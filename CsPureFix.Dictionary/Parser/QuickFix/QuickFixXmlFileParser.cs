@@ -10,6 +10,7 @@ namespace PureFix.Dictionary.Parser.QuickFix;
 public partial class QuickFixXmlFileParser
 {
     public FixDefinitions Definitions { get; }
+
     public QuickFixXmlFileParser(FixDefinitions definitions)
     {
         Definitions = definitions;
