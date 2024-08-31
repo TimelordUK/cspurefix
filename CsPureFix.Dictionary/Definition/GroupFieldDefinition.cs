@@ -10,6 +10,9 @@ namespace PureFix.Dictionary.Definition
 {
     public class GroupFieldDefinition : ContainedFieldSet
     {
+        /**
+         * the field representing the number of instances representing the group.
+         */
         public SimpleFieldDefinition NoOfField { get; }
 
         public GroupFieldDefinition(string name, string abbreviation, string category, SimpleFieldDefinition noOfField,

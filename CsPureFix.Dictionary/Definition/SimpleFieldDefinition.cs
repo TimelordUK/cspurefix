@@ -15,14 +15,15 @@ namespace PureFix.Dictionary.Definition
     {
         public int Tag { get; }
         public string Name { get; }
-        public string BaseCategory { get; }
-        public string Abbreviation { get; }
         public string Description { get; }
-        public string BaseCategoryAbbreviation { get; }
         public string Type { get; }
         public TagType TagType { get; }
         private readonly Dictionary<string, FieldEnum> _enums;
         public bool IsEnum => _enums != null && _enums.Count > 0;
+        // needed for FIXML as "ID" is resolved within the context of its parent.
+        public string Abbreviation { get; }
+        public string BaseCategory { get; }
+        public string BaseCategoryAbbreviation { get; }
 
         // var sd = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
         public SimpleFieldDefinition(string name, string cat, string type, int tag, List<FieldEnum> enums) : this(name,
@@ -30,9 +31,9 @@ namespace PureFix.Dictionary.Definition
         {
         }
 
-        public SimpleFieldDefinition(string name, string abreviation, string baseCategory, string baseCategoryAbbreviation, string type, string description, int tag, List<FieldEnum> enums)
+        public SimpleFieldDefinition(string name, string abbreviation, string baseCategory, string baseCategoryAbbreviation, string type, string description, int tag, List<FieldEnum> enums)
         {
-            Abbreviation = abreviation;
+            Abbreviation = abbreviation;
             BaseCategory = baseCategory;
             Description = description;
             BaseCategoryAbbreviation = baseCategoryAbbreviation;
@@ -43,7 +44,6 @@ namespace PureFix.Dictionary.Definition
             if (enums != null && enums.Count > 0)
             {
                 _enums = enums.ToDictionary(fe => fe.Key, fe => fe);
-
             }
         }
 

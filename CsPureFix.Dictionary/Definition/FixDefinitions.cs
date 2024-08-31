@@ -18,7 +18,13 @@ namespace PureFix.Dictionary.Definition
         private readonly Dictionary<string, ComponentFieldDefinition> _component = new ();
 
         public IReadOnlyDictionary<string, SimpleFieldDefinition> Simple => _nameToSimple;
+        /**
+         * all global scope components - top level.
+         */
         public IReadOnlyDictionary<string, ComponentFieldDefinition> Component => _component;
+        /**
+         * numeric tag lookup to field definition.
+         */
         public IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimple => _tagToSimple;
         /**
          * all messages defined from source definition indexed via name
