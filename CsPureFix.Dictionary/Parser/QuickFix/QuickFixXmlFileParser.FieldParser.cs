@@ -17,9 +17,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var fields = doc.Descendants("fields");
             foreach (var fieldElement in fields.Descendants())
             {
-                (int tag, string name, string type) t = GetField(fieldElement);
+                var (tag, name, type) = GetField(fieldElement);
                 var values = GetFieldValues(fieldElement);
-                var sf = new SimpleFieldDefinition(t.name, t.tag, TagTypeUtil.ToType(t.type), values);
+                var sf = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
                 Definitions.AddSimple(sf);
             }
         }
