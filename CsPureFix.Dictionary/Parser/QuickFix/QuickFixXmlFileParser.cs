@@ -318,7 +318,7 @@ public partial class QuickFixXmlFileParser
         {
             var tailNode = MakeNode(name, element, ElementType.ComponentDeclaration);
             var edge = node.MakeEdge(tailNode.ID);
-            var tailEdge = tailNode.MakeEdge(node.ID);
+            tailNode.MakeEdge(node.ID);
             AddEdge(edge);
         }
     }
