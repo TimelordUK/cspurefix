@@ -7,4 +7,5 @@ var definitions = new FixDefinitions();
 var parser = new QuickFixXmlFileParser(definitions);
 // parser.Parse("FIX44.xml");
 parser.Parse("FIX50SP2.xml");
-Console.WriteLine(definitions.Message["A"]);
+var logon = definitions.Message["A"];
+Console.WriteLine(logon);

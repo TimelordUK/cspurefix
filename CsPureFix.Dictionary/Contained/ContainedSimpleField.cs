@@ -19,7 +19,7 @@ namespace PureFix.Dictionary.Contained
         }
         public override string ToString()
         {
-            return $"[{Position}]= S.{Definition.Tag} ({Name})";
+            return $"[{Position}:{Required}] = S.{Definition.Tag} ({Name})";
         }
     }
 }

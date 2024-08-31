@@ -8,10 +8,10 @@ namespace PureFix.Dictionary.Contained
 {
     public class ContainedField
     {
-        public string Name { get; private set; }
-        public int Position { get; private set; }
-        public ContainedFieldType Type { get; private set; }
-        public bool Required { get; private set; }
+        public string Name { get; }
+        public int Position { get; }
+        public ContainedFieldType Type { get; }
+        public bool Required { get; }
 
         public ContainedField(string name, int position, ContainedFieldType type, bool required)
         {

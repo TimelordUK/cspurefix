@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
+using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser;
 
 namespace PureFix.Dictionary.Parser.QuickFix
 {
@@ -20,8 +21,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
             public ElementType Type { get; }
             private readonly List<Edge> _edges = new();
             public IReadOnlyList<Edge> Edges => _edges;
-
-
+            public IReadOnlyDictionary<string, string> AsAttributeDict() => QuickFixXmlFileParser.AsAttributeDict(Element);
+            public bool IsRequired() => AsAttributeDict().TryGetValue("required", out var val) && val == "Y";
+            
             public Node(int id, string name, ElementType elementType, XElement element)
             {
                 ID = id;

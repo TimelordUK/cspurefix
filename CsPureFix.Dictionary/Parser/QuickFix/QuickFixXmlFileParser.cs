@@ -110,11 +110,9 @@ public partial class QuickFixXmlFileParser
          * regardless of how many times the component is used, only 1 definition is held
          * the context is captured in a contained field.
          */
-        if (!Definitions.Component.TryGetValue(node.Name, out var definition))
-        {
-            definition = new ComponentFieldDefinition(node.Name, null, null, node.Name);
-            Definitions.AddComponent(definition);
-        }
+        if (Definitions.Component.TryGetValue(node.Name, out var definition)) return definition;
+        definition = new ComponentFieldDefinition(node.Name, null, null, node.Name);
+        Definitions.AddComponent(definition);
 
         return definition;
     }
@@ -126,9 +124,7 @@ public partial class QuickFixXmlFileParser
         var edge = node.Edges[0];
         if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
         {
-
-            var att = AsAttributeDict(node.Element);
-            var containedComponent = new ContainedComponentField(definition, parentSet.Fields.Count, IsRequired(att), null);
+            var containedComponent = new ContainedComponentField(definition, parentSet.Fields.Count, node.IsRequired(), null);
             parentSet.Add(containedComponent);
             _containedSets[edge.Head] = definition;
         }
@@ -153,10 +149,7 @@ public partial class QuickFixXmlFileParser
         ExpandSet(node);
     }
 
-    private static bool IsRequired(Dictionary<string, string> att)
-    {
-        return att["required"] == "Y";
-    }
+
 
     private void InlineGroupDefinition(Node node)
     {
@@ -167,13 +160,13 @@ public partial class QuickFixXmlFileParser
         var edge = node.Edges[0];
         if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
         {
-            var att = AsAttributeDict(node.Element);
+            var att = node.AsAttributeDict();
             if (Definitions.Simple.TryGetValue(node.Name, out var noOFieldDefinition))
             {
                 var name = att["name"];
                 var definition =
                     new GroupFieldDefinition(name, null, null, noOFieldDefinition, name);
-                var containedGroup = new ContainedGroupField(definition, parentSet.Fields.Count, IsRequired(att), null);
+                var containedGroup = new ContainedGroupField(definition, parentSet.Fields.Count, node.IsRequired(), null);
                 parentSet.Add(containedGroup);
                 _containedSets[edge.Head] = definition;
                 var childNode = MakeNode(name, node.Element, ElementType.GroupDefinition);
@@ -202,11 +195,10 @@ public partial class QuickFixXmlFileParser
         var edge = node.Edges[0];
         if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
         {
-            var att = AsAttributeDict(node.Element);
             if (_nodes.TryGetValue(edge.Head, out var simpleNode) &&
                 Definitions.Simple.TryGetValue(simpleNode.Name, out var sd))
             {
-                var containedSimpleField = new ContainedSimpleField(sd, parentSet.Fields.Count, IsRequired(att), false, null);
+                var containedSimpleField = new ContainedSimpleField(sd, parentSet.Fields.Count, node.IsRequired(), false, null);
                 parentSet.Add(containedSimpleField);
             }
             else

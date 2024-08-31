@@ -24,7 +24,7 @@ namespace PureFix.Dictionary.Contained
             }
 
             var tag = Definition.NoOfField?.Tag ?? -1;
-            return $"[{Position}]= G.{Definition.Fields.Count} (0={tag})({Name})";
+            return $"[{Position}:{Required}]= G.{Definition.Fields.Count} (0={tag})({Name})";
         }
     }
 }

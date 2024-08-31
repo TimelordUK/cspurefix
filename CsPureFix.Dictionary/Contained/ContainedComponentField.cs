@@ -19,7 +19,7 @@ namespace PureFix.Dictionary.Contained
 
         public override string ToString()
         {
-            return Definition == null ? "" : $"[{Position}]= C.{Definition.Fields.Count} ({Name})";
+            return Definition == null ? "" : $"[{Position}:{Required}]= C.{Definition.Fields.Count} ({Name})";
         }
     }
 }
