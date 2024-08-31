@@ -23,6 +23,16 @@ namespace PureFix.Dictionary.Parser.QuickFix
             }
         }
 
+        private void ParseComponents(XDocument doc)
+        {
+            var fields = doc.Descendants("components").First().Descendants("component");
+            foreach (var componentElement in fields)
+            {
+                var at = AsAttributeDict(componentElement);
+                MakeNode(at["name"], componentElement, Node.ElementType.ComponentDefinition);
+            }
+        }
+
         private static SimpleFieldDefinition GetField(XElement fieldElement)
         {
             var tag = 0;

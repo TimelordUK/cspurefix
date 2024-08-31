@@ -10,8 +10,7 @@ namespace PureFix.Dictionary.Definition
 {
     public class ComponentFieldDefinition : ContainedFieldSet
     {
-        public ComponentFieldDefinition(string name, string abbreviation, string category, SimpleFieldDefinition noOfField,
-            string description) :
+        public ComponentFieldDefinition(string name, string abbreviation, string category, string description) :
             base(ContainedSetType.Component, name, abbreviation, category, description)
         {
         }

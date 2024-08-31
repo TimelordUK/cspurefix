@@ -15,8 +15,10 @@ namespace PureFix.Dictionary.Definition
         private readonly Dictionary<string, SimpleFieldDefinition> _nameToSimple = new();
         private readonly Dictionary<string, MessageDefinition> _message = new();
         private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimple = new();
+        private readonly Dictionary<string, ComponentFieldDefinition> _component = new ();
 
         public IReadOnlyDictionary<string, SimpleFieldDefinition> Simple => _nameToSimple;
+        public IReadOnlyDictionary<string, ComponentFieldDefinition> Component => _component;
         public IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimple => _tagToSimple;
         /**
          * all messages defined from source definition indexed via name
@@ -33,6 +35,11 @@ namespace PureFix.Dictionary.Definition
         public void AddMessaqe(MessageDefinition msg)
         {
             _message[msg.MsgType] = msg;
+        }
+
+        public void AddComponent(ComponentFieldDefinition component)
+        {
+            _component[component.Name] = component;
         }
     }
 }

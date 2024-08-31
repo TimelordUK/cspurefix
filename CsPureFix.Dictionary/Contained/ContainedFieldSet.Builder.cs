@@ -15,7 +15,7 @@ namespace PureFix.Dictionary.Contained
             _fields.Add(field);
             _localNameToField[field.Name] = field;
             AddUpdate(field);
-            AddContained(field);
+            AddContained(this, field);
         }
 
         private void AddUpdate(ContainedField field)
@@ -82,31 +82,31 @@ namespace PureFix.Dictionary.Contained
             }
         }
 
-        private void AddContained(ContainedField field)
+        private void AddContained(ContainedFieldSet parent, ContainedField field)
         {
             switch (field.Type)
             {
                 case ContainedFieldType.Group:
                 {
-                    AddGroupFieldDef(field as ContainedGroupField);
+                    AddGroupFieldDef(parent, field as ContainedGroupField);
                     break;
                 }
 
                 case ContainedFieldType.Component:
                 {
-                    AddComponentFieldDef(field as ContainedComponentField);
+                    AddComponentFieldDef(parent, field as ContainedComponentField);
                     break;
                 }
 
                 case ContainedFieldType.Simple:
                 {
-                    AddSimpleFieldDef(field as ContainedSimpleField);
+                    AddSimpleFieldDef(parent, field as ContainedSimpleField);
                     break;
                 }
             }
         }
 
-        private void AddGroupFieldDef(ContainedGroupField groupField)
+        private void AddGroupFieldDef(ContainedFieldSet containedField, ContainedGroupField groupField)
         {
             if (_groups.ContainsKey(groupField.Name)) { return; }
 
@@ -124,7 +124,7 @@ namespace PureFix.Dictionary.Contained
             MapAllBelow(definition, groupField);
         }
 
-        private void AddComponentFieldDef(ContainedComponentField componentField)
+        private void AddComponentFieldDef(ContainedFieldSet containedField, ContainedComponentField componentField)
         {
             if (_components.ContainsKey(componentField.Name))
             {
@@ -146,7 +146,7 @@ namespace PureFix.Dictionary.Contained
             }
         }
 
-        private void AddSimpleFieldDef(ContainedSimpleField field)
+        private void AddSimpleFieldDef(ContainedFieldSet parent, ContainedSimpleField field)
         {
             if (_simple.ContainsKey(field.Name))
             {
@@ -158,7 +158,7 @@ namespace PureFix.Dictionary.Contained
             {
                 case TagType.RawData:
                 {
-                    if (_fields[field.Position - 1] is ContainedSimpleField dataLengthField && dataLengthField.Definition.TagType == TagType.Length)
+                    if (parent.Fields[field.Position - 1] is ContainedSimpleField dataLengthField && dataLengthField.Definition.TagType == TagType.Length)
                     {
                         _containedLength[dataLengthField.Definition.Tag] = true;
                         ContainsRaw = true;
@@ -178,7 +178,7 @@ namespace PureFix.Dictionary.Contained
         {
             foreach (var field in containedField.Fields)
             {
-                AddContained(field);
+                AddContained(containedField, field);
             }
         }
     }
