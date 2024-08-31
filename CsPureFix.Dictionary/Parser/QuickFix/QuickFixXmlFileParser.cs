@@ -16,8 +16,9 @@ public partial class QuickFixXmlFileParser
     public FixDefinitions Definitions { get; }
     public Queue<Node> Queue { get; } = new ();
     private int _nextId;
-    private Dictionary<int, Node> _nodes = new();
+    private readonly Dictionary<int, Node> _nodes = new();
     private readonly Dictionary<int, List<Edge>> _edges = new();
+    private readonly Dictionary<int, ContainedFieldSet> _containedSets = new();
 
     public class Node
     {
@@ -101,37 +102,70 @@ public partial class QuickFixXmlFileParser
             {
                 var md = GetMessage(node.Element);
                 Definitions.AddMessaqe(md);
+                _containedSets[node.ID] = md;
                 ExpandSet(node);
                 break;
             }
 
+            /*
+             * the edge will have head as the declared field and tail to the set in which the declaration should be added.
+             */
             case ElementType.SimpleFieldDeclaration:
             {
                 var edge = node.Edges[0];
-                if (_nodes.TryGetValue(edge.Tail, out var containedSet))
+                if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
                 {
-                    switch (containedSet.Type)
+                    var att = AsAttributeDict(node.Element);
+                    if (_nodes.TryGetValue(edge.Head, out var simpleNode) &&
+                        Definitions.Simple.TryGetValue(simpleNode.Name, out var sd))
                     {
-                        case ElementType.MessageDefinition:
-                        {
-                            if (Definitions.Message.TryGetValue(containedSet.Name, out var md))
-                            {
-                                var att = AsAttributeDict(node.Element);
-                                if (_nodes.TryGetValue(edge.Head, out var simpleNode) && Definitions.Simple.TryGetValue(simpleNode.Name, out var sd))
-                                {
-                                    var cf = new ContainedSimpleField(sd, md.Fields.Count, att["required"] == "Y",
-                                        false, null);
-                                    md.Add(cf);
-                                }
-                            }
-                            else
-                            {
-                                throw new InvalidDataException(
-                                    $"declared field {node} has no parent set {containedSet.Name}");
-                            }
-                            break;
-                        }
+                        var containedSimpleField = new ContainedSimpleField(sd, parentSet.Fields.Count,
+                            att["required"] == "Y",
+                            false, null);
+                        parentSet.Add(containedSimpleField);
                     }
+                    else
+                    {
+                        throw new InvalidDataException(
+                            $"element {node} edge {edge} cannot be located as a simple field {simpleNode?.Name}");
+                    }
+                }
+                else
+                {
+                    throw new InvalidDataException($"edge {edge} tail has no contained set on which to place declared field");
+                }
+                break;
+            }
+
+            /*
+             * in this case the group is defined locally private to the container in which it belongs.
+             */
+            case ElementType.InlineGroupDefinition:
+            {
+                var edge = node.Edges[0];
+                if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
+                {
+                    var att = AsAttributeDict(node.Element);
+                    if (Definitions.Simple.TryGetValue(node.Name, out var noOFieldDefinition))
+                    {
+                        var name = att["name"];
+                        var definition =
+                            new GroupFieldDefinition(name, null, null, noOFieldDefinition, name);
+                        var containedGroup = new ContainedGroupField(definition, parentSet.Fields.Count,
+                            att["required"] == "Y", null);
+                        parentSet.Add(containedGroup);
+                        _containedSets[edge.Tail] = definition;
+                        var childNode = MakeNode(name, node.Element, ElementType.GroupDefinition);
+                        ExpandSet(childNode);
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"{node.Name} does not exist in simple field definitions");
+                    }
+                }
+                else
+                {
+                    throw new InvalidDataException($"edge {edge} tail has no contained set on which to place declared inline group");
                 }
                 break;
             }
@@ -155,41 +189,51 @@ public partial class QuickFixXmlFileParser
 
     public void ExpandSet(Node node)
     {
-        foreach (var element in node.Element.Descendants("field"))
+        foreach (var element in node.Element.Descendants())
         {
             switch (element.Name.LocalName)
             {
                 case "field":
                 {
-                    var at = AsAttributeDict(element);
-                    var childNode = MakeNode(at["name"], element, ElementType.SimpleFieldDeclaration);
-                    var edge = node.MakeEdge(childNode.ID);
-                    childNode.MakeEdge(node.ID);
-                    AddEdge(edge);
+                    ExpandField(node, element);
                     break;
                 }
 
                 case "group":
                 {
-                    var at = AsAttributeDict(element);
-                    var inlinedFields = element.Descendants("field").ToList();
-                    if (inlinedFields.Count > 0)
-                    {
-                        var tailNode = MakeNode(at["name"], element, ElementType.InlineGroupDefinition);
-                        var edge = node.MakeEdge(tailNode.ID);
-                        tailNode.MakeEdge(node.ID);
-                        AddEdge(edge);
-                    }
-                    else
-                    {
-                        var tailNode = MakeNode(at["name"], element, ElementType.GroupDeclaration);
-                        var edge = node.MakeEdge(tailNode.ID);
-                        tailNode.MakeEdge(node.ID);
-                        AddEdge(edge);
-                    }
+                    ExpandGroup(node, element);
                     break;
                 }
             }
+        }
+    }
+
+    private void ExpandField(Node node, XElement element)
+    {
+        var at = AsAttributeDict(element);
+        var childNode = MakeNode(at["name"], element, ElementType.SimpleFieldDeclaration);
+        var edge = node.MakeEdge(childNode.ID);
+        childNode.MakeEdge(node.ID);
+        AddEdge(edge);
+    }
+
+    private void ExpandGroup(Node node, XElement element)
+    {
+        var at = AsAttributeDict(element);
+        var inlinedFields = element.Descendants("field").ToList();
+        if (inlinedFields.Count > 0)
+        {
+            var tailNode = MakeNode(at["name"], element, ElementType.InlineGroupDefinition);
+            var edge = node.MakeEdge(tailNode.ID);
+            tailNode.MakeEdge(node.ID);
+            AddEdge(edge);
+        }
+        else
+        {
+            var tailNode = MakeNode(at["name"], element, ElementType.GroupDeclaration);
+            var edge = node.MakeEdge(tailNode.ID);
+            tailNode.MakeEdge(node.ID);
+            AddEdge(edge);
         }
     }
 }

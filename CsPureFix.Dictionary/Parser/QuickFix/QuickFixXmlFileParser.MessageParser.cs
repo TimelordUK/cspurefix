@@ -17,7 +17,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             foreach (var messageElement in messages)
             {
                 var ad = AsAttributeDict(messageElement);
-                var node = MakeNode(ad["msgtype"], messageElement, Node.ElementType.MessageDefinition);
+                MakeNode(ad["msgtype"], messageElement, Node.ElementType.MessageDefinition);
             }
         }
 
