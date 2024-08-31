@@ -3,6 +3,7 @@ using System.Xml;
 using System.Linq;
 using System.Xml.Linq;
 using PureFix.Buffer.tag;
+using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 
 namespace PureFix.Dictionary.Parser.QuickFix;
@@ -10,7 +11,38 @@ namespace PureFix.Dictionary.Parser.QuickFix;
 public partial class QuickFixXmlFileParser
 {
     public FixDefinitions Definitions { get; }
+    public Queue<Node> Queue { get; } = new ();
+    private int _nextId;
+    private Dictionary<int, Node> _nodes = new();
 
+    public class Node
+    {
+        public string Name { get; }
+        public int ID { get; }
+        public XElement Element { get; }
+        public ElementType Type { get; }
+        private readonly List<Node> _depenedencies = new ();
+        public IReadOnlyList<Node> Dependencies => _depenedencies;
+
+        public Node(int id, string name, ElementType elementType, XElement element)
+        {
+            ID = id;
+            Name = name;
+            Element = element;
+            Type = elementType;
+        }
+        
+        public enum ElementType
+        {
+            MessageDefinition,
+            FieldDefinition,
+            FieldDeclaration,
+            InlineGroupDefinition,
+            ComponentDefinition,
+            GroupDefinition,
+            ComponentDeclaration,
+        }
+    }
 
     public QuickFixXmlFileParser(FixDefinitions definitions)
     {
@@ -19,22 +51,31 @@ public partial class QuickFixXmlFileParser
 
     public void Parse(string path)
     {
-        var doc = XDocument.Load(path);
-        ParseMessages(doc);
         // first parse all fields including their enum definitions, and add to the dictionary
+        var doc = XDocument.Load(path);
         ParseFields(doc);
+        ParseMessages(doc);
+        while (Queue.Count > 0)
+        {
+            var element = Queue.Dequeue();
+            Work(element);
+        }
     }
 
-    public void ExpandSet(, XElement element)
+    public void Work(Node node)
     {
-        var descendants = element.Descendants();
-        foreach (var descendant in descendants)
+        switch (node.Type)
         {
-            switch (descendant.Name.LocalName)
+            case Node.ElementType.FieldDefinition:
             {
-                case "field":
-                    var ad = AsAttributeDict(descendant);
-                    break;
+                var sd = GetField(node.Element);
+                Definitions.AddSimple(sd);
+                break;
+            }
+
+            case Node.ElementType.MessageDefinition:
+            {
+                break;
             }
         }
     }

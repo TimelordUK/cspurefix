@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PureFix.Dictionary.Parser;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,67 +28,76 @@ namespace PureFix.Dictionary.Contained
         /**
          *  sequence of fields representing this type - can be simple, group or component
          */
-        IRe[] Fields;
-  /**
-   * any tag at any level i.e. does this set contain a tag
-   */
-  readonly containedTag: INumericKeyed<boolean>
-  /**
-   * any tag at any level ordered i.e. all tags flattened to list
-   */
-  readonly flattenedTag: number[]
-  /**
-   * any data tags contained length within this set.
-   */
-  readonly containedLength: INumericKeyed<boolean>
-  /**
-   * tags only in repository at this level, not from any at deeper levels
-   */
-  readonly localTag: INumericKeyed<ContainedSimpleField>
-  /**
-   * tags marked required at this level only
-   */
-  readonly localRequired: INumericKeyed<ContainedSimpleField>
-  /**
-   * all tags contained within this field set flattened from all levels
-   */
-  readonly tagToSimple: INumericKeyed<ContainedSimpleField>
-  /**
-   * direct any tag contained within this set to field one level down where it belongs.
-   */
-  readonly tagToField: INumericKeyed<ContainedField>
-  /**
-   * only repository directly in this set indexed by name
-   */
-  readonly localNameToField: Map<string, ContainedField>
-  /**
-   * for FixMl notation this set of fields appear as attributes i.e. <Pty ID="323" R="38">
-   */
-  readonly nameToLocalAttribute: Map<string, ContainedSimpleField>
-  /**
-   * all attributes in order of being declared
-   */
-  readonly localAttribute: ContainedSimpleField[]
-  readonly type: ContainedSetType
-  readonly name: string
-  readonly category: string | null
-  readonly abbreviation: string | null
-  readonly description: string | null
-  /**
-   * at any level on this set, first declared simple field
-   */
-  firstSimple: (ContainedSimpleField | null)
-  containsRaw: boolean
+        IReadOnlyList<ContainedField> Fields { get; }
 
-  toString: () => string
+        /**
+         * any tag at any level i.e. does this set contain a tag
+         */
+        IReadOnlyDictionary<int, bool> ContainedTag { get; }
 
-  getPrefix: () => string
+        /**
+         * any tag at any level ordered i.e. all tags flattened to list
+         */
+        IReadOnlyList<int> FlattenedTag { get; }
 
-  getFieldName: (tag: number) => string
+        /**
+         * any data tags contained length within this set.
+         */
+        IReadOnlyDictionary<int, bool> ContainedLength { get; }
 
-  getSet: (path: string) => IContainedSet | null
+        /**
+         * tags only in repository at this level, not from any at deeper levels
+         */
+        IReadOnlyDictionary<int, ContainedSimpleField> LocalTag { get; }
 
-  keys: () => number[]
-        }
+        /**
+         * tags marked required at this level only
+         */
+        IReadOnlyDictionary<int, ContainedSimpleField> LocalRequired { get; }
+
+        /**
+         * all tags contained within this field set flattened from all levels
+         */
+        IReadOnlyDictionary<int, ContainedSimpleField> TagToSimple { get; }
+
+        /**
+         * direct any tag contained within this set to field one level down where it belongs.
+         */
+        IReadOnlyDictionary<int, ContainedField> TagToField { get; }
+
+        /**
+         * only repository directly in this set indexed by name
+         */
+        IReadOnlyDictionary<string, ContainedField> LocalNameToField { get; }
+
+        /**
+         * for FixMl notation this set of fields appear as attributes i.e. <Pty ID="323" R="38">
+         */
+        IReadOnlyDictionary<string, ContainedSimpleField> NameToLocalAttribute { get; }
+
+        /**
+         * all attributes in order of being declared
+         */
+        IReadOnlyList<ContainedSimpleField> LocalAttribute { get; }
+
+        ContainedSetType Type { get; }
+        string Name { get; }
+        string Category { get; }
+        string Abbreviation { get; }
+        string Description { get; }
+
+        /**
+         * at any level on this set, first declared simple field
+         */
+        ContainedSimpleField FirstSimple { get; }
+
+        bool ContainsRaw { get; }
+
+        string GetPrefix();
+
+        string GetFieldName(int tag);
+        IContainedSet GetSet(string path);
+
+        IReadOnlyList<int> Keys();
     }
 }

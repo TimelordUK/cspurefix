@@ -16,14 +16,13 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var fields = doc.Descendants("messages");
             foreach (var messageElement in fields.Descendants())
             {
-                var (name, msgCat, msgType) = GetMessage(messageElement);
-                var node = AddMessage(name);
-                Expand(node, messageElement);
+                var ad = AsAttributeDict(messageElement);
+                var node = MakeNode(ad["name"], messageElement, Node.ElementType.FieldDefinition);
             }
         }
 
         //  <message name='Logout' msgcat='admin' msgtype='5'>
-        private static (string mame, string msgCat, string msgType) GetMessage(XElement fieldElement)
+        private static MessageDefinition GetMessage(XElement fieldElement)
         {
             var name = "";
             var msgCat = "";
@@ -45,7 +44,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
                         break;
                 }
             }
-            return (name, msgCat, msgType);
+
+            var md = new MessageDefinition(name, name, msgType, msgCat, name);
+            return md;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
@@ -14,17 +15,15 @@ namespace PureFix.Dictionary.Parser.QuickFix
     {
         private void ParseFields(XDocument doc)
         {
-            var fields = doc.Descendants("fields");
-            foreach (var fieldElement in fields.Descendants())
+            var fields = doc.Descendants("fields").First().Descendants("field");
+            foreach (var fieldElement in fields)
             {
-                var (tag, name, type) = GetField(fieldElement);
-                var values = GetFieldValues(fieldElement);
-                var sf = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
-                Definitions.AddSimple(sf);
+                var at = AsAttributeDict(fieldElement);
+                MakeNode(at["name"], fieldElement, Node.ElementType.FieldDefinition);
             }
         }
 
-        private static (int tag, string mame, string type) GetField(XElement fieldElement)
+        private static SimpleFieldDefinition GetField(XElement fieldElement)
         {
             var tag = 0;
             var name = "";
@@ -46,7 +45,10 @@ namespace PureFix.Dictionary.Parser.QuickFix
                         break;
                 }
             }
-            return (tag, name, type);
+
+            var values = GetFieldValues(fieldElement);
+            var sd = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
+            return sd;
         }
 
         private static List<FieldEnum> GetFieldValues(XElement fieldElement)
