@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel;
-using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Xml;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Xml.Linq;
-using PureFix.Buffer.tag;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
@@ -16,61 +13,7 @@ public partial class QuickFixXmlFileParser
 {
     public FixDefinitions Definitions { get; }
     public Queue<Node> Queue { get; } = new ();
-    private int _nextId;
-    /*
-     * a graph representing the data dictionary
-     */
-    private readonly Dictionary<int, Node> _nodes = new();
-    private readonly Dictionary<int, List<Edge>> _edges = new();
-    /*
-     * indexed on node id, this allows an edge to quickly find the set in which to place a field.
-     */
-    private readonly Dictionary<int, ContainedFieldSet> _containedSets = new();
-
-    public class Node
-    {
-        public record Edge(int Head, int Tail);
-        public string Name { get; }
-        public int ID { get; }
-        public XElement Element { get; }
-        public ElementType Type { get; }
-        private readonly List<Edge> _edges = new ();
-        public IReadOnlyList<Edge> Edges => _edges;
-        
-
-        public Node(int id, string name, ElementType elementType, XElement element)
-        {
-            ID = id;
-            Name = name;
-            Element = element;
-            Type = elementType;
-        }
-
-        public override string ToString()
-        {
-            return $"Node: ID = {ID}, Name = {Name}, Type = {Type}, element = {Element}, Edges = {string.Join(", ", Edges)}";
-        }
-
-        public Edge MakeEdge(int tail)
-        {
-            var edge = new Edge(ID, tail);
-            _edges.Add(edge);
-            return edge;
-        }
-
-        public enum ElementType
-        {
-            MessageDefinition,
-            SimpleFieldDefinition,
-            SimpleFieldDeclaration,
-            InlineGroupDefinition,
-            GroupDefinition,
-            GroupDeclaration,
-            ComponentDefinition,
-            ComponentDeclaration,
-        }
-    }
-
+    
     public QuickFixXmlFileParser(FixDefinitions definitions)
     {
         Definitions = definitions;
@@ -93,12 +36,20 @@ public partial class QuickFixXmlFileParser
                 break;
             }
 
+            /*
+             * any message is a set of fields where each field may be simple, component or a group
+             * where components and groups may recursively contain other sets.
+             */
             case ElementType.MessageDefinition:
             {
                 MessageDefinition(node);
                 break;
             }
 
+            /*
+             * an actual component definition (which may itself contain components and groups)
+             * these are referenced as declaration fields.
+             */
             case ElementType.ComponentDefinition:
             {
                 ComponentDefinition(node);
@@ -107,6 +58,7 @@ public partial class QuickFixXmlFileParser
 
             /*
              * the edge will have head as the declared field and tail to the set in which the declaration should be added.
+             * at this point all field definitions will exist.
              */
             case ElementType.SimpleFieldDeclaration:
             {
@@ -123,6 +75,10 @@ public partial class QuickFixXmlFileParser
                 break;
             }
 
+            /*
+             * this is a reference to a component that is defined elsewhere - there will only be one
+             * definition instance, yet it may be included in many sets.
+             */
             case ElementType.ComponentDeclaration:
             {
                 ComponentDeclaration(node);
@@ -136,8 +92,11 @@ public partial class QuickFixXmlFileParser
         // first parse all fields including their enum definitions, and add to the dictionary
         var doc = XDocument.Load(path);
         ParseFields(doc);
+        // all top level components which will later be further expanded\
         ParseComponents(doc);
+        // can now resolve message types
         ParseMessages(doc);
+        // keep expanding and resolving until every set is fully resolved.
         while (Queue.Count > 0)
         {
             var element = Queue.Dequeue();
@@ -147,6 +106,10 @@ public partial class QuickFixXmlFileParser
 
     private ComponentFieldDefinition GetComponentDefinition(Node node)
     {
+        /*
+         * regardless of how many times the component is used, only 1 definition is held
+         * the context is captured in a contained field.
+         */
         if (!Definitions.Component.TryGetValue(node.Name, out var definition))
         {
             definition = new ComponentFieldDefinition(node.Name, null, null, node.Name);
@@ -165,7 +128,7 @@ public partial class QuickFixXmlFileParser
         {
 
             var att = AsAttributeDict(node.Element);
-            var containedComponent = new ContainedComponentField(definition, parentSet.Fields.Count, att["required"] == "Y", null);
+            var containedComponent = new ContainedComponentField(definition, parentSet.Fields.Count, IsRequired(att), null);
             parentSet.Add(containedComponent);
             _containedSets[edge.Head] = definition;
         }
@@ -190,8 +153,17 @@ public partial class QuickFixXmlFileParser
         ExpandSet(node);
     }
 
+    private static bool IsRequired(Dictionary<string, string> att)
+    {
+        return att["required"] == "Y";
+    }
+
     private void InlineGroupDefinition(Node node)
     {
+        if (node.Edges.Count == 0)
+        {
+            throw new InvalidDataException($"node {node} has no edges to find tail for inline group definition.");
+        }
         var edge = node.Edges[0];
         if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
         {
@@ -201,10 +173,9 @@ public partial class QuickFixXmlFileParser
                 var name = att["name"];
                 var definition =
                     new GroupFieldDefinition(name, null, null, noOFieldDefinition, name);
-                var containedGroup = new ContainedGroupField(definition, parentSet.Fields.Count,
-                    att["required"] == "Y", null);
+                var containedGroup = new ContainedGroupField(definition, parentSet.Fields.Count, IsRequired(att), null);
                 parentSet.Add(containedGroup);
-                _containedSets[edge.Tail] = definition;
+                _containedSets[edge.Head] = definition;
                 var childNode = MakeNode(name, node.Element, ElementType.GroupDefinition);
                 _containedSets[childNode.ID] = definition;
                 node.MakeEdge(childNode.ID);
@@ -226,7 +197,7 @@ public partial class QuickFixXmlFileParser
     {
         if (node.Edges.Count == 0)
         {
-            Debugger.Break();
+            throw new InvalidDataException($"node {node} has no edges to find tail for simple field declaration.");
         }
         var edge = node.Edges[0];
         if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
@@ -235,9 +206,7 @@ public partial class QuickFixXmlFileParser
             if (_nodes.TryGetValue(edge.Head, out var simpleNode) &&
                 Definitions.Simple.TryGetValue(simpleNode.Name, out var sd))
             {
-                var containedSimpleField = new ContainedSimpleField(sd, parentSet.Fields.Count,
-                    att["required"] == "Y",
-                    false, null);
+                var containedSimpleField = new ContainedSimpleField(sd, parentSet.Fields.Count, IsRequired(att), false, null);
                 parentSet.Add(containedSimpleField);
             }
             else
@@ -254,7 +223,6 @@ public partial class QuickFixXmlFileParser
 
     private void AddEdge(Edge edge)
     {
-
         if (!_edges.TryGetValue(edge.Head, out var pCached))
         {
             _edges[edge.Head] = pCached = new List<Edge>();
@@ -268,6 +236,11 @@ public partial class QuickFixXmlFileParser
         cCached.Add(edge);
     }
 
+    /*
+     * a group or collection needs to be further expanded into its constituents,
+     * groups and fields will later arrive once more to further resolve deeper into
+     * the definition.
+     */
     public void ExpandSet(Node node)
     {
         foreach (var element in node.Element.Descendants())
@@ -295,6 +268,10 @@ public partial class QuickFixXmlFileParser
         }
     }
 
+    /*
+     * this is a declared field which can not be further resolved - a definition to this field
+     * would already be resolved providing it actually exists in the XML
+     */
     private void ExpandField(Node node, XElement element)
     {
         var at = AsAttributeDict(element);
@@ -343,7 +320,6 @@ public partial class QuickFixXmlFileParser
             var edge = node.MakeEdge(tailNode.ID);
             var tailEdge = tailNode.MakeEdge(node.ID);
             AddEdge(edge);
-            AddEdge(tailEdge);
         }
     }
 }
