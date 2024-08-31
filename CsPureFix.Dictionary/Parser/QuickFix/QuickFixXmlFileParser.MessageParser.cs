@@ -13,11 +13,11 @@ namespace PureFix.Dictionary.Parser.QuickFix
     {
         private void ParseMessages(XDocument doc)
         {
-            var fields = doc.Descendants("messages");
-            foreach (var messageElement in fields.Descendants())
+            var messages = doc.Descendants("messages").First().Descendants("message");
+            foreach (var messageElement in messages)
             {
                 var ad = AsAttributeDict(messageElement);
-                var node = MakeNode(ad["name"], messageElement, Node.ElementType.FieldDefinition);
+                var node = MakeNode(ad["name"], messageElement, Node.ElementType.MessageDefinition);
             }
         }
 
@@ -39,7 +39,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
                         name = a.Value;
                         break;
 
-                    case "msgType":
+                    case "msgtype":
                         msgType = a.Value;
                         break;
                 }

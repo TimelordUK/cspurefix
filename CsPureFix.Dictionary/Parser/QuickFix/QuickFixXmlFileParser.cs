@@ -65,7 +65,13 @@ public partial class QuickFixXmlFileParser
     public void Work(Node node)
     {
         switch (node.Type)
-        {
+        { 
+            /*
+             * all messages, components and groups eventually reduce to sets of fields,
+             * here we are making an actual field definition which can be contained by any
+             * of above sets.  The definition has no context, but once declared in a component
+             * it has a position and hence context.
+             */
             case Node.ElementType.FieldDefinition:
             {
                 var sd = GetField(node.Element);
@@ -75,6 +81,8 @@ public partial class QuickFixXmlFileParser
 
             case Node.ElementType.MessageDefinition:
             {
+                var md = GetMessage(node.Element);
+                Definitions.AddMessaqe(md);
                 break;
             }
         }
