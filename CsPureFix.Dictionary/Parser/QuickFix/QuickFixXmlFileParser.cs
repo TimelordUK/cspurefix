@@ -2,6 +2,7 @@
 using System.Data.SqlTypes;
 using System.Xml;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Xml.Linq;
 using PureFix.Buffer.tag;
 using PureFix.Dictionary.Contained;
@@ -51,8 +52,8 @@ public partial class QuickFixXmlFileParser
         public enum ElementType
         {
             MessageDefinition,
-            FieldDefinition,
-            FieldDeclaration,
+            SimpleFieldDefinition,
+            SimpleFieldDeclaration,
             InlineGroupDefinition,
             ComponentDefinition,
             GroupDefinition,
@@ -89,7 +90,7 @@ public partial class QuickFixXmlFileParser
              * of above sets.  The definition has no context, but once declared in a component
              * it has a position and hence context.
              */
-            case ElementType.FieldDefinition:
+            case ElementType.SimpleFieldDefinition:
             {
                 var sd = GetField(node.Element);
                 Definitions.AddSimple(sd);
@@ -104,9 +105,10 @@ public partial class QuickFixXmlFileParser
                 break;
             }
 
-            case ElementType.FieldDeclaration:
+            case ElementType.SimpleFieldDeclaration:
             {
-                if (_nodes.TryGetValue(node.Edges[0].Tail, out var containedSet))
+                var edge = node.Edges[0];
+                if (_nodes.TryGetValue(edge.Tail, out var containedSet))
                 {
                     switch (containedSet.Type)
                     {
@@ -114,7 +116,13 @@ public partial class QuickFixXmlFileParser
                         {
                             if (Definitions.Message.TryGetValue(containedSet.Name, out var md))
                             {
-
+                                var att = AsAttributeDict(node.Element);
+                                if (_nodes.TryGetValue(edge.Head, out var simpleNode) && Definitions.Simple.TryGetValue(simpleNode.Name, out var sd))
+                                {
+                                    var cf = new ContainedSimpleField(sd, md.Fields.Count, att["required"] == "Y",
+                                        false, null);
+                                    md.Add(cf);
+                                }
                             }
                             else
                             {
@@ -154,7 +162,7 @@ public partial class QuickFixXmlFileParser
                 case "field":
                 {
                     var at = AsAttributeDict(element);
-                    var childNode = MakeNode(at["name"], element, ElementType.FieldDeclaration);
+                    var childNode = MakeNode(at["name"], element, ElementType.SimpleFieldDeclaration);
                     var edge = node.MakeEdge(childNode.ID);
                     childNode.MakeEdge(node.ID);
                     AddEdge(edge);

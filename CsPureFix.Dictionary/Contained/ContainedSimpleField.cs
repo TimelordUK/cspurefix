@@ -10,9 +10,11 @@ namespace PureFix.Dictionary.Contained
     public class ContainedSimpleField : ContainedField
     {
         public SimpleFieldDefinition Definition { get; }
+        public bool IsAttribute { get; }
         public ContainedSimpleField(SimpleFieldDefinition definition, int position, bool required, bool attribute,
             string overrideName) : base(overrideName ?? definition.Name, position, ContainedFieldType.Simple, required)
         {
+            IsAttribute = attribute;
             Definition = definition;
         }
         public override string ToString()

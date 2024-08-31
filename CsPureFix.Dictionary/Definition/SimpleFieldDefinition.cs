@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +15,31 @@ namespace PureFix.Dictionary.Definition
     {
         public int Tag { get; }
         public string Name { get; }
+        public string BaseCategory { get; }
+        public string Abbreviation { get; }
+        public string Description { get; }
+        public string BaseCategoryAbbreviation { get; }
+        public string Type { get; }
         public TagType TagType { get; }
         private readonly Dictionary<string, FieldEnum> _enums;
         public bool IsEnum => _enums != null && _enums.Count > 0;
-        public SimpleFieldDefinition(string name, int tag, TagType tagType, List<FieldEnum> enums)
+
+        // var sd = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
+        public SimpleFieldDefinition(string name, string cat, string type, int tag, List<FieldEnum> enums) : this(name,
+            null, cat, null, type, name, tag, enums)
         {
+        }
+
+        public SimpleFieldDefinition(string name, string abreviation, string baseCategory, string baseCategoryAbbreviation, string type, string description, int tag, List<FieldEnum> enums)
+        {
+            Abbreviation = abreviation;
+            BaseCategory = baseCategory;
+            Description = description;
+            BaseCategoryAbbreviation = baseCategoryAbbreviation;
             Name = name;
+            Type = type;
             Tag = tag;
-            TagType = tagType;
+            TagType = TagTypeUtil.ToType(type);
             if (enums != null && enums.Count > 0)
             {
                 _enums = enums.ToDictionary(fe => fe.Key, fe => fe);

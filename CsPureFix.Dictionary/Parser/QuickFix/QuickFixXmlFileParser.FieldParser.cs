@@ -19,7 +19,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             foreach (var fieldElement in fields)
             {
                 var at = AsAttributeDict(fieldElement);
-                MakeNode(at["name"], fieldElement, Node.ElementType.FieldDefinition);
+                MakeNode(at["name"], fieldElement, Node.ElementType.SimpleFieldDefinition);
             }
         }
 
@@ -47,7 +47,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             }
 
             var values = GetFieldValues(fieldElement);
-            var sd = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
+            var sd = new SimpleFieldDefinition(name, null, type, tag, values);
             return sd;
         }
 

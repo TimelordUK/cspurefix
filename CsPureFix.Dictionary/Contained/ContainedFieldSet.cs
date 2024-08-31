@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.Dictionary.Contained
 {
-    public abstract class ContainedFieldSet : IContainedSet
+    public abstract partial class ContainedFieldSet : IContainedSet
     {
         protected readonly Dictionary<string, IContainedSet> _groups = new();
         protected readonly Dictionary<string, IContainedSet> _components = new();
@@ -26,6 +26,7 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<int, ContainedField> _tagToField = new();
         protected readonly Dictionary<string, ContainedField> _localNameToField = new();
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = new();
+        protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = new();
         protected readonly List<ContainedSimpleField> _localAttribute = new();
 
         /**
