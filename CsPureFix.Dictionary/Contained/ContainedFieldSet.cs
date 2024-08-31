@@ -146,7 +146,7 @@ namespace PureFix.Dictionary.Contained
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append($"Set: {Name} (${GetPrefix()}) fields[${Fields.Count}]: ");
+            sb.Append($"Set: {Name} ({GetPrefix()}) fields[{Fields.Count}]: ");
             sb.Append($"{string.Join(", ", Fields.Select(s => s.ToString()))}");
             return sb.ToString();
         }
