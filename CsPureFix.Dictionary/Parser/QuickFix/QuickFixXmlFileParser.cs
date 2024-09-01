@@ -7,6 +7,7 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
 
+
 namespace PureFix.Dictionary.Parser.QuickFix;
 
 public partial class QuickFixXmlFileParser
@@ -17,6 +18,24 @@ public partial class QuickFixXmlFileParser
     public QuickFixXmlFileParser(FixDefinitions definitions)
     {
         Definitions = definitions;
+    }
+
+    public void Parse(string path)
+    {
+        // first parse all fields including their enum definitions, and add to the dictionary
+        var doc = XDocument.Load(path);
+        ParseFields(doc);
+        // all top level components which will later be further expanded
+        ParseComponents(doc);
+        ParseHeader(doc);
+        ParseTrailer(doc);
+        // can now resolve message types
+        ParseMessages(doc);
+        // keep expanding and resolving until every set is fully resolved.
+        while (Queue.Count > 0)
+        {
+            Work(Queue.Dequeue());
+        }
     }
 
     public void Work(Node node)
@@ -77,6 +96,12 @@ public partial class QuickFixXmlFileParser
                 break;
             }
 
+            case ElementType.GroupDefinition:
+            {
+                GroupDefinition(node);
+                break;
+            }
+
             /*
              * this is a reference to a component that is defined elsewhere - there will only be one
              * definition instance, yet it may be included in many sets.
@@ -89,24 +114,6 @@ public partial class QuickFixXmlFileParser
         }
     }
 
-    public void Parse(string path)
-    {
-        // first parse all fields including their enum definitions, and add to the dictionary
-        var doc = XDocument.Load(path);
-        ParseFields(doc);
-        // all top level components which will later be further expanded
-        ParseComponents(doc);
-        ParseHeader(doc);
-        ParseTrailer(doc);
-        // can now resolve message types
-        ParseMessages(doc);
-        // keep expanding and resolving until every set is fully resolved.
-        while (Queue.Count > 0)
-        {
-            var element = Queue.Dequeue();
-            Work(element);
-        }
-    }
 
     private ComponentFieldDefinition GetComponentDefinition(Node node)
     {
@@ -156,6 +163,15 @@ public partial class QuickFixXmlFileParser
         ExpandSet(node);
     }
 
+    private void GroupDefinition(Node node)
+    {
+        if (_containedSets.TryGetValue(node.Edges[0].Tail, out var definition))
+        {
+            _containedSets[node.Edges[0].Head] = definition;
+            ExpandSet(node);
+        }
+    }
+
     private void InlineGroupDefinition(Node node)
     {
         if (node.Edges.Count == 0)
@@ -170,18 +186,11 @@ public partial class QuickFixXmlFileParser
             if (Definitions.Simple.TryGetValue(node.Name, out var noOFieldDefinition))
             {
                 var name = att["name"];
-                var definition =
-                    new GroupFieldDefinition(name, null, null, noOFieldDefinition, name);
+                var definition = new GroupFieldDefinition(name, null, null, noOFieldDefinition, name);
                 var containedGroup = new ContainedGroupField(definition, parentSet.Fields.Count, node.IsRequired(), null);
                 parentSet.Add(containedGroup);
                 _containedSets[edge.Head] = definition;
-                var childNode = MakeNode(name, node.Element, ElementType.GroupDefinition);
-                // the definition has a unique node in graph, but only exists within the context of the container in which 
-                // it is defined, unlike components which are globally scoped.
-                _containedSets[childNode.ID] = definition;
-                node.MakeEdge(childNode.ID);
-                childNode.MakeEdge(edge.Tail);
-                ExpandSet(childNode);
+                ConstructTailNode(name, node, node.Element, ElementType.GroupDefinition);
             }
             else
             {
@@ -228,7 +237,7 @@ public partial class QuickFixXmlFileParser
      */
     public void ExpandSet(Node node)
     {
-        foreach (var element in node.Element.Descendants())
+        foreach (var element in node.Element.Elements())
         {
             switch (element.Name.LocalName)
             {
@@ -267,19 +276,24 @@ public partial class QuickFixXmlFileParser
 
     private void ExpandGroup(Node node, XElement element)
     {
-        var at = element.AsAttributeDict();
-        var name = at["name"];
-        var inlinedFields = element.Descendants();
-        var elementType = inlinedFields.Any() ? ElementType.InlineGroupDefinition : ElementType.GroupDeclaration;
-        ConstructTailNode(name, node, element, elementType);
+        ExpandSet(node, element, ElementType.InlineGroupDefinition, ElementType.GroupDeclaration);
     }
 
     private void ExpandComponent(Node node, XElement element)
     {
+        ExpandSet(node, element, ElementType.ComponentDefinition, ElementType.ComponentDeclaration);
+    }
+
+    /*
+     * if declaring, then a definition node should exist
+     */
+
+    private void ExpandSet(Node node, XElement element, ElementType defineElement, ElementType declareElement)
+    {
         var at = element.AsAttributeDict();
         var name = at["name"];
-        var inlinedFields = element.Descendants();
-        var elementType = inlinedFields.Any() ? ElementType.ComponentDefinition : ElementType.ComponentDeclaration;
+        var inlinedFields = element.Elements();
+        var elementType = inlinedFields.Any() ? defineElement : declareElement;
         ConstructTailNode(name, node, element, elementType);
     }
 }

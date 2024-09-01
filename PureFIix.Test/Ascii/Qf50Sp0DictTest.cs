@@ -62,5 +62,14 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(securityList, index++, "TransactTime", false);
             _setHelper.IsComponent(securityList, index++, "StandardTrailer", true);
         }
+
+        [Test]
+        public void Check_Sec_List_Grp()
+        {
+            var secListGrp = _secHelper.GetSecListGrp();
+            Assert.That(secListGrp, Is.Not.Null);
+            Assert.That(secListGrp.Fields.Count, Is.EqualTo(1));
+            _setHelper.IsGroup(secListGrp, 0, "NoRelatedSym", false);
+        }
     }
 }
