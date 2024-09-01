@@ -36,15 +36,13 @@ namespace PureFix.Dictionary.Parser.QuickFix
         private void ParseHeader(XDocument doc)
         {
             var header = doc.Descendants("header").First();
-            var at = header.AsAttributeDict();
-            MakeNode("StandardHeader", header, Node.ElementType.ComponentDefinition);
+            _header = MakeNode("StandardHeader", header, Node.ElementType.ComponentDefinition);
         }
 
         private void ParseTrailer(XDocument doc)
         {
-            var header = doc.Descendants("trailer").First();
-            var at = header.AsAttributeDict();
-            MakeNode("StandardTrailer", header, Node.ElementType.ComponentDefinition);
+            var trailer = doc.Descendants("trailer").First();
+            _trailer = MakeNode("StandardTrailer", trailer, Node.ElementType.ComponentDefinition);
         }
 
         private static SimpleFieldDefinition GetField(XElement fieldElement)

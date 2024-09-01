@@ -144,7 +144,9 @@ public partial class QuickFixXmlFileParser
         Definitions.AddMessaqe(md);
         _containedSets[node.ID] = md;
         // need to wrap the expanded set in a header and trailer as this is assumed within the quick fix xml.
+        ConstructTailNode("StandardHeader", node, _header.Element, ElementType.ComponentDeclaration);
         ExpandSet(node);
+        ConstructTailNode("StandardTrailer", node, _trailer.Element, ElementType.ComponentDeclaration);
     }
 
     private void ComponentDefinition(Node node)
@@ -217,21 +219,6 @@ public partial class QuickFixXmlFileParser
         {
             throw new InvalidDataException($"edge {edge} tail has no contained set on which to place declared field");
         }
-    }
-
-    private void AddEdge(Edge edge)
-    {
-        if (!_edges.TryGetValue(edge.Head, out var pCached))
-        {
-            _edges[edge.Head] = pCached = new List<Edge>();
-        }
-        pCached.Add(edge);
-
-        if (!_edges.TryGetValue(edge.Tail, out var cCached))
-        {
-            _edges[edge.Tail] = cCached = new List<Edge>();
-        }
-        cCached.Add(edge);
     }
 
     /*

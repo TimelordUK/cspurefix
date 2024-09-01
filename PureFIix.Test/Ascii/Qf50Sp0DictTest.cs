@@ -40,7 +40,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(securityList, Is.Not.Null);
             var index = 0;
             // the header and trailer is not yet being added to the message definitions.
-            // _setHelper.IsComponent(securityList, index++, "StandardHeader", true);
+            _setHelper.IsComponent(securityList, index++, "StandardHeader", true);
             _setHelper.IsSimple(securityList, index++, "SecurityReqID", false);
             _setHelper.IsSimple(securityList, index++, "SecurityResponseID", false);
             _setHelper.IsSimple(securityList, index++, "SecurityRequestResult", false);
@@ -60,7 +60,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(securityList, index++, "SecurityListType", false);
             _setHelper.IsSimple(securityList, index++, "SecurityListTypeSource", false);
             _setHelper.IsSimple(securityList, index++, "TransactTime", false);
-            // _setHelper.IsComponent(securityList, index++, "StandardTrailer", true);
+            _setHelper.IsComponent(securityList, index++, "StandardTrailer", true);
         }
     }
 }

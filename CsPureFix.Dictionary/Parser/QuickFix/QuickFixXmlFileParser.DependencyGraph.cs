@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using PureFix.Dictionary.Contained;
-using PureFix.Dictionary.Definition;
-using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser;
 using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
 
 namespace PureFix.Dictionary.Parser.QuickFix
@@ -23,7 +22,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
             private readonly List<Edge> _edges = new();
             public IReadOnlyList<Edge> Edges => _edges;
             public IReadOnlyDictionary<string, string> AsAttributeDict() => Element.AsAttributeDict();
-            public bool IsRequired() => AsAttributeDict().TryGetValue("required", out var val) && val == "Y";
+            public bool IsRequired() => Name == "StandardHeader" || 
+                                        Name == "StandardTrailer" || 
+                                        AsAttributeDict().TryGetValue("required", out var val) && val == "Y";
             
             public Node(int id, string name, ElementType elementType, XElement element)
             {
@@ -62,13 +63,30 @@ namespace PureFix.Dictionary.Parser.QuickFix
          * a graph representing the data dictionary
          */
         private readonly Dictionary<int, Node> _nodes = new();
-        private readonly Dictionary<int, List<Node.Edge>> _edges = new();
+        private readonly Dictionary<int, List<Edge>> _edges = new();
         /*
          * indexed on node id, this allows an edge to quickly find the set in which to place a field.
          */
         private readonly Dictionary<int, ContainedFieldSet> _containedSets = new();
+        private Node _header;
+        private Node _trailer;
 
         private int _nextId;
+
+        private void AddEdge(Edge edge)
+        {
+            if (!_edges.TryGetValue(edge.Head, out var pCached))
+            {
+                _edges[edge.Head] = pCached = new List<Edge>();
+            }
+            pCached.Add(edge);
+
+            if (!_edges.TryGetValue(edge.Tail, out var cCached))
+            {
+                _edges[edge.Tail] = cCached = new List<Edge>();
+            }
+            cCached.Add(edge);
+        }
 
         private void ConstructTailNode(string name, Node headNode, XElement element, ElementType type)
         {
@@ -78,7 +96,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             AddEdge(edge);
         }
 
-        private Node MakeNode(string name, XElement messageElement, Node.ElementType type)
+        private Node MakeNode(string name, XElement messageElement, ElementType type)
         {
             var node = new Node(_nextId++, name, type, messageElement);
             _nodes[node.ID] = node;
