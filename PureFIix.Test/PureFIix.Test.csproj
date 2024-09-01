@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataDict\**" />
+    <EmbeddedResource Remove="DataDict\**" />
+    <None Remove="DataDict\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
@@ -22,7 +28,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataDict\" />
+    <ProjectReference Include="..\CsPureFix.Dictionary\PureFix.Dictionary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\fix5-mod.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
