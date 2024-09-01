@@ -16,7 +16,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var messages = doc.Descendants("messages").First().Descendants("message");
             foreach (var messageElement in messages)
             {
-                var ad = AsAttributeDict(messageElement);
+                var ad = messageElement.AsAttributeDict();
                 MakeNode(ad["msgtype"], messageElement, Node.ElementType.MessageDefinition);
             }
         }
@@ -27,7 +27,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var name = "";
             var msgCat = "";
             var msgType = "";
-            foreach (var a in AsAttributeDict(fieldElement))
+            foreach (var a in fieldElement.AsAttributeDict())
             {
                 switch (a.Key)
                 {

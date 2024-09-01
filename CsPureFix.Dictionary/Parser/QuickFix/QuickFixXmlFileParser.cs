@@ -264,7 +264,7 @@ public partial class QuickFixXmlFileParser
      */
     private void ExpandField(Node node, XElement element)
     {
-        var at = AsAttributeDict(element);
+        var at = element.AsAttributeDict();
         var childNode = MakeNode(at["name"], element, ElementType.SimpleFieldDeclaration);
         var edge = node.MakeEdge(childNode.ID);
         childNode.MakeEdge(node.ID);
@@ -273,7 +273,7 @@ public partial class QuickFixXmlFileParser
 
     private void ExpandGroup(Node node, XElement element)
     {
-        var at = AsAttributeDict(element);
+        var at = element.AsAttributeDict();
         var name = at["name"];
         var inlinedFields = element.Descendants().ToList();
         if (inlinedFields.Count > 0)
@@ -294,7 +294,7 @@ public partial class QuickFixXmlFileParser
 
     private void ExpandComponent(Node node, XElement element)
     {
-        var at = AsAttributeDict(element);
+        var at = element.AsAttributeDict();
         var inlinedFields = element.Descendants().ToList();
         var name = at["name"];
         if (inlinedFields.Count > 0)

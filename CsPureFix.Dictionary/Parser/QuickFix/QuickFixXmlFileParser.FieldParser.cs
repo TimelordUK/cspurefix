@@ -18,7 +18,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var fields = doc.Descendants("fields").First().Descendants("field");
             foreach (var fieldElement in fields)
             {
-                var at = AsAttributeDict(fieldElement);
+                var at = fieldElement.AsAttributeDict();
                 MakeNode(at["name"], fieldElement, Node.ElementType.SimpleFieldDefinition);
             }
         }
@@ -28,7 +28,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var fields = doc.Descendants("components").First().Descendants("component");
             foreach (var componentElement in fields)
             {
-                var at = AsAttributeDict(componentElement);
+                var at = componentElement.AsAttributeDict();
                 MakeNode(at["name"], componentElement, Node.ElementType.ComponentDefinition);
             }
         }
@@ -38,7 +38,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var tag = 0;
             var name = "";
             var type = "";
-            foreach (var a in AsAttributeDict(fieldElement))
+            foreach (var a in fieldElement.AsAttributeDict())
             {
                 switch (a.Key)
                 {
@@ -70,7 +70,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             {
                 var enumName = "";
                 var description = "";
-                foreach (var a in AsAttributeDict(value))
+                foreach (var a in value.AsAttributeDict())
                 {
                     switch (a.Key)
                     {
@@ -90,9 +90,6 @@ namespace PureFix.Dictionary.Parser.QuickFix
             return result;
         }
 
-        private static Dictionary<string, string> AsAttributeDict(XElement element)
-        {
-            return element.Attributes().ToDictionary(a => a.Name.LocalName, a => a.Value);
-        }
+   
     }
 }
