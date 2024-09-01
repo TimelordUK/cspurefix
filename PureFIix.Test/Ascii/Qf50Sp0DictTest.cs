@@ -21,9 +21,10 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Check_Security_List_Test()
+        public void Check_Security_List_Exists_Test()
         {
-            Assert.Pass();
+            var securityList = _definitions.GetSet("SecurityList");
+            Assert.That(securityList, Is.Not.Null);
         }
     }
 }
