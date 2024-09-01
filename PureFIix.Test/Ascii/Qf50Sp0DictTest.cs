@@ -178,5 +178,36 @@ namespace PureFIix.Test.Ascii
             Assert.That(securityTradingRules.Fields.Count, Is.EqualTo(index));
         }
 
+
+        /*
+        <component name="TickRules">
+            <group name="NoTickRules" required="N">
+                <field name="StartTickPriceRange" required="N" />
+                <field name="EndTickPriceRange" required="N" />
+                <field name="TickIncrement" required="N" />
+                <field name="TickRuleType" required="N" />
+            </group>
+        </component>
+ */
+        [Test]
+        public void Check_Tick_Rules_Test()
+        {
+            var index = 0;
+            var tickRules = _secHelper.GetTickRules();
+            _setHelper.IsGroup(tickRules, index++, "NoTickRules", false);
+            Assert.That(tickRules.Fields.Count, Is.EqualTo(index));
+        }
+
+        [Test]
+        public void Check_No_Tick_Rules_Test()
+        {
+            var index = 0;
+            var noTickRules = _secHelper.GetNoTickRules();
+            _setHelper.IsSimple(noTickRules, index++, "StartTickPriceRange", false);
+            _setHelper.IsSimple(noTickRules, index++, "EndTickPriceRange", false);
+            _setHelper.IsSimple(noTickRules, index++, "TickIncrement", false);
+            _setHelper.IsSimple(noTickRules, index++, "TickRuleType", false);
+            Assert.That(noTickRules.Fields.Count, Is.EqualTo(index));
+        }
     }
 }

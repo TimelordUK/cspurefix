@@ -173,6 +173,10 @@ public partial class QuickFixXmlFileParser
             _containedSets[node.Edges[0].Head] = definition;
             ExpandSet(node);
         }
+        else
+        {
+            throw new InvalidDataException($"node {node} has no edges to find tail for group definition.");
+        }
     }
 
     private void InlineGroupDefinition(Node node)
