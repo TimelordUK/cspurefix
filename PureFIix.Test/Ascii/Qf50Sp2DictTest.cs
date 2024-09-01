@@ -320,5 +320,23 @@ namespace PureFIix.Test.Ascii
         {
             CheckSimple("XmlData", 213, "XMLDATA");
         }
+
+        [Test]
+        public void Check_Message_Existance()
+        {
+            Assert.That(_definitions.Simple.TryGetValue("MsgType", out var mt));
+            Assert.That(mt, Is.Not.Null);
+            Assert.That(mt.IsEnum, Is.True);
+            Assert.That(mt.Enums, Is.Not.Null);
+            Assert.That(mt.Enums.TryGetValue("0", out _), Is.True);
+            Assert.That(mt.Enums.TryGetValue("1", out _), Is.True);
+            foreach (var k in mt.Enums.Keys)
+            {
+                Assert.That(k, Is.Not.Null);
+                Assert.That(_definitions.Message.TryGetValue(k, out var m), Is.True);
+                Assert.That(m, Is.Not.Null);
+                Assert.That(m.MsgType, Is.EqualTo(k));
+            }
+        }
     }
 }

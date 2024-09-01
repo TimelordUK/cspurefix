@@ -8,13 +8,9 @@ using PureFix.Dictionary.Parser;
 
 namespace PureFix.Dictionary.Definition
 {
-    public class ComponentFieldDefinition : ContainedFieldSet
+    public class ComponentFieldDefinition(string name, string? abbreviation, string? category, string description)
+        : ContainedFieldSet(ContainedSetType.Component, name, category, abbreviation, description)
     {
-        public ComponentFieldDefinition(string name, string? abbreviation, string? category, string description) :
-            base(ContainedSetType.Component, name, category, abbreviation, description)
-        {
-        }
-
         public override string GetPrefix()
         {
             return "C";

@@ -6,19 +6,11 @@ using System.Threading.Tasks;
 
 namespace PureFix.Dictionary.Contained
 {
-    public abstract class ContainedField
+    public abstract class ContainedField(string name, int position, ContainedFieldType type, bool required)
     {
-        public string Name { get; }
-        public int Position { get; }
-        public ContainedFieldType Type { get; }
-        public bool Required { get; }
-
-        protected ContainedField(string name, int position, ContainedFieldType type, bool required)
-        {
-            Name = name;
-            Position = position;
-            Type = type;
-            Required = required;
-        }
+        public string Name { get; } = name;
+        public int Position { get; } = position;
+        public ContainedFieldType Type { get; } = type;
+        public bool Required { get; } = required;
     }
 }

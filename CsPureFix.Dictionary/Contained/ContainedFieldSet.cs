@@ -11,7 +11,13 @@ using System.Threading.Tasks;
 
 namespace PureFix.Dictionary.Contained
 {
-    public abstract partial class ContainedFieldSet : IContainedSet
+    public abstract partial class ContainedFieldSet(
+        ContainedSetType type,
+        string name,
+        string? category,
+        string? abbreviation,
+        string description)
+        : IContainedSet
     {
         protected readonly Dictionary<string, IContainedSet> _groups = new();
         protected readonly Dictionary<string, IContainedSet> _components = new();
@@ -104,29 +110,16 @@ namespace PureFix.Dictionary.Contained
         /// </summary>
         public ContainedSimpleField? FirstSimple { get; private set; }
 
-        public string Name { get; init; }
-        public string? Category { get; init; }
-        public string? Abbreviation { get; init; }
-        public string Description { get; init; }
-        public ContainedSetType Type { get; init; }
+        public string Name { get; init; } = name;
+        public string? Category { get; init; } = category;
+        public string? Abbreviation { get; init; } = abbreviation;
+        public string Description { get; init; } = description;
+        public ContainedSetType Type { get; init; } = type;
 
         /// <summary>
         /// parser needs to know about raw fields, any present in this set?
         /// </summary>
         public bool ContainsRaw { get; private set; }
-
-        protected ContainedFieldSet(ContainedSetType type,
-            string name,
-            string? category,
-            string? abbreviation,
-            string description)
-        {
-            Name = name;
-            Category = category;
-            Abbreviation = abbreviation;
-            Description = description;
-            Type = type;
-        }
 
         /// <summary>
         /// not for generral usage, this partially resets the set such it can be used on a second pass of the xml parser
@@ -183,16 +176,7 @@ namespace PureFix.Dictionary.Contained
             return path?.Split('.').Aggregate(this, (IContainedSet? set, string next) =>
             {
                 if (set is null) return null;
-
-                if(set.Groups.TryGetValue(next, out var g))
-                {
-                    return g;
-                }
-                else
-                {
-                    return set.Components.GetValueOrDefault(next);
-                }
-
+                return set.Groups.TryGetValue(next, out var g) ? g : set.Components.GetValueOrDefault(next);
             });
         }
     }

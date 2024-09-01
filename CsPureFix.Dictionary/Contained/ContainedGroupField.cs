@@ -7,16 +7,15 @@ using PureFix.Dictionary.Definition;
 
 namespace PureFix.Dictionary.Contained
 {
-    public class ContainedGroupField : ContainedField
-    {
-        public GroupFieldDefinition? Definition { get; }
-        
-        public ContainedGroupField(GroupFieldDefinition? definition, int position, bool required, string? overrideName) :
-            base(overrideName ?? definition?.Name ?? throw new ArgumentException("could not resolve name"), 
+    public class ContainedGroupField(
+        GroupFieldDefinition? definition,
+        int position,
+        bool required,
+        string? overrideName)
+        : ContainedField(overrideName ?? definition?.Name ?? throw new ArgumentException("could not resolve name"),
             position, ContainedFieldType.Group, required)
-        {
-            Definition = definition;
-        }
+    {
+        public GroupFieldDefinition? Definition { get; } = definition;
 
         public override string ToString()
         {

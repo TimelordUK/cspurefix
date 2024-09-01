@@ -8,13 +8,9 @@ using PureFix.Dictionary.Definition;
 
 namespace PureFIix.Test.Env
 {
-    internal class SetConstraintHelper
+    internal class SetConstraintHelper(FixDefinitions definitions)
     {
-        public FixDefinitions Definitions { get; }
-        public SetConstraintHelper(FixDefinitions definitions)
-        {
-            Definitions = definitions;
-        }
+        public FixDefinitions Definitions { get; } = definitions;
 
         public void IsComponent(IContainedSet set, int index, string name, bool expected)
         {

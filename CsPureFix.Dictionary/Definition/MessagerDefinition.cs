@@ -8,14 +8,15 @@ using PureFix.Dictionary.Parser;
 
 namespace PureFix.Dictionary.Definition
 {
-    public class MessageDefinition : ContainedFieldSet
+    public class MessageDefinition(
+        string name,
+        string abbreviation,
+        string msgType,
+        string category,
+        string description)
+        : ContainedFieldSet(ContainedSetType.Msg, name, category, abbreviation, description)
     {
-        public string MsgType { get; }
-        public MessageDefinition(string name, string abbreviation, string msgType, string category, string description) :
-            base(ContainedSetType.Msg, name, category, abbreviation, description)
-        {
-            MsgType = msgType;
-        }
+        public string MsgType { get; } = msgType;
 
         public override string GetPrefix()
         {

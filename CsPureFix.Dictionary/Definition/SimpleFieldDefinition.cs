@@ -48,7 +48,7 @@ namespace PureFix.Dictionary.Definition
             if (enums != null && enums.Count > 0)
             {
                 _enums = enums.ToDictionary(fe => fe.Key, fe => fe);
-                _enumVals = new HashSet<string>(_enums.Values.Select(kv => kv.Val));
+                _enumVals = [.._enums.Values.Select(kv => kv.Val)];
             }
         }
 

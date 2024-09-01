@@ -9,15 +9,10 @@ using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
 
 namespace PureFix.Dictionary.Parser.QuickFix;
 
-public partial class QuickFixXmlFileParser
+public partial class QuickFixXmlFileParser(FixDefinitions definitions)
 {
-    public FixDefinitions Definitions { get; }
+    public FixDefinitions Definitions { get; } = definitions;
     public Queue<Node> Queue { get; } = new ();
-    
-    public QuickFixXmlFileParser(FixDefinitions definitions)
-    {
-        Definitions = definitions;
-    }
 
     private void ParseVersion(XDocument doc)
     {

@@ -78,7 +78,7 @@ namespace PureFix.Dictionary.Definition
             var name = path;
             if (idx > 0)
             {
-                name = path.Substring(0, idx);
+                name = path[..idx];
             }
             else
             {

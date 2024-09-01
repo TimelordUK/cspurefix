@@ -7,16 +7,17 @@ using PureFix.Dictionary.Definition;
 
 namespace PureFix.Dictionary.Contained
 {
-    public class ContainedSimpleField : ContainedField
+    public class ContainedSimpleField(
+        SimpleFieldDefinition definition,
+        int position,
+        bool required,
+        bool attribute,
+        string? overrideName)
+        : ContainedField(overrideName ?? definition.Name, position, ContainedFieldType.Simple, required)
     {
-        public SimpleFieldDefinition Definition { get; }
-        public bool IsAttribute { get; }
-        public ContainedSimpleField(SimpleFieldDefinition definition, int position, bool required, bool attribute, string? overrideName) : 
-            base(overrideName ?? definition.Name, position, ContainedFieldType.Simple, required)
-        {
-            IsAttribute = attribute;
-            Definition = definition;
-        }
+        public SimpleFieldDefinition Definition { get; } = definition;
+        public bool IsAttribute { get; } = attribute;
+
         public override string ToString()
         {
             return $"[{Position}:{Required}] = S.{Definition.Tag} ({Name})";

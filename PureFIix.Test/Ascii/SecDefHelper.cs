@@ -8,14 +8,9 @@ using PureFix.Dictionary.Definition;
 
 namespace PureFIix.Test.Ascii
 {
-    internal class SecDefHelper
+    internal class SecDefHelper(FixDefinitions definitions)
     {
-        public FixDefinitions Definitions { get; }
-
-        public SecDefHelper(FixDefinitions definitions)
-        {
-            Definitions = definitions;
-        }
+        public FixDefinitions Definitions { get; } = definitions;
 
         public IContainedSet GetSecListGrp()
         {
