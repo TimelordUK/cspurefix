@@ -1,6 +1,7 @@
 using PureFIix.Test.Env;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using System;
 
 namespace PureFIix.Test.Ascii
 {
@@ -87,7 +88,7 @@ namespace PureFIix.Test.Ascii
  */
 
         [Test]
-        public void Check_Sec_List_Grp()
+        public void Check_Sec_List_Grp_Test()
         {
             var secListGrp = _secHelper.GetSecListGrp();
             Assert.That(secListGrp, Is.Not.Null);
@@ -95,9 +96,8 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsGroup(secListGrp, 0, "NoRelatedSym", false);
         }
 
-
         [Test]
-        public void Check_No_Related_Sym()
+        public void Check_No_Related_Sym_Test()
         {
             var index = 0;
             var noRelatedSym = _secHelper.GetNumRelatedSym();
@@ -117,6 +117,25 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsComponent(noRelatedSym, index++, "SecurityTradingRules", false);
             _setHelper.IsComponent(noRelatedSym, index++, "StrikeRules", false);
             _setHelper.IsSimple(noRelatedSym, index, "RelSymTransactTime", false);
+        }
+
+        /*
+        <component name="SecurityTradingRules">
+            <component name="BaseTradingRules" required="N" />
+            <component name="TradingSessionRulesGrp" required="N" />
+            <component name="NestedInstrumentAttribute" required="N" />
+        </component>
+        */
+
+        [Test]
+        public void Check_Security_Trading_Rules_Test()
+        {
+            var index = 0;
+            var securityTradingRules = _secHelper.GetSecurityTradingRules();
+            Assert.That(securityTradingRules.Fields.Count, Is.EqualTo(3));
+            _setHelper.IsComponent(securityTradingRules, index++, "BaseTradingRules", false);
+            _setHelper.IsComponent(securityTradingRules, index++, "TradingSessionRulesGrp", false);
+            _setHelper.IsComponent(securityTradingRules, index, "NestedInstrumentAttribute", false);
         }
     }
 }

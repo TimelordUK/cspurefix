@@ -96,6 +96,9 @@ public partial class QuickFixXmlFileParser
                 break;
             }
 
+            /*
+             * with a group set defined, it is now expanded and populated with fields.
+             */
             case ElementType.GroupDefinition:
             {
                 GroupDefinition(node);

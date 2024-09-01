@@ -13,7 +13,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
     {
         private void ParseMessages(XDocument doc)
         {
-            var messages = doc.Descendants("messages").First().Descendants("message");
+            var messages = doc.Descendants("messages").First().Elements("message");
             foreach (var messageElement in messages)
             {
                 var ad = messageElement.AsAttributeDict();
