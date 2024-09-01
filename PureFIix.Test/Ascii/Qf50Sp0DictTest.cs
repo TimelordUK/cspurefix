@@ -137,5 +137,44 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsComponent(securityTradingRules, index++, "TradingSessionRulesGrp", false);
             _setHelper.IsComponent(securityTradingRules, index, "NestedInstrumentAttribute", false);
         }
+
+        /*
+        <component name="BaseTradingRules">
+            <component name="TickRules" required="N" />
+            <component name="LotTypeRules" required="N" />
+            <component name="PriceLimits" required="N" />
+            <field name="ExpirationCycle" required="N" />
+            <field name="MinTradeVol" required="N" />
+            <field name="MaxTradeVol" required="N" />
+            <field name="MaxPriceVariation" required="N" />
+            <field name="ImpliedMarketIndicator" required="N" />
+            <field name="TradingCurrency" required="N" />
+            <field name="RoundLot" required="N" />
+            <field name="MultilegModel" required="N" />
+            <field name="MultilegPriceMethod" required="N" />
+            <field name="PriceType" required="N" />
+        </component>
+ */
+
+        [Test]
+        public void Check_Base_Trading_Rules_Test()
+        {
+            var index = 0;
+            var securityTradingRules = _secHelper.GetBaseTradingRules();
+            _setHelper.IsComponent(securityTradingRules, index++, "TickRules", false);
+            _setHelper.IsComponent(securityTradingRules, index++, "LotTypeRules", false);
+            _setHelper.IsComponent(securityTradingRules, index++, "PriceLimits", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "ExpirationCycle", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "MinTradeVol", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "MaxTradeVol", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "MaxPriceVariation", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "ImpliedMarketIndicator", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "TradingCurrency", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "RoundLot", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "MultilegModel", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "MultilegPriceMethod", false);
+            _setHelper.IsSimple(securityTradingRules, index, "PriceType", false);
+        }
+
     }
 }
