@@ -149,8 +149,6 @@ public partial class QuickFixXmlFileParser
         ExpandSet(node);
     }
 
-
-
     private void InlineGroupDefinition(Node node)
     {
         if (node.Edges.Count == 0)
