@@ -226,6 +226,15 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Check_Field_By_Tag_4_Test()
+        {
+            Assert.That(_definitions.TagToSimple.TryGetValue(4, out var def), Is.True);
+            Assert.That(def, Is.Not.Null);
+            Assert.That(def.Tag, Is.EqualTo(4));
+            Assert.That(def.Name, Is.EqualTo("AdvSide"));
+        }
+
+        [Test]
         public void Check_Definitions_Version_Test()
         {
             Assert.That(_definitions.GetMajor(), Is.EqualTo(5));
@@ -239,7 +248,8 @@ namespace PureFIix.Test.Ascii
             Assert.That(_definitions.Version, Is.EqualTo(FixVersion.FIX50SP2));
         }
 
-        private void CheckEnum(IReadOnlyDictionary<string, FieldEnum>  enums, string key, string expectedVal, string expectedDescription)
+        private void CheckEnum(IReadOnlyDictionary<string, FieldEnum> enums, string key, string expectedVal,
+            string expectedDescription)
         {
             Assert.That(enums, Is.Not.Null);
             Assert.That(enums.TryGetValue(key, out var en), Is.True);
@@ -248,7 +258,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(en?.Key, Is.EqualTo(key));
         }
 
-    [Test]
+        [Test]
         public void Check_Field_AdvSide_Test()
         {
             Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
@@ -259,6 +269,56 @@ namespace PureFIix.Test.Ascii
             CheckEnum(def?.Enums, "S", "Sell", "SELL");
             CheckEnum(def?.Enums, "X", "Cross", "CROSS");
             CheckEnum(def?.Enums, "T", "Trade", "TRADE");
+        }
+
+        private void CheckSimple(string name, int number, string type)
+        {
+            Assert.That(_definitions.Simple.TryGetValue(name, out var def), Is.True);
+            Assert.That(def, Is.Not.Null);
+            Assert.That(def.Tag, Is.EqualTo(number));
+            Assert.That(def.Type, Is.EqualTo(type));
+        }
+
+        [Test]
+        public void Check_Simple_Tag_8_Test()
+        {
+            CheckSimple("BeginString", 8, "STRING");
+        }
+
+        [Test]
+        public void Check_Simple_Tag_9_Test()
+        {
+            CheckSimple("BodyLength", 9, "LENGTH");
+        }
+
+        [Test]
+        public void Check_Simple_Tag_12_Test()
+        {
+            CheckSimple("Commission", 12, "AMT");
+        }
+
+        [Test]
+        public void Check_Simple_Tag_16_Test()
+        {
+            CheckSimple("EndSeqNo", 16, "SEQNUM");
+        }
+
+        [Test]
+        public void Check_Simple_Tag_38_Test()
+        {
+            CheckSimple("OrderQty", 38, "QTY");
+        }
+
+        [Test]
+        public void Check_Simple_Tag_212_Test()
+        {
+            CheckSimple("XmlDataLen", 212, "LENGTH");
+        }
+
+        [Test]
+        public void Check_Simple_Tag_213_Test()
+        {
+            CheckSimple("XmlData", 213, "XMLDATA");
         }
     }
 }
