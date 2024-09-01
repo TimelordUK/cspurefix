@@ -116,7 +116,8 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(noRelatedSym, index++, "EncodedText", false);
             _setHelper.IsComponent(noRelatedSym, index++, "SecurityTradingRules", false);
             _setHelper.IsComponent(noRelatedSym, index++, "StrikeRules", false);
-            _setHelper.IsSimple(noRelatedSym, index, "RelSymTransactTime", false);
+            _setHelper.IsSimple(noRelatedSym, index++, "RelSymTransactTime", false);
+            Assert.That(noRelatedSym.Fields.Count, Is.EqualTo(index));
         }
 
         /*
@@ -132,10 +133,10 @@ namespace PureFIix.Test.Ascii
         {
             var index = 0;
             var securityTradingRules = _secHelper.GetSecurityTradingRules();
-            Assert.That(securityTradingRules.Fields.Count, Is.EqualTo(3));
             _setHelper.IsComponent(securityTradingRules, index++, "BaseTradingRules", false);
             _setHelper.IsComponent(securityTradingRules, index++, "TradingSessionRulesGrp", false);
-            _setHelper.IsComponent(securityTradingRules, index, "NestedInstrumentAttribute", false);
+            _setHelper.IsComponent(securityTradingRules, index++, "NestedInstrumentAttribute", false);
+            Assert.That(securityTradingRules.Fields.Count, Is.EqualTo(index));
         }
 
         /*
@@ -173,7 +174,8 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(securityTradingRules, index++, "RoundLot", false);
             _setHelper.IsSimple(securityTradingRules, index++, "MultilegModel", false);
             _setHelper.IsSimple(securityTradingRules, index++, "MultilegPriceMethod", false);
-            _setHelper.IsSimple(securityTradingRules, index, "PriceType", false);
+            _setHelper.IsSimple(securityTradingRules, index++, "PriceType", false);
+            Assert.That(securityTradingRules.Fields.Count, Is.EqualTo(index));
         }
 
     }
