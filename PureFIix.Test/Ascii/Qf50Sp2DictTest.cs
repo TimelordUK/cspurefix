@@ -226,6 +226,14 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Check_Definitions_Version_Test()
+        {
+            Assert.That(_definitions.GetMajor(), Is.EqualTo(5));
+            Assert.That(_definitions.GetMinor(), Is.EqualTo(0));
+            Assert.That(_definitions.GetServicePack(), Is.EqualTo(2));
+        }
+
+        [Test]
         public void Check_Version_Test()
         {
             Assert.That(_definitions.Version, Is.EqualTo(FixVersion.FIX50SP2));
