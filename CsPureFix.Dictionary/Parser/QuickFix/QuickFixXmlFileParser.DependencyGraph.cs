@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser;
+using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
 
 namespace PureFix.Dictionary.Parser.QuickFix
 {
@@ -68,6 +69,14 @@ namespace PureFix.Dictionary.Parser.QuickFix
         private readonly Dictionary<int, ContainedFieldSet> _containedSets = new();
 
         private int _nextId;
+
+        private void ConstructTailNode(string name, Node headNode, XElement element, ElementType type)
+        {
+            var tailNode = MakeNode(name, element, type);
+            var edge = headNode.MakeEdge(tailNode.ID);
+            tailNode.MakeEdge(headNode.ID);
+            AddEdge(edge);
+        }
 
         private Node MakeNode(string name, XElement messageElement, Node.ElementType type)
         {

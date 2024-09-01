@@ -24,27 +24,11 @@ namespace PureFix.Dictionary.Parser.QuickFix
         //  <message name='Logout' msgcat='admin' msgtype='5'>
         private static MessageDefinition GetMessage(XElement fieldElement)
         {
-            var name = "";
-            var msgCat = "";
-            var msgType = "";
-            foreach (var a in fieldElement.AsAttributeDict())
-            {
-                switch (a.Key)
-                {
-                    case "msgcat":
-                        msgCat = a.Value;
-                        break;
-
-                    case "name":
-                        name = a.Value;
-                        break;
-
-                    case "msgtype":
-                        msgType = a.Value;
-                        break;
-                }
-            }
-
+            var atts = fieldElement.AsAttributeDict();
+            var name = atts["name"];
+            var msgCat = atts["msgcat"];
+            var msgType = atts["msgtype"];
+         
             var md = new MessageDefinition(name, name, msgType, msgCat, name);
             return md;
         }

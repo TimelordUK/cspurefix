@@ -39,6 +39,8 @@ public partial class QuickFixXmlFileParser
             /*
              * any message is a set of fields where each field may be simple, component or a group
              * where components and groups may recursively contain other sets.
+             * in quickfix notation the header and trailer are not included in each definition so
+             * must be added.
              */
             case ElementType.MessageDefinition:
             {
@@ -92,8 +94,10 @@ public partial class QuickFixXmlFileParser
         // first parse all fields including their enum definitions, and add to the dictionary
         var doc = XDocument.Load(path);
         ParseFields(doc);
-        // all top level components which will later be further expanded\
+        // all top level components which will later be further expanded
         ParseComponents(doc);
+        ParseHeader(doc);
+        ParseTrailer(doc);
         // can now resolve message types
         ParseMessages(doc);
         // keep expanding and resolving until every set is fully resolved.
@@ -139,6 +143,7 @@ public partial class QuickFixXmlFileParser
         var md = GetMessage(node.Element);
         Definitions.AddMessaqe(md);
         _containedSets[node.ID] = md;
+        // need to wrap the expanded set in a header and trailer as this is assumed within the quick fix xml.
         ExpandSet(node);
     }
 
@@ -158,6 +163,7 @@ public partial class QuickFixXmlFileParser
         var edge = node.Edges[0];
         if (_containedSets.TryGetValue(edge.Tail, out var parentSet))
         {
+            // there must be a backing simple field definition representing the no in the group.
             var att = node.AsAttributeDict();
             if (Definitions.Simple.TryGetValue(node.Name, out var noOFieldDefinition))
             {
@@ -168,6 +174,8 @@ public partial class QuickFixXmlFileParser
                 parentSet.Add(containedGroup);
                 _containedSets[edge.Head] = definition;
                 var childNode = MakeNode(name, node.Element, ElementType.GroupDefinition);
+                // the definition has a unique node in graph, but only exists within the context of the container in which 
+                // it is defined, unlike components which are globally scoped.
                 _containedSets[childNode.ID] = definition;
                 node.MakeEdge(childNode.ID);
                 childNode.MakeEdge(edge.Tail);
@@ -175,7 +183,7 @@ public partial class QuickFixXmlFileParser
             }
             else
             {
-                throw new InvalidDataException($"{node.Name} does not exist in simple field definitions");
+                throw new InvalidDataException($"{node.Name} does not exist in simple field definitions to construct inline group");
             }
         }
         else
@@ -260,56 +268,31 @@ public partial class QuickFixXmlFileParser
 
     /*
      * this is a declared field which can not be further resolved - a definition to this field
-     * would already be resolved providing it actually exists in the XML
+     * would already be resolved providing it actually exists in the XML, in this case add a node
+     * which will place the declared field in its owning set at tail of the new edge.
      */
+
     private void ExpandField(Node node, XElement element)
     {
         var at = element.AsAttributeDict();
-        var childNode = MakeNode(at["name"], element, ElementType.SimpleFieldDeclaration);
-        var edge = node.MakeEdge(childNode.ID);
-        childNode.MakeEdge(node.ID);
-        AddEdge(edge);
+        ConstructTailNode(at["name"], node, element, ElementType.SimpleFieldDeclaration);
     }
 
     private void ExpandGroup(Node node, XElement element)
     {
         var at = element.AsAttributeDict();
         var name = at["name"];
-        var inlinedFields = element.Descendants().ToList();
-        if (inlinedFields.Count > 0)
-        {
-            var tailNode = MakeNode(name, element, ElementType.InlineGroupDefinition);
-            var edge = node.MakeEdge(tailNode.ID);
-            tailNode.MakeEdge(node.ID);
-            AddEdge(edge);
-        }
-        else
-        {
-            var tailNode = MakeNode(name, element, ElementType.GroupDeclaration);
-            var edge = node.MakeEdge(tailNode.ID);
-            tailNode.MakeEdge(node.ID);
-            AddEdge(edge);
-        }
+        var inlinedFields = element.Descendants();
+        var elementType = inlinedFields.Any() ? ElementType.InlineGroupDefinition : ElementType.GroupDeclaration;
+        ConstructTailNode(name, node, element, elementType);
     }
 
     private void ExpandComponent(Node node, XElement element)
     {
         var at = element.AsAttributeDict();
-        var inlinedFields = element.Descendants().ToList();
         var name = at["name"];
-        if (inlinedFields.Count > 0)
-        {
-            var tailNode = MakeNode(name, element, ElementType.ComponentDefinition);
-            var edge = node.MakeEdge(tailNode.ID);
-            tailNode.MakeEdge(node.ID);
-            AddEdge(edge);
-        }
-        else
-        {
-            var tailNode = MakeNode(name, element, ElementType.ComponentDeclaration);
-            var edge = node.MakeEdge(tailNode.ID);
-            tailNode.MakeEdge(node.ID);
-            AddEdge(edge);
-        }
+        var inlinedFields = element.Descendants();
+        var elementType = inlinedFields.Any() ? ElementType.ComponentDefinition : ElementType.ComponentDeclaration;
+        ConstructTailNode(name, node, element, elementType);
     }
 }
