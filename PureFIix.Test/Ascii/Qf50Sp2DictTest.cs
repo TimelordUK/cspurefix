@@ -33,5 +33,14 @@ namespace PureFIix.Test.Ascii
             Assert.That(def, Is.Not.Null);
             Assert.That(def.Tag, Is.EqualTo(4));
         }
+
+        [Test]
+        public void Check_Field_AdvSide_Test()
+        {
+            Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
+            Assert.That(def, Is.Not.Null);
+            Assert.That(def.Tag, Is.EqualTo(4));
+            Assert.That(def.IsEnum, Is.True);
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace PureFix.Dictionary.Parser
         {
             if (string.IsNullOrEmpty(name) || !name.Contains("_"))
             {
-                return name;
+                return name.ToLower().FirstCharToUpper();
             }
             var array = name.Split('_');
             for (var i = 0; i < array.Length; i++)
