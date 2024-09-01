@@ -7,7 +7,6 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
 
-
 namespace PureFix.Dictionary.Parser.QuickFix;
 
 public partial class QuickFixXmlFileParser
@@ -20,10 +19,24 @@ public partial class QuickFixXmlFileParser
         Definitions = definitions;
     }
 
+    private void ParseVersion(XDocument doc)
+    {
+        var version = doc.Descendants("fix").First();
+        var atts = version.AsAttributeDict();
+        var major = int.Parse(atts["major"]);
+        var minor = int.Parse(atts["minor"]);
+        var servicepack = int.Parse(atts["servicepack"]);
+        var description = (major != 5 || servicepack == 0)
+            ? $"FIX.{major}.{minor}"
+            : $"FIX.{major}.{minor}SP{servicepack}";
+        Definitions.SetVersion(VersionUtil.Resolve(description));
+    }
+
     public void Parse(string path)
     {
         // first parse all fields including their enum definitions, and add to the dictionary
         var doc = XDocument.Load(path);
+        ParseVersion(doc);
         ParseFields(doc);
         // all top level components which will later be further expanded
         ParseComponents(doc);

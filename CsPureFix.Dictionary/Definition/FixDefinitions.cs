@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
+using PureFix.Dictionary.Parser;
 
 namespace PureFix.Dictionary.Definition
 {
@@ -17,7 +18,7 @@ namespace PureFix.Dictionary.Definition
         private readonly Dictionary<string, MessageDefinition> _message = new();
         private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimple = new();
         private readonly Dictionary<string, ComponentFieldDefinition> _component = new();
-
+        
         public IReadOnlyDictionary<string, SimpleFieldDefinition> Simple => _nameToSimple;
         /**
          * all global scope components - top level.
@@ -32,7 +33,7 @@ namespace PureFix.Dictionary.Definition
          * e.g. 'Logon'
         */
         public IReadOnlyDictionary<string, MessageDefinition> Message => _message;
-
+        public FixVersion Version { get; private set; }
         public void AddSimple(SimpleFieldDefinition simpleField)
         {
             _nameToSimple[simpleField.Name] = simpleField;
@@ -70,6 +71,11 @@ namespace PureFix.Dictionary.Definition
             }
 
             return Message.GetValueOrDefault(name)?.GetSet(path[(idx + 1)..]);
+        }
+
+        public void SetVersion(FixVersion version)
+        {
+            Version = version;
         }
     }
 }

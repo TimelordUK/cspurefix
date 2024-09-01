@@ -33,6 +33,8 @@ namespace PureFix.Dictionary.Parser.QuickFix
             }
         }
 
+
+
         private void ParseHeader(XDocument doc)
         {
             var header = doc.Descendants("header").First();
@@ -47,27 +49,11 @@ namespace PureFix.Dictionary.Parser.QuickFix
 
         private static SimpleFieldDefinition GetField(XElement fieldElement)
         {
-            var tag = 0;
-            var name = "";
-            var type = "";
-            foreach (var a in fieldElement.AsAttributeDict())
-            {
-                switch (a.Key)
-                {
-                    case "number":
-                        tag = int.Parse(a.Value);
-                        break;
-
-                    case "name":
-                        name = a.Value;
-                        break;
-
-                    case "type":
-                        type = a.Value;
-                        break;
-                }
-            }
-
+            var atts = fieldElement.AsAttributeDict();
+            var tag = int.Parse(atts["number"]); ;
+            var name = atts["name"];
+            var type = atts["type"];
+            
             var values = GetFieldValues(fieldElement);
             var sd = new SimpleFieldDefinition(name, null, type, tag, values);
             return sd;
@@ -75,33 +61,18 @@ namespace PureFix.Dictionary.Parser.QuickFix
 
         private static List<FieldEnum>? GetFieldValues(XElement fieldElement)
         {
-            var values = fieldElement.Descendants("value");
+            var values = fieldElement.Elements("value");
             List<FieldEnum>? result = null;
 
             foreach (var value in values)
             {
-                var enumName = "";
-                var description = "";
-                foreach (var a in value.AsAttributeDict())
-                {
-                    switch (a.Key)
-                    {
-                        case "enum":
-                            enumName = a.Value;
-                            break;
-
-                        case "description":
-                            description = a.Value;
-                            break;
-                    }
-                }
-
+                var atts = value.AsAttributeDict();
+                var enumName = atts["enum"];
+                var description = atts["description"];
                 result ??= new List<FieldEnum>();
                 result.Add(new FieldEnum(enumName, description));
             }
             return result;
         }
-
-   
     }
 }
