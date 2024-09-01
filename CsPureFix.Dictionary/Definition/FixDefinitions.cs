@@ -18,7 +18,22 @@ namespace PureFix.Dictionary.Definition
         private readonly Dictionary<string, MessageDefinition> _message = new();
         private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimple = new();
         private readonly Dictionary<string, ComponentFieldDefinition> _component = new();
-        
+
+        public int GetMajor()
+        {
+            return FixVersionParser.GetMajor(Version);
+        }
+
+        public int GetMinor()
+        {
+            return FixVersionParser.GetMinor(Version);
+        }
+
+        public int GetServicePack()
+        {
+            return FixVersionParser.GetServicePack(Version);
+        }
+
         public IReadOnlyDictionary<string, SimpleFieldDefinition> Simple => _nameToSimple;
         /**
          * all global scope components - top level.
