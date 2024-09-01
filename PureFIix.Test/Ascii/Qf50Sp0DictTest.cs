@@ -60,8 +60,31 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(securityList, index++, "SecurityListType", false);
             _setHelper.IsSimple(securityList, index++, "SecurityListTypeSource", false);
             _setHelper.IsSimple(securityList, index++, "TransactTime", false);
-            _setHelper.IsComponent(securityList, index++, "StandardTrailer", true);
+            _setHelper.IsComponent(securityList, index, "StandardTrailer", true);
         }
+
+        /*
+        <component name="SecListGrp">
+            <group name="NoRelatedSym" required="N">
+                <component name="Instrument"/>
+                <component name="InstrumentExtension"/>
+                <component name="FinancingDetails"/>
+                <component name="UndInstrmtGrp"/>
+                <field name="Currency" required="N"/>
+                <field name="ContractPositionNumber" required="N"/>
+                <component name="Stipulations"/>
+                <component name="InstrmtLegSecListGrp"/>
+                <component name="SpreadOrBenchmarkCurveData"/>
+                <component name="YieldData"/>
+                <field name="Text" required="N"/>
+                <field name="EncodedTextLen" required="N"/>
+                <field name="EncodedText" required="N"/>
+                <component name="SecurityTradingRules" required="N" />
+                <component name="StrikeRules" required="N" />
+                <field name="RelSymTransactTime" required="N" />
+            </group>
+        </component>
+ */
 
         [Test]
         public void Check_Sec_List_Grp()
@@ -70,6 +93,30 @@ namespace PureFIix.Test.Ascii
             Assert.That(secListGrp, Is.Not.Null);
             Assert.That(secListGrp.Fields.Count, Is.EqualTo(1));
             _setHelper.IsGroup(secListGrp, 0, "NoRelatedSym", false);
+        }
+
+
+        [Test]
+        public void Check_No_Related_Sym()
+        {
+            var index = 0;
+            var noRelatedSym = _secHelper.GetNumRelatedSym();
+            _setHelper.IsComponent(noRelatedSym, index++, "Instrument", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "InstrumentExtension", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "FinancingDetails", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "UndInstrmtGrp", false);
+            _setHelper.IsSimple(noRelatedSym, index++, "Currency", false);
+            _setHelper.IsSimple(noRelatedSym, index++, "ContractPositionNumber", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "Stipulations", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "InstrmtLegSecListGrp", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "SpreadOrBenchmarkCurveData", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "YieldData", false);
+            _setHelper.IsSimple(noRelatedSym, index++, "Text", false);
+            _setHelper.IsSimple(noRelatedSym, index++, "EncodedTextLen", false);
+            _setHelper.IsSimple(noRelatedSym, index++, "EncodedText", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "SecurityTradingRules", false);
+            _setHelper.IsComponent(noRelatedSym, index++, "StrikeRules", false);
+            _setHelper.IsSimple(noRelatedSym, index, "RelSymTransactTime", false);
         }
     }
 }
