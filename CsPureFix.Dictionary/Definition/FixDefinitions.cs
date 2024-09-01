@@ -56,9 +56,9 @@ namespace PureFix.Dictionary.Definition
             _component[component.Name] = component;
         }
 
-        public IContainedSet GetSet(string path)
+        public IContainedSet? GetSet(string path)
         {
-            var idx = path.IndexOf(".", StringComparison.Ordinal);
+            var idx = path.IndexOf('.', StringComparison.Ordinal);
             var name = path;
             if (idx > 0)
             {

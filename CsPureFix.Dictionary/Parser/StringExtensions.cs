@@ -30,6 +30,7 @@ namespace PureFix.Dictionary.Parser
                 }
                 array[i] = first + rest;
             }
+
             string newname = string.Join("", array);
             if (newname.Length > 0)
             {

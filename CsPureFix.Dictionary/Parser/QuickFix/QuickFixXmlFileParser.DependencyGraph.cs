@@ -69,8 +69,8 @@ namespace PureFix.Dictionary.Parser.QuickFix
          * indexed on node id, this allows an edge to quickly find the set in which to place a field.
          */
         private readonly Dictionary<int, ContainedFieldSet> _containedSets = new();
-        private Node _header;
-        private Node _trailer;
+        private Node? _header;
+        private Node? _trailer;
 
         private int _nextId;
 

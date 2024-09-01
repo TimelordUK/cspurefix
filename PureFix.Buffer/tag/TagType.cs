@@ -23,10 +23,12 @@ namespace PureFix.Buffer.tag
 
     public static class TagTypeUtil
     {
-        public static TagType ToType(string type)
+        public static TagType ToType(string? type)
         {
             type = type ?? "string";
-            switch (type.ToLower()) {
+            
+            switch (type.ToLower()) 
+            {
                 case "currency":
                 case "string":
                 case "char":

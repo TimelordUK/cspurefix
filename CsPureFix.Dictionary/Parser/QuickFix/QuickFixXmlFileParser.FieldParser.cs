@@ -73,10 +73,10 @@ namespace PureFix.Dictionary.Parser.QuickFix
             return sd;
         }
 
-        private static List<FieldEnum> GetFieldValues(XElement fieldElement)
+        private static List<FieldEnum>? GetFieldValues(XElement fieldElement)
         {
             var values = fieldElement.Descendants("value");
-            List<FieldEnum> result = null;
+            List<FieldEnum>? result = null;
 
             foreach (var value in values)
             {

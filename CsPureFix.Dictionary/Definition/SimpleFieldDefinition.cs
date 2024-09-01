@@ -18,24 +18,23 @@ namespace PureFix.Dictionary.Definition
         public string Description { get; }
         public string Type { get; }
         public TagType TagType { get; }
-        private readonly Dictionary<string, FieldEnum> _enums;
-        private readonly HashSet<string> _enumVals;
+        private readonly Dictionary<string, FieldEnum>? _enums;
+        private readonly HashSet<string>? _enumVals;
         public bool IsEnum => _enums != null && _enums.Count > 0;
         // needed for FIXML as "ID" is resolved within the context of its parent.
-        public string Abbreviation { get; }
-        public string BaseCategory { get; }
-        public string BaseCategoryAbbreviation { get; }
+        public string? Abbreviation { get; }
+        public string? BaseCategory { get; }
+        public string? BaseCategoryAbbreviation { get; }
         public int Count => _enums?.Count ?? 0;
-        public IReadOnlySet<string> EnumVals => _enumVals;
-        public IReadOnlyDictionary<string, FieldEnum> Enums => _enums;
+        public IReadOnlySet<string>? EnumVals => _enumVals;
+        public IReadOnlyDictionary<string, FieldEnum>? Enums => _enums;
 
         // var sd = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
-        public SimpleFieldDefinition(string name, string cat, string type, int tag, List<FieldEnum> enums) : this(name,
-            null, cat, null, type, name, tag, enums)
+        public SimpleFieldDefinition(string name, string? cat, string type, int tag, List<FieldEnum>? enums) : this(name, null, cat, null, type, name, tag, enums)
         {
         }
 
-        public SimpleFieldDefinition(string name, string abbreviation, string baseCategory, string baseCategoryAbbreviation, string type, string description, int tag, List<FieldEnum> enums)
+        public SimpleFieldDefinition(string name, string? abbreviation, string? baseCategory, string? baseCategoryAbbreviation, string type, string description, int tag, List<FieldEnum>? enums)
         {
             Abbreviation = abbreviation;
             BaseCategory = baseCategory;
@@ -45,6 +44,7 @@ namespace PureFix.Dictionary.Definition
             Type = type;
             Tag = tag;
             TagType = TagTypeUtil.ToType(type);
+            
             if (enums != null && enums.Count > 0)
             {
                 _enums = enums.ToDictionary(fe => fe.Key, fe => fe);
@@ -54,6 +54,7 @@ namespace PureFix.Dictionary.Definition
 
         public string ResolveEnum(string key)
         {
+            if (_enums is null) return key;
             return _enums.TryGetValue(key, out var fe) ? fe.Val : key;
         }
 

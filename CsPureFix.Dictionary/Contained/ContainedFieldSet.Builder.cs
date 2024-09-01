@@ -23,7 +23,7 @@ namespace PureFix.Dictionary.Contained
             switch (field.Type)
             {
                 case ContainedFieldType.Simple:
-                    AddLocalSimple(field as ContainedSimpleField);
+                    AddLocalSimple((ContainedSimpleField)field);
                     break;
 
                 case ContainedFieldType.Component:
@@ -88,19 +88,19 @@ namespace PureFix.Dictionary.Contained
             {
                 case ContainedFieldType.Group:
                 {
-                    AddGroupFieldDef(parent, field as ContainedGroupField);
+                    AddGroupFieldDef(parent, (ContainedGroupField)field);
                     break;
                 }
 
                 case ContainedFieldType.Component:
                 {
-                    AddComponentFieldDef(parent, field as ContainedComponentField);
+                    AddComponentFieldDef(parent, (ContainedComponentField)field);
                     break;
                 }
 
                 case ContainedFieldType.Simple:
                 {
-                    AddSimpleFieldDef(parent, field as ContainedSimpleField);
+                    AddSimpleFieldDef(parent, (ContainedSimpleField)field);
                     break;
                 }
             }
@@ -111,17 +111,21 @@ namespace PureFix.Dictionary.Contained
             if (_groups.ContainsKey(groupField.Name)) { return; }
 
             var definition = groupField.Definition;
-            _groups[groupField.Name] = definition;
-            var nof = definition.NoOfField;
-            if (nof != null)
-            {
-                var tag = nof.Tag;
-                _containedTag[tag] = true;
-                _flattendTag.Add(tag);
-            }
 
-            AddAllFields(definition);
-            MapAllBelow(definition, groupField);
+            if (definition is not null)
+            {
+                _groups[groupField.Name] = definition;
+                var nof = definition.NoOfField;
+                if (nof != null)
+                {
+                    var tag = nof.Tag;
+                    _containedTag[tag] = true;
+                    _flattendTag.Add(tag);
+                }
+
+                AddAllFields(definition);
+                MapAllBelow(definition, groupField);
+            }
         }
 
         private void AddComponentFieldDef(ContainedFieldSet containedField, ContainedComponentField componentField)
@@ -132,9 +136,13 @@ namespace PureFix.Dictionary.Contained
             }
 
             var definition = componentField.Definition;
-            _components[componentField.Name] = definition;
-            AddAllFields(definition);
-            MapAllBelow(definition, componentField);
+
+            if (definition is not null)
+            {
+                _components[componentField.Name] = definition;
+                AddAllFields(definition);
+                MapAllBelow(definition, componentField);
+            }
         }
 
         private void MapAllBelow(ContainedFieldSet set, ContainedField field)

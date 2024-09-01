@@ -13,11 +13,10 @@ namespace PureFix.Dictionary.Definition
         /**
          * the field representing the number of instances representing the group.
          */
-        public SimpleFieldDefinition NoOfField { get; }
+        public SimpleFieldDefinition? NoOfField { get; }
 
-        public GroupFieldDefinition(string name, string abbreviation, string category, SimpleFieldDefinition noOfField,
-            string description) :
-            base(ContainedSetType.Group, name, abbreviation, category, description)
+        public GroupFieldDefinition(string name, string? abbreviation, string? category, SimpleFieldDefinition? noOfField, string description) :
+            base(ContainedSetType.Group, name, category, abbreviation, description)
         {
             NoOfField = noOfField;
             if (noOfField != null)

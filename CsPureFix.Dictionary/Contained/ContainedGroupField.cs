@@ -9,9 +9,11 @@ namespace PureFix.Dictionary.Contained
 {
     public class ContainedGroupField : ContainedField
     {
-        public GroupFieldDefinition Definition { get; }
-        public ContainedGroupField(GroupFieldDefinition definition, int position, bool required, string overrideName) :
-            base(overrideName ?? definition.Name, position, ContainedFieldType.Group, required)
+        public GroupFieldDefinition? Definition { get; }
+        
+        public ContainedGroupField(GroupFieldDefinition? definition, int position, bool required, string? overrideName) :
+            base(overrideName ?? definition?.Name ?? throw new ArgumentException("could not resolve name"), 
+            position, ContainedFieldType.Group, required)
         {
             Definition = definition;
         }

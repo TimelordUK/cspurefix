@@ -82,21 +82,21 @@ namespace PureFix.Dictionary.Contained
 
         ContainedSetType Type { get; }
         string Name { get; }
-        string Category { get; }
-        string Abbreviation { get; }
+        string? Category { get; }
+        string? Abbreviation { get; }
         string Description { get; }
 
         /**
          * at any level on this set, first declared simple field
          */
-        ContainedSimpleField FirstSimple { get; }
+        ContainedSimpleField? FirstSimple { get; }
 
         bool ContainsRaw { get; }
 
         string GetPrefix();
 
         string GetFieldName(int tag);
-        IContainedSet GetSet(string path);
+        IContainedSet? GetSet(string path);
 
         IReadOnlyList<int> Keys();
     }

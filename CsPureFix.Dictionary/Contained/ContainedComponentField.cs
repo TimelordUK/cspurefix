@@ -10,9 +10,11 @@ namespace PureFix.Dictionary.Contained
 {
     internal class ContainedComponentField : ContainedField
     {
-        public ComponentFieldDefinition Definition { get; }
-        public ContainedComponentField(ComponentFieldDefinition definition, int position, bool required, string overrideName) :
-            base(overrideName ?? definition.Name, position, ContainedFieldType.Component, required)
+        public ComponentFieldDefinition? Definition { get; }
+
+        public ContainedComponentField(ComponentFieldDefinition? definition, int position, bool required, string? overrideName) :
+            base(overrideName ?? definition?.Name ?? throw new ArgumentException("could not resolve a name for component"),
+            position, ContainedFieldType.Component, required)
         {
             Definition = definition;
         }

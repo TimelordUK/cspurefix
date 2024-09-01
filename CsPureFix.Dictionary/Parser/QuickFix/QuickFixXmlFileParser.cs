@@ -150,6 +150,9 @@ public partial class QuickFixXmlFileParser
 
     private void MessageDefinition(Node node)
     {
+        if (_header is null) throw new InvalidOperationException("header not set");
+        if (_trailer is null) throw new InvalidOperationException("trailer not set");
+
         var md = GetMessage(node.Element);
         Definitions.AddMessaqe(md);
         _containedSets[node.ID] = md;

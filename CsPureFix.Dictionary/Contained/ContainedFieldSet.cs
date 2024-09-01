@@ -29,97 +29,96 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = new();
         protected readonly List<ContainedSimpleField> _localAttribute = new();
 
-        /**
-         * index of name to any group that may be present within the field list
-         */
+        /// <summary>
+        /// Index of name to any group that may be present within the field list
+        /// </summary>
         public IReadOnlyDictionary<string, IContainedSet> Groups => _groups;
 
-        /**
-        * index of name to any component that may be present within the field list
-        */
-
+        /// <summary>
+        /// index of name to any component that may be present within the field list
+        /// </summary>
         public IReadOnlyDictionary<string, IContainedSet> Components => _components;
 
-        /**
-         * index of name to any simple field that may be present within the field list
-         */
+        /// <summary>
+        /// index of name to any simple field that may be present within the field list
+        /// </summary>
         public IReadOnlyDictionary<string, ContainedSimpleField> Simple => _simple;
 
-        /**
-         *  sequence of fields representing this type - can be simple, group or component
-         */
+        /// <summary>
+        /// sequence of fields representing this type - can be simple, group or component
+        /// </summary>
         public IReadOnlyList<ContainedField> Fields => _fields;
 
-        /**
-         * any tag at any level i.e. does this set contain a tag
-         */
+        /// <summary>
+        /// any tag at any level i.e. does this set contain a tag
+        /// </summary>
         public IReadOnlyDictionary<int, bool> ContainedTag => _containedTag;
 
-        /**
-         * any tag at any level ordered i.e. all tags flattened to list
-         */
+        /// <summary>
+        /// any tag at any level ordered i.e. all tags flattened to list
+        /// </summary>
         public IReadOnlyList<int> FlattenedTag => _flattendTag;
 
-        /**
-         * any data tags contained length within this set.
-         */
+        /// <summary>
+        /// any data tags contained length within this set.
+        /// </summary>
         public IReadOnlyDictionary<int, bool> ContainedLength => _containedLength;
 
-        /**
-         * tags only in repository at this level, not from any at deeper levels
-         */
+        /// <summary>
+        /// tags only in repository at this level, not from any at deeper levels
+        /// </summary>
         public IReadOnlyDictionary<int, ContainedSimpleField> LocalTag => _localTag;
 
-        /**
-         * tags marked required at this level only
-         */
+        /// <summary>
+        /// tags marked required at this level only
+        /// </summary>
         public IReadOnlyDictionary<int, ContainedSimpleField> LocalRequired => _localRequired;
 
-        /**
-         * all tags contained within this field set flattened from all levels
-        */
+        /// <summary>
+        /// all tags contained within this field set flattened from all levels
+        /// </summary>
         public IReadOnlyDictionary<int, ContainedSimpleField> TagToSimple => _tagToSimple;
 
-        /**
-         * direct any tag contained within this set to field one level down where it belongs.
-        */
+        /// <summary>
+        /// direct any tag contained within this set to field one level down where it belongs.
+        /// </summary>
         public IReadOnlyDictionary<int, ContainedField> TagToField => _tagToField;
 
-        /**
-         * only repository directly in this set indexed by name
-         */
+        /// <summary>
+        /// only repository directly in this set indexed by name
+        /// </summary>
         public IReadOnlyDictionary<string, ContainedField> LocalNameToField => _localNameToField;
 
-        /**
-         * for FixMl notation this set of fields appear as attributes i.e. <Pty ID="323" R="38">
-         */
+        /// <summary>
+        /// for FixMl notation this set of fields appear as attributes i.e. <Pty ID="323" R="38">
+        /// </summary>
         public IReadOnlyDictionary<string, ContainedSimpleField> NameToLocalAttribute => _nameToLocalField;
 
-        /**
-         * all attributes in order of being declared
-         */
+        /// <summary>
+        /// all attributes in order of being declared
+        /// </summary>
         public IReadOnlyList<ContainedSimpleField> LocalAttribute => _localAttribute;
 
-        /**
-         * at any level on this set, first declared simple field
-         */
-        public ContainedSimpleField FirstSimple { get; private set; }
+        /// <summary>
+        /// at any level on this set, first declared simple field
+        /// </summary>
+        public ContainedSimpleField? FirstSimple { get; private set; }
 
         public string Name { get; init; }
-        public string Category { get; init; }
-        public string Abbreviation { get; init; }
+        public string? Category { get; init; }
+        public string? Abbreviation { get; init; }
         public string Description { get; init; }
         public ContainedSetType Type { get; init; }
 
-        /**
-         * parser needs to know about raw fields, any present in this set?
-         */
+        /// <summary>
+        /// parser needs to know about raw fields, any present in this set?
+        /// </summary>
         public bool ContainsRaw { get; private set; }
 
         protected ContainedFieldSet(ContainedSetType type,
             string name,
-            string category,
-            string abbreviation,
+            string? category,
+            string? abbreviation,
             string description)
         {
             Name = name;
@@ -129,10 +128,9 @@ namespace PureFix.Dictionary.Contained
             Type = type;
         }
 
-        /**
-         * not for generral usage, this partially resets the set such it can be used on a second
-         * pass of the xml parser
-         */
+        /// <summary>
+        /// not for generral usage, this partially resets the set such it can be used on a second pass of the xml parser
+        /// </summary>
         public void Reset()
         {
             _groups.Clear();
@@ -174,17 +172,28 @@ namespace PureFix.Dictionary.Contained
             return $"{tag}";
         }
 
-        /**
-         * recurses down a path to return nested set definitiom of a group or component
-         * given in dot notation 'SecListGrp.NoRelatedSym.SecurityTradingRules.BaseTradingRules'
-         * @param path in dot notation
-         */
-        public IContainedSet GetSet(string path)
+        /// <summary>
+        /// recurses down a path to return nested set definitiom of a group or component
+        /// given in dot notation 'SecListGrp.NoRelatedSym.SecurityTradingRules.BaseTradingRules'
+        /// </summary>
+        /// <param name="path">path in dot notation</param>
+        /// <returns></returns>
+        public IContainedSet? GetSet(string path)
         {
-            return path?.Split('.').Aggregate(this,
-                (IContainedSet set, string next) => set.Groups.TryGetValue(next, out var g) 
-                    ? g 
-                    : set.Components.GetValueOrDefault(next));
+            return path?.Split('.').Aggregate(this, (IContainedSet? set, string next) =>
+            {
+                if (set is null) return null;
+
+                if(set.Groups.TryGetValue(next, out var g))
+                {
+                    return g;
+                }
+                else
+                {
+                    return set.Components.GetValueOrDefault(next);
+                }
+
+            });
         }
     }
 }
