@@ -100,5 +100,25 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsComponent(hb, index++, "StandardTrailer", true);
             Assert.That(hb.Fields.Count, Is.EqualTo(index));
         }
+
+        /*
+         *  <message name='ResendRequest' msgcat='admin' msgtype='2'>
+             <field name='BeginSeqNo' required='Y' />
+             <field name='EndSeqNo' required='Y' />
+           </message>
+         */
+
+        [Test]
+        public void Check_ResendRequest_Fields()
+        {
+            var hb = _definitions.Message["ResendRequest"];
+            Assert.That(hb, Is.Not.Null);
+            var index = 0;
+            _setHelper.IsComponent(hb, index++, "StandardHeader", true);
+            _setHelper.IsSimple(hb, index++, "BeginSeqNo", true);
+            _setHelper.IsSimple(hb, index++, "EndSeqNo", true);
+            _setHelper.IsComponent(hb, index++, "StandardTrailer", true);
+            Assert.That(hb.Fields.Count, Is.EqualTo(index));
+        }
     }
 }
