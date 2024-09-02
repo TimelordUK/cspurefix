@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 
 namespace PureFIix.Test.Env
 {
@@ -49,6 +50,16 @@ namespace PureFIix.Test.Env
             Assert.That(set.LocalTag.ContainsKey(tag));
             Assert.That(set.TagToSimple.ContainsKey(tag));
             Assert.That(set.LocalNameToField.ContainsKey(name));
+        }
+
+        public void IsEnum(IReadOnlyDictionary<string, FieldEnum> enums, string key, string expectedVal,
+            string expectedDescription)
+        {
+            Assert.That(enums, Is.Not.Null);
+            Assert.That(enums.TryGetValue(key, out var en), Is.True);
+            Assert.That(en?.Val, Is.EqualTo(expectedVal));
+            Assert.That(en?.Description, Is.EqualTo(expectedDescription));
+            Assert.That(en?.Key, Is.EqualTo(key));
         }
     }
 }

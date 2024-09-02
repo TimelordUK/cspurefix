@@ -248,16 +248,6 @@ namespace PureFIix.Test.Ascii
             Assert.That(_definitions.Version, Is.EqualTo(FixVersion.FIX50SP2));
         }
 
-        private void CheckEnum(IReadOnlyDictionary<string, FieldEnum> enums, string key, string expectedVal,
-            string expectedDescription)
-        {
-            Assert.That(enums, Is.Not.Null);
-            Assert.That(enums.TryGetValue(key, out var en), Is.True);
-            Assert.That(en?.Val, Is.EqualTo(expectedVal));
-            Assert.That(en?.Description, Is.EqualTo(expectedDescription));
-            Assert.That(en?.Key, Is.EqualTo(key));
-        }
-
         [Test]
         public void Check_Field_AdvSide_Test()
         {
@@ -265,10 +255,10 @@ namespace PureFIix.Test.Ascii
             Assert.That(def, Is.Not.Null);
             Assert.That(def.Tag, Is.EqualTo(4));
             Assert.That(def.IsEnum, Is.True);
-            CheckEnum(def?.Enums, "B", "Buy", "BUY");
-            CheckEnum(def?.Enums, "S", "Sell", "SELL");
-            CheckEnum(def?.Enums, "X", "Cross", "CROSS");
-            CheckEnum(def?.Enums, "T", "Trade", "TRADE");
+            _setHelper.IsEnum(def?.Enums, "B", "Buy", "BUY");
+            _setHelper.IsEnum(def?.Enums, "S", "Sell", "SELL");
+            _setHelper.IsEnum(def?.Enums, "X", "Cross", "CROSS");
+            _setHelper.IsEnum(def?.Enums, "T", "Trade", "TRADE");
         }
 
         private void CheckSimple(string name, int number, string type)
@@ -319,6 +309,41 @@ namespace PureFIix.Test.Ascii
         public void Check_Simple_Tag_213_Test()
         {
             CheckSimple("XmlData", 213, "XMLDATA");
+        }
+
+        [Test]
+        public void Check_Logon_Fields()
+        {
+            var logon = _definitions.Message["Logon"];
+            Assert.That(logon, Is.Not.Null);
+            var index = 0;
+            _setHelper.IsComponent(logon, index++, "StandardHeader", true);
+            _setHelper.IsSimple(logon, index++, "EncryptMethod", true);
+            _setHelper.IsSimple(logon, index++, "HeartBtInt", true);
+            _setHelper.IsSimple(logon, index++, "RawDataLength", false);
+            _setHelper.IsSimple(logon, index++, "RawData", false);
+            _setHelper.IsSimple(logon, index++, "ResetSeqNumFlag", false);
+            _setHelper.IsSimple(logon, index++, "NextExpectedMsgSeqNum", false);
+            _setHelper.IsSimple(logon, index++, "MaxMessageSize", false);
+            _setHelper.IsGroup(logon, index++, "NoMsgTypes", false);
+            _setHelper.IsSimple(logon, index++, "TestMessageIndicator", false);
+            _setHelper.IsSimple(logon, index++, "Username", false);
+            _setHelper.IsSimple(logon, index++, "Password", false);
+            _setHelper.IsSimple(logon, index++, "NewPassword", false);
+            _setHelper.IsSimple(logon, index++, "EncryptedPasswordMethod", false);
+            _setHelper.IsSimple(logon, index++, "EncryptedPasswordLen", false);
+            _setHelper.IsSimple(logon, index++, "EncryptedPassword", false);
+            _setHelper.IsSimple(logon, index++, "EncryptedNewPasswordLen", false);
+            _setHelper.IsSimple(logon, index++, "EncryptedNewPassword", false);
+            _setHelper.IsSimple(logon, index++, "SessionStatus", false);
+            _setHelper.IsSimple(logon, index++, "DefaultApplVerID", false);
+            _setHelper.IsSimple(logon, index++, "DefaultApplExtID", false);
+            _setHelper.IsSimple(logon, index++, "DefaultCstmApplVerID", false);
+            _setHelper.IsSimple(logon, index++, "Text", false);
+            _setHelper.IsSimple(logon, index++, "EncodedTextLen", false);
+            _setHelper.IsSimple(logon, index++, "EncodedText", false);
+            _setHelper.IsComponent(logon, index++, "StandardTrailer", true);
+            Assert.That(logon.Fields.Count, Is.EqualTo(index));
         }
 
         [Test]

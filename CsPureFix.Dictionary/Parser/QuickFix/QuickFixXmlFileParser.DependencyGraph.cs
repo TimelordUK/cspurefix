@@ -78,13 +78,13 @@ namespace PureFix.Dictionary.Parser.QuickFix
         {
             if (!_edges.TryGetValue(edge.Head, out var pCached))
             {
-                _edges[edge.Head] = pCached = new List<Edge>();
+                _edges[edge.Head] = pCached = [];
             }
             pCached.Add(edge);
 
             if (!_edges.TryGetValue(edge.Tail, out var cCached))
             {
-                _edges[edge.Tail] = cCached = new List<Edge>();
+                _edges[edge.Tail] = cCached = [];
             }
             cCached.Add(edge);
         }
