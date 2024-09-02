@@ -1,5 +1,6 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,21 @@ namespace PureFIix.Test.Ascii
             var qf = new QuickFixXmlFileParser(_definitions);
             qf.Parse(Path.Join(rootFolder, "..", "..", "..", "..", "Data", "FIX44.xml"));
         }
+
+        [Test]
+        public void Check_Definitions_Version_Test()
+        {
+            Assert.That(_definitions.GetMajor(), Is.EqualTo(4));
+            Assert.That(_definitions.GetMinor(), Is.EqualTo(4));
+            Assert.That(_definitions.GetServicePack(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Check_Version_Test()
+        {
+            Assert.That(_definitions.Version, Is.EqualTo(FixVersion.FIX44));
+        }
+
         /*
          *   <field number='54' name='Side' type='CHAR'>
              <value enum='1' description='BUY' />
@@ -66,6 +82,23 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsEnum(def?.Enums, "E", "Redeem", "REDEEM");
             _setHelper.IsEnum(def?.Enums, "F", "Lend", "LEND");
             _setHelper.IsEnum(def?.Enums, "G", "Borrow", "BORROW");
+        }
+
+        /*
+         *  <message name='Heartbeat' msgcat='admin' msgtype='0'>
+             <field name='TestReqID' required='N' />
+           </message>
+         */
+        [Test]
+        public void Check_Heartbeat_Fields()
+        {
+            var hb = _definitions.Message["Heartbeat"];
+            Assert.That(hb, Is.Not.Null);
+            var index = 0;
+            _setHelper.IsComponent(hb, index++, "StandardHeader", true);
+            _setHelper.IsSimple(hb, index++, "TestReqID", false);
+            _setHelper.IsComponent(hb, index++, "StandardTrailer", true);
+            Assert.That(hb.Fields.Count, Is.EqualTo(index));
         }
     }
 }

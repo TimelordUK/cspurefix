@@ -61,7 +61,8 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(securityList, index++, "SecurityListType", false);
             _setHelper.IsSimple(securityList, index++, "SecurityListTypeSource", false);
             _setHelper.IsSimple(securityList, index++, "TransactTime", false);
-            _setHelper.IsComponent(securityList, index, "StandardTrailer", true);
+            _setHelper.IsComponent(securityList, index++, "StandardTrailer", true);
+            Assert.That(securityList.Fields.Count, Is.EqualTo(index));
         }
 
         /*
