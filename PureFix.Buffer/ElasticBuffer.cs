@@ -51,7 +51,7 @@ namespace PureFix.Buffer
 
         public int WriteBoolean(bool v)
         {
-            this.writeChar(v ? AsciiChars.Y : AsciiChars.N);
+            WriteChar(v ? AsciiChars.Y : AsciiChars.N);
             return _ptr;
         }
 
@@ -69,18 +69,56 @@ namespace PureFix.Buffer
 
         public int WriteChar(byte c)
         {
-            CheckGrowBuffer(1);
             _buffer[_ptr++] = c;
             return _ptr;
         }
 
         public int WriteString(string s)
         {
-            var begin = _ptr;
-            this.CheckGrowBuffer(s.Length);
-            _ptr += buffer.write(s, begin, s.length, 'ascii')
-            return this.ptr
+            foreach (var c in s)
+            {
+                _buffer[_ptr++] = (byte)c;
+            }
+
+            return _ptr;
         }
-}
+
+        public int WriteBuffer(Memory<byte> v) {
+            var span = v.Span;
+            foreach (var c in span)
+            {
+                _buffer[_ptr++] = c;
+            }
+
+            return _ptr;
+        }
+
+        public int WriteWholeNumber(int n) {
+            var digits = HowManyDigits(n);
+            var sign = Math.Sign(n);
+            var p = (int)Math.Pow(10, digits - 1);
+            var v = Math.Abs(n);
+            
+            if (sign < 0)
+            {
+                _buffer[_ptr++] = AsciiChars.Minus;
+            }
+            while (p >= 1)
+            {
+                var d = (byte)(v / p);
+                v -= d * p;
+                p /= 10;
+                _buffer[_ptr++] = (byte)(AsciiChars.Zero + d);
+            }
+
+            return _ptr;
+        }
+
+        public bool Reset()
+        {
+            _ptr = 0;
+            return true;
+        }
+    }
 }
 
