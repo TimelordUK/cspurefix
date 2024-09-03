@@ -8,13 +8,7 @@ namespace PureFix.Dictionary.Parser
 {
     public record FieldEnum(string Key, string Description)
     {
-        public string Val => _val??= Description.UnderscoreToCamelCase();
-        private string _val;
-
-        private static string FromCamel(string input)
-        {
-            var result = string.Concat(input.Select((x, i) => i > 0 && char.IsUpper(x) ? $"_{x}" : x.ToString()));
-            return result;
-        }
+        public string Val => _val ??= Description.UnderscoreToCamelCase();
+        private string? _val;
     }
 }

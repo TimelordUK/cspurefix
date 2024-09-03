@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
@@ -14,73 +15,64 @@ namespace PureFix.Dictionary.Parser.QuickFix
     {
         private void ParseFields(XDocument doc)
         {
-            var fields = doc.Descendants("fields");
-            foreach (var fieldElement in fields.Descendants())
+            var fields = doc.Descendants("fields").First().Elements("field");
+            foreach (var fieldElement in fields)
             {
-                (int tag, string name, string type) t = GetField(fieldElement);
-                var values = GetFieldValues(fieldElement);
-                var sf = new SimpleFieldDefinition(t.name, t.tag, TagTypeUtil.ToType(t.type), values);
-                Definitions.AddSimple(sf);
+                var at = fieldElement.AsAttributeDict();
+                MakeNode(at["name"], fieldElement, Node.ElementType.SimpleFieldDefinition);
             }
         }
 
-        private static (int tag, string mame, string type) GetField(XElement fieldElement)
+        private void ParseComponents(XDocument doc)
         {
-            var tag = 0;
-            var name = "";
-            var type = "";
-            foreach (var a in AsAttributeDict(fieldElement))
+            var fields = doc.Descendants("components").First().Elements("component");
+            foreach (var componentElement in fields)
             {
-                switch (a.Key)
-                {
-                    case "number":
-                        tag = int.Parse(a.Value);
-                        break;
-
-                    case "name":
-                        name = a.Value;
-                        break;
-
-                    case "type":
-                        type = a.Value;
-                        break;
-                }
+                var at = componentElement.AsAttributeDict();
+                MakeNode(at["name"], componentElement, Node.ElementType.ComponentDefinition);
             }
-            return (tag, name, type);
         }
 
-        private static List<FieldEnum> GetFieldValues(XElement fieldElement)
+
+
+        private void ParseHeader(XDocument doc)
         {
-            var values = fieldElement.Descendants("value");
-            List<FieldEnum> result = null;
+            var header = doc.Descendants("header").First();
+            _header = MakeNode("StandardHeader", header, Node.ElementType.ComponentDefinition);
+        }
+
+        private void ParseTrailer(XDocument doc)
+        {
+            var trailer = doc.Descendants("trailer").First();
+            _trailer = MakeNode("StandardTrailer", trailer, Node.ElementType.ComponentDefinition);
+        }
+
+        private static SimpleFieldDefinition GetField(XElement fieldElement)
+        {
+            var atts = fieldElement.AsAttributeDict();
+            var tag = int.Parse(atts["number"]); ;
+            var name = atts["name"];
+            var type = atts["type"];
+            
+            var values = GetFieldValues(fieldElement);
+            var sd = new SimpleFieldDefinition(name, null, type, tag, values);
+            return sd;
+        }
+
+        private static List<FieldEnum>? GetFieldValues(XElement fieldElement)
+        {
+            var values = fieldElement.Elements("value");
+            List<FieldEnum>? result = null;
 
             foreach (var value in values)
             {
-                var enumName = "";
-                var description = "";
-                foreach (var a in AsAttributeDict(value))
-                {
-                    switch (a.Key)
-                    {
-                        case "enum":
-                            enumName = a.Value;
-                            break;
-
-                        case "description":
-                            description = a.Value;
-                            break;
-                    }
-                }
-
+                var atts = value.AsAttributeDict();
+                var enumName = atts["enum"];
+                var description = atts["description"];
                 result ??= new List<FieldEnum>();
                 result.Add(new FieldEnum(enumName, description));
             }
             return result;
-        }
-
-        private static Dictionary<string, string> AsAttributeDict(XElement element)
-        {
-            return element.Attributes().ToDictionary(a => a.Name.LocalName, a => a.Value);
         }
     }
 }
