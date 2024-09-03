@@ -119,6 +119,11 @@ namespace PureFix.Buffer
             _ptr = 0;
             return true;
         }
+
+        public int GetWholeNumber(int tagStartPos, int pos)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

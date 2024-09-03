@@ -14,13 +14,14 @@ namespace PureFix.Buffer.Ascii
         byte _writeDelimiter = AsciiChars.Pipe;
         int id = _nextId++;
         private Memory<byte> _receivingBuffer = new(new byte[20 * 1024]);
-        private AsciiParseState _state = new ();
+        private AsciiParseState _state = new();
 
-        private void Msg(int ptr)  {
+        private void Msg(int ptr)
+        {
             _state.BeginMessage();
         }
 
-    public void ParseFrom(Memory<byte> readFrom)
+        public void ParseFrom(Memory<byte> readFrom)
         {
             var state = this._state;
             var eq = AsciiChars.Eq;
@@ -89,7 +90,7 @@ namespace PureFix.Buffer.Ascii
                             }
                         }
 
-                            break;
+                        break;
                     }
 
                     case ParseState.ParsingRawDataLength:
@@ -122,7 +123,7 @@ namespace PureFix.Buffer.Ascii
             {
                 case ParseState.MsgComplete:
                 {
-                    msg(receivingBuffer.GetPos());
+                    Msg(receivingBuffer.GetPos());
                     break;
                 }
             }
