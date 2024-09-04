@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using PureFix.Dictionary.Definition;
+using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiParser
+    public class AsciiParser(FixDefinitions definitions, ElasticBuffer receivingBuffer)
     {
         private static int _nextId;
         byte _delimiter = AsciiChars.Soh;
         byte _writeDelimiter = AsciiChars.Pipe;
         int id = _nextId++;
-        private Memory<byte> _receivingBuffer = new(new byte[20 * 1024]);
-        private AsciiParseState _state = new();
+        private readonly AsciiParseState _state = new(receivingBuffer, definitions, new Tags(30000));
 
         private void Msg(int ptr)
         {

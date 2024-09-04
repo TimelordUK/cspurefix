@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Definition;
-using PureFix.Dictionary.tag;
+using PureFix.Types.tag;
 
 namespace PureFix.Dictionary.Contained
 {

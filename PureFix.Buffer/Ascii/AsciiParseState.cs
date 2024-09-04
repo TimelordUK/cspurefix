@@ -6,14 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Definition;
 using PureFix.Types.tag;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFix.Buffer.Ascii
 {
-    internal class AsciiParseState
+    internal class AsciiParseState(ElasticBuffer eb, FixDefinitions definitions, Tags locations)
     {
-        private MessageDefinition _message;
-        private Tags _locations;
+        private MessageDefinition? _message;
         public ParseState ParseState { get; private set; }
 
         private int _bodyLen;
@@ -25,9 +23,7 @@ namespace PureFix.Buffer.Ascii
         private int _currentTag;
         private int _rawDataLen;
         private int _rawDataRead;
-        private FixDefinitions _definitions;
         private string? _msgType;
-        private ElasticBuffer _elasticBuffer;
 
         public void BeginTag(int pos)
         {
@@ -39,8 +35,8 @@ namespace PureFix.Buffer.Ascii
 
         public void BeginMessage()
         {
-            _elasticBuffer.Reset();
-            _locations.Reset();
+            eb.Reset();
+            locations.Reset();
             _checksumExpectedPos = 0;
             ParseState = ParseState.BeginField;
             _count = 0;
@@ -61,7 +57,7 @@ namespace PureFix.Buffer.Ascii
             {
                 case ParseState.ParsingTag:
                 {
-                    _currentTag = _elasticBuffer.GetWholeNumber(_tagStartPos, pos - 1);
+                    _currentTag = eb.GetWholeNumber(_tagStartPos, pos - 1);
                     break;
                 }
 
@@ -105,12 +101,12 @@ namespace PureFix.Buffer.Ascii
 
         public void Store()
         {
-            var valueEndPos = _elasticBuffer.GetPos() - 1;
+            var valueEndPos = eb.GetPos() - 1;
             _valueEndPos = valueEndPos;
             var equalPos = _equalPos;
             var tag = _currentTag;
-            var locations = _locations;
-            var buffer = _elasticBuffer;
+            var locations1 = locations;
+            var buffer = eb;
             var _terminates = _checksumExpectedPos;
 
             switch (ParseState)
@@ -119,114 +115,119 @@ namespace PureFix.Buffer.Ascii
                 case ParseState.ParsingRawData:
                 {
                     _rawDataLen = 0;
-                    locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    locations1.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
 
                 case ParseState.ParsingRawDataLength:
                 {
                     _rawDataLen = buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
-                    locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    locations1.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
             }
 
             ParseState = ParseState.BeginField;
             _count++;
-            var nextTagPos = locations.NextTagPos;
+            var nextTagPos = locations1.NextTagPos;
 
             switch (tag)
             {
                 case Tags.BeginString:
+                {
+                    if (nextTagPos != 1)
                     {
-                        if (nextTagPos != 1)
-                        {
-                            throw new InvalidDataException($"BeginString: not expected at position[{nextTagPos}]");
-                        }
-                        break;
+                        throw new InvalidDataException($"BeginString: not expected at position[{nextTagPos}]");
                     }
+
+                    break;
+                }
 
                 case Tags.BodyLengthTag:
+                {
+                    if (nextTagPos != 2)
                     {
-                        if (nextTagPos != 2)
-                        {
-                            throw new InvalidDataException($"BodyLengthTag: not expected at position[{nextTagPos}]");
-                        }
-
-                        _bodyLen = buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
-                        _checksumExpectedPos = _bodyLen + valueEndPos;
-                        break;
+                        throw new InvalidDataException($"BodyLengthTag: not expected at position[{nextTagPos}]");
                     }
+
+                    _bodyLen = buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                    _checksumExpectedPos = _bodyLen + valueEndPos;
+                    break;
+                }
 
                 case Tags.MessageTag:
+                {
+                    if (nextTagPos != 3)
                     {
-                        if (nextTagPos != 3)
-                        {
-                            throw new InvalidDataException($"MsgTag: not expected at position[{nextTagPos}]");
-                        }
-
-                        _msgType = buffer.GetString(equalPos + 1, valueEndPos);
-                        if (_definitions.Message.TryGetValue(_msgType, out var message))
-                        {
-                            _message = message;
-                        }
-                        else
-                        {
-                            throw new InvalidDataException($"MsgType: [{_msgType}] not in definitions.");
-                        }
-                        break;
+                        throw new InvalidDataException($"MsgTag: not expected at position[{nextTagPos}]");
                     }
+
+                    _msgType = buffer.GetString(equalPos + 1, valueEndPos);
+                    if (definitions.Message.TryGetValue(_msgType, out var message))
+                    {
+                        _message = message;
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"MsgType: [{_msgType}] not in definitions.");
+                    }
+
+                    break;
+                }
 
                 case Tags.CheckSumTag:
+                {
+                    if (valueEndPos < _bodyLen)
                     {
-                        if (valueEndPos < _bodyLen)
-                        {
-                            throw new InvalidDataException($"CheckSumTag: [{valueEndPos}] expected after ${_bodyLen}");
-                        }
-
-                        ParseState = ParseState.MsgComplete;
-                        break;
+                        throw new InvalidDataException($"CheckSumTag: [{valueEndPos}] expected after ${_bodyLen}");
                     }
 
+                    ParseState = ParseState.MsgComplete;
+                    break;
+                }
+
                 default:
+                {
+                    if (_terminates > 0 && valueEndPos > _terminates)
                     {
-                        if (terminates && valueEndPos > terminates)
-                        {
-                            throw new Error(`Tag: [${ tag }] cant be after ${ terminates}`)
-        }
-                        break
+                        throw new InvalidDataException($"Tag: [{tag}] cant be after ${_terminates}");
+                    }
+
+                    break;
                 }
             }
 
             switch (nextTagPos)
             {
                 case 1:
+                {
+                    if (tag != Tags.BeginString)
                     {
-                        if (tag !== Tags.BeginString)
-                        {
-                            throw new Error(`position 1[${ tag }] must be BeginString: 8 =`)
-        }
-                        break
+                        throw new InvalidDataException($"position 1[{tag}] must be BeginString: 8 =");
+                    }
+
+                    break;
                 }
                 case 2:
+                {
+                    if (tag != Tags.BodyLengthTag)
                     {
-                        if (tag !== Tags.BodyLengthTag)
-                        {
-                            throw new Error(`position 2[${ tag }] must be BodyLengthTag: 9 =`)
-        }
-                        break
+                        throw new InvalidDataException($"position 2[${tag}] must be BodyLengthTag: 9 =");
+                    }
+
+                    break;
                 }
                 case 3:
+                {
+                    if (tag != Tags.MessageTag)
                     {
-                        if (tag !== Tags.MsgTag)
-                        {
-                            throw new Error(`position 3[${ tag }] must be MsgTag: 35 =`)
-        }
-                        break
+                        throw new InvalidDataException($"position 3[{tag}] must be MsgTag: 35 =");
+                    }
                 }
+                    break;
             }
         }
-
+        
         public bool IncRaw()
         {
             ++_rawDataRead;
