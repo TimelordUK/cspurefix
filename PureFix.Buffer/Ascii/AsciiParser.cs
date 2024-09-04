@@ -15,7 +15,7 @@ namespace PureFix.Buffer.Ascii
         byte _delimiter = AsciiChars.Soh;
         byte _writeDelimiter = AsciiChars.Pipe;
         int id = _nextId++;
-        private readonly AsciiParseState _state = new(receivingBuffer, definitions, new Tags(30000));
+        private readonly AsciiParseState _state = new(receivingBuffer, definitions, new Tags());
 
         private void Msg(int ptr)
         {
@@ -24,14 +24,11 @@ namespace PureFix.Buffer.Ascii
 
         public void ParseFrom(Memory<byte> readFrom)
         {
-            var state = this._state;
-            var eq = AsciiChars.Eq;
-            var zero = AsciiChars.Zero;
-            var nine = AsciiChars.Nine;
+            const byte eq = AsciiChars.Eq;
+            const byte zero = AsciiChars.Zero;
+            const byte nine = AsciiChars.Nine;
             var delimiter = _delimiter;
-            var writeDelimiter = _writeDelimiter;
-            var receivingBuffer = new ElasticBuffer();
-            var switchDelimiter = writeDelimiter != delimiter;
+            var switchDelimiter = _writeDelimiter != delimiter;
             var readPtr = 0;
             var end = readFrom.Length;
             var readBuffer = readFrom.Span;
@@ -39,7 +36,7 @@ namespace PureFix.Buffer.Ascii
             {
                 var charAtPos = readBuffer[readPtr];
                 var writePtr = receivingBuffer.SaveChar(charAtPos) - 1;
-                switch (state.ParseState)
+                switch (_state.ParseState)
                 {
                     case ParseState.MsgComplete:
                     {
@@ -49,10 +46,10 @@ namespace PureFix.Buffer.Ascii
 
                     case ParseState.BeginField:
                     {
-                        var atDigit = charAtPos >= zero && charAtPos <= nine;
+                        var atDigit = charAtPos is >= zero and <= nine;
                         if (atDigit)
                         {
-                            state.BeginTag(writePtr);
+                            _state.BeginTag(writePtr);
                         }
 
                         break;
@@ -63,7 +60,7 @@ namespace PureFix.Buffer.Ascii
                         var isEquals = charAtPos == eq;
                         if (isEquals)
                         {
-                            state.EndTag(writePtr);
+                            _state.EndTag(writePtr);
                         }
 
                         break;
@@ -72,17 +69,17 @@ namespace PureFix.Buffer.Ascii
                     case ParseState.ParsingRawData:
                     {
                         // keep skipping until length read, regardless of delimiter or not
-                        if (state.IncRaw())
+                        if (_state.IncRaw())
                         {
                             // having consumed the raw field expecting delimiter
                             if (charAtPos == delimiter)
                             {
                                 if (switchDelimiter)
                                 {
-                                    receivingBuffer.SwitchChar(writeDelimiter);
+                                    receivingBuffer.SwitchChar(_writeDelimiter);
                                 }
 
-                                state.Store();
+                                _state.Store();
                             }
                             else
                             {
@@ -101,10 +98,10 @@ namespace PureFix.Buffer.Ascii
                         {
                             if (switchDelimiter)
                             {
-                                receivingBuffer.SwitchChar(writeDelimiter);
+                                receivingBuffer.SwitchChar(_writeDelimiter);
                             }
 
-                            state.Store();
+                            _state.Store();
                         }
 
                         break;
@@ -112,7 +109,7 @@ namespace PureFix.Buffer.Ascii
 
                     default:
                     {
-                        var st = state.ParseState;
+                        var st = _state.ParseState;
                         throw new InvalidDataException($"fix parser in unknown state {st}");
                     }
                 }
@@ -120,7 +117,7 @@ namespace PureFix.Buffer.Ascii
                 readPtr++;
             }
 
-            switch (state.ParseState)
+            switch (_state.ParseState)
             {
                 case ParseState.MsgComplete:
                 {
