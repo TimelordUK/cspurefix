@@ -9,7 +9,7 @@ using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    internal class AsciiParseState(ElasticBuffer eb, FixDefinitions definitions, Tags locations)
+    internal class AsciiParseState(ElasticBuffer buffer, FixDefinitions definitions, Tags locations)
     {
         private MessageDefinition? _message;
         public ParseState ParseState { get; private set; }
@@ -35,7 +35,7 @@ namespace PureFix.Buffer.Ascii
 
         public void BeginMessage()
         {
-            eb.Reset();
+            buffer.Reset();
             locations.Reset();
             _checksumExpectedPos = 0;
             ParseState = ParseState.BeginField;
@@ -57,7 +57,7 @@ namespace PureFix.Buffer.Ascii
             {
                 case ParseState.ParsingTag:
                 {
-                    _currentTag = eb.GetWholeNumber(_tagStartPos, pos - 1);
+                    _currentTag = buffer.GetWholeNumber(_tagStartPos, pos - 1);
                     break;
                 }
 
@@ -65,7 +65,7 @@ namespace PureFix.Buffer.Ascii
                     throw new InvalidDataException($"EndTag: unexpected state {ParseState}");
             }
             // if a raw tag, then need length to skip that many bytes
-            this.CheckRawTag();
+            CheckRawTag();
         }
 
         private void CheckRawTag()
@@ -101,35 +101,32 @@ namespace PureFix.Buffer.Ascii
 
         public void Store()
         {
-            var valueEndPos = eb.GetPos() - 1;
+            var valueEndPos = buffer.GetPos() - 1;
             _valueEndPos = valueEndPos;
             var equalPos = _equalPos;
             var tag = _currentTag;
-            var locations1 = locations;
-            var buffer = eb;
-            var _terminates = _checksumExpectedPos;
-
+            
             switch (ParseState)
             {
                 case ParseState.ParsingValue:
                 case ParseState.ParsingRawData:
                 {
                     _rawDataLen = 0;
-                    locations1.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
 
                 case ParseState.ParsingRawDataLength:
                 {
                     _rawDataLen = buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
-                    locations1.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
             }
 
             ParseState = ParseState.BeginField;
             _count++;
-            var nextTagPos = locations1.NextTagPos;
+            var nextTagPos = locations.NextTagPos;
 
             switch (tag)
             {
@@ -188,9 +185,9 @@ namespace PureFix.Buffer.Ascii
 
                 default:
                 {
-                    if (_terminates > 0 && valueEndPos > _terminates)
+                    if (_checksumExpectedPos > 0 && valueEndPos > _checksumExpectedPos)
                     {
-                        throw new InvalidDataException($"Tag: [{tag}] cant be after ${_terminates}");
+                        throw new InvalidDataException($"Tag: [{tag}] cant be after ${_checksumExpectedPos}");
                     }
 
                     break;
