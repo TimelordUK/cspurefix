@@ -1,5 +1,4 @@
-﻿using PureFix.Buffer.tag;
-using PureFix.Dictionary.Definition;
+﻿using PureFix.Dictionary.Definition;
 using System;
 using System.Collections.Generic;
 using System.Linq;

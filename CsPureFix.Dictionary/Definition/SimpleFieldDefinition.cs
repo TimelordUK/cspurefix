@@ -6,8 +6,8 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using PureFix.Buffer.tag;
 using PureFix.Dictionary.Parser;
+using PureFix.Dictionary.tag;
 
 namespace PureFix.Dictionary.Definition
 {

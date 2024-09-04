@@ -4,8 +4,8 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureFix.Buffer.tag;
 using PureFix.Dictionary.Definition;
+using PureFix.Types.tag;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFix.Buffer.Ascii
@@ -148,36 +148,45 @@ namespace PureFix.Buffer.Ascii
 
                 case Tags.BodyLengthTag:
                     {
-                        if (nextTagPos !== 2)
+                        if (nextTagPos != 2)
                         {
-                            throw new Error(`BodyLengthTag: not expected at position[${ nextTagPos }]`)
-        }
-                        this.bodyLen = buffer.getWholeNumber(equalPos + 1, valueEndPos - 1)
-                  this.checksumExpectedPos = this.bodyLen + valueEndPos
-                  this.elasticBuffer.checkGrowBuffer(this.bodyLen)
-                  break
-                }
+                            throw new InvalidDataException($"BodyLengthTag: not expected at position[{nextTagPos}]");
+                        }
 
-                case Tags.MsgTag:
+                        _bodyLen = buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                        _checksumExpectedPos = _bodyLen + valueEndPos;
+                        break;
+                    }
+
+                case Tags.MessageTag:
                     {
-                        if (nextTagPos !== 3)
+                        if (nextTagPos != 3)
                         {
-                            throw new Error(`MsgTag: not expected at position[${ nextTagPos }]`)
-        }
-                        this.msgType = buffer.getString(equalPos + 1, valueEndPos)
-                  this.message = this.definitions.message.get(this.msgType)
-                  break
-                }
+                            throw new InvalidDataException($"MsgTag: not expected at position[{nextTagPos}]");
+                        }
+
+                        _msgType = buffer.GetString(equalPos + 1, valueEndPos);
+                        if (_definitions.Message.TryGetValue(_msgType, out var message))
+                        {
+                            _message = message;
+                        }
+                        else
+                        {
+                            throw new InvalidDataException($"MsgType: [{_msgType}] not in definitions.");
+                        }
+                        break;
+                    }
 
                 case Tags.CheckSumTag:
                     {
-                        if (valueEndPos < this.bodyLen)
+                        if (valueEndPos < _bodyLen)
                         {
-                            throw new Error(`CheckSumTag: [${ valueEndPos }] expected after ${ this.bodyLen}`)
-        }
-                        this.parseState = ParseState.MsgComplete
-                  break
-                }
+                            throw new InvalidDataException($"CheckSumTag: [{valueEndPos}] expected after ${_bodyLen}");
+                        }
+
+                        ParseState = ParseState.MsgComplete;
+                        break;
+                    }
 
                 default:
                     {

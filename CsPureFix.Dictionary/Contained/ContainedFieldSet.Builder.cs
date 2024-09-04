@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureFix.Buffer.tag;
 using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.tag;
 
 namespace PureFix.Dictionary.Contained
 {
