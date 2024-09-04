@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.Data", "Data\PureFi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.Buffer", "PureFix.Buffer\PureFix.Buffer.csproj", "{03F75A48-5262-410F-90C7-947593DF7C30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFIix.Test", "PureFIix.Test\PureFIix.Test.csproj", "{1D06894B-F227-490D-A2EF-C267805069B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFIix.Test", "PureFIix.Test\PureFIix.Test.csproj", "{1D06894B-F227-490D-A2EF-C267805069B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types", "PureFix.Types\PureFix.Types.csproj", "{8F781A69-A1B9-42BE-A1B1-E19C857FB97D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{1D06894B-F227-490D-A2EF-C267805069B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D06894B-F227-490D-A2EF-C267805069B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D06894B-F227-490D-A2EF-C267805069B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F781A69-A1B9-42BE-A1B1-E19C857FB97D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F781A69-A1B9-42BE-A1B1-E19C857FB97D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F781A69-A1B9-42BE-A1B1-E19C857FB97D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F781A69-A1B9-42BE-A1B1-E19C857FB97D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CsPureFix.Dictionary\PureFix.Dictionary.csproj" />
-    <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
-  </ItemGroup>
 </Project>
