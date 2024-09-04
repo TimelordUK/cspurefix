@@ -120,9 +120,47 @@ namespace PureFix.Buffer
             return true;
         }
 
-        public int GetWholeNumber(int tagStartPos, int pos)
+        public int GetWholeNumber(int start, int vend)
         {
-            throw new NotImplementedException();
+            var sign = 1;
+            var raised = vend - start;
+            switch (_buffer[start])
+            {
+                case AsciiChars.Minus:
+                {
+                    --raised;
+                    sign = -1;
+                    ++start;
+                    break;
+                }
+                case AsciiChars.Plus:
+                {
+                    --raised;
+                    ++start;
+                    break;
+                }
+            }
+
+            var i = (int)Math.Pow(10, raised);
+            var num = 0;
+            var scan = start;
+
+            while (scan <= vend)
+            {
+                var p = _buffer[scan++];
+                var d = p - AsciiChars.Zero;
+                num += d * i;
+                i /= 10;
+            }
+
+            return num * sign;
+        }
+
+        public string GetString(int start, int end)
+        {
+            var slice = _buffer.Slice(start, end - start);
+            var str = Encoding.Default.GetString(slice.ToArray());
+            return str;
         }
     }
 }

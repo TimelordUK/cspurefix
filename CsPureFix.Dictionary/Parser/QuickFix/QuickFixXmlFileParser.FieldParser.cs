@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
 using System.Xml.Linq;
-using PureFix.Buffer.tag;
 using PureFix.Dictionary.Definition;
 
 namespace PureFix.Dictionary.Parser.QuickFix
