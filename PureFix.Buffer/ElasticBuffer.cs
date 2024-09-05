@@ -59,7 +59,13 @@ namespace PureFix.Buffer
             return _ptr;
         }
 
-        public int SwitchChar(byte c)
+        public bool GetBoolean(int start)
+        {
+            var b = _buffer[start];
+            return b == AsciiChars.Y;
+        }
+
+    public int SwitchChar(byte c)
         {
             _buffer[_ptr - 1] = c;
             return _ptr;
