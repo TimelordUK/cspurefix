@@ -218,7 +218,7 @@ namespace PureFix.Buffer
             else
             {
                 // decimal with fraction turn to string
-                return WriteString($"{v}");
+                return WriteString($"{(decimal)v}");
             }
         }
 
@@ -245,7 +245,7 @@ namespace PureFix.Buffer
                     }
             }
             var len = vend - start;
-            long i = (long)Math.Pow(10, len - 1);
+            
             for (var j = start; j <= vend; ++j)
             {
                 var p = _buffer[j];
@@ -253,8 +253,11 @@ namespace PureFix.Buffer
                 {
                     var d = p - AsciiChars.Zero;
                     ++digits;
-                    n += d * i;
-                    i /= 10;
+                    n += d;
+                    if (j < vend)
+                    {
+                        n = n * 10;
+                    }
                 }
                 else if (p == AsciiChars.Dot)
                 {
@@ -269,11 +272,16 @@ namespace PureFix.Buffer
                     return null;
                 }
             }
-            var power = dotPosition == 0 ? 0 : len - dotPosition;
-            var raised = dotPosition == 0 ? 10 : Math.Pow(10, -1 * power);
-            var round = dotPosition == 0 ? 1 : Math.Pow(10, power);
+            if (dotPosition == 0)
+            {
+                return n * sign;
+            }
+            var power = len - dotPosition;
+            var raised = Math.Pow(10, -1 * power);
+            var round = Math.Pow(10, power);
             var val = n * raised * sign;
-            return Math.Round(val * round) / round;
+            var rounded = Math.Round(val * round) / round;
+            return rounded;
         }
     }
 }
