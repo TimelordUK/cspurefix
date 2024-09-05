@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFIix.Test.Ascii
 {
@@ -62,6 +61,19 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Whole_Number_Grow_Buffer()
+        {
+            var buffer = new ElasticBuffer(1);
+            var n = 12345;
+            buffer.WriteWholeNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(8));
+        }
+
+        [Test]
         public void Whole_Negative_Number()
         {
             var buffer = new ElasticBuffer(10);
@@ -70,6 +82,7 @@ namespace PureFIix.Test.Ascii
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
             Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
         }
 
