@@ -239,60 +239,60 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
         }
 
+        [Test]
+        public void Tiny_Negative_Floating_Point()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = -0.000000000001;
+            buffer.WriteNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString()));
+            var asf = buffer.GetFloat(0, asString.Length - 1);
+            Assert.That(asf, Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+        }
+
+
+        [Test]
+        public void Tiny_Float_Number_With_Sign_Test()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = 0.000000000001;
+            buffer.WriteString($"+{(decimal)n}");
+            var asString = buffer.ToString();
+            Assert.That(buffer.ToString(), Is.EqualTo("+0.000000000001"));
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.GetFloat(0, asString.Length - 1), Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+        }
+
+        [Test]
+        public void Boolean_True_Test()
+        {
+            var buffer = new ElasticBuffer(1);
+            buffer.WriteBoolean(true);
+            var asString = buffer.ToString();
+            Assert.That(buffer.ToString(), Is.EqualTo("Y"));
+            Assert.That(buffer.GetPos(), Is.EqualTo(1));
+            Assert.That(buffer.GetBoolean(0), Is.EqualTo(true));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Boolean_False_Test()
+        {
+            var buffer = new ElasticBuffer(1);
+            buffer.WriteBoolean(false);
+            var asString = buffer.ToString();
+            Assert.That(buffer.ToString(), Is.EqualTo("N"));
+            Assert.That(buffer.GetPos(), Is.EqualTo(1));
+            Assert.That(buffer.GetBoolean(0), Is.EqualTo(false));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+        }
 
         /*
      
-        test('tiny floating point', () => {
-                const n: number = 0.000000000001
-          const buffer = new ElasticBuffer(10)
-          buffer.writeNumber(n)
-          const asString = buffer.toString()
-          expect(buffer.getPos()).toEqual(14)
-          expect(asString).toEqual('0.000000000001')
-          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-          expect(buffer.currentSize()).toEqual(20)
-        })
-
-        test('tiny -ve floating point', () => {
-                const n: number = -0.000000000001
-          const buffer = new ElasticBuffer(10)
-          buffer.writeNumber(n)
-          const asString = buffer.toString()
-          expect(buffer.getPos()).toEqual(asString.length)
-          expect(asString).toEqual('-0.000000000001')
-          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-          expect(buffer.currentSize()).toEqual(20)
-        })
-
-        test('tiny +ve floating point with sign', () => {
-                const n: number = 0.000000000001
-          const buffer = new ElasticBuffer(10)
-          buffer.writeString(`+${ n.toFixed(12)}`)
-          const asString = buffer.toString()
-          expect(buffer.getPos()).toEqual(asString.length)
-          expect(asString).toEqual('+0.000000000001')
-          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-          expect(buffer.currentSize()).toEqual(20)
-        })
-
-        test('boolean true', () => {
-                const buffer = new ElasticBuffer(1)
-          buffer.writeBoolean(true)
-          expect(buffer.getPos()).toEqual(1)
-          expect(buffer.toString()).toEqual('Y')
-          expect(buffer.currentSize()).toEqual(1)
-          expect(buffer.getBoolean(0)).toBe(true)
-        })
-
-        test('boolean false', () => {
-                const buffer = new ElasticBuffer(1)
-          buffer.writeBoolean(false)
-          expect(buffer.getPos()).toEqual(1)
-          expect(buffer.toString()).toEqual('N')
-          expect(buffer.currentSize()).toEqual(1)
-          expect(buffer.getBoolean(0)).toBe(false)
-        })
-
         test('write buffer', () => {
                 const buffer = new ElasticBuffer(1)
           const s: string = 'fixing up fix'
