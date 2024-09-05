@@ -57,34 +57,23 @@ namespace PureFIix.Test.Ascii
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
             Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
         }
 
+        [Test]
+        public void Whole_Negative_Number()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = -2468;
+            buffer.WriteWholeNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+        }
 
-        /*
-        test('whole number', () => {
-        const n: number = 12345
-  const buffer = new ElasticBuffer(10)
-  buffer.writeWholeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('12345')
-  expect(buffer.getWholeNumber(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize() === 10)
-})
-
-        
-test('-ve number', () => {
-        const n: number = -2468
-  const buffer = new ElasticBuffer(10)
-  buffer.writeWholeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('-2468')
-  expect(buffer.getWholeNumber(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
-
+/*
 test('+ve number with explicit sign', () => {
         const n: number = 2468
   const buffer = new ElasticBuffer(10)
