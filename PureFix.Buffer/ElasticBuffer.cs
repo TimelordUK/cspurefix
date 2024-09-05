@@ -11,7 +11,7 @@ namespace PureFix.Buffer
     {
         private int _size = size;
         private int _returnTo = returnTo;
-        private readonly List<byte> _buffer = new(size);
+        private readonly List<byte> _buffer = Enumerable.Repeat((byte)0, size).ToList();
         private int _ptr;
 
         private static int HowManyDigits(int v)
@@ -161,6 +161,16 @@ namespace PureFix.Buffer
             var slice = _buffer.Slice(start, end - start);
             var str = Encoding.Default.GetString(slice.ToArray());
             return str;
+        }
+
+        public int CurrentSize()
+        {
+            return _buffer.Capacity;
+        }
+
+        public override string ToString()
+        {
+            return Encoding.UTF8.GetString(_buffer.ToArray(), 0, _ptr);
         }
     }
 }

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CsPureFix.Dictionary\PureFix.Dictionary.csproj" />
+    <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
