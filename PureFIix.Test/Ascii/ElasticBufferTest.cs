@@ -37,16 +37,18 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
         }
 
-        /*
-test('string', () => {
-        const s: string = 'fixing up fix'
-  const buffer = new ElasticBuffer(1)
-  buffer.writeString(s)
-  expect(buffer.getPos()).toEqual(s.length)
-  expect(buffer.toString()).toEqual(s)
-  expect(buffer.currentSize()).toEqual(16)
-})
+        [Test]
+        public void String_in_buffer()
+        {
+            var buffer = new ElasticBuffer(1);
+            var s = "fixing up fix";
+            buffer.WriteString(s);
+            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(s));
+            // Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+        }
 
+/*
 test('whole number', () => {
         const n: number = 12345
   const buffer = new ElasticBuffer(10)

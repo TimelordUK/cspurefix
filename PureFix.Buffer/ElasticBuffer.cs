@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
@@ -75,6 +76,7 @@ namespace PureFix.Buffer
 
         public int WriteString(string s)
         {
+            CheckGrowBuffer(s.Length);
             foreach (var c in s)
             {
                 _buffer[_ptr++] = (byte)c;
@@ -98,7 +100,7 @@ namespace PureFix.Buffer
             var sign = Math.Sign(n);
             var p = (int)Math.Pow(10, digits - 1);
             var v = Math.Abs(n);
-            
+
             if (sign < 0)
             {
                 _buffer[_ptr++] = AsciiChars.Minus;
@@ -127,18 +129,18 @@ namespace PureFix.Buffer
             switch (_buffer[start])
             {
                 case AsciiChars.Minus:
-                {
-                    --raised;
-                    sign = -1;
-                    ++start;
-                    break;
-                }
+                    {
+                        --raised;
+                        sign = -1;
+                        ++start;
+                        break;
+                    }
                 case AsciiChars.Plus:
-                {
-                    --raised;
-                    ++start;
-                    break;
-                }
+                    {
+                        --raised;
+                        ++start;
+                        break;
+                    }
             }
 
             var i = (int)Math.Pow(10, raised);
@@ -172,6 +174,22 @@ namespace PureFix.Buffer
         {
             return Encoding.UTF8.GetString(_buffer.ToArray(), 0, _ptr);
         }
+
+        public void CheckGrowBuffer(int required)
+        {
+            if (_buffer.Capacity - _buffer.Count - _ptr >= required)
+            {
+                return;
+            }
+
+            while (_buffer.Capacity - _buffer.Count - _ptr < required)
+            {
+                _buffer.Capacity *= 2;
+            }
+            _buffer.AddRange(Enumerable.Repeat((byte)0, _buffer.Capacity - _buffer.Count));
+        }
     }
 }
+
+    
 
