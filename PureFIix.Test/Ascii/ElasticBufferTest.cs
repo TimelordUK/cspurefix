@@ -113,53 +113,49 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
         }
 
+        [Test]
+        public void Floating_Point_1dp_Test()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = 12345678.9;
+            buffer.WriteNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            var asf = buffer.GetFloat(0, asString.Length - 1);
+            Assert.That(asf, Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+        }
+
+        [Test]
+        public void Negative_Floating_Point_Test()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = -12345.6789;
+            buffer.WriteNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            var asf = buffer.GetFloat(0, asString.Length - 1);
+            Assert.That(asf, Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+        }
+
+        [Test]
+        public void Floating_Point_Many_Dp_Test()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = 0.123456789;
+            buffer.WriteNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            var asf = buffer.GetFloat(0, asString.Length - 1);
+            Assert.That(asf, Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+        }
+
         /*
-     
-
-        test('floating point', () => {
-                const n: number = 12345.6789
-          const buffer = new ElasticBuffer(10)
-          buffer.writeNumber(n)
-          const asString = buffer.toString()
-          expect(buffer.getPos()).toEqual(asString.length)
-          expect(asString).toEqual('12345.6789')
-          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-          expect(buffer.currentSize()).toEqual(10)
-        })
-
-        test('floating point 1 dp', () => {
-                const n: number = 12345678.9
-          const buffer = new ElasticBuffer(10)
-          buffer.writeNumber(n)
-          const asString = buffer.toString()
-          expect(buffer.getPos()).toEqual(asString.length)
-          expect(asString).toEqual('12345678.9')
-          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-          expect(buffer.currentSize()).toEqual(10)
-        })
-
-        test('-ve floating point', () => {
-                const n: number = -12345.6789
-          const buffer = new ElasticBuffer(10)
-          buffer.writeNumber(n)
-          const asString = buffer.toString()
-          expect(buffer.getPos()).toEqual(asString.length)
-          expect(buffer.toString()).toEqual('-12345.6789')
-          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-          expect(buffer.currentSize()).toEqual(20)
-        })
-
-        test('floating point many dp', () => {
-                const n: number = 0.123456789
-          const buffer = new ElasticBuffer(10)
-          buffer.writeNumber(n)
-          const asString = buffer.toString()
-          expect(buffer.getPos()).toEqual(asString.length)
-          expect(asString).toEqual('0.123456789')
-          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-          expect(buffer.currentSize()).toEqual(20)
-        })
-
         test('simple floating point 3.90', () => {
                 const n: number = 3.90
           const buffer = new ElasticBuffer(10)
