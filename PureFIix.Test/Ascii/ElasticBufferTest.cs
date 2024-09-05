@@ -27,7 +27,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void One_char_in_buffer_length_1()
+        public void One_char_in_buffer_length_1_Test()
         {
             var buffer = new ElasticBuffer(1);
             buffer.WriteChar(AsciiChars.Dot);
@@ -37,7 +37,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void String_in_buffer()
+        public void String_in_buffer_Test()
         {
             var buffer = new ElasticBuffer(1);
             var s = "fixing up fix";
@@ -48,7 +48,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Whole_Number()
+        public void Whole_Number_Test()
         {
             var buffer = new ElasticBuffer(10);
             var n = 12345;
@@ -61,7 +61,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Whole_Number_Grow_Buffer()
+        public void Whole_Number_Grow_Buffer_Test()
         {
             var buffer = new ElasticBuffer(1);
             var n = 12345;
@@ -74,7 +74,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Whole_Negative_Number()
+        public void Whole_Negative_Number_Test()
         {
             var buffer = new ElasticBuffer(10);
             var n = -2468;
@@ -86,189 +86,209 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
         }
 
-/*
-test('+ve number with explicit sign', () => {
-        const n: number = 2468
-  const buffer = new ElasticBuffer(10)
-  buffer.writeString(`+${ n}`)
-  const asString = buffer.toString()
-  expect(asString).toEqual('+2468')
-  expect(buffer.getWholeNumber(0, asString.length - 1)).toEqual(n)
-})
+        [Test]
+        public void Get_Whole_Positive_Number_Test()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = 2468;
+            buffer.WriteString($"+{n}");
+            var asString = buffer.ToString();
+            Assert.That(buffer.ToString(), Is.EqualTo("+2468"));
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+        }
 
-test('floating point', () => {
-        const n: number = 12345.6789
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('12345.6789')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
+        [Test]
+        public void Floating_Point_Test()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = 12345.6789;
+            buffer.WriteNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            var asf = buffer.GetFloat(0, asString.Length - 1);
+            Assert.That(asf, Is.EqualTo(n));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+        }
 
-test('floating point 1 dp', () => {
-        const n: number = 12345678.9
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('12345678.9')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
+        /*
+     
 
-test('-ve floating point', () => {
-        const n: number = -12345.6789
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(buffer.toString()).toEqual('-12345.6789')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(20)
-})
+        test('floating point', () => {
+                const n: number = 12345.6789
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('12345.6789')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(10)
+        })
 
-test('floating point many dp', () => {
-        const n: number = 0.123456789
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('0.123456789')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(20)
-})
+        test('floating point 1 dp', () => {
+                const n: number = 12345678.9
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('12345678.9')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(10)
+        })
 
-test('simple floating point 3.90', () => {
-        const n: number = 3.90
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('3.9')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
+        test('-ve floating point', () => {
+                const n: number = -12345.6789
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(buffer.toString()).toEqual('-12345.6789')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(20)
+        })
 
-test('simple floating point 35.77', () => {
-        const n: number = 35.77
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('35.77')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
+        test('floating point many dp', () => {
+                const n: number = 0.123456789
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('0.123456789')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(20)
+        })
 
-test('simple floating point 0.058457', () => {
-        const n: number = 0.058457
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('0.058457')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
+        test('simple floating point 3.90', () => {
+                const n: number = 3.90
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('3.9')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(10)
+        })
 
-test('simple floating point -0.06445', () => {
-        const n: number = -0.06445
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('-0.06445')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
+        test('simple floating point 35.77', () => {
+                const n: number = 35.77
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('35.77')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(10)
+        })
 
-test('whole number as floating point', () => {
-        const n: number = 123456789
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString.toString()).toEqual('123456789')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(10)
-})
+        test('simple floating point 0.058457', () => {
+                const n: number = 0.058457
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('0.058457')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(10)
+        })
 
-test('tiny floating point', () => {
-        const n: number = 0.000000000001
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(14)
-  expect(asString).toEqual('0.000000000001')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(20)
-})
+        test('simple floating point -0.06445', () => {
+                const n: number = -0.06445
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('-0.06445')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(10)
+        })
 
-test('tiny -ve floating point', () => {
-        const n: number = -0.000000000001
-  const buffer = new ElasticBuffer(10)
-  buffer.writeNumber(n)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('-0.000000000001')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(20)
-})
+        test('whole number as floating point', () => {
+                const n: number = 123456789
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString.toString()).toEqual('123456789')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(10)
+        })
 
-test('tiny +ve floating point with sign', () => {
-        const n: number = 0.000000000001
-  const buffer = new ElasticBuffer(10)
-  buffer.writeString(`+${ n.toFixed(12)}`)
-  const asString = buffer.toString()
-  expect(buffer.getPos()).toEqual(asString.length)
-  expect(asString).toEqual('+0.000000000001')
-  expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
-  expect(buffer.currentSize()).toEqual(20)
-})
+        test('tiny floating point', () => {
+                const n: number = 0.000000000001
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(14)
+          expect(asString).toEqual('0.000000000001')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(20)
+        })
 
-test('boolean true', () => {
-        const buffer = new ElasticBuffer(1)
-  buffer.writeBoolean(true)
-  expect(buffer.getPos()).toEqual(1)
-  expect(buffer.toString()).toEqual('Y')
-  expect(buffer.currentSize()).toEqual(1)
-  expect(buffer.getBoolean(0)).toBe(true)
-})
+        test('tiny -ve floating point', () => {
+                const n: number = -0.000000000001
+          const buffer = new ElasticBuffer(10)
+          buffer.writeNumber(n)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('-0.000000000001')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(20)
+        })
 
-test('boolean false', () => {
-        const buffer = new ElasticBuffer(1)
-  buffer.writeBoolean(false)
-  expect(buffer.getPos()).toEqual(1)
-  expect(buffer.toString()).toEqual('N')
-  expect(buffer.currentSize()).toEqual(1)
-  expect(buffer.getBoolean(0)).toBe(false)
-})
+        test('tiny +ve floating point with sign', () => {
+                const n: number = 0.000000000001
+          const buffer = new ElasticBuffer(10)
+          buffer.writeString(`+${ n.toFixed(12)}`)
+          const asString = buffer.toString()
+          expect(buffer.getPos()).toEqual(asString.length)
+          expect(asString).toEqual('+0.000000000001')
+          expect(buffer.getFloat(0, asString.length - 1)).toEqual(n)
+          expect(buffer.currentSize()).toEqual(20)
+        })
 
-test('write buffer', () => {
-        const buffer = new ElasticBuffer(1)
-  const s: string = 'fixing up fix'
-  const b = Buffer.from(s)
-  buffer.writeBuffer(b)
-  expect(buffer.getPos()).toEqual(b.length)
-  expect(buffer.toString()).toEqual(s)
-  expect(buffer.currentSize() === 16)
-  const fetched: Buffer = buffer.getBuffer(0, b.length)
-  expect(fetched).toEqual(b)
-})
+        test('boolean true', () => {
+                const buffer = new ElasticBuffer(1)
+          buffer.writeBoolean(true)
+          expect(buffer.getPos()).toEqual(1)
+          expect(buffer.toString()).toEqual('Y')
+          expect(buffer.currentSize()).toEqual(1)
+          expect(buffer.getBoolean(0)).toBe(true)
+        })
 
-test('buffer shrinks', () => {
-        const buffer = new ElasticBuffer(1)
-  const s = '.'.repeat(60 * 1024)
-  buffer.writeString(s)
-  expect(buffer.getPos()).toEqual(s.length)
-  expect(buffer.toString()).toEqual(s)
-  expect(buffer.currentSize()).toEqual(65536)
-  expect(buffer.reset()).toBe(true)
-  expect(buffer.getPos()).toEqual(0)
-  expect(buffer.currentSize() < 60 * 1024).toBe(true)
-})
-    }*/
+        test('boolean false', () => {
+                const buffer = new ElasticBuffer(1)
+          buffer.writeBoolean(false)
+          expect(buffer.getPos()).toEqual(1)
+          expect(buffer.toString()).toEqual('N')
+          expect(buffer.currentSize()).toEqual(1)
+          expect(buffer.getBoolean(0)).toBe(false)
+        })
+
+        test('write buffer', () => {
+                const buffer = new ElasticBuffer(1)
+          const s: string = 'fixing up fix'
+          const b = Buffer.from(s)
+          buffer.writeBuffer(b)
+          expect(buffer.getPos()).toEqual(b.length)
+          expect(buffer.toString()).toEqual(s)
+          expect(buffer.currentSize() === 16)
+          const fetched: Buffer = buffer.getBuffer(0, b.length)
+          expect(fetched).toEqual(b)
+        })
+
+        test('buffer shrinks', () => {
+                const buffer = new ElasticBuffer(1)
+          const s = '.'.repeat(60 * 1024)
+          buffer.writeString(s)
+          expect(buffer.getPos()).toEqual(s.length)
+          expect(buffer.toString()).toEqual(s)
+          expect(buffer.currentSize()).toEqual(65536)
+          expect(buffer.reset()).toBe(true)
+          expect(buffer.getPos()).toEqual(0)
+          expect(buffer.currentSize() < 60 * 1024).toBe(true)
+        })
+            }*/
     }
 }
