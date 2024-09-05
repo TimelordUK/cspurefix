@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,7 +88,8 @@ namespace PureFix.Buffer
             return _ptr;
         }
 
-        public int WriteBuffer(Memory<byte> v) {
+        public int WriteBuffer(Memory<byte> v)
+        {
             var span = v.Span;
             foreach (var c in span)
             {
@@ -96,7 +99,8 @@ namespace PureFix.Buffer
             return _ptr;
         }
 
-        public int WriteWholeNumber(int n) {
+        public int WriteWholeNumber(int n)
+        {
             var digits = HowManyDigits(n);
             var reserve = digits;
             var sign = Math.Sign(n);
@@ -195,8 +199,81 @@ namespace PureFix.Buffer
             }
             _buffer.AddRange(Enumerable.Repeat((byte)0, _buffer.Capacity - _buffer.Count));
         }
+
+        private static double PrecisionRound(double n, int precision)
+        {
+            var factor = Math.Pow(10, precision);
+            return Math.Round(n * factor) / factor;
+        }
+
+        public int WriteNumber(double v, int places = 13)
+        {
+            var rounded = Math.Floor(v);
+            var fraction = PrecisionRound(v - rounded, places);
+            if (fraction == 0)
+            {
+                // integer
+                return WriteWholeNumber((int)rounded);
+            }
+            else
+            {
+                // decimal with fraction turn to string
+                return WriteString($"{v}");
+            }
+        }
+
+        public double? GetFloat(int start, int vend)
+        {
+            long n = 0;
+            var digits = 0;
+            var dotPosition = 0;
+            var sign = 1;
+
+            switch (_buffer[start])
+            {
+                case AsciiChars.Minus:
+                    {
+                        sign = -1;
+                        start++;
+                        break;
+                    }
+
+                case AsciiChars.Plus:
+                    {
+                        start++;
+                        break;
+                    }
+            }
+            var len = vend - start;
+            long i = (long)Math.Pow(10, len - 1);
+            for (var j = start; j <= vend; ++j)
+            {
+                var p = _buffer[j];
+                if (p >= AsciiChars.Zero && p <= AsciiChars.Nine)
+                {
+                    var d = p - AsciiChars.Zero;
+                    ++digits;
+                    n += d * i;
+                    i /= 10;
+                }
+                else if (p == AsciiChars.Dot)
+                {
+                    if (dotPosition > 0)
+                    {
+                        return null;
+                    }
+                    dotPosition = j - start;
+                }
+                else if (digits > 0)
+                {
+                    return null;
+                }
+            }
+            var power = dotPosition == 0 ? 0 : len - dotPosition;
+            var raised = dotPosition == 0 ? 10 : Math.Pow(10, -1 * power);
+            var round = dotPosition == 0 ? 1 : Math.Pow(10, power);
+            var val = n * raised * sign;
+            return Math.Round(val * round) / round;
+        }
     }
 }
-
-    
-
