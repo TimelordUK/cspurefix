@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFix.Buffer
 {
@@ -97,7 +98,13 @@ namespace PureFix.Buffer
 
         public int WriteWholeNumber(int n) {
             var digits = HowManyDigits(n);
+            var reserve = digits;
             var sign = Math.Sign(n);
+            if (sign < 0)
+            {
+                reserve++;
+            }
+            CheckGrowBuffer(reserve);
             var p = (int)Math.Pow(10, digits - 1);
             var v = Math.Abs(n);
 
@@ -177,12 +184,12 @@ namespace PureFix.Buffer
 
         public void CheckGrowBuffer(int required)
         {
-            if (_buffer.Capacity - _buffer.Count - _ptr >= required)
+            if (_buffer.Capacity - _ptr >= required)
             {
                 return;
             }
 
-            while (_buffer.Capacity - _buffer.Count - _ptr < required)
+            while (_buffer.Capacity - _ptr < required)
             {
                 _buffer.Capacity *= 2;
             }

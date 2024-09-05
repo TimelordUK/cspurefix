@@ -45,11 +45,24 @@ namespace PureFIix.Test.Ascii
             buffer.WriteString(s);
             Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
             Assert.That(buffer.ToString(), Is.EqualTo(s));
-            // Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(16));
         }
 
-/*
-test('whole number', () => {
+        [Test]
+        public void Whole_Number()
+        {
+            var buffer = new ElasticBuffer(10);
+            var n = 12345;
+            buffer.WriteWholeNumber(n);
+            var asString = buffer.ToString();
+            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+        }
+
+
+        /*
+        test('whole number', () => {
         const n: number = 12345
   const buffer = new ElasticBuffer(10)
   buffer.writeWholeNumber(n)
@@ -60,6 +73,7 @@ test('whole number', () => {
   expect(buffer.currentSize() === 10)
 })
 
+        
 test('-ve number', () => {
         const n: number = -2468
   const buffer = new ElasticBuffer(10)
