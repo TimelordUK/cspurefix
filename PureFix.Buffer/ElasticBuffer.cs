@@ -8,7 +8,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFix.Buffer
 {
@@ -18,6 +17,7 @@ namespace PureFix.Buffer
         private int _returnTo = returnTo;
         private readonly List<byte> _buffer = Enumerable.Repeat((byte)0, size).ToList();
         private int _ptr;
+        public int Pos => _ptr;
 
         private static int HowManyDigits(int v)
         {
@@ -31,6 +31,25 @@ namespace PureFix.Buffer
             }
 
             return Math.Max(digits, 1);
+        }
+
+        public int Checksum(int? p)
+        {
+            var ptr = p ?? _ptr;
+            var cks = Sum(ptr);
+            return cks % 256;
+        }
+
+        public int Sum(int? p)
+        {
+            var total = 0;
+            var ptr = p ?? _ptr;
+            ptr = Math.Min(ptr, _ptr);
+            for (var idx = 0; idx < ptr; idx++)
+            {
+                total += _buffer[idx];
+            }
+            return total;
         }
 
         public int GetPos()
@@ -80,6 +99,7 @@ namespace PureFix.Buffer
 
         public int WriteChar(byte c)
         {
+            CheckGrowBuffer(1);
             _buffer[_ptr++] = c;
             return _ptr;
         }
