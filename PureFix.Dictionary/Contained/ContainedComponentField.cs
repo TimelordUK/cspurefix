@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace PureFix.Dictionary.Contained
 {
-    internal class ContainedComponentField(
+    public class ContainedComponentField(
         ComponentFieldDefinition? definition,
         int position,
         bool required,
