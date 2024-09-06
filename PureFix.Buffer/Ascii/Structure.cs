@@ -48,16 +48,24 @@ namespace PureFix.Buffer.Ascii
         {
             foreach (var current in Segments)
             {
-                if (segment != null && !segment.Contains(current)) continue;
                 if (current.Name == null) continue;
-                if (_groups.TryGetValue(current.Name, out var instances))
+                if (segment != null && !segment.Contains(current)) continue;
+                switch (current.Type)
                 {
-                    instances.Add(current);
-                }
-                else if (_components.Remove(current.Name, out var component))
-                {
-                    // assume a group 
-                    _groups[current.Name] = [component, current];
+                    case SegmentType.Group:
+                        {
+                            if (!_groups.TryGetValue(current.Name, out var instances))
+                            {
+                                _groups[current.Name] = instances = [];
+                            }
+                            instances.Add(current);
+                            break;
+                        }
+
+                    case SegmentType.Component:
+                    case SegmentType.Msg:
+                        _components[current.Name] = current;
+                        break;
                 }
             }
         }

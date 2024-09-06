@@ -91,10 +91,12 @@ namespace PureFIix.Test.Ascii
             var b = Encoding.UTF8.GetBytes(Logon);
             ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
-            var msg = await duplex.Reader.ReadAsync();
-            var sp = new AsciiSegmentParser(_definitions);
-            Assert.That(msg.Tags, Is.Not.Null);
-            sp.Parse("A", msg.Tags, msg.Tags.Count() - 1);
+            var view = await duplex.Reader.ReadAsync() as AsciiView;
+            Assert.That(view, Is.Not.Null);
+            Assert.That(view.Structure, Is.Not.Null);
+            Assert.That(view.Segment, Is.Not.Null);
+            Assert.That(view.Definitions, Is.Not.Null);
+            Assert.That(view.Tags, Is.Not.Null);
         }
     }
 }

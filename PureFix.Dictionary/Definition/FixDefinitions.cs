@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using PureFix.Dictionary.Parser;
 
 namespace PureFix.Dictionary.Definition
 {
-    public class FixDefinitions
+    public class FixDefinitions : IEnumerable<MessageDefinition>
     {
         /**
          * all simple fields defined from source definition indexed via name
@@ -18,21 +19,6 @@ namespace PureFix.Dictionary.Definition
         private readonly Dictionary<string, MessageDefinition> _message = new();
         private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimple = new();
         private readonly Dictionary<string, ComponentFieldDefinition> _component = new();
-
-        public int GetMajor()
-        {
-            return FixVersionParser.GetMajor(Version);
-        }
-
-        public int GetMinor()
-        {
-            return FixVersionParser.GetMinor(Version);
-        }
-
-        public int GetServicePack()
-        {
-            return FixVersionParser.GetServicePack(Version);
-        }
 
         public IReadOnlyDictionary<string, SimpleFieldDefinition> Simple => _nameToSimple;
         /**
@@ -91,6 +77,43 @@ namespace PureFix.Dictionary.Definition
         public void SetVersion(FixVersion version)
         {
             Version = version;
+        }
+
+        public IEnumerator<MessageDefinition> GetEnumerator()
+        {
+           return Message.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+           return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append($"message.Count = {Message.Count / 2} "); // lookup via "A" or "Logon"
+            sb.Append($"simple.Count = {Simple.Count} ");
+            sb.Append($"component.Count = {Component.Count} ");
+            return sb.ToString();
+        }
+    }
+
+    public static class FixDefinitionExt
+    {
+        public static int GetMajor(this FixDefinitions definitions)
+        {
+            return FixVersionParser.GetMajor(definitions.Version);
+        }
+
+        public static int GetMinor(this FixDefinitions definitions)
+        {
+            return FixVersionParser.GetMinor(definitions.Version);
+        }
+
+        public static int GetServicePack(this FixDefinitions definitions)
+        {
+            return FixVersionParser.GetServicePack(definitions.Version);
         }
     }
 }
