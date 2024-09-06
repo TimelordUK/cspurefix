@@ -291,20 +291,20 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
         }
 
-        /*
-     
-        test('write buffer', () => {
-                const buffer = new ElasticBuffer(1)
-          const s: string = 'fixing up fix'
-          const b = Buffer.from(s)
-          buffer.writeBuffer(b)
-          expect(buffer.getPos()).toEqual(b.length)
-          expect(buffer.toString()).toEqual(s)
-          expect(buffer.currentSize() === 16)
-          const fetched: Buffer = buffer.getBuffer(0, b.length)
-          expect(fetched).toEqual(b)
-        })
+        [Test]
+        public void Buffer_Write_Test() {
+            var buffer = new ElasticBuffer(1);
+            var s = "fixing up fix";
+            var b = Encoding.UTF8.GetBytes(s);
+            buffer.WriteBuffer(b);
+            Assert.That(buffer.GetPos(), Is.EqualTo(b.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(s));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(16));
+            var fetched = buffer.GetBuffer(0, b.Length);
+            Assert.That(fetched.ToArray(), Is.EqualTo(b));
+        }
 
+        /*
         test('buffer shrinks', () => {
                 const buffer = new ElasticBuffer(1)
           const s = '.'.repeat(60 * 1024)
