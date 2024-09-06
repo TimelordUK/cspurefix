@@ -279,24 +279,31 @@ namespace PureFix.Buffer
             for (var j = start; j <= vend; ++j)
             {
                 var p = _buffer[j];
-                if (p >= AsciiChars.Zero && p <= AsciiChars.Nine)
+                switch (p)
                 {
-                    n = n * 10;
-                    var d = p - AsciiChars.Zero;
-                    ++digits;
-                    n += d;
-                }
-                else if (p == AsciiChars.Dot)
-                {
-                    if (dotPosition > 0)
-                    {
-                        return null;
-                    }
-                    dotPosition = j - start;
-                }
-                else if (digits > 0)
-                {
-                    return null;
+                    case >= AsciiChars.Zero and <= AsciiChars.Nine:
+                        {
+                            n = n * 10;
+                            var d = p - AsciiChars.Zero;
+                            ++digits;
+                            n += d;
+                            break;
+                        }
+
+                    case AsciiChars.Dot:
+                        if (dotPosition > 0)
+                        {
+                            return null;
+                        }
+                        dotPosition = j - start;
+                        break;
+
+                    default:
+                        if (digits > 0)
+                        {
+                            return null;
+                        }
+                        break;
                 }
             }
             if (dotPosition == 0)
