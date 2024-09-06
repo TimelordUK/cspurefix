@@ -11,7 +11,7 @@ using PureFix.Buffer.Ascii;
 
 namespace PureFix.Buffer
 {
-    public class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024)
+    public class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) : IEquatable<ElasticBuffer>
     {
         private int _size = size;
         private int _returnTo = returnTo;
@@ -32,6 +32,17 @@ namespace PureFix.Buffer
 
             return Math.Max(digits, 1);
         }
+
+        public Memory<byte> Slice() {
+            return _buffer.Slice(0, _ptr).ToArray();
+         }
+  
+        /*
+    public copy() : Buffer {
+    const m = Buffer.alloc(this.ptr)
+    this.buffer.copy(m, 0, 0, this.ptr)
+    return m
+    }*/
 
         public int Checksum(int? p)
         {
@@ -161,7 +172,12 @@ namespace PureFix.Buffer
         public bool Reset()
         {
             _ptr = 0;
-            return true;
+            var reducing = _buffer.Capacity > _returnTo;
+            if (reducing)
+            {
+                CollectionsMarshal.SetCount(_buffer, _returnTo);
+            }
+            return reducing;
         }
 
         private (int start, int sign) GetSign(int start)
@@ -292,6 +308,20 @@ namespace PureFix.Buffer
             var val = n * raised * sign;
             var rounded = Math.Round(val * round) / round;
             return rounded;
+        }
+
+        public ElasticBuffer Clone()
+        {
+            var rhs = new ElasticBuffer(_buffer.Capacity);
+            rhs.SetPos(_ptr);
+            return rhs;
+        }
+
+        public bool Equals(ElasticBuffer? other)
+        {
+            if (!ReferenceEquals(other, null)) return false;
+            if (other == null) return false;
+            return _buffer.SequenceEqual(other._buffer);
         }
     }
 }

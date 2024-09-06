@@ -317,18 +317,31 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.ToString(), Is.EqualTo(s));
         }
 
-            /*
-            test('buffer shrinks', () => {
-                    const buffer = new ElasticBuffer(1)
-              const s = '.'.repeat(60 * 1024)
-              buffer.writeString(s)
-              expect(buffer.getPos()).toEqual(s.length)
-              expect(buffer.toString()).toEqual(s)
-              expect(buffer.currentSize()).toEqual(65536)
-              expect(buffer.reset()).toBe(true)
-              expect(buffer.getPos()).toEqual(0)
-              expect(buffer.currentSize() < 60 * 1024).toBe(true)
-            })
-                }*/
+        [Test]
+        public void Buffer_Shrinks()
+        {
+            var buffer = new ElasticBuffer(1);
+            var s = new string('.', 60 * 1024);
+            buffer.WriteString(s);
+            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
+            Assert.That(buffer.ToString(), Is.EqualTo(s));
+            Assert.That(buffer.CurrentSize(), Is.EqualTo(65536));
+            buffer.Reset();
+            Assert.That(buffer.GetPos(), Is.EqualTo(0));
         }
+
+        /*
+        test('buffer shrinks', () => {
+                const buffer = new ElasticBuffer(1)
+          const s = '.'.repeat(60 * 1024)
+          buffer.writeString(s)
+          expect(buffer.getPos()).toEqual(s.length)
+          expect(buffer.toString()).toEqual(s)
+          expect(buffer.currentSize()).toEqual(65536)
+          expect(buffer.reset()).toBe(true)
+          expect(buffer.getPos()).toEqual(0)
+          expect(buffer.currentSize() < 60 * 1024).toBe(true)
+        })
+            }*/
+    }
 }
