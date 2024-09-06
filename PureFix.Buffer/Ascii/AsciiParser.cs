@@ -38,7 +38,7 @@ namespace PureFix.Buffer.Ascii
         // eventually need to parse the location set via segment parser to add all structures from the message.
         private void Msg(int ptr)
         {
-            _txDuplex.Writer.WriteAsync(new MsgView(Locations.ToArray()));
+            _txDuplex.Writer.WriteAsync(new MsgView(Locations.Clone()));
             _state.BeginMessage();
         }
 

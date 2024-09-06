@@ -38,18 +38,18 @@ namespace PureFix.Buffer.Segment
         {
             var buffer = new StringBuilder();
 
-            buffer.Append($"name = ${Name}, ");
-            buffer.Append($"startTag = ${StartTag}, ");
-            buffer.Append($"startPosition = ${StartPosition}, ");
-            buffer.Append($"type = ${Type}, ");
-            buffer.Append($"depth = ${Depth}, ");
-            buffer.Append($"index = ${Index}, ");
-            buffer.Append($"endTag = ${EndTag}, ");
-            buffer.Append($"endPosition = ${EndPosition}, ");
-            buffer.Append($"delimiterTag = ${DelimiterTag}, ");
-            buffer.Append($"delimiterPositions = ${string.Join(", ", DelimiterPositions)}, ");
-            buffer.Append($"currentField = ${CurrentField}, ");
-            buffer.Append($"set = ${Set?.Keys()}, ");
+            buffer.Append($"name = {Name}, ");
+            buffer.Append($"startTag = {StartTag}, ");
+            buffer.Append($"startPosition = {StartPosition}, ");
+            buffer.Append($"type = {Type}, ");
+            buffer.Append($"depth = {Depth}, ");
+            buffer.Append($"index = {Index}, ");
+            buffer.Append($"endTag = {EndTag}, ");
+            buffer.Append($"endPosition = {EndPosition}, ");
+            buffer.Append($"delimiterTag = {DelimiterTag}, ");
+            buffer.Append($"delimiterPositions = {string.Join(", ", DelimiterPositions)}, ");
+            buffer.Append($"currentField = {CurrentField}, ");
+            buffer.Append($"set = {Set?.Keys()}, ");
 
             return buffer.ToString();
         }

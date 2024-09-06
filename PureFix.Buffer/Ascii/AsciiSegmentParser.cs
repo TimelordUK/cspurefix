@@ -168,7 +168,6 @@ namespace PureFix.Buffer.Ascii
                 var tag = context.Tags[context.CurrentTagPosition].Tag;
                 context.Peek = context.StructureStack.Peek();
                 context.Peek.SetCurrentField(tag);
-                var inSet = !context.Peek.Set?.ContainedTag.ContainsKey(tag);
                 if (GroupDelimiter(context, tag) || (context.Peek.Set != null && !context.Peek.Set.ContainedTag.ContainsKey(tag))) {
                     // unravelled all way back to root hence this is not recognised
                     var unknown = context.Peek.Type == SegmentType.Msg;
