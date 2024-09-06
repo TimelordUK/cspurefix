@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -139,33 +140,34 @@ namespace PureFix.Buffer
             return true;
         }
 
-        public int GetWholeNumber(int start, int vend)
+        private (int start, int sign) GetSign(int start)
         {
             var sign = 1;
-            var raised = vend - start;
             switch (_buffer[start])
             {
                 case AsciiChars.Minus:
                     {
                         sign = -1;
-                        --raised;                       
                         ++start;
                         break;
                     }
                 case AsciiChars.Plus:
                     {
-                        --raised;
                         ++start;
                         break;
                     }
             }
+            return (start, sign);
+        } 
 
+        public long GetWholeNumber(int st, int vend)
+        {
+            var (start, sign) = GetSign(st);
             var num = 0;
             for (var j = start; j <= vend; ++j)
             {
                 num *= 10;
-                var p = _buffer[j];
-                var d = p - AsciiChars.Zero;
+                var d = _buffer[j] - AsciiChars.Zero;
                 num += d;
             }
 
@@ -225,28 +227,12 @@ namespace PureFix.Buffer
             }
         }
 
-        public double? GetFloat(int start, int vend)
+        public double? GetFloat(int st, int vend)
         {
             long n = 0;
             var digits = 0;
             var dotPosition = 0;
-            var sign = 1;
-
-            switch (_buffer[start])
-            {
-                case AsciiChars.Minus:
-                    {
-                        sign = -1;
-                        start++;
-                        break;
-                    }
-
-                case AsciiChars.Plus:
-                    {
-                        start++;
-                        break;
-                    }
-            }
+            var (start, sign) = GetSign(st);            
             var len = vend - start;
             
             for (var j = start; j <= vend; ++j)
