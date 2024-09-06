@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFix.Buffer
 {
@@ -65,7 +66,7 @@ namespace PureFix.Buffer
             return b == AsciiChars.Y;
         }
 
-    public int SwitchChar(byte c)
+        public int SwitchChar(byte c)
         {
             _buffer[_ptr - 1] = c;
             return _ptr;
@@ -102,8 +103,11 @@ namespace PureFix.Buffer
             {
                 _buffer[_ptr++] = c;
             }
-
             return _ptr;
+        }
+
+        public Memory<byte> GetBuffer(int start, int end) {
+            return _buffer.Slice(start, start + (end - start)).ToArray();
         }
 
         public int WriteWholeNumber(int n)
@@ -158,7 +162,7 @@ namespace PureFix.Buffer
                     }
             }
             return (start, sign);
-        } 
+        }
 
         public long GetWholeNumber(int st, int vend)
         {
@@ -232,9 +236,9 @@ namespace PureFix.Buffer
             long n = 0;
             var digits = 0;
             var dotPosition = 0;
-            var (start, sign) = GetSign(st);            
+            var (start, sign) = GetSign(st);
             var len = vend - start;
-            
+
             for (var j = start; j <= vend; ++j)
             {
                 var p = _buffer[j];
