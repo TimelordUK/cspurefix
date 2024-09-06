@@ -64,6 +64,8 @@ namespace PureFIix.Test.Ascii
             var b = Encoding.UTF8.GetBytes(s);
             ap.ParseFrom(b);
             Assert.That(ap.Locations[0], Is.EqualTo(_expectedTagPos[0]));
+            // we would not expect a message from this single field
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
         }
 
         [Test]
@@ -74,6 +76,7 @@ namespace PureFIix.Test.Ascii
             var ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
             var b = Encoding.UTF8.GetBytes(Logon);
             ap.ParseFrom(b);
+            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
             var msg = await duplex.Reader.ReadAsync();
             Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
         }
