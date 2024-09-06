@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Buffer.Ascii;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
@@ -13,7 +14,6 @@ namespace PureFix.Buffer.Ascii
 {
     public class AsciiSegmentParser(FixDefinitions definitions)
     {
-
         // the internal state should a fatal error be encountered.
         public record Summary(
             string MsgType,
@@ -38,7 +38,7 @@ namespace PureFix.Buffer.Ascii
         }
 
         public FixDefinitions Definitions { get; } = definitions;
-        
+
         public Structure? Parse(string msgType, Tags tags, int last)
         {
             if (!Definitions.Message.TryGetValue(msgType, out var msgDefinition))
@@ -50,9 +50,17 @@ namespace PureFix.Buffer.Ascii
             // i.e. a component containing a repeated group of components
             // with sub-groups of components
             var context = new Context(msgType, tags, last) { MsgDefinition = msgDefinition };
-            
-            return null;
+
+            var msgStructure = new SegmentDescription(msgDefinition.Name, tags[0].Tag, msgDefinition,
+                  context.CurrentTagPosition, context.StructureStack.Count, SegmentType.Msg);
+            context.StructureStack.Push(msgStructure);
+            Discover(context);
+            Clean(context);
+
+            // now know where all components and groups are positioned within message
+            return new Structure(tags, context.Segments.ToArray());
         }
+
 
         public Summary Summarise(Context context)
         {
@@ -66,7 +74,7 @@ namespace PureFix.Buffer.Ascii
                 context.Segments.Select(s => s.ToString()).ToArray());
         }
 
-        private void Unwind(int tag, Context context)
+        private void Unwind(Context context, int tag)
         {
             while (context.StructureStack.Count > 1)
             {
@@ -88,7 +96,7 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
-        private SegmentDescription? Examine(int tag, Context context)
+        private SegmentDescription? Examine(Context context, int tag)
         {
             SegmentDescription? structure = null;
             var currentField = context.Peek?.CurrentField;
@@ -97,42 +105,114 @@ namespace PureFix.Buffer.Ascii
             switch (currentField.Type)
             {
                 case ContainedFieldType.Simple:
-                {
-                    var sf = (ContainedSimpleField)currentField;
-                    if (sf.Definition.Tag == tag)
                     {
-                        context.CurrentTagPosition += 1;
+                        var sf = (ContainedSimpleField)currentField;
+                        if (sf.Definition.Tag == tag)
+                        {
+                            context.CurrentTagPosition += 1;
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 // moving deeper into structure, start a new context
                 case ContainedFieldType.Component:
-                {
-                    var cf = (ContainedComponentField)currentField;
-                    structure = new SegmentDescription(cf.Name, tag, cf.Definition, context.CurrentTagPosition,
-                        context.StructureStack.Count, SegmentType.Component);
+                    {
+                        var cf = (ContainedComponentField)currentField;
+                        structure = new SegmentDescription(cf.Name, tag, cf.Definition, context.CurrentTagPosition,
+                            context.StructureStack.Count, SegmentType.Component);
                         break;
-                }
+                    }
 
                 case ContainedFieldType.Group:
-                {
-                    var gf = (ContainedGroupField)currentField;
-                    structure = new SegmentDescription(gf.Name, tag, gf.Definition, context.CurrentTagPosition,
-                        context.StructureStack.Count, SegmentType.Group);
-                    context.CurrentTagPosition += 1;
+                    {
+                        var gf = (ContainedGroupField)currentField;
+                        structure = new SegmentDescription(gf.Name, tag, gf.Definition, context.CurrentTagPosition,
+                            context.StructureStack.Count, SegmentType.Group);
+                        context.CurrentTagPosition += 1;
                         structure.StartGroup(context.Tags[context.CurrentTagPosition].Tag);
-                    break;
-                }
+                        break;
+                    }
 
                 default:
-                {
-                    var c = Summarise(context);
-                    throw new InvalidDataException($"examine unknown type for tag = {tag} {c}");
-                }
+                    {
+                        var c = Summarise(context);
+                        throw new InvalidDataException($"examine unknown type for tag = {tag} {c}");
+                    }
             }
-
             return structure;
         }
-}
+
+        public bool GroupDelimiter(Context context, int tag)
+        {
+            var delimiter = false;
+            if (context.Peek == null) return false;
+            if (tag == context.Peek.DelimiterTag)
+            {
+                context.Peek.AddDelimiterPosition(context.CurrentTagPosition);
+            }
+            else if (context.StructureStack.Count > 1)
+            {
+                // if a group is represented by a repeated component, then the tag representing delimiter
+                // needs to be added further up stack to group itself.
+                var last = context.StructureStack.LastOrDefault(d => d.Set?.Type == Dictionary.Parser.ContainedSetType.Group);
+                if (last != null)
+                {
+                    delimiter = last.GroupAddDelimiter(tag, context.CurrentTagPosition);
+                }
+            }
+            return delimiter;
+        }
+
+        void Discover(Context context) {
+            while (context.CurrentTagPosition <= context.Last) {
+                var tag = context.Tags[context.CurrentTagPosition].Tag;
+                context.Peek = context.StructureStack.Peek();
+                context.Peek.SetCurrentField(tag);
+                var inSet = !context.Peek.Set?.ContainedTag.ContainsKey(tag);
+                if (GroupDelimiter(context, tag) || (context.Peek.Set != null && !context.Peek.Set.ContainedTag.ContainsKey(tag))) {
+                    // unravelled all way back to root hence this is not recognised
+                    var unknown = context.Peek.Type == SegmentType.Msg;
+                    if (unknown) {
+                        Gap(context, tag);
+                    } else if (context.StructureStack.Count > 1) {
+                        // move back up the segments and save the finished group / component
+                        Unwind(context, tag);
+                    }
+                    continue;
+                }
+                if (context.Peek.CurrentField == null || context.Peek.Set == null) {
+                    throw new InvalidDataException($"discover no currentField or set for tag = ${tag} {Summarise(context)}");
+                }
+                var structure = Examine(context, tag);
+                if (structure != null) {
+                    context.StructureStack.Push(structure);
+                }
+            }
+        }
+
+        void Clean(Context context)
+        {
+            // any remainder components can be closed.
+            var segments = context.Segments;
+            while (context.StructureStack.Count > 0)
+            {
+                var done = context.StructureStack.Pop();
+                done.End(segments.Count, context.CurrentTagPosition - 1, context.Tags[context.CurrentTagPosition - 1].Tag);
+                segments.Add(done);
+            }
+            // logically reverse the trailer and message so trailer is last in list.
+            var m1 = segments.Count - 1;
+            var m2 = segments.Count - 2;
+            (segments[m1], segments[m2]) = (segments[m2], segments[m1]);
+        }
+    
+        public void Gap(Context context, int tag)
+        {
+            var gap = new SegmentDescription(".undefined", tag, context.Peek?.Set,
+              context.CurrentTagPosition, context.StructureStack.Count, SegmentType.Gap);
+            gap.End(context.Segments.Count, context.CurrentTagPosition, tag);
+            context.Segments.Add(gap);
+            context.CurrentTagPosition++;
+        }
+    }
 }

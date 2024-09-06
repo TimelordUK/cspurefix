@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Segment;
+using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
@@ -16,8 +17,10 @@ namespace PureFix.Buffer.Ascii
         public IReadOnlyDictionary<string, SegmentDescription> Components => _components;
 
         public IReadOnlyList<SegmentDescription> Segments { get; }
-        public Structure(IReadOnlyList<SegmentDescription> segments)
+        public Tags Tags { get; }
+        public Structure(Tags tags, IReadOnlyList<SegmentDescription> segments)
         {
+            Tags = tags;
             Segments = segments;
             BoundLayout();
         }
