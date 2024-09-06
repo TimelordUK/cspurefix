@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFix.Buffer
 {
@@ -97,6 +96,7 @@ namespace PureFix.Buffer
         public int WriteBuffer(Memory<byte> v)
         {
             var span = v.Span;
+            CheckGrowBuffer(span.Length);
             foreach (var c in span)
             {
                 _buffer[_ptr++] = c;
@@ -147,8 +147,8 @@ namespace PureFix.Buffer
             {
                 case AsciiChars.Minus:
                     {
-                        --raised;
                         sign = -1;
+                        --raised;                       
                         ++start;
                         break;
                     }
@@ -160,16 +160,13 @@ namespace PureFix.Buffer
                     }
             }
 
-            var i = (int)Math.Pow(10, raised);
             var num = 0;
-            var scan = start;
-
-            while (scan <= vend)
+            for (var j = start; j <= vend; ++j)
             {
-                var p = _buffer[scan++];
+                num *= 10;
+                var p = _buffer[j];
                 var d = p - AsciiChars.Zero;
-                num += d * i;
-                i /= 10;
+                num += d;
             }
 
             return num * sign;
@@ -257,13 +254,10 @@ namespace PureFix.Buffer
                 var p = _buffer[j];
                 if (p >= AsciiChars.Zero && p <= AsciiChars.Nine)
                 {
+                    n = n * 10;
                     var d = p - AsciiChars.Zero;
                     ++digits;
                     n += d;
-                    if (j < vend)
-                    {
-                        n = n * 10;
-                    }
                 }
                 else if (p == AsciiChars.Dot)
                 {
