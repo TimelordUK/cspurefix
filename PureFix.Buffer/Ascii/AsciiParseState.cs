@@ -25,6 +25,8 @@ namespace PureFix.Buffer.Ascii
         private int _rawDataRead;
         private string? _msgType;
 
+        public string? MsgTtype => _msgType;
+
         public void BeginTag(int pos)
         {
             ParseState = ParseState.ParsingTag;

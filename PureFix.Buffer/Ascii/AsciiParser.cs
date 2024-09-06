@@ -25,6 +25,7 @@ namespace PureFix.Buffer.Ascii
 
         int id = _nextId++;
         private readonly AsciiParseState _state;
+        private readonly AsciiSegmentParser _segmentParser;
         
         public AsciiParser(FixDefinitions definitions, FixDuplex<MsgView> txDuplex, ElasticBuffer? receivingBuffer)
         {
@@ -33,12 +34,28 @@ namespace PureFix.Buffer.Ascii
             _txDuplex = txDuplex;
             _receivingBuffer = receivingBuffer ?? new ElasticBuffer();
             _state = new AsciiParseState(_receivingBuffer, definitions, Locations);
+            _segmentParser = new AsciiSegmentParser(_definitions);
         }
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
         private void Msg(int ptr)
         {
-            _txDuplex.Writer.WriteAsync(new MsgView(Locations.Clone()));
+            if (_state.MsgTtype == null)
+            {
+                return;
+            }
+            var structure = _segmentParser.Parse(_state.MsgTtype, Locations.Clone(), Locations.NextTagPos - 1);
+            if (structure == null)
+            {
+                return;
+            }
+            var msg = structure.Msg();
+            if (msg == null)
+            {
+                return;
+            }
+            var view = new AsciiView(_definitions, msg, _receivingBuffer, structure, ptr, Delimiter, WriteDelimiter);
+            _txDuplex.Writer.WriteAsync(view);
             _state.BeginMessage();
         }
 
