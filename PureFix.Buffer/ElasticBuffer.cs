@@ -176,6 +176,7 @@ namespace PureFix.Buffer
             if (reducing)
             {
                 CollectionsMarshal.SetCount(_buffer, _returnTo);
+                _buffer.Capacity = _returnTo;
             }
             return reducing;
         }
