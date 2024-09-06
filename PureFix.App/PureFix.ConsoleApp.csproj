@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CsPureFix.Dictionary\PureFix.Dictionary.csproj" />
     <ProjectReference Include="..\Data\PureFix.Data.csproj" />
+    <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
   </ItemGroup>
 
 </Project>

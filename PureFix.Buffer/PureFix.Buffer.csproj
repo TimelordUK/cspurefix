@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CsPureFix.Dictionary\PureFix.Dictionary.csproj" />
+    <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
+    <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
     <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
   </ItemGroup>
 </Project>
