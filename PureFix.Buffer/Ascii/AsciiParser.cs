@@ -21,25 +21,24 @@ namespace PureFix.Buffer.Ascii
 
         private readonly ElasticBuffer _receivingBuffer;
         public ElasticBuffer ReceivingBuffer => _receivingBuffer;
-        private readonly FixDuplex<MsgView> _duplex;
+        private readonly FixDuplex<MsgView> _txDuplex;
 
         int id = _nextId++;
         private readonly AsciiParseState _state;
-        private Channel<MsgView> _channel;
         
-        public AsciiParser(FixDefinitions definitions, FixDuplex<MsgView> duplex, ElasticBuffer? receivingBuffer)
+        public AsciiParser(FixDefinitions definitions, FixDuplex<MsgView> txDuplex, ElasticBuffer? receivingBuffer)
         {
             _definitions = definitions;
-            _duplex = duplex;
+            // publish completed parsed views on tx channel.
+            _txDuplex = txDuplex;
             _receivingBuffer = receivingBuffer ?? new ElasticBuffer();
             _state = new AsciiParseState(_receivingBuffer, definitions, Locations);
-            _channel = Channel.CreateUnbounded<MsgView>();
         }
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
         private void Msg(int ptr)
         {
-            _duplex.Writer.WriteAsync(new MsgView(Locations.ToArray()));
+            _txDuplex.Writer.WriteAsync(new MsgView(Locations.ToArray()));
             _state.BeginMessage();
         }
 

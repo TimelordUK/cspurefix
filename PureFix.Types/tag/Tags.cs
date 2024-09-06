@@ -10,6 +10,12 @@ namespace PureFix.Types.tag
         public const int MessageTag = (int)MsgTag.MsgType;
 
         private readonly List<TagPos> _tagPos = new(startingCapacity);
+
+        public override string ToString()
+        {
+            return $"[{_tagPos.Count}] {string.Join(", ", _tagPos)}";
+        }
+
         public int NextTagPos => _tagPos.Count;
 
         public Tags(Tags that) : this()
@@ -20,6 +26,7 @@ namespace PureFix.Types.tag
 
         public TagPos this[int x] => _tagPos[x];
 
+        // used by the compiler to produce types representing the dictionary.
         public static string ToCsType(TagType tagType)
         {
             switch (tagType)
