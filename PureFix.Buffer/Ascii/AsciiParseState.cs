@@ -57,7 +57,7 @@ namespace PureFix.Buffer.Ascii
             {
                 case ParseState.ParsingTag:
                 {
-                    _currentTag = buffer.GetWholeNumber(_tagStartPos, pos - 1);
+                    _currentTag = (int)buffer.GetWholeNumber(_tagStartPos, pos - 1);
                     break;
                 }
 
@@ -118,7 +118,7 @@ namespace PureFix.Buffer.Ascii
 
                 case ParseState.ParsingRawDataLength:
                 {
-                    _rawDataLen = buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                    _rawDataLen = (int)buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
                     locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
@@ -147,7 +147,7 @@ namespace PureFix.Buffer.Ascii
                         throw new InvalidDataException($"BodyLengthTag: not expected at position[{nextTagPos}]");
                     }
 
-                    _bodyLen = buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                    _bodyLen = (int)buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
                     _checksumExpectedPos = _bodyLen + valueEndPos;
                     break;
                 }
