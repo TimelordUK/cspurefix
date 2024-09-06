@@ -16,7 +16,7 @@ namespace PureFix.Buffer.Ascii
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
-        private FixDefinitions _definitions;
+        private readonly FixDefinitions _definitions;
         public Tags Locations { get; } = new ();
 
         private readonly ElasticBuffer _receivingBuffer;
@@ -40,23 +40,26 @@ namespace PureFix.Buffer.Ascii
         // eventually need to parse the location set via segment parser to add all structures from the message.
         private void Msg(int ptr)
         {
-            if (_state.MsgTtype == null)
-            {
-                return;
-            }
-            var structure = _segmentParser.Parse(_state.MsgTtype, Locations.Clone(), Locations.NextTagPos - 1);
-            if (structure == null)
-            {
-                return;
-            }
-            var msg = structure.Msg();
-            if (msg == null)
-            {
-                return;
-            }
-            var view = new AsciiView(_definitions, msg, _receivingBuffer, structure, ptr, Delimiter, WriteDelimiter);
+            var view = GetViiew(ptr);
+            if (view == null) return;
             _txDuplex.Writer.WriteAsync(view);
             _state.BeginMessage();
+        }
+
+        private AsciiView? GetViiew(int ptr)
+        {
+            if (_state.MsgTtype == null)
+            {
+                return null;
+            }
+            var structure = _segmentParser.Parse(_state.MsgTtype, Locations.Clone(), Locations.NextTagPos - 1);
+            var msg = structure?.Msg();
+            if (msg == null)
+            {
+                return null;
+            }
+            var view = new AsciiView(_definitions, msg, _receivingBuffer, structure, ptr, Delimiter, WriteDelimiter);
+            return view;
         }
 
         public void ParseFrom(Memory<byte> readFrom)
