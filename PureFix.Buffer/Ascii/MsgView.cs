@@ -7,8 +7,8 @@ using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class MsgView(TagPos[] tags)
+    public class MsgView(Tags tags)
     {
-        public TagPos[] Tags { get; set; } = tags;
+        public Tags Tags { get; private set; } = tags;
     }
 }

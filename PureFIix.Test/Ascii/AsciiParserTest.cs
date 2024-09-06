@@ -81,5 +81,19 @@ namespace PureFIix.Test.Ascii
             var msg = await duplex.Reader.ReadAsync();
             Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
         }
+
+        [Test]
+        public async Task Logon_Segment_Parse_Test()
+        {
+            var rb = new ElasticBuffer();
+            var duplex = new FixDuplex<MsgView>();
+            var ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
+            var b = Encoding.UTF8.GetBytes(Logon);
+            ap.ParseFrom(b);
+            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            var msg = await duplex.Reader.ReadAsync();
+            var sp = new AsciiSegmentParser(_definitions);
+            sp.Parse("A", msg.Tags, msg.Tags.Count() - 1);
+        }
     }
 }
