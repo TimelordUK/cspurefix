@@ -21,7 +21,6 @@ namespace PureFix.Types.tag
         public Tags(Tags that) : this()
         {
             _tagPos = [..that._tagPos];
-            _tagPos.Capacity = that._tagPos.Capacity;
         }
 
         public TagPos this[int x] => _tagPos[x];
