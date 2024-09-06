@@ -18,16 +18,16 @@ namespace PureFix.Buffer.Segment
         int depth,
         SegmentType type)
     {
-        public string? Name => name;
+        public string? Name { get; private set; } = name;
         public int Index { get; private set; }
         public int EndTag { get; private set; }
         public int? DelimiterTag { get; private set; }
         public int EndPosition { get; private set; }
-        public int StartPosition => startPosition;
-        public int Depth => depth;
-        public int StartTag => startTag;
-        public SegmentType Type => type;
-        private IContainedSet? Set => set;
+        public int StartPosition { get; } = startPosition;
+        public int Depth { get; } = depth;
+        public int StartTag { get; } = startTag;
+        public SegmentType Type { get; } = type;
+        public IContainedSet? Set { get; } = set;
 
         public ContainedField? CurrentField { get; private set; }
         private List<int>? _delimterPositions;
@@ -38,7 +38,7 @@ namespace PureFix.Buffer.Segment
         {
             var buffer = new StringBuilder();
 
-            buffer.Append($"name = ${name}, ");
+            buffer.Append($"name = ${Name}, ");
             buffer.Append($"startTag = ${StartTag}, ");
             buffer.Append($"startPosition = ${StartPosition}, ");
             buffer.Append($"type = ${Type}, ");
@@ -49,7 +49,7 @@ namespace PureFix.Buffer.Segment
             buffer.Append($"delimiterTag = ${DelimiterTag}, ");
             buffer.Append($"delimiterPositions = ${string.Join(", ", DelimiterPositions)}, ");
             buffer.Append($"currentField = ${CurrentField}, ");
-            buffer.Append($"set = ${set?.Keys()}, ");
+            buffer.Append($"set = ${Set?.Keys()}, ");
 
             return buffer.ToString();
         }
