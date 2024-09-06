@@ -93,6 +93,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
             var msg = await duplex.Reader.ReadAsync();
             var sp = new AsciiSegmentParser(_definitions);
+            Assert.That(msg.Tags, Is.Not.Null);
             sp.Parse("A", msg.Tags, msg.Tags.Count() - 1);
         }
     }
