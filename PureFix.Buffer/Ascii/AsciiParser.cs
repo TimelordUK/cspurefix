@@ -9,13 +9,26 @@ using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiParser(FixDefinitions definitions, ElasticBuffer receivingBuffer)
+    public class AsciiParser
     {
         private static int _nextId;
-        byte _delimiter = AsciiChars.Soh;
-        byte _writeDelimiter = AsciiChars.Pipe;
+        public byte Delimiter { get; set; } = AsciiChars.Soh;
+        public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
+        private readonly Tags _locations = new ();
+        private FixDefinitions _definitions;
+        public Tags Locations => _locations;
+        private readonly ElasticBuffer _receivingBuffer;
+        public ElasticBuffer ReceivingBuffer => _receivingBuffer;
+
         int id = _nextId++;
-        private readonly AsciiParseState _state = new(receivingBuffer, definitions, new Tags());
+        private readonly AsciiParseState _state;
+
+        public AsciiParser(FixDefinitions definitions, ElasticBuffer? receivingBuffer)
+        {
+            _definitions = definitions;
+            _receivingBuffer = receivingBuffer ?? new ElasticBuffer();
+            _state = new AsciiParseState(_receivingBuffer, definitions, _locations);
+        }
 
         private void Msg(int ptr)
         {
@@ -27,15 +40,19 @@ namespace PureFix.Buffer.Ascii
             const byte eq = AsciiChars.Eq;
             const byte zero = AsciiChars.Zero;
             const byte nine = AsciiChars.Nine;
-            var delimiter = _delimiter;
-            var switchDelimiter = _writeDelimiter != delimiter;
+            var delimiter = Delimiter;
+            var switchDelimiter = WriteDelimiter != delimiter;
             var readPtr = 0;
             var end = readFrom.Length;
             var readBuffer = readFrom.Span;
+            if (_receivingBuffer.Pos == 0)
+            {
+                _state.BeginMessage();
+            }
             while (readPtr < end)
             {
                 var charAtPos = readBuffer[readPtr];
-                var writePtr = receivingBuffer.SaveChar(charAtPos) - 1;
+                var writePtr = _receivingBuffer.SaveChar(charAtPos) - 1;
                 switch (_state.ParseState)
                 {
                     case ParseState.MsgComplete:
@@ -76,7 +93,7 @@ namespace PureFix.Buffer.Ascii
                             {
                                 if (switchDelimiter)
                                 {
-                                    receivingBuffer.SwitchChar(_writeDelimiter);
+                                        _receivingBuffer.SwitchChar(WriteDelimiter);
                                 }
 
                                 _state.Store();
@@ -98,7 +115,7 @@ namespace PureFix.Buffer.Ascii
                         {
                             if (switchDelimiter)
                             {
-                                receivingBuffer.SwitchChar(_writeDelimiter);
+                                    _receivingBuffer.SwitchChar(WriteDelimiter);
                             }
 
                             _state.Store();
@@ -121,7 +138,7 @@ namespace PureFix.Buffer.Ascii
             {
                 case ParseState.MsgComplete:
                 {
-                    Msg(receivingBuffer.GetPos());
+                    Msg(_receivingBuffer.GetPos());
                     break;
                 }
             }

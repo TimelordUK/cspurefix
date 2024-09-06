@@ -5,6 +5,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -107,7 +108,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
@@ -121,7 +122,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
@@ -135,7 +136,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
@@ -149,7 +150,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
@@ -163,7 +164,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
@@ -177,7 +178,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
@@ -191,7 +192,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
@@ -205,7 +206,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
@@ -233,7 +234,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
@@ -247,7 +248,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
             Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString()));
+            Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
             var asf = buffer.GetFloat(0, asString.Length - 1);
             Assert.That(asf, Is.EqualTo(n));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
@@ -272,7 +273,6 @@ namespace PureFIix.Test.Ascii
         {
             var buffer = new ElasticBuffer(1);
             buffer.WriteBoolean(true);
-            var asString = buffer.ToString();
             Assert.That(buffer.ToString(), Is.EqualTo("Y"));
             Assert.That(buffer.GetPos(), Is.EqualTo(1));
             Assert.That(buffer.GetBoolean(0), Is.EqualTo(true));
@@ -284,7 +284,6 @@ namespace PureFIix.Test.Ascii
         {
             var buffer = new ElasticBuffer(1);
             buffer.WriteBoolean(false);
-            var asString = buffer.ToString();
             Assert.That(buffer.ToString(), Is.EqualTo("N"));
             Assert.That(buffer.GetPos(), Is.EqualTo(1));
             Assert.That(buffer.GetBoolean(0), Is.EqualTo(false));
@@ -305,7 +304,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Buffer_Write_Chars()
+        public void Buffer_Write_Chars_Test()
         {
             var buffer = new ElasticBuffer(1);
             var s = "8=FIX.4.4";
@@ -318,7 +317,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Buffer_Shrinks()
+        public void Buffer_Shrinks_Test()
         {
             var buffer = new ElasticBuffer(1);
             var s = new string('.', 60 * 1024);
@@ -329,6 +328,21 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.Reset(), Is.True);
             Assert.That(buffer.GetPos(), Is.EqualTo(0));
             Assert.That(buffer.CurrentSize, Is.LessThan(60 * 1024));
+        }
+
+        [Test]
+        public void Replace_Char_Test()
+        {
+            var buffer = new ElasticBuffer(1);
+            var s = "8=FIX.4.4";
+            buffer.WriteString(s);
+            Assert.That(buffer.ToString(), Is.EqualTo(s));
+            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
+            buffer.WriteChar(AsciiChars.Soh);
+            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length + 1));
+            buffer.SwitchChar(AsciiChars.Pipe);
+            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length + 1));
+            Assert.That(buffer.ToString(), Is.EqualTo($"{s}|"));
         }
     }
 }

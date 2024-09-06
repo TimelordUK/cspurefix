@@ -16,6 +16,8 @@
             _tagPos.Capacity = that._tagPos.Capacity;
         }
 
+        public TagPos this[int x] => _tagPos[x];
+
         public static string ToCsType(TagType tagType)
         {
             switch (tagType)
