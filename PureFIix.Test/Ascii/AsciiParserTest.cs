@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using PureFIix.Test.Env;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Transport;
 using PureFix.Types.tag;
 
 namespace PureFIix.Test.Ascii
@@ -15,7 +17,7 @@ namespace PureFIix.Test.Ascii
     public class AsciiParserTest
     {
         private string Logon = "8=FIX4.4|9=0000208|35=A|49=sender-10|56=target-20|34=1|57=sub-a|52=20180610-10:39:01.621|98=2|108=62441|95=20|96=VgfoSqo56NqSVI1fLdlI|141=Y|789=4886|383=20|384=1|372=ipsum|385=R|464=N|553=sit|554=consectetur|10=49|";
-        private TagPos[] _expectedTagPos =
+        private readonly TagPos[] _expectedTagPos =
         [
             new(0, 8, 2, 6),
             new(1, 9, 11, 7),
@@ -56,11 +58,24 @@ namespace PureFIix.Test.Ascii
         public void Begin_String_TagPos_Test()
         {
             var rb = new ElasticBuffer();
-            var ap = new AsciiParser(_definitions, rb) { Delimiter = AsciiChars.Pipe };
+            var duplex = new FixDuplex<MsgView>();
+            var ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
             var s = "8=FIX4.4|";
             var b = Encoding.UTF8.GetBytes(s);
             ap.ParseFrom(b);
             Assert.That(ap.Locations[0], Is.EqualTo(_expectedTagPos[0]));
+        }
+
+        [Test]
+        public async Task Logon_Parsers_Correct_Tag_Set_Test()
+        {
+            var rb = new ElasticBuffer();
+            var duplex = new FixDuplex<MsgView>();
+            var ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
+            var b = Encoding.UTF8.GetBytes(Logon);
+            ap.ParseFrom(b);
+            var msg = await duplex.Reader.ReadAsync();
+            Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
         }
     }
 }

@@ -79,8 +79,7 @@ namespace PureFix.Buffer.Ascii
             }
             // if this is a raw data tag then need to keep track of the length
             // on this field to skip that many bytes.
-            var isDataLength = msg.ContainedLength[_currentTag];
-            if (isDataLength)
+            if (msg.ContainedLength.ContainsKey(_currentTag))
             {
                 ParseState = ParseState.ParsingRawDataLength;
             }

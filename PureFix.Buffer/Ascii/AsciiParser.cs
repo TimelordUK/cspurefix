@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using PureFix.Dictionary.Definition;
+using PureFix.Transport;
 using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
@@ -14,24 +16,30 @@ namespace PureFix.Buffer.Ascii
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
-        private readonly Tags _locations = new ();
         private FixDefinitions _definitions;
-        public Tags Locations => _locations;
+        public Tags Locations { get; } = new ();
+
         private readonly ElasticBuffer _receivingBuffer;
         public ElasticBuffer ReceivingBuffer => _receivingBuffer;
+        private readonly FixDuplex<MsgView> _duplex;
 
         int id = _nextId++;
         private readonly AsciiParseState _state;
-
-        public AsciiParser(FixDefinitions definitions, ElasticBuffer? receivingBuffer)
+        private Channel<MsgView> _channel;
+        
+        public AsciiParser(FixDefinitions definitions, FixDuplex<MsgView> duplex, ElasticBuffer? receivingBuffer)
         {
             _definitions = definitions;
+            _duplex = duplex;
             _receivingBuffer = receivingBuffer ?? new ElasticBuffer();
-            _state = new AsciiParseState(_receivingBuffer, definitions, _locations);
+            _state = new AsciiParseState(_receivingBuffer, definitions, Locations);
+            _channel = Channel.CreateUnbounded<MsgView>();
         }
 
+        // eventually need to parse the location set via segment parser to add all structures from the message.
         private void Msg(int ptr)
         {
+            _duplex.Writer.WriteAsync(new MsgView(Locations.ToArray()));
             _state.BeginMessage();
         }
 
@@ -68,7 +76,6 @@ namespace PureFix.Buffer.Ascii
                         {
                             _state.BeginTag(writePtr);
                         }
-
                         break;
                     }
 
@@ -79,7 +86,6 @@ namespace PureFix.Buffer.Ascii
                         {
                             _state.EndTag(writePtr);
                         }
-
                         break;
                     }
 
@@ -93,9 +99,8 @@ namespace PureFix.Buffer.Ascii
                             {
                                 if (switchDelimiter)
                                 {
-                                        _receivingBuffer.SwitchChar(WriteDelimiter);
+                                    _receivingBuffer.SwitchChar(WriteDelimiter);
                                 }
-
                                 _state.Store();
                             }
                             else
@@ -104,7 +109,6 @@ namespace PureFix.Buffer.Ascii
                                     $"delimiter({delimiter}) expected at position {readPtr} when value is {charAtPos}");
                             }
                         }
-
                         break;
                     }
 
@@ -115,12 +119,10 @@ namespace PureFix.Buffer.Ascii
                         {
                             if (switchDelimiter)
                             {
-                                    _receivingBuffer.SwitchChar(WriteDelimiter);
+                                _receivingBuffer.SwitchChar(WriteDelimiter);
                             }
-
                             _state.Store();
                         }
-
                         break;
                     }
 

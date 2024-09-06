@@ -1,6 +1,8 @@
-﻿namespace PureFix.Types.tag
+﻿using System.Collections;
+
+namespace PureFix.Types.tag
 {
-    public class Tags(int startingCapacity = 30 * 000)
+    public class Tags(int startingCapacity = 30 * 000) : IEnumerable<TagPos>
     {
         public const int BeginString = (int)MsgTag.BeginString;
         public const int BodyLengthTag = (int)MsgTag.BodyLength;
@@ -63,6 +65,16 @@
         public void Store(int start, int len, int tag)
         {
             _tagPos.Add(new TagPos(_tagPos.Count, tag, start, len));
+        }
+
+        public IEnumerator<TagPos> GetEnumerator()
+        {
+            return _tagPos.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
