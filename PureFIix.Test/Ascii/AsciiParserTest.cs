@@ -63,6 +63,7 @@ namespace PureFIix.Test.Ascii
             var s = "8=FIX4.4|";
             var b = Encoding.UTF8.GetBytes(s);
             ap.ParseFrom(b);
+            Assert.That(ap.Locations.Count(), Is.EqualTo(1));
             Assert.That(ap.Locations[0], Is.EqualTo(_expectedTagPos[0]));
             // we would not expect a message from this single field
             Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
