@@ -326,22 +326,9 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
             Assert.That(buffer.ToString(), Is.EqualTo(s));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(65536));
-            buffer.Reset();
+            Assert.That(buffer.Reset(), Is.True);
             Assert.That(buffer.GetPos(), Is.EqualTo(0));
+            Assert.That(buffer.CurrentSize, Is.LessThan(60 * 1024));
         }
-
-        /*
-        test('buffer shrinks', () => {
-                const buffer = new ElasticBuffer(1)
-          const s = '.'.repeat(60 * 1024)
-          buffer.writeString(s)
-          expect(buffer.getPos()).toEqual(s.length)
-          expect(buffer.toString()).toEqual(s)
-          expect(buffer.currentSize()).toEqual(65536)
-          expect(buffer.reset()).toBe(true)
-          expect(buffer.getPos()).toEqual(0)
-          expect(buffer.currentSize() < 60 * 1024).toBe(true)
-        })
-            }*/
     }
 }
