@@ -37,5 +37,11 @@ namespace PureFIix.Test.Env
             Duplex = new FixDuplex<MsgView>();
             Parser = new AsciiParser(Definitions, Duplex, Buffer) { Delimiter = AsciiChars.Pipe };
         }
+
+        public void ParseTest(string s)
+        {
+            var b = Encoding.UTF8.GetBytes(s);
+            Parser.ParseFrom(b);
+        }
     }
 }
