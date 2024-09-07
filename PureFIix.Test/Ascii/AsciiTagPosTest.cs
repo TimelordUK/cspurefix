@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
+using System.Globalization;
 
 namespace PureFIix.Test.Ascii
 {
@@ -15,7 +16,7 @@ namespace PureFIix.Test.Ascii
         private List<AsciiView> _views;
         public string ReplayPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4", "quickfix", "logon","fix.txt");
 
-        private TagPos[] _testTags =
+        private readonly TagPos[] _testTags =
         [
             new(0, 120, 0, 1), // 3
             new(1, 50, 1, 1), // 0
@@ -81,6 +82,16 @@ namespace PureFIix.Test.Ascii
             Assert.That(t0, Is.Not.Null);
             var tp = t0[..(_views[0].Segment?.EndPosition ?? 0)];
             Assert.That(tp, Is.EqualTo(_unsortedLogon));
+        }
+
+        [Test]
+        public void Expect_Tags_Sort_In_Tag_First_Order_Test()
+        {
+            var sorted = _testTags.ToList()[.._testTags.Length];
+            sorted.Sort(TagPos.Compare);
+            var tags = sorted.Select(t => t.Tag).ToArray();
+            var expected = new [] {50, 50, 100, 120, 120};
+            Assert.That(tags,Is.EqualTo(expected));
         }
     }
 }
