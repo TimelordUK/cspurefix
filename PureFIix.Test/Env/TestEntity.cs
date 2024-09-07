@@ -43,5 +43,19 @@ namespace PureFIix.Test.Env
             var b = Encoding.UTF8.GetBytes(s);
             Parser.ParseFrom(b);
         }
+
+        public void ParseTestHunks(string s)
+        {
+            var b = Encoding.UTF8.GetBytes(s);
+            var span = new Span<byte>(b);
+            var iteration = 0;
+            while (span.Length > 0)
+            {
+                var want = Math.Min(span.Length, (iteration % 10) + 1);
+                Parser.ParseFrom(span[..want].ToArray());
+                span = span[want..];
+                ++iteration;
+            }
+        }
     }
 }

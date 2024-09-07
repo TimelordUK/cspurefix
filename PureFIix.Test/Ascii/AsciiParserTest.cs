@@ -151,10 +151,8 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Logon_Parsers_Correct_Tag_Set_Test()
         {
-            var b = Encoding.UTF8.GetBytes(Logon);
-            var ap = _testEntity.Parser;
+            _testEntity.ParseTest(Logon);
             var duplex = _testEntity.Duplex;
-            ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
             var msg = await duplex.Reader.ReadAsync();
             Assert.That(msg.Segment.Name, Is.EqualTo("Logon"));
@@ -165,22 +163,26 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Complete_Msg_Parsed()
+        public void Complete_Msg_Parsed_Test()
         {
-            var b = Encoding.UTF8.GetBytes(Logon);
-            var ap = _testEntity.Parser;
+            _testEntity.ParseTest(Logon);
             var duplex = _testEntity.Duplex;
-            ap.ParseFrom(b);
+            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+        }
+
+        [Test]
+        public void Complete_Msg_Parsed_In_Chunks_Test()
+        {
+            _testEntity.ParseTestHunks(Logon);
+            var duplex = _testEntity.Duplex;
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
         }
 
         [Test]
         public async Task Logon_Segment_Parse_Test()
         {
-            var b = Encoding.UTF8.GetBytes(Logon);
-            var ap = _testEntity.Parser;
+            _testEntity.ParseTestHunks(Logon);
             var duplex = _testEntity.Duplex;
-            ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
             var view = await duplex.Reader.ReadAsync() as AsciiView;
             Assert.That(view, Is.Not.Null);
