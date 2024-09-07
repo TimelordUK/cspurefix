@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
 using PureFix.Transport;
 using PureFix.Types.tag;
@@ -55,12 +56,18 @@ namespace PureFix.Buffer.Ascii
             }
             var structure = _segmentParser.Parse(_state.MsgType, Locations.Clone(), Locations.NextTagPos - 1);
             var msg = structure?.Msg();
-            if (msg == null)
+            if (msg != null)
             {
-                return null;
+                var view = new AsciiView(_definitions, msg, _receivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
+                return view;
             }
-            var view = new AsciiView(_definitions, msg, _receivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
-            return view;
+
+            structure = new Structure(Locations.Clone(), []);
+            var segment = new SegmentDescription("unknown", Locations[0].Tag, null, 0, 1, SegmentType.Unknown)
+                {
+                    EndPosition = Locations.NextTagPos - 1
+                };
+            return new AsciiView(_definitions, segment, _receivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
         }
 
         public void ParseFrom(Memory<byte> readFrom)
