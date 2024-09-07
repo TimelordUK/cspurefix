@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,15 +9,13 @@ using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class Structure
+    public class Structure : IEnumerable<SegmentDescription>
     {
         private readonly Dictionary<string, SegmentDescription> _components = new();
         private readonly Dictionary<string, List<SegmentDescription>> _groups = new();
 
-        public IReadOnlyDictionary<string, List<SegmentDescription>> Groups => _groups;
-        public IReadOnlyDictionary<string, SegmentDescription> Components => _components;
-
         public IReadOnlyList<SegmentDescription> Segments { get; }
+
         public Tags Tags { get; }
         public Structure(Tags tags, IReadOnlyList<SegmentDescription> segments)
         {
@@ -64,10 +63,21 @@ namespace PureFix.Buffer.Ascii
 
                     case SegmentType.Component:
                     case SegmentType.Msg:
+                    case SegmentType.Batch:
                         _components[current.Name] = current;
                         break;
                 }
             }
+        }
+
+        public IEnumerator<SegmentDescription> GetEnumerator()
+        {
+            return Segments.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
