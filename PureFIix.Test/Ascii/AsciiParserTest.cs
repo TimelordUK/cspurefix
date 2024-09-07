@@ -74,11 +74,8 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Begin_String_Incorectly_Placed_Test()
         {
-            var s = "8=FIX4.4|8=FIX4.4|";
-            var ap = _testEntity.Parser;
             var duplex = _testEntity.Duplex;
-            var b = Encoding.UTF8.GetBytes(s);
-            var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest("8=FIX4.4|8=FIX4.4|"));
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("BeginString: not expected at position [2]"));
             // we would not expect a message from illegal message
@@ -88,11 +85,8 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Begin_Length_Incorectly_Placed_Test()
         {
-            var s = "8=FIX4.4|9=101|9=101|";
-            var ap = _testEntity.Parser;
             var duplex = _testEntity.Duplex;
-            var b = Encoding.UTF8.GetBytes(s);
-            var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest("8=FIX4.4|9=101|9=101|"));
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("BodyLengthTag: not expected at position [3]"));
             // we would not expect a message from illegal message
@@ -102,13 +96,21 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Msg_Type_Incorectly_Placed_Test()
         {
-            var s = "8=FIX4.4|9=101|35=A|35=A|";
-            var b = Encoding.UTF8.GetBytes(s);
-            var ap = _testEntity.Parser;
             var duplex = _testEntity.Duplex;
-            var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest("8=FIX4.4|9=101|35=A|35=A|"));
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("MsgTag: not expected at position [4]"));
+            // we would not expect a message from illegal message
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Do_Not_Start_With_8_Test()
+        {
+            var duplex = _testEntity.Duplex;
+            var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest("59=FIX4.4|"));
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.Message, Is.EqualTo("position 1 [59] must be BeginString: 8="));
             // we would not expect a message from illegal message
             Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
         }

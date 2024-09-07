@@ -201,7 +201,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (tag != Tags.BeginString)
                     {
-                        throw new InvalidDataException($"position 1[{tag}] must be BeginString: 8 =");
+                        throw new InvalidDataException($"position 1 [{tag}] must be BeginString: 8=");
                     }
 
                     break;
@@ -210,7 +210,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (tag != Tags.BodyLengthTag)
                     {
-                        throw new InvalidDataException($"position 2[${tag}] must be BodyLengthTag: 9 =");
+                        throw new InvalidDataException($"position 2 [${tag}] must be BodyLengthTag: 9=");
                     }
 
                     break;
@@ -219,7 +219,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (tag != Tags.MessageTag)
                     {
-                        throw new InvalidDataException($"position 3[{tag}] must be MsgTag: 35 =");
+                        throw new InvalidDataException($"position 3 [{tag}] must be MsgTag: 35=");
                     }
                 }
                     break;
