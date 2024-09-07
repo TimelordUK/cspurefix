@@ -17,26 +17,26 @@ namespace PureFix.Buffer.Ascii
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
-        private readonly FixDefinitions _definitions;
-        public FixDefinitions Definitons => _definitions;
+        public FixDefinitions Definitons { get; }
+
         public Tags Locations { get; } = new ();
 
-        private readonly ElasticBuffer _receivingBuffer;
-        public ElasticBuffer ReceivingBuffer => _receivingBuffer;
-        private readonly FixDuplex<MsgView> _txDuplex;
+        public ElasticBuffer ReceivingBuffer { get; }
 
-        int id = _nextId++;
+        private readonly FixDuplex<MsgView> _txDuplex;
+        public int ID => _id;
+        private readonly int _id = Interlocked.Increment(ref _nextId);
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;
         
         public AsciiParser(FixDefinitions definitions, FixDuplex<MsgView> txDuplex, ElasticBuffer? receivingBuffer)
         {
-            _definitions = definitions;
+            Definitons = definitions;
             // publish completed parsed views on tx channel.
             _txDuplex = txDuplex;
-            _receivingBuffer = receivingBuffer ?? new ElasticBuffer();
-            _state = new AsciiParseState(_receivingBuffer, definitions, Locations);
-            _segmentParser = new AsciiSegmentParser(_definitions);
+            ReceivingBuffer = receivingBuffer ?? new ElasticBuffer();
+            _state = new AsciiParseState(ReceivingBuffer, definitions, Locations);
+            _segmentParser = new AsciiSegmentParser(Definitons);
         }
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
@@ -58,7 +58,7 @@ namespace PureFix.Buffer.Ascii
             var msg = structure?.Msg();
             if (msg != null)
             {
-                var view = new AsciiView(_definitions, msg, _receivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
+                var view = new AsciiView(Definitons, msg, ReceivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
                 return view;
             }
 
@@ -67,7 +67,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     EndPosition = Locations.NextTagPos - 1
                 };
-            return new AsciiView(_definitions, segment, _receivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
+            return new AsciiView(Definitons, segment, ReceivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
         }
 
         public void ParseFrom(Memory<byte> readFrom)
@@ -80,14 +80,14 @@ namespace PureFix.Buffer.Ascii
             var readPtr = 0;
             var end = readFrom.Length;
             var readBuffer = readFrom.Span;
-            if (_receivingBuffer.Pos == 0)
+            if (ReceivingBuffer.Pos == 0)
             {
                 _state.BeginMessage();
             }
             while (readPtr < end)
             {
                 var charAtPos = readBuffer[readPtr];
-                var writePtr = _receivingBuffer.SaveChar(charAtPos) - 1;
+                var writePtr = ReceivingBuffer.SaveChar(charAtPos) - 1;
                 switch (_state.ParseState)
                 {
                     case ParseState.MsgComplete:
@@ -126,7 +126,7 @@ namespace PureFix.Buffer.Ascii
                             {
                                 if (switchDelimiter)
                                 {
-                                    _receivingBuffer.SwitchChar(WriteDelimiter);
+                                    ReceivingBuffer.SwitchChar(WriteDelimiter);
                                 }
                                 _state.Store();
                             }
@@ -146,7 +146,7 @@ namespace PureFix.Buffer.Ascii
                         {
                             if (switchDelimiter)
                             {
-                                _receivingBuffer.SwitchChar(WriteDelimiter);
+                                ReceivingBuffer.SwitchChar(WriteDelimiter);
                             }
                             _state.Store();
                         }
@@ -167,7 +167,7 @@ namespace PureFix.Buffer.Ascii
             {
                 case ParseState.MsgComplete:
                 {
-                    Msg(_receivingBuffer.GetPos());
+                    Msg(ReceivingBuffer.GetPos());
                     break;
                 }
             }

@@ -65,7 +65,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(ap.Locations.Count(), Is.EqualTo(1));
             Assert.That(ap.Locations[0], Is.EqualTo(_expectedTagPos[0]));
             // we would not expect a message from this single field
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("BeginString: not expected at position [2]"));
             // we would not expect a message from illegal message
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("BodyLengthTag: not expected at position [3]"));
             // we would not expect a message from illegal message
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("MsgTag: not expected at position [4]"));
             // we would not expect a message from illegal message
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("position 1 [59] must be BeginString: 8="));
             // we would not expect a message from illegal message
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("position 2 [59] must be BodyLengthTag: 9="));
             // we would not expect a message from illegal message
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("position 3 [59] must be MsgTag: 35="));
             // we would not expect a message from illegal message
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace PureFIix.Test.Ascii
             var duplex = _testEntity.Duplex;
             _testEntity.ParseTest("8=FIX4.4|9=0000208|35=A|");
             var locs = _testEntity.Parser.Locations;
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
             Assert.That(locs.Count, Is.EqualTo(3));
             Assert.That(locs, Is.EqualTo(_expectedTagPos[..3]));
         }
@@ -150,9 +150,9 @@ namespace PureFIix.Test.Ascii
         {
             _testEntity.ParseTest(Logon);
             var duplex = _testEntity.Duplex;
-            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(true));
             var msg = await duplex.Reader.ReadAsync();
-            Assert.That(msg.Segment.Name, Is.EqualTo("Logon"));
+            Assert.That(msg.Segment?.Name, Is.EqualTo("Logon"));
             var md = msg.Segment.Set as MessageDefinition;
             Assert.That(md, Is.Not.Null);
             Assert.That(md.MsgType, Is.EqualTo("A"));
@@ -165,9 +165,9 @@ namespace PureFIix.Test.Ascii
         {
             _testEntity.ParseTestHunks(Logon);
             var duplex = _testEntity.Duplex;
-            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(true));
             var msg = await duplex.Reader.ReadAsync();
-            Assert.That(msg.Segment.Name, Is.EqualTo("Logon"));
+            Assert.That(msg.Segment?.Name, Is.EqualTo("Logon"));
             var md = msg.Segment.Set as MessageDefinition;
             Assert.That(md, Is.Not.Null);
             Assert.That(md.MsgType, Is.EqualTo("A"));
@@ -181,7 +181,7 @@ namespace PureFIix.Test.Ascii
             const string begin = "8=FIX4.4|9=0000208|";
             var changed = Logon.Replace("10=49|", "555=you know nothin|10=49");
             var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest(changed));
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo($"Tag: [555] cant be after {208 + begin.Length - 1}"));
         }
@@ -192,9 +192,9 @@ namespace PureFIix.Test.Ascii
             var duplex = _testEntity.Duplex;
             var changed = Logon.Replace("35=A", "35=ZZ");
             var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest(changed));
-            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(false));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex.Message, Is.EqualTo($"MsgType: [ZZ] not in definitions."));
+            Assert.That(ex.Message, Is.EqualTo("MsgType: [ZZ] not in definitions."));
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace PureFIix.Test.Ascii
         {
             _testEntity.ParseTest(Logon);
             var duplex = _testEntity.Duplex;
-            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(true));
         }
 
         [Test]
@@ -211,6 +211,7 @@ namespace PureFIix.Test.Ascii
             _testEntity.ParseTestHunks(Logon);
             var duplex = _testEntity.Duplex;
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Assert.That(m, Is.Not.Null);
             Console.WriteLine(m.ToString());
         }
 
@@ -219,7 +220,7 @@ namespace PureFIix.Test.Ascii
         {
             _testEntity.ParseTestHunks(Logon);
             var duplex = _testEntity.Duplex;
-            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(true));
             var view = await duplex.Reader.ReadAsync() as AsciiView;
             Assert.That(view, Is.Not.Null);
             Assert.That(view.Structure, Is.Not.Null);
@@ -234,7 +235,7 @@ namespace PureFIix.Test.Ascii
             var changed = Logon.Replace("108=62441|", "000=62441|");
             _testEntity.ParseTest(changed);
             var duplex = _testEntity.Duplex;
-            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(true));
             var view = await duplex.Reader.ReadAsync() as AsciiView;
             Assert.That(view, Is.Not.Null);
             var missing = view.Missing();
@@ -247,7 +248,7 @@ namespace PureFIix.Test.Ascii
             var changed = Logon.Replace("98=2|108=62441|", "01=2|000=62441|");
             _testEntity.ParseTest(changed);
             var duplex = _testEntity.Duplex;
-            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Assert.That(duplex.Reader.TryPeek(out _), Is.EqualTo(true));
             var view = await duplex.Reader.ReadAsync() as AsciiView;
             Assert.That(view, Is.Not.Null);
             var missing = view.Missing();

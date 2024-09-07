@@ -186,7 +186,7 @@ namespace PureFix.Buffer.Ascii
          */
         public override string ToString()
         {
-            return Stringify(MsgView.AsToken);
+            return Stringify(AsToken);
         }
 
         private string Stringify(Func<SimpleFieldDefinition, string, int, int, TagPos, string> getToken)
