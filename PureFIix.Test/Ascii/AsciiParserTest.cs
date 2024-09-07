@@ -78,7 +78,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Begin_String_Inorectly_Placed_Test()
+        public void Begin_String_Incorectly_Placed_Test()
         {
             var s = "8=FIX4.4|8=FIX4.4|";
             var b = Encoding.UTF8.GetBytes(s);
@@ -89,12 +89,23 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Begin_Length_Inorectly_Placed_Test()
+        public void Begin_Length_Incorectly_Placed_Test()
         {
             var s = "8=FIX4.4|9=101|9=101|";
             var b = Encoding.UTF8.GetBytes(s);
             var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
             Assert.That(ex.Message, Is.EqualTo("BodyLengthTag: not expected at position [3]"));
+            // we would not expect a message from illegal message
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Msg_Type_Incorectly_Placed_Test()
+        {
+            var s = "8=FIX4.4|9=101|35=A|35=A|";
+            var b = Encoding.UTF8.GetBytes(s);
+            var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            Assert.That(ex.Message, Is.EqualTo("MsgTag: not expected at position [4]"));
             // we would not expect a message from illegal message
             Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
         }
