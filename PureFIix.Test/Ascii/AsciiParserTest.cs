@@ -162,6 +162,33 @@ namespace PureFIix.Test.Ascii
             Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
         }
 
+
+        [Test]
+        public async Task Logon_Chunks_Parsers_Correct_Tag_Set_Test()
+        {
+            _testEntity.ParseTestHunks(Logon);
+            var duplex = _testEntity.Duplex;
+            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            var msg = await duplex.Reader.ReadAsync();
+            Assert.That(msg.Segment.Name, Is.EqualTo("Logon"));
+            var md = msg.Segment.Set as MessageDefinition;
+            Assert.That(md, Is.Not.Null);
+            Assert.That(md.MsgType, Is.EqualTo("A"));
+            Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
+        }
+
+        [Test]
+        public void Tags_Other_10_Past_Body_Length_Test()
+        {
+            var duplex = _testEntity.Duplex;
+            var begin = "8=FIX4.4|9=0000208|";
+            var changed = Logon.Replace("10=49|", "555=you know nothin|10=49");
+            var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest(changed));
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.Message, Is.EqualTo($"Tag: [555] cant be after {208 + begin.Length - 1}"));
+        }
+
         [Test]
         public void Complete_Msg_Parsed_Test()
         {
