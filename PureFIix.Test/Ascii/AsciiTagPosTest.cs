@@ -121,5 +121,28 @@ namespace PureFIix.Test.Ascii
             var sorted = GetSorted();
             Assert.That(TagPos.BinarySearch(sorted, 100), Is.EqualTo(2));
         }
+
+        [Test]
+        public void Binary_Search_Non_Existing_Tag_Test()
+        {
+            var sorted = GetSorted();
+            Assert.That(TagPos.BinarySearch(sorted, 1000), Is.LessThan(0));
+        }
+
+        [Test]
+        public void Binary_Search_Duplicate_Tag_Test()
+        {
+            var sorted = GetSorted();
+            Assert.That(TagPos.BinarySearch(sorted, 50), Is.LessThanOrEqualTo(1));
+        }
+
+        [Test]
+        public void Check_Logon_Test()
+        {
+            var sorted = _unsortedLogon.ToList()[.._unsortedLogon.Length];
+            sorted.Sort(TagPos.Compare);
+            Assert.That(sorted[0].Tag, Is.EqualTo(8));
+            Assert.That(sorted[sorted.Count - 1].Tag, Is.EqualTo(789));
+        }
     }
 }
