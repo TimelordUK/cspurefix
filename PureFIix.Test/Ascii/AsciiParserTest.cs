@@ -5,13 +5,9 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using PureFIix.Test.Env;
-using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
-using PureFix.Dictionary.Parser.QuickFix;
-using PureFix.Transport;
 using PureFix.Types.tag;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFIix.Test.Ascii
 {
@@ -229,6 +225,19 @@ namespace PureFIix.Test.Ascii
             Assert.That(view.Segment, Is.Not.Null);
             Assert.That(view.Definitions, Is.Not.Null);
             Assert.That(view.Tags, Is.Not.Null);
+        }
+
+        [Test]
+        public async Task Missing_1_Required_Tag_Test()
+        {
+            var changed = Logon.Replace("108=62441|", "000=62441|");
+            _testEntity.ParseTest(changed);
+            var duplex = _testEntity.Duplex;
+            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            var view = await duplex.Reader.ReadAsync() as AsciiView;
+            Assert.That(view, Is.Not.Null);
+            var missing = view.Missing();
+            Assert.That(missing, Is.EqualTo((int[]) [108]));
         }
     }
 }

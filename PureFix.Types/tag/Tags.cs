@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Drawing;
 
 namespace PureFix.Types.tag
 {
@@ -25,6 +26,11 @@ namespace PureFix.Types.tag
         }
 
         public TagPos this[int x] => _tagPos[x];
+
+        public List<TagPos> Slice(int startPosition, int endPosition)
+        {
+            return _tagPos.Slice(startPosition, endPosition - startPosition);
+        }
 
         // used by the compiler to produce types representing the dictionary.
         public static string ToCsType(TagType tagType)
