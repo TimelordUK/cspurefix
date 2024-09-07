@@ -17,6 +17,7 @@ namespace PureFix.Buffer.Ascii
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
         private readonly FixDefinitions _definitions;
+        public FixDefinitions Definitons => _definitions;
         public Tags Locations { get; } = new ();
 
         private readonly ElasticBuffer _receivingBuffer;
@@ -40,25 +41,25 @@ namespace PureFix.Buffer.Ascii
         // eventually need to parse the location set via segment parser to add all structures from the message.
         private void Msg(int ptr)
         {
-            var view = GetViiew(ptr);
+            var view = GetView(ptr);
             if (view == null) return;
             _txDuplex.Writer.WriteAsync(view);
             _state.BeginMessage();
         }
 
-        private AsciiView? GetViiew(int ptr)
+        private AsciiView? GetView(int ptr)
         {
-            if (_state.MsgTtype == null)
+            if (_state.MsgType == null)
             {
                 return null;
             }
-            var structure = _segmentParser.Parse(_state.MsgTtype, Locations.Clone(), Locations.NextTagPos - 1);
+            var structure = _segmentParser.Parse(_state.MsgType, Locations.Clone(), Locations.NextTagPos - 1);
             var msg = structure?.Msg();
             if (msg == null)
             {
                 return null;
             }
-            var view = new AsciiView(_definitions, msg, _receivingBuffer, structure, ptr, Delimiter, WriteDelimiter);
+            var view = new AsciiView(_definitions, msg, _receivingBuffer.Clone(), structure, ptr, Delimiter, WriteDelimiter);
             return view;
         }
 

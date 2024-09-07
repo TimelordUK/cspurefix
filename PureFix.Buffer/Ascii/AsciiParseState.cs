@@ -25,7 +25,7 @@ namespace PureFix.Buffer.Ascii
         private int _rawDataRead;
         private string? _msgType;
 
-        public string? MsgTtype => _msgType;
+        public string? MsgType => _msgType;
 
         public void BeginTag(int pos)
         {
@@ -50,6 +50,27 @@ namespace PureFix.Buffer.Ascii
             _rawDataLen = 0;
             _bodyLen = 0;
             _msgType = null;
+            _message = null;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            
+            sb.Append($"ParseState = {ParseState} ");
+            sb.Append($"count = {_count} ");
+            sb.Append($"currentTag = {_currentTag} ");
+            sb.Append($"tagStartPos = {_tagStartPos} ");
+            sb.Append($"valueEndPos = {_valueEndPos} ");
+            sb.Append($"equalPos = {_equalPos} ");
+            sb.Append($"rawDataRead = {_rawDataRead} ");
+            sb.Append($"rawDataLen = {_rawDataLen} ");
+            sb.Append($"bodyLen = {_bodyLen} ");
+            sb.Append($"msgType = {_msgType} ");
+            sb.Append($"buffer = {buffer} ");
+            sb.Append($"message = {_message} ");
+
+            return sb.ToString();
         }
 
         public void EndTag(int pos)

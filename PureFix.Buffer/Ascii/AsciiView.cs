@@ -8,24 +8,19 @@ using System.Threading.Tasks;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiView : MsgView
+    public class AsciiView(
+        FixDefinitions definitions,
+        SegmentDescription segment,
+        ElasticBuffer buffer,
+        Structure? structure,
+        int ptr,
+        int delimiter,
+        int writeDelimiter)
+        : MsgView(definitions, segment, structure)
     {
-        public int Ptr { get; }
-        public int Delimiter { get; }
-        public int delimiter { get; }
-        int WriteDelimiter { get; }
-        public AsciiView(FixDefinitions definitions,
-            SegmentDescription segment,
-            ElasticBuffer buffer,
-            Structure? structure,
-            int ptr,
-            int delimiter,
-            int writeDelimiter) :
-            base(definitions, segment, structure)
-        {
-            Ptr = ptr;
-            Delimiter = delimiter;
-            WriteDelimiter = writeDelimiter;
-        }
+        public int Ptr { get; } = ptr;
+        public int Delimiter { get; } = delimiter;
+        int WriteDelimiter { get; } = writeDelimiter;
+        public ElasticBuffer Buffer { get; } = buffer;
     }
 }
