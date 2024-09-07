@@ -22,7 +22,7 @@ namespace PureFix.Buffer.Segment
         public int Index { get; private set; }
         public int EndTag { get; private set; }
         public int? DelimiterTag { get; private set; }
-        public int EndPosition { get; private set; }
+        public int EndPosition { get; set; }
         public int StartPosition { get; } = startPosition;
         public int Depth { get; } = depth;
         public int StartTag { get; } = startTag;
