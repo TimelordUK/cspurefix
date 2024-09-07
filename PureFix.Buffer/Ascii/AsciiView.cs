@@ -40,5 +40,17 @@ namespace PureFix.Buffer.Ascii
                 Delimiter,
                 WriteDelimiter);
         }
+
+        protected override string? StringAtPosition(int position)
+        {
+            if (Structure == null) return null;
+            var tags = Structure.Tags;
+            if (position < 0 || position >= tags.NextTagPos)
+            {
+                return null;
+            }
+            var tag = tags[position];
+            return Buffer.GetString(tag.Start, tag.Start + tag.Len);
+        }
     }
 }
