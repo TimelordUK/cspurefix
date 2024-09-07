@@ -211,6 +211,7 @@ namespace PureFIix.Test.Ascii
             _testEntity.ParseTestHunks(Logon);
             var duplex = _testEntity.Duplex;
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            Console.WriteLine(m.ToString());
         }
 
         [Test]
@@ -238,6 +239,19 @@ namespace PureFIix.Test.Ascii
             Assert.That(view, Is.Not.Null);
             var missing = view.Missing();
             Assert.That(missing, Is.EqualTo((int[]) [108]));
+        }
+
+        [Test]
+        public async Task Missing_2_Required_Tag_Test()
+        {
+            var changed = Logon.Replace("98=2|108=62441|", "01=2|000=62441|");
+            _testEntity.ParseTest(changed);
+            var duplex = _testEntity.Duplex;
+            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
+            var view = await duplex.Reader.ReadAsync() as AsciiView;
+            Assert.That(view, Is.Not.Null);
+            var missing = view.Missing();
+            Assert.That(missing, Is.EqualTo((int[])[98, 108]));
         }
     }
 }

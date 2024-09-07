@@ -9,6 +9,7 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types.tag;
 
+
 namespace PureFix.Buffer.Ascii
 {
     public abstract class MsgView(FixDefinitions definitions, SegmentDescription segment, Structure? structure)
@@ -28,6 +29,34 @@ namespace PureFix.Buffer.Ascii
             return MissingRequired(Segment.Set, []).ToArray();
         }
 
+        protected static string AsToken(SimpleFieldDefinition? field, string val, int i, int count, TagPos tagpos)
+        {
+            var perLine = 2;
+            var newLine = Environment.NewLine;
+            // [280] 814 (ApplQueueResolution) = 2[OverlayLast][281] 10 (CheckSum) = 80
+            string desc;
+            string name;
+            if (field != null)
+            {
+                name = field.Name;
+                desc = field.IsEnum ? $"{val} [{field.ResolveEnum(val)}]" : $"{val}";
+            } else
+            {
+                desc = $"{val}";
+                name = "unknown";
+            }
+            string delimiter;
+            if (i == 1 || (i < count && i % perLine - 1 == 0))
+            {
+                delimiter = newLine;
+            } else
+            {
+                delimiter = i < count ? ", " : "";
+            }
+
+            return $"[{i}] {tagpos.Tag} ({name}) = {desc}{delimiter}";
+        }
+        
         private List<int> MissingRequired(IContainedSet? segmentSet, List<int> start)
         {
             if (segmentSet == null)
@@ -151,6 +180,39 @@ namespace PureFix.Buffer.Ascii
             return TagPos.BinarySearch(SortedTagPosForwards, tag);
         }
 
+        /**
+         * easy human-readable format showing each field, its position, value and resolved
+         * enum.
+         */
+        public override string ToString()
+        {
+            return Stringify(MsgView.AsToken);
+        }
+
+        private string Stringify(Func<SimpleFieldDefinition, string, int, int, TagPos, string> getToken)
+        {
+            if (structure == null) return "";
+            var buffer = new StringBuilder();
+            var tags = structure.Tags;
+            var count = segment.EndPosition - segment.StartPosition;
+            var simple = Definitions.TagToSimple;
+
+            for (var i = segment.StartPosition; i <= segment.EndPosition; ++i)
+            {
+                var tagPos = tags[i];
+                simple.TryGetValue(tagPos.Tag, out var field);
+                var val = StringAtPosition(i) ?? "";
+                // [0] 8 (BeginString) = FIX4.4
+                var token = field != null
+                    ? getToken(field, val, i - segment.StartPosition, count, tagPos)
+                    : $"[{i}] {tagPos.Tag} (unknown) = {val}, ";
+                buffer.Append(token);
+            }
+
+            return buffer.ToString();
+        }
+
         protected abstract MsgView Create(SegmentDescription singleton);
+        protected abstract string? StringAtPosition(int position);
     }
 }
