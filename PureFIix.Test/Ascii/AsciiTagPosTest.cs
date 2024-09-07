@@ -14,7 +14,7 @@ namespace PureFIix.Test.Ascii
     {
         private TestEntity _testEntity;
         private List<AsciiView> _views;
-        public string ReplayPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4", "quickfix", "logon","fix.txt");
+        public string ReplayPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4", "quickfix", "logon", "fix.txt");
 
         private readonly TagPos[] _testTags =
         [
@@ -84,14 +84,42 @@ namespace PureFIix.Test.Ascii
             Assert.That(tp, Is.EqualTo(_unsortedLogon));
         }
 
-        [Test]
-        public void Expect_Tags_Sort_In_Tag_First_Order_Test()
+        List<TagPos> GetSorted()
         {
             var sorted = _testTags.ToList()[.._testTags.Length];
             sorted.Sort(TagPos.Compare);
+            return sorted;
+        }
+
+        [Test]
+        public void Expect_Tags_Sort_In_Tag_First_Order_Test()
+        {
+            var sorted = GetSorted();
             var tags = sorted.Select(t => t.Tag).ToArray();
-            var expected = new [] {50, 50, 100, 120, 120};
-            Assert.That(tags,Is.EqualTo(expected));
+            var expected = new[] { 50, 50, 100, 120, 120 };
+            Assert.That(tags, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Expect_Tags_Sort_In_Tag_Then_Start_First_Order_Test()
+        {
+            var sorted = GetSorted();
+            Assert.That(sorted[0].Tag, Is.EqualTo(sorted[1].Tag));
+            Assert.That(sorted[0].Start, Is.LessThan(sorted[1].Start));
+        }
+
+        [Test]
+        public void Expect_Start_To_Carry_With_Its_Tag_Test()
+        {
+            var sorted = GetSorted();
+            Assert.That(sorted, Is.EqualTo(_expected));
+        }
+
+        [Test]
+        public void Binary_Search_On_Sorted_Test()
+        {
+            var sorted = GetSorted();
+            Assert.That(TagPos.BinarySearch(sorted, 100), Is.EqualTo(2));
         }
     }
 }
