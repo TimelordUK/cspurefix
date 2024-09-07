@@ -43,26 +43,18 @@ namespace PureFIix.Test.Ascii
             new(21, 10, 211, 2)
         ];
 
-        private FixDefinitions _definitions;
-        private ElasticBuffer rb;
-        private FixDuplex<MsgView> duplex;
-        private AsciiParser ap;
+        private TestEntity _testEntity;
 
         [OneTimeSetUp]
         public void OnceSetup()
         {
-            var rootFolder = Directory.GetCurrentDirectory();
-            _definitions = new FixDefinitions();
-            var qf = new QuickFixXmlFileParser(_definitions);
-            qf.Parse(Path.Join(rootFolder, "..", "..", "..", "..", "Data", "FIX44.xml"));
+            _testEntity = new TestEntity();
         }
 
         [SetUp]
         public void Setup()
         {
-            rb = new ElasticBuffer();
-            duplex = new FixDuplex<MsgView>();
-            ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
+            _testEntity.Prepare();
         }
 
         [Test]
@@ -70,6 +62,8 @@ namespace PureFIix.Test.Ascii
         {
             var s = "8=FIX4.4|";
             var b = Encoding.UTF8.GetBytes(s);
+            var ap = _testEntity.Parser;
+            var duplex = _testEntity.Duplex;
             ap.ParseFrom(b);
             Assert.That(ap.Locations.Count(), Is.EqualTo(1));
             Assert.That(ap.Locations[0], Is.EqualTo(_expectedTagPos[0]));
@@ -81,8 +75,11 @@ namespace PureFIix.Test.Ascii
         public void Begin_String_Incorectly_Placed_Test()
         {
             var s = "8=FIX4.4|8=FIX4.4|";
+            var ap = _testEntity.Parser;
+            var duplex = _testEntity.Duplex;
             var b = Encoding.UTF8.GetBytes(s);
             var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("BeginString: not expected at position [2]"));
             // we would not expect a message from illegal message
             Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
@@ -92,8 +89,11 @@ namespace PureFIix.Test.Ascii
         public void Begin_Length_Incorectly_Placed_Test()
         {
             var s = "8=FIX4.4|9=101|9=101|";
+            var ap = _testEntity.Parser;
+            var duplex = _testEntity.Duplex;
             var b = Encoding.UTF8.GetBytes(s);
             var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("BodyLengthTag: not expected at position [3]"));
             // we would not expect a message from illegal message
             Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
@@ -104,7 +104,10 @@ namespace PureFIix.Test.Ascii
         {
             var s = "8=FIX4.4|9=101|35=A|35=A|";
             var b = Encoding.UTF8.GetBytes(s);
+            var ap = _testEntity.Parser;
+            var duplex = _testEntity.Duplex;
             var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo("MsgTag: not expected at position [4]"));
             // we would not expect a message from illegal message
             Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
@@ -114,6 +117,8 @@ namespace PureFIix.Test.Ascii
         public async Task Logon_Parsers_Correct_Tag_Set_Test()
         {
             var b = Encoding.UTF8.GetBytes(Logon);
+            var ap = _testEntity.Parser;
+            var duplex = _testEntity.Duplex;
             ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
             var msg = await duplex.Reader.ReadAsync();
@@ -124,6 +129,8 @@ namespace PureFIix.Test.Ascii
         public async Task Logon_Segment_Parse_Test()
         {
             var b = Encoding.UTF8.GetBytes(Logon);
+            var ap = _testEntity.Parser;
+            var duplex = _testEntity.Duplex;
             ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
             var view = await duplex.Reader.ReadAsync() as AsciiView;
