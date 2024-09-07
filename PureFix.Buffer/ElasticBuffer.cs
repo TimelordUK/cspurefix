@@ -13,11 +13,16 @@ namespace PureFix.Buffer
 {
     public class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) : IEquatable<ElasticBuffer>
     {
-        private int _size = size;
-        private int _returnTo = returnTo;
         private readonly List<byte> _buffer = Enumerable.Repeat((byte)0, size).ToList();
-        private int _ptr;
-        public int Pos => _ptr;
+        public int Pos { get; private set; }
+        private readonly int _returnTo = returnTo;
+
+        public ElasticBuffer(ElasticBuffer rhs) : this()
+        {
+            _buffer = rhs._buffer[..rhs.Pos];
+            _returnTo = rhs._returnTo;
+            Pos = rhs.Pos;
+        }
 
         private static int HowManyDigits(int v)
         {
@@ -34,7 +39,7 @@ namespace PureFix.Buffer
         }
 
         public Memory<byte> Slice() {
-            return _buffer.Slice(0, _ptr).ToArray();
+            return _buffer.Slice(0, Pos).ToArray();
          }
   
         /*
@@ -46,7 +51,7 @@ namespace PureFix.Buffer
 
         public int Checksum(int? p)
         {
-            var ptr = p ?? _ptr;
+            var ptr = p ?? Pos;
             var cks = Sum(ptr);
             return cks % 256;
         }
@@ -54,8 +59,8 @@ namespace PureFix.Buffer
         public int Sum(int? p)
         {
             var total = 0;
-            var ptr = p ?? _ptr;
-            ptr = Math.Min(ptr, _ptr);
+            var ptr = p ?? Pos;
+            ptr = Math.Min(ptr, Pos);
             for (var idx = 0; idx < ptr; idx++)
             {
                 total += _buffer[idx];
@@ -65,15 +70,15 @@ namespace PureFix.Buffer
 
         public int GetPos()
         {
-            return _ptr;
+            return Pos;
         }
 
         public int SetPos(int ptr)
         {
-            var prev = _ptr;
+            var prev = Pos;
             if (ptr >= 0 && ptr <= _buffer.Count)
             {
-                _ptr = ptr;
+                Pos = ptr;
             }
 
             return prev;
@@ -87,7 +92,7 @@ namespace PureFix.Buffer
         public int WriteBoolean(bool v)
         {
             WriteChar(v ? AsciiChars.Y : AsciiChars.N);
-            return _ptr;
+            return Pos;
         }
 
         public bool GetBoolean(int start)
@@ -98,21 +103,21 @@ namespace PureFix.Buffer
 
         public int SwitchChar(byte c)
         {
-            _buffer[_ptr - 1] = c;
-            return _ptr;
+            _buffer[Pos - 1] = c;
+            return Pos;
         }
 
         public int SaveChar(byte c)
         {
-            _buffer[_ptr++] = c;
-            return _ptr;
+            _buffer[Pos++] = c;
+            return Pos;
         }
 
         public int WriteChar(byte c)
         {
             CheckGrowBuffer(1);
-            _buffer[_ptr++] = c;
-            return _ptr;
+            _buffer[Pos++] = c;
+            return Pos;
         }
 
         public int WriteString(string s)
@@ -120,10 +125,10 @@ namespace PureFix.Buffer
             CheckGrowBuffer(s.Length);
             foreach (var c in s)
             {
-                _buffer[_ptr++] = (byte)c;
+                _buffer[Pos++] = (byte)c;
             }
 
-            return _ptr;
+            return Pos;
         }
 
         public int WriteBuffer(Memory<byte> v)
@@ -132,9 +137,9 @@ namespace PureFix.Buffer
             CheckGrowBuffer(span.Length);
             foreach (var c in span)
             {
-                _buffer[_ptr++] = c;
+                _buffer[Pos++] = c;
             }
-            return _ptr;
+            return Pos;
         }
 
         public Memory<byte> GetBuffer(int start, int end) {
@@ -156,22 +161,22 @@ namespace PureFix.Buffer
 
             if (sign < 0)
             {
-                _buffer[_ptr++] = AsciiChars.Minus;
+                _buffer[Pos++] = AsciiChars.Minus;
             }
             while (p >= 1)
             {
                 var d = (byte)(v / p);
                 v -= d * p;
                 p /= 10;
-                _buffer[_ptr++] = (byte)(AsciiChars.Zero + d);
+                _buffer[Pos++] = (byte)(AsciiChars.Zero + d);
             }
 
-            return _ptr;
+            return Pos;
         }
 
         public bool Reset()
         {
-            _ptr = 0;
+            Pos = 0;
             var reducing = _buffer.Capacity > _returnTo;
             if (reducing)
             {
@@ -229,17 +234,17 @@ namespace PureFix.Buffer
 
         public override string ToString()
         {
-            return Encoding.UTF8.GetString(_buffer.ToArray(), 0, _ptr);
+            return Encoding.UTF8.GetString(_buffer.ToArray(), 0, Pos);
         }
 
         public void CheckGrowBuffer(int required)
         {
-            if (_buffer.Capacity - _ptr >= required)
+            if (_buffer.Capacity - Pos >= required)
             {
                 return;
             }
 
-            while (_buffer.Capacity - _ptr < required)
+            while (_buffer.Capacity - Pos < required)
             {
                 _buffer.Capacity *= 2;
             }
@@ -320,16 +325,13 @@ namespace PureFix.Buffer
 
         public ElasticBuffer Clone()
         {
-            var rhs = new ElasticBuffer(_buffer.Capacity);
-            rhs.SetPos(_ptr);
-            return rhs;
+            return new ElasticBuffer(this);
         }
 
         public bool Equals(ElasticBuffer? other)
         {
             if (!ReferenceEquals(other, null)) return false;
-            if (other == null) return false;
-            return _buffer.SequenceEqual(other._buffer);
+            return other != null && _buffer.SequenceEqual(other._buffer);
         }
     }
 }
