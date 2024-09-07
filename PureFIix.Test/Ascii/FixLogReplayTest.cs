@@ -11,8 +11,9 @@ namespace PureFIix.Test.Ascii
     public class FixLogReplayTest
     {
         private TestEntity _testEntity;
-        public string ReplayPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4", "fix.txt");
-        public string JsonPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4", "fix.json");
+        public static readonly string RootPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4");
+        public string ReplayPath = Path.Join(RootPath, "fix.txt");
+        public string JsonPath = Path.Join(RootPath, "fix.json");
         private Dictionary<string, int> _expectedCounts;
         private List<AsciiView> _views;
 
