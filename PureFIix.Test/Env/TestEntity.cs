@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace PureFIix.Test.Env
 {
@@ -55,6 +56,14 @@ namespace PureFIix.Test.Env
                 ++iteration;
             }
             Duplex.Writer.Complete();
+        }
+
+        public async Task<Dictionary<string,int>> GetJsonDict(string file)
+        {
+            using var streamReader = File.OpenText(file);
+            var json = await streamReader.ReadToEndAsync();
+            var values = JsonSerializer.Deserialize<Dictionary<string, int>>(json);
+            return values;
         }
 
         public async Task<List<AsciiView>> Replay(string file)
