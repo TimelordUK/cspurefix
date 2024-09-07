@@ -198,7 +198,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (valueEndPos < _bodyLen)
                     {
-                        throw new InvalidDataException($"CheckSumTag: [{valueEndPos}] expected after ${_bodyLen}");
+                        throw new InvalidDataException($"CheckSumTag: [{valueEndPos}] expected after {_bodyLen}");
                     }
 
                     ParseState = ParseState.MsgComplete;
@@ -209,7 +209,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (_checksumExpectedPos > 0 && valueEndPos > _checksumExpectedPos)
                     {
-                        throw new InvalidDataException($"Tag: [{tag}] cant be after ${_checksumExpectedPos}");
+                        throw new InvalidDataException($"Tag: [{tag}] cant be after {_checksumExpectedPos}");
                     }
 
                     break;
