@@ -83,7 +83,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Begin_Length_Incorectly_Placed_Test()
+        public void Begin_Length_Missing_Pos_3_Test()
         {
             var duplex = _testEntity.Duplex;
             var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest("8=FIX4.4|9=101|9=101|"));
@@ -113,6 +113,39 @@ namespace PureFIix.Test.Ascii
             Assert.That(ex.Message, Is.EqualTo("position 1 [59] must be BeginString: 8="));
             // we would not expect a message from illegal message
             Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Body_Length_Incorrectl_Placed_Test()
+        {
+            var duplex = _testEntity.Duplex;
+            var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest("8=FIX4.4|59=101|9=101|"));
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.Message, Is.EqualTo("position 2 [59] must be BodyLengthTag: 9="));
+            // we would not expect a message from illegal message
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void MsgTag_Incorrectl_Placed_Test()
+        {
+            var duplex = _testEntity.Duplex;
+            var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseTest("8=FIX4.4|9=101|59=A|"));
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.Message, Is.EqualTo("position 3 [59] must be MsgTag: 35="));
+            // we would not expect a message from illegal message
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void First_3_Fields_Correctly_Placed_Test()
+        {
+            var duplex = _testEntity.Duplex;
+            _testEntity.ParseTest("8=FIX4.4|9=0000208|35=A|");
+            var locs = _testEntity.Parser.Locations;
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+            Assert.That(locs.Count, Is.EqualTo(3));
+            Assert.That(locs, Is.EqualTo(_expectedTagPos[..3]));
         }
 
         [Test]

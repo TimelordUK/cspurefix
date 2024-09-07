@@ -210,7 +210,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (tag != Tags.BodyLengthTag)
                     {
-                        throw new InvalidDataException($"position 2 [${tag}] must be BodyLengthTag: 9=");
+                        throw new InvalidDataException($"position 2 [{tag}] must be BodyLengthTag: 9=");
                     }
 
                     break;
