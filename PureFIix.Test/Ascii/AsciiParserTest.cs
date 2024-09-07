@@ -44,7 +44,10 @@ namespace PureFIix.Test.Ascii
         ];
 
         private FixDefinitions _definitions;
-        
+        private ElasticBuffer rb;
+        private FixDuplex<MsgView> duplex;
+        private AsciiParser ap;
+
         [OneTimeSetUp]
         public void OnceSetup()
         {
@@ -54,12 +57,17 @@ namespace PureFIix.Test.Ascii
             qf.Parse(Path.Join(rootFolder, "..", "..", "..", "..", "Data", "FIX44.xml"));
         }
 
+        [SetUp]
+        public void Setup()
+        {
+            rb = new ElasticBuffer();
+            duplex = new FixDuplex<MsgView>();
+            ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
+        }
+
         [Test]
         public void Begin_String_TagPos_Test()
         {
-            var rb = new ElasticBuffer();
-            var duplex = new FixDuplex<MsgView>();
-            var ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
             var s = "8=FIX4.4|";
             var b = Encoding.UTF8.GetBytes(s);
             ap.ParseFrom(b);
@@ -70,11 +78,30 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Begin_String_Inorectly_Placed_Test()
+        {
+            var s = "8=FIX4.4|8=FIX4.4|";
+            var b = Encoding.UTF8.GetBytes(s);
+            var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            Assert.That(ex.Message, Is.EqualTo("BeginString: not expected at position [2]"));
+            // we would not expect a message from illegal message
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Begin_Length_Inorectly_Placed_Test()
+        {
+            var s = "8=FIX4.4|9=101|9=101|";
+            var b = Encoding.UTF8.GetBytes(s);
+            var ex = Assert.Throws<InvalidDataException>(() => ap.ParseFrom(b));
+            Assert.That(ex.Message, Is.EqualTo("BodyLengthTag: not expected at position [3]"));
+            // we would not expect a message from illegal message
+            Assert.That(duplex.Reader.TryPeek(out var msg), Is.EqualTo(false));
+        }
+
+        [Test]
         public async Task Logon_Parsers_Correct_Tag_Set_Test()
         {
-            var rb = new ElasticBuffer();
-            var duplex = new FixDuplex<MsgView>();
-            var ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
             var b = Encoding.UTF8.GetBytes(Logon);
             ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
@@ -85,9 +112,6 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Logon_Segment_Parse_Test()
         {
-            var rb = new ElasticBuffer();
-            var duplex = new FixDuplex<MsgView>();
-            var ap = new AsciiParser(_definitions, duplex, rb) { Delimiter = AsciiChars.Pipe };
             var b = Encoding.UTF8.GetBytes(Logon);
             ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));

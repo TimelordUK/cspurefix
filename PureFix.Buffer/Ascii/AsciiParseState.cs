@@ -135,7 +135,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (nextTagPos != 1)
                     {
-                        throw new InvalidDataException($"BeginString: not expected at position[{nextTagPos}]");
+                        throw new InvalidDataException($"BeginString: not expected at position [{nextTagPos}]");
                     }
 
                     break;
@@ -145,7 +145,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (nextTagPos != 2)
                     {
-                        throw new InvalidDataException($"BodyLengthTag: not expected at position[{nextTagPos}]");
+                        throw new InvalidDataException($"BodyLengthTag: not expected at position [{nextTagPos}]");
                     }
 
                     _bodyLen = (int)buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
@@ -157,7 +157,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (nextTagPos != 3)
                     {
-                        throw new InvalidDataException($"MsgTag: not expected at position[{nextTagPos}]");
+                        throw new InvalidDataException($"MsgTag: not expected at position [{nextTagPos}]");
                     }
 
                     _msgType = buffer.GetString(equalPos + 1, valueEndPos);

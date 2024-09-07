@@ -8,6 +8,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
@@ -34,7 +35,7 @@ namespace PureFix.Buffer.Ascii
             public Tags Tags { get; } = tags;
             public int Last { get; } = last;
             public MessageDefinition? MsgDefinition { get; set; }
-            public SegmentDescription? Peek { get; set; }
+            public SegmentDescription? Peek => StructureStack.Peek();
         }
 
         public FixDefinitions Definitions { get; } = definitions;
@@ -71,24 +72,23 @@ namespace PureFix.Buffer.Ascii
                 context.CurrentTagPosition,
                 context.StructureStack.Peek().ToString(),
                 context.Segments.Select(s => s.ToString()).ToArray(),
-                context.Segments.Select(s => s.ToString()).ToArray());
+                context.StructureStack.Select(s => s.ToString()).ToArray());
         }
 
         private void Unwind(Context context, int tag)
         {
-            while (context.StructureStack.Count > 1)
+            while (context?.StructureStack.Count > 1)
             {
                 var done = context.StructureStack.Pop();
                 done.End(context.Segments.Count, context.CurrentTagPosition - 1, context.Tags[context.CurrentTagPosition - 1].Tag);
                 context.Segments.Add(done);
-                context.Peek = context.StructureStack.Peek();
-                if (context.Peek.Set != null && context.Peek.Set.ContainedTag.ContainsKey(tag))
+                if (context?.Peek?.Set != null && context.Peek.Set.ContainedTag.ContainsKey(tag))
                 {
                     // unwound to point this tag lives in this set.
                     break;
                 }
 
-                if (context.Peek.Type == SegmentType.Msg)
+                if (context?.Peek?.Type == SegmentType.Msg)
                 {
                     // this is unknown tag, and it is not part of trailer so raise unknown
                     break;
@@ -154,7 +154,7 @@ namespace PureFix.Buffer.Ascii
             {
                 // if a group is represented by a repeated component, then the tag representing delimiter
                 // needs to be added further up stack to group itself.
-                var last = context.StructureStack.LastOrDefault(d => d.Set?.Type == Dictionary.Parser.ContainedSetType.Group);
+                var last = context.StructureStack.FirstOrDefault(d => d.Set?.Type == ContainedSetType.Group);
                 if (last != null)
                 {
                     delimiter = last.GroupAddDelimiter(tag, context.CurrentTagPosition);
@@ -163,33 +163,40 @@ namespace PureFix.Buffer.Ascii
             return delimiter;
         }
 
-        void Discover(Context context) {
-            while (context.CurrentTagPosition <= context.Last) {
+        private void Discover(Context context)
+        {
+            while (context.CurrentTagPosition <= context.Last)
+            {
                 var tag = context.Tags[context.CurrentTagPosition].Tag;
-                context.Peek = context.StructureStack.Peek();
-                context.Peek.SetCurrentField(tag);
-                if (GroupDelimiter(context, tag) || (context.Peek.Set != null && !context.Peek.Set.ContainedTag.ContainsKey(tag))) {
+                context.Peek?.SetCurrentField(tag);
+                if (GroupDelimiter(context, tag) || (context.Peek?.Set != null && !context.Peek.Set.ContainedTag.ContainsKey(tag)))
+                {
                     // unravelled all way back to root hence this is not recognised
-                    var unknown = context.Peek.Type == SegmentType.Msg;
-                    if (unknown) {
+                    var unknown = context.Peek?.Type == SegmentType.Msg;
+                    if (unknown)
+                    {
                         Gap(context, tag);
-                    } else if (context.StructureStack.Count > 1) {
+                    }
+                    else if (context.StructureStack.Count > 1)
+                    {
                         // move back up the segments and save the finished group / component
                         Unwind(context, tag);
                     }
                     continue;
                 }
-                if (context.Peek.CurrentField == null || context.Peek.Set == null) {
+                if (context.Peek?.CurrentField == null || context.Peek.Set == null)
+                {
                     throw new InvalidDataException($"discover no currentField or set for tag = ${tag} {Summarise(context)}");
                 }
                 var structure = Examine(context, tag);
-                if (structure != null) {
+                if (structure != null)
+                {
                     context.StructureStack.Push(structure);
                 }
             }
         }
 
-        void Clean(Context context)
+        private void Clean(Context context)
         {
             // any remainder components can be closed.
             var segments = context.Segments;
@@ -204,8 +211,8 @@ namespace PureFix.Buffer.Ascii
             var m2 = segments.Count - 2;
             (segments[m1], segments[m2]) = (segments[m2], segments[m1]);
         }
-    
-        public void Gap(Context context, int tag)
+
+        private void Gap(Context context, int tag)
         {
             var gap = new SegmentDescription(".undefined", tag, context.Peek?.Set,
               context.CurrentTagPosition, context.StructureStack.Count, SegmentType.Gap);
