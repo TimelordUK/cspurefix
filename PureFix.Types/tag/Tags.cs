@@ -10,6 +10,7 @@ namespace PureFix.Types.tag
         public const int MessageTag = (int)MsgTag.MsgType;
 
         private readonly List<TagPos> _tagPos = new(startingCapacity);
+        public int Count => _tagPos.Count;
 
         public override string ToString()
         {
