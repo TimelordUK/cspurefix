@@ -157,7 +157,21 @@ namespace PureFIix.Test.Ascii
             ap.ParseFrom(b);
             Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
             var msg = await duplex.Reader.ReadAsync();
+            Assert.That(msg.Segment.Name, Is.EqualTo("Logon"));
+            var md = msg.Segment.Set as MessageDefinition;
+            Assert.That(md, Is.Not.Null);
+            Assert.That(md.MsgType, Is.EqualTo("A"));
             Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
+        }
+
+        [Test]
+        public void Complete_Msg_Parsed()
+        {
+            var b = Encoding.UTF8.GetBytes(Logon);
+            var ap = _testEntity.Parser;
+            var duplex = _testEntity.Duplex;
+            ap.ParseFrom(b);
+            Assert.That(duplex.Reader.TryPeek(out var m), Is.EqualTo(true));
         }
 
         [Test]
