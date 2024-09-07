@@ -15,20 +15,17 @@ namespace PureFIix.Test.Env
     internal class TestEntity
     {
         public FixDefinitions Definitions { get; }
-
         public ElasticBuffer Buffer { get; }
-
         public FixDuplex<MsgView> Duplex { get; private set;}
-
         public AsciiParser Parser { get; private set; }
+        public string RootData { get; } = Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "Data");
 
         public TestEntity(string dataDict = "FIX44.xml")
         {
-            var rootFolder = Directory.GetCurrentDirectory();
             Definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(Definitions);
-            qf.Parse(Path.Join(rootFolder, "..", "..", "..", "..", "Data", dataDict));
-            Buffer = new ElasticBuffer();
+            qf.Parse(Path.Join(RootData, dataDict));
+            Buffer = new ElasticBuffer(160 * 1024, 160 * 1024);
         }
 
         public void Prepare()
@@ -42,6 +39,7 @@ namespace PureFIix.Test.Env
         {
             var b = Encoding.UTF8.GetBytes(s);
             Parser.ParseFrom(b);
+            Duplex.Writer.Complete();
         }
 
         public void ParseTestHunks(string s)
@@ -56,6 +54,29 @@ namespace PureFIix.Test.Env
                 span = span[want..];
                 ++iteration;
             }
+            Duplex.Writer.Complete();
+        }
+
+        public async Task<List<AsciiView>> Replay(string file)
+        {
+            List<AsciiView> msgs = [];
+            try
+            {
+                using var streamReader = File.OpenText(file);
+                var all = await streamReader.ReadToEndAsync();
+                ParseTest(all);
+                await foreach (var view in Duplex.Reader.ReadAllAsync())
+                {
+                    msgs.Add((AsciiView)view);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return msgs;
         }
     }
 }
