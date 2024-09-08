@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
@@ -13,7 +12,7 @@ namespace PureFix.Buffer
 {
     public class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) : IEquatable<ElasticBuffer>
     {
-        private readonly List<byte> _buffer = Enumerable.Repeat((byte)0, size).ToList();
+        private byte[] _buffer = Enumerable.Repeat((byte)0, size).ToArray();
         public int Pos { get; private set; }
         private readonly int _returnTo = returnTo;
 
@@ -38,9 +37,11 @@ namespace PureFix.Buffer
             return Math.Max(digits, 1);
         }
 
-        public Memory<byte> Slice() {
-            return _buffer.Slice(0, Pos).ToArray();
-         }
+        public Memory<byte> Slice()
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, 0, Pos);
+            return span.ToArray();
+        }
   
         /*
     public copy() : Buffer {
@@ -76,7 +77,7 @@ namespace PureFix.Buffer
         public int SetPos(int ptr)
         {
             var prev = Pos;
-            if (ptr >= 0 && ptr <= _buffer.Count)
+            if (ptr >= 0 && ptr <= _buffer.Length)
             {
                 Pos = ptr;
             }
@@ -143,7 +144,8 @@ namespace PureFix.Buffer
         }
 
         public Memory<byte> GetBuffer(int start, int end) {
-            return _buffer.Slice(start, start + (end - start)).ToArray();
+            var span = new ReadOnlySpan<byte>(_buffer, start, start + (end - start));
+            return span.ToArray();
         }
 
         public int WriteWholeNumber(int n)
@@ -177,64 +179,32 @@ namespace PureFix.Buffer
         public bool Reset()
         {
             Pos = 0;
-            var reducing = _buffer.Capacity > _returnTo;
+            var reducing = _buffer.Length > _returnTo;
             if (reducing)
             {
-                CollectionsMarshal.SetCount(_buffer, _returnTo);
-                _buffer.Capacity = _returnTo;
+                var span = new ReadOnlySpan<byte>(_buffer, 0, _returnTo);
+                _buffer = span.ToArray();
             }
             return reducing;
         }
 
-        private (int start, int sign) GetSign(int start)
-        {
-            var sign = 1;
-            switch (_buffer[start])
-            {
-                case AsciiChars.Minus:
-                    {
-                        sign = -1;
-                        ++start;
-                        break;
-                    }
-                case AsciiChars.Plus:
-                    {
-                        ++start;
-                        break;
-                    }
-            }
-            return (start, sign);
-        }
-
         public long GetWholeNumber(int st, int vend)
         {
-            var (start, sign) = GetSign(st);
-            var num = 0;
-            for (var j = start; j <= vend; ++j)
-            {
-                num *= 10;
-                var v = _buffer[j];
-                if (v is < AsciiChars.Zero or > AsciiChars.Nine)
-                {
-                    throw new InvalidDataException($"{v} is not a digit 0-9");
-                }
-                var d = v - AsciiChars.Zero;
-                num += d;
-            }
-
-            return num * sign;
+            var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            var v = long.Parse(ros);
+            return v;
         }
 
         public string GetString(int start, int end)
         {
-            var slice = _buffer.Slice(start, end - start);
+            var slice = new ReadOnlySpan<byte>(_buffer, start, (end - start));
             var str = Encoding.Default.GetString(slice.ToArray());
             return str;
         }
 
         public int CurrentSize()
         {
-            return _buffer.Capacity;
+            return _buffer.Length;
         }
 
         public override string ToString()
@@ -244,16 +214,20 @@ namespace PureFix.Buffer
 
         public void CheckGrowBuffer(int required)
         {
-            if (_buffer.Capacity - Pos >= required)
+            var len = _buffer.Length;
+            if (_buffer.Length - Pos >= required)
             {
                 return;
             }
 
-            while (_buffer.Capacity - Pos < required)
+            while (len - Pos < required)
             {
-                _buffer.Capacity *= 2;
+                len *= 2;
             }
-            _buffer.AddRange(Enumerable.Repeat((byte)0, _buffer.Capacity - _buffer.Count));
+
+            var grown = new byte[len];
+            Array.Copy(_buffer, grown, _buffer.Length);
+            _buffer = grown;
         }
 
         private static double PrecisionRound(double n, int precision)
@@ -280,52 +254,16 @@ namespace PureFix.Buffer
 
         public double? GetFloat(int st, int vend)
         {
-            long n = 0;
-            var digits = 0;
-            var dotPosition = 0;
-            var (start, sign) = GetSign(st);
-            var len = vend - start;
+            var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            var v = double.Parse(ros);
+            return v;
+        }
 
-            for (var j = start; j <= vend; ++j)
-            {
-                var p = _buffer[j];
-                switch (p)
-                {
-                    case >= AsciiChars.Zero and <= AsciiChars.Nine:
-                        {
-                            n = n * 10;
-                            var d = p - AsciiChars.Zero;
-                            ++digits;
-                            n += d;
-                            break;
-                        }
-
-                    case AsciiChars.Dot:
-                        if (dotPosition > 0)
-                        {
-                            return null;
-                        }
-                        dotPosition = j - start;
-                        break;
-
-                    default:
-                        if (digits > 0)
-                        {
-                            return null;
-                        }
-                        break;
-                }
-            }
-            if (dotPosition == 0)
-            {
-                return n * sign;
-            }
-            var power = len - dotPosition;
-            var raised = Math.Pow(10, -1 * power);
-            var round = Math.Pow(10, power);
-            var val = n * raised * sign;
-            var rounded = Math.Round(val * round) / round;
-            return rounded;
+        public decimal? GetDecimal(int st, int vend)
+        {
+            var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            var v = decimal.Parse(ros);
+            return v;
         }
 
         public ElasticBuffer Clone()

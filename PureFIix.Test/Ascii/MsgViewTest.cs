@@ -40,7 +40,6 @@ namespace PureFIix.Test.Ascii
             Assert.That(asString, Is.EqualTo("FIX4.4"));
         }
 
-
         [Test]
         public void Get_Tag_9_Typed_String_View_Test()
         {
