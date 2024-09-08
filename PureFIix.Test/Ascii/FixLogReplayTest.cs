@@ -31,7 +31,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Check_Replay_View_Count_Test()
         {
-            Assert.That(_views.Count, Is.EqualTo(50));
+            Assert.That(_views, Has.Count.EqualTo(50));
         }
 
         /*
