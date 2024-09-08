@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFIix.Test.Ascii
 {
@@ -112,6 +113,15 @@ namespace PureFIix.Test.Ascii
             var view = _views[0];
             var asString = view.GetString(999);
             Assert.That(asString, Is.Null);
+        }
+
+        [Test]
+        public void Get_All_Strings_View_Test()
+        {
+            var view = _views[0];
+            var asStrings = view.GetStrings();
+            Assert.That(asStrings, Has.Length.EqualTo(22));
+            Assert.That(asStrings[0], Is.EqualTo("FIX4.4"));
         }
     }
 }
