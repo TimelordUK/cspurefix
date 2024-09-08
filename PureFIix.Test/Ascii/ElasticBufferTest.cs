@@ -342,5 +342,19 @@ namespace PureFIix.Test.Ascii
             Assert.That(buffer.GetPos(), Is.EqualTo(s.Length + 1));
             Assert.That(buffer.ToString(), Is.EqualTo($"{s}|"));
         }
+
+        [Test]
+        public void Read_LocalDate_Test()
+        {
+            var ds = "10:39:01.621";
+            var b = new ElasticBuffer(1);
+            b.WriteString(ds);
+            var dt = b.GetLocalTime(0, b.Pos - 1);
+            Assert.That(dt, Is.Not.Null);
+            Assert.That(dt.Value.Hour, Is.EqualTo(10));
+            Assert.That(dt.Value.Minute, Is.EqualTo(39));
+            Assert.That(dt.Value.Second, Is.EqualTo(01));
+            Assert.That(dt.Value.Millisecond, Is.EqualTo(621));
+        }
     }
 }

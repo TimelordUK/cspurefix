@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -259,6 +260,22 @@ namespace PureFix.Buffer
         {
             var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             return span.ToArray();
+        }
+
+        // 20180610-10:39:01.621
+        public DateTime? GetLocalTime(int st, int vend)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            var chars = new ReadOnlySpan<char>(span.ToArray().Select(b => (char)b).ToArray());
+            if (DateTime.TryParseExact(chars, "hh:mm:ss.fff".AsSpan(), null,DateTimeStyles.AssumeLocal, out var d))
+            {
+                return d;
+            }
+            if (DateTime.TryParseExact(chars, "hh:mm:ss".AsSpan(), null, DateTimeStyles.AssumeLocal, out var d1))
+            {
+                return d1;
+            }
+            return null;
         }
 
         public bool GetBoolean(int start)
