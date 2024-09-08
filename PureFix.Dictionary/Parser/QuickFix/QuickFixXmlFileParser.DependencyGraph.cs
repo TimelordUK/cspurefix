@@ -15,12 +15,12 @@ namespace PureFix.Dictionary.Parser.QuickFix
     {
         public class Node
         {
-            public record Edge(int Head, int Tail);
+            public readonly record struct Edge(int Head, int Tail);
             public string Name { get; }
             public int ID { get; }
             public XElement Element { get; }
             public ElementType Type { get; }
-            private readonly List<Edge> _edges = new();
+            private readonly List<Edge> _edges = [];
             public IReadOnlyList<Edge> Edges => _edges;
             public IReadOnlyDictionary<string, string> AsAttributeDict() => Element.AsAttributeDict();
             public bool IsRequired() => Name == "StandardHeader" || 
@@ -63,12 +63,12 @@ namespace PureFix.Dictionary.Parser.QuickFix
         /*
          * a graph representing the data dictionary
          */
-        private readonly Dictionary<int, Node> _nodes = new();
-        private readonly Dictionary<int, List<Edge>> _edges = new();
+        private readonly Dictionary<int, Node> _nodes = [];
+        private readonly Dictionary<int, List<Edge>> _edges = [];
         /*
          * indexed on node id, this allows an edge to quickly find the set in which to place a field.
          */
-        private readonly Dictionary<int, ContainedFieldSet> _containedSets = new();
+        private readonly Dictionary<int, ContainedFieldSet> _containedSets = [];
         private Node? _header;
         private Node? _trailer;
 

@@ -27,28 +27,34 @@ namespace PureFix.Dictionary.Contained
                     break;
 
                 case ContainedFieldType.Component:
-                {
-                    var cf = field as ContainedComponentField;
-                    var definition = cf?.Definition;
-                    if (definition != null && !string.IsNullOrEmpty(definition.Abbreviation) &&
-                        definition.Abbreviation != field.Name)
-                    {
-                        _localNameToField[definition.Abbreviation] = field;
-                    }
+                    AddUpdateComponent(field);
                     break;
-                }
 
                 case ContainedFieldType.Group:
-                {
-                    var gf = field as ContainedGroupField;
-                    var definition = gf?.Definition;
-                    if (definition != null && !string.IsNullOrEmpty(definition.Abbreviation) &&
-                     definition.Abbreviation != field.Name)
-                    {
-                        _localNameToField[definition.Abbreviation] = field;
-                    }
+                    AddUpdateGroup(field);
                     break;
-                }
+            }
+        }
+
+        private void AddUpdateGroup(ContainedField field)
+        {
+            var gf = field as ContainedGroupField;
+            var definition = gf?.Definition;
+            if (definition != null && !string.IsNullOrEmpty(definition.Abbreviation) &&
+             definition.Abbreviation != field.Name)
+            {
+                _localNameToField[definition.Abbreviation] = field;
+            }
+        }
+
+        private void AddUpdateComponent(ContainedField field)
+        {
+            var cf = field as ContainedComponentField;
+            var definition = cf?.Definition;
+            if (definition != null && !string.IsNullOrEmpty(definition.Abbreviation) &&
+                definition.Abbreviation != field.Name)
+            {
+                _localNameToField[definition.Abbreviation] = field;
             }
         }
 
