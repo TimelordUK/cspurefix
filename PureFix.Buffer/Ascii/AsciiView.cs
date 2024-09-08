@@ -59,6 +59,11 @@ namespace PureFix.Buffer.Ascii
                 return (T?)Convert.ChangeType(DecimalAtPosition(position), typeof(T));
             }
 
+            if (typeof(T) == typeof(bool))
+            {
+                return (T?)Convert.ChangeType(BoolAtPosition(position), typeof(T));
+            }
+
             return default(T?);
         }
 
@@ -107,6 +112,12 @@ namespace PureFix.Buffer.Ascii
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetDecimal(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+        }
+
+        protected bool? BoolAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetBoolean(tag.Value.Start);
         }
     }
 }
