@@ -93,7 +93,7 @@ namespace PureFix.Buffer.Ascii
         private TagPos? GetTag(int position)
         {
             if (Structure == null) return null;
-            var tags = Structure.Tags;
+            var tags = Structure.Value.Tags;
             if (position < 0 || position >= tags.NextTagPos)
             {
                 return null;

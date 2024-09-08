@@ -9,7 +9,7 @@ using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class Structure 
+    public struct Structure 
     {
         private Dictionary<string, SegmentDescription>? _components;
         // do not create unless needed
