@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 
-namespace PureFIix.Test.Ascii
+namespace PureFIix.Test.Env
 {
     internal class SecDefHelper(FixDefinitions definitions)
     {

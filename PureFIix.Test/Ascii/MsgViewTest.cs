@@ -29,7 +29,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Get_Single_View_Test()
         {
-            Assert.That(_views.Count, Is.EqualTo(1));
+            Assert.That(_views, Has.Count.EqualTo(1));
         }
 
         [Test]

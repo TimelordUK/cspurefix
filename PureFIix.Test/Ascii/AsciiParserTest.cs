@@ -8,7 +8,6 @@ using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Types.tag;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFIix.Test.Ascii
 {

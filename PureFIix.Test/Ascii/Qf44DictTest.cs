@@ -27,9 +27,12 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Check_Definitions_Version_Test()
         {
-            Assert.That(_definitions.GetMajor(), Is.EqualTo(4));
-            Assert.That(_definitions.GetMinor(), Is.EqualTo(4));
-            Assert.That(_definitions.GetServicePack(), Is.EqualTo(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_definitions.GetMajor(), Is.EqualTo(4));
+                Assert.That(_definitions.GetMinor(), Is.EqualTo(4));
+                Assert.That(_definitions.GetServicePack(), Is.EqualTo(0));
+            });
         }
 
         [Test]
@@ -61,26 +64,29 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Check_Field_AdvSide_Test()
         {
-            Assert.That(_definitions.Simple.TryGetValue("Side", out var def), Is.True);
-            Assert.That(def, Is.Not.Null);
-            Assert.That(def.Tag, Is.EqualTo(54));
-            Assert.That(def.IsEnum, Is.True);
-            _setHelper.IsEnum(def.Enums, "1", "Buy", "BUY");
-            _setHelper.IsEnum(def.Enums, "2", "Sell", "SELL");
-            _setHelper.IsEnum(def.Enums, "3", "BuyMinus", "BUY_MINUS");
-            _setHelper.IsEnum(def.Enums, "4", "SellPlus", "SELL_PLUS");
-            _setHelper.IsEnum(def.Enums, "5", "SellShort", "SELL_SHORT");
-            _setHelper.IsEnum(def.Enums, "6", "SellShortExempt", "SELL_SHORT_EXEMPT");
-            _setHelper.IsEnum(def.Enums, "7", "Undisclosed", "UNDISCLOSED");
-            _setHelper.IsEnum(def.Enums, "8", "Cross", "CROSS");
-            _setHelper.IsEnum(def.Enums, "9", "CrossShort", "CROSS_SHORT");
-            _setHelper.IsEnum(def.Enums, "A", "CrossShortExempt", "CROSS_SHORT_EXEMPT");
-            _setHelper.IsEnum(def.Enums, "B", "AsDefined", "AS_DEFINED");
-            _setHelper.IsEnum(def.Enums, "C", "Opposite", "OPPOSITE");
-            _setHelper.IsEnum(def.Enums, "D", "Subscribe", "SUBSCRIBE");
-            _setHelper.IsEnum(def.Enums, "E", "Redeem", "REDEEM");
-            _setHelper.IsEnum(def.Enums, "F", "Lend", "LEND");
-            _setHelper.IsEnum(def.Enums, "G", "Borrow", "BORROW");
+            Assert.Multiple(() =>
+            {
+                Assert.That(_definitions.Simple.TryGetValue("Side", out var def), Is.True);
+                Assert.That(def, Is.Not.Null);
+                Assert.That(def.Tag, Is.EqualTo(54));
+                Assert.That(def.IsEnum, Is.True);
+                _setHelper.IsEnum(def.Enums, "1", "Buy", "BUY");
+                _setHelper.IsEnum(def.Enums, "2", "Sell", "SELL");
+                _setHelper.IsEnum(def.Enums, "3", "BuyMinus", "BUY_MINUS");
+                _setHelper.IsEnum(def.Enums, "4", "SellPlus", "SELL_PLUS");
+                _setHelper.IsEnum(def.Enums, "5", "SellShort", "SELL_SHORT");
+                _setHelper.IsEnum(def.Enums, "6", "SellShortExempt", "SELL_SHORT_EXEMPT");
+                _setHelper.IsEnum(def.Enums, "7", "Undisclosed", "UNDISCLOSED");
+                _setHelper.IsEnum(def.Enums, "8", "Cross", "CROSS");
+                _setHelper.IsEnum(def.Enums, "9", "CrossShort", "CROSS_SHORT");
+                _setHelper.IsEnum(def.Enums, "A", "CrossShortExempt", "CROSS_SHORT_EXEMPT");
+                _setHelper.IsEnum(def.Enums, "B", "AsDefined", "AS_DEFINED");
+                _setHelper.IsEnum(def.Enums, "C", "Opposite", "OPPOSITE");
+                _setHelper.IsEnum(def.Enums, "D", "Subscribe", "SUBSCRIBE");
+                _setHelper.IsEnum(def.Enums, "E", "Redeem", "REDEEM");
+                _setHelper.IsEnum(def.Enums, "F", "Lend", "LEND");
+                _setHelper.IsEnum(def.Enums, "G", "Borrow", "BORROW");
+            });
         }
 
         /*
@@ -97,7 +103,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsComponent(hb, index++, "StandardHeader", true);
             _setHelper.IsSimple(hb, index++, "TestReqID", false);
             _setHelper.IsComponent(hb, index++, "StandardTrailer", true);
-            Assert.That(hb.Fields.Count, Is.EqualTo(index));
+            Assert.That(hb.Fields, Has.Count.EqualTo(index));
         }
 
         /*
@@ -117,7 +123,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(hb, index++, "BeginSeqNo", true);
             _setHelper.IsSimple(hb, index++, "EndSeqNo", true);
             _setHelper.IsComponent(hb, index++, "StandardTrailer", true);
-            Assert.That(hb.Fields.Count, Is.EqualTo(index));
+            Assert.That(hb.Fields, Has.Count.EqualTo(index));
         }
     }
 }
