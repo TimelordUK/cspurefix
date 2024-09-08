@@ -296,7 +296,7 @@ namespace PureFIix.Test.Ascii
             buffer.WriteBuffer(b);
             Assert.That(buffer.GetPos(), Is.EqualTo(b.Length));
             Assert.That(buffer.ToString(), Is.EqualTo(s));
-            var fetched = buffer.GetBuffer(0, b.Length);
+            var fetched = buffer.GetBuffer(0, b.Length - 1);
             Assert.That(fetched.ToArray(), Is.EqualTo(b));
             Assert.That(buffer.CurrentSize(), Is.EqualTo(16));
         }

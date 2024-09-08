@@ -31,6 +31,37 @@ namespace PureFix.Buffer.Ascii
             Buffer = buffer;
         }
 
+        public T? GetTyped<T>(int tag)
+        {
+            var position = GetPosition(tag);
+            if (position< 0)
+            {
+                return default(T?);
+            }
+
+            if (typeof(T) == typeof(string))
+            {
+                return (T?) Convert.ChangeType(StringAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(int))
+            {
+                return (T?)Convert.ChangeType(LongAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(double))
+            {
+                return (T?)Convert.ChangeType(FloatAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(decimal))
+            {
+                return (T?)Convert.ChangeType(DecimalAtPosition(position), typeof(T));
+            }
+
+            return default(T?);
+        }
+
         protected override MsgView Create(SegmentDescription singleton)
         {
             return new AsciiView(Definitions,
@@ -60,10 +91,22 @@ namespace PureFix.Buffer.Ascii
             return tag == null ? null : Buffer.GetString(tag.Value.Start, tag.Value.Start + tag.Value.Len);
         }
 
-        protected override long? LongAtPosition(int position)
+        protected long? LongAtPosition(int position)
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetWholeNumber(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+        }
+
+        protected double? FloatAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetFloat(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+        }
+
+        protected decimal? DecimalAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetDecimal(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
         }
     }
 }
