@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -110,6 +111,27 @@ namespace PureFix.Buffer.Ascii
         {
             var position = GetPosition(tag);
             return position < 0 ? null : StringAtPosition(position);
+        }
+
+        public T? GetTyped<T>(int tag) 
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                return default(T?);
+            }
+
+            if (typeof(T) == typeof(string))
+            {
+                return (T?)Convert.ChangeType(StringAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(int))
+            {
+                return (T?)Convert.ChangeType(LongAtPosition(position), typeof(T));
+            }
+
+            return default(T?);
         }
 
         /**
@@ -272,5 +294,6 @@ namespace PureFix.Buffer.Ascii
 
         protected abstract MsgView Create(SegmentDescription singleton);
         protected abstract string? StringAtPosition(int position);
+        protected abstract long? LongAtPosition(int position);
     }
 }
