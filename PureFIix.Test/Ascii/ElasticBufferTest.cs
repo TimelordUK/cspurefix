@@ -15,16 +15,14 @@ namespace PureFIix.Test.Ascii
     public class ElasticBufferTest
     {
         private FixDefinitions _definitions;
-        private SetConstraintHelper _setHelper;
 
         [OneTimeSetUp]
         public void OnceSetup()
         {
             var rootFolder = Directory.GetCurrentDirectory();
             _definitions = new FixDefinitions();
-            _setHelper = new SetConstraintHelper(_definitions);
             var qf = new QuickFixXmlFileParser(_definitions);
-            qf.Parse(Path.Join(rootFolder, "..", "..", "..", "..", "Data", "FIX44.xml"));
+            qf.Parse(Fix44PathHelper.DataDictPath);
         }
 
         [Test]
