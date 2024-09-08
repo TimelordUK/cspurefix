@@ -54,14 +54,26 @@ namespace PureFix.Buffer.Ascii
                 return (T?)Convert.ChangeType(FloatAtPosition(position), typeof(T));
             }
 
+            if (typeof(T) == typeof(bool))
+            {
+                return (T?)Convert.ChangeType(BoolAtPosition(position), typeof(T));
+            }
+
             if (typeof(T) == typeof(decimal))
             {
                 return (T?)Convert.ChangeType(DecimalAtPosition(position), typeof(T));
             }
 
-            if (typeof(T) == typeof(bool))
+            if (typeof(T) == typeof(byte[]))
             {
-                return (T?)Convert.ChangeType(BoolAtPosition(position), typeof(T));
+                var b = BufferAtPosition(position);
+                if (b == null) return default(T?);
+                return (T?)Convert.ChangeType(b.Value.ToArray(), typeof(T));
+            }
+
+            if (typeof(T) == typeof(Memory<byte>))
+            {
+                return (T?)Convert.ChangeType(BufferAtPosition(position), typeof(T));
             }
 
             return default(T?);
@@ -112,6 +124,12 @@ namespace PureFix.Buffer.Ascii
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetDecimal(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+        }
+
+        protected Memory<byte>? BufferAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetBuffer(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
         }
 
         protected bool? BoolAtPosition(int position)

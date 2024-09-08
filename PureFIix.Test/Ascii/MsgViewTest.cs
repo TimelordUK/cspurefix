@@ -83,6 +83,14 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Get_Tag_96_Typed_Buffer_View_Test()
+        {
+            var view = _views[0];
+            var asBuffer = view.GetTyped<byte[]>(96);
+            Assert.That(asBuffer, Is.EqualTo("VgfoSqo56NqSVI1fLdlI"u8.ToArray()));
+        }
+
+        [Test]
         public void Get_Tag_141_Typed_Bool_View_Test()
         {
             var view = _views[0];
