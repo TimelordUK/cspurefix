@@ -30,9 +30,12 @@ namespace PureFIix.Test.Ascii
         {
             var buffer = new ElasticBuffer(1);
             buffer.WriteChar(AsciiChars.Dot);
-            Assert.That(buffer.GetPos(), Is.EqualTo(1));
-            Assert.That(buffer.ToString(), Is.EqualTo("."));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(1));
+                Assert.That(buffer.ToString(), Is.EqualTo("."));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+            });
         }
 
         [Test]
@@ -368,21 +371,25 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Buffer_Write_Test() {
             var buffer = new ElasticBuffer(1);
-            var s = "fixing up fix";
+            const string s = "fixing up fix";
             var b = Encoding.UTF8.GetBytes(s);
             buffer.WriteBuffer(b);
-            Assert.That(buffer.GetPos(), Is.EqualTo(b.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(s));
-            var fetched = buffer.GetBuffer(0, b.Length - 1);
-            Assert.That(fetched.ToArray(), Is.EqualTo(b));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(16));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(b.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(s));
+                var fetched = buffer.GetBuffer(0, b.Length - 1);
+                Assert.That(fetched.ToArray(), Is.EqualTo(b));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(16));
+            });
         }
 
         [Test]
         public void Buffer_Write_Chars_Test()
         {
             var buffer = new ElasticBuffer(1);
-            var s = "8=FIX.4.4";
+            const string s = "8=FIX.4.4";
             foreach(var c in s)
             {
                 buffer.WriteChar((byte)c);
@@ -470,11 +477,14 @@ namespace PureFIix.Test.Ascii
             var b = new ElasticBuffer(1);
             b.WriteString(ds);
             var lt = b.GetLocalTime(0, b.Pos - 1);
-            Assert.That(lt, Is.Not.Null);
             var ut = b.GetUtcTime(0, b.Pos - 1);
-            Assert.That(ut, Is.Not.Null);
-            var delta = lt - ut;
-            Assert.That(delta, Is.EqualTo(DateTimeOffset.Now.Offset));
+            Assert.Multiple(() =>
+            {
+                var delta = lt - ut;
+                Assert.That(lt, Is.Not.Null);
+                Assert.That(ut, Is.Not.Null);
+                Assert.That(delta, Is.EqualTo(DateTimeOffset.Now.Offset));
+            });
         }
     }
 }
