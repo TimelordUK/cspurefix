@@ -11,9 +11,6 @@ namespace PureFIix.Test.Ascii
     public class FixLogReplayTest
     {
         private TestEntity _testEntity;
-        public static readonly string RootPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4");
-        public string ReplayPath = Path.Join(RootPath, "fix.txt");
-        public string JsonPath = Path.Join(RootPath, "fix.json");
         private Dictionary<string, int> _expectedCounts;
         private List<AsciiView> _views;
 
@@ -21,9 +18,8 @@ namespace PureFIix.Test.Ascii
         public async Task OnceSetup()
         {
             _testEntity = new TestEntity();
-            _testEntity.Prepare();
-            _expectedCounts = await _testEntity.GetJsonDict(JsonPath);
-            _views = await _testEntity.Replay(ReplayPath);
+            _expectedCounts = await _testEntity.GetJsonDict(Fix44PathHelper.JsonPath);
+            _views = await _testEntity.Replay(Fix44PathHelper.ReplayPath);
         }
 
         [SetUp]
@@ -36,6 +32,28 @@ namespace PureFIix.Test.Ascii
         public void Check_Replay_View_Count_Test()
         {
             Assert.That(_views.Count, Is.EqualTo(50));
+        }
+
+        /*
+         * using a generated fix file ensure it is parsed into expected composition of messages.
+         */
+        [Test]
+        public void Check_Replay_Msg_Count_Test()
+        {
+            var defs = _testEntity.Definitions.Message;
+            var fileCounts = new Dictionary<string,int>();
+            _views.ForEach(v =>
+            {
+                if (defs.TryGetValue(v.Structure?.Msg()?.Name ?? string.Empty, out var msg))
+                {
+                    if (!fileCounts.TryGetValue(msg.MsgType, out var c))
+                    {
+                        fileCounts[msg.MsgType] = c = 0;
+                    }
+                    fileCounts[msg.MsgType] = c + 1;
+                }
+            });
+            Assert.That(fileCounts, Is.EqualTo(_expectedCounts));
         }
     }
 }

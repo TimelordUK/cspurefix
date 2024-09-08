@@ -19,14 +19,14 @@ namespace PureFIix.Test.Env
         public ElasticBuffer Buffer { get; }
         public FixDuplex<MsgView> Duplex { get; private set;}
         public AsciiParser Parser { get; private set; }
-        public string RootData { get; } = Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "Data");
-
+        
         public TestEntity(string dataDict = "FIX44.xml")
         {
             Definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(Definitions);
-            qf.Parse(Path.Join(RootData, dataDict));
+            qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, dataDict));
             Buffer = new ElasticBuffer(160 * 1024, 160 * 1024);
+            Prepare();
         }
 
         public void Prepare()

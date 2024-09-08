@@ -14,8 +14,7 @@ namespace PureFIix.Test.Ascii
     {
         private TestEntity _testEntity;
         private List<AsciiView> _views;
-        public string ReplayPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4", "quickfix", "logon", "fix.txt");
-
+        
         private readonly TagPos[] _testTags =
         [
             new(0, 120, 0, 1), // 3
@@ -25,7 +24,7 @@ namespace PureFIix.Test.Ascii
             new(4, 100, 4, 1) // 2
         ];
 
-        private TagPos[] _expected =
+        private readonly TagPos[] _expected =
         [
             new(1, 50, 1, 1), // 0
             new(2, 50, 2, 1), // 1
@@ -64,7 +63,7 @@ namespace PureFIix.Test.Ascii
         {
             _testEntity = new TestEntity();
             _testEntity.Prepare();
-            _views = await _testEntity.Replay(ReplayPath);
+            _views = await _testEntity.Replay(Fix44PathHelper.LogonReplayPath);
         }
 
         [SetUp]
@@ -142,7 +141,7 @@ namespace PureFIix.Test.Ascii
             var sorted = _unsortedLogon.ToList()[.._unsortedLogon.Length];
             sorted.Sort(TagPos.Compare);
             Assert.That(sorted[0].Tag, Is.EqualTo(8));
-            Assert.That(sorted[sorted.Count - 1].Tag, Is.EqualTo(789));
+            Assert.That(sorted[^1].Tag, Is.EqualTo(789));
         }
     }
 }

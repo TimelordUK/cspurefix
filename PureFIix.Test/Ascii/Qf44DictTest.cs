@@ -14,15 +14,15 @@ namespace PureFIix.Test.Ascii
     {
         private FixDefinitions _definitions;
         private SetConstraintHelper _setHelper;
+        public static string RootPath { get; } = Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "Data");
 
         [OneTimeSetUp]
         public void OnceSetup()
         {
-            var rootFolder = Directory.GetCurrentDirectory();
             _definitions = new FixDefinitions();
             _setHelper = new SetConstraintHelper(_definitions);
             var qf = new QuickFixXmlFileParser(_definitions);
-            qf.Parse(Path.Join(rootFolder, "..", "..", "..", "..", "Data", "FIX44.xml"));
+            qf.Parse(Path.Join(RootPath, "FIX44.xml"));
         }
 
         [Test]
