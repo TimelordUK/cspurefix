@@ -19,21 +19,21 @@ namespace PureFix.Dictionary.Contained
         string description)
         : IContainedSet
     {
-        protected readonly Dictionary<string, IContainedSet> _groups = new();
-        protected readonly Dictionary<string, IContainedSet> _components = new();
-        protected readonly Dictionary<string, ContainedSimpleField> _simple = new();
-        protected readonly List<ContainedField> _fields = new();
-        protected readonly Dictionary<int, bool> _containedTag = new();
-        protected readonly List<int> _flattendTag = new();
-        protected readonly Dictionary<int, bool> _containedLength = new();
-        protected readonly Dictionary<int, ContainedSimpleField> _localTag = new();
-        protected readonly Dictionary<int, ContainedSimpleField> _localRequired = new();
-        protected readonly Dictionary<int, ContainedSimpleField> _tagToSimple = new();
-        protected readonly Dictionary<int, ContainedField> _tagToField = new();
-        protected readonly Dictionary<string, ContainedField> _localNameToField = new();
-        protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = new();
-        protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = new();
-        protected readonly List<ContainedSimpleField> _localAttribute = new();
+        protected readonly Dictionary<string, IContainedSet> _groups = [];
+        protected readonly Dictionary<string, IContainedSet> _components = [];
+        protected readonly Dictionary<string, ContainedSimpleField> _simple = [];
+        protected readonly List<ContainedField> _fields = [];
+        protected readonly Dictionary<int, bool> _containedTag = [];
+        protected readonly List<int> _flattendTag = [];
+        protected readonly Dictionary<int, bool> _containedLength = [];
+        protected readonly Dictionary<int, ContainedSimpleField> _localTag = [];
+        protected readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
+        protected readonly Dictionary<int, ContainedSimpleField> _tagToSimple = [];
+        protected readonly Dictionary<int, ContainedField> _tagToField = [];
+        protected readonly Dictionary<string, ContainedField> _localNameToField = [];
+        protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = [];
+        protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = [];
+        protected readonly List<ContainedSimpleField> _localAttribute = [];
 
         /// <summary>
         /// Index of name to any group that may be present within the field list
