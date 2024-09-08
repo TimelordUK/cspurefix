@@ -9,6 +9,7 @@ using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types.tag;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace PureFix.Buffer.Ascii
@@ -113,13 +114,21 @@ namespace PureFix.Buffer.Ascii
             return position < 0 ? null : StringAtPosition(position);
         }
 
-      
+        public string?[] GetStrings(int? tag = null)
+        {
+            if (tag == null)
+            {
+                return AllStrings();
+            }
+            var positions = GetPositons(tag.Value);
+            return positions.Select(StringAtPosition).ToArray();
+        }
 
-        /**
-         * if this view represents a repeated group then return a sub view representing
-         * this instance of repeated group.
-         * @param i the index to return i.e. 0 is first within repeated group
-         */
+    /**
+     * if this view represents a repeated group then return a sub view representing
+     * this instance of repeated group.
+     * @param i the index to return i.e. 0 is first within repeated group
+     */
         public MsgView? GetGroupInstance(int i)
         {
             var instance = Segment?.GetInstance(i);
