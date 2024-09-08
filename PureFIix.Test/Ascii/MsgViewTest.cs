@@ -44,8 +44,8 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_9_Typed_String_View_Test()
         {
             var view = _views[0];
-            var asInt = view.GetTyped<string>(9);
-            Assert.That(asInt, Is.EqualTo("0000208"));
+            var asString = view.GetTyped<string>(9);
+            Assert.That(asString, Is.EqualTo("0000208"));
         }
 
         [Test]
@@ -54,6 +54,8 @@ namespace PureFIix.Test.Ascii
             var view = _views[0];
             var asInt = view.GetTyped<int>(9);
             Assert.That(asInt, Is.EqualTo(208));
+            var asDecimal = view.GetTyped<decimal>(9);
+            Assert.That(asDecimal, Is.EqualTo(208d));
         }
 
         [Test]

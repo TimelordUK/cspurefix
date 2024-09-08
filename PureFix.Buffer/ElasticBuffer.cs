@@ -96,12 +96,6 @@ namespace PureFix.Buffer
             return Pos;
         }
 
-        public bool GetBoolean(int start)
-        {
-            var b = _buffer[start];
-            return b == AsciiChars.Y;
-        }
-
         public int SwitchChar(byte c)
         {
             _buffer[Pos - 1] = c;
@@ -141,11 +135,6 @@ namespace PureFix.Buffer
                 _buffer[Pos++] = c;
             }
             return Pos;
-        }
-
-        public Memory<byte> GetBuffer(int start, int end) {
-            var span = new ReadOnlySpan<byte>(_buffer, start, start + (end - start));
-            return span.ToArray();
         }
 
         public int WriteWholeNumber(int n)
@@ -264,6 +253,18 @@ namespace PureFix.Buffer
             var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             var v = decimal.Parse(ros);
             return v;
+        }
+
+        public Memory<byte> GetBuffer(int st, int vend)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            return span.ToArray();
+        }
+
+        public bool GetBoolean(int start)
+        {
+            var b = _buffer[start];
+            return b == AsciiChars.Y;
         }
 
         public ElasticBuffer Clone()
