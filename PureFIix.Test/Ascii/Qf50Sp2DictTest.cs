@@ -18,11 +18,10 @@ namespace PureFIix.Test.Ascii
         [OneTimeSetUp]
         public void OnceSetup()
         {
-            var rootFolder = Directory.GetCurrentDirectory();
             _definitions = new FixDefinitions();
             _setHelper = new SetConstraintHelper(_definitions);
             var qf = new QuickFixXmlFileParser(_definitions);
-            qf.Parse(Path.Join(rootFolder, "..", "..", "..", "..", "Data", "FIX50SP2.xml"));
+            qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, "FIX50SP2.xml"));
         }
 
         private void CheckTradeCapture(MessageDefinition tc)
