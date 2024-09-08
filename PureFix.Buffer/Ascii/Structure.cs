@@ -25,11 +25,18 @@ namespace PureFix.Buffer.Ascii
             BoundLayout();
         }
 
-        public SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
+        public readonly SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
 
-        public SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
+        public readonly SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
         {
-            if (_components == null) return null;
+            if (_components == null)
+            {
+                if (_groups != null && _groups.TryGetValue(name, out var instances))
+                {
+                    return instances.FirstOrDefault(segment.Contains);
+                }
+                return null;
+            }
 
             if (!_components.TryGetValue(name, out var component))
             {
