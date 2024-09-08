@@ -83,6 +83,22 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Get_Tag_141_Typed_Bool_View_Test()
+        {
+            var view = _views[0];
+            var asBool = view.GetTyped<bool>(141);
+            Assert.That(asBool, Is.True);
+        }
+
+        [Test]
+        public void Get_Tag_464_Typed_Bool_View_Test()
+        {
+            var view = _views[0];
+            var asBool = view.GetTyped<bool>(464);
+            Assert.That(asBool, Is.False);
+        }
+
+        [Test]
         public void Get_Tag_999_As_String_View_Test()
         {
             var view = _views[0];
