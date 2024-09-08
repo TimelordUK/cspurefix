@@ -106,6 +106,12 @@ namespace PureFix.Buffer.Ascii
             return count;
         }
 
+        public string? GetString(int tag)
+        {
+            var position = GetPosition(tag);
+            return position < 0 ? null : StringAtPosition(position);
+        }
+
         /**
          * if this view represents a repeated group then return a sub view representing
          * this instance of repeated group.
@@ -167,6 +173,58 @@ namespace PureFix.Buffer.Ascii
                 return SortedTagPosForwards?[pos].Position ?? -1;
             }
             return -1;
+        }
+
+        private string?[] AllStrings()
+        {
+            if (Segment == null) return [];
+            var range = new int[Segment.EndPosition - Segment.StartPosition +1];
+            var j = 0;
+            for (var i = segment.StartPosition; i <= segment.EndPosition; ++i)
+            {
+                range[j++] = i;
+            }
+            return range.Select(StringAtPosition).ToArray();
+        }
+
+        protected int[] GetPositons(int tag)
+        {
+            var forwards = SortedTagPosForwards;
+            var backwards = SortedTagPosBackwards;
+            var position = BinarySearch(tag);
+            if (forwards == null || backwards == null || position < 0)
+            {
+                return [];
+            }
+
+            var count = forwards.Count;
+            var last = count - 1;
+            var end = position;
+            while (end <= last)
+            {
+                if (tag != forwards[end].Tag)
+                {
+                    break;
+                }
+                ++end;
+            }
+
+            // avoid backtracking over an array by scan forwards on a reversed copy
+            var start = last - position;
+            while (start <= last)
+            {
+                if (tag != backwards[start].Tag)
+                {
+                    break;
+                }
+                ++start;
+            }
+
+            var begin = last - (start - 1);
+            var len = end - begin;
+
+            var positions = forwards[begin..end].Select(s => s.Position).ToArray();
+            return positions;
         }
 
         private int BinarySearch(int tag)
