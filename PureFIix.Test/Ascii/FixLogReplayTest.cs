@@ -18,7 +18,7 @@ namespace PureFIix.Test.Ascii
         public async Task OnceSetup()
         {
             _testEntity = new TestEntity();
-            _expectedCounts = await _testEntity.GetJsonDict(Fix44PathHelper.JsonPath);
+            _expectedCounts = await TestEntity.GetJsonDict(Fix44PathHelper.JsonPath);
             _views = await _testEntity.Replay(Fix44PathHelper.ReplayPath);
         }
 
@@ -44,14 +44,12 @@ namespace PureFIix.Test.Ascii
             var fileCounts = new Dictionary<string,int>();
             _views.ForEach(v =>
             {
-                if (defs.TryGetValue(v.Structure?.Msg()?.Name ?? string.Empty, out var msg))
+                if (!defs.TryGetValue(v.Structure?.Msg()?.Name ?? string.Empty, out var msg)) return;
+                if (!fileCounts.TryGetValue(msg.MsgType, out var c))
                 {
-                    if (!fileCounts.TryGetValue(msg.MsgType, out var c))
-                    {
-                        fileCounts[msg.MsgType] = c = 0;
-                    }
-                    fileCounts[msg.MsgType] = c + 1;
+                    fileCounts[msg.MsgType] = c = 0;
                 }
+                fileCounts[msg.MsgType] = c + 1;
             });
             Assert.That(fileCounts, Is.EqualTo(_expectedCounts));
         }

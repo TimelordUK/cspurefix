@@ -29,12 +29,22 @@ namespace PureFix.Buffer
         // 10:39:01.621
         public DateTime? GetLocalTime(int st, int vend)
         {
+            return GetTime(st, vend, DateTimeStyles.AssumeLocal);
+        }
+
+        public DateTime? GetUtcTime(int st, int vend)
+        {
+            return GetLocalTime(st, vend)?.ToUniversalTime();
+        }
+
+        private DateTime? GetTime(int st, int vend, DateTimeStyles style)
+        {
             var chars = GetChars(st, vend);
-            if (DateTime.TryParseExact(chars, "hh:mm:ss.fff".AsSpan(), null,DateTimeStyles.AssumeLocal, out var d))
+            if (DateTime.TryParseExact(chars, "hh:mm:ss.fff".AsSpan(), null, style, out var d))
             {
                 return d;
             }
-            if (DateTime.TryParseExact(chars, "hh:mm:ss".AsSpan(), null, DateTimeStyles.AssumeLocal, out var d1))
+            if (DateTime.TryParseExact(chars, "hh:mm:ss".AsSpan(), null, style, out var d1))
             {
                 return d1;
             }
