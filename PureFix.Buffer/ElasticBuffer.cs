@@ -213,7 +213,12 @@ namespace PureFix.Buffer
             for (var j = start; j <= vend; ++j)
             {
                 num *= 10;
-                var d = _buffer[j] - AsciiChars.Zero;
+                var v = _buffer[j];
+                if (v is < AsciiChars.Zero or > AsciiChars.Nine)
+                {
+                    throw new InvalidDataException($"{v} is not a digit 0-9");
+                }
+                var d = v - AsciiChars.Zero;
                 num += d;
             }
 

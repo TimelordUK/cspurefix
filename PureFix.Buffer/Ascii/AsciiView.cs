@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Types.tag;
 
 namespace PureFix.Buffer.Ascii
 {
@@ -41,7 +42,7 @@ namespace PureFix.Buffer.Ascii
                 WriteDelimiter);
         }
 
-        protected override string? StringAtPosition(int position)
+        private TagPos? GetTag(int position)
         {
             if (Structure == null) return null;
             var tags = Structure.Tags;
@@ -50,7 +51,19 @@ namespace PureFix.Buffer.Ascii
                 return null;
             }
             var tag = tags[position];
-            return Buffer.GetString(tag.Start, tag.Start + tag.Len);
+            return tag;
+        }
+
+        protected override string? StringAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetString(tag.Value.Start, tag.Value.Start + tag.Value.Len);
+        }
+
+        protected override long? LongAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetWholeNumber(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
         }
     }
 }

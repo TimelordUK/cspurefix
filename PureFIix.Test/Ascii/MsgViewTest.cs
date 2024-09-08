@@ -40,6 +40,23 @@ namespace PureFIix.Test.Ascii
             Assert.That(asString, Is.EqualTo("FIX4.4"));
         }
 
+
+        [Test]
+        public void Get_Tag_9_Typed_String_View_Test()
+        {
+            var view = _views[0];
+            var asInt = view.GetTyped<string>(9);
+            Assert.That(asInt, Is.EqualTo("0000208"));
+        }
+
+        [Test]
+        public void Get_Tag_9_Typed_Int_View_Test()
+        {
+            var view = _views[0];
+            var asInt = view.GetTyped<int>(9);
+            Assert.That(asInt, Is.EqualTo(208));
+        }
+
         [Test]
         public void Get_Tag_35_As_String_View_Test()
         {
@@ -57,10 +74,19 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Get_Tag_56_Typed_String_View_Test()
+        {
+            var view = _views[0];
+            var asString = view.GetTyped<string>(56);
+            Assert.That(asString, Is.EqualTo("target-20"));
+        }
+
+        [Test]
         public void Get_Tag_999_As_String_View_Test()
         {
             var view = _views[0];
-            var bs = view.GetString(999);
+            var asString = view.GetString(999);
+            Assert.That(asString, Is.Null);
         }
     }
 }
