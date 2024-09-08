@@ -62,7 +62,6 @@ namespace PureFIix.Test.Ascii
         public async Task OnceSetup()
         {
             _testEntity = new TestEntity();
-            _testEntity.Prepare();
             _views = await _testEntity.Replay(Fix44PathHelper.LogonReplayPath);
         }
 
