@@ -219,26 +219,35 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Check_Field_By_Name_AdvSide_Test()
         {
-            Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
-            Assert.That(def, Is.Not.Null);
-            Assert.That(def.Tag, Is.EqualTo(4));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
+                Assert.That(def, Is.Not.Null);
+                Assert.That(def.Tag, Is.EqualTo(4));
+            });
         }
 
         [Test]
         public void Check_Field_By_Tag_4_Test()
         {
-            Assert.That(_definitions.TagToSimple.TryGetValue(4, out var def), Is.True);
-            Assert.That(def, Is.Not.Null);
-            Assert.That(def.Tag, Is.EqualTo(4));
-            Assert.That(def.Name, Is.EqualTo("AdvSide"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_definitions.TagToSimple.TryGetValue(4, out var def), Is.True);
+                Assert.That(def, Is.Not.Null);
+                Assert.That(def.Tag, Is.EqualTo(4));
+                Assert.That(def.Name, Is.EqualTo("AdvSide"));
+            });
         }
 
         [Test]
         public void Check_Definitions_Version_Test()
         {
-            Assert.That(_definitions.GetMajor(), Is.EqualTo(5));
-            Assert.That(_definitions.GetMinor(), Is.EqualTo(0));
-            Assert.That(_definitions.GetServicePack(), Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_definitions.GetMajor(), Is.EqualTo(5));
+                Assert.That(_definitions.GetMinor(), Is.EqualTo(0));
+                Assert.That(_definitions.GetServicePack(), Is.EqualTo(2));
+            });
         }
 
         [Test]
@@ -250,22 +259,28 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Check_Field_AdvSide_Test()
         {
-            Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
-            Assert.That(def, Is.Not.Null);
-            Assert.That(def.Tag, Is.EqualTo(4));
-            Assert.That(def.IsEnum, Is.True);
-            _setHelper.IsEnum(def?.Enums, "B", "Buy", "BUY");
-            _setHelper.IsEnum(def?.Enums, "S", "Sell", "SELL");
-            _setHelper.IsEnum(def?.Enums, "X", "Cross", "CROSS");
-            _setHelper.IsEnum(def?.Enums, "T", "Trade", "TRADE");
+            Assert.Multiple(() =>
+            {
+                Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
+                Assert.That(def, Is.Not.Null);
+                Assert.That(def.Tag, Is.EqualTo(4));
+                Assert.That(def.IsEnum, Is.True);
+                _setHelper.IsEnum(def?.Enums, "B", "Buy", "BUY");
+                _setHelper.IsEnum(def?.Enums, "S", "Sell", "SELL");
+                _setHelper.IsEnum(def?.Enums, "X", "Cross", "CROSS");
+                _setHelper.IsEnum(def?.Enums, "T", "Trade", "TRADE");
+            });
         }
 
         private void CheckSimple(string name, int number, string type)
         {
-            Assert.That(_definitions.Simple.TryGetValue(name, out var def), Is.True);
-            Assert.That(def, Is.Not.Null);
-            Assert.That(def.Tag, Is.EqualTo(number));
-            Assert.That(def.Type, Is.EqualTo(type));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_definitions.Simple.TryGetValue(name, out var def), Is.True);
+                Assert.That(def, Is.Not.Null);
+                Assert.That(def.Tag, Is.EqualTo(number));
+                Assert.That(def.Type, Is.EqualTo(type));
+            });
         }
 
         [Test]
@@ -342,25 +357,28 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(logon, index++, "EncodedTextLen", false);
             _setHelper.IsSimple(logon, index++, "EncodedText", false);
             _setHelper.IsComponent(logon, index++, "StandardTrailer", true);
-            Assert.That(logon.Fields.Count, Is.EqualTo(index));
+            Assert.That(logon.Fields, Has.Count.EqualTo(index));
         }
 
         [Test]
         public void Check_Message_Existance()
         {
-            Assert.That(_definitions.Simple.TryGetValue("MsgType", out var mt));
-            Assert.That(mt, Is.Not.Null);
-            Assert.That(mt.IsEnum, Is.True);
-            Assert.That(mt.Enums, Is.Not.Null);
-            Assert.That(mt.Enums.TryGetValue("0", out _), Is.True);
-            Assert.That(mt.Enums.TryGetValue("1", out _), Is.True);
-            foreach (var k in mt.Enums.Keys)
+            Assert.Multiple(() =>
             {
-                Assert.That(k, Is.Not.Null);
-                Assert.That(_definitions.Message.TryGetValue(k, out var m), Is.True);
-                Assert.That(m, Is.Not.Null);
-                Assert.That(m.MsgType, Is.EqualTo(k));
-            }
+                Assert.That(_definitions.Simple.TryGetValue("MsgType", out var mt));
+                Assert.That(mt, Is.Not.Null);
+                Assert.That(mt.IsEnum, Is.True);
+                Assert.That(mt.Enums, Is.Not.Null);
+                Assert.That(mt.Enums.TryGetValue("0", out _), Is.True);
+                Assert.That(mt.Enums.TryGetValue("1", out _), Is.True);
+                foreach (var k in mt.Enums.Keys)
+                {
+                    Assert.That(k, Is.Not.Null);
+                    Assert.That(_definitions.Message.TryGetValue(k, out var m), Is.True);
+                    Assert.That(m, Is.Not.Null);
+                    Assert.That(m.MsgType, Is.EqualTo(k));
+                }
+            });
         }
     }
 }
