@@ -58,7 +58,7 @@ namespace PureFIix.Test.Env
             Duplex.Writer.Complete();
         }
 
-        public async Task<Dictionary<string,int>> GetJsonDict(string file)
+        public static async Task<Dictionary<string,int>> GetJsonDict(string file)
         {
             using var streamReader = File.OpenText(file);
             var json = await streamReader.ReadToEndAsync();

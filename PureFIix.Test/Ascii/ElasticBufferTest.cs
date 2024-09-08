@@ -39,189 +39,249 @@ namespace PureFIix.Test.Ascii
         public void String_in_buffer_Test()
         {
             var buffer = new ElasticBuffer(1);
-            var s = "fixing up fix";
+            const string s = "fixing up fix";
             buffer.WriteString(s);
-            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(s));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(16));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(s));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(16));
+            });
         }
 
         [Test]
         public void Whole_Number_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 12345;
+            const int n = 12345;
             buffer.WriteWholeNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
-            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+                Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
+
         }
 
         [Test]
         public void Whole_Number_Grow_Buffer_Test()
         {
             var buffer = new ElasticBuffer(1);
-            var n = 12345;
+            const int n = 12345;
             buffer.WriteWholeNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
-            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(8));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+                Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(8));
+            });
         }
 
         [Test]
         public void Whole_Negative_Number_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = -2468;
+            const int n = -2468;
             buffer.WriteWholeNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
-            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+                Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Get_Whole_Positive_Number_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 2468;
+            const int n = 2468;
             buffer.WriteString($"+{n}");
             var asString = buffer.ToString();
-            Assert.That(buffer.ToString(), Is.EqualTo("+2468"));
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.ToString(), Is.EqualTo("+2468"));
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Floating_Point_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 12345.6789;
+            const double n = 12345.6789;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Floating_Point_1dp_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 12345678.9;
+            const double n = 12345678.9;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Negative_Floating_Point_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = -12345.6789;
+            const double n = -12345.6789;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+            });
         }
 
         [Test]
         public void Floating_Point_Many_Dp_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 0.123456789;
+            const double n = 0.123456789;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+            });
         }
 
         [Test]
         public void Simple_Float_Point_1_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 3.9;
+            const double n = 3.9;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Simple_Float_Point_2_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 35.77;
+            const double n = 35.77;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Simple_Float_Point_3_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 0.058457;
+            const double n = 0.058457;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Simple_Float_Point_4_Test()
         {
             var buffer = new ElasticBuffer(10);
-            var n = -0.06445;
+            const double n = -0.06445;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+            });
         }
 
         [Test]
         public void Whole_Number_As_Float_Point()
         {
             var buffer = new ElasticBuffer(10);
-            var n = 123456789;
+            const int n = 123456789;
             buffer.WriteNumber(n);
-            var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+            Assert.Multiple(() =>
+            {
+                var asString = buffer.ToString();
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+
+            });
         }
 
         [Test]
@@ -231,27 +291,33 @@ namespace PureFIix.Test.Ascii
             var n = 0.000000000001;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+            });
         }
 
         [Test]
         public void Tiny_Negative_Floating_Point()
         {
             var buffer = new ElasticBuffer(10);
-            var n = -0.000000000001;
+            const double n = -0.000000000001;
             buffer.WriteNumber(n);
             var asString = buffer.ToString();
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
-            var asf = buffer.GetFloat(0, asString.Length - 1);
-            Assert.That(asf, Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
-        }
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
+                var asf = buffer.GetFloat(0, asString.Length - 1);
+                Assert.That(asf, Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
 
+            });
+        }
 
         [Test]
         public void Tiny_Float_Number_With_Sign_Test()
@@ -260,10 +326,14 @@ namespace PureFIix.Test.Ascii
             var n = 0.000000000001;
             buffer.WriteString($"+{(decimal)n}");
             var asString = buffer.ToString();
-            Assert.That(buffer.ToString(), Is.EqualTo("+0.000000000001"));
-            Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
-            Assert.That(buffer.GetFloat(0, asString.Length - 1), Is.EqualTo(n));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.ToString(), Is.EqualTo("+0.000000000001"));
+                Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
+                Assert.That(buffer.GetFloat(0, asString.Length - 1), Is.EqualTo(n));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+
+            });
         }
 
         [Test]
@@ -271,10 +341,14 @@ namespace PureFIix.Test.Ascii
         {
             var buffer = new ElasticBuffer(1);
             buffer.WriteBoolean(true);
-            Assert.That(buffer.ToString(), Is.EqualTo("Y"));
-            Assert.That(buffer.GetPos(), Is.EqualTo(1));
-            Assert.That(buffer.GetBoolean(0), Is.EqualTo(true));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.ToString(), Is.EqualTo("Y"));
+                Assert.That(buffer.GetPos(), Is.EqualTo(1));
+                Assert.That(buffer.GetBoolean(0), Is.EqualTo(true));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+
+            });
         }
 
         [Test]
@@ -282,10 +356,13 @@ namespace PureFIix.Test.Ascii
         {
             var buffer = new ElasticBuffer(1);
             buffer.WriteBoolean(false);
-            Assert.That(buffer.ToString(), Is.EqualTo("N"));
-            Assert.That(buffer.GetPos(), Is.EqualTo(1));
-            Assert.That(buffer.GetBoolean(0), Is.EqualTo(false));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.ToString(), Is.EqualTo("N"));
+                Assert.That(buffer.GetPos(), Is.EqualTo(1));
+                Assert.That(buffer.GetBoolean(0), Is.EqualTo(false));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+            }); 
         }
 
         [Test]
@@ -310,8 +387,11 @@ namespace PureFIix.Test.Ascii
             {
                 buffer.WriteChar((byte)c);
             }
-            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(s));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(s));
+            });
         }
 
         [Test]
@@ -320,12 +400,15 @@ namespace PureFIix.Test.Ascii
             var buffer = new ElasticBuffer(1);
             var s = new string('.', 60 * 1024);
             buffer.WriteString(s);
-            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
-            Assert.That(buffer.ToString(), Is.EqualTo(s));
-            Assert.That(buffer.CurrentSize(), Is.EqualTo(65536));
-            Assert.That(buffer.Reset(), Is.True);
-            Assert.That(buffer.GetPos(), Is.EqualTo(0));
-            Assert.That(buffer.CurrentSize, Is.LessThan(60 * 1024));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
+                Assert.That(buffer.ToString(), Is.EqualTo(s));
+                Assert.That(buffer.CurrentSize(), Is.EqualTo(65536));
+                Assert.That(buffer.Reset(), Is.True);
+                Assert.That(buffer.GetPos(), Is.EqualTo(0));
+                Assert.That(buffer.CurrentSize, Is.LessThan(60 * 1024));
+            });
         }
 
         [Test]
@@ -334,13 +417,16 @@ namespace PureFIix.Test.Ascii
             var buffer = new ElasticBuffer(1);
             const string s = "8=FIX.4.4";
             buffer.WriteString(s);
-            Assert.That(buffer.ToString(), Is.EqualTo(s));
-            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
-            buffer.WriteChar(AsciiChars.Soh);
-            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length + 1));
-            buffer.SwitchChar(AsciiChars.Pipe);
-            Assert.That(buffer.GetPos(), Is.EqualTo(s.Length + 1));
-            Assert.That(buffer.ToString(), Is.EqualTo($"{s}|"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(buffer.ToString(), Is.EqualTo(s));
+                Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
+                buffer.WriteChar(AsciiChars.Soh);
+                Assert.That(buffer.GetPos(), Is.EqualTo(s.Length + 1));
+                buffer.SwitchChar(AsciiChars.Pipe);
+                Assert.That(buffer.GetPos(), Is.EqualTo(s.Length + 1));
+                Assert.That(buffer.ToString(), Is.EqualTo($"{s}|"));
+            });
         }
 
         [Test]
@@ -351,10 +437,13 @@ namespace PureFIix.Test.Ascii
             b.WriteString(ds);
             var dt = b.GetLocalTime(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
-            Assert.That(dt.Value.Hour, Is.EqualTo(10));
-            Assert.That(dt.Value.Minute, Is.EqualTo(39));
-            Assert.That(dt.Value.Second, Is.EqualTo(01));
-            Assert.That(dt.Value.Millisecond, Is.EqualTo(621));
+            Assert.Multiple(() =>
+            {
+                Assert.That(dt.Value.Hour, Is.EqualTo(10));
+                Assert.That(dt.Value.Minute, Is.EqualTo(39));
+                Assert.That(dt.Value.Second, Is.EqualTo(01));
+                Assert.That(dt.Value.Millisecond, Is.EqualTo(621));
+            });
         }
 
         [Test]
@@ -365,10 +454,27 @@ namespace PureFIix.Test.Ascii
             b.WriteString(ds);
             var dt = b.GetLocalTime(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
-            Assert.That(dt.Value.Hour, Is.EqualTo(10));
-            Assert.That(dt.Value.Minute, Is.EqualTo(39));
-            Assert.That(dt.Value.Second, Is.EqualTo(01));
-            Assert.That(dt.Value.Millisecond, Is.EqualTo(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(dt.Value.Hour, Is.EqualTo(10));
+                Assert.That(dt.Value.Minute, Is.EqualTo(39));
+                Assert.That(dt.Value.Second, Is.EqualTo(01));
+                Assert.That(dt.Value.Millisecond, Is.EqualTo(0));
+            });
+        }
+
+        [Test]
+        public void Read_UTC_Time_Without_MS_Test()
+        {
+            const string ds = "10:39:01";
+            var b = new ElasticBuffer(1);
+            b.WriteString(ds);
+            var lt = b.GetLocalTime(0, b.Pos - 1);
+            Assert.That(lt, Is.Not.Null);
+            var ut = b.GetUtcTime(0, b.Pos - 1);
+            Assert.That(ut, Is.Not.Null);
+            var delta = lt - ut;
+            Assert.That(delta, Is.EqualTo(DateTimeOffset.Now.Offset));
         }
     }
 }
