@@ -332,7 +332,7 @@ namespace PureFIix.Test.Ascii
         public void Replace_Char_Test()
         {
             var buffer = new ElasticBuffer(1);
-            var s = "8=FIX.4.4";
+            const string s = "8=FIX.4.4";
             buffer.WriteString(s);
             Assert.That(buffer.ToString(), Is.EqualTo(s));
             Assert.That(buffer.GetPos(), Is.EqualTo(s.Length));
@@ -344,9 +344,9 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Read_LocalDate_Test()
+        public void Read_LocalTime_With_MS_Test()
         {
-            var ds = "10:39:01.621";
+            const string ds = "10:39:01.621";
             var b = new ElasticBuffer(1);
             b.WriteString(ds);
             var dt = b.GetLocalTime(0, b.Pos - 1);
@@ -355,6 +355,20 @@ namespace PureFIix.Test.Ascii
             Assert.That(dt.Value.Minute, Is.EqualTo(39));
             Assert.That(dt.Value.Second, Is.EqualTo(01));
             Assert.That(dt.Value.Millisecond, Is.EqualTo(621));
+        }
+
+        [Test]
+        public void Read_LocalTime_Without_MS_Test()
+        {
+            const string ds = "10:39:01";
+            var b = new ElasticBuffer(1);
+            b.WriteString(ds);
+            var dt = b.GetLocalTime(0, b.Pos - 1);
+            Assert.That(dt, Is.Not.Null);
+            Assert.That(dt.Value.Hour, Is.EqualTo(10));
+            Assert.That(dt.Value.Minute, Is.EqualTo(39));
+            Assert.That(dt.Value.Second, Is.EqualTo(01));
+            Assert.That(dt.Value.Millisecond, Is.EqualTo(0));
         }
     }
 }

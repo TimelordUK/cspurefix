@@ -11,7 +11,7 @@ using PureFix.Buffer.Ascii;
 
 namespace PureFix.Buffer
 {
-    public class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) : IEquatable<ElasticBuffer>
+    public partial class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) : IEquatable<ElasticBuffer>
     {
         private byte[] _buffer = Enumerable.Repeat((byte)0, size).ToArray();
         public int Pos { get; private set; }
@@ -260,22 +260,6 @@ namespace PureFix.Buffer
         {
             var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             return span.ToArray();
-        }
-
-        // 20180610-10:39:01.621
-        public DateTime? GetLocalTime(int st, int vend)
-        {
-            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
-            var chars = new ReadOnlySpan<char>(span.ToArray().Select(b => (char)b).ToArray());
-            if (DateTime.TryParseExact(chars, "hh:mm:ss.fff".AsSpan(), null,DateTimeStyles.AssumeLocal, out var d))
-            {
-                return d;
-            }
-            if (DateTime.TryParseExact(chars, "hh:mm:ss".AsSpan(), null, DateTimeStyles.AssumeLocal, out var d1))
-            {
-                return d1;
-            }
-            return null;
         }
 
         public bool GetBoolean(int start)
