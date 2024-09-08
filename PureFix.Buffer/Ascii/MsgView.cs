@@ -9,7 +9,6 @@ using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types.tag;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace PureFix.Buffer.Ascii
@@ -20,6 +19,8 @@ namespace PureFix.Buffer.Ascii
         public SegmentDescription? Segment => segment;
         public Structure? Structure => structure;
         public Tags? Tags => Structure?.Tags;
+        // do not allocate unless tags are fetched as a view may be used to fetch a component 
+        // without fetching a specific tag.
         protected List<TagPos>? SortedTagPosForwards;
         protected List<TagPos>? SortedTagPosBackwards;
         
@@ -114,14 +115,14 @@ namespace PureFix.Buffer.Ascii
             return position < 0 ? null : StringAtPosition(position);
         }
 
-        public string?[] GetStrings(int? tag = null)
+        public string?[] GetStrings()
         {
-            if (tag == null)
-            {
-                return AllStrings();
-            }
-            var positions = GetPositons(tag.Value);
-            return positions.Select(StringAtPosition).ToArray();
+            return AllStrings();
+        }
+
+        public string?[] GetStrings(int tag)
+        {
+            return GetPositons(tag).Select(StringAtPosition).ToArray();
         }
 
     /**
@@ -243,7 +244,7 @@ namespace PureFix.Buffer.Ascii
         {
             if (Structure == null) return -1;
             if (SortedTagPosForwards != null) return TagPos.BinarySearch(SortedTagPosForwards, tag);
-            SortedTagPosForwards = Structure.Tags.Slice(segment.StartPosition, segment.EndPosition + 1);
+            SortedTagPosForwards = Structure.Value.Tags.Slice(segment.StartPosition, segment.EndPosition + 1);
             SortedTagPosForwards.Sort(TagPos.Compare);
             SortedTagPosBackwards = SortedTagPosForwards[..SortedTagPosForwards.Count];
             SortedTagPosBackwards.Reverse();
@@ -263,7 +264,7 @@ namespace PureFix.Buffer.Ascii
         {
             if (structure == null) return "";
             var buffer = new StringBuilder();
-            var tags = structure.Tags;
+            var tags = structure.Value.Tags;
             var count = segment.EndPosition - segment.StartPosition;
             var simple = Definitions.TagToSimple;
 
