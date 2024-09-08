@@ -2,6 +2,7 @@ using PureFIix.Test.Env;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using System;
+using System.Reflection;
 
 namespace PureFIix.Test.Ascii
 {
@@ -93,7 +94,7 @@ namespace PureFIix.Test.Ascii
         {
             var secListGrp = _secHelper.GetSecListGrp();
             Assert.That(secListGrp, Is.Not.Null);
-            Assert.That(secListGrp.Fields.Count, Is.EqualTo(1));
+            Assert.That(secListGrp.Fields, Has.Count.EqualTo(1));
             _setHelper.IsGroup(secListGrp, 0, "NoRelatedSym", false);
         }
 
@@ -118,7 +119,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsComponent(noRelatedSym, index++, "SecurityTradingRules", false);
             _setHelper.IsComponent(noRelatedSym, index++, "StrikeRules", false);
             _setHelper.IsSimple(noRelatedSym, index++, "RelSymTransactTime", false);
-            Assert.That(noRelatedSym.Fields.Count, Is.EqualTo(index));
+            Assert.That(noRelatedSym.Fields, Has.Count.EqualTo(index));
         }
 
         /*
@@ -137,7 +138,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsComponent(securityTradingRules, index++, "BaseTradingRules", false);
             _setHelper.IsComponent(securityTradingRules, index++, "TradingSessionRulesGrp", false);
             _setHelper.IsComponent(securityTradingRules, index++, "NestedInstrumentAttribute", false);
-            Assert.That(securityTradingRules.Fields.Count, Is.EqualTo(index));
+            Assert.That(securityTradingRules.Fields, Has.Count.EqualTo(index));
         }
 
         /*
@@ -176,7 +177,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(securityTradingRules, index++, "MultilegModel", false);
             _setHelper.IsSimple(securityTradingRules, index++, "MultilegPriceMethod", false);
             _setHelper.IsSimple(securityTradingRules, index++, "PriceType", false);
-            Assert.That(securityTradingRules.Fields.Count, Is.EqualTo(index));
+            Assert.That(securityTradingRules.Fields, Has.Count.EqualTo(index));
         }
 
 
@@ -196,7 +197,7 @@ namespace PureFIix.Test.Ascii
             var index = 0;
             var tickRules = _secHelper.GetTickRules();
             _setHelper.IsGroup(tickRules, index++, "NoTickRules", false);
-            Assert.That(tickRules.Fields.Count, Is.EqualTo(index));
+            Assert.That(tickRules.Fields, Has.Count.EqualTo(index));
         }
 
         [Test]
@@ -208,7 +209,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(noTickRules, index++, "EndTickPriceRange", false);
             _setHelper.IsSimple(noTickRules, index++, "TickIncrement", false);
             _setHelper.IsSimple(noTickRules, index++, "TickRuleType", false);
-            Assert.That(noTickRules.Fields.Count, Is.EqualTo(index));
+            Assert.That(noTickRules.Fields, Has.Count.EqualTo(index));
         }
     }
 }
