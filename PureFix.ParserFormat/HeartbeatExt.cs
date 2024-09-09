@@ -11,14 +11,13 @@ namespace PureFix.ParserFormat
 {
     public static class HeartbeatExt
     {
-        public static void Parse(this Heartbeat instance, MsgView? mv)
+        public static void Parse(this Heartbeat instance, MsgView? view)
         {
-            if (mv is not AsciiView view) return;
             instance.StandardHeader ??= new StandardHeader();
-            instance.StandardHeader.Parse(view.GetView("StandardHeader"));
-            instance.TestReqID = view.GetTyped<string>(112);
+            instance.StandardHeader.Parse(view?.GetView("StandardHeader"));
+            instance.TestReqID = view?.GetTyped<string>(112);
             instance.StandardTrailer ??= new StandardTrailer();
-            instance.StandardTrailer.Parse(view.GetView("StandardTrailer"));
+            instance.StandardTrailer.Parse(view?.GetView("StandardTrailer"));
         }
     }
 }

@@ -38,35 +38,34 @@ namespace PureFix.ParserFormat
 
     public static class StandardHeaderExt
     {
-        public static void Parse(this StandardHeader instance, MsgView? mv)
+        public static void Parse(this StandardHeader instance, MsgView? view)
         {
-            if (mv is not AsciiView view) return;
-            instance.BeginString = view.GetTyped<string>(8);
-            instance.BodyLength = view.GetTyped<int>(9);
-            instance.MsgType = view.GetTyped<string>(35);
-            instance.SenderCompID = view.GetTyped<string>(49);
-            instance.TargetCompID = view.GetTyped<string>(56);
-            instance.OnBehalfOfCompID = view.GetTyped<string>(115);
-            instance.DeliverToCompID = view.GetTyped<string>(128);
-            instance.SecureDataLen = view.GetTyped<int>(91);
-            instance.MsgSeqNum = view.GetTyped<int>(34);
-            instance.SenderSubID = view.GetTyped<string>(50);
-            instance.SenderLocationID = view.GetTyped<string>(142);
-            instance.TargetSubID = view.GetTyped<string>(57);
-            instance.TargetLocationID = view.GetTyped<string>(143);
-            instance.OnBehalfOfSubID = view.GetTyped<string>(116);
-            instance.OnBehalfOfLocationID = view.GetTyped<string>(144);
-            instance.DeliverToSubID = view.GetTyped<string>(129);
-            instance.DeliverToLocationID = view.GetTyped<string>(145);
-            instance.PossDupFlag = view.GetTyped<bool>(43);
-            instance.PossResend = view.GetTyped<bool>(97);
-            instance.SendingTime = view.GetTyped<DateTime>(52);
-            instance.OrigSendingTime = view.GetTyped<DateTime>(122);
-            instance.XmlDataLen = view.GetTyped<int>(212);
-            instance.XmlData = view.GetTyped<byte[]>(213);
-            instance.MessageEncoding = view.GetTyped<string>(347);
-            instance.LastMsgSeqNumProcessed = view.GetTyped<int>(369);
-            instance.Hop?.Parse(view.GetView("Hop"));
+            instance.BeginString = view?.GetTyped<string>(8);
+            instance.BodyLength = view?.GetTyped<int>(9);
+            instance.MsgType = view?.GetTyped<string>(35);
+            instance.SenderCompID = view?.GetTyped<string>(49);
+            instance.TargetCompID = view?.GetTyped<string>(56);
+            instance.OnBehalfOfCompID = view?.GetTyped<string>(115);
+            instance.DeliverToCompID = view?.GetTyped<string>(128);
+            instance.SecureDataLen = view?.GetTyped<int>(91);
+            instance.MsgSeqNum = view?.GetTyped<int>(34);
+            instance.SenderSubID = view?.GetTyped<string>(50);
+            instance.SenderLocationID = view?.GetTyped<string>(142);
+            instance.TargetSubID = view?.GetTyped<string>(57);
+            instance.TargetLocationID = view?.GetTyped<string>(143);
+            instance.OnBehalfOfSubID = view?.GetTyped<string>(116);
+            instance.OnBehalfOfLocationID = view?.GetTyped<string>(144);
+            instance.DeliverToSubID = view?.GetTyped<string>(129);
+            instance.DeliverToLocationID = view?.GetTyped<string>(145);
+            instance.PossDupFlag = view?.GetTyped<bool>(43);
+            instance.PossResend = view?.GetTyped<bool>(97);
+            instance.SendingTime = view?.GetTyped<DateTime>(52);
+            instance.OrigSendingTime = view?.GetTyped<DateTime>(122);
+            instance.XmlDataLen = view?.GetTyped<int>(212);
+            instance.XmlData = view?.GetTyped<byte[]>(213);
+            instance.MessageEncoding = view?.GetTyped<string>(347);
+            instance.LastMsgSeqNumProcessed = view?.GetTyped<int>(369);
+            instance.Hop?.Parse(view?.GetView("Hop"));
         }
     }
 }
