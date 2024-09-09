@@ -529,5 +529,18 @@ namespace PureFIix.Test.Ascii
             Assume.That(dt, Is.Not.Null);
             Assume.That(dt, Is.EqualTo(d));
         }
+
+        [Test]
+        public void Write_Utc_Date_Read_Utc_Date_Test()
+        {
+            const string ds = "20180610-10:39:01.621";
+            var format = ElasticBuffer.TimeFormats.Date;
+            DateTime.TryParseExact(ds, format, null, DateTimeStyles.AssumeUniversal, out var d);
+            var b = new ElasticBuffer(1);
+            b.WriteUtcDateOnly(d);
+            var dt = b.GetUtcDateOnly(0, b.Pos - 1);
+            Assume.That(dt, Is.Not.Null);
+            Assume.That(dt, Is.EqualTo(d));
+        }
     }
 }
