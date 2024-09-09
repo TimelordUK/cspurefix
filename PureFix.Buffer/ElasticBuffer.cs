@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,7 +12,7 @@ using PureFix.Buffer.Ascii;
 
 namespace PureFix.Buffer
 {
-    public partial class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) : IEquatable<ElasticBuffer>
+    public partial class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) 
     {
         private byte[] _buffer = Enumerable.Repeat((byte)0, size).ToArray();
         public int Pos { get; private set; }
@@ -43,14 +44,7 @@ namespace PureFix.Buffer
             var span = new ReadOnlySpan<byte>(_buffer, 0, Pos);
             return span.ToArray();
         }
-  
-        /*
-    public copy() : Buffer {
-    const m = Buffer.alloc(this.ptr)
-    this.buffer.copy(m, 0, 0, this.ptr)
-    return m
-    }*/
-
+        
         public int Checksum(int? p)
         {
             var ptr = p ?? Pos;
@@ -63,9 +57,10 @@ namespace PureFix.Buffer
             var total = 0;
             var ptr = p ?? Pos;
             ptr = Math.Min(ptr, Pos);
-            for (var idx = 0; idx < ptr; idx++)
+            var span = new Span<byte>(_buffer, 0, ptr);
+            foreach (var t in span)
             {
-                total += _buffer[idx];
+                total += t;
             }
             return total;
         }
@@ -148,21 +143,9 @@ namespace PureFix.Buffer
                 reserve++;
             }
             CheckGrowBuffer(reserve);
-            var p = (int)Math.Pow(10, digits - 1);
-            var v = Math.Abs(n);
-
-            if (sign < 0)
-            {
-                _buffer[Pos++] = AsciiChars.Minus;
-            }
-            while (p >= 1)
-            {
-                var d = (byte)(v / p);
-                v -= d * p;
-                p /= 10;
-                _buffer[Pos++] = (byte)(AsciiChars.Zero + d);
-            }
-
+            var span = new Span<byte>(_buffer, Pos, reserve);
+            n.TryFormat(span, out var written);
+            Pos += written;
             return Pos;
         }
 
@@ -188,7 +171,7 @@ namespace PureFix.Buffer
         public string GetString(int start, int end)
         {
             var slice = new ReadOnlySpan<byte>(_buffer, start, (end - start));
-            var str = Encoding.Default.GetString(slice.ToArray());
+            var str = Encoding.UTF8.GetString(slice);
             return str;
         }
 
@@ -199,7 +182,9 @@ namespace PureFix.Buffer
 
         public override string ToString()
         {
-            return Encoding.UTF8.GetString(_buffer.ToArray(), 0, Pos);
+            var slice = new ReadOnlySpan<byte>(_buffer, 0, Pos);
+            var str = Encoding.UTF8.GetString(slice);
+            return str;
         }
 
         public void CheckGrowBuffer(int required)
@@ -271,12 +256,6 @@ namespace PureFix.Buffer
         public ElasticBuffer Clone()
         {
             return new ElasticBuffer(this);
-        }
-
-        public bool Equals(ElasticBuffer? other)
-        {
-            if (!ReferenceEquals(other, null)) return false;
-            return other != null && _buffer.SequenceEqual(other._buffer);
         }
     }
 }
