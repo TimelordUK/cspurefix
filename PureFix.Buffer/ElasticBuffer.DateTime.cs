@@ -30,11 +30,10 @@ namespace PureFix.Buffer
         {
             var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             Span<char> chars = stackalloc char[span.Length];
-            var itr = span.GetEnumerator();
             var j = 0;
-            while (itr.MoveNext())
+            foreach (var c in span)
             {
-                chars[j++] = (char)itr.Current;
+                chars[j++] = (char)c;
             }
             if (DateTime.TryParseExact(chars, "hh:mm:ss.fff".AsSpan(), null, style, out var d))
             {

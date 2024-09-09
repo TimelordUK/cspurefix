@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using PureFix.Buffer.Ascii;
 
 namespace PureFix.Buffer
@@ -39,12 +40,6 @@ namespace PureFix.Buffer
             return Math.Max(digits, 1);
         }
 
-        public Memory<byte> Slice()
-        {
-            var span = new ReadOnlySpan<byte>(_buffer, 0, Pos);
-            return span.ToArray();
-        }
-        
         public int Checksum(int? p)
         {
             var ptr = p ?? Pos;
@@ -114,11 +109,13 @@ namespace PureFix.Buffer
         public int WriteString(string s)
         {
             CheckGrowBuffer(s.Length);
+            var span = new Span<byte>(_buffer, Pos, s.Length);
+            var i = 0;
             foreach (var c in s)
             {
-                _buffer[Pos++] = (byte)c;
+                span[i++] = (byte)c;
             }
-
+            Pos += s.Length;
             return Pos;
         }
 
