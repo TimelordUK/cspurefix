@@ -76,23 +76,34 @@ namespace PureFix.Buffer
         // 20180610-10:39:01.621
         public int WriteUtcTimeStamp(DateTime dateTime)
         {
-            return WriteUtcFormat(dateTime, TimeFormats.Timestamp);
+            return WriteFormat(dateTime.ToUniversalTime(), TimeFormats.Timestamp);
         }
 
         public int WriteUtcDateOnly(DateTime dateTime)
         {
-            return WriteUtcFormat(dateTime, TimeFormats.Date);
+            return WriteFormat(dateTime.ToUniversalTime(), TimeFormats.Date);
         }
+
+        public int WriteLocalDateOnly(DateTime dateTime)
+        {
+            return WriteFormat(dateTime, TimeFormats.Date);
+        }
+
         public DateTime? GetUtcDateOnly(int st, int vend)
         {
             return GetDateTimeWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeUniversal);
         }
 
-        private int WriteUtcFormat(DateTime dateTime, string format)
+        public DateTime? GetLocalDateOnly(int st, int vend)
+        {
+            return GetDateTimeWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeLocal);
+        }
+
+        private int WriteFormat(DateTime dateTime, string format)
         {
             CheckGrowBuffer(format.Length);
             var span = _buffer.AsSpan()[Pos..format.Length];
-            dateTime.ToUniversalTime().TryFormat(span, out var written, format);
+            dateTime.TryFormat(span, out var written, format);
             Pos += written;
             return Pos;
         }
