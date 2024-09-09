@@ -81,7 +81,7 @@ namespace PureFix.Buffer
             var format = TimeFormats.Timestamp;
             CheckGrowBuffer(format.Length);
             var span = _buffer.AsSpan()[Pos..format.Length];
-            dateTime.TryFormat(span, out var written, format);
+            dateTime.ToUniversalTime().TryFormat(span, out var written, format);
             Pos += written;
             return Pos;
         }

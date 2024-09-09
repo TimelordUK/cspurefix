@@ -508,10 +508,23 @@ namespace PureFIix.Test.Ascii
         public void Read_Utc_TimeStamp_Test()
         {
             const string ds = "20180610-10:39:01.621";
-            const string format = "yyyyMMdd-HH:mm:ss.fff";
+            var format = ElasticBuffer.TimeFormats.Timestamp;
             DateTime.TryParseExact(ds, format, null, DateTimeStyles.AssumeUniversal, out var d);
             var b = new ElasticBuffer(1);
             b.WriteString(ds);
+            var dt = b.GetUtcTimeStamp(0, b.Pos - 1);
+            Assume.That(dt, Is.Not.Null);
+            Assume.That(dt, Is.EqualTo(d));
+        }
+
+        [Test]
+        public void Write_Utc_TimeStamp_Read_Utc_Timestamp_Test()
+        {
+            const string ds = "20180610-10:39:01.621";
+            var format = ElasticBuffer.TimeFormats.Timestamp;
+            DateTime.TryParseExact(ds, format, null, DateTimeStyles.AssumeUniversal, out var d);
+            var b = new ElasticBuffer(1);
+            b.WriteUtcTimeStamp(d);
             var dt = b.GetUtcTimeStamp(0, b.Pos - 1);
             Assume.That(dt, Is.Not.Null);
             Assume.That(dt, Is.EqualTo(d));
