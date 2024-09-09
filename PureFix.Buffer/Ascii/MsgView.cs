@@ -67,7 +67,7 @@ namespace PureFix.Buffer.Ascii
         {
             if (Segment == null) return [];
             if (Segment.Set == null) return [];
-            return MissingRequired(Segment.Set, []).ToArray();
+            return [.. MissingRequired(Segment.Set, [])];
         }
 
         protected static string AsToken(SimpleFieldDefinition? field, string val, int i, int count, TagPos tagpos)
@@ -178,6 +178,14 @@ namespace PureFix.Buffer.Ascii
         {
             var instance = Segment?.GetInstance(i);
             return instance == null ? null : Create(instance);
+        }
+
+        public MsgView? this[int i]
+        {
+            get
+            {
+                return GetGroupInstance(i);
+            }
         }
 
         private void MissingComponent(ContainedComponentField cf, List<int> ints)

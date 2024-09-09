@@ -61,6 +61,8 @@ namespace PureFIix.Test.Ascii
             var leg0 = noLegs.GetGroupInstance(0);
             Assert.That(leg0, Is.Not.Null);
             Assert.That(leg0.GetTyped<string>("LegSymbol"), Is.EqualTo("posuere"));
+            var l0 = mv.GetView("InstrmtLegExecGrp.NoLegs")[0];
+            Assert.That(l0.GetTyped<string>("LegSymbol"), Is.EqualTo("posuere"));
         }
     }
 }

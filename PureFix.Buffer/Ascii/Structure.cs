@@ -63,7 +63,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     case SegmentType.Group:
                     {
-                        _groups ??= new Dictionary<string, List<SegmentDescription>>();
+                        _groups ??= [];
                         if (!_groups.TryGetValue(current.Name, out var instances))
                         {
                             _groups[current.Name] = instances = [];
@@ -76,7 +76,7 @@ namespace PureFix.Buffer.Ascii
                     case SegmentType.Component:
                     case SegmentType.Msg:
                     case SegmentType.Batch:
-                        _components ??= new Dictionary<string, SegmentDescription>();
+                        _components ??= [];
                         _components[current.Name] = current;
                         break;
                 }
