@@ -3,34 +3,60 @@ using System.Drawing;
 
 namespace PureFix.Types.tag
 {
-    public class Tags(int startingCapacity = 30 * 000) : IEnumerable<TagPos>
+    public class Tags : IEnumerable<TagPos>
     {
         public const int BeginString = (int)MsgTag.BeginString;
         public const int BodyLengthTag = (int)MsgTag.BodyLength;
         public const int CheckSumTag = (int)MsgTag.CheckSum;
         public const int MessageTag = (int)MsgTag.MsgType;
 
-        private readonly List<TagPos> _tagPos = new(startingCapacity);
-        public int Count => _tagPos.Count;
+        private readonly TagPos[] _tagPos;
+        private int _ptr;
+
+        public Tags() : this(30 * 1000)
+        {
+        }
+
+        public Tags(int startingCapacity)
+        {
+            _tagPos = new TagPos[startingCapacity];
+        }
+
+        public IEnumerator<TagPos> GetEnumerator()
+        {
+            for (var i = 0; i < _ptr; ++i)
+            {
+                yield return _tagPos[i];
+            }
+        }
 
         public override string ToString()
         {
-            return $"[{_tagPos.Count}] {string.Join(", ", _tagPos)}";
+            return $"[{NextTagPos}] {string.Join(", ", _tagPos[..NextTagPos])}";
         }
 
-        public int NextTagPos => _tagPos.Count;
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public int NextTagPos => _ptr;
 
         public Tags(Tags that) : this()
         {
-            _tagPos = [..that._tagPos];
+            _tagPos = that._tagPos[..that._ptr];
+            _ptr = that._ptr;
+        }
+
+        public int Count => _ptr;
+
+        public TagPos[] Slice(int start, int end)
+        {
+            return _tagPos[start..end];
         }
 
         public TagPos this[int x] => _tagPos[x];
-
-        public List<TagPos> Slice(int startPosition, int endPosition)
-        {
-            return _tagPos.Slice(startPosition, endPosition - startPosition);
-        }
+        public TagPos this[Index i] => _tagPos[i];
 
         // used by the compiler to produce types representing the dictionary.
         public static string ToCsType(TagType tagType)
@@ -72,22 +98,12 @@ namespace PureFix.Types.tag
 
         public void Reset()
         {
-            _tagPos.Clear();
+            _ptr = 0;
         }
 
         public void Store(int start, int len, int tag)
         {
-            _tagPos.Add(new TagPos(_tagPos.Count, tag, start, len));
-        }
-
-        public IEnumerator<TagPos> GetEnumerator()
-        {
-            return _tagPos.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            _tagPos[_ptr] = new TagPos(_ptr++, tag, start, len);
         }
     }
 }

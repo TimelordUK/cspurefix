@@ -21,8 +21,8 @@ namespace PureFix.Buffer.Ascii
         public Tags? Tags => Structure?.Tags;
         // do not allocate unless tags are fetched as a view may be used to fetch a component 
         // without fetching a specific tag.
-        protected List<TagPos>? SortedTagPosForwards;
-        protected List<TagPos>? SortedTagPosBackwards;
+        protected TagPos[]? SortedTagPosForwards;
+        protected TagPos[]? SortedTagPosBackwards;
         
         // list of tags that must be present
         public int[] Missing()
@@ -210,7 +210,7 @@ namespace PureFix.Buffer.Ascii
                 return [];
             }
 
-            var count = forwards.Count;
+            var count = forwards.Length;
             var last = count - 1;
             var end = position;
             while (end <= last)
@@ -244,10 +244,11 @@ namespace PureFix.Buffer.Ascii
         {
             if (Structure == null) return -1;
             if (SortedTagPosForwards != null) return TagPos.BinarySearch(SortedTagPosForwards, tag);
-            SortedTagPosForwards = Structure.Value.Tags.Slice(segment.StartPosition, segment.EndPosition + 1);
-            SortedTagPosForwards.Sort(TagPos.Compare);
-            SortedTagPosBackwards = SortedTagPosForwards[..SortedTagPosForwards.Count];
-            SortedTagPosBackwards.Reverse();
+            var end = segment.EndPosition + 1;
+            var start = segment.StartPosition;
+            SortedTagPosForwards = Structure.Value.Tags.Slice(start,end);
+            Array.Sort(SortedTagPosForwards, TagPos.Compare);
+            SortedTagPosBackwards = SortedTagPosForwards[..SortedTagPosForwards.Length].Reverse().ToArray();
             return TagPos.BinarySearch(SortedTagPosForwards, tag);
         }
 

@@ -15,7 +15,7 @@ namespace PureFix.Buffer
 {
     public partial class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) 
     {
-        private byte[] _buffer = Enumerable.Repeat((byte)0, size).ToArray();
+        private byte[] _buffer = new byte[size];
         public int Pos { get; private set; }
         private readonly int _returnTo = returnTo;
 
@@ -246,8 +246,7 @@ namespace PureFix.Buffer
 
         public bool GetBoolean(int start)
         {
-            var b = _buffer[start];
-            return b == AsciiChars.Y;
+            return _buffer[start] == AsciiChars.Y;
         }
 
         public ElasticBuffer Clone()
