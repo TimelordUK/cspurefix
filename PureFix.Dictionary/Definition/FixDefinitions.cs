@@ -15,10 +15,10 @@ namespace PureFix.Dictionary.Definition
          * all simple fields defined from source definition indexed via name
          * e.g. 'BeginString'
         */
-        private readonly Dictionary<string, SimpleFieldDefinition> _nameToSimple = new();
-        private readonly Dictionary<string, MessageDefinition> _message = new();
-        private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimple = new();
-        private readonly Dictionary<string, ComponentFieldDefinition> _component = new();
+        private readonly Dictionary<string, SimpleFieldDefinition> _nameToSimple = [];
+        private readonly Dictionary<string, MessageDefinition> _message = [];
+        private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimple = [];
+        private readonly Dictionary<string, ComponentFieldDefinition> _component = [];
 
         public IReadOnlyDictionary<string, SimpleFieldDefinition> Simple => _nameToSimple;
         /**

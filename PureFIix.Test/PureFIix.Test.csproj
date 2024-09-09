@@ -56,7 +56,6 @@
 
   <ItemGroup>
     <Folder Include="Data\examples\FIX.4.4\quickfix\logon\" />
-    <Folder Include="Data\examples\FIX.4.4\quickfix\execution-report\" />
     <Folder Include="Data\examples\FIX.4.4\quickfix\heartbeat\" />
   </ItemGroup>
 

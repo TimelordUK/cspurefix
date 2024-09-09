@@ -32,6 +32,15 @@ namespace PureFix.Buffer.Ascii
             Buffer = buffer;
         }
 
+        public T? GetTyped<T>(string name)
+        {
+            if (Definitions.Simple.TryGetValue(name, out var typed))
+            {
+                return GetTyped<T>(typed.Tag);
+            }
+            return default;
+        }
+
         public T? GetTyped<T>(int tag)
         {
             var position = GetPosition(tag);
