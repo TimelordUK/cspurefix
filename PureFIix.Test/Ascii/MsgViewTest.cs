@@ -1,7 +1,9 @@
 ﻿using PureFIix.Test.Env;
+using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,6 +107,16 @@ namespace PureFIix.Test.Ascii
             var view = _views[0];
             var asBool = view.GetTyped<bool>(464);
             Assert.That(asBool, Is.False);
+        }
+
+        [Test]
+        public void Get_Tag_52_Typed_Utc_Timestamp_View_Test()
+        {
+            var format = ElasticBuffer.TimeFormats.Timestamp;
+            DateTime.TryParseExact("20180610-10:39:01.621", format, null, DateTimeStyles.AssumeUniversal, out var d);
+            var view = _views[0];
+            var asUtc = view.GetTyped<DateTime>(52);
+            Assert.That(asUtc, Is.EqualTo(d));
         }
 
         [Test]

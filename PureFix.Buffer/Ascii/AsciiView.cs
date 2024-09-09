@@ -36,7 +36,7 @@ namespace PureFix.Buffer.Ascii
             var position = GetPosition(tag);
             if (position< 0)
             {
-                return default(T?);
+                return default;
             }
 
             if (typeof(T) == typeof(string))
@@ -67,7 +67,7 @@ namespace PureFix.Buffer.Ascii
             if (typeof(T) == typeof(byte[]))
             {
                 var b = BufferAtPosition(position);
-                if (b == null) return default(T?);
+                if (b == null) return default;
                 return (T?)Convert.ChangeType(b.Value.ToArray(), typeof(T));
             }
 
@@ -76,7 +76,27 @@ namespace PureFix.Buffer.Ascii
                 return (T?)Convert.ChangeType(BufferAtPosition(position), typeof(T));
             }
 
-            return default(T?);
+            if (typeof(T) == typeof(DateTime))
+            {
+                var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
+                if (sf == null) return default;
+                switch (sf.TagType)
+                {
+                    case TagType.UtcDateOnly:
+                        return (T?)Convert.ChangeType(UtcDateOnlyAtPosition(position), typeof(T));
+
+                    case TagType.UtcTimeOnly:
+                        return (T?)Convert.ChangeType(UtcTimeOnlyAtPosition(position), typeof(T));
+
+                    case TagType.UtcTimestamp:
+                        return (T?)Convert.ChangeType(UtcTimestampAtPosition(position), typeof(T));
+
+                    case TagType.LocalDate:
+                        return (T?)Convert.ChangeType(LocalDateOnlyAtPosition(position), typeof(T));
+                }
+            }
+
+            return default;
         }
 
         protected override MsgView Create(SegmentDescription singleton)
@@ -111,31 +131,54 @@ namespace PureFix.Buffer.Ascii
         protected long? LongAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetWholeNumber(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+            return tag == null ? null : Buffer.GetWholeNumber(tag.Value.Start, tag.Value.End);
         }
 
         protected double? FloatAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetFloat(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+            return tag == null ? null : Buffer.GetFloat(tag.Value.Start, tag.Value.End);
         }
 
         protected decimal? DecimalAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetDecimal(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+            return tag == null ? null : Buffer.GetDecimal(tag.Value.Start, tag.Value.End);
         }
 
         protected Memory<byte>? BufferAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetBuffer(tag.Value.Start, tag.Value.Start + tag.Value.Len - 1);
+            return tag == null ? null : Buffer.GetBuffer(tag.Value.Start, tag.Value.End);
         }
 
         protected bool? BoolAtPosition(int position)
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetBoolean(tag.Value.Start);
+        }
+
+        protected DateTime? UtcDateOnlyAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetUtcDateOnly(tag.Value.Start, tag.Value.End);
+        }
+        protected DateTime? UtcTimeOnlyAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Value.Start, tag.Value.End);
+        }
+
+        protected DateTime? LocalDateOnlyAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetLocalDateOnly(tag.Value.Start, tag.Value.End);
+        }
+
+        protected DateTime? UtcTimestampAtPosition(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Value.Start, tag.Value.End);
         }
     }
 }
