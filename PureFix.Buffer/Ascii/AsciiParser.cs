@@ -19,7 +19,7 @@ namespace PureFix.Buffer.Ascii
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
         public FixDefinitions Definitons { get; }
 
-        public Tags Locations { get; } = new ();
+        public Tags Locations { get; } = new Tags();
 
         public ElasticBuffer ReceivingBuffer { get; }
 

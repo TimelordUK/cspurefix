@@ -40,7 +40,7 @@
                 return 0;
             }
 
-            return ((lhs.Start < rhs.Start) ? -1 : ((lhs.Start > rhs.Start) ? 1 : 0));
+            return lhs.Start < rhs.Start ? -1 : lhs.Start > rhs.Start ? 1 : 0;
         }
     }
 }
