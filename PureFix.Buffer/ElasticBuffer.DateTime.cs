@@ -7,10 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.Unicode;
 using System.Threading.Tasks;
-using PureFix.Buffer.Ascii;
-using static PureFix.Buffer.ElasticBuffer;
 
 namespace PureFix.Buffer
 {
@@ -40,6 +37,7 @@ namespace PureFix.Buffer
         public static class TimeFormats
         {
             public static readonly string Timestamp = "yyyyMMdd-HH:mm:ss.fff";
+            public static readonly string Date = "yyyyMMdd";
             public static readonly string TimeMs = "HH:mm:ss.fff";
             public static readonly string Time = "HH:mm:ss";
         }
@@ -78,7 +76,20 @@ namespace PureFix.Buffer
         // 20180610-10:39:01.621
         public int WriteUtcTimeStamp(DateTime dateTime)
         {
-            var format = TimeFormats.Timestamp;
+            return WriteUtcFormat(dateTime, TimeFormats.Timestamp);
+        }
+
+        public int WriteUtcDateOnly(DateTime dateTime)
+        {
+            return WriteUtcFormat(dateTime, TimeFormats.Date);
+        }
+        public DateTime? GetUtcDateOnly(int st, int vend)
+        {
+            return GetDateTimeWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeUniversal);
+        }
+
+        private int WriteUtcFormat(DateTime dateTime, string format)
+        {
             CheckGrowBuffer(format.Length);
             var span = _buffer.AsSpan()[Pos..format.Length];
             dateTime.ToUniversalTime().TryFormat(span, out var written, format);
@@ -88,10 +99,10 @@ namespace PureFix.Buffer
 
         public DateTime? GetUtcTimeStamp(int st, int vend)
         {
-            return GetTime(st, vend, TimeFormats.Timestamp, DateTimeStyles.AssumeUniversal);
+            return GetDateTimeWithFormat(st, vend, TimeFormats.Timestamp, DateTimeStyles.AssumeUniversal);
         }
 
-        public DateTime? GetTime(int st, int vend, string format, DateTimeStyles style)
+        private DateTime? GetDateTimeWithFormat(int st, int vend, string format, DateTimeStyles style)
         {
             var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             Span<char> chars = stackalloc char[span.Length];
