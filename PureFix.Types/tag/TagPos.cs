@@ -2,6 +2,8 @@
 {
     public readonly record struct TagPos(int Position, int Tag, int Start, int Len)
     {
+        public int End => Start + Len - 1;
+
         public static int BinarySearch(IReadOnlyList<TagPos> ar, int tag)
         {
             var m = 0;

@@ -234,8 +234,6 @@ namespace PureFix.Buffer.Ascii
             }
 
             var begin = last - (start - 1);
-            var len = end - begin;
-
             var positions = forwards[begin..end].Select(s => s.Position).ToArray();
             return positions;
         }
