@@ -79,13 +79,16 @@ namespace PureFIix.Test.Ascii
              */
             var instance = new StandardHeader();
             instance.Parse(sh);
-            Assert.That(instance.BeginString, Is.EqualTo("FIX4.4"));
-            Assert.That(instance.BodyLength, Is.EqualTo(208));
-            Assert.That(instance.MsgType, Is.EqualTo("A"));
-            Assert.That(instance.SenderCompID, Is.EqualTo("sender-10"));
-            Assert.That(instance.TargetCompID, Is.EqualTo("target-20"));
-            Assert.That(instance.MsgSeqNum, Is.EqualTo(1));
-            Assert.That(instance.TargetSubID, Is.EqualTo("sub-a"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(instance.BeginString, Is.EqualTo("FIX4.4"));
+                Assert.That(instance.BodyLength, Is.EqualTo(208));
+                Assert.That(instance.MsgType, Is.EqualTo("A"));
+                Assert.That(instance.SenderCompID, Is.EqualTo("sender-10"));
+                Assert.That(instance.TargetCompID, Is.EqualTo("target-20"));
+                Assert.That(instance.MsgSeqNum, Is.EqualTo(1));
+                Assert.That(instance.TargetSubID, Is.EqualTo("sub-a"));
+            });
         }
     }
 }
