@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Definition;
-using PureFix.Types.tag;
+using PureFix.Tag;
 
 namespace PureFix.Buffer.Ascii
 {

@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
-using PureFix.Types.tag;
+using PureFix.Tag;
 
 
 namespace PureFix.Buffer.Ascii

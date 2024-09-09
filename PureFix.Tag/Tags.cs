@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using System.Drawing;
+using PureFix.Types;
 
-namespace PureFix.Types.tag
+namespace PureFix.Tag
 {
     public class Tags : IEnumerable<TagPos>
     {

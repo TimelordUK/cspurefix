@@ -9,7 +9,8 @@ using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
-using PureFix.Types.tag;
+using PureFix.Tag;
+
 
 namespace PureFix.Buffer.Ascii
 {
