@@ -10,12 +10,11 @@ namespace PureFix.ParserFormat
 {
     public static class StandardTrailerExt
     {
-        public static void Parse(this StandardTrailer instance, MsgView? mv)
+        public static void Parse(this StandardTrailer instance, MsgView? view)
         {
-            if (mv is not AsciiView view) return;
-            instance.SignatureLength = view.GetTyped<int>(93);
-            instance.Signature = view.GetTyped<byte[]>(89);
-            instance.CheckSum = view.GetTyped<string>(10);
+            instance.SignatureLength = view?.GetTyped<int>(93);
+            instance.Signature = view?.GetTyped<byte[]>(89);
+            instance.CheckSum = view?.GetTyped<string>(10);
         }
     }
 }

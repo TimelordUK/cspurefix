@@ -58,7 +58,7 @@ namespace PureFIix.Test.Ascii
             var noLegs = v.GetView("NoLegs");
             var count = noLegs.GroupCount();
             Assert.That(count, Is.EqualTo(3));
-            var leg0 = noLegs.GetGroupInstance(0) as AsciiView;
+            var leg0 = noLegs.GetGroupInstance(0);
             Assert.That(leg0, Is.Not.Null);
             Assert.That(leg0.GetTyped<string>("LegSymbol"), Is.EqualTo("posuere"));
         }

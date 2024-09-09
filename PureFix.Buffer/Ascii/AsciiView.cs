@@ -32,83 +32,7 @@ namespace PureFix.Buffer.Ascii
             Buffer = buffer;
         }
 
-        public T? GetTyped<T>(string name)
-        {
-            if (Definitions.Simple.TryGetValue(name, out var typed))
-            {
-                return GetTyped<T>(typed.Tag);
-            }
-            return default;
-        }
-
-        public T? GetTyped<T>(int tag)
-        {
-            var position = GetPosition(tag);
-            if (position< 0)
-            {
-                return default;
-            }
-
-            if (typeof(T) == typeof(DateTime))
-            {
-                var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
-                if (sf == null) return default;
-                switch (sf.TagType)
-                {
-                    case TagType.UtcDateOnly:
-                        return (T?)Convert.ChangeType(UtcDateOnlyAtPosition(position), typeof(T));
-
-                    case TagType.UtcTimeOnly:
-                        return (T?)Convert.ChangeType(UtcTimeOnlyAtPosition(position), typeof(T));
-
-                    case TagType.UtcTimestamp:
-                        return (T?)Convert.ChangeType(UtcTimestampAtPosition(position), typeof(T));
-
-                    case TagType.LocalDate:
-                        return (T?)Convert.ChangeType(LocalDateOnlyAtPosition(position), typeof(T));
-                }
-            }
-
-            if (typeof(T) == typeof(string))
-            {
-                return (T?) Convert.ChangeType(StringAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(int))
-            {
-                return (T?)Convert.ChangeType(LongAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(double))
-            {
-                return (T?)Convert.ChangeType(FloatAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(bool))
-            {
-                return (T?)Convert.ChangeType(BoolAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(decimal))
-            {
-                return (T?)Convert.ChangeType(DecimalAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(byte[]))
-            {
-                var b = BufferAtPosition(position);
-                if (b == null) return default;
-                return (T?)Convert.ChangeType(b.Value.ToArray(), typeof(T));
-            }
-
-            if (typeof(T) == typeof(Memory<byte>))
-            {
-                return (T?)Convert.ChangeType(BufferAtPosition(position), typeof(T));
-            }
-
-            return default;
-        }
-
+    
         protected override MsgView Create(SegmentDescription singleton)
         {
             return new AsciiView(Definitions,
@@ -189,6 +113,83 @@ namespace PureFix.Buffer.Ascii
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Value.Start, tag.Value.End);
+        }
+
+        public override T? GetTyped<T>(string name) where T : default
+        {
+            if (Definitions.Simple.TryGetValue(name, out var typed))
+            {
+                return GetTyped<T>(typed.Tag);
+            }
+            return default;
+        }
+
+        public override T? GetTyped<T>(int tag) where T : default
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                return default;
+            }
+
+            if (typeof(T) == typeof(DateTime))
+            {
+                var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
+                if (sf == null) return default;
+                switch (sf.TagType)
+                {
+                    case TagType.UtcDateOnly:
+                        return (T?)Convert.ChangeType(UtcDateOnlyAtPosition(position), typeof(T));
+
+                    case TagType.UtcTimeOnly:
+                        return (T?)Convert.ChangeType(UtcTimeOnlyAtPosition(position), typeof(T));
+
+                    case TagType.UtcTimestamp:
+                        return (T?)Convert.ChangeType(UtcTimestampAtPosition(position), typeof(T));
+
+                    case TagType.LocalDate:
+                        return (T?)Convert.ChangeType(LocalDateOnlyAtPosition(position), typeof(T));
+                }
+            }
+
+            if (typeof(T) == typeof(string))
+            {
+                return (T?)Convert.ChangeType(StringAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(int))
+            {
+                return (T?)Convert.ChangeType(LongAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(double))
+            {
+                return (T?)Convert.ChangeType(FloatAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(bool))
+            {
+                return (T?)Convert.ChangeType(BoolAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(decimal))
+            {
+                return (T?)Convert.ChangeType(DecimalAtPosition(position), typeof(T));
+            }
+
+            if (typeof(T) == typeof(byte[]))
+            {
+                var b = BufferAtPosition(position);
+                if (b == null) return default;
+                return (T?)Convert.ChangeType(b.Value.ToArray(), typeof(T));
+            }
+
+            if (typeof(T) == typeof(Memory<byte>))
+            {
+                return (T?)Convert.ChangeType(BufferAtPosition(position), typeof(T));
+            }
+
+            return default;
         }
     }
 }

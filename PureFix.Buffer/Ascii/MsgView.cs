@@ -59,6 +59,9 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
+        public abstract T? GetTyped<T>(string name);
+        public abstract T? GetTyped<T>(int tag);
+
         // list of tags that must be present
         public int[] Missing()
         {
