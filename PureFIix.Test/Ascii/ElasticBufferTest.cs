@@ -442,7 +442,7 @@ namespace PureFIix.Test.Ascii
             const string ds = "10:39:01.621";
             var b = new ElasticBuffer(1);
             b.WriteString(ds);
-            var dt = b.GetLocalTime(0, b.Pos - 1);
+            var dt = b.GetLocalTimeOnly(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -459,7 +459,7 @@ namespace PureFIix.Test.Ascii
             const string ds = "10:39:01";
             var b = new ElasticBuffer(1);
             b.WriteString(ds);
-            var dt = b.GetLocalTime(0, b.Pos - 1);
+            var dt = b.GetLocalTimeOnly(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -471,7 +471,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Write_UtcTime_Read_Utc_Test()
+        public void Write_UtcTime_Read_Utc_TimeOnly_Test()
         {
             var utc = DateTime.Now.ToUniversalTime();
             var b = new ElasticBuffer(1);
@@ -488,12 +488,12 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Write_Local_Read_Local_Test()
+        public void Write_Local_Read_Local_TimeOnly_Test()
         {
             var local = DateTime.Now;
             var b = new ElasticBuffer(1);
             b.WriteLocalTimeOnly(local);
-            var dt = b.GetLocalTime(0, b.Pos - 1);
+            var dt = b.GetLocalTimeOnly(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -502,6 +502,19 @@ namespace PureFIix.Test.Ascii
                 Assert.That(dt.Value.Second, Is.EqualTo(local.Second));
                 Assert.That(dt.Value.Millisecond, Is.EqualTo(local.Millisecond));
             });
+        }
+
+        [Test]
+        public void Read_Utc_TimeStamp_Test()
+        {
+            const string ds = "20180610-10:39:01.621";
+            const string format = "yyyyMMdd-HH:mm:ss.fff";
+            DateTime.TryParseExact(ds, format, null, DateTimeStyles.AssumeUniversal, out var d);
+            var b = new ElasticBuffer(1);
+            b.WriteString(ds);
+            var dt = b.GetUtcTimeStamp(0, b.Pos - 1);
+            Assume.That(dt, Is.Not.Null);
+            Assume.That(dt, Is.EqualTo(d));
         }
     }
 }
