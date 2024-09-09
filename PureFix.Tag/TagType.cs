@@ -1,4 +1,4 @@
-﻿namespace PureFix.Types.tag
+﻿namespace PureFix.Tag
 {
     public enum TagType
     {

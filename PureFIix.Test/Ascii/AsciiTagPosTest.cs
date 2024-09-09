@@ -1,5 +1,4 @@
 ﻿using PureFIix.Test.Env;
-using PureFix.Types.tag;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
 using System.Globalization;
+using PureFix.Tag;
 
 namespace PureFIix.Test.Ascii
 {

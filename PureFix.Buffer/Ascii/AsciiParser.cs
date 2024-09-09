@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
+using PureFix.Tag;
 using PureFix.Transport;
-using PureFix.Types.tag;
+
 
 namespace PureFix.Buffer.Ascii
 {

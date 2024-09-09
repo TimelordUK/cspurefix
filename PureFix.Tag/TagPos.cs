@@ -1,4 +1,4 @@
-﻿namespace PureFix.Types.tag
+﻿namespace PureFix.Tag
 {
     public readonly record struct TagPos(int Position, int Tag, int Start, int Len)
     {

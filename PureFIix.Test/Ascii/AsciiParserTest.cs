@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
-using PureFix.Types.tag;
+using PureFix.Tag;
 
 namespace PureFIix.Test.Ascii
 {
