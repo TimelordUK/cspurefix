@@ -3,6 +3,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Tag;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,7 +53,15 @@ namespace PureFIix.Test.Ascii
             Assert.That(sh, Is.Not.Null);
             var instance = new StandardHeader();
             Console.WriteLine(sh.ToString());
-            instance.Parse(sh);
+            var sw = new Stopwatch();
+            sw.Start();
+            const int count = 100000;
+            for (var i = 1; i < count; ++i)
+            {
+                instance.Parse(sh);
+            }
+            sw.Stop();
+            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.ElapsedMilliseconds / count * 1000}  micro/msg");
         }
     }
 }

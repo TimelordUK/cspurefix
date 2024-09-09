@@ -13,17 +13,52 @@ using PureFix.Tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public abstract class MsgView(FixDefinitions definitions, SegmentDescription segment, Structure? structure)
+    public abstract class MsgView
     {
-        public FixDefinitions Definitions => definitions;
-        public SegmentDescription? Segment => segment;
-        public Structure? Structure => structure;
+        public FixDefinitions Definitions { get; }
+        public SegmentDescription? Segment { get; }
+        public Structure? Structure { get; }
         public Tags? Tags => Structure?.Tags;
         // do not allocate unless tags are fetched as a view may be used to fetch a component 
         // without fetching a specific tag.
         protected TagPos[]? SortedTagPosForwards;
-        protected TagPos[]? SortedTagPosBackwards;
-        
+        protected Dictionary<int, Range>? TagSpans;
+
+        protected MsgView(FixDefinitions definitions, SegmentDescription segment, Structure? structure)
+        {
+            Definitions = definitions;
+            Segment = segment;
+            Structure = structure;
+        }
+
+        private void EnumeratSpan()
+        {
+            if (TagSpans != null) return;
+            if (Tags == null) return;
+            if (Structure == null) return;
+            if (Segment == null) return;
+
+            var end = Segment.EndPosition + 1;
+            var start = Segment.StartPosition;
+            SortedTagPosForwards = Structure.Value.Tags.Slice(start, end);
+            Array.Sort(SortedTagPosForwards, TagPos.Compare);
+            var span = SortedTagPosForwards[..SortedTagPosForwards.Length];
+            TagSpans = [];
+
+            for (var i = 0; i < SortedTagPosForwards.Length; ++i)
+            {
+                var t = span[i];
+                if (TagSpans.TryGetValue(t.Tag, out var c))
+                {
+                    TagSpans[t.Tag] = new Range(c.Start, i);
+                }
+                else
+                {
+                    TagSpans[t.Tag] = new Range(i, i);
+                }
+            }
+        }
+
         // list of tags that must be present
         public int[] Missing()
         {
@@ -115,14 +150,20 @@ namespace PureFix.Buffer.Ascii
             return position < 0 ? null : StringAtPosition(position);
         }
 
-        public string?[] GetStrings()
+        public string?[]? GetStrings()
         {
             return AllStrings();
         }
 
-        public string?[] GetStrings(int tag)
+        public string?[]? GetStrings(int tag)
         {
-            return GetPositons(tag).Select(StringAtPosition).ToArray();
+            var range = GetPositions(tag);
+            if (range == null) return null;
+            if (SortedTagPosForwards == null) return null;
+            var i = range.Value.Start.Value;
+            var j = range.Value.End.Value;
+            var numbers = Enumerable.Range(i, j - i + 1);
+            return numbers.Select(k => SortedTagPosForwards[k].Position).Select(StringAtPosition).ToArray();
         }
 
     /**
@@ -180,76 +221,39 @@ namespace PureFix.Buffer.Ascii
 
         protected int GetPosition(int tag)
         {
-            var pos = BinarySearch(tag);
-            if (pos >= 0)
+            if (TagSpans == null) EnumeratSpan();
+            if (TagSpans == null) return -1;
+            if (SortedTagPosForwards == null) return -1;
+            if (TagSpans.TryGetValue(tag, out var r))
             {
-                return SortedTagPosForwards?[pos].Position ?? -1;
+                return SortedTagPosForwards[r.Start.Value].Position;
             }
             return -1;
         }
 
-        private string?[] AllStrings()
+        private string?[]? AllStrings()
         {
-            if (Segment == null) return [];
+            if (Segment == null) return null;
             var range = new int[Segment.EndPosition - Segment.StartPosition +1];
             var j = 0;
-            for (var i = segment.StartPosition; i <= segment.EndPosition; ++i)
+            for (var i = Segment.StartPosition; i <= Segment.EndPosition; ++i)
             {
                 range[j++] = i;
             }
             return range.Select(StringAtPosition).ToArray();
         }
 
-        protected int[] GetPositons(int tag)
+        protected Range? GetPositions(int tag)
         {
-            var forwards = SortedTagPosForwards;
-            var backwards = SortedTagPosBackwards;
-            var position = BinarySearch(tag);
-            if (forwards == null || backwards == null || position < 0)
+            EnumeratSpan();
+            if (TagSpans == null) return null;
+            if (!TagSpans.TryGetValue(tag, out var r))
             {
-                return [];
+                return null;
             }
 
-            var count = forwards.Length;
-            var last = count - 1;
-            var end = position;
-            while (end <= last)
-            {
-                if (tag != forwards[end].Tag)
-                {
-                    break;
-                }
-                ++end;
-            }
-
-            // avoid backtracking over an array by scan forwards on a reversed copy
-            var start = last - position;
-            while (start <= last)
-            {
-                if (tag != backwards[start].Tag)
-                {
-                    break;
-                }
-                ++start;
-            }
-
-            var begin = last - (start - 1);
-            var positions = forwards[begin..end].Select(s => s.Position).ToArray();
-            return positions;
+            return r;
         }
-
-        private int BinarySearch(int tag)
-        {
-            if (Structure == null) return -1;
-            if (SortedTagPosForwards != null) return TagPos.BinarySearch(SortedTagPosForwards, tag);
-            var end = segment.EndPosition + 1;
-            var start = segment.StartPosition;
-            SortedTagPosForwards = Structure.Value.Tags.Slice(start,end);
-            Array.Sort(SortedTagPosForwards, TagPos.Compare);
-            SortedTagPosBackwards = SortedTagPosForwards[..SortedTagPosForwards.Length].Reverse().ToArray();
-            return TagPos.BinarySearch(SortedTagPosForwards, tag);
-        }
-
         /**
          * easy human-readable format showing each field, its position, value and resolved
          * enum.
@@ -261,20 +265,21 @@ namespace PureFix.Buffer.Ascii
 
         private string Stringify(Func<SimpleFieldDefinition, string, int, int, TagPos, string> getToken)
         {
-            if (structure == null) return "";
+            if (Structure == null) return "";
             var buffer = new StringBuilder();
-            var tags = structure.Value.Tags;
-            var count = segment.EndPosition - segment.StartPosition;
+            var tags = Structure.Value.Tags;
+            if (Segment == null) return "";
+            var count = Segment.EndPosition - Segment.StartPosition;
             var simple = Definitions.TagToSimple;
 
-            for (var i = segment.StartPosition; i <= segment.EndPosition; ++i)
+            for (var i = Segment.StartPosition; i <= Segment.EndPosition; ++i)
             {
                 var tagPos = tags[i];
                 simple.TryGetValue(tagPos.Tag, out var field);
                 var val = StringAtPosition(i) ?? "";
                 // [0] 8 (BeginString) = FIX4.4
                 var token = field != null
-                    ? getToken(field, val, i - segment.StartPosition, count, tagPos)
+                    ? getToken(field, val, i - Segment.StartPosition, count, tagPos)
                     : $"[{i}] {tagPos.Tag} (unknown) = {val}, ";
                 buffer.Append(token);
             }
