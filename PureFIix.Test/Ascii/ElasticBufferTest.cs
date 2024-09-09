@@ -471,19 +471,36 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Read_UTC_Time_Without_MS_Test()
+        public void Write_UtcTime_Read_Utc_Test()
         {
-            const string ds = "10:39:01";
+            var utc = DateTime.Now.ToUniversalTime();
             var b = new ElasticBuffer(1);
-            b.WriteString(ds);
-            var lt = b.GetLocalTime(0, b.Pos - 1);
-            var ut = b.GetUtcTime(0, b.Pos - 1);
+            b.WriteUtcTimeOnly(utc);
+            var dt = b.GetUtcTimeOnly(0, b.Pos - 1);
+            Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {
-                var delta = lt - ut;
-                Assert.That(lt, Is.Not.Null);
-                Assert.That(ut, Is.Not.Null);
-                Assert.That(delta, Is.EqualTo(DateTimeOffset.Now.Offset));
+                Assert.That(dt.Value.Hour, Is.EqualTo(utc.Hour));
+                Assert.That(dt.Value.Minute, Is.EqualTo(utc.Minute));
+                Assert.That(dt.Value.Second, Is.EqualTo(utc.Second));
+                Assert.That(dt.Value.Millisecond, Is.EqualTo(utc.Millisecond));
+            });
+        }
+
+        [Test]
+        public void Write_Local_Read_Local_Test()
+        {
+            var local = DateTime.Now;
+            var b = new ElasticBuffer(1);
+            b.WriteLocalTimeOnly(local);
+            var dt = b.GetLocalTime(0, b.Pos - 1);
+            Assert.That(dt, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(dt.Value.Hour, Is.EqualTo(local.Hour));
+                Assert.That(dt.Value.Minute, Is.EqualTo(local.Minute));
+                Assert.That(dt.Value.Second, Is.EqualTo(local.Second));
+                Assert.That(dt.Value.Millisecond, Is.EqualTo(local.Millisecond));
             });
         }
     }
