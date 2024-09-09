@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
+using static PureFix.Buffer.ElasticBuffer;
 
 namespace PureFix.Buffer
 {
@@ -36,8 +37,15 @@ namespace PureFix.Buffer
      */
     public partial class ElasticBuffer
     {
+        public static class TimeFormats
+        {
+            public static readonly string Timestamp = "yyyyMMdd-HH:mm:ss.fff";
+            public static readonly string TimeMs = "HH:mm:ss.fff";
+            public static readonly string Time = "HH:mm:ss";
+        }
+        
         // 10:39:01.621
-        public DateTime? GetLocalTime(int st, int vend)
+        public DateTime? GetLocalTimeOnly(int st, int vend)
         {
             var v = GetTime(st, vend, DateTimeStyles.AssumeLocal);
             if (v == null) return v;
@@ -59,12 +67,44 @@ namespace PureFix.Buffer
 
         public int WriteLocalTimeOnly(DateTime dateTime)
         {
-            var format = "HH:mm:ss.fff".AsSpan();
+            var format = TimeFormats.TimeMs.AsSpan();
             CheckGrowBuffer(format.Length);
             var span = _buffer.AsSpan()[Pos..format.Length];
             dateTime.TryFormat(span, out var written, format);
             Pos += written;
             return Pos;
+        }
+
+        // 20180610-10:39:01.621
+        public int WriteUtcTimeStamp(DateTime dateTime)
+        {
+            var format = TimeFormats.Timestamp;
+            CheckGrowBuffer(format.Length);
+            var span = _buffer.AsSpan()[Pos..format.Length];
+            dateTime.TryFormat(span, out var written, format);
+            Pos += written;
+            return Pos;
+        }
+
+        public DateTime? GetUtcTimeStamp(int st, int vend)
+        {
+            return GetTime(st, vend, TimeFormats.Timestamp, DateTimeStyles.AssumeUniversal);
+        }
+
+        public DateTime? GetTime(int st, int vend, string format, DateTimeStyles style)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            Span<char> chars = stackalloc char[span.Length];
+            var j = 0;
+            foreach (var c in span)
+            {
+                chars[j++] = (char)c;
+            }
+            if (DateTime.TryParseExact(chars, format, null, style, out var d))
+            {
+                return d;
+            }
+            return null;
         }
 
         private DateTime? GetTime(int st, int vend, DateTimeStyles style)
@@ -76,11 +116,11 @@ namespace PureFix.Buffer
             {
                 chars[j++] = (char)c;
             }
-            if (DateTime.TryParseExact(chars, "HH:mm:ss.fff".AsSpan(), null, style, out var d))
+            if (DateTime.TryParseExact(chars, TimeFormats.TimeMs, null, style, out var d))
             {
                 return d;
             }
-            if (DateTime.TryParseExact(chars, "HH:mm:ss".AsSpan(), null, style, out var d1))
+            if (DateTime.TryParseExact(chars, TimeFormats.Time, null, style, out var d1))
             {
                 return d1;
             }
