@@ -40,6 +40,26 @@ namespace PureFix.Buffer.Ascii
                 return default;
             }
 
+            if (typeof(T) == typeof(DateTime))
+            {
+                var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
+                if (sf == null) return default;
+                switch (sf.TagType)
+                {
+                    case TagType.UtcDateOnly:
+                        return (T?)Convert.ChangeType(UtcDateOnlyAtPosition(position), typeof(T));
+
+                    case TagType.UtcTimeOnly:
+                        return (T?)Convert.ChangeType(UtcTimeOnlyAtPosition(position), typeof(T));
+
+                    case TagType.UtcTimestamp:
+                        return (T?)Convert.ChangeType(UtcTimestampAtPosition(position), typeof(T));
+
+                    case TagType.LocalDate:
+                        return (T?)Convert.ChangeType(LocalDateOnlyAtPosition(position), typeof(T));
+                }
+            }
+
             if (typeof(T) == typeof(string))
             {
                 return (T?) Convert.ChangeType(StringAtPosition(position), typeof(T));
@@ -75,26 +95,6 @@ namespace PureFix.Buffer.Ascii
             if (typeof(T) == typeof(Memory<byte>))
             {
                 return (T?)Convert.ChangeType(BufferAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(DateTime))
-            {
-                var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
-                if (sf == null) return default;
-                switch (sf.TagType)
-                {
-                    case TagType.UtcDateOnly:
-                        return (T?)Convert.ChangeType(UtcDateOnlyAtPosition(position), typeof(T));
-
-                    case TagType.UtcTimeOnly:
-                        return (T?)Convert.ChangeType(UtcTimeOnlyAtPosition(position), typeof(T));
-
-                    case TagType.UtcTimestamp:
-                        return (T?)Convert.ChangeType(UtcTimestampAtPosition(position), typeof(T));
-
-                    case TagType.LocalDate:
-                        return (T?)Convert.ChangeType(LocalDateOnlyAtPosition(position), typeof(T));
-                }
             }
 
             return default;
