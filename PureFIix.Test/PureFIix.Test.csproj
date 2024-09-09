@@ -43,6 +43,9 @@
     <None Update="Data\examples\FIX.4.4\quickfix\execution-report\fix.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\examples\FIX.4.4\quickfix\heartbeat\fix.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\examples\FIX.4.4\quickfix\logon\fix.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -54,6 +57,7 @@
   <ItemGroup>
     <Folder Include="Data\examples\FIX.4.4\quickfix\logon\" />
     <Folder Include="Data\examples\FIX.4.4\quickfix\execution-report\" />
+    <Folder Include="Data\examples\FIX.4.4\quickfix\heartbeat\" />
   </ItemGroup>
 
 </Project>

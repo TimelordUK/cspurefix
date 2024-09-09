@@ -12,6 +12,8 @@ namespace PureFix.ParserFormat
     {
         public static void Parse(this Hop instance, MsgView? mv)
         {
+            if (mv is not AsciiView view) return;
+
         }
     }
 }
