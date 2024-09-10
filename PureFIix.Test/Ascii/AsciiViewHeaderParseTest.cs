@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.ParserFormat;
 using PureFix.Types.FIX4._4.quickfix.set;
+using NUnit.Framework;
 
 namespace PureFIix.Test.Ascii
 {
@@ -42,7 +43,24 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Parse_Header_View_Timing_Test()
+        public async Task Get_Header_View_Timing_With_Channel_Test()
+        {
+            const int count = 1000;
+            var sw = new Stopwatch();
+            sw.Start();
+            var repeats = await _testEntity.Replay(Fix44PathHelper.LogonReplayPath, count);
+            sw.Stop();
+            Assert.That(repeats, Has.Count.EqualTo(count));
+            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.ElapsedMilliseconds / count * 1000}  micro/msg");
+        }
+
+        /*
+         * here we parse one view and repeatedly write the 8 field view into a standard header strong object.
+         * This gives an idea of performance.
+         */
+
+            [Test]
+        public void Parse_Header_View_Object_Timing_Test()
         {
             Assert.That(_views, Is.Not.Null);
             Assert.That(_views, Has.Count.EqualTo(1));

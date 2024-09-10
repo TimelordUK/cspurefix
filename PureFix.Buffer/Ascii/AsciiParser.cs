@@ -20,13 +20,13 @@ namespace PureFix.Buffer.Ascii
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
         public FixDefinitions Definitons { get; }
 
-        public Tags Locations { get; } = new Tags();
+        public Tags Locations { get; } = new();
 
         public ElasticBuffer ReceivingBuffer { get; }
 
         private readonly FixDuplex<MsgView> _txDuplex;
-        public int ID => _id;
-        private readonly int _id = Interlocked.Increment(ref _nextId);
+        public int ID { get; } = Interlocked.Increment(ref _nextId);
+
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;
         
@@ -45,7 +45,7 @@ namespace PureFix.Buffer.Ascii
         {
             var view = GetView(ptr);
             if (view == null) return;
-            _txDuplex.Writer.WriteAsync(view);
+            _txDuplex.WriteAsync(view);
             _state.BeginMessage();
         }
 
