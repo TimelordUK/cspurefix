@@ -23,9 +23,8 @@ namespace PureFix.Buffer.Ascii
         private int _currentTag;
         private int _rawDataLen;
         private int _rawDataRead;
-        private string? _msgType;
 
-        public string? MsgType => _msgType;
+        public string? MsgType { get; private set; }
 
         public void BeginTag(int pos)
         {
@@ -49,7 +48,7 @@ namespace PureFix.Buffer.Ascii
             _rawDataRead = 0;
             _rawDataLen = 0;
             _bodyLen = 0;
-            _msgType = null;
+            MsgType = null;
             _message = null;
         }
 
@@ -66,7 +65,7 @@ namespace PureFix.Buffer.Ascii
             sb.Append($"rawDataRead = {_rawDataRead} ");
             sb.Append($"rawDataLen = {_rawDataLen} ");
             sb.Append($"bodyLen = {_bodyLen} ");
-            sb.Append($"msgType = {_msgType} ");
+            sb.Append($"msgType = {MsgType} ");
             sb.Append($"buffer = {buffer} ");
             sb.Append($"message = {_message} ");
 
@@ -110,14 +109,7 @@ namespace PureFix.Buffer.Ascii
             {
                 _rawDataRead = 0;
                 var isData = _rawDataLen > 0;
-                if (isData)
-                {
-                    ParseState = ParseState.ParsingRawData;
-                }
-                else
-                {
-                    ParseState = ParseState.ParsingValue;
-                }
+                ParseState = isData ? ParseState.ParsingRawData : ParseState.ParsingValue;
             }
         }
 
@@ -181,14 +173,14 @@ namespace PureFix.Buffer.Ascii
                         throw new InvalidDataException($"MsgTag: not expected at position [{nextTagPos}]");
                     }
 
-                    _msgType = buffer.GetString(equalPos + 1, valueEndPos);
-                    if (definitions.Message.TryGetValue(_msgType, out var message))
+                    MsgType = buffer.GetString(equalPos + 1, valueEndPos);
+                    if (definitions.Message.TryGetValue(MsgType, out var message))
                     {
                         _message = message;
                     }
                     else
                     {
-                        throw new InvalidDataException($"MsgType: [{_msgType}] not in definitions.");
+                        throw new InvalidDataException($"MsgType: [{MsgType}] not in definitions.");
                     }
 
                     break;

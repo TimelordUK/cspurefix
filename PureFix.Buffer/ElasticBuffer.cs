@@ -22,7 +22,7 @@ namespace PureFix.Buffer
         public ElasticBuffer(ElasticBuffer rhs) : this()
         {
             _buffer = rhs._buffer[..rhs.Pos];
-            _returnTo = rhs._returnTo;
+            _returnTo = _buffer.Length;
             Pos = rhs.Pos;
         }
 

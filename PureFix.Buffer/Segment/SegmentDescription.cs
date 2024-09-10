@@ -18,7 +18,7 @@ namespace PureFix.Buffer.Segment
         int depth,
         SegmentType type)
     {
-        public string? Name { get; private set; } = name;
+        public string? Name { get; } = name;
         public int Index { get; private set; }
         public int EndTag { get; private set; }
         public int? DelimiterTag { get; private set; }
