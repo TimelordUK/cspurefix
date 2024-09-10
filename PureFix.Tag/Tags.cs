@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using PureFix.Types;
 
 namespace PureFix.Tag
@@ -10,10 +11,10 @@ namespace PureFix.Tag
         public const int CheckSumTag = (int)MsgTag.CheckSum;
         public const int MessageTag = (int)MsgTag.MsgType;
 
-        private readonly TagPos[] _tagPos;
+        private TagPos[] _tagPos;
         private int _ptr;
 
-        public Tags() : this(30 * 1000)
+        public Tags() : this(1 * 1000)
         {
         }
 
@@ -103,6 +104,12 @@ namespace PureFix.Tag
 
         public void Store(int start, int len, int tag)
         {
+            if (_ptr == _tagPos.Length)
+            {
+                var grown = new TagPos[_tagPos.Length * 2];
+                Array.Copy(_tagPos, grown, _tagPos.Length);
+                _tagPos = grown;
+            }
             _tagPos[_ptr] = new TagPos(_ptr++, tag, start, len);
         }
     }
