@@ -13,11 +13,17 @@ using PureFix.Buffer.Ascii;
 
 namespace PureFix.Buffer
 {
-    public partial class ElasticBuffer(int size = 6 * 1024, int returnTo = 6 * 1024) 
+    public partial class ElasticBuffer
     {
-        private byte[] _buffer = new byte[size];
+        private byte[] _buffer;
         public int Pos { get; private set; }
-        private readonly int _returnTo = returnTo;
+        private readonly int _returnTo;
+
+        public ElasticBuffer(int size = 6 * 1024) 
+        {
+            _buffer = new byte[size];
+            _returnTo = _buffer.Length;
+        }
 
         public ElasticBuffer(ElasticBuffer rhs) : this()
         {

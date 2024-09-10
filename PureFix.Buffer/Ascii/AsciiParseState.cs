@@ -41,7 +41,8 @@ namespace PureFix.Buffer.Ascii
         public void BeginMessage()
         {
             _buffer = new ElasticBuffer(1 * 1024);
-            _locations = new Tags(100);
+            _locations = new Tags(50);
+
             _checksumExpectedPos = 0;
             ParseState = ParseState.BeginField;
             _count = 0;
