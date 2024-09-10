@@ -66,6 +66,7 @@ namespace PureFix.Buffer.Ascii
             return new AsciiView(Definitons, segment, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
         }
 
+        // will callback with ptr as to current location through byte array and the view with all parsed locations.
         public void ParseFrom(Span<byte> readFrom, Action<int, AsciiView>? onView)
         {
             const byte eq = AsciiChars.Eq;
