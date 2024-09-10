@@ -32,7 +32,7 @@ namespace PureFix.Tag
 
         public override string ToString()
         {
-            return $"[{NextTagPos}] {string.Join(", ", _tagPos[..NextTagPos])}";
+            return $"[{NextTagPos}] {string.Join(", ", _tagPos[..NextTagPos].Select(tp=>tp.ToString()))}";
         }
 
         IEnumerator IEnumerable.GetEnumerator()

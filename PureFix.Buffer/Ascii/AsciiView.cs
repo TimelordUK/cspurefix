@@ -16,7 +16,8 @@ namespace PureFix.Buffer.Ascii
         public int Delimiter { get; }
         public int WriteDelimiter { get; } 
         public ElasticBuffer Buffer { get; }
-        
+
+
         public AsciiView (
             FixDefinitions definitions,
             SegmentDescription segment,
@@ -47,7 +48,7 @@ namespace PureFix.Buffer.Ascii
         private TagPos? GetTag(int position)
         {
             if (Structure == null) return null;
-            var tags = Structure.Value.Tags;
+            var tags = Structure.Tags;
             if (position < 0 || position >= tags.NextTagPos)
             {
                 return null;
@@ -59,60 +60,60 @@ namespace PureFix.Buffer.Ascii
         protected override string? StringAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetString(tag.Value.Start, tag.Value.Start + tag.Value.Len);
+            return tag == null ? null : Buffer.GetString(tag.Start, tag.Start + tag.Len);
         }
 
         protected long? LongAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetWholeNumber(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetWholeNumber(tag.Start, tag.End);
         }
 
         protected double? FloatAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetFloat(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetFloat(tag.Start, tag.End);
         }
 
         protected decimal? DecimalAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetDecimal(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetDecimal(tag.Start, tag.End);
         }
 
         protected Memory<byte>? BufferAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetBuffer(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetBuffer(tag.Start, tag.End);
         }
 
         protected bool? BoolAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetBoolean(tag.Value.Start);
+            return tag == null ? null : Buffer.GetBoolean(tag.Start);
         }
 
         protected DateTime? UtcDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcDateOnly(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetUtcDateOnly(tag.Start, tag.End);
         }
         protected DateTime? UtcTimeOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Start, tag.End);
         }
 
         protected DateTime? LocalDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetLocalDateOnly(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetLocalDateOnly(tag.Start, tag.End);
         }
 
         protected DateTime? UtcTimestampAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Start, tag.End);
         }
 
         public override T? GetTyped<T>(string name) where T : default

@@ -41,6 +41,7 @@ namespace PureFix.Buffer.Ascii
         }
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
+
         private void Msg(int ptr)
         {
             var view = GetView(ptr);

@@ -9,7 +9,7 @@ using PureFix.Tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public struct Structure 
+    public class Structure 
     {
         private Dictionary<string, SegmentDescription>? _components;
         // do not create unless needed
@@ -25,9 +25,9 @@ namespace PureFix.Buffer.Ascii
             BoundLayout();
         }
 
-        public readonly SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
+        public SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
 
-        public readonly SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
+        public SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
         {
             if (_components == null)
             {

@@ -42,10 +42,11 @@ namespace PureFix.Buffer.Ascii
             if (Tags == null) return;
             if (Structure == null) return;
             if (Segment == null) return;
+            if (Structure.Tags == null) return;
 
             var end = Segment.EndPosition + 1;
             var start = Segment.StartPosition;
-            SortedTagPosForwards = Structure.Value.Tags.Slice(start, end);
+            SortedTagPosForwards = Structure.Tags.Slice(start, end);
             Array.Sort(SortedTagPosForwards, TagPos.Compare);
             var span = SortedTagPosForwards[..SortedTagPosForwards.Length];
             TagSpans = [];
@@ -227,7 +228,7 @@ namespace PureFix.Buffer.Ascii
         {
             if (Structure == null) return "";
             var buffer = new StringBuilder();
-            var tags = Structure.Value.Tags;
+            var tags = Structure.Tags;
             if (Segment == null) return "";
             var count = Segment.EndPosition - Segment.StartPosition;
             var simple = Definitions.TagToSimple;

@@ -19,7 +19,6 @@ namespace PureFIix.Test.Ascii
         [OneTimeSetUp]
         public void OnceSetup()
         {
-            var rootFolder = Directory.GetCurrentDirectory();
             _definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(_definitions);
             qf.Parse(Fix44PathHelper.DataDictPath);
