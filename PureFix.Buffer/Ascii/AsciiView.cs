@@ -60,60 +60,60 @@ namespace PureFix.Buffer.Ascii
         protected override string? StringAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetString(tag.Start, tag.Start + tag.Len);
+            return tag == null ? null : Buffer.GetString(tag.Value.Start, tag.Value.Start + tag.Value.Len);
         }
 
         protected long? LongAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetWholeNumber(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetWholeNumber(tag.Value.Start, tag.Value.End);
         }
 
         protected double? FloatAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetFloat(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetFloat(tag.Value.Start, tag.Value.End);
         }
 
         protected decimal? DecimalAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetDecimal(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetDecimal(tag.Value.Start, tag.Value.End);
         }
 
         protected Memory<byte>? BufferAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetBuffer(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetBuffer(tag.Value.Start, tag.Value.End);
         }
 
         protected bool? BoolAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetBoolean(tag.Start);
+            return tag == null ? null : Buffer.GetBoolean(tag.Value.Start);
         }
 
         protected DateTime? UtcDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcDateOnly(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetUtcDateOnly(tag.Value.Start, tag.Value.End);
         }
         protected DateTime? UtcTimeOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Value.Start, tag.Value.End);
         }
 
         protected DateTime? LocalDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetLocalDateOnly(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetLocalDateOnly(tag.Value.Start, tag.Value.End);
         }
 
         protected DateTime? UtcTimestampAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Start, tag.End);
+            return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Value.Start, tag.Value.End);
         }
 
         public override T? GetTyped<T>(string name) where T : default

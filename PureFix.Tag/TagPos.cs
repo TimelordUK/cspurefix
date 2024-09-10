@@ -1,6 +1,6 @@
 ﻿namespace PureFix.Tag
 {
-    public record TagPos(int Position, int Tag, int Start, int Len)
+    public readonly record struct TagPos(int Position, int Tag, int Start, int Len)
     {
         public int End => Start + Len - 1;
 

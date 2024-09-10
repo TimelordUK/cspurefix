@@ -45,31 +45,18 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Get_Heartbeat_View_Ascii_Parser_Test()
         {
-            const int count = 50000;
-            var sw = new Stopwatch();
-            var t = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
-            var repeats = string.Concat(Enumerable.Repeat(t, count));
-            sw.Start();
-            _testEntity.ParseText(repeats);
-            sw.Stop();
-            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
-        }
-
-        [Test]
-        public async Task Get_Heartbeat_View_Timing_With_Channel_Test()
-        {
             const int count = 10000;
             var sw = new Stopwatch();
             var one = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
             var all = string.Concat(Enumerable.Repeat(one, count));
             var b = Encoding.UTF8.GetBytes(all);
-            sw.Start();
             var msgs = new List<AsciiView>(count);
+            sw.Start();
             _testEntity.Parser.ParseFrom(b, (i, view) => msgs.Add(view));
             //_testEntity.Parser.ParseFrom(b, null);
             sw.Stop();
             Assert.That(msgs, Has.Count.EqualTo(count));
-            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
+            Console.WriteLine($"{sw.Elapsed.Milliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
         }
 
         /*
@@ -95,7 +82,7 @@ namespace PureFIix.Test.Ascii
                 instance.Parse(sh);
             }
             sw.Stop();
-            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
+            Console.WriteLine($"{sw.Elapsed.Milliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
         }
 
         [Test]
