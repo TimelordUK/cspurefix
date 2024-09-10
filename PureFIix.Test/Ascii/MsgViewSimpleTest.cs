@@ -44,10 +44,26 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Get_Tag_BeginString_As_String_View_Test()
+        {
+            var view = _views[0];
+            var asString = view.GetString("BeginString");
+            Assert.That(asString, Is.EqualTo("FIX4.4"));
+        }
+
+        [Test]
         public void Get_Tag_9_Typed_String_View_Test()
         {
             var view = _views[0];
             var asString = view.GetTyped<string>(9);
+            Assert.That(asString, Is.EqualTo("0000208"));
+        }
+
+        [Test]
+        public void Get_Tag_BodyLength_Typed_String_View_Test()
+        {
+            var view = _views[0];
+            var asString = view.GetTyped<string>("BodyLength");
             Assert.That(asString, Is.EqualTo("0000208"));
         }
 
@@ -66,6 +82,14 @@ namespace PureFIix.Test.Ascii
         {
             var view = _views[0];
             var asString = view.GetString(35);
+            Assert.That(asString, Is.EqualTo("A"));
+        }
+
+        [Test]
+        public void Get_Tag_MsgType_As_String_View_Test()
+        {
+            var view = _views[0];
+            var asString = view.GetString("MsgType");
             Assert.That(asString, Is.EqualTo("A"));
         }
 
