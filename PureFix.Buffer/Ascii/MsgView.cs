@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using PureFix.Buffer.Segment;
-using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Tag;
 
@@ -36,6 +35,7 @@ namespace PureFix.Buffer.Ascii
          * and compute a range within that sorted set of start end positions as some
          * tags for repeated groups will have more than one instance.
          */
+
         private void EnumeratSpan()
         {
             if (TagSpans != null) return;
@@ -70,6 +70,8 @@ namespace PureFix.Buffer.Ascii
         public abstract T? GetTyped<T>(string name);
         public abstract T? GetTyped<T>(int tag);
         public abstract (T?, U?) GetTyped<T,U>(int tag1, int tag2);
+        public abstract (T?, U?, V?) GetTyped<T, U, V>(int tag1, int tag2, int tag3);
+        public abstract (T?, U?, V?, W?) GetTyped<T, U, V, W>(int tag1, int tag2, int tag3, int tag4);
 
         public int GroupCount()
         {
