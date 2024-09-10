@@ -16,7 +16,6 @@ namespace PureFIix.Test.Env
     internal class TestEntity
     {
         public FixDefinitions Definitions { get; }
-        public ElasticBuffer Buffer { get; }
         public FixDuplex<MsgView> Duplex { get; private set;}
         public AsciiParser Parser { get; private set; }
         
@@ -25,15 +24,13 @@ namespace PureFIix.Test.Env
             Definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(Definitions);
             qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, dataDict));
-            Buffer = new ElasticBuffer(160 * 1024, 160 * 1024);
             Prepare();
         }
 
         public void Prepare()
         {
-            Buffer.Reset();
             Duplex = new ChannelDuplex<MsgView>();
-            Parser = new AsciiParser(Definitions, Duplex, Buffer) { Delimiter = AsciiChars.Pipe };
+            Parser = new AsciiParser(Definitions, Duplex) { Delimiter = AsciiChars.Pipe };
         }
 
         public void ParseTest(string s)

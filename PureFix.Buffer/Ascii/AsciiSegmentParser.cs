@@ -97,7 +97,7 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
-        private SegmentDescription? Examine(Context context, int tag)
+        private static SegmentDescription? Examine(Context context, int tag)
         {
             SegmentDescription? structure = null;
             var currentField = context.Peek?.CurrentField;
@@ -164,7 +164,7 @@ namespace PureFix.Buffer.Ascii
             return delimiter;
         }
 
-        private void Discover(Context context)
+        private static void Discover(Context context)
         {
             while (context.CurrentTagPosition <= context.Last)
             {

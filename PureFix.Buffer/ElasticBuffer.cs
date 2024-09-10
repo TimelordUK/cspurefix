@@ -95,6 +95,7 @@ namespace PureFix.Buffer
 
         public int SaveChar(byte c)
         {
+            CheckGrowBuffer(1);
             _buffer[Pos++] = c;
             return Pos;
         }

@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.ObjectPool;
 
 namespace PureFIix.Test.Ascii
 {
+
     internal class ExecutionReportMsgViewTest
     {
         private TestEntity _testEntity;
