@@ -65,7 +65,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ap.Locations, Has.Count.EqualTo(1));
-                Assert.That(ap.Locations[0], Is.EqualTo(_expectedTagPos[0]));
+                Assert.That(ap.Locations?[0], Is.EqualTo(_expectedTagPos[0]));
                 // we would not expect a message from this single field
                 Assert.That(duplex.TryPeek(out _), Is.EqualTo(false));
             });

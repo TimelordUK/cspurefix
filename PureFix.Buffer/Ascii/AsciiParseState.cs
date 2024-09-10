@@ -9,7 +9,7 @@ using PureFix.Tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    internal class AsciiParseState(ElasticBuffer buffer, FixDefinitions definitions, Tags locations)
+    internal class AsciiParseState(FixDefinitions definitions)
     {
         private MessageDefinition? _message;
         public ParseState ParseState { get; private set; }
@@ -23,6 +23,10 @@ namespace PureFix.Buffer.Ascii
         private int _currentTag;
         private int _rawDataLen;
         private int _rawDataRead;
+        private ElasticBuffer? _buffer;
+        private Tags? _locations;
+        public Tags? Locations => _locations;
+        public ElasticBuffer? Buffer => _buffer;
 
         public string? MsgType { get; private set; }
 
@@ -36,8 +40,8 @@ namespace PureFix.Buffer.Ascii
 
         public void BeginMessage()
         {
-            buffer.Reset();
-            locations.Reset();
+            _buffer = new ElasticBuffer(10 * 1024);
+            _locations = new Tags(1000);
             _checksumExpectedPos = 0;
             ParseState = ParseState.BeginField;
             _count = 0;
@@ -66,7 +70,7 @@ namespace PureFix.Buffer.Ascii
             sb.Append($"rawDataLen = {_rawDataLen} ");
             sb.Append($"bodyLen = {_bodyLen} ");
             sb.Append($"msgType = {MsgType} ");
-            sb.Append($"buffer = {buffer} ");
+            sb.Append($"buffer = {_buffer} ");
             sb.Append($"message = {_message} ");
 
             return sb.ToString();
@@ -74,12 +78,13 @@ namespace PureFix.Buffer.Ascii
 
         public void EndTag(int pos)
         {
+            if (_buffer == null) return;
             _equalPos = pos;
             switch (ParseState)
             {
                 case ParseState.ParsingTag:
                 {
-                    _currentTag = (int)buffer.GetWholeNumber(_tagStartPos, pos - 1);
+                    _currentTag = (int)_buffer.GetWholeNumber(_tagStartPos, pos - 1);
                     break;
                 }
 
@@ -115,7 +120,9 @@ namespace PureFix.Buffer.Ascii
 
         public void Store()
         {
-            var valueEndPos = buffer.GetPos() - 1;
+            if (_buffer == null) return;
+            if (_locations == null) return;
+            var valueEndPos = _buffer.GetPos() - 1;
             _valueEndPos = valueEndPos;
             var equalPos = _equalPos;
             var tag = _currentTag;
@@ -126,21 +133,21 @@ namespace PureFix.Buffer.Ascii
                 case ParseState.ParsingRawData:
                 {
                     _rawDataLen = 0;
-                    locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    _locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
 
                 case ParseState.ParsingRawDataLength:
                 {
-                    _rawDataLen = (int)buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
-                    locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    _rawDataLen = (int)_buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                    _locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
             }
 
             ParseState = ParseState.BeginField;
             _count++;
-            var nextTagPos = locations.NextTagPos;
+            var nextTagPos = _locations.NextTagPos;
 
             switch (tag)
             {
@@ -161,7 +168,7 @@ namespace PureFix.Buffer.Ascii
                         throw new InvalidDataException($"BodyLengthTag: not expected at position [{nextTagPos}]");
                     }
 
-                    _bodyLen = (int)buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                    _bodyLen = (int)_buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
                     _checksumExpectedPos = _bodyLen + valueEndPos;
                     break;
                 }
@@ -173,7 +180,7 @@ namespace PureFix.Buffer.Ascii
                         throw new InvalidDataException($"MsgTag: not expected at position [{nextTagPos}]");
                     }
 
-                    MsgType = buffer.GetString(equalPos + 1, valueEndPos);
+                    MsgType = _buffer.GetString(equalPos + 1, valueEndPos);
                     if (definitions.Message.TryGetValue(MsgType, out var message))
                     {
                         _message = message;

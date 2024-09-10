@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Tag;
-
+using Microsoft.Extensions.ObjectPool;
 
 namespace PureFix.Buffer.Ascii
 {
