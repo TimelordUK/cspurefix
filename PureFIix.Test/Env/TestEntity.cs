@@ -7,6 +7,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -32,7 +33,7 @@ namespace PureFIix.Test.Env
         public void Prepare()
         {
             Buffer.Reset();
-            Duplex = new FixDuplex<MsgView>();
+            Duplex = new ChannelDuplex<MsgView>();
             Parser = new AsciiParser(Definitions, Duplex, Buffer) { Delimiter = AsciiChars.Pipe };
         }
 
@@ -40,7 +41,7 @@ namespace PureFIix.Test.Env
         {
             var b = Encoding.UTF8.GetBytes(s);
             Parser.ParseFrom(b);
-            Duplex.Writer.Complete();
+            Duplex.Complete();
         }
 
         public void ParseTestHunks(string s)
@@ -55,7 +56,7 @@ namespace PureFIix.Test.Env
                 span = span[want..];
                 ++iteration;
             }
-            Duplex.Writer.Complete();
+            Duplex.Complete();
         }
 
         public static async Task<Dictionary<string,int>> GetJsonDict(string file)
@@ -66,15 +67,25 @@ namespace PureFIix.Test.Env
             return values;
         }
 
-        public async Task<List<AsciiView>> Replay(string file)
+        public static async Task<string> GetText(string file)
         {
-            List<AsciiView> msgs = [];
+            using var streamReader = File.OpenText(file);
+            var all = await streamReader.ReadToEndAsync();
+            return all;
+        }
+
+        public async Task<List<AsciiView>> ReplayText(string all, int repeats = 1)
+        {
+            var msgs = new List<AsciiView>(10000);
             try
             {
-                using var streamReader = File.OpenText(file);
-                var all = await streamReader.ReadToEndAsync();
+                if (repeats > 1)
+                {
+                    all = string.Concat(Enumerable.Repeat(all, repeats));
+                }
+
                 ParseTest(all);
-                await foreach (var view in Duplex.Reader.ReadAllAsync())
+                await foreach (var view in Duplex.ReadAllAsync())
                 {
                     msgs.Add((AsciiView)view);
                 }
@@ -85,6 +96,13 @@ namespace PureFIix.Test.Env
                 throw;
             }
 
+            return msgs;
+        }
+
+        public async Task<List<AsciiView>> Replay(string file, int repeats = 1)
+        {
+            var all = await GetText(file);
+            var msgs = await ReplayText(all, repeats);
             return msgs;
         }
     }

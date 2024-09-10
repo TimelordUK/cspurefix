@@ -18,10 +18,10 @@ namespace PureFIix.Test.Env
             Assert.Multiple(() =>
             {
                 Assert.That(set, Is.Not.Null);
-                var field = set?.Fields[index];
-                Assert.That(field?.Type, Is.EqualTo(ContainedFieldType.Component));
-                Assert.That(field?.Name, Is.EqualTo(name));
-                Assert.That(field?.Required, Is.EqualTo(expected));
+                var field = set.Fields[index];
+                Assert.That(field.Type, Is.EqualTo(ContainedFieldType.Component));
+                Assert.That(field.Name, Is.EqualTo(name));
+                Assert.That(field.Required, Is.EqualTo(expected));
                 Assert.That(set.Components.ContainsKey(name));
             });
         }
@@ -31,10 +31,10 @@ namespace PureFIix.Test.Env
             Assert.Multiple(() =>
             {
                 Assert.That(set, Is.Not.Null);
-                var field = set?.Fields[index];
-                Assert.That(field?.Type, Is.EqualTo(ContainedFieldType.Group));
-                Assert.That(field?.Name, Is.EqualTo(name));
-                Assert.That(field?.Required, Is.EqualTo(expected));
+                var field = set.Fields[index];
+                Assert.That(field.Type, Is.EqualTo(ContainedFieldType.Group));
+                Assert.That(field.Name, Is.EqualTo(name));
+                Assert.That(field.Required, Is.EqualTo(expected));
                 Assert.That(set.Groups.ContainsKey(name));
             });
         }
