@@ -74,6 +74,15 @@ namespace PureFix.Buffer.Ascii
             return count;
         }
 
+        public string? GetString(string name)
+        {
+            if (Definitions.Simple.TryGetValue(name, out var typed))
+            {
+                return GetString(typed.Tag);
+            }
+            return null;
+        }
+
         public string? GetString(int tag)
         {
             var position = GetPosition(tag);
