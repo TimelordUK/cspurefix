@@ -20,30 +20,27 @@ namespace PureFix.Buffer.Ascii
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
         public FixDefinitions Definitons { get; }
-
-        private readonly FixDuplex<MsgView> _txDuplex;
         public int ID { get; } = Interlocked.Increment(ref _nextId);
 
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;
         public Tags? Locations => _state.Locations;
         
-        public AsciiParser(FixDefinitions definitions, FixDuplex<MsgView> txDuplex)
+        public AsciiParser(FixDefinitions definitions)
         {
             Definitons = definitions;
             // publish completed parsed views on tx channel.
-            _txDuplex = txDuplex;
             _state = new AsciiParseState(definitions);
             _segmentParser = new AsciiSegmentParser(Definitons);
         }
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
 
-        private void Msg(int ptr)
+        private void Msg(int ptr, Action<int, AsciiView>? onMsg)
         {
            var view = GetView(ptr);
            if (view == null) return;
-           _txDuplex.WriteAsync(view);
+           onMsg?.Invoke(ptr, view);
            _state.BeginMessage();
         }
 
@@ -54,7 +51,6 @@ namespace PureFix.Buffer.Ascii
                 return null;
             }
             var structure = _segmentParser.Parse(_state.MsgType, Locations, Locations.NextTagPos - 1);
-            //Console.WriteLine($"struct {sw.Elapsed.TotalMicroseconds}");
             var msg = structure?.Msg();
             if (msg != null)
             {
@@ -70,7 +66,7 @@ namespace PureFix.Buffer.Ascii
             return new AsciiView(Definitons, segment, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
         }
 
-        public void ParseFrom(Span<byte> readFrom)
+        public void ParseFrom(Span<byte> readFrom, Action<int, AsciiView>? onView)
         {
             const byte eq = AsciiChars.Eq;
             const byte zero = AsciiChars.Zero;
@@ -95,7 +91,7 @@ namespace PureFix.Buffer.Ascii
                     {
                         case ParseState.MsgComplete:
                         {
-                            Msg(writePtr);
+                            Msg(writePtr, onView);
                             continue;
                         }
 
@@ -176,7 +172,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     case ParseState.MsgComplete:
                     {
-                        Msg(_state.Buffer.GetPos());
+                        Msg(_state.Buffer.GetPos(), onView);
                         break;
                     }
                 }
