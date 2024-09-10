@@ -60,11 +60,11 @@ namespace PureFix.Buffer.Ascii
             Clean(context);
 
             // now know where all components and groups are positioned within message
-            return new Structure(tags, context.Segments.ToArray());
+            return new Structure(tags, [.. context.Segments]);
         }
 
 
-        public Summary Summarise(Context context)
+        public static Summary Summarise(Context context)
         {
             return new Summary(context.MsgType,
                 context.Tags.ToArray(),
@@ -76,7 +76,7 @@ namespace PureFix.Buffer.Ascii
                 context.StructureStack.Select(s => s.ToString()).ToArray());
         }
 
-        private void Unwind(Context context, int tag)
+        private static void Unwind(Context context, int tag)
         {
             while (context?.StructureStack.Count > 1)
             {
@@ -143,7 +143,7 @@ namespace PureFix.Buffer.Ascii
             return structure;
         }
 
-        public bool GroupDelimiter(Context context, int tag)
+        public static bool GroupDelimiter(Context context, int tag)
         {
             var delimiter = false;
             if (context.Peek == null) return false;
@@ -197,7 +197,7 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
-        private void Clean(Context context)
+        private static void Clean(Context context)
         {
             // any remainder components can be closed.
             var segments = context.Segments;
@@ -213,7 +213,7 @@ namespace PureFix.Buffer.Ascii
             (segments[m1], segments[m2]) = (segments[m2], segments[m1]);
         }
 
-        private void Gap(Context context, int tag)
+        private static void Gap(Context context, int tag)
         {
             var gap = new SegmentDescription(".undefined", tag, context.Peek?.Set,
               context.CurrentTagPosition, context.StructureStack.Count, SegmentType.Gap);

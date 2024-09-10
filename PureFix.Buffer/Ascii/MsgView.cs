@@ -13,7 +13,7 @@ using PureFix.Tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public abstract class MsgView
+    public abstract partial class MsgView
     {
         public FixDefinitions Definitions { get; }
         public SegmentDescription? Segment { get; }
@@ -31,6 +31,11 @@ namespace PureFix.Buffer.Ascii
             Structure = structure;
         }
 
+        /*
+         * sort the local copy of tags sliced for this view (i.e. only ones bounded)
+         * and compute a range within that sorted set of start end positions as some
+         * tags for repeated groups will have more than one instance.
+         */
         private void EnumeratSpan()
         {
             if (TagSpans != null) return;
@@ -59,87 +64,9 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
+        // "BeginString" or 8
         public abstract T? GetTyped<T>(string name);
         public abstract T? GetTyped<T>(int tag);
-
-        // list of tags that must be present
-        public int[] Missing()
-        {
-            if (Segment == null) return [];
-            if (Segment.Set == null) return [];
-            return [.. MissingRequired(Segment.Set, [])];
-        }
-
-        protected static string AsToken(SimpleFieldDefinition? field, string val, int i, int count, TagPos tagpos)
-        {
-            var perLine = 2;
-            var newLine = Environment.NewLine;
-            // [280] 814 (ApplQueueResolution) = 2[OverlayLast][281] 10 (CheckSum) = 80
-            string desc;
-            string name;
-            if (field != null)
-            {
-                name = field.Name;
-                desc = field.IsEnum ? $"{val} [{field.ResolveEnum(val)}]" : $"{val}";
-            } else
-            {
-                desc = $"{val}";
-                name = "unknown";
-            }
-            string delimiter;
-            if (i == 1 || (i < count && i % perLine - 1 == 0))
-            {
-                delimiter = newLine;
-            } else
-            {
-                delimiter = i < count ? ", " : "";
-            }
-
-            return $"[{i}] {tagpos.Tag} ({name}) = {desc}{delimiter}";
-        }
-        
-        private List<int> MissingRequired(IContainedSet? segmentSet, List<int> start)
-        {
-            if (segmentSet == null)
-            {
-                return start;
-            }
-            return segmentSet.Fields.Aggregate(start, (tags, field) =>
-            {
-                switch (field.Type)
-                {
-                    case ContainedFieldType.Simple:
-                        MissingSimple((ContainedSimpleField)field, tags);
-                        break;
-
-                    case ContainedFieldType.Group:
-                        MissingGroup(segmentSet, (ContainedGroupField)field, tags);
-                        break;
-
-                    case ContainedFieldType.Component:
-                        MissingComponent((ContainedComponentField)field, tags);
-                        break;
-                }
-                return tags;
-            });
-        }
-
-        private void MissingGroup(IContainedSet def , ContainedGroupField gf, List<int> tags)
-        {
-            var name = gf.Definition?.NoOfField != null ? gf.Definition.NoOfField.Name : def.Name;
-            var groupView = GetView(name) ?? GetView(gf.Definition?.Name ?? "");
-            if (groupView == null)
-            {
-                return;
-            }
-
-            var count = groupView.GroupCount();
-            for (var j = 0; j < count; ++j)
-            {
-                var instance = groupView.GetGroupInstance(j);
-                instance?.MissingRequired(gf.Definition, tags);
-            }
-        }
 
         public int GroupCount()
         {
@@ -180,26 +107,7 @@ namespace PureFix.Buffer.Ascii
             return instance == null ? null : Create(instance);
         }
 
-        public MsgView? this[int i]
-        {
-            get
-            {
-                return GetGroupInstance(i);
-            }
-        }
-
-        private void MissingComponent(ContainedComponentField cf, List<int> ints)
-        {
-            var view = GetView(cf.Name);
-            view?.MissingRequired(cf.Definition, ints);
-        }
-
-        private void MissingSimple(ContainedSimpleField sf, List<int> a) {
-            if (sf.Required && GetPosition(sf.Definition.Tag) < 0)
-            {
-                a.Add(sf.Definition.Tag);
-            }
-        }
+        public MsgView? this[int i] => GetGroupInstance(i);
 
         public MsgView? GetView(string name)
         {
@@ -265,6 +173,38 @@ namespace PureFix.Buffer.Ascii
 
             return r;
         }
+
+        protected static string AsToken(SimpleFieldDefinition? field, string val, int i, int count, TagPos tagpos)
+        {
+            var perLine = 2;
+            var newLine = Environment.NewLine;
+            // [280] 814 (ApplQueueResolution) = 2[OverlayLast][281] 10 (CheckSum) = 80
+            string desc;
+            string name;
+            if (field != null)
+            {
+                name = field.Name;
+                desc = field.IsEnum ? $"{val} [{field.ResolveEnum(val)}]" : $"{val}";
+            }
+            else
+            {
+                desc = $"{val}";
+                name = "unknown";
+            }
+            string delimiter;
+            if (i == 1 || (i < count && i % perLine - 1 == 0))
+            {
+                delimiter = newLine;
+            }
+            else
+            {
+                delimiter = i < count ? ", " : "";
+            }
+
+            return $"[{i}] {tagpos.Tag} ({name}) = {desc}{delimiter}";
+        }
+
+
         /**
          * easy human-readable format showing each field, its position, value and resolved
          * enum.
