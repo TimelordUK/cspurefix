@@ -56,12 +56,14 @@ namespace PureFIix.Test.Ascii
             var v = mv.GetView("InstrmtLegExecGrp");
             Assert.That(v, Is.Not.Null);
             var noLegs = v.GetView("NoLegs");
+            Assert.That(noLegs, Is.Not.Null);
             var count = noLegs.GroupCount();
             Assert.That(count, Is.EqualTo(3));
             var leg0 = noLegs.GetGroupInstance(0);
             Assert.That(leg0, Is.Not.Null);
             Assert.That(leg0.GetTyped<string>("LegSymbol"), Is.EqualTo("posuere"));
-            var l0 = mv.GetView("InstrmtLegExecGrp.NoLegs")[0];
+            var l0 = mv.GetView("InstrmtLegExecGrp.NoLegs")?[0];
+            Assert.That(l0, Is.Not.Null);
             Assert.That(l0.GetTyped<string>("LegSymbol"), Is.EqualTo("posuere"));
         }
     }

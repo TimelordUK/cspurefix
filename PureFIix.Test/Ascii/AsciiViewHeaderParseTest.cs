@@ -43,6 +43,19 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public async Task TaskGet_Header_View_Ascii_Parser_Test()
+        {
+            const int count = 50000;
+            var sw = new Stopwatch();
+            var t = await TestEntity.GetText(Fix44PathHelper.LogonReplayPath);
+            var repeats = string.Concat(Enumerable.Repeat(t, count));
+            sw.Start();
+            _testEntity.ParseTest(repeats);
+            sw.Stop();
+            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.ElapsedMilliseconds / count * 1000}  micro/msg");
+        }
+
+        [Test]
         public async Task Get_Header_View_Timing_With_Channel_Test()
         {
             const int count = 1000;

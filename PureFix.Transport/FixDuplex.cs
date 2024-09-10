@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -16,35 +19,38 @@ namespace PureFix.Transport
         public abstract void Complete(Exception? error = default);
     }
 
-    public class ChannelDuplex<T> : FixDuplex<T>
+    public class TestDuplex<T> : FixDuplex<T>
     {
-        private readonly Channel<T> _channel = Channel.CreateUnbounded<T>();
-        public ChannelReader<T> Reader => _channel.Reader;
-        public ChannelWriter<T> Writer => _channel.Writer;
+        private readonly BlockingCollection<T> _q = new();
 
         public override ValueTask WriteAsync(T item, CancellationToken cancellationToken = default)
         {
-            return Writer.WriteAsync(item, cancellationToken);
+            _q.Add(item, cancellationToken);
+            return ValueTask.CompletedTask;
         }
 
-        public override IAsyncEnumerable<T> ReadAllAsync(CancellationToken cancellationToken = default)
+        public async override IAsyncEnumerable<T> ReadAllAsync(CancellationToken cancellationToken = default)
         {
-            return Reader.ReadAllAsync(cancellationToken);
+            foreach (var i in _q)
+            {
+                yield return i;
+            }
         }
 
         public override bool TryPeek(out T? item)
         {
-            return Reader.TryPeek(out item);
+            return _q.TryTake(out item);
         }
 
         public override ValueTask<T> ReadAsync(CancellationToken cancellationToken = default)
         {
-            return Reader.ReadAsync(cancellationToken);
+            var r = _q.Take();
+            return ValueTask.FromResult(r);
         }
 
         public override void Complete(Exception? error = default)
         {
-            Writer.Complete(error);
+            _q.CompleteAdding();
         }
     }
 }
