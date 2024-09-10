@@ -48,7 +48,7 @@ namespace PureFix.Buffer.Ascii
         private TagPos? GetTag(int position)
         {
             if (Structure == null) return null;
-            var tags = Structure.Tags;
+            var tags = Structure.Value.Tags;
             if (position < 0 || position >= tags.NextTagPos)
             {
                 return null;
@@ -125,6 +125,13 @@ namespace PureFix.Buffer.Ascii
             return default;
         }
 
+        public override (T?, U?) GetTyped<T, U>(int tag1, int tag2)
+          where T : default
+          where U : default
+        {
+            return (GetTyped<T>(tag1), GetTyped<U>(tag2));
+        }
+
         public override T? GetTyped<T>(int tag) where T : default
         {
             var position = GetPosition(tag);
@@ -192,5 +199,7 @@ namespace PureFix.Buffer.Ascii
 
             return default;
         }
+
+      
     }
 }

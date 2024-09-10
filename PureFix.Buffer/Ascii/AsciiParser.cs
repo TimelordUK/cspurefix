@@ -51,10 +51,10 @@ namespace PureFix.Buffer.Ascii
                 return null;
             }
             var structure = _segmentParser.Parse(_state.MsgType, Locations, Locations.NextTagPos - 1);
-            var msg = structure?.Msg();
-            if (msg != null)
+            var msgSegment = structure?.Msg();
+            if (msgSegment != null)
             {
-                var view = new AsciiView(Definitons, msg, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
+                var view = new AsciiView(Definitons, msgSegment, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
                 return view;
             }
 
