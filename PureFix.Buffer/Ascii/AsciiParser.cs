@@ -29,9 +29,9 @@ namespace PureFix.Buffer.Ascii
         public AsciiParser(FixDefinitions definitions)
         {
             Definitons = definitions;
-            // publish completed parsed views on tx channel.
             _state = new AsciiParseState(definitions);
             _segmentParser = new AsciiSegmentParser(Definitons);
+            _state.BeginMessage();
         }
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
@@ -77,10 +77,7 @@ namespace PureFix.Buffer.Ascii
             var readPtr = 0;
             var end = readFrom.Length;
             var readBuffer = readFrom;
-            if (_state.Buffer == null || _state.Buffer.Pos == 0)
-            {
-                _state.BeginMessage();
-            }
+
             if (_state.Buffer == null) return;
             try
             {
