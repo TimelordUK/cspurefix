@@ -46,6 +46,7 @@ namespace PureFix.Buffer.Ascii
 
             var end = Segment.EndPosition + 1;
             var start = Segment.StartPosition;
+            // slice out the section of tags which represents this view 
             SortedTagPosForwards = Structure.Value.Tags.Slice(start, end);
             Array.Sort(SortedTagPosForwards, TagPos.Compare);
             var span = SortedTagPosForwards[..SortedTagPosForwards.Length];
