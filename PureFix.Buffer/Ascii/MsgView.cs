@@ -42,11 +42,11 @@ namespace PureFix.Buffer.Ascii
             if (Tags == null) return;
             if (Structure == null) return;
             if (Segment == null) return;
-            if (Structure.Tags == null) return;
+            if (Structure.Value.Tags == null) return;
 
             var end = Segment.EndPosition + 1;
             var start = Segment.StartPosition;
-            SortedTagPosForwards = Structure.Tags.Slice(start, end);
+            SortedTagPosForwards = Structure.Value.Tags.Slice(start, end);
             Array.Sort(SortedTagPosForwards, TagPos.Compare);
             var span = SortedTagPosForwards[..SortedTagPosForwards.Length];
             TagSpans = [];
@@ -68,6 +68,7 @@ namespace PureFix.Buffer.Ascii
         // "BeginString" or 8
         public abstract T? GetTyped<T>(string name);
         public abstract T? GetTyped<T>(int tag);
+        public abstract (T?, U?) GetTyped<T,U>(int tag1, int tag2);
 
         public int GroupCount()
         {
@@ -228,7 +229,7 @@ namespace PureFix.Buffer.Ascii
         {
             if (Structure == null) return "";
             var buffer = new StringBuilder();
-            var tags = Structure.Tags;
+            var tags = Structure.Value.Tags;
             if (Segment == null) return "";
             var count = Segment.EndPosition - Segment.StartPosition;
             var simple = Definitions.TagToSimple;
@@ -248,7 +249,6 @@ namespace PureFix.Buffer.Ascii
             return buffer.ToString();
         }
 
-        //public abstract T? GetTyped<T>(int tag);
         protected abstract MsgView Create(SegmentDescription singleton);
         protected abstract string? StringAtPosition(int position);
     }

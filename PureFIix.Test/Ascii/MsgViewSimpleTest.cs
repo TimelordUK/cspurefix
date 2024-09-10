@@ -86,6 +86,17 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Get_Tag_9_35_Typed_Int_View_Test()
+        {
+            var view = _views[0];
+            var (bodyLength, msgType) = view.GetTyped<int,string>(9,35);
+            Assert.That(bodyLength, Is.EqualTo(208));
+            Assert.That(msgType, Is.EqualTo("A"));
+            var asDecimal = view.GetTyped<decimal>(9);
+            Assert.That(asDecimal, Is.EqualTo(208d));
+        }
+
+        [Test]
         public void Get_Tag_MsgType_As_String_View_Test()
         {
             var view = _views[0];
