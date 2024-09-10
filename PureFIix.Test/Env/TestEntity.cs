@@ -16,7 +16,6 @@ namespace PureFIix.Test.Env
     internal class TestEntity
     {
         public FixDefinitions Definitions { get; }
-        public FixDuplex<MsgView> Duplex { get; private set;}
         public AsciiParser Parser { get; private set; }
         
         public TestEntity(string dataDict = "FIX44.xml")
@@ -29,30 +28,39 @@ namespace PureFIix.Test.Env
 
         public void Prepare()
         {
-            Duplex = new ChannelDuplex<MsgView>();
-            Parser = new AsciiParser(Definitions, Duplex) { Delimiter = AsciiChars.Pipe };
+            Parser = new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe };
         }
 
-        public void ParseTest(string s)
+
+        public List<AsciiView> ParseText(byte[] b)
         {
-            var b = Encoding.UTF8.GetBytes(s);
-            Parser.ParseFrom(b);
-            Duplex.Complete();
+            var views = new List<AsciiView>(10000);
+            Parser.ParseFrom(b, (i, view) => views.Add(view));
+            return views;
         }
 
-        public void ParseTestHunks(string s)
+        public List<AsciiView> ParseText(string s)
+        {
+            var views = new List<AsciiView>(10000);
+            var b = Encoding.UTF8.GetBytes(s);
+            Parser.ParseFrom(b, (i, view) => views.Add(view));
+            return views;
+        }
+
+        public List<AsciiView> ParseTestHunks(string s)
         {
             var b = Encoding.UTF8.GetBytes(s);
             var span = new Span<byte>(b);
             var iteration = 0;
+            var views = new List<AsciiView>();
             while (span.Length > 0)
             {
                 var want = Math.Min(span.Length, (iteration % 10) + 1);
-                Parser.ParseFrom(span[..want].ToArray());
+                Parser.ParseFrom(b, (i, view) => views.Add(view));
                 span = span[want..];
                 ++iteration;
             }
-            Duplex.Complete();
+            return views;
         }
 
         public static async Task<Dictionary<string,int>> GetJsonDict(string file)
@@ -70,35 +78,28 @@ namespace PureFIix.Test.Env
             return all;
         }
 
-        public async Task<List<AsciiView>> ReplayText(string all, int repeats = 1)
+        public List<AsciiView> ReplayText(string all, int repeats = 1)
         {
-            var msgs = new List<AsciiView>(10000);
             try
             {
                 if (repeats > 1)
                 {
                     all = string.Concat(Enumerable.Repeat(all, repeats));
                 }
-
-                ParseTest(all);
-                await foreach (var view in Duplex.ReadAllAsync())
-                {
-                    msgs.Add((AsciiView)view);
-                }
+                var msgs = ParseText(all);
+                  return msgs;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-
-            return msgs;
         }
 
         public async Task<List<AsciiView>> Replay(string file, int repeats = 1)
         {
             var all = await GetText(file);
-            var msgs = await ReplayText(all, repeats);
+            var msgs = ReplayText(all, repeats);
             return msgs;
         }
     }

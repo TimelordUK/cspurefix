@@ -50,21 +50,26 @@ namespace PureFIix.Test.Ascii
             var t = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
             var repeats = string.Concat(Enumerable.Repeat(t, count));
             sw.Start();
-            _testEntity.ParseTest(repeats);
+            _testEntity.ParseText(repeats);
             sw.Stop();
-            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.ElapsedMilliseconds / count * 1000}  micro/msg");
+            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
         }
 
         [Test]
         public async Task Get_Heartbeat_View_Timing_With_Channel_Test()
         {
-            const int count = 100;
+            const int count = 10000;
             var sw = new Stopwatch();
+            var one = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
+            var all = string.Concat(Enumerable.Repeat(one, count));
+            var b = Encoding.UTF8.GetBytes(all);
             sw.Start();
-            var repeats = await _testEntity.Replay(Fix44PathHelper.HeartbeatReplayPath, count);
+            var msgs = new List<AsciiView>(count);
+            _testEntity.Parser.ParseFrom(b, (i, view) => msgs.Add(view));
+            //_testEntity.Parser.ParseFrom(b, null);
             sw.Stop();
-            //Assert.That(repeats, Has.Count.EqualTo(count));
-            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.ElapsedMilliseconds / count * 1000}  micro/msg");
+            Assert.That(msgs, Has.Count.EqualTo(count));
+            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
         }
 
         /*
@@ -90,7 +95,7 @@ namespace PureFIix.Test.Ascii
                 instance.Parse(sh);
             }
             sw.Stop();
-            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.ElapsedMilliseconds / count * 1000}  micro/msg");
+            Console.WriteLine($"{sw.ElapsedMilliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
         }
 
         [Test]
