@@ -40,6 +40,11 @@ namespace PureFix.Buffer.Ascii
 
         public void BeginMessage()
         {
+            
+            // a new buffer and location set is allocated per message as this can be part of a view that is cached by 
+            // caller. However now we are calling back inline, the parent parse function can assume these can be
+            // re-used on the next invocation.
+
             _buffer = new ElasticBuffer(1 * 1024);
             _locations = new Tags(50);
 

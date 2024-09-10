@@ -132,6 +132,23 @@ namespace PureFix.Buffer.Ascii
             return (GetTyped<T>(tag1), GetTyped<U>(tag2));
         }
 
+        public override (T?, U?, V?) GetTyped<T, U, V>(int tag1, int tag2, int tag3)
+                  where T : default
+                  where U : default
+                  where V : default
+        {
+            return (GetTyped<T>(tag1), GetTyped<U>(tag2), GetTyped<V>(tag3));
+        }
+
+        public override (T?, U?, V?, W?) GetTyped<T, U, V, W>(int tag1, int tag2, int tag3, int tag4)
+                 where T : default
+                 where U : default
+                 where V : default
+                 where W : default
+        {
+            return (GetTyped<T>(tag1), GetTyped<U>(tag2), GetTyped<V>(tag3), GetTyped<W>(tag4));
+        }
+
         public override T? GetTyped<T>(int tag) where T : default
         {
             var position = GetPosition(tag);
@@ -200,6 +217,6 @@ namespace PureFix.Buffer.Ascii
             return default;
         }
 
-      
+     
     }
 }

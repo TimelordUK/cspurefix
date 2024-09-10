@@ -42,22 +42,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(sh, Is.Not.Null);
         }
 
-        [Test]
-        public async Task Get_Heartbeat_View_Ascii_Parser_Test()
-        {
-            const int count = 10000;
-            var sw = new Stopwatch();
-            var one = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
-            var all = string.Concat(Enumerable.Repeat(one, count));
-            var b = Encoding.UTF8.GetBytes(all);
-            var msgs = new List<AsciiView>(count);
-            sw.Start();
-            _testEntity.Parser.ParseFrom(b, (i, view) => msgs.Add(view));
-            //_testEntity.Parser.ParseFrom(b, null);
-            sw.Stop();
-            Assert.That(msgs, Has.Count.EqualTo(count));
-            Console.WriteLine($"{sw.Elapsed.Milliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
-        }
+ 
 
         /*
          * here we parse one view and repeatedly write the 8 field view into a standard header strong object.

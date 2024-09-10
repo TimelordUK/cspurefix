@@ -4,6 +4,7 @@ using PureFix.ParserFormat;
 using PureFix.Types.FIX4._4.quickfix;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,23 @@ namespace PureFIix.Test.Ascii
             Assert.That(mv, Is.Not.Null);
             var hb = new Heartbeat();
             hb.Parse(mv);
+        }
+
+        [Test]
+        public async Task Get_Heartbeat_View_Ascii_Parser_Test()
+        {
+            const int count = 10000;
+            var sw = new Stopwatch();
+            var one = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
+            var all = string.Concat(Enumerable.Repeat(one, count));
+            var b = Encoding.UTF8.GetBytes(all);
+            var msgs = new List<AsciiView>(count);
+            sw.Start();
+            _testEntity.Parser.ParseFrom(b, (i, view) => msgs.Add(view));
+            //_testEntity.Parser.ParseFrom(b, null);
+            sw.Stop();
+            Assert.That(msgs, Has.Count.EqualTo(count));
+            Console.WriteLine($"{sw.Elapsed.Milliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
         }
     }
 }
