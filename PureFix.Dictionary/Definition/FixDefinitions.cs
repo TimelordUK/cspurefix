@@ -41,7 +41,7 @@ namespace PureFix.Dictionary.Definition
             _tagToSimple[simpleField.Tag] = simpleField;
         }
 
-        public void AddMessaqe(MessageDefinition msg)
+        public void AddMessage(MessageDefinition msg)
         {
             _message[msg.Name] = msg;
             if (msg.MsgType != null && msg.MsgType != msg.Name)

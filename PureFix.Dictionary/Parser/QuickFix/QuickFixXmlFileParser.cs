@@ -162,7 +162,7 @@ public partial class QuickFixXmlFileParser(FixDefinitions definitions)
         if (_trailer is null) throw new InvalidOperationException("trailer not set");
 
         var md = GetMessage(node.Element);
-        Definitions.AddMessaqe(md);
+        Definitions.AddMessage(md);
         _containedSets[node.ID] = md;
         // need to wrap the expanded set in a header and trailer as this is assumed within the quick fix xml.
         ConstructTailNode("StandardHeader", node, _header.Element, ElementType.ComponentDeclaration);
