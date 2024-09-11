@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,19 +16,23 @@ namespace PureFix.Buffer
 {
     public partial class ElasticBuffer
     {
+        private static readonly ArrayPool<byte> _pool = ArrayPool<byte>.Create(128 * 1024, 50);
+
         private byte[] _buffer;
         public int Pos { get; private set; }
         private readonly int _returnTo;
 
         public ElasticBuffer(int size = 1 * 1024) 
         {
-            _buffer = new byte[size];
+            _buffer = _pool.Rent(size);
             _returnTo = _buffer.Length;
         }
 
         public ElasticBuffer(ElasticBuffer rhs) : this()
         {
-            _buffer = rhs._buffer[..rhs.Pos];
+            var length = rhs.Pos;
+            _buffer = _pool.Rent(length);
+            rhs._buffer[..rhs.Pos].CopyTo(_buffer, length);
             _returnTo = _buffer.Length;
             Pos = rhs.Pos;
         }
@@ -159,8 +164,8 @@ namespace PureFix.Buffer
             var reducing = _buffer.Length > _returnTo;
             if (reducing)
             {
-                var span = new ReadOnlySpan<byte>(_buffer, 0, _returnTo);
-                _buffer = span.ToArray();
+                _pool.Return(_buffer);
+                _buffer = _pool.Rent(_returnTo);
             }
             return reducing;
         }
@@ -213,9 +218,10 @@ namespace PureFix.Buffer
                 len *= 2;
             }
 
-            var grown = new byte[len];
-            Array.Copy(_buffer, grown, _buffer.Length);
-            _buffer = grown;
+            var newBuffer = _pool.Rent(len);
+            Array.Copy(_buffer, newBuffer, _buffer.Length);
+
+            _buffer = newBuffer;
         }
 
         private static double PrecisionRound(double n, int precision)
