@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -15,18 +16,14 @@ namespace PureFix.Buffer.Ascii
 {
     public class AsciiParser
     {
-        public readonly record struct Stats(long ReceivedBytes, long ParsedMessages, long Rents, long Returns);
+        public readonly record struct Stats(long ReceivedBytes, long ParsedMessages, long Rents, long Returns, double TotalSegmentParseMicro, double TotalElapsedParseMicro);
         public class Pool
         {
             public class Storage
             {
-                public Storage()
-                {
-                    Buffer = new ElasticBuffer();
-                    Locations = new Tags();
-                }
-                public ElasticBuffer Buffer { get; }
-                public Tags Locations { get; }
+                public ElasticBuffer Buffer { get; } = new();
+                public Tags Locations { get; } = new();
+
                 public void Reset()
                 {
                     Buffer.Reset();
@@ -41,7 +38,7 @@ namespace PureFix.Buffer.Ascii
             {
                 var instance = _pool.Get();
                 instance.Reset();
-                ++_rents;
+                ++Rents;
                 return instance;
             }
             public void Deliver(Storage storage)
@@ -52,17 +49,16 @@ namespace PureFix.Buffer.Ascii
             {
                 while (_delivered.Count > 0)
                 {
-                    _returns++;
+                    Returns++;
                     var instance = _delivered.Dequeue();
                     _pool.Return(instance);
                 }
             }
-            public long Imbalance => _rents - _returns;
-            public long Rents => _rents;
-            public long Returns => _returns;
+            public long Imbalance => Rents - Returns;
+            public long Rents { get; private set; }
 
-            private long _rents;
-            private long _returns;
+            public long Returns { get; private set; }
+
             private readonly ObjectPool<Storage> _pool = new DefaultObjectPool<Storage>(new DefaultPooledObjectPolicy<Storage>());
             private readonly Queue<Storage> _delivered = [];
         }
@@ -78,7 +74,9 @@ namespace PureFix.Buffer.Ascii
         private readonly Pool _pool = new();
         private long _receivedBytes;
         private long _parsedMessages;
-        public Stats ParserStats => new(_receivedBytes, _parsedMessages, _pool.Rents, _pool.Returns);
+        private double _totalElapsedSegmentParseMicros;
+        private double _totalElapsedParseMicros;
+        public Stats ParserStats => new(_receivedBytes, _parsedMessages, _pool.Rents, _pool.Returns, _totalElapsedSegmentParseMicros, _totalElapsedParseMicros);
 
         public AsciiParser(FixDefinitions definitions)
         {
@@ -92,7 +90,11 @@ namespace PureFix.Buffer.Ascii
 
         private void Msg(int ptr, Action<int, AsciiView>? onMsg)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var view = GetView(ptr);
+            sw.Stop();
+            _totalElapsedSegmentParseMicros += sw.Elapsed.TotalMicroseconds;
             if (view == null) return;
             _parsedMessages++;
             onMsg?.Invoke(ptr, view);
@@ -136,7 +138,8 @@ namespace PureFix.Buffer.Ascii
             var end = readFrom.Length;
             var readBuffer = readFrom;
             _receivedBytes += readFrom.Length;
-
+            var sw = new Stopwatch();
+            sw.Start();
             if (_state.Buffer == null) return;
             try
             {
@@ -237,6 +240,8 @@ namespace PureFix.Buffer.Ascii
                 // any views dispatched on the callback from previous call are considered ready to be reclaimed, the expectation
                 // being the recipient must have extracted required data or parsed into a concrete type within the callbak itself.s
                 _pool.Reclaim();
+                sw.Stop();
+                _totalElapsedParseMicros += sw.Elapsed.TotalMicroseconds;
             }
         }
     }

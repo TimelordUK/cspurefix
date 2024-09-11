@@ -4,6 +4,7 @@ using PureFix.ParserFormat;
 using PureFix.Types.FIX4._4.quickfix;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -68,12 +69,10 @@ namespace PureFIix.Test.Ascii
             });
         }
 
-        [Test]
-        public async Task Get_Heartbeat_View_Ascii_Parser_Test()
+        private async Task TimeParse(string path, int count)
         {
-            const int count = 10000;
             var sw = new Stopwatch();
-            var one = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
+            var one = await TestEntity.GetText(path);
             var all = string.Concat(Enumerable.Repeat(one, count));
             var b = Encoding.UTF8.GetBytes(all);
             var msgs = new List<AsciiView>(count);
@@ -82,7 +81,14 @@ namespace PureFIix.Test.Ascii
             //_testEntity.Parser.ParseFrom(b, null);
             sw.Stop();
             Assert.That(msgs, Has.Count.EqualTo(count));
-            Console.WriteLine($"{sw.Elapsed.Milliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
+            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds} {(decimal)sw.Elapsed.TotalMicroseconds / count}  micro/msg {_testEntity.Parser.ParserStats.TotalSegmentParseMicro/count} seg/msg {_testEntity.Parser.ParserStats}");
+        }
+
+        [Test]
+        public async Task Get_Heartbeat_View_Ascii_Parser_Test()
+        {
+            await TimeParse(Fix44PathHelper.HeartbeatReplayPath, 1000);
+            await TimeParse(Fix44PathHelper.HeartbeatReplayPath, 20000);
         }
     }
 }
