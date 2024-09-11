@@ -12,6 +12,7 @@ using PureFix.Dictionary.Parser;
 using PureFix.Tag;
 
 
+
 namespace PureFix.Buffer.Ascii
 {
     public class AsciiSegmentParser(FixDefinitions definitions)

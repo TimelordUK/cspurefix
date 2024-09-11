@@ -19,7 +19,7 @@ namespace PureFix.Buffer
         public int Pos { get; private set; }
         private readonly int _returnTo;
 
-        public ElasticBuffer(int size = 6 * 1024) 
+        public ElasticBuffer(int size = 1 * 1024) 
         {
             _buffer = new byte[size];
             _returnTo = _buffer.Length;

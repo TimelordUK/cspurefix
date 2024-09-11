@@ -50,6 +50,25 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public async Task Replay_Again_Check_Stats_Test()
+        {
+            // a new parser is constructed for each test, here we parse twice on same instance
+            var text = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
+            var views1 = _testEntity.ParseText(text);
+            var views2 = _testEntity.ParseText(text);
+            var stats = _testEntity.Parser.ParserStats;
+            // we will have taken 2 buffers, returned 2 for views above and we are waiting to parse into
+            // a new buffer
+            Assert.Multiple(() =>
+            {
+                Assert.That(stats.Rents, Is.EqualTo(3));
+                Assert.That(stats.Returns, Is.EqualTo(2));
+                Assert.That(stats.ParsedMessages, Is.EqualTo(2));
+                Assert.That(stats.ReceivedBytes, Is.EqualTo(2 * text.Length));
+            });
+        }
+
+        [Test]
         public async Task Get_Heartbeat_View_Ascii_Parser_Test()
         {
             const int count = 10000;

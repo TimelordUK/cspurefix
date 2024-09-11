@@ -9,7 +9,7 @@ using PureFix.Tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    internal class AsciiParseState(FixDefinitions definitions)
+    internal class AsciiParseState(FixDefinitions definitions, AsciiParser.Pool pool)
     {
         private MessageDefinition? _message;
         public ParseState ParseState { get; private set; }
@@ -23,10 +23,11 @@ namespace PureFix.Buffer.Ascii
         private int _currentTag;
         private int _rawDataLen;
         private int _rawDataRead;
-        private ElasticBuffer? _buffer;
-        private Tags? _locations;
-        public Tags? Locations => _locations;
-        public ElasticBuffer? Buffer => _buffer;
+        AsciiParser.Pool.Storage? _storage;
+        public AsciiParser.Pool.Storage? Storage => _storage;
+        public Tags? Locations => _storage?.Locations;
+        public ElasticBuffer? Buffer => _storage?.Buffer;
+
 
         public string? MsgType { get; private set; }
 
@@ -40,14 +41,12 @@ namespace PureFix.Buffer.Ascii
 
         public void BeginMessage()
         {
-            
+
             // a new buffer and location set is allocated per message as this can be part of a view that is cached by 
             // caller. However now we are calling back inline, the parent parse function can assume these can be
             // re-used on the next invocation.
 
-            _buffer = new ElasticBuffer(1 * 1024);
-            _locations = new Tags(50);
-
+            _storage = pool.Rent();
             _checksumExpectedPos = 0;
             ParseState = ParseState.BeginField;
             _count = 0;
@@ -76,7 +75,7 @@ namespace PureFix.Buffer.Ascii
             sb.Append($"rawDataLen = {_rawDataLen} ");
             sb.Append($"bodyLen = {_bodyLen} ");
             sb.Append($"msgType = {MsgType} ");
-            sb.Append($"buffer = {_buffer} ");
+            sb.Append($"buffer = {Buffer} ");
             sb.Append($"message = {_message} ");
 
             return sb.ToString();
@@ -84,13 +83,13 @@ namespace PureFix.Buffer.Ascii
 
         public void EndTag(int pos)
         {
-            if (_buffer == null) return;
+            if (Buffer == null) return;
             _equalPos = pos;
             switch (ParseState)
             {
                 case ParseState.ParsingTag:
                 {
-                    _currentTag = (int)_buffer.GetWholeNumber(_tagStartPos, pos - 1);
+                    _currentTag = (int)Buffer.GetWholeNumber(_tagStartPos, pos - 1);
                     break;
                 }
 
@@ -126,9 +125,9 @@ namespace PureFix.Buffer.Ascii
 
         public void Store()
         {
-            if (_buffer == null) return;
-            if (_locations == null) return;
-            var valueEndPos = _buffer.GetPos() - 1;
+            if (Buffer == null) return;
+            if (Locations == null) return;
+            var valueEndPos = Buffer.GetPos() - 1;
             _valueEndPos = valueEndPos;
             var equalPos = _equalPos;
             var tag = _currentTag;
@@ -139,21 +138,21 @@ namespace PureFix.Buffer.Ascii
                 case ParseState.ParsingRawData:
                 {
                     _rawDataLen = 0;
-                    _locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    Locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
 
                 case ParseState.ParsingRawDataLength:
                 {
-                    _rawDataLen = (int)_buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
-                    _locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
+                    _rawDataLen = (int)Buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                    Locations.Store(equalPos + 1, valueEndPos - equalPos - 1, tag);
                     break;
                 }
             }
 
             ParseState = ParseState.BeginField;
             _count++;
-            var nextTagPos = _locations.NextTagPos;
+            var nextTagPos = Locations.NextTagPos;
 
             switch (tag)
             {
@@ -174,7 +173,7 @@ namespace PureFix.Buffer.Ascii
                         throw new InvalidDataException($"BodyLengthTag: not expected at position [{nextTagPos}]");
                     }
 
-                    _bodyLen = (int)_buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
+                    _bodyLen = (int)Buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
                     _checksumExpectedPos = _bodyLen + valueEndPos;
                     break;
                 }
@@ -186,7 +185,7 @@ namespace PureFix.Buffer.Ascii
                         throw new InvalidDataException($"MsgTag: not expected at position [{nextTagPos}]");
                     }
 
-                    MsgType = _buffer.GetString(equalPos + 1, valueEndPos);
+                    MsgType = Buffer.GetString(equalPos + 1, valueEndPos);
                     if (definitions.Message.TryGetValue(MsgType, out var message))
                     {
                         _message = message;
