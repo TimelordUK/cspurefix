@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace PureFIix.Test.Env
 {
@@ -30,13 +31,6 @@ namespace PureFIix.Test.Env
             Parser = new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe };
         }
 
-
-        public List<AsciiView> ParseText(byte[] b)
-        {
-            var views = new List<AsciiView>(10000);
-            Parser.ParseFrom(b, (i, view) => views.Add(view));
-            return views;
-        }
 
         public List<AsciiView> ParseText(string s)
         {
@@ -107,6 +101,28 @@ namespace PureFIix.Test.Env
             var all = await GetTextAsync(file);
             var msgs = ReplayText(all, repeats);
             return msgs;
+        }
+
+        public void TimeParsePath(string description, string path, int repeats, int batch = 1)
+        {
+            var sw = new Stopwatch();
+            var one = GetText(path);
+            var all = string.Concat(Enumerable.Repeat(one, repeats));
+            var count = repeats * batch;
+            var b = Encoding.UTF8.GetBytes(all);
+            var msgs = new List<AsciiView>(count);
+
+            // Move the creating of the action outside the stopwatch code
+            // to avoid recording the time to allocate the memory for it
+            Action<int, AsciiView> action = (i, view) => msgs.Add(view);
+            //_testEntity.Parser.ParseFrom(b, action);
+
+            sw.Start();
+            Parser.ParseFrom(b, action);
+            //_testEntity.Parser.ParseFrom(b, null);
+            sw.Stop();
+            Assert.That(msgs, Has.Count.EqualTo(count));
+            Console.WriteLine($"{description}[{count},{batch}]: {sw.Elapsed.TotalMilliseconds} {(decimal)sw.Elapsed.TotalMicroseconds / count}  micro/msg {Parser.ParserStats.TotalSegmentParseMicro / count} seg/msg {Parser.ParserStats}");
         }
     }
 }

@@ -2,6 +2,7 @@
 using PureFix.Buffer.Ascii;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace PureFIix.Test.Ascii
         {
             _testEntity = new TestEntity();
             _expectedCounts = await TestEntity.GetJsonDict(Fix44PathHelper.JsonPath);
+            var sw = new Stopwatch();
+            sw.Start();
             _views = await _testEntity.Replay(Fix44PathHelper.ReplayPath);
         }
 
@@ -52,6 +55,12 @@ namespace PureFIix.Test.Ascii
                 fileCounts[msg.MsgType] = c + 1;
             });
             Assert.That(fileCounts, Is.EqualTo(_expectedCounts));
+        }
+
+        [Test]
+        public void Get_Views_From_FixAscii_Parser_Test()
+        {
+            _testEntity.TimeParsePath("Get_Views_From_FixAscii_Parser_Test", Fix44PathHelper.ReplayPath, 1000 / 50, 50);
         }
     }
 }
