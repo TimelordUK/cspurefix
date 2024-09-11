@@ -61,7 +61,7 @@ namespace PureFix.Buffer.Ascii
             Clean(context);
 
             // now know where all components and groups are positioned within message
-            return new Structure(tags, [.. context.Segments]);
+            return new Structure(tags, context.Segments);
         }
 
 

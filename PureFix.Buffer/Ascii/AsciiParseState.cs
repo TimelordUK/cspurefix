@@ -23,10 +23,10 @@ namespace PureFix.Buffer.Ascii
         private int _currentTag;
         private int _rawDataLen;
         private int _rawDataRead;
-        AsciiParser.Pool.Storage? _storage;
-        public AsciiParser.Pool.Storage? Storage => _storage;
-        public Tags? Locations => _storage?.Locations;
-        public ElasticBuffer? Buffer => _storage?.Buffer;
+        public AsciiParser.Pool.Storage? Storage { get; private set; }
+
+        public Tags? Locations => Storage?.Locations;
+        public ElasticBuffer? Buffer => Storage?.Buffer;
 
 
         public string? MsgType { get; private set; }
@@ -46,7 +46,7 @@ namespace PureFix.Buffer.Ascii
             // caller. However now we are calling back inline, the parent parse function can assume these can be
             // re-used on the next invocation.
 
-            _storage = pool.Rent();
+            Storage = pool.Rent();
             _checksumExpectedPos = 0;
             ParseState = ParseState.BeginField;
             _count = 0;
