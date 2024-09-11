@@ -67,7 +67,7 @@ namespace PureFIix.Test.Ascii
                 instance.Parse(sh);
             }
             sw.Stop();
-            Console.WriteLine($"{sw.Elapsed.Milliseconds} {(decimal)sw.Elapsed.Microseconds / count}  micro/msg");
+            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds} {(decimal)sw.Elapsed.TotalMicroseconds / count}  micro/msg");
         }
 
         [Test]
