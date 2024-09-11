@@ -126,7 +126,7 @@ namespace PureFix.Buffer.Ascii
         public MsgView? GetView(string name)
         {
             var parts = name.Split('.');
-            return parts.Aggregate(this, (a, current) =>
+            return parts.Aggregate(this, static (a, current) =>
             {
                 var subStructure = a.Structure;
                 if (a.Segment == null)

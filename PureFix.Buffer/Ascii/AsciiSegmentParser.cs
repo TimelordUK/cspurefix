@@ -79,18 +79,20 @@ namespace PureFix.Buffer.Ascii
 
         private static void Unwind(Context context, int tag)
         {
-            while (context?.StructureStack.Count > 1)
+            while (context.StructureStack.Count > 1)
             {
                 var done = context.StructureStack.Pop();
                 done.End(context.Segments.Count, context.CurrentTagPosition - 1, context.Tags[context.CurrentTagPosition - 1].Tag);
                 context.Segments.Add(done);
-                if (context?.Peek?.Set != null && context.Peek.Set.ContainedTag.ContainsKey(tag))
+
+                var peekSet = context.Peek?.Set;
+                if (peekSet!= null && peekSet.ContainedTag.ContainsKey(tag))
                 {
                     // unwound to point this tag lives in this set.
                     break;
                 }
 
-                if (context?.Peek?.Type == SegmentType.Msg)
+                if (context.Peek?.Type == SegmentType.Msg)
                 {
                     // this is unknown tag, and it is not part of trailer so raise unknown
                     break;
@@ -156,7 +158,7 @@ namespace PureFix.Buffer.Ascii
             {
                 // if a group is represented by a repeated component, then the tag representing delimiter
                 // needs to be added further up stack to group itself.
-                var last = context.StructureStack.FirstOrDefault(d => d.Set?.Type == ContainedSetType.Group);
+                var last = context.StructureStack.FirstOrDefault(static d => d.Set?.Type == ContainedSetType.Group);
                 if (last != null)
                 {
                     delimiter = last.GroupAddDelimiter(tag, context.CurrentTagPosition);

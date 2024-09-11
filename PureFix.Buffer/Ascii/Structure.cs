@@ -55,8 +55,10 @@ namespace PureFix.Buffer.Ascii
 
         private void BoundLayout(SegmentDescription? segment = null)
         {
-            foreach (var current in Segments)
+            for (var i = 0; i < Segments.Count; i++)
             {
+                var current = Segments[i];
+
                 if (current.Name == null) continue;
                 if (segment != null && !segment.Contains(current)) continue;
                 switch (current.Type)

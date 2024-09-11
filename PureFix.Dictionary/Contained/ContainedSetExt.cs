@@ -16,8 +16,11 @@ namespace PureFix.Dictionary.Contained
     {
         public static void Iterate(this IContainedSet set, ISetDispatchReceiver dispatcher)
         {
-            foreach (var k in set.Fields)
+            var fields = set.Fields;
+            for (var i = 0; i < fields.Count; i++)
             {
+                var k = fields[i];
+
                 switch (k.Type)
                 {
                     case ContainedFieldType.Simple:
