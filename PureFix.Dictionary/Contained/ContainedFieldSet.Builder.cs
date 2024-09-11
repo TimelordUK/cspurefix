@@ -155,8 +155,9 @@ namespace PureFix.Dictionary.Contained
         private void MapAllBelow(ContainedFieldSet set, ContainedField field)
         {
             var tagsBelow = set.Keys();
-            foreach (var tag in tagsBelow)
+            for (var i = 0; i < tagsBelow.Count; i++)
             {
+                var tag = tagsBelow[i];
                 _tagToField[tag] = field;
             }
         }
@@ -191,9 +192,11 @@ namespace PureFix.Dictionary.Contained
 
         private void AddAllFields(ContainedFieldSet containedField)
         {
-            foreach (var field in containedField.Fields)
+            var fields = containedField.Fields;
+
+            for (int i = 0; i < fields.Count; i++)
             {
-                AddContained(containedField, field);
+                AddContained(containedField, fields[i]);
             }
         }
     }

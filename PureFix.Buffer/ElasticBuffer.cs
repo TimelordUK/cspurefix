@@ -63,10 +63,13 @@ namespace PureFix.Buffer
             var total = 0;
             var ptr = p ?? Pos;
             ptr = Math.Min(ptr, Pos);
+            
             var span = new Span<byte>(_buffer, 0, ptr);
-            foreach (var t in span)
+            var length = span.Length;
+            
+            for (var i = 0; i < length; i++)
             {
-                total += t;
+                total += span[i];
             }
             return total;
         }
@@ -122,10 +125,12 @@ namespace PureFix.Buffer
         {
             CheckGrowBuffer(s.Length);
             var span = new Span<byte>(_buffer, Pos, s.Length);
-            var i = 0;
-            foreach (var c in s)
+            var length = s.Length;
+            
+            for (var i = 0; i < length; i++)
             {
-                span[i++] = (byte)c;
+                var c = s[i];
+                span[i] = (byte)c;
             }
             Pos += s.Length;
             return Pos;
@@ -134,10 +139,13 @@ namespace PureFix.Buffer
         public int WriteBuffer(Memory<byte> v)
         {
             var span = v.Span;
-            CheckGrowBuffer(span.Length);
-            foreach (var c in span)
+            var length = span.Length;
+            CheckGrowBuffer(length);
+            
+            for (var i = 0; i < length; i++)
             {
-                _buffer[Pos++] = c;
+                var b = span[i];
+                _buffer[Pos++] = b;
             }
             return Pos;
         }
