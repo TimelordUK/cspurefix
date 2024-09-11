@@ -65,7 +65,7 @@ namespace PureFix.Buffer
 
         public int WriteLocalTimeOnly(DateTime dateTime)
         {
-            var format = TimeFormats.TimeMs.AsSpan();
+            var format = TimeFormats.TimeMs;
             CheckGrowBuffer(format.Length);
             var span = _buffer.AsSpan()[Pos..format.Length];
             dateTime.TryFormat(span, out var written, format);

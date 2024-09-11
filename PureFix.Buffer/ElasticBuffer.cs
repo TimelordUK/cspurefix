@@ -172,9 +172,44 @@ namespace PureFix.Buffer
 
         public long GetWholeNumber(int st, int vend)
         {
-            var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
-            var v = long.Parse(ros);
-            return v;
+            // Fix numbers don't have any fancy formatting other than a sign prefix
+            // so we should probably avoid doing (int/long).Parse as it supports too many formats
+            var encoding = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            var offset = 0;
+            var length = encoding.Length;
+
+            long multiplier = 1;
+            if (encoding[0] == (byte)'+')
+            {
+                multiplier = 1;
+                offset++;
+            }
+            else if (encoding[0] == (byte)'-')
+            {
+                multiplier = -1;
+                offset++;
+            }
+
+            long value = 0;
+
+            while(offset < length)
+            {
+                var b = encoding[offset];
+                if (char.IsDigit((char)b))
+                {
+                    value = (value * 10) + (b - (byte)'0');
+                }
+                else
+                {
+                    throw new FormatException("invalid digit in number");
+                }
+
+                offset++;
+            }
+
+            value *= multiplier;
+            
+            return value;
         }
 
         public string GetString(int start, int end)
@@ -249,15 +284,23 @@ namespace PureFix.Buffer
         public double? GetFloat(int st, int vend)
         {
             var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
-            var v = double.Parse(ros);
-            return v;
+            if (double.TryParse(ros, out var v))
+            {
+                return v;
+            }
+
+            return null;
         }
 
         public decimal? GetDecimal(int st, int vend)
         {
             var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
-            var v = decimal.Parse(ros);
-            return v;
+            if (decimal.TryParse(ros, out var v))
+            {
+                return v;
+            }
+
+            return null;
         }
 
         public Memory<byte> GetBuffer(int st, int vend)
