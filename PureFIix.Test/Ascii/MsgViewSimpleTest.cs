@@ -56,7 +56,7 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_9_Typed_String_View_Test()
         {
             var view = _views[0];
-            var asString = view.GetTyped<string>(9);
+            var asString = view.GetString(9);
             Assert.That(asString, Is.EqualTo("0000208"));
         }
 
@@ -64,7 +64,7 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_BodyLength_Typed_String_View_Test()
         {
             var view = _views[0];
-            var asString = view.GetTyped<string>("BodyLength");
+            var asString = view.GetString("BodyLength");
             Assert.That(asString, Is.EqualTo("0000208"));
         }
 
@@ -72,9 +72,9 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_9_Typed_Int_View_Test()
         {
             var view = _views[0];
-            var asInt = view.GetTyped<int>(9);
+            var asInt = view.GetInt32(9);
             Assert.That(asInt, Is.EqualTo(208));
-            var asDecimal = view.GetTyped<decimal>(9);
+            var asDecimal = view.GetDecimal(9);
             Assert.That(asDecimal, Is.EqualTo(208d));
         }
 
@@ -90,7 +90,7 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_9_35_Typed_Int_View_Test()
         {
             var view = _views[0];
-            var (bodyLength, msgType) = view.GetTyped<int,string>(9,35);
+            var (bodyLength, msgType) = (view.GetInt32(9), view.GetString(35));
             Assert.Multiple(() =>
             {
                 Assert.That(bodyLength, Is.EqualTo(208));
@@ -102,7 +102,9 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_9_35_96_Typed_Int_View_Test()
         {
             var view = _views[0];
-            var (bodyLength, msgType, buffer) = view.GetTyped<int, string, byte[]>(9, 35, 96);
+            var bodyLength = view.GetInt32(9);
+            var msgType = view.GetString(35);
+            var buffer = view.GetByteArray(96);
             Assert.Multiple( () =>
             {
                 Assert.That(bodyLength, Is.EqualTo(208));
@@ -131,7 +133,7 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_56_Typed_String_View_Test()
         {
             var view = _views[0];
-            var asString = view.GetTyped<string>(56);
+            var asString = view.GetString(56);
             Assert.That(asString, Is.EqualTo("target-20"));
         }
 
@@ -139,7 +141,7 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_96_Typed_Buffer_View_Test()
         {
             var view = _views[0];
-            var asBuffer = view.GetTyped<byte[]>(96);
+            var asBuffer = view.GetByteArray(96);
             Assert.That(asBuffer, Is.EqualTo("VgfoSqo56NqSVI1fLdlI"u8.ToArray()));
         }
 
@@ -147,17 +149,17 @@ namespace PureFIix.Test.Ascii
         public void Get_Tag_141_Typed_Bool_View_Test()
         {
             var view = _views[0];
-            var asBool = view.GetTyped<bool>(141);
+            var asBool = view.GetBool(141);
             Assert.That(asBool, Is.True);
             // show that the get span positions is only done once.
-            var asBool2 = view.GetTyped<bool>(141);
+            var asBool2 = view.GetBool(141);
         }
 
         [Test]
         public void Get_Tag_464_Typed_Bool_View_Test()
         {
             var view = _views[0];
-            var asBool = view.GetTyped<bool>(464);
+            var asBool = view.GetBool(464);
             Assert.That(asBool, Is.False);
         }
 
@@ -167,7 +169,7 @@ namespace PureFIix.Test.Ascii
             var format = ElasticBuffer.TimeFormats.Timestamp;
             DateTime.TryParseExact("20180610-10:39:01.621", format, null, DateTimeStyles.AssumeUniversal, out var d);
             var view = _views[0];
-            var asUtc = view.GetTyped<DateTime>(52);
+            var asUtc = view.GetDateTime(52);
             Assert.That(asUtc, Is.EqualTo(d));
         }
 

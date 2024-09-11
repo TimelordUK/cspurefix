@@ -12,9 +12,9 @@ namespace PureFix.ParserFormat
     {
         public static void Parse(this StandardTrailer instance, MsgView? view)
         {
-            instance.SignatureLength = view?.GetTyped<int>(93);
-            instance.Signature = view?.GetTyped<byte[]>(89);
-            instance.CheckSum = view?.GetTyped<string>(10);
+            instance.SignatureLength = view?.GetInt32(93);
+            instance.Signature = view?.GetByteArray(89);
+            instance.CheckSum = view?.GetString(10);
         }
     }
 }

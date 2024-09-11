@@ -15,7 +15,7 @@ namespace PureFix.ParserFormat
         {
             instance.StandardHeader ??= new StandardHeader();
             instance.StandardHeader.Parse(view?.GetView("StandardHeader"));
-            instance.TestReqID = view?.GetTyped<string>(112);
+            instance.TestReqID = view?.GetString(112);
             instance.StandardTrailer ??= new StandardTrailer();
             instance.StandardTrailer.Parse(view?.GetView("StandardTrailer"));
         }

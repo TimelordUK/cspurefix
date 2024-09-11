@@ -116,40 +116,7 @@ namespace PureFix.Buffer.Ascii
             return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Value.Start, tag.Value.End);
         }
 
-        public override T? GetTyped<T>(string name) where T : default
-        {
-            if (Definitions.Simple.TryGetValue(name, out var typed))
-            {
-                return GetTyped<T>(typed.Tag);
-            }
-            return default;
-        }
-
-        public override (T?, U?) GetTyped<T, U>(int tag1, int tag2)
-          where T : default
-          where U : default
-        {
-            return (GetTyped<T>(tag1), GetTyped<U>(tag2));
-        }
-
-        public override (T?, U?, V?) GetTyped<T, U, V>(int tag1, int tag2, int tag3)
-                  where T : default
-                  where U : default
-                  where V : default
-        {
-            return (GetTyped<T>(tag1), GetTyped<U>(tag2), GetTyped<V>(tag3));
-        }
-
-        public override (T?, U?, V?, W?) GetTyped<T, U, V, W>(int tag1, int tag2, int tag3, int tag4)
-                 where T : default
-                 where U : default
-                 where V : default
-                 where W : default
-        {
-            return (GetTyped<T>(tag1), GetTyped<U>(tag2), GetTyped<V>(tag3), GetTyped<W>(tag4));
-        }
-
-        public override T? GetTyped<T>(int tag) where T : default
+        public override int? GetInt32(int tag)
         {
             var position = GetPosition(tag);
             if (position < 0)
@@ -157,66 +124,83 @@ namespace PureFix.Buffer.Ascii
                 return default;
             }
 
-            if (typeof(T) == typeof(DateTime))
-            {
-                var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
-                if (sf == null) return default;
-                switch (sf.TagType)
-                {
-                    case TagType.UtcDateOnly:
-                        return (T?)Convert.ChangeType(UtcDateOnlyAtPosition(position), typeof(T));
-
-                    case TagType.UtcTimeOnly:
-                        return (T?)Convert.ChangeType(UtcTimeOnlyAtPosition(position), typeof(T));
-
-                    case TagType.UtcTimestamp:
-                        return (T?)Convert.ChangeType(UtcTimestampAtPosition(position), typeof(T));
-
-                    case TagType.LocalDate:
-                        return (T?)Convert.ChangeType(LocalDateOnlyAtPosition(position), typeof(T));
-                }
-            }
-
-            if (typeof(T) == typeof(string))
-            {
-                return (T?)Convert.ChangeType(StringAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(int))
-            {
-                return (T?)Convert.ChangeType(LongAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(double))
-            {
-                return (T?)Convert.ChangeType(FloatAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(bool))
-            {
-                return (T?)Convert.ChangeType(BoolAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(decimal))
-            {
-                return (T?)Convert.ChangeType(DecimalAtPosition(position), typeof(T));
-            }
-
-            if (typeof(T) == typeof(byte[]))
-            {
-                var b = BufferAtPosition(position);
-                if (b == null) return default;
-                return (T?)Convert.ChangeType(b.Value.ToArray(), typeof(T));
-            }
-
-            if (typeof(T) == typeof(Memory<byte>))
-            {
-                return (T?)Convert.ChangeType(BufferAtPosition(position), typeof(T));
-            }
-
-            return default;
+            var value = LongAtPosition(position);
+            return value is null ? null : (int)value.Value;
         }
 
-     
+        public override double? GetDouble(int tag)
+        {
+            return GetPosition(tag) switch
+            {
+                var position when position < 0 => default,
+                var position => FloatAtPosition(position)
+            };
+        }
+
+        public override bool? GetBool(int tag)
+        {
+            return GetPosition(tag) switch
+            {
+                var position when position < 0 => default,
+                var position => BoolAtPosition(position)
+            };
+        }
+
+        public override decimal? GetDecimal(int tag)
+        {
+            return GetPosition(tag) switch
+            {
+                var position when position < 0 => default,
+                var position => DecimalAtPosition(position)
+            };
+        }
+
+        public override byte[]? GetByteArray(int tag)
+        {
+            return GetPosition(tag) switch
+            {
+                var position when position < 0 => default,
+                var position => BufferAtPosition(position)?.ToArray()
+            };
+        }
+
+        public override Memory<byte>? GetMemory(int tag)
+        {
+            return GetPosition(tag) switch
+            {
+                var position when position < 0 => default,
+                var position => BufferAtPosition(position)
+            };
+        }
+
+        public override DateTime? GetDateTime(int tag)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                return default;
+            }
+
+            var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
+            if (sf == null) return default;
+
+            switch (sf.TagType)
+            {
+                case TagType.UtcDateOnly:
+                    return UtcDateOnlyAtPosition(position);
+
+                case TagType.UtcTimeOnly:
+                    return UtcTimeOnlyAtPosition(position);
+
+                case TagType.UtcTimestamp:
+                    return UtcTimestampAtPosition(position);
+
+                case TagType.LocalDate:
+                    return LocalDateOnlyAtPosition(position);
+
+                default:
+                    return default;
+            }
+        }     
     }
 }

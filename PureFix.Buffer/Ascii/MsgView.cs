@@ -67,11 +67,13 @@ namespace PureFix.Buffer.Ascii
         }
 
         // "BeginString" or 8
-        public abstract T? GetTyped<T>(string name);
-        public abstract T? GetTyped<T>(int tag);
-        public abstract (T?, U?) GetTyped<T,U>(int tag1, int tag2);
-        public abstract (T?, U?, V?) GetTyped<T, U, V>(int tag1, int tag2, int tag3);
-        public abstract (T?, U?, V?, W?) GetTyped<T, U, V, W>(int tag1, int tag2, int tag3, int tag4);
+        public abstract DateTime? GetDateTime(int tag);
+        public abstract int? GetInt32(int tag);
+        public abstract double? GetDouble(int tag);
+        public abstract bool? GetBool(int tag);
+        public abstract decimal? GetDecimal(int tag);
+        public abstract byte[]? GetByteArray(int tag);
+        public abstract Memory<byte>? GetMemory(int tag);
 
         public int GroupCount()
         {
