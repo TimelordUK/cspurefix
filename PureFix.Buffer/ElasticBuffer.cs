@@ -174,8 +174,17 @@ namespace PureFix.Buffer
 
         public string GetString(int start, int end)
         {
-            var slice = new ReadOnlySpan<byte>(_buffer, start, (end - start));
-            var str = Encoding.UTF8.GetString(slice);
+            var length = end - start;
+            if (length == 0) return string.Empty;
+
+            var str = string.Create(length, (_buffer, start, length), static (span, state) =>
+            {
+                for (var i = 0; i < state.length; i++)
+                {
+                    span[i] = (char)(state._buffer[state.start + i]);
+                }
+            });
+
             return str;
         }
 
