@@ -16,6 +16,9 @@ namespace PureFix.Buffer
 {
     public partial class ElasticBuffer
     {
+        private const byte AsciiZero = (byte)'0';
+        private const byte AsciiNine = (byte)'9';
+
         private static readonly ArrayPool<byte> _pool = ArrayPool<byte>.Create(128 * 1024, 50);
 
         private byte[] _buffer;
@@ -124,15 +127,14 @@ namespace PureFix.Buffer
         public int WriteString(string s)
         {
             CheckGrowBuffer(s.Length);
-            var span = new Span<byte>(_buffer, Pos, s.Length);
             var length = s.Length;
             
             for (var i = 0; i < length; i++)
             {
                 var c = s[i];
-                span[i] = (byte)c;
+                _buffer[Pos++] = (byte)c;
             }
-            Pos += s.Length;
+            
             return Pos;
         }
 
@@ -203,9 +205,9 @@ namespace PureFix.Buffer
             while(offset < length)
             {
                 var b = encoding[offset];
-                if (char.IsDigit((char)b))
+                if (b >= AsciiZero && b <= AsciiNine)
                 {
-                    value = (value * 10) + (b - (byte)'0');
+                    value = (value * 10) + (b - AsciiZero);
                 }
                 else
                 {
