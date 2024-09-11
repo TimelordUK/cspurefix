@@ -54,7 +54,7 @@ namespace PureFIix.Test.Ascii
         public async Task Replay_Again_Check_Stats_Test()
         {
             // a new parser is constructed for each test, here we parse twice on same instance
-            var text = await TestEntity.GetText(Fix44PathHelper.HeartbeatReplayPath);
+            var text = await TestEntity.GetTextAsync(Fix44PathHelper.HeartbeatReplayPath);
             var views1 = _testEntity.ParseText(text);
             var views2 = _testEntity.ParseText(text);
             var stats = _testEntity.Parser.ParserStats;
@@ -69,15 +69,21 @@ namespace PureFIix.Test.Ascii
             });
         }
 
-        private async Task TimeParse(string path, int count)
+        private void TimeParse(string path, int count)
         {
             var sw = new Stopwatch();
-            var one = await TestEntity.GetText(path);
+            var one = TestEntity.GetText(path);
             var all = string.Concat(Enumerable.Repeat(one, count));
             var b = Encoding.UTF8.GetBytes(all);
             var msgs = new List<AsciiView>(count);
+
+            // Move the creating of the action outside the stopwatch code
+            // to avoid recording the time to allocate the memory for it
+            Action<int, AsciiView> action = (i, view) => msgs.Add(view);
+            //_testEntity.Parser.ParseFrom(b, action);
+
             sw.Start();
-            _testEntity.Parser.ParseFrom(b, (i, view) => msgs.Add(view));
+            _testEntity.Parser.ParseFrom(b, action);
             //_testEntity.Parser.ParseFrom(b, null);
             sw.Stop();
             Assert.That(msgs, Has.Count.EqualTo(count));
@@ -85,10 +91,10 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public async Task Get_Heartbeat_View_Ascii_Parser_Test()
+        public void Get_Heartbeat_View_Ascii_Parser_Test()
         {
-            await TimeParse(Fix44PathHelper.HeartbeatReplayPath, 1000);
-            await TimeParse(Fix44PathHelper.HeartbeatReplayPath, 20000);
+            TimeParse(Fix44PathHelper.HeartbeatReplayPath, 1000);
+            TimeParse(Fix44PathHelper.HeartbeatReplayPath, 20000);
         }
     }
 }

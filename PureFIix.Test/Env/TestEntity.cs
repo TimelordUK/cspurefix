@@ -70,10 +70,17 @@ namespace PureFIix.Test.Env
             return values;
         }
 
-        public static async Task<string> GetText(string file)
+        public static async Task<string> GetTextAsync(string file)
         {
             using var streamReader = File.OpenText(file);
             var all = await streamReader.ReadToEndAsync();
+            return all;
+        }
+
+        public static string GetText(string file)
+        {
+            using var streamReader = File.OpenText(file);
+            var all = streamReader.ReadToEnd();
             return all;
         }
 
@@ -97,7 +104,7 @@ namespace PureFIix.Test.Env
 
         public async Task<List<AsciiView>> Replay(string file, int repeats = 1)
         {
-            var all = await GetText(file);
+            var all = await GetTextAsync(file);
             var msgs = ReplayText(all, repeats);
             return msgs;
         }
