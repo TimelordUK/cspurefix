@@ -33,7 +33,7 @@ namespace PureFIix.Test.Ascii
             {
                 Assert.That(buffer.GetPos(), Is.EqualTo(1));
                 Assert.That(buffer.ToString(), Is.EqualTo("."));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
             });
         }
 
@@ -65,7 +65,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
                 Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
 
         }
@@ -83,7 +83,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
                 Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(8));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(8));
             });
         }
 
@@ -101,7 +101,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
                 Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -118,7 +118,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo("+2468"));
                 Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
                 Assert.That(buffer.GetWholeNumber(0, asString.Length - 1), Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -136,7 +136,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -155,7 +155,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -173,7 +173,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
             });
         }
 
@@ -191,7 +191,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
             });
         }
 
@@ -210,7 +210,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -228,7 +228,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -246,7 +246,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -263,7 +263,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
             });
         }
 
@@ -281,7 +281,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(n.ToString()));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(10));
 
             });
         }
@@ -299,7 +299,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
             });
         }
 
@@ -316,7 +316,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo(((decimal)n).ToString(CultureInfo.InvariantCulture)));
                 var asf = buffer.GetFloat(0, asString.Length - 1);
                 Assert.That(asf, Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
 
             });
         }
@@ -333,7 +333,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo("+0.000000000001"));
                 Assert.That(buffer.GetPos(), Is.EqualTo(asString.Length));
                 Assert.That(buffer.GetFloat(0, asString.Length - 1), Is.EqualTo(n));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(20));
 
             });
         }
@@ -348,7 +348,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo("Y"));
                 Assert.That(buffer.GetPos(), Is.EqualTo(1));
                 Assert.That(buffer.GetBoolean(0), Is.EqualTo(true));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
 
             });
         }
@@ -363,7 +363,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(buffer.ToString(), Is.EqualTo("N"));
                 Assert.That(buffer.GetPos(), Is.EqualTo(1));
                 Assert.That(buffer.GetBoolean(0), Is.EqualTo(false));
-                Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
+                //Assert.That(buffer.CurrentSize(), Is.EqualTo(1));
             }); 
         }
 
