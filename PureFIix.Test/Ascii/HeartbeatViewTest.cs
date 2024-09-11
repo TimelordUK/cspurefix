@@ -69,32 +69,11 @@ namespace PureFIix.Test.Ascii
             });
         }
 
-        private void TimeParse(string path, int count)
-        {
-            var sw = new Stopwatch();
-            var one = TestEntity.GetText(path);
-            var all = string.Concat(Enumerable.Repeat(one, count));
-            var b = Encoding.UTF8.GetBytes(all);
-            var msgs = new List<AsciiView>(count);
-
-            // Move the creating of the action outside the stopwatch code
-            // to avoid recording the time to allocate the memory for it
-            Action<int, AsciiView> action = (i, view) => msgs.Add(view);
-            //_testEntity.Parser.ParseFrom(b, action);
-
-            sw.Start();
-            _testEntity.Parser.ParseFrom(b, action);
-            //_testEntity.Parser.ParseFrom(b, null);
-            sw.Stop();
-            Assert.That(msgs, Has.Count.EqualTo(count));
-            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds} {(decimal)sw.Elapsed.TotalMicroseconds / count}  micro/msg {_testEntity.Parser.ParserStats.TotalSegmentParseMicro/count} seg/msg {_testEntity.Parser.ParserStats}");
-        }
-
         [Test]
         public void Get_Heartbeat_View_Ascii_Parser_Test()
         {
-            TimeParse(Fix44PathHelper.HeartbeatReplayPath, 1000);
-            TimeParse(Fix44PathHelper.HeartbeatReplayPath, 20000);
+            _testEntity.TimeParsePath("Get_Heartbeat_View_Ascii_Parser_Test", Fix44PathHelper.HeartbeatReplayPath, 1000);
+            _testEntity.TimeParsePath("Get_Heartbeat_View_Ascii_Parser_Test", Fix44PathHelper.HeartbeatReplayPath, 20000);
         }
     }
 }
