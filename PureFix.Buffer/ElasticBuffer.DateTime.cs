@@ -117,11 +117,8 @@ namespace PureFix.Buffer
         {
             var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             Span<char> chars = stackalloc char[span.Length];
-            var j = 0;
-            foreach (var c in span)
-            {
-                chars[j++] = (char)c;
-            }
+            span.CopyByteSpanToCharSpan(chars);
+
             if (DateTime.TryParseExact(chars, format, null, style, out var d))
             {
                 return d;
@@ -133,11 +130,9 @@ namespace PureFix.Buffer
         {
             var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             Span<char> chars = stackalloc char[span.Length];
-            var j = 0;
-            foreach (var c in span)
-            {
-                chars[j++] = (char)c;
-            }
+            span.CopyByteSpanToCharSpan(chars);
+
+            
             if (DateTime.TryParseExact(chars, TimeFormats.TimeMs, null, style, out var d))
             {
                 return d;
