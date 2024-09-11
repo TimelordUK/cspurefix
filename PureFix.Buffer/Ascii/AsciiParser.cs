@@ -9,13 +9,63 @@ using System.Xml.Serialization;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
 using PureFix.Tag;
-using PureFix.Transport;
-
+using Microsoft.Extensions.ObjectPool;
 
 namespace PureFix.Buffer.Ascii
 {
     public class AsciiParser
     {
+        public readonly record struct Stats(long ReceivedBytes, long ParsedMessages, long Rents, long Returns);
+        public class Pool
+        {
+            public class Storage
+            {
+                public Storage()
+                {
+                    Buffer = new ElasticBuffer();
+                    Locations = new Tags();
+                }
+                public ElasticBuffer Buffer { get; }
+                public Tags Locations { get; }
+                public void Reset()
+                {
+                    Buffer.Reset();
+                    Locations.Reset();
+                }
+                public override string ToString()
+                {
+                    return $"[{Buffer.Pos}, {Locations.NextTagPos}]";
+                }
+            }
+            public Storage Rent()
+            {
+                var instance = _pool.Get();
+                instance.Reset();
+                ++_rents;
+                return instance;
+            }
+            public void Deliver(Storage storage)
+            {
+                _delivered.Enqueue(storage);
+            }
+            public void Reclaim()
+            {
+                while (_delivered.Count > 0)
+                {
+                    _returns++;
+                    var instance = _delivered.Dequeue();
+                    _pool.Return(instance);
+                }
+            }
+            public long Imbalance => _rents - _returns;
+            public long Rents => _rents;
+            public long Returns => _returns;
+
+            private long _rents;
+            private long _returns;
+            private readonly ObjectPool<Storage> _pool = new DefaultObjectPool<Storage>(new DefaultPooledObjectPolicy<Storage>());
+            private readonly Queue<Storage> _delivered = [];
+        }
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
@@ -25,11 +75,15 @@ namespace PureFix.Buffer.Ascii
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;
         public Tags? Locations => _state.Locations;
-        
+        private readonly Pool _pool = new();
+        private long _receivedBytes;
+        private long _parsedMessages;
+        public Stats ParserStats => new(_receivedBytes, _parsedMessages, _pool.Rents, _pool.Returns);
+
         public AsciiParser(FixDefinitions definitions)
         {
             Definitons = definitions;
-            _state = new AsciiParseState(definitions);
+            _state = new AsciiParseState(definitions, _pool);
             _segmentParser = new AsciiSegmentParser(Definitons);
             _state.BeginMessage();
         }
@@ -38,10 +92,14 @@ namespace PureFix.Buffer.Ascii
 
         private void Msg(int ptr, Action<int, AsciiView>? onMsg)
         {
-           var view = GetView(ptr);
-           if (view == null) return;
-           onMsg?.Invoke(ptr, view);
-           _state.BeginMessage();
+            var view = GetView(ptr);
+            if (view == null) return;
+            _parsedMessages++;
+            onMsg?.Invoke(ptr, view);
+            // storage for this message will be re-used on next invocation now its been handed to
+            // application
+            if (_state.Storage != null) _pool.Deliver(_state.Storage);
+            _state.BeginMessage();
         }
 
         private AsciiView? GetView(int ptr)
@@ -77,6 +135,7 @@ namespace PureFix.Buffer.Ascii
             var readPtr = 0;
             var end = readFrom.Length;
             var readBuffer = readFrom;
+            _receivedBytes += readFrom.Length;
 
             if (_state.Buffer == null) return;
             try
@@ -95,12 +154,11 @@ namespace PureFix.Buffer.Ascii
 
                         case ParseState.BeginField:
                         {
-                            var atDigit = charAtPos is >= zero and <= nine;
-                            if (atDigit)
+                            var isDigit = charAtPos is >= zero and <= nine;
+                            if (isDigit)
                             {
                                 _state.BeginTag(writePtr);
                             }
-
                             break;
                         }
 
@@ -111,7 +169,6 @@ namespace PureFix.Buffer.Ascii
                             {
                                 _state.EndTag(writePtr);
                             }
-
                             break;
                         }
 
@@ -127,7 +184,6 @@ namespace PureFix.Buffer.Ascii
                                     {
                                         _state.Buffer.SwitchChar(WriteDelimiter);
                                     }
-
                                     _state.Store();
                                 }
                                 else
@@ -136,7 +192,6 @@ namespace PureFix.Buffer.Ascii
                                         $"delimiter({delimiter}) expected at position {readPtr} when value is {charAtPos}");
                                 }
                             }
-
                             break;
                         }
 
@@ -149,10 +204,8 @@ namespace PureFix.Buffer.Ascii
                                 {
                                     _state.Buffer.SwitchChar(WriteDelimiter);
                                 }
-
                                 _state.Store();
                             }
-
                             break;
                         }
 
@@ -162,7 +215,6 @@ namespace PureFix.Buffer.Ascii
                             throw new InvalidDataException($"fix parser in unknown state {st}");
                         }
                     }
-
                     readPtr++;
                 }
 
@@ -175,9 +227,16 @@ namespace PureFix.Buffer.Ascii
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                // return buffer given this message has failed to deliver
+                if (_state.Storage != null) _pool.Deliver(_state.Storage);
                 throw;
+            } finally
+            {
+                // any views dispatched on the callback from previous call are considered ready to be reclaimed, the expectation
+                // being the recipient must have extracted required data or parsed into a concrete type within the callbak itself.s
+                _pool.Reclaim();
             }
         }
     }

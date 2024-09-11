@@ -14,7 +14,7 @@ namespace PureFix.Tag
         private TagPos[] _tagPos;
         private int _ptr;
 
-        public Tags() : this(1 * 1000)
+        public Tags() : this(50)
         {
         }
 

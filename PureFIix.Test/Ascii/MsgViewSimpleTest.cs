@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 
 
@@ -90,10 +91,24 @@ namespace PureFIix.Test.Ascii
         {
             var view = _views[0];
             var (bodyLength, msgType) = view.GetTyped<int,string>(9,35);
-            Assert.That(bodyLength, Is.EqualTo(208));
-            Assert.That(msgType, Is.EqualTo("A"));
-            var asDecimal = view.GetTyped<decimal>(9);
-            Assert.That(asDecimal, Is.EqualTo(208d));
+            Assert.Multiple(() =>
+            {
+                Assert.That(bodyLength, Is.EqualTo(208));
+                Assert.That(msgType, Is.EqualTo("A"));
+            });
+        }
+
+        [Test]
+        public void Get_Tag_9_35_96_Typed_Int_View_Test()
+        {
+            var view = _views[0];
+            var (bodyLength, msgType, buffer) = view.GetTyped<int, string, byte[]>(9, 35, 96);
+            Assert.Multiple( () =>
+            {
+                Assert.That(bodyLength, Is.EqualTo(208));
+                Assert.That(msgType, Is.EqualTo("A"));
+                Assert.That(buffer, Is.EqualTo("VgfoSqo56NqSVI1fLdlI"u8.ToArray()));
+            });
         }
 
         [Test]

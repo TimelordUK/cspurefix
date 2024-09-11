@@ -175,7 +175,7 @@ namespace PureFIix.Test.Ascii
             var msgs = _testEntity.ParseTestHunks(Logon);
             Assert.Multiple( () =>
             {
-                Assert.That(msgs.Count, Is.AtLeast(1));
+                Assert.That(msgs, Has.Count.EqualTo(1));
                 var msg = msgs[0];
                 Assert.That(msg.Segment?.Name, Is.EqualTo("Logon"));
                 var md = msg.Segment.Set as MessageDefinition;
@@ -184,7 +184,15 @@ namespace PureFIix.Test.Ascii
                 Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
             });
         }
-        
+
+        [Test]
+        public void Logon_Dispatch_Reuse_View_Test()
+        {
+            var msgs = _testEntity.ParseTestHunks(Logon);
+            Assert.That(msgs, Has.Count.EqualTo(1));
+            msgs = _testEntity.ParseTestHunks(Logon);
+        }
+
         [Test]
         public void Tags_Other_10_Past_Body_Length_Test()
         {

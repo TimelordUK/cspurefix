@@ -2,7 +2,6 @@
 using PureFix.Buffer;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
-using PureFix.Transport;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -56,7 +55,7 @@ namespace PureFIix.Test.Env
             while (span.Length > 0)
             {
                 var want = Math.Min(span.Length, (iteration % 10) + 1);
-                Parser.ParseFrom(b, (i, view) => views.Add(view));
+                Parser.ParseFrom(span[..want], (i, view) => views.Add(view));
                 span = span[want..];
                 ++iteration;
             }
