@@ -148,7 +148,7 @@ namespace PureFIix.Test.Ascii
             {
                 Assert.That(res, Has.Count.EqualTo(0));
                 Assert.That(locs, Has.Count.EqualTo(3));
-                Assert.That(locs, Is.EqualTo(_expectedTagPos[..3]));
+                Assert.That(locs.ToArray(), Is.EqualTo(_expectedTagPos[..3]));
             });
         }
 
@@ -164,7 +164,7 @@ namespace PureFIix.Test.Ascii
                 var md = msg.Segment.Set as MessageDefinition;
                 Assert.That(md, Is.Not.Null);
                 Assert.That(md.MsgType, Is.EqualTo("A"));
-                Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
+                Assert.That(msg.Tags.ToArray(), Is.EqualTo(_expectedTagPos));
             });
         }
 
@@ -181,7 +181,7 @@ namespace PureFIix.Test.Ascii
                 var md = msg.Segment.Set as MessageDefinition;
                 Assert.That(md, Is.Not.Null);
                 Assert.That(md.MsgType, Is.EqualTo("A"));
-                Assert.That(msg.Tags, Is.EqualTo(_expectedTagPos));
+                Assert.That(msg.Tags.ToArray(), Is.EqualTo(_expectedTagPos));
             });
         }
 

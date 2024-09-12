@@ -4,7 +4,7 @@ using PureFix.Types;
 
 namespace PureFix.Tag
 {
-    public class Tags : IEnumerable<TagPos>
+    public class Tags
     {
         public const int BeginString = (int)MsgTag.BeginString;
         public const int BodyLengthTag = (int)MsgTag.BodyLength;
@@ -23,22 +23,17 @@ namespace PureFix.Tag
             _tagPos = new TagPos[startingCapacity];
         }
 
-        public IEnumerator<TagPos> GetEnumerator()
-        {
-            for (var i = 0; i < _ptr; ++i)
-            {
-                yield return _tagPos[i];
-            }
-        }
-
         public override string ToString()
         {
             return $"[{NextTagPos}] {string.Join(", ", _tagPos[..NextTagPos].Select(tp=>tp.ToString()))}";
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public TagPos[] ToArray()
         {
-            return GetEnumerator();
+            var array = new TagPos[_ptr];
+            Array.Copy(_tagPos, array, _ptr);
+
+            return array;
         }
 
         public int NextTagPos => _ptr;
