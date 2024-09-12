@@ -166,6 +166,11 @@ namespace PureFix.Dictionary.Compiler
 
             using(_builder.BeginBlock($"namespace {ns}"))
             {
+                if (compilerType.Set is MessageDefinition messageDefinition)
+                {
+                    _builder.WriteLine($"[MessageType(\"{messageDefinition.MsgType}\")]");
+                }
+
                 using(_builder.BeginBlock($"public sealed class {compilerType.Name}{inheritsDeclaration}"))
                 {
                     compilerType.Set.Iterate(this, "\t\t");

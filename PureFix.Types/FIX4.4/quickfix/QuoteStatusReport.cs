@@ -7,6 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
+	[MessageType("AI")]
 	public sealed class QuoteStatusReport : FixMsg
 	{
 		[Component]

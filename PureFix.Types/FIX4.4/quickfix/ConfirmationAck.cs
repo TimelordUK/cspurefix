@@ -7,6 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
+	[MessageType("AU")]
 	public sealed class ConfirmationAck : FixMsg
 	{
 		[Component]

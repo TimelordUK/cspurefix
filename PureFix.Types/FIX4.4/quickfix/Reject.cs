@@ -7,6 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
+	[MessageType("3")]
 	public sealed class Reject : FixMsg
 	{
 		[Component]

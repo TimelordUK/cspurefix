@@ -7,6 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
+	[MessageType("AN")]
 	public sealed class RequestForPositions : FixMsg
 	{
 		[Component]
