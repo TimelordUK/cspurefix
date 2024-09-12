@@ -30,10 +30,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 128, Type = TagType.String, Offset = 6, Required = false)]
 		public string? DeliverToCompID { get; set; }
 		
-		[TagDetails(Tag = 90, Type = TagType.Length, Offset = 7, Required = false)]
+		[TagDetails(Tag = 90, Type = TagType.Length, Offset = 7, Required = false, LinksToTag = 91)]
 		public int? SecureDataLen { get; set; }
 		
-		[TagDetails(Tag = 91, Type = TagType.RawData, Offset = 8, Required = false)]
+		[TagDetails(Tag = 91, Type = TagType.RawData, Offset = 8, Required = false, LinksToTag = 90)]
 		public byte[]? SecureData { get; set; }
 		
 		[TagDetails(Tag = 34, Type = TagType.Int, Offset = 9, Required = true)]
@@ -75,10 +75,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 122, Type = TagType.UtcTimestamp, Offset = 21, Required = false)]
 		public DateTime? OrigSendingTime { get; set; }
 		
-		[TagDetails(Tag = 212, Type = TagType.Length, Offset = 22, Required = false)]
+		[TagDetails(Tag = 212, Type = TagType.Length, Offset = 22, Required = false, LinksToTag = 213)]
 		public int? XmlDataLen { get; set; }
 		
-		[TagDetails(Tag = 213, Type = TagType.RawData, Offset = 23, Required = false)]
+		[TagDetails(Tag = 213, Type = TagType.RawData, Offset = 23, Required = false, LinksToTag = 212)]
 		public byte[]? XmlData { get; set; }
 		
 		[TagDetails(Tag = 347, Type = TagType.String, Offset = 24, Required = false)]

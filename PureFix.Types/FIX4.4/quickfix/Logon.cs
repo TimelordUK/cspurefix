@@ -19,10 +19,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(Tag = 108, Type = TagType.Int, Offset = 2, Required = true)]
 		public int? HeartBtInt { get; set; }
 		
-		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 3, Required = false)]
+		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 3, Required = false, LinksToTag = 96)]
 		public int? RawDataLength { get; set; }
 		
-		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 4, Required = false)]
+		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 4, Required = false, LinksToTag = 95)]
 		public byte[]? RawData { get; set; }
 		
 		[TagDetails(Tag = 141, Type = TagType.Boolean, Offset = 5, Required = false)]

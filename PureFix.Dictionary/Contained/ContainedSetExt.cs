@@ -8,7 +8,7 @@ namespace PureFix.Dictionary.Contained
 {
     public interface ISetDispatchReceiver
     {
-        void OnSimple(ContainedSimpleField sf, int index);
+        void OnSimple(ContainedSimpleField sf, int index, object? peek);
         void OnComponent(ContainedComponentField cf, int index);
         void OnGroup(ContainedGroupField cf, int index);
     }
@@ -21,10 +21,17 @@ namespace PureFix.Dictionary.Contained
             {
                 var k = fields[i];
 
+                object? peek = null;
+
+                if (i < fields.Count - 1)
+                {
+                    peek = fields[i + 1];
+                }
+
                 switch (k.Type)
                 {
                     case ContainedFieldType.Simple:
-                        dispatcher.OnSimple((ContainedSimpleField)k, i);
+                        dispatcher.OnSimple((ContainedSimpleField)k, i, peek);
                         break;
 
                     case ContainedFieldType.Group:

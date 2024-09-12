@@ -28,10 +28,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(Tag = 925, Type = TagType.String, Offset = 5, Required = false)]
 		public string? NewPassword { get; set; }
 		
-		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 6, Required = false)]
+		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 6, Required = false, LinksToTag = 96)]
 		public int? RawDataLength { get; set; }
 		
-		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 7, Required = false)]
+		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 7, Required = false, LinksToTag = 95)]
 		public byte[]? RawData { get; set; }
 		
 		[Component(Offset = 8, Required = true)]

@@ -102,19 +102,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 106, Type = TagType.String, Offset = 30, Required = false)]
 		public string? Issuer { get; set; }
 		
-		[TagDetails(Tag = 348, Type = TagType.Length, Offset = 31, Required = false)]
+		[TagDetails(Tag = 348, Type = TagType.Length, Offset = 31, Required = false, LinksToTag = 349)]
 		public int? EncodedIssuerLen { get; set; }
 		
-		[TagDetails(Tag = 349, Type = TagType.RawData, Offset = 32, Required = false)]
+		[TagDetails(Tag = 349, Type = TagType.RawData, Offset = 32, Required = false, LinksToTag = 348)]
 		public byte[]? EncodedIssuer { get; set; }
 		
 		[TagDetails(Tag = 107, Type = TagType.String, Offset = 33, Required = false)]
 		public string? SecurityDesc { get; set; }
 		
-		[TagDetails(Tag = 350, Type = TagType.Length, Offset = 34, Required = false)]
+		[TagDetails(Tag = 350, Type = TagType.Length, Offset = 34, Required = false, LinksToTag = 351)]
 		public int? EncodedSecurityDescLen { get; set; }
 		
-		[TagDetails(Tag = 351, Type = TagType.RawData, Offset = 35, Required = false)]
+		[TagDetails(Tag = 351, Type = TagType.RawData, Offset = 35, Required = false, LinksToTag = 350)]
 		public byte[]? EncodedSecurityDesc { get; set; }
 		
 		[TagDetails(Tag = 691, Type = TagType.String, Offset = 36, Required = false)]

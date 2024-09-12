@@ -102,19 +102,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 306, Type = TagType.String, Offset = 30, Required = false)]
 		public string? UnderlyingIssuer { get; set; }
 		
-		[TagDetails(Tag = 362, Type = TagType.Length, Offset = 31, Required = false)]
+		[TagDetails(Tag = 362, Type = TagType.Length, Offset = 31, Required = false, LinksToTag = 363)]
 		public int? EncodedUnderlyingIssuerLen { get; set; }
 		
-		[TagDetails(Tag = 363, Type = TagType.RawData, Offset = 32, Required = false)]
+		[TagDetails(Tag = 363, Type = TagType.RawData, Offset = 32, Required = false, LinksToTag = 362)]
 		public byte[]? EncodedUnderlyingIssuer { get; set; }
 		
 		[TagDetails(Tag = 307, Type = TagType.String, Offset = 33, Required = false)]
 		public string? UnderlyingSecurityDesc { get; set; }
 		
-		[TagDetails(Tag = 364, Type = TagType.Length, Offset = 34, Required = false)]
+		[TagDetails(Tag = 364, Type = TagType.Length, Offset = 34, Required = false, LinksToTag = 365)]
 		public int? EncodedUnderlyingSecurityDescLen { get; set; }
 		
-		[TagDetails(Tag = 365, Type = TagType.RawData, Offset = 35, Required = false)]
+		[TagDetails(Tag = 365, Type = TagType.RawData, Offset = 35, Required = false, LinksToTag = 364)]
 		public byte[]? EncodedUnderlyingSecurityDesc { get; set; }
 		
 		[TagDetails(Tag = 877, Type = TagType.String, Offset = 36, Required = false)]

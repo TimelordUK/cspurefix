@@ -22,10 +22,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(Tag = 148, Type = TagType.String, Offset = 3, Required = true)]
 		public string? Headline { get; set; }
 		
-		[TagDetails(Tag = 358, Type = TagType.Length, Offset = 4, Required = false)]
+		[TagDetails(Tag = 358, Type = TagType.Length, Offset = 4, Required = false, LinksToTag = 359)]
 		public int? EncodedHeadlineLen { get; set; }
 		
-		[TagDetails(Tag = 359, Type = TagType.RawData, Offset = 5, Required = false)]
+		[TagDetails(Tag = 359, Type = TagType.RawData, Offset = 5, Required = false, LinksToTag = 358)]
 		public byte[]? EncodedHeadline { get; set; }
 		
 		[Component(Offset = 6, Required = false)]
@@ -46,10 +46,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(Tag = 149, Type = TagType.String, Offset = 11, Required = false)]
 		public string? URLLink { get; set; }
 		
-		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 12, Required = false)]
+		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 12, Required = false, LinksToTag = 96)]
 		public int? RawDataLength { get; set; }
 		
-		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 13, Required = false)]
+		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 13, Required = false, LinksToTag = 95)]
 		public byte[]? RawData { get; set; }
 		
 		[Component(Offset = 14, Required = true)]

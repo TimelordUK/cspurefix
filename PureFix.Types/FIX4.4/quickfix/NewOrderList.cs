@@ -46,10 +46,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(Tag = 69, Type = TagType.String, Offset = 11, Required = false)]
 		public string? ListExecInst { get; set; }
 		
-		[TagDetails(Tag = 352, Type = TagType.Length, Offset = 12, Required = false)]
+		[TagDetails(Tag = 352, Type = TagType.Length, Offset = 12, Required = false, LinksToTag = 353)]
 		public int? EncodedListExecInstLen { get; set; }
 		
-		[TagDetails(Tag = 353, Type = TagType.RawData, Offset = 13, Required = false)]
+		[TagDetails(Tag = 353, Type = TagType.RawData, Offset = 13, Required = false, LinksToTag = 352)]
 		public byte[]? EncodedListExecInst { get; set; }
 		
 		[TagDetails(Tag = 765, Type = TagType.Float, Offset = 14, Required = false)]

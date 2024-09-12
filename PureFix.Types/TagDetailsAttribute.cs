@@ -32,5 +32,11 @@ namespace PureFix.Types
         public required int Offset{get; init;}
 
         public required bool Required{get; init;}
+
+        /// <summary>
+        /// The FIX tag of a field that this message is linked to in some way, or -1 if there is no such field.
+        /// This is typically used to associate raw data fields with their length field
+        /// </summary>
+        public int LinksToTag{get; init;} = -1;
     }
 }

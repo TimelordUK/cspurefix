@@ -40,6 +40,8 @@ namespace PureFix.Dictionary.Compiler
         private readonly Dictionary<string, CompilerType> _completed = [];
         private readonly CodeGenerator _builder = new();
 
+        private ContainedSimpleField? _LastSimpleField;
+
 
         public MsgCompiler(FixDefinitions definitions, Options? options = null)
         {
@@ -139,11 +141,25 @@ namespace PureFix.Dictionary.Compiler
         }
 
         // public string? TestReqID { get; set; }
-        public void OnSimple(ContainedSimpleField sf, int index)
+        public void OnSimple(ContainedSimpleField sf, int index, object? peek)
         {
             var type = Tags.ToCsType(sf.Definition.TagType);
 
-            _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)})]");
+            if(sf.Definition.TagType == TagType.Length && peek is ContainedSimpleField peekField && peekField.Definition.TagType == TagType.RawData)
+            {
+                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)}, LinksToTag = {peekField.Definition.Tag})]");
+            }
+            else if (sf.Definition.TagType == TagType.RawData && _LastSimpleField is not null)
+            {
+                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)}, LinksToTag = {_LastSimpleField.Definition.Tag})]");
+            }
+            else
+            {
+                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)})]");
+            }
+
+            _LastSimpleField = sf;
+
             _builder.WriteLine($"public {type}? {sf.Definition.Name} {GetSet}");
             _builder.WriteLine();
         }

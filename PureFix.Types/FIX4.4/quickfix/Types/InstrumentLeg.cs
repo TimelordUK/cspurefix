@@ -99,19 +99,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 617, Type = TagType.String, Offset = 29, Required = false)]
 		public string? LegIssuer { get; set; }
 		
-		[TagDetails(Tag = 618, Type = TagType.Length, Offset = 30, Required = false)]
+		[TagDetails(Tag = 618, Type = TagType.Length, Offset = 30, Required = false, LinksToTag = 619)]
 		public int? EncodedLegIssuerLen { get; set; }
 		
-		[TagDetails(Tag = 619, Type = TagType.RawData, Offset = 31, Required = false)]
+		[TagDetails(Tag = 619, Type = TagType.RawData, Offset = 31, Required = false, LinksToTag = 618)]
 		public byte[]? EncodedLegIssuer { get; set; }
 		
 		[TagDetails(Tag = 620, Type = TagType.String, Offset = 32, Required = false)]
 		public string? LegSecurityDesc { get; set; }
 		
-		[TagDetails(Tag = 621, Type = TagType.Length, Offset = 33, Required = false)]
+		[TagDetails(Tag = 621, Type = TagType.Length, Offset = 33, Required = false, LinksToTag = 622)]
 		public int? EncodedLegSecurityDescLen { get; set; }
 		
-		[TagDetails(Tag = 622, Type = TagType.RawData, Offset = 34, Required = false)]
+		[TagDetails(Tag = 622, Type = TagType.RawData, Offset = 34, Required = false, LinksToTag = 621)]
 		public byte[]? EncodedLegSecurityDesc { get; set; }
 		
 		[TagDetails(Tag = 623, Type = TagType.Float, Offset = 35, Required = false)]

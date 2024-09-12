@@ -364,10 +364,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 117, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 118, Required = false)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 118, Required = false, LinksToTag = 355)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 119, Required = false)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 119, Required = false, LinksToTag = 354)]
 		public byte[]? EncodedText { get; set; }
 		
 		[TagDetails(Tag = 193, Type = TagType.LocalDate, Offset = 120, Required = false)]

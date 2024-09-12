@@ -31,10 +31,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(Tag = 444, Type = TagType.String, Offset = 6, Required = false)]
 		public string? ListStatusText { get; set; }
 		
-		[TagDetails(Tag = 445, Type = TagType.Length, Offset = 7, Required = false)]
+		[TagDetails(Tag = 445, Type = TagType.Length, Offset = 7, Required = false, LinksToTag = 446)]
 		public int? EncodedListStatusTextLen { get; set; }
 		
-		[TagDetails(Tag = 446, Type = TagType.RawData, Offset = 8, Required = false)]
+		[TagDetails(Tag = 446, Type = TagType.RawData, Offset = 8, Required = false, LinksToTag = 445)]
 		public byte[]? EncodedListStatusText { get; set; }
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 9, Required = false)]
