@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("Y")]
+	[MessageType("Y", FixVersion.FIX44)]
 	public sealed class MarketDataRequestReject : FixMsg
 	{
 		[Component]

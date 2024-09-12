@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AH")]
+	[MessageType("AH", FixVersion.FIX44)]
 	public sealed class RFQRequest : FixMsg
 	{
 		[Component]

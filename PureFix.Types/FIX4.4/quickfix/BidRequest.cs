@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("k")]
+	[MessageType("k", FixVersion.FIX44)]
 	public sealed class BidRequest : FixMsg
 	{
 		[Component]

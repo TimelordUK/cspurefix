@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AW")]
+	[MessageType("AW", FixVersion.FIX44)]
 	public sealed class AssignmentReport : FixMsg
 	{
 		[Component]

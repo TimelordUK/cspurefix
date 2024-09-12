@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFix.Dictionary.Parser
+namespace PureFix.Types
 {
     public class FixVersionParser
     {

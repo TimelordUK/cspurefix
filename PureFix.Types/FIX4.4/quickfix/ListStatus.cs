@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("N")]
+	[MessageType("N", FixVersion.FIX44)]
 	public sealed class ListStatus : FixMsg
 	{
 		[Component]

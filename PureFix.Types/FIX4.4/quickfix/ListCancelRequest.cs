@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("K")]
+	[MessageType("K", FixVersion.FIX44)]
 	public sealed class ListCancelRequest : FixMsg
 	{
 		[Component]

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AE")]
+	[MessageType("AE", FixVersion.FIX44)]
 	public sealed class TradeCaptureReport : FixMsg
 	{
 		[Component]

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("Z")]
+	[MessageType("Z", FixVersion.FIX44)]
 	public sealed class QuoteCancel : FixMsg
 	{
 		[Component]

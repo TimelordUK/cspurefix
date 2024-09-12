@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("BC")]
+	[MessageType("BC", FixVersion.FIX44)]
 	public sealed class NetworkCounterpartySystemStatusRequest : FixMsg
 	{
 		[Component]

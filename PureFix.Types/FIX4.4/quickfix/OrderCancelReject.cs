@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("9")]
+	[MessageType("9", FixVersion.FIX44)]
 	public sealed class OrderCancelReject : FixMsg
 	{
 		[Component]

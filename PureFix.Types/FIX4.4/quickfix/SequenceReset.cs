@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("4")]
+	[MessageType("4", FixVersion.FIX44)]
 	public sealed class SequenceReset : FixMsg
 	{
 		[Component]

@@ -1,4 +1,5 @@
 ﻿using PureFix.Dictionary.Parser;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

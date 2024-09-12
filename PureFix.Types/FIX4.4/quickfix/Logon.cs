@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("A")]
+	[MessageType("A", FixVersion.FIX44)]
 	public sealed class Logon : FixMsg
 	{
 		[Component]

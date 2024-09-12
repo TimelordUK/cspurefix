@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AT")]
+	[MessageType("AT", FixVersion.FIX44)]
 	public sealed class AllocationReportAck : FixMsg
 	{
 		[Component]

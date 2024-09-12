@@ -11,63 +11,17 @@ using PureFix.Types;
 
 namespace PureFix.Dictionary.Compiler
 {
-    public class MsgCompiler : ISetDispatchReceiver
+    public partial class MsgCompiler : ISetDispatchReceiver
     {
-        public class Options
-        {
-            public string? BackingTypeOutputPath { get; set; }
-            public string? BackingTypeNamespace { get; set; }
-            public string? MsgInheritsFrom { get; set; } = "FixMsg";
-            public IReadOnlyList<string>? MsgTypes { get; set; }
-
-            public IReadOnlyList<string> DefaultUsing =
-                ["System", "System.Collections.Generic", "System.Linq", "System.Text", "System.Threading.Tasks"];
-
-            public static string DefaultRootOutputPath { get; set; } = Path.Join(Directory.GetCurrentDirectory(), "..",
-                "..",
-                "..", "..", "PureFix.Types");
-
-
-            public static Options FromVersion(FixDefinitions definitions)
-            {
-                switch (definitions.Version)
-                {
-                    case FixVersion.FIX44:
-                        return new Options
-                        {
-                            MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX4.4", "QuickFix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX44.QuickFix"
-                        };
-
-                    case FixVersion.FIX50SP2:
-                        return new Options
-                        {
-                            MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX.50SP2", "QuickFix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX450SP2.QuickFix"
-                        };
-
-                    default:
-                        return new Options
-                        {
-                            MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX", "QuickFix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX.QuickFix"
-                        };
-                }
-            }
-        }
-
         /***
-         *using PureFix.Types.FIX4._4.quickfix.set;
+         * using PureFix.Types.FIX44.QuickFix.Types;
            using System;
            using System.Collections.Generic;
            using System.Linq;
            using System.Text;
            using System.Threading.Tasks;
 
-           namespace PureFix.Types.FIX4._4.quickfix
+           namespace PureFix.Types.FIX44.QuickFix
            {
                public class Heartbeat
                {
@@ -77,25 +31,6 @@ namespace PureFix.Dictionary.Compiler
                }
            }
          */
-
-        public class CompilerType
-        {
-            public FixDefinitions Definitions { get; }
-            public IContainedSet Set { get; }
-            public string Name { get; }
-            public string Declaration => Name 
-                is "StandardHeader" 
-                or "StandardTrailer" ? 
-                $"override {Name}" : 
-                Name;
-
-            public CompilerType(FixDefinitions definitions, IContainedSet set, string name)
-            {
-                Definitions = definitions;
-                Set = set;
-                Name = name;
-            }
-        }
 
         public FixDefinitions Definitions { get; }
         public Options CompilerOptions { get; }
@@ -168,7 +103,7 @@ namespace PureFix.Dictionary.Compiler
             {
                 if (compilerType.Set is MessageDefinition messageDefinition)
                 {
-                    _builder.WriteLine($"[MessageType(\"{messageDefinition.MsgType}\")]");
+                    _builder.WriteLine($"[MessageType(\"{messageDefinition.MsgType}\", FixVersion.{Definitions.Version})]");
                 }
 
                 using(_builder.BeginBlock($"public sealed class {compilerType.Name}{inheritsDeclaration}"))

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("r")]
+	[MessageType("r", FixVersion.FIX44)]
 	public sealed class OrderMassCancelReport : FixMsg
 	{
 		[Component]

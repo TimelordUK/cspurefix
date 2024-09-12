@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("0")]
+	[MessageType("0", FixVersion.FIX44)]
 	public sealed class Heartbeat : FixMsg
 	{
 		[Component]

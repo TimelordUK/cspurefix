@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AB")]
+	[MessageType("AB", FixVersion.FIX44)]
 	public sealed class NewOrderMultileg : FixMsg
 	{
 		[Component]

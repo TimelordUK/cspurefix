@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("6")]
+	[MessageType("6", FixVersion.FIX44)]
 	public sealed class IOI : FixMsg
 	{
 		[Component]

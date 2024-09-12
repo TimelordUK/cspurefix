@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AY")]
+	[MessageType("AY", FixVersion.FIX44)]
 	public sealed class CollateralAssignment : FixMsg
 	{
 		[Component]

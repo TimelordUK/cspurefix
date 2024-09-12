@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AP")]
+	[MessageType("AP", FixVersion.FIX44)]
 	public sealed class PositionReport : FixMsg
 	{
 		[Component]

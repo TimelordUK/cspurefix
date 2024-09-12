@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("AV")]
+	[MessageType("AV", FixVersion.FIX44)]
 	public sealed class SettlementInstructionRequest : FixMsg
 	{
 		[Component]

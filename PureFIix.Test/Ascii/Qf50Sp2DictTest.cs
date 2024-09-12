@@ -2,6 +2,7 @@
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	[MessageType("C")]
+	[MessageType("C", FixVersion.FIX44)]
 	public sealed class Email : FixMsg
 	{
 		[Component]
