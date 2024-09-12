@@ -10,58 +10,58 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("P", FixVersion.FIX44)]
 	public sealed class AllocationInstructionAck : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(70, TagType.String)]
+		[TagDetails(Tag = 70, Type = TagType.String, Offset = 1)]
 		public string? AllocID { get; set; }
 		
-		[Component]
+		[Component(Offset = 2)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(793, TagType.String)]
+		[TagDetails(Tag = 793, Type = TagType.String, Offset = 3)]
 		public string? SecondaryAllocID { get; set; }
 		
-		[TagDetails(75, TagType.LocalDate)]
+		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 4)]
 		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 5)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(87, TagType.Int)]
+		[TagDetails(Tag = 87, Type = TagType.Int, Offset = 6)]
 		public int? AllocStatus { get; set; }
 		
-		[TagDetails(88, TagType.Int)]
+		[TagDetails(Tag = 88, Type = TagType.Int, Offset = 7)]
 		public int? AllocRejCode { get; set; }
 		
-		[TagDetails(626, TagType.Int)]
+		[TagDetails(Tag = 626, Type = TagType.Int, Offset = 8)]
 		public int? AllocType { get; set; }
 		
-		[TagDetails(808, TagType.Int)]
+		[TagDetails(Tag = 808, Type = TagType.Int, Offset = 9)]
 		public int? AllocIntermedReqType { get; set; }
 		
-		[TagDetails(573, TagType.String)]
+		[TagDetails(Tag = 573, Type = TagType.String, Offset = 10)]
 		public string? MatchStatus { get; set; }
 		
-		[TagDetails(460, TagType.Int)]
+		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 11)]
 		public int? Product { get; set; }
 		
-		[TagDetails(167, TagType.String)]
+		[TagDetails(Tag = 167, Type = TagType.String, Offset = 12)]
 		public string? SecurityType { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 13)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 14)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 15)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 16)]
 		public AllocAckGrp? AllocAckGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 17)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

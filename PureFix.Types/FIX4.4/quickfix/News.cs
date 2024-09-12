@@ -10,49 +10,49 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("B", FixVersion.FIX44)]
 	public sealed class News : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(42, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 42, Type = TagType.UtcTimestamp, Offset = 1)]
 		public DateTime? OrigTime { get; set; }
 		
-		[TagDetails(61, TagType.String)]
+		[TagDetails(Tag = 61, Type = TagType.String, Offset = 2)]
 		public string? Urgency { get; set; }
 		
-		[TagDetails(148, TagType.String)]
+		[TagDetails(Tag = 148, Type = TagType.String, Offset = 3)]
 		public string? Headline { get; set; }
 		
-		[TagDetails(358, TagType.Length)]
+		[TagDetails(Tag = 358, Type = TagType.Length, Offset = 4)]
 		public int? EncodedHeadlineLen { get; set; }
 		
-		[TagDetails(359, TagType.RawData)]
+		[TagDetails(Tag = 359, Type = TagType.RawData, Offset = 5)]
 		public byte[]? EncodedHeadline { get; set; }
 		
-		[Component]
+		[Component(Offset = 6)]
 		public RoutingGrp? RoutingGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public InstrmtGrp? InstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 8)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public LinesOfTextGrp? LinesOfTextGrp { get; set; }
 		
-		[TagDetails(149, TagType.String)]
+		[TagDetails(Tag = 149, Type = TagType.String, Offset = 11)]
 		public string? URLLink { get; set; }
 		
-		[TagDetails(95, TagType.Length)]
+		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 12)]
 		public int? RawDataLength { get; set; }
 		
-		[TagDetails(96, TagType.RawData)]
+		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 13)]
 		public byte[]? RawData { get; set; }
 		
-		[Component]
+		[Component(Offset = 14)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

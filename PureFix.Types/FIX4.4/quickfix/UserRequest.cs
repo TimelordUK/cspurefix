@@ -10,31 +10,31 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("BE", FixVersion.FIX44)]
 	public sealed class UserRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(923, TagType.String)]
+		[TagDetails(Tag = 923, Type = TagType.String, Offset = 1)]
 		public string? UserRequestID { get; set; }
 		
-		[TagDetails(924, TagType.Int)]
+		[TagDetails(Tag = 924, Type = TagType.Int, Offset = 2)]
 		public int? UserRequestType { get; set; }
 		
-		[TagDetails(553, TagType.String)]
+		[TagDetails(Tag = 553, Type = TagType.String, Offset = 3)]
 		public string? Username { get; set; }
 		
-		[TagDetails(554, TagType.String)]
+		[TagDetails(Tag = 554, Type = TagType.String, Offset = 4)]
 		public string? Password { get; set; }
 		
-		[TagDetails(925, TagType.String)]
+		[TagDetails(Tag = 925, Type = TagType.String, Offset = 5)]
 		public string? NewPassword { get; set; }
 		
-		[TagDetails(95, TagType.Length)]
+		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 6)]
 		public int? RawDataLength { get; set; }
 		
-		[TagDetails(96, TagType.RawData)]
+		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 7)]
 		public byte[]? RawData { get; set; }
 		
-		[Component]
+		[Component(Offset = 8)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

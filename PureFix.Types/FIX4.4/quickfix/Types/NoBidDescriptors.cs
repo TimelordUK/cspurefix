@@ -9,37 +9,37 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoBidDescriptors
 	{
-		[TagDetails(399, TagType.Int)]
+		[TagDetails(Tag = 399, Type = TagType.Int, Offset = 0)]
 		public int? BidDescriptorType { get; set; }
 		
-		[TagDetails(400, TagType.String)]
+		[TagDetails(Tag = 400, Type = TagType.String, Offset = 1)]
 		public string? BidDescriptor { get; set; }
 		
-		[TagDetails(401, TagType.Int)]
+		[TagDetails(Tag = 401, Type = TagType.Int, Offset = 2)]
 		public int? SideValueInd { get; set; }
 		
-		[TagDetails(404, TagType.Float)]
+		[TagDetails(Tag = 404, Type = TagType.Float, Offset = 3)]
 		public double? LiquidityValue { get; set; }
 		
-		[TagDetails(441, TagType.Int)]
+		[TagDetails(Tag = 441, Type = TagType.Int, Offset = 4)]
 		public int? LiquidityNumSecurities { get; set; }
 		
-		[TagDetails(402, TagType.Float)]
+		[TagDetails(Tag = 402, Type = TagType.Float, Offset = 5)]
 		public double? LiquidityPctLow { get; set; }
 		
-		[TagDetails(403, TagType.Float)]
+		[TagDetails(Tag = 403, Type = TagType.Float, Offset = 6)]
 		public double? LiquidityPctHigh { get; set; }
 		
-		[TagDetails(405, TagType.Float)]
+		[TagDetails(Tag = 405, Type = TagType.Float, Offset = 7)]
 		public double? EFPTrackingError { get; set; }
 		
-		[TagDetails(406, TagType.Float)]
+		[TagDetails(Tag = 406, Type = TagType.Float, Offset = 8)]
 		public double? FairValue { get; set; }
 		
-		[TagDetails(407, TagType.Float)]
+		[TagDetails(Tag = 407, Type = TagType.Float, Offset = 9)]
 		public double? OutsideIndexPct { get; set; }
 		
-		[TagDetails(408, TagType.Float)]
+		[TagDetails(Tag = 408, Type = TagType.Float, Offset = 10)]
 		public double? ValueOfFutures { get; set; }
 		
 	}

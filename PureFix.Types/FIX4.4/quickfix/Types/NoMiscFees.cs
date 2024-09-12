@@ -9,16 +9,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoMiscFees
 	{
-		[TagDetails(137, TagType.Float)]
+		[TagDetails(Tag = 137, Type = TagType.Float, Offset = 0)]
 		public double? MiscFeeAmt { get; set; }
 		
-		[TagDetails(138, TagType.String)]
+		[TagDetails(Tag = 138, Type = TagType.String, Offset = 1)]
 		public string? MiscFeeCurr { get; set; }
 		
-		[TagDetails(139, TagType.String)]
+		[TagDetails(Tag = 139, Type = TagType.String, Offset = 2)]
 		public string? MiscFeeType { get; set; }
 		
-		[TagDetails(891, TagType.Int)]
+		[TagDetails(Tag = 891, Type = TagType.Int, Offset = 3)]
 		public int? MiscFeeBasis { get; set; }
 		
 	}

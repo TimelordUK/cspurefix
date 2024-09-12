@@ -10,52 +10,52 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("Q", FixVersion.FIX44)]
 	public sealed class DontKnowTrade : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(37, TagType.String)]
+		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1)]
 		public string? OrderID { get; set; }
 		
-		[TagDetails(198, TagType.String)]
+		[TagDetails(Tag = 198, Type = TagType.String, Offset = 2)]
 		public string? SecondaryOrderID { get; set; }
 		
-		[TagDetails(17, TagType.String)]
+		[TagDetails(Tag = 17, Type = TagType.String, Offset = 3)]
 		public string? ExecID { get; set; }
 		
-		[TagDetails(127, TagType.String)]
+		[TagDetails(Tag = 127, Type = TagType.String, Offset = 4)]
 		public string? DKReason { get; set; }
 		
-		[Component]
+		[Component(Offset = 5)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 6)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[TagDetails(54, TagType.String)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 8)]
 		public string? Side { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public OrderQtyData? OrderQtyData { get; set; }
 		
-		[TagDetails(32, TagType.Float)]
+		[TagDetails(Tag = 32, Type = TagType.Float, Offset = 10)]
 		public double? LastQty { get; set; }
 		
-		[TagDetails(31, TagType.Float)]
+		[TagDetails(Tag = 31, Type = TagType.Float, Offset = 11)]
 		public double? LastPx { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 12)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 13)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 14)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 15)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

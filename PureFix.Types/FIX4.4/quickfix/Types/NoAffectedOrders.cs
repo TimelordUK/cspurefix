@@ -9,13 +9,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoAffectedOrders
 	{
-		[TagDetails(41, TagType.String)]
+		[TagDetails(Tag = 41, Type = TagType.String, Offset = 0)]
 		public string? OrigClOrdID { get; set; }
 		
-		[TagDetails(535, TagType.String)]
+		[TagDetails(Tag = 535, Type = TagType.String, Offset = 1)]
 		public string? AffectedOrderID { get; set; }
 		
-		[TagDetails(536, TagType.String)]
+		[TagDetails(Tag = 536, Type = TagType.String, Offset = 2)]
 		public string? AffectedSecondaryOrderID { get; set; }
 		
 	}

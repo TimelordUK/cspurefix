@@ -10,40 +10,40 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("p", FixVersion.FIX44)]
 	public sealed class RegistrationInstructionsResponse : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(513, TagType.String)]
+		[TagDetails(Tag = 513, Type = TagType.String, Offset = 1)]
 		public string? RegistID { get; set; }
 		
-		[TagDetails(514, TagType.String)]
+		[TagDetails(Tag = 514, Type = TagType.String, Offset = 2)]
 		public string? RegistTransType { get; set; }
 		
-		[TagDetails(508, TagType.String)]
+		[TagDetails(Tag = 508, Type = TagType.String, Offset = 3)]
 		public string? RegistRefID { get; set; }
 		
-		[TagDetails(11, TagType.String)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 4)]
 		public string? ClOrdID { get; set; }
 		
-		[Component]
+		[Component(Offset = 5)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 6)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 7)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(506, TagType.String)]
+		[TagDetails(Tag = 506, Type = TagType.String, Offset = 8)]
 		public string? RegistStatus { get; set; }
 		
-		[TagDetails(507, TagType.Int)]
+		[TagDetails(Tag = 507, Type = TagType.Int, Offset = 9)]
 		public int? RegistRejReasonCode { get; set; }
 		
-		[TagDetails(496, TagType.String)]
+		[TagDetails(Tag = 496, Type = TagType.String, Offset = 10)]
 		public string? RegistRejReasonText { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

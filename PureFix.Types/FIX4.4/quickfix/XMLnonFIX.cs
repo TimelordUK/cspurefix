@@ -10,10 +10,10 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("n", FixVersion.FIX44)]
 	public sealed class XMLnonFIX : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[Component]
+		[Component(Offset = 1)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

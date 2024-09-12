@@ -9,22 +9,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoExecs
 	{
-		[TagDetails(32, TagType.Float)]
+		[TagDetails(Tag = 32, Type = TagType.Float, Offset = 0)]
 		public double? LastQty { get; set; }
 		
-		[TagDetails(17, TagType.String)]
+		[TagDetails(Tag = 17, Type = TagType.String, Offset = 1)]
 		public string? ExecID { get; set; }
 		
-		[TagDetails(527, TagType.String)]
+		[TagDetails(Tag = 527, Type = TagType.String, Offset = 2)]
 		public string? SecondaryExecID { get; set; }
 		
-		[TagDetails(31, TagType.Float)]
+		[TagDetails(Tag = 31, Type = TagType.Float, Offset = 3)]
 		public double? LastPx { get; set; }
 		
-		[TagDetails(669, TagType.Float)]
+		[TagDetails(Tag = 669, Type = TagType.Float, Offset = 4)]
 		public double? LastParPx { get; set; }
 		
-		[TagDetails(29, TagType.String)]
+		[TagDetails(Tag = 29, Type = TagType.String, Offset = 5)]
 		public string? LastCapacity { get; set; }
 		
 	}

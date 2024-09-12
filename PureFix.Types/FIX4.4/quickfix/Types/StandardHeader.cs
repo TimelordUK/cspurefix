@@ -9,85 +9,85 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class StandardHeader
 	{
-		[TagDetails(8, TagType.String)]
+		[TagDetails(Tag = 8, Type = TagType.String, Offset = 0)]
 		public string? BeginString { get; set; }
 		
-		[TagDetails(9, TagType.Length)]
+		[TagDetails(Tag = 9, Type = TagType.Length, Offset = 1)]
 		public int? BodyLength { get; set; }
 		
-		[TagDetails(35, TagType.String)]
+		[TagDetails(Tag = 35, Type = TagType.String, Offset = 2)]
 		public string? MsgType { get; set; }
 		
-		[TagDetails(49, TagType.String)]
+		[TagDetails(Tag = 49, Type = TagType.String, Offset = 3)]
 		public string? SenderCompID { get; set; }
 		
-		[TagDetails(56, TagType.String)]
+		[TagDetails(Tag = 56, Type = TagType.String, Offset = 4)]
 		public string? TargetCompID { get; set; }
 		
-		[TagDetails(115, TagType.String)]
+		[TagDetails(Tag = 115, Type = TagType.String, Offset = 5)]
 		public string? OnBehalfOfCompID { get; set; }
 		
-		[TagDetails(128, TagType.String)]
+		[TagDetails(Tag = 128, Type = TagType.String, Offset = 6)]
 		public string? DeliverToCompID { get; set; }
 		
-		[TagDetails(90, TagType.Length)]
+		[TagDetails(Tag = 90, Type = TagType.Length, Offset = 7)]
 		public int? SecureDataLen { get; set; }
 		
-		[TagDetails(91, TagType.RawData)]
+		[TagDetails(Tag = 91, Type = TagType.RawData, Offset = 8)]
 		public byte[]? SecureData { get; set; }
 		
-		[TagDetails(34, TagType.Int)]
+		[TagDetails(Tag = 34, Type = TagType.Int, Offset = 9)]
 		public int? MsgSeqNum { get; set; }
 		
-		[TagDetails(50, TagType.String)]
+		[TagDetails(Tag = 50, Type = TagType.String, Offset = 10)]
 		public string? SenderSubID { get; set; }
 		
-		[TagDetails(142, TagType.String)]
+		[TagDetails(Tag = 142, Type = TagType.String, Offset = 11)]
 		public string? SenderLocationID { get; set; }
 		
-		[TagDetails(57, TagType.String)]
+		[TagDetails(Tag = 57, Type = TagType.String, Offset = 12)]
 		public string? TargetSubID { get; set; }
 		
-		[TagDetails(143, TagType.String)]
+		[TagDetails(Tag = 143, Type = TagType.String, Offset = 13)]
 		public string? TargetLocationID { get; set; }
 		
-		[TagDetails(116, TagType.String)]
+		[TagDetails(Tag = 116, Type = TagType.String, Offset = 14)]
 		public string? OnBehalfOfSubID { get; set; }
 		
-		[TagDetails(144, TagType.String)]
+		[TagDetails(Tag = 144, Type = TagType.String, Offset = 15)]
 		public string? OnBehalfOfLocationID { get; set; }
 		
-		[TagDetails(129, TagType.String)]
+		[TagDetails(Tag = 129, Type = TagType.String, Offset = 16)]
 		public string? DeliverToSubID { get; set; }
 		
-		[TagDetails(145, TagType.String)]
+		[TagDetails(Tag = 145, Type = TagType.String, Offset = 17)]
 		public string? DeliverToLocationID { get; set; }
 		
-		[TagDetails(43, TagType.Boolean)]
+		[TagDetails(Tag = 43, Type = TagType.Boolean, Offset = 18)]
 		public bool? PossDupFlag { get; set; }
 		
-		[TagDetails(97, TagType.Boolean)]
+		[TagDetails(Tag = 97, Type = TagType.Boolean, Offset = 19)]
 		public bool? PossResend { get; set; }
 		
-		[TagDetails(52, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 52, Type = TagType.UtcTimestamp, Offset = 20)]
 		public DateTime? SendingTime { get; set; }
 		
-		[TagDetails(122, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 122, Type = TagType.UtcTimestamp, Offset = 21)]
 		public DateTime? OrigSendingTime { get; set; }
 		
-		[TagDetails(212, TagType.Length)]
+		[TagDetails(Tag = 212, Type = TagType.Length, Offset = 22)]
 		public int? XmlDataLen { get; set; }
 		
-		[TagDetails(213, TagType.RawData)]
+		[TagDetails(Tag = 213, Type = TagType.RawData, Offset = 23)]
 		public byte[]? XmlData { get; set; }
 		
-		[TagDetails(347, TagType.String)]
+		[TagDetails(Tag = 347, Type = TagType.String, Offset = 24)]
 		public string? MessageEncoding { get; set; }
 		
-		[TagDetails(369, TagType.Int)]
+		[TagDetails(Tag = 369, Type = TagType.Int, Offset = 25)]
 		public int? LastMsgSeqNumProcessed { get; set; }
 		
-		[Component]
+		[Component(Offset = 26)]
 		public Hop? Hop { get; set; }
 		
 	}

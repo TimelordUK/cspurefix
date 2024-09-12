@@ -10,40 +10,40 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AF", FixVersion.FIX44)]
 	public sealed class OrderMassStatusRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(584, TagType.String)]
+		[TagDetails(Tag = 584, Type = TagType.String, Offset = 1)]
 		public string? MassStatusReqID { get; set; }
 		
-		[TagDetails(585, TagType.Int)]
+		[TagDetails(Tag = 585, Type = TagType.Int, Offset = 2)]
 		public int? MassStatusReqType { get; set; }
 		
-		[Component]
+		[Component(Offset = 3)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 4)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 5)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 6)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 7)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[Component]
+		[Component(Offset = 8)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
 		
-		[TagDetails(54, TagType.String)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 10)]
 		public string? Side { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

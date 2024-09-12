@@ -9,13 +9,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoContAmts
 	{
-		[TagDetails(519, TagType.Int)]
+		[TagDetails(Tag = 519, Type = TagType.Int, Offset = 0)]
 		public int? ContAmtType { get; set; }
 		
-		[TagDetails(520, TagType.Float)]
+		[TagDetails(Tag = 520, Type = TagType.Float, Offset = 1)]
 		public double? ContAmtValue { get; set; }
 		
-		[TagDetails(521, TagType.String)]
+		[TagDetails(Tag = 521, Type = TagType.String, Offset = 2)]
 		public string? ContAmtCurr { get; set; }
 		
 	}

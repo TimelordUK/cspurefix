@@ -10,43 +10,43 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("z", FixVersion.FIX44)]
 	public sealed class DerivativeSecurityListRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(320, TagType.String)]
+		[TagDetails(Tag = 320, Type = TagType.String, Offset = 1)]
 		public string? SecurityReqID { get; set; }
 		
-		[TagDetails(559, TagType.Int)]
+		[TagDetails(Tag = 559, Type = TagType.Int, Offset = 2)]
 		public int? SecurityListRequestType { get; set; }
 		
-		[Component]
+		[Component(Offset = 3)]
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
 		
-		[TagDetails(762, TagType.String)]
+		[TagDetails(Tag = 762, Type = TagType.String, Offset = 4)]
 		public string? SecuritySubType { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 5)]
 		public string? Currency { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 6)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 7)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 8)]
 		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 9)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 10)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(263, TagType.String)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 11)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[Component]
+		[Component(Offset = 12)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

@@ -10,37 +10,37 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("e", FixVersion.FIX44)]
 	public sealed class SecurityStatusRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(324, TagType.String)]
+		[TagDetails(Tag = 324, Type = TagType.String, Offset = 1)]
 		public string? SecurityStatusReqID { get; set; }
 		
-		[Component]
+		[Component(Offset = 2)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 3)]
 		public InstrumentExtension? InstrumentExtension { get; set; }
 		
-		[Component]
+		[Component(Offset = 4)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 5)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 6)]
 		public string? Currency { get; set; }
 		
-		[TagDetails(263, TagType.String)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 7)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 8)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 9)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

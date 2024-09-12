@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class AffectedOrdGrp
 	{
-		[Group(534)]
+		[Group(NoOfTag = 534, Offset = 0)]
 		public NoAffectedOrders[]? NoAffectedOrders { get; set; }
 		
 	}

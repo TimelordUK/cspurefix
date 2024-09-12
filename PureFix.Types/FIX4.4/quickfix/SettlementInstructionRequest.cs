@@ -10,55 +10,55 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AV", FixVersion.FIX44)]
 	public sealed class SettlementInstructionRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(791, TagType.String)]
+		[TagDetails(Tag = 791, Type = TagType.String, Offset = 1)]
 		public string? SettlInstReqID { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 2)]
 		public DateTime? TransactTime { get; set; }
 		
-		[Component]
+		[Component(Offset = 3)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(79, TagType.String)]
+		[TagDetails(Tag = 79, Type = TagType.String, Offset = 4)]
 		public string? AllocAccount { get; set; }
 		
-		[TagDetails(661, TagType.Int)]
+		[TagDetails(Tag = 661, Type = TagType.Int, Offset = 5)]
 		public int? AllocAcctIDSource { get; set; }
 		
-		[TagDetails(54, TagType.String)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 6)]
 		public string? Side { get; set; }
 		
-		[TagDetails(460, TagType.Int)]
+		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 7)]
 		public int? Product { get; set; }
 		
-		[TagDetails(167, TagType.String)]
+		[TagDetails(Tag = 167, Type = TagType.String, Offset = 8)]
 		public string? SecurityType { get; set; }
 		
-		[TagDetails(461, TagType.String)]
+		[TagDetails(Tag = 461, Type = TagType.String, Offset = 9)]
 		public string? CFICode { get; set; }
 		
-		[TagDetails(168, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 168, Type = TagType.UtcTimestamp, Offset = 10)]
 		public DateTime? EffectiveTime { get; set; }
 		
-		[TagDetails(126, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 126, Type = TagType.UtcTimestamp, Offset = 11)]
 		public DateTime? ExpireTime { get; set; }
 		
-		[TagDetails(779, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 779, Type = TagType.UtcTimestamp, Offset = 12)]
 		public DateTime? LastUpdateTime { get; set; }
 		
-		[TagDetails(169, TagType.Int)]
+		[TagDetails(Tag = 169, Type = TagType.Int, Offset = 13)]
 		public int? StandInstDbType { get; set; }
 		
-		[TagDetails(170, TagType.String)]
+		[TagDetails(Tag = 170, Type = TagType.String, Offset = 14)]
 		public string? StandInstDbName { get; set; }
 		
-		[TagDetails(171, TagType.String)]
+		[TagDetails(Tag = 171, Type = TagType.String, Offset = 15)]
 		public string? StandInstDbID { get; set; }
 		
-		[Component]
+		[Component(Offset = 16)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

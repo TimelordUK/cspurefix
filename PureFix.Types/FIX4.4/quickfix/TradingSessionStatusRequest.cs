@@ -10,28 +10,28 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("g", FixVersion.FIX44)]
 	public sealed class TradingSessionStatusRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(335, TagType.String)]
+		[TagDetails(Tag = 335, Type = TagType.String, Offset = 1)]
 		public string? TradSesReqID { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 2)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 3)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(338, TagType.Int)]
+		[TagDetails(Tag = 338, Type = TagType.Int, Offset = 4)]
 		public int? TradSesMethod { get; set; }
 		
-		[TagDetails(339, TagType.Int)]
+		[TagDetails(Tag = 339, Type = TagType.Int, Offset = 5)]
 		public int? TradSesMode { get; set; }
 		
-		[TagDetails(263, TagType.String)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 6)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

@@ -10,16 +10,20 @@ namespace PureFix.Types
     /// Flags a property as being a FIX field
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class GroupAttribute : FixAttribute
+    public sealed class GroupAttribute : FixAttribute, ITagOffset
     {
-        public GroupAttribute(int noOfTag)
+        public GroupAttribute()
         {
-            this.NoOfTag = noOfTag;
         }
 
         /// <summary>
         /// The field which holds the count for the group
         /// </summary>
-        public int NoOfTag{get;}
+        public required int NoOfTag{get; init;}
+
+        /// <summary>
+        /// The zero-based position of the field within the message, component or group
+        /// </summary>
+        public required int Offset{get; init;}
     }
 }

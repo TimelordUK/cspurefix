@@ -9,19 +9,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoPositions
 	{
-		[TagDetails(703, TagType.String)]
+		[TagDetails(Tag = 703, Type = TagType.String, Offset = 0)]
 		public string? PosType { get; set; }
 		
-		[TagDetails(704, TagType.Float)]
+		[TagDetails(Tag = 704, Type = TagType.Float, Offset = 1)]
 		public double? LongQty { get; set; }
 		
-		[TagDetails(705, TagType.Float)]
+		[TagDetails(Tag = 705, Type = TagType.Float, Offset = 2)]
 		public double? ShortQty { get; set; }
 		
-		[TagDetails(706, TagType.Int)]
+		[TagDetails(Tag = 706, Type = TagType.Int, Offset = 3)]
 		public int? PosQtyStatus { get; set; }
 		
-		[Component]
+		[Component(Offset = 4)]
 		public NestedParties? NestedParties { get; set; }
 		
 	}

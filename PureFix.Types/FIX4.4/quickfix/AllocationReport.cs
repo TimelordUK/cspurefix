@@ -10,211 +10,211 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AS", FixVersion.FIX44)]
 	public sealed class AllocationReport : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(755, TagType.String)]
+		[TagDetails(Tag = 755, Type = TagType.String, Offset = 1)]
 		public string? AllocReportID { get; set; }
 		
-		[TagDetails(70, TagType.String)]
+		[TagDetails(Tag = 70, Type = TagType.String, Offset = 2)]
 		public string? AllocID { get; set; }
 		
-		[TagDetails(71, TagType.String)]
+		[TagDetails(Tag = 71, Type = TagType.String, Offset = 3)]
 		public string? AllocTransType { get; set; }
 		
-		[TagDetails(795, TagType.String)]
+		[TagDetails(Tag = 795, Type = TagType.String, Offset = 4)]
 		public string? AllocReportRefID { get; set; }
 		
-		[TagDetails(796, TagType.Int)]
+		[TagDetails(Tag = 796, Type = TagType.Int, Offset = 5)]
 		public int? AllocCancReplaceReason { get; set; }
 		
-		[TagDetails(793, TagType.String)]
+		[TagDetails(Tag = 793, Type = TagType.String, Offset = 6)]
 		public string? SecondaryAllocID { get; set; }
 		
-		[TagDetails(794, TagType.Int)]
+		[TagDetails(Tag = 794, Type = TagType.Int, Offset = 7)]
 		public int? AllocReportType { get; set; }
 		
-		[TagDetails(87, TagType.Int)]
+		[TagDetails(Tag = 87, Type = TagType.Int, Offset = 8)]
 		public int? AllocStatus { get; set; }
 		
-		[TagDetails(88, TagType.Int)]
+		[TagDetails(Tag = 88, Type = TagType.Int, Offset = 9)]
 		public int? AllocRejCode { get; set; }
 		
-		[TagDetails(72, TagType.String)]
+		[TagDetails(Tag = 72, Type = TagType.String, Offset = 10)]
 		public string? RefAllocID { get; set; }
 		
-		[TagDetails(808, TagType.Int)]
+		[TagDetails(Tag = 808, Type = TagType.Int, Offset = 11)]
 		public int? AllocIntermedReqType { get; set; }
 		
-		[TagDetails(196, TagType.String)]
+		[TagDetails(Tag = 196, Type = TagType.String, Offset = 12)]
 		public string? AllocLinkID { get; set; }
 		
-		[TagDetails(197, TagType.Int)]
+		[TagDetails(Tag = 197, Type = TagType.Int, Offset = 13)]
 		public int? AllocLinkType { get; set; }
 		
-		[TagDetails(466, TagType.String)]
+		[TagDetails(Tag = 466, Type = TagType.String, Offset = 14)]
 		public string? BookingRefID { get; set; }
 		
-		[TagDetails(857, TagType.Int)]
+		[TagDetails(Tag = 857, Type = TagType.Int, Offset = 15)]
 		public int? AllocNoOrdersType { get; set; }
 		
-		[Component]
+		[Component(Offset = 16)]
 		public OrdAllocGrp? OrdAllocGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 17)]
 		public ExecAllocGrp? ExecAllocGrp { get; set; }
 		
-		[TagDetails(570, TagType.Boolean)]
+		[TagDetails(Tag = 570, Type = TagType.Boolean, Offset = 18)]
 		public bool? PreviouslyReported { get; set; }
 		
-		[TagDetails(700, TagType.Boolean)]
+		[TagDetails(Tag = 700, Type = TagType.Boolean, Offset = 19)]
 		public bool? ReversalIndicator { get; set; }
 		
-		[TagDetails(574, TagType.String)]
+		[TagDetails(Tag = 574, Type = TagType.String, Offset = 20)]
 		public string? MatchType { get; set; }
 		
-		[TagDetails(54, TagType.String)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 21)]
 		public string? Side { get; set; }
 		
-		[Component]
+		[Component(Offset = 22)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 23)]
 		public InstrumentExtension? InstrumentExtension { get; set; }
 		
-		[Component]
+		[Component(Offset = 24)]
 		public FinancingDetails? FinancingDetails { get; set; }
 		
-		[Component]
+		[Component(Offset = 25)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 26)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[TagDetails(53, TagType.Float)]
+		[TagDetails(Tag = 53, Type = TagType.Float, Offset = 27)]
 		public double? Quantity { get; set; }
 		
-		[TagDetails(854, TagType.Int)]
+		[TagDetails(Tag = 854, Type = TagType.Int, Offset = 28)]
 		public int? QtyType { get; set; }
 		
-		[TagDetails(30, TagType.String)]
+		[TagDetails(Tag = 30, Type = TagType.String, Offset = 29)]
 		public string? LastMkt { get; set; }
 		
-		[TagDetails(229, TagType.LocalDate)]
+		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 30)]
 		public DateTime? TradeOriginationDate { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 31)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 32)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(423, TagType.Int)]
+		[TagDetails(Tag = 423, Type = TagType.Int, Offset = 33)]
 		public int? PriceType { get; set; }
 		
-		[TagDetails(6, TagType.Float)]
+		[TagDetails(Tag = 6, Type = TagType.Float, Offset = 34)]
 		public double? AvgPx { get; set; }
 		
-		[TagDetails(860, TagType.Float)]
+		[TagDetails(Tag = 860, Type = TagType.Float, Offset = 35)]
 		public double? AvgParPx { get; set; }
 		
-		[Component]
+		[Component(Offset = 36)]
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 37)]
 		public string? Currency { get; set; }
 		
-		[TagDetails(74, TagType.Int)]
+		[TagDetails(Tag = 74, Type = TagType.Int, Offset = 38)]
 		public int? AvgPxPrecision { get; set; }
 		
-		[Component]
+		[Component(Offset = 39)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(75, TagType.LocalDate)]
+		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 40)]
 		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 41)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(63, TagType.String)]
+		[TagDetails(Tag = 63, Type = TagType.String, Offset = 42)]
 		public string? SettlType { get; set; }
 		
-		[TagDetails(64, TagType.LocalDate)]
+		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 43)]
 		public DateTime? SettlDate { get; set; }
 		
-		[TagDetails(775, TagType.Int)]
+		[TagDetails(Tag = 775, Type = TagType.Int, Offset = 44)]
 		public int? BookingType { get; set; }
 		
-		[TagDetails(381, TagType.Float)]
+		[TagDetails(Tag = 381, Type = TagType.Float, Offset = 45)]
 		public double? GrossTradeAmt { get; set; }
 		
-		[TagDetails(238, TagType.Float)]
+		[TagDetails(Tag = 238, Type = TagType.Float, Offset = 46)]
 		public double? Concession { get; set; }
 		
-		[TagDetails(237, TagType.Float)]
+		[TagDetails(Tag = 237, Type = TagType.Float, Offset = 47)]
 		public double? TotalTakedown { get; set; }
 		
-		[TagDetails(118, TagType.Float)]
+		[TagDetails(Tag = 118, Type = TagType.Float, Offset = 48)]
 		public double? NetMoney { get; set; }
 		
-		[TagDetails(77, TagType.String)]
+		[TagDetails(Tag = 77, Type = TagType.String, Offset = 49)]
 		public string? PositionEffect { get; set; }
 		
-		[TagDetails(754, TagType.Boolean)]
+		[TagDetails(Tag = 754, Type = TagType.Boolean, Offset = 50)]
 		public bool? AutoAcceptIndicator { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 51)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 52)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 53)]
 		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(157, TagType.Int)]
+		[TagDetails(Tag = 157, Type = TagType.Int, Offset = 54)]
 		public int? NumDaysInterest { get; set; }
 		
-		[TagDetails(158, TagType.Float)]
+		[TagDetails(Tag = 158, Type = TagType.Float, Offset = 55)]
 		public double? AccruedInterestRate { get; set; }
 		
-		[TagDetails(159, TagType.Float)]
+		[TagDetails(Tag = 159, Type = TagType.Float, Offset = 56)]
 		public double? AccruedInterestAmt { get; set; }
 		
-		[TagDetails(540, TagType.Float)]
+		[TagDetails(Tag = 540, Type = TagType.Float, Offset = 57)]
 		public double? TotalAccruedInterestAmt { get; set; }
 		
-		[TagDetails(738, TagType.Float)]
+		[TagDetails(Tag = 738, Type = TagType.Float, Offset = 58)]
 		public double? InterestAtMaturity { get; set; }
 		
-		[TagDetails(920, TagType.Float)]
+		[TagDetails(Tag = 920, Type = TagType.Float, Offset = 59)]
 		public double? EndAccruedInterestAmt { get; set; }
 		
-		[TagDetails(921, TagType.Float)]
+		[TagDetails(Tag = 921, Type = TagType.Float, Offset = 60)]
 		public double? StartCash { get; set; }
 		
-		[TagDetails(922, TagType.Float)]
+		[TagDetails(Tag = 922, Type = TagType.Float, Offset = 61)]
 		public double? EndCash { get; set; }
 		
-		[TagDetails(650, TagType.Boolean)]
+		[TagDetails(Tag = 650, Type = TagType.Boolean, Offset = 62)]
 		public bool? LegalConfirm { get; set; }
 		
-		[Component]
+		[Component(Offset = 63)]
 		public Stipulations? Stipulations { get; set; }
 		
-		[Component]
+		[Component(Offset = 64)]
 		public YieldData? YieldData { get; set; }
 		
-		[TagDetails(892, TagType.Int)]
+		[TagDetails(Tag = 892, Type = TagType.Int, Offset = 65)]
 		public int? TotNoAllocs { get; set; }
 		
-		[TagDetails(893, TagType.Boolean)]
+		[TagDetails(Tag = 893, Type = TagType.Boolean, Offset = 66)]
 		public bool? LastFragment { get; set; }
 		
-		[Component]
+		[Component(Offset = 67)]
 		public AllocGrp? AllocGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 68)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

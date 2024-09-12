@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class TrdCapDtGrp
 	{
-		[Group(580)]
+		[Group(NoOfTag = 580, Offset = 0)]
 		public NoDates[]? NoDates { get; set; }
 		
 	}

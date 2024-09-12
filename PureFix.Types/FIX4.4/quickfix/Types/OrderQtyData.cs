@@ -9,19 +9,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class OrderQtyData
 	{
-		[TagDetails(38, TagType.Float)]
+		[TagDetails(Tag = 38, Type = TagType.Float, Offset = 0)]
 		public double? OrderQty { get; set; }
 		
-		[TagDetails(152, TagType.Float)]
+		[TagDetails(Tag = 152, Type = TagType.Float, Offset = 1)]
 		public double? CashOrderQty { get; set; }
 		
-		[TagDetails(516, TagType.Float)]
+		[TagDetails(Tag = 516, Type = TagType.Float, Offset = 2)]
 		public double? OrderPercent { get; set; }
 		
-		[TagDetails(468, TagType.String)]
+		[TagDetails(Tag = 468, Type = TagType.String, Offset = 3)]
 		public string? RoundingDirection { get; set; }
 		
-		[TagDetails(469, TagType.Float)]
+		[TagDetails(Tag = 469, Type = TagType.Float, Offset = 4)]
 		public double? RoundingModulus { get; set; }
 		
 	}

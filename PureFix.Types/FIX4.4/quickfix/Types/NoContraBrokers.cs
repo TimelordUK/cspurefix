@@ -9,19 +9,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoContraBrokers
 	{
-		[TagDetails(375, TagType.String)]
+		[TagDetails(Tag = 375, Type = TagType.String, Offset = 0)]
 		public string? ContraBroker { get; set; }
 		
-		[TagDetails(337, TagType.String)]
+		[TagDetails(Tag = 337, Type = TagType.String, Offset = 1)]
 		public string? ContraTrader { get; set; }
 		
-		[TagDetails(437, TagType.Float)]
+		[TagDetails(Tag = 437, Type = TagType.Float, Offset = 2)]
 		public double? ContraTradeQty { get; set; }
 		
-		[TagDetails(438, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 438, Type = TagType.UtcTimestamp, Offset = 3)]
 		public DateTime? ContraTradeTime { get; set; }
 		
-		[TagDetails(655, TagType.String)]
+		[TagDetails(Tag = 655, Type = TagType.String, Offset = 4)]
 		public string? ContraLegRefID { get; set; }
 		
 	}

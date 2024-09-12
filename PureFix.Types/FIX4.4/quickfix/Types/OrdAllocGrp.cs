@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class OrdAllocGrp
 	{
-		[Group(73)]
+		[Group(NoOfTag = 73, Offset = 0)]
 		public NoOrders[]? NoOrders { get; set; }
 		
 	}

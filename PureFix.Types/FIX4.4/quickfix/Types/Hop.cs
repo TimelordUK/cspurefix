@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class Hop
 	{
-		[Group(627)]
+		[Group(NoOfTag = 627, Offset = 0)]
 		public NoHops[]? NoHops { get; set; }
 		
 	}

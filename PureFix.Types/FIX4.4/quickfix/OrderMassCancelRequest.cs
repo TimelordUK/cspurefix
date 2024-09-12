@@ -10,46 +10,46 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("q", FixVersion.FIX44)]
 	public sealed class OrderMassCancelRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(11, TagType.String)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 1)]
 		public string? ClOrdID { get; set; }
 		
-		[TagDetails(526, TagType.String)]
+		[TagDetails(Tag = 526, Type = TagType.String, Offset = 2)]
 		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(530, TagType.String)]
+		[TagDetails(Tag = 530, Type = TagType.String, Offset = 3)]
 		public string? MassCancelRequestType { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 4)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 5)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[Component]
+		[Component(Offset = 6)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
 		
-		[TagDetails(54, TagType.String)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 8)]
 		public string? Side { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 9)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 10)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 11)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 12)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 13)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

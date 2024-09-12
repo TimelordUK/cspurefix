@@ -10,232 +10,232 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AC", FixVersion.FIX44)]
 	public sealed class MultilegOrderCancelReplace : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(37, TagType.String)]
+		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1)]
 		public string? OrderID { get; set; }
 		
-		[TagDetails(41, TagType.String)]
+		[TagDetails(Tag = 41, Type = TagType.String, Offset = 2)]
 		public string? OrigClOrdID { get; set; }
 		
-		[TagDetails(11, TagType.String)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 3)]
 		public string? ClOrdID { get; set; }
 		
-		[TagDetails(526, TagType.String)]
+		[TagDetails(Tag = 526, Type = TagType.String, Offset = 4)]
 		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(583, TagType.String)]
+		[TagDetails(Tag = 583, Type = TagType.String, Offset = 5)]
 		public string? ClOrdLinkID { get; set; }
 		
-		[TagDetails(586, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 586, Type = TagType.UtcTimestamp, Offset = 6)]
 		public DateTime? OrigOrdModTime { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(229, TagType.LocalDate)]
+		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 8)]
 		public DateTime? TradeOriginationDate { get; set; }
 		
-		[TagDetails(75, TagType.LocalDate)]
+		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 9)]
 		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 10)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 11)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(581, TagType.Int)]
+		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 12)]
 		public int? AccountType { get; set; }
 		
-		[TagDetails(589, TagType.String)]
+		[TagDetails(Tag = 589, Type = TagType.String, Offset = 13)]
 		public string? DayBookingInst { get; set; }
 		
-		[TagDetails(590, TagType.String)]
+		[TagDetails(Tag = 590, Type = TagType.String, Offset = 14)]
 		public string? BookingUnit { get; set; }
 		
-		[TagDetails(591, TagType.String)]
+		[TagDetails(Tag = 591, Type = TagType.String, Offset = 15)]
 		public string? PreallocMethod { get; set; }
 		
-		[TagDetails(70, TagType.String)]
+		[TagDetails(Tag = 70, Type = TagType.String, Offset = 16)]
 		public string? AllocID { get; set; }
 		
-		[Component]
+		[Component(Offset = 17)]
 		public PreAllocMlegGrp? PreAllocMlegGrp { get; set; }
 		
-		[TagDetails(63, TagType.String)]
+		[TagDetails(Tag = 63, Type = TagType.String, Offset = 18)]
 		public string? SettlType { get; set; }
 		
-		[TagDetails(64, TagType.LocalDate)]
+		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 19)]
 		public DateTime? SettlDate { get; set; }
 		
-		[TagDetails(544, TagType.String)]
+		[TagDetails(Tag = 544, Type = TagType.String, Offset = 20)]
 		public string? CashMargin { get; set; }
 		
-		[TagDetails(635, TagType.String)]
+		[TagDetails(Tag = 635, Type = TagType.String, Offset = 21)]
 		public string? ClearingFeeIndicator { get; set; }
 		
-		[TagDetails(21, TagType.String)]
+		[TagDetails(Tag = 21, Type = TagType.String, Offset = 22)]
 		public string? HandlInst { get; set; }
 		
-		[TagDetails(18, TagType.String)]
+		[TagDetails(Tag = 18, Type = TagType.String, Offset = 23)]
 		public string? ExecInst { get; set; }
 		
-		[TagDetails(110, TagType.Float)]
+		[TagDetails(Tag = 110, Type = TagType.Float, Offset = 24)]
 		public double? MinQty { get; set; }
 		
-		[TagDetails(111, TagType.Float)]
+		[TagDetails(Tag = 111, Type = TagType.Float, Offset = 25)]
 		public double? MaxFloor { get; set; }
 		
-		[TagDetails(100, TagType.String)]
+		[TagDetails(Tag = 100, Type = TagType.String, Offset = 26)]
 		public string? ExDestination { get; set; }
 		
-		[Component]
+		[Component(Offset = 27)]
 		public TrdgSesGrp? TrdgSesGrp { get; set; }
 		
-		[TagDetails(81, TagType.String)]
+		[TagDetails(Tag = 81, Type = TagType.String, Offset = 28)]
 		public string? ProcessCode { get; set; }
 		
-		[TagDetails(54, TagType.String)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 29)]
 		public string? Side { get; set; }
 		
-		[Component]
+		[Component(Offset = 30)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 31)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[TagDetails(140, TagType.Float)]
+		[TagDetails(Tag = 140, Type = TagType.Float, Offset = 32)]
 		public double? PrevClosePx { get; set; }
 		
-		[Component]
+		[Component(Offset = 33)]
 		public LegOrdGrp? LegOrdGrp { get; set; }
 		
-		[TagDetails(114, TagType.Boolean)]
+		[TagDetails(Tag = 114, Type = TagType.Boolean, Offset = 34)]
 		public bool? LocateReqd { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 35)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(854, TagType.Int)]
+		[TagDetails(Tag = 854, Type = TagType.Int, Offset = 36)]
 		public int? QtyType { get; set; }
 		
-		[Component]
+		[Component(Offset = 37)]
 		public OrderQtyData? OrderQtyData { get; set; }
 		
-		[TagDetails(40, TagType.String)]
+		[TagDetails(Tag = 40, Type = TagType.String, Offset = 38)]
 		public string? OrdType { get; set; }
 		
-		[TagDetails(423, TagType.Int)]
+		[TagDetails(Tag = 423, Type = TagType.Int, Offset = 39)]
 		public int? PriceType { get; set; }
 		
-		[TagDetails(44, TagType.Float)]
+		[TagDetails(Tag = 44, Type = TagType.Float, Offset = 40)]
 		public double? Price { get; set; }
 		
-		[TagDetails(99, TagType.Float)]
+		[TagDetails(Tag = 99, Type = TagType.Float, Offset = 41)]
 		public double? StopPx { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 42)]
 		public string? Currency { get; set; }
 		
-		[TagDetails(376, TagType.String)]
+		[TagDetails(Tag = 376, Type = TagType.String, Offset = 43)]
 		public string? ComplianceID { get; set; }
 		
-		[TagDetails(377, TagType.Boolean)]
+		[TagDetails(Tag = 377, Type = TagType.Boolean, Offset = 44)]
 		public bool? SolicitedFlag { get; set; }
 		
-		[TagDetails(23, TagType.String)]
+		[TagDetails(Tag = 23, Type = TagType.String, Offset = 45)]
 		public string? IOIID { get; set; }
 		
-		[TagDetails(117, TagType.String)]
+		[TagDetails(Tag = 117, Type = TagType.String, Offset = 46)]
 		public string? QuoteID { get; set; }
 		
-		[TagDetails(59, TagType.String)]
+		[TagDetails(Tag = 59, Type = TagType.String, Offset = 47)]
 		public string? TimeInForce { get; set; }
 		
-		[TagDetails(168, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 168, Type = TagType.UtcTimestamp, Offset = 48)]
 		public DateTime? EffectiveTime { get; set; }
 		
-		[TagDetails(432, TagType.LocalDate)]
+		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 49)]
 		public DateTime? ExpireDate { get; set; }
 		
-		[TagDetails(126, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 126, Type = TagType.UtcTimestamp, Offset = 50)]
 		public DateTime? ExpireTime { get; set; }
 		
-		[TagDetails(427, TagType.Int)]
+		[TagDetails(Tag = 427, Type = TagType.Int, Offset = 51)]
 		public int? GTBookingInst { get; set; }
 		
-		[Component]
+		[Component(Offset = 52)]
 		public CommissionData? CommissionData { get; set; }
 		
-		[TagDetails(528, TagType.String)]
+		[TagDetails(Tag = 528, Type = TagType.String, Offset = 53)]
 		public string? OrderCapacity { get; set; }
 		
-		[TagDetails(529, TagType.String)]
+		[TagDetails(Tag = 529, Type = TagType.String, Offset = 54)]
 		public string? OrderRestrictions { get; set; }
 		
-		[TagDetails(582, TagType.Int)]
+		[TagDetails(Tag = 582, Type = TagType.Int, Offset = 55)]
 		public int? CustOrderCapacity { get; set; }
 		
-		[TagDetails(121, TagType.Boolean)]
+		[TagDetails(Tag = 121, Type = TagType.Boolean, Offset = 56)]
 		public bool? ForexReq { get; set; }
 		
-		[TagDetails(120, TagType.String)]
+		[TagDetails(Tag = 120, Type = TagType.String, Offset = 57)]
 		public string? SettlCurrency { get; set; }
 		
-		[TagDetails(775, TagType.Int)]
+		[TagDetails(Tag = 775, Type = TagType.Int, Offset = 58)]
 		public int? BookingType { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 59)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 60)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 61)]
 		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(77, TagType.String)]
+		[TagDetails(Tag = 77, Type = TagType.String, Offset = 62)]
 		public string? PositionEffect { get; set; }
 		
-		[TagDetails(203, TagType.Int)]
+		[TagDetails(Tag = 203, Type = TagType.Int, Offset = 63)]
 		public int? CoveredOrUncovered { get; set; }
 		
-		[TagDetails(210, TagType.Float)]
+		[TagDetails(Tag = 210, Type = TagType.Float, Offset = 64)]
 		public double? MaxShow { get; set; }
 		
-		[Component]
+		[Component(Offset = 65)]
 		public PegInstructions? PegInstructions { get; set; }
 		
-		[Component]
+		[Component(Offset = 66)]
 		public DiscretionInstructions? DiscretionInstructions { get; set; }
 		
-		[TagDetails(847, TagType.Int)]
+		[TagDetails(Tag = 847, Type = TagType.Int, Offset = 67)]
 		public int? TargetStrategy { get; set; }
 		
-		[TagDetails(848, TagType.String)]
+		[TagDetails(Tag = 848, Type = TagType.String, Offset = 68)]
 		public string? TargetStrategyParameters { get; set; }
 		
-		[TagDetails(849, TagType.Float)]
+		[TagDetails(Tag = 849, Type = TagType.Float, Offset = 69)]
 		public double? ParticipationRate { get; set; }
 		
-		[TagDetails(480, TagType.String)]
+		[TagDetails(Tag = 480, Type = TagType.String, Offset = 70)]
 		public string? CancellationRights { get; set; }
 		
-		[TagDetails(481, TagType.String)]
+		[TagDetails(Tag = 481, Type = TagType.String, Offset = 71)]
 		public string? MoneyLaunderingStatus { get; set; }
 		
-		[TagDetails(513, TagType.String)]
+		[TagDetails(Tag = 513, Type = TagType.String, Offset = 72)]
 		public string? RegistID { get; set; }
 		
-		[TagDetails(494, TagType.String)]
+		[TagDetails(Tag = 494, Type = TagType.String, Offset = 73)]
 		public string? Designation { get; set; }
 		
-		[TagDetails(563, TagType.Int)]
+		[TagDetails(Tag = 563, Type = TagType.Int, Offset = 74)]
 		public int? MultiLegRptTypeReq { get; set; }
 		
-		[Component]
+		[Component(Offset = 75)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

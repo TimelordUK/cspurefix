@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoLegStipulations
 	{
-		[TagDetails(688, TagType.String)]
+		[TagDetails(Tag = 688, Type = TagType.String, Offset = 0)]
 		public string? LegStipulationType { get; set; }
 		
-		[TagDetails(689, TagType.String)]
+		[TagDetails(Tag = 689, Type = TagType.String, Offset = 1)]
 		public string? LegStipulationValue { get; set; }
 		
 	}

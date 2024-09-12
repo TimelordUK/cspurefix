@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class PositionQty
 	{
-		[Group(702)]
+		[Group(NoOfTag = 702, Offset = 0)]
 		public NoPositions[]? NoPositions { get; set; }
 		
 	}

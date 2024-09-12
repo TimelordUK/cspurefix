@@ -10,67 +10,67 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AO", FixVersion.FIX44)]
 	public sealed class RequestForPositionsAck : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(721, TagType.String)]
+		[TagDetails(Tag = 721, Type = TagType.String, Offset = 1)]
 		public string? PosMaintRptID { get; set; }
 		
-		[TagDetails(710, TagType.String)]
+		[TagDetails(Tag = 710, Type = TagType.String, Offset = 2)]
 		public string? PosReqID { get; set; }
 		
-		[TagDetails(727, TagType.Int)]
+		[TagDetails(Tag = 727, Type = TagType.Int, Offset = 3)]
 		public int? TotalNumPosReports { get; set; }
 		
-		[TagDetails(325, TagType.Boolean)]
+		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 4)]
 		public bool? UnsolicitedIndicator { get; set; }
 		
-		[TagDetails(728, TagType.Int)]
+		[TagDetails(Tag = 728, Type = TagType.Int, Offset = 5)]
 		public int? PosReqResult { get; set; }
 		
-		[TagDetails(729, TagType.Int)]
+		[TagDetails(Tag = 729, Type = TagType.Int, Offset = 6)]
 		public int? PosReqStatus { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 8)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 9)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(581, TagType.Int)]
+		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 10)]
 		public int? AccountType { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public Instrument? Instrument { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 12)]
 		public string? Currency { get; set; }
 		
-		[Component]
+		[Component(Offset = 13)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 14)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[TagDetails(725, TagType.Int)]
+		[TagDetails(Tag = 725, Type = TagType.Int, Offset = 15)]
 		public int? ResponseTransportType { get; set; }
 		
-		[TagDetails(726, TagType.String)]
+		[TagDetails(Tag = 726, Type = TagType.String, Offset = 16)]
 		public string? ResponseDestination { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 17)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 18)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 19)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 20)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

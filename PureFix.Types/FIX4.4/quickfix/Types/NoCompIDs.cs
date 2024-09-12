@@ -9,16 +9,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoCompIDs
 	{
-		[TagDetails(930, TagType.String)]
+		[TagDetails(Tag = 930, Type = TagType.String, Offset = 0)]
 		public string? RefCompID { get; set; }
 		
-		[TagDetails(931, TagType.String)]
+		[TagDetails(Tag = 931, Type = TagType.String, Offset = 1)]
 		public string? RefSubID { get; set; }
 		
-		[TagDetails(283, TagType.String)]
+		[TagDetails(Tag = 283, Type = TagType.String, Offset = 2)]
 		public string? LocationID { get; set; }
 		
-		[TagDetails(284, TagType.String)]
+		[TagDetails(Tag = 284, Type = TagType.String, Offset = 3)]
 		public string? DeskID { get; set; }
 		
 	}

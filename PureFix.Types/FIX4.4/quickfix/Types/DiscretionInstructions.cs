@@ -9,25 +9,25 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class DiscretionInstructions
 	{
-		[TagDetails(388, TagType.String)]
+		[TagDetails(Tag = 388, Type = TagType.String, Offset = 0)]
 		public string? DiscretionInst { get; set; }
 		
-		[TagDetails(389, TagType.Float)]
+		[TagDetails(Tag = 389, Type = TagType.Float, Offset = 1)]
 		public double? DiscretionOffsetValue { get; set; }
 		
-		[TagDetails(841, TagType.Int)]
+		[TagDetails(Tag = 841, Type = TagType.Int, Offset = 2)]
 		public int? DiscretionMoveType { get; set; }
 		
-		[TagDetails(842, TagType.Int)]
+		[TagDetails(Tag = 842, Type = TagType.Int, Offset = 3)]
 		public int? DiscretionOffsetType { get; set; }
 		
-		[TagDetails(843, TagType.Int)]
+		[TagDetails(Tag = 843, Type = TagType.Int, Offset = 4)]
 		public int? DiscretionLimitType { get; set; }
 		
-		[TagDetails(844, TagType.Int)]
+		[TagDetails(Tag = 844, Type = TagType.Int, Offset = 5)]
 		public int? DiscretionRoundDirection { get; set; }
 		
-		[TagDetails(846, TagType.Int)]
+		[TagDetails(Tag = 846, Type = TagType.Int, Offset = 6)]
 		public int? DiscretionScope { get; set; }
 		
 	}

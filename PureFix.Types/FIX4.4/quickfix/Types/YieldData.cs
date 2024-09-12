@@ -9,22 +9,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class YieldData
 	{
-		[TagDetails(235, TagType.String)]
+		[TagDetails(Tag = 235, Type = TagType.String, Offset = 0)]
 		public string? YieldType { get; set; }
 		
-		[TagDetails(236, TagType.Float)]
+		[TagDetails(Tag = 236, Type = TagType.Float, Offset = 1)]
 		public double? Yield { get; set; }
 		
-		[TagDetails(701, TagType.LocalDate)]
+		[TagDetails(Tag = 701, Type = TagType.LocalDate, Offset = 2)]
 		public DateTime? YieldCalcDate { get; set; }
 		
-		[TagDetails(696, TagType.LocalDate)]
+		[TagDetails(Tag = 696, Type = TagType.LocalDate, Offset = 3)]
 		public DateTime? YieldRedemptionDate { get; set; }
 		
-		[TagDetails(697, TagType.Float)]
+		[TagDetails(Tag = 697, Type = TagType.Float, Offset = 4)]
 		public double? YieldRedemptionPrice { get; set; }
 		
-		[TagDetails(698, TagType.Int)]
+		[TagDetails(Tag = 698, Type = TagType.Int, Offset = 5)]
 		public int? YieldRedemptionPriceType { get; set; }
 		
 	}

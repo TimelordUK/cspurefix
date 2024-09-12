@@ -10,31 +10,31 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("j", FixVersion.FIX44)]
 	public sealed class BusinessMessageReject : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(45, TagType.Int)]
+		[TagDetails(Tag = 45, Type = TagType.Int, Offset = 1)]
 		public int? RefSeqNum { get; set; }
 		
-		[TagDetails(372, TagType.String)]
+		[TagDetails(Tag = 372, Type = TagType.String, Offset = 2)]
 		public string? RefMsgType { get; set; }
 		
-		[TagDetails(379, TagType.String)]
+		[TagDetails(Tag = 379, Type = TagType.String, Offset = 3)]
 		public string? BusinessRejectRefID { get; set; }
 		
-		[TagDetails(380, TagType.Int)]
+		[TagDetails(Tag = 380, Type = TagType.Int, Offset = 4)]
 		public int? BusinessRejectReason { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 5)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 6)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 7)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 8)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

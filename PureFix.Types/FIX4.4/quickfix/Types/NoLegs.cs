@@ -9,13 +9,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoLegs
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public InstrumentLeg? InstrumentLeg { get; set; }
 		
-		[TagDetails(682, TagType.String)]
+		[TagDetails(Tag = 682, Type = TagType.String, Offset = 1)]
 		public string? LegIOIQty { get; set; }
 		
-		[Component]
+		[Component(Offset = 2)]
 		public LegStipulations? LegStipulations { get; set; }
 		
 	}

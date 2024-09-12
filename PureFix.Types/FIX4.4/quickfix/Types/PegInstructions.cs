@@ -9,22 +9,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class PegInstructions
 	{
-		[TagDetails(211, TagType.Float)]
+		[TagDetails(Tag = 211, Type = TagType.Float, Offset = 0)]
 		public double? PegOffsetValue { get; set; }
 		
-		[TagDetails(835, TagType.Int)]
+		[TagDetails(Tag = 835, Type = TagType.Int, Offset = 1)]
 		public int? PegMoveType { get; set; }
 		
-		[TagDetails(836, TagType.Int)]
+		[TagDetails(Tag = 836, Type = TagType.Int, Offset = 2)]
 		public int? PegOffsetType { get; set; }
 		
-		[TagDetails(837, TagType.Int)]
+		[TagDetails(Tag = 837, Type = TagType.Int, Offset = 3)]
 		public int? PegLimitType { get; set; }
 		
-		[TagDetails(838, TagType.Int)]
+		[TagDetails(Tag = 838, Type = TagType.Int, Offset = 4)]
 		public int? PegRoundDirection { get; set; }
 		
-		[TagDetails(840, TagType.Int)]
+		[TagDetails(Tag = 840, Type = TagType.Int, Offset = 5)]
 		public int? PegScope { get; set; }
 		
 	}

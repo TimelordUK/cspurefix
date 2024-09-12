@@ -9,31 +9,31 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class FinancingDetails
 	{
-		[TagDetails(913, TagType.String)]
+		[TagDetails(Tag = 913, Type = TagType.String, Offset = 0)]
 		public string? AgreementDesc { get; set; }
 		
-		[TagDetails(914, TagType.String)]
+		[TagDetails(Tag = 914, Type = TagType.String, Offset = 1)]
 		public string? AgreementID { get; set; }
 		
-		[TagDetails(915, TagType.LocalDate)]
+		[TagDetails(Tag = 915, Type = TagType.LocalDate, Offset = 2)]
 		public DateTime? AgreementDate { get; set; }
 		
-		[TagDetails(918, TagType.String)]
+		[TagDetails(Tag = 918, Type = TagType.String, Offset = 3)]
 		public string? AgreementCurrency { get; set; }
 		
-		[TagDetails(788, TagType.Int)]
+		[TagDetails(Tag = 788, Type = TagType.Int, Offset = 4)]
 		public int? TerminationType { get; set; }
 		
-		[TagDetails(916, TagType.LocalDate)]
+		[TagDetails(Tag = 916, Type = TagType.LocalDate, Offset = 5)]
 		public DateTime? StartDate { get; set; }
 		
-		[TagDetails(917, TagType.LocalDate)]
+		[TagDetails(Tag = 917, Type = TagType.LocalDate, Offset = 6)]
 		public DateTime? EndDate { get; set; }
 		
-		[TagDetails(919, TagType.Int)]
+		[TagDetails(Tag = 919, Type = TagType.Int, Offset = 7)]
 		public int? DeliveryType { get; set; }
 		
-		[TagDetails(898, TagType.Float)]
+		[TagDetails(Tag = 898, Type = TagType.Float, Offset = 8)]
 		public double? MarginRatio { get; set; }
 		
 	}

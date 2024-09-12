@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoUnderlyingStips
 	{
-		[TagDetails(888, TagType.String)]
+		[TagDetails(Tag = 888, Type = TagType.String, Offset = 0)]
 		public string? UnderlyingStipType { get; set; }
 		
-		[TagDetails(889, TagType.String)]
+		[TagDetails(Tag = 889, Type = TagType.String, Offset = 1)]
 		public string? UnderlyingStipValue { get; set; }
 		
 	}

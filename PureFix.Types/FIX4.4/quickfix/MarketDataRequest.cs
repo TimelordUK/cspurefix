@@ -10,49 +10,49 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("V", FixVersion.FIX44)]
 	public sealed class MarketDataRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(262, TagType.String)]
+		[TagDetails(Tag = 262, Type = TagType.String, Offset = 1)]
 		public string? MDReqID { get; set; }
 		
-		[TagDetails(263, TagType.String)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 2)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[TagDetails(264, TagType.Int)]
+		[TagDetails(Tag = 264, Type = TagType.Int, Offset = 3)]
 		public int? MarketDepth { get; set; }
 		
-		[TagDetails(265, TagType.Int)]
+		[TagDetails(Tag = 265, Type = TagType.Int, Offset = 4)]
 		public int? MDUpdateType { get; set; }
 		
-		[TagDetails(266, TagType.Boolean)]
+		[TagDetails(Tag = 266, Type = TagType.Boolean, Offset = 5)]
 		public bool? AggregatedBook { get; set; }
 		
-		[TagDetails(286, TagType.String)]
+		[TagDetails(Tag = 286, Type = TagType.String, Offset = 6)]
 		public string? OpenCloseSettlFlag { get; set; }
 		
-		[TagDetails(546, TagType.String)]
+		[TagDetails(Tag = 546, Type = TagType.String, Offset = 7)]
 		public string? Scope { get; set; }
 		
-		[TagDetails(547, TagType.Boolean)]
+		[TagDetails(Tag = 547, Type = TagType.Boolean, Offset = 8)]
 		public bool? MDImplicitDelete { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public MDReqGrp? MDReqGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public InstrmtMDReqGrp? InstrmtMDReqGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public TrdgSesGrp? TrdgSesGrp { get; set; }
 		
-		[TagDetails(815, TagType.Int)]
+		[TagDetails(Tag = 815, Type = TagType.Int, Offset = 12)]
 		public int? ApplQueueAction { get; set; }
 		
-		[TagDetails(812, TagType.Int)]
+		[TagDetails(Tag = 812, Type = TagType.Int, Offset = 13)]
 		public int? ApplQueueMax { get; set; }
 		
-		[Component]
+		[Component(Offset = 14)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

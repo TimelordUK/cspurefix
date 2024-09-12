@@ -10,85 +10,85 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("f", FixVersion.FIX44)]
 	public sealed class SecurityStatus : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(324, TagType.String)]
+		[TagDetails(Tag = 324, Type = TagType.String, Offset = 1)]
 		public string? SecurityStatusReqID { get; set; }
 		
-		[Component]
+		[Component(Offset = 2)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 3)]
 		public InstrumentExtension? InstrumentExtension { get; set; }
 		
-		[Component]
+		[Component(Offset = 4)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 5)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 6)]
 		public string? Currency { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 7)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 8)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(325, TagType.Boolean)]
+		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 9)]
 		public bool? UnsolicitedIndicator { get; set; }
 		
-		[TagDetails(326, TagType.Int)]
+		[TagDetails(Tag = 326, Type = TagType.Int, Offset = 10)]
 		public int? SecurityTradingStatus { get; set; }
 		
-		[TagDetails(291, TagType.String)]
+		[TagDetails(Tag = 291, Type = TagType.String, Offset = 11)]
 		public string? FinancialStatus { get; set; }
 		
-		[TagDetails(292, TagType.String)]
+		[TagDetails(Tag = 292, Type = TagType.String, Offset = 12)]
 		public string? CorporateAction { get; set; }
 		
-		[TagDetails(327, TagType.String)]
+		[TagDetails(Tag = 327, Type = TagType.String, Offset = 13)]
 		public string? HaltReasonChar { get; set; }
 		
-		[TagDetails(328, TagType.Boolean)]
+		[TagDetails(Tag = 328, Type = TagType.Boolean, Offset = 14)]
 		public bool? InViewOfCommon { get; set; }
 		
-		[TagDetails(329, TagType.Boolean)]
+		[TagDetails(Tag = 329, Type = TagType.Boolean, Offset = 15)]
 		public bool? DueToRelated { get; set; }
 		
-		[TagDetails(330, TagType.Float)]
+		[TagDetails(Tag = 330, Type = TagType.Float, Offset = 16)]
 		public double? BuyVolume { get; set; }
 		
-		[TagDetails(331, TagType.Float)]
+		[TagDetails(Tag = 331, Type = TagType.Float, Offset = 17)]
 		public double? SellVolume { get; set; }
 		
-		[TagDetails(332, TagType.Float)]
+		[TagDetails(Tag = 332, Type = TagType.Float, Offset = 18)]
 		public double? HighPx { get; set; }
 		
-		[TagDetails(333, TagType.Float)]
+		[TagDetails(Tag = 333, Type = TagType.Float, Offset = 19)]
 		public double? LowPx { get; set; }
 		
-		[TagDetails(31, TagType.Float)]
+		[TagDetails(Tag = 31, Type = TagType.Float, Offset = 20)]
 		public double? LastPx { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 21)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(334, TagType.Int)]
+		[TagDetails(Tag = 334, Type = TagType.Int, Offset = 22)]
 		public int? Adjustment { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 23)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 24)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 25)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 26)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

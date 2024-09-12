@@ -10,16 +10,16 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("4", FixVersion.FIX44)]
 	public sealed class SequenceReset : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(123, TagType.Boolean)]
+		[TagDetails(Tag = 123, Type = TagType.Boolean, Offset = 1)]
 		public bool? GapFillFlag { get; set; }
 		
-		[TagDetails(36, TagType.Int)]
+		[TagDetails(Tag = 36, Type = TagType.Int, Offset = 2)]
 		public int? NewSeqNo { get; set; }
 		
-		[Component]
+		[Component(Offset = 3)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

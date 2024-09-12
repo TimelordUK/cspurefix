@@ -9,16 +9,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class CommissionData
 	{
-		[TagDetails(12, TagType.Float)]
+		[TagDetails(Tag = 12, Type = TagType.Float, Offset = 0)]
 		public double? Commission { get; set; }
 		
-		[TagDetails(13, TagType.String)]
+		[TagDetails(Tag = 13, Type = TagType.String, Offset = 1)]
 		public string? CommType { get; set; }
 		
-		[TagDetails(479, TagType.String)]
+		[TagDetails(Tag = 479, Type = TagType.String, Offset = 2)]
 		public string? CommCurrency { get; set; }
 		
-		[TagDetails(497, TagType.String)]
+		[TagDetails(Tag = 497, Type = TagType.String, Offset = 3)]
 		public string? FundRenewWaiv { get; set; }
 		
 	}

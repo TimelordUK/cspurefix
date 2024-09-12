@@ -10,91 +10,91 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AW", FixVersion.FIX44)]
 	public sealed class AssignmentReport : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(833, TagType.String)]
+		[TagDetails(Tag = 833, Type = TagType.String, Offset = 1)]
 		public string? AsgnRptID { get; set; }
 		
-		[TagDetails(832, TagType.Int)]
+		[TagDetails(Tag = 832, Type = TagType.Int, Offset = 2)]
 		public int? TotNumAssignmentReports { get; set; }
 		
-		[TagDetails(912, TagType.Boolean)]
+		[TagDetails(Tag = 912, Type = TagType.Boolean, Offset = 3)]
 		public bool? LastRptRequested { get; set; }
 		
-		[Component]
+		[Component(Offset = 4)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 5)]
 		public string? Account { get; set; }
 		
-		[TagDetails(581, TagType.Int)]
+		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 6)]
 		public int? AccountType { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public Instrument? Instrument { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 8)]
 		public string? Currency { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public PositionQty? PositionQty { get; set; }
 		
-		[Component]
+		[Component(Offset = 12)]
 		public PositionAmountData? PositionAmountData { get; set; }
 		
-		[TagDetails(834, TagType.Float)]
+		[TagDetails(Tag = 834, Type = TagType.Float, Offset = 13)]
 		public double? ThresholdAmount { get; set; }
 		
-		[TagDetails(730, TagType.Float)]
+		[TagDetails(Tag = 730, Type = TagType.Float, Offset = 14)]
 		public double? SettlPrice { get; set; }
 		
-		[TagDetails(731, TagType.Int)]
+		[TagDetails(Tag = 731, Type = TagType.Int, Offset = 15)]
 		public int? SettlPriceType { get; set; }
 		
-		[TagDetails(732, TagType.Float)]
+		[TagDetails(Tag = 732, Type = TagType.Float, Offset = 16)]
 		public double? UnderlyingSettlPrice { get; set; }
 		
-		[TagDetails(432, TagType.LocalDate)]
+		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 17)]
 		public DateTime? ExpireDate { get; set; }
 		
-		[TagDetails(744, TagType.String)]
+		[TagDetails(Tag = 744, Type = TagType.String, Offset = 18)]
 		public string? AssignmentMethod { get; set; }
 		
-		[TagDetails(745, TagType.Float)]
+		[TagDetails(Tag = 745, Type = TagType.Float, Offset = 19)]
 		public double? AssignmentUnit { get; set; }
 		
-		[TagDetails(746, TagType.Float)]
+		[TagDetails(Tag = 746, Type = TagType.Float, Offset = 20)]
 		public double? OpenInterest { get; set; }
 		
-		[TagDetails(747, TagType.String)]
+		[TagDetails(Tag = 747, Type = TagType.String, Offset = 21)]
 		public string? ExerciseMethod { get; set; }
 		
-		[TagDetails(716, TagType.String)]
+		[TagDetails(Tag = 716, Type = TagType.String, Offset = 22)]
 		public string? SettlSessID { get; set; }
 		
-		[TagDetails(717, TagType.String)]
+		[TagDetails(Tag = 717, Type = TagType.String, Offset = 23)]
 		public string? SettlSessSubID { get; set; }
 		
-		[TagDetails(715, TagType.LocalDate)]
+		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 24)]
 		public DateTime? ClearingBusinessDate { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 25)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 26)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 27)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 28)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

@@ -10,37 +10,37 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AU", FixVersion.FIX44)]
 	public sealed class ConfirmationAck : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(664, TagType.String)]
+		[TagDetails(Tag = 664, Type = TagType.String, Offset = 1)]
 		public string? ConfirmID { get; set; }
 		
-		[TagDetails(75, TagType.LocalDate)]
+		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 2)]
 		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 3)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(940, TagType.Int)]
+		[TagDetails(Tag = 940, Type = TagType.Int, Offset = 4)]
 		public int? AffirmStatus { get; set; }
 		
-		[TagDetails(774, TagType.Int)]
+		[TagDetails(Tag = 774, Type = TagType.Int, Offset = 5)]
 		public int? ConfirmRejReason { get; set; }
 		
-		[TagDetails(573, TagType.String)]
+		[TagDetails(Tag = 573, Type = TagType.String, Offset = 6)]
 		public string? MatchStatus { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 7)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 8)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 9)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

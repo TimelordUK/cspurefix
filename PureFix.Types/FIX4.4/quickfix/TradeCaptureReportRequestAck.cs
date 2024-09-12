@@ -10,55 +10,55 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AQ", FixVersion.FIX44)]
 	public sealed class TradeCaptureReportRequestAck : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(568, TagType.String)]
+		[TagDetails(Tag = 568, Type = TagType.String, Offset = 1)]
 		public string? TradeRequestID { get; set; }
 		
-		[TagDetails(569, TagType.Int)]
+		[TagDetails(Tag = 569, Type = TagType.Int, Offset = 2)]
 		public int? TradeRequestType { get; set; }
 		
-		[TagDetails(263, TagType.String)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 3)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[TagDetails(748, TagType.Int)]
+		[TagDetails(Tag = 748, Type = TagType.Int, Offset = 4)]
 		public int? TotNumTradeReports { get; set; }
 		
-		[TagDetails(749, TagType.Int)]
+		[TagDetails(Tag = 749, Type = TagType.Int, Offset = 5)]
 		public int? TradeRequestResult { get; set; }
 		
-		[TagDetails(750, TagType.Int)]
+		[TagDetails(Tag = 750, Type = TagType.Int, Offset = 6)]
 		public int? TradeRequestStatus { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 8)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[TagDetails(442, TagType.String)]
+		[TagDetails(Tag = 442, Type = TagType.String, Offset = 10)]
 		public string? MultiLegReportingType { get; set; }
 		
-		[TagDetails(725, TagType.Int)]
+		[TagDetails(Tag = 725, Type = TagType.Int, Offset = 11)]
 		public int? ResponseTransportType { get; set; }
 		
-		[TagDetails(726, TagType.String)]
+		[TagDetails(Tag = 726, Type = TagType.String, Offset = 12)]
 		public string? ResponseDestination { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 13)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 14)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 15)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 16)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

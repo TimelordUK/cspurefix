@@ -9,145 +9,145 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class UnderlyingInstrument
 	{
-		[TagDetails(311, TagType.String)]
+		[TagDetails(Tag = 311, Type = TagType.String, Offset = 0)]
 		public string? UnderlyingSymbol { get; set; }
 		
-		[TagDetails(312, TagType.String)]
+		[TagDetails(Tag = 312, Type = TagType.String, Offset = 1)]
 		public string? UnderlyingSymbolSfx { get; set; }
 		
-		[TagDetails(309, TagType.String)]
+		[TagDetails(Tag = 309, Type = TagType.String, Offset = 2)]
 		public string? UnderlyingSecurityID { get; set; }
 		
-		[TagDetails(305, TagType.String)]
+		[TagDetails(Tag = 305, Type = TagType.String, Offset = 3)]
 		public string? UnderlyingSecurityIDSource { get; set; }
 		
-		[Component]
+		[Component(Offset = 4)]
 		public UndSecAltIDGrp? UndSecAltIDGrp { get; set; }
 		
-		[TagDetails(462, TagType.Int)]
+		[TagDetails(Tag = 462, Type = TagType.Int, Offset = 5)]
 		public int? UnderlyingProduct { get; set; }
 		
-		[TagDetails(463, TagType.String)]
+		[TagDetails(Tag = 463, Type = TagType.String, Offset = 6)]
 		public string? UnderlyingCFICode { get; set; }
 		
-		[TagDetails(310, TagType.String)]
+		[TagDetails(Tag = 310, Type = TagType.String, Offset = 7)]
 		public string? UnderlyingSecurityType { get; set; }
 		
-		[TagDetails(763, TagType.String)]
+		[TagDetails(Tag = 763, Type = TagType.String, Offset = 8)]
 		public string? UnderlyingSecuritySubType { get; set; }
 		
-		[TagDetails(313, TagType.String)]
+		[TagDetails(Tag = 313, Type = TagType.String, Offset = 9)]
 		public string? UnderlyingMaturityMonthYear { get; set; }
 		
-		[TagDetails(542, TagType.LocalDate)]
+		[TagDetails(Tag = 542, Type = TagType.LocalDate, Offset = 10)]
 		public DateTime? UnderlyingMaturityDate { get; set; }
 		
-		[TagDetails(315, TagType.Int)]
+		[TagDetails(Tag = 315, Type = TagType.Int, Offset = 11)]
 		public int? UnderlyingPutOrCall { get; set; }
 		
-		[TagDetails(241, TagType.LocalDate)]
+		[TagDetails(Tag = 241, Type = TagType.LocalDate, Offset = 12)]
 		public DateTime? UnderlyingCouponPaymentDate { get; set; }
 		
-		[TagDetails(242, TagType.LocalDate)]
+		[TagDetails(Tag = 242, Type = TagType.LocalDate, Offset = 13)]
 		public DateTime? UnderlyingIssueDate { get; set; }
 		
-		[TagDetails(243, TagType.String)]
+		[TagDetails(Tag = 243, Type = TagType.String, Offset = 14)]
 		public string? UnderlyingRepoCollateralSecurityType { get; set; }
 		
-		[TagDetails(244, TagType.Int)]
+		[TagDetails(Tag = 244, Type = TagType.Int, Offset = 15)]
 		public int? UnderlyingRepurchaseTerm { get; set; }
 		
-		[TagDetails(245, TagType.Float)]
+		[TagDetails(Tag = 245, Type = TagType.Float, Offset = 16)]
 		public double? UnderlyingRepurchaseRate { get; set; }
 		
-		[TagDetails(246, TagType.Float)]
+		[TagDetails(Tag = 246, Type = TagType.Float, Offset = 17)]
 		public double? UnderlyingFactor { get; set; }
 		
-		[TagDetails(256, TagType.String)]
+		[TagDetails(Tag = 256, Type = TagType.String, Offset = 18)]
 		public string? UnderlyingCreditRating { get; set; }
 		
-		[TagDetails(595, TagType.String)]
+		[TagDetails(Tag = 595, Type = TagType.String, Offset = 19)]
 		public string? UnderlyingInstrRegistry { get; set; }
 		
-		[TagDetails(592, TagType.String)]
+		[TagDetails(Tag = 592, Type = TagType.String, Offset = 20)]
 		public string? UnderlyingCountryOfIssue { get; set; }
 		
-		[TagDetails(593, TagType.String)]
+		[TagDetails(Tag = 593, Type = TagType.String, Offset = 21)]
 		public string? UnderlyingStateOrProvinceOfIssue { get; set; }
 		
-		[TagDetails(594, TagType.String)]
+		[TagDetails(Tag = 594, Type = TagType.String, Offset = 22)]
 		public string? UnderlyingLocaleOfIssue { get; set; }
 		
-		[TagDetails(247, TagType.LocalDate)]
+		[TagDetails(Tag = 247, Type = TagType.LocalDate, Offset = 23)]
 		public DateTime? UnderlyingRedemptionDate { get; set; }
 		
-		[TagDetails(316, TagType.Float)]
+		[TagDetails(Tag = 316, Type = TagType.Float, Offset = 24)]
 		public double? UnderlyingStrikePrice { get; set; }
 		
-		[TagDetails(941, TagType.String)]
+		[TagDetails(Tag = 941, Type = TagType.String, Offset = 25)]
 		public string? UnderlyingStrikeCurrency { get; set; }
 		
-		[TagDetails(317, TagType.String)]
+		[TagDetails(Tag = 317, Type = TagType.String, Offset = 26)]
 		public string? UnderlyingOptAttribute { get; set; }
 		
-		[TagDetails(436, TagType.Float)]
+		[TagDetails(Tag = 436, Type = TagType.Float, Offset = 27)]
 		public double? UnderlyingContractMultiplier { get; set; }
 		
-		[TagDetails(435, TagType.Float)]
+		[TagDetails(Tag = 435, Type = TagType.Float, Offset = 28)]
 		public double? UnderlyingCouponRate { get; set; }
 		
-		[TagDetails(308, TagType.String)]
+		[TagDetails(Tag = 308, Type = TagType.String, Offset = 29)]
 		public string? UnderlyingSecurityExchange { get; set; }
 		
-		[TagDetails(306, TagType.String)]
+		[TagDetails(Tag = 306, Type = TagType.String, Offset = 30)]
 		public string? UnderlyingIssuer { get; set; }
 		
-		[TagDetails(362, TagType.Length)]
+		[TagDetails(Tag = 362, Type = TagType.Length, Offset = 31)]
 		public int? EncodedUnderlyingIssuerLen { get; set; }
 		
-		[TagDetails(363, TagType.RawData)]
+		[TagDetails(Tag = 363, Type = TagType.RawData, Offset = 32)]
 		public byte[]? EncodedUnderlyingIssuer { get; set; }
 		
-		[TagDetails(307, TagType.String)]
+		[TagDetails(Tag = 307, Type = TagType.String, Offset = 33)]
 		public string? UnderlyingSecurityDesc { get; set; }
 		
-		[TagDetails(364, TagType.Length)]
+		[TagDetails(Tag = 364, Type = TagType.Length, Offset = 34)]
 		public int? EncodedUnderlyingSecurityDescLen { get; set; }
 		
-		[TagDetails(365, TagType.RawData)]
+		[TagDetails(Tag = 365, Type = TagType.RawData, Offset = 35)]
 		public byte[]? EncodedUnderlyingSecurityDesc { get; set; }
 		
-		[TagDetails(877, TagType.String)]
+		[TagDetails(Tag = 877, Type = TagType.String, Offset = 36)]
 		public string? UnderlyingCPProgram { get; set; }
 		
-		[TagDetails(878, TagType.String)]
+		[TagDetails(Tag = 878, Type = TagType.String, Offset = 37)]
 		public string? UnderlyingCPRegType { get; set; }
 		
-		[TagDetails(318, TagType.String)]
+		[TagDetails(Tag = 318, Type = TagType.String, Offset = 38)]
 		public string? UnderlyingCurrency { get; set; }
 		
-		[TagDetails(879, TagType.Float)]
+		[TagDetails(Tag = 879, Type = TagType.Float, Offset = 39)]
 		public double? UnderlyingQty { get; set; }
 		
-		[TagDetails(810, TagType.Float)]
+		[TagDetails(Tag = 810, Type = TagType.Float, Offset = 40)]
 		public double? UnderlyingPx { get; set; }
 		
-		[TagDetails(882, TagType.Float)]
+		[TagDetails(Tag = 882, Type = TagType.Float, Offset = 41)]
 		public double? UnderlyingDirtyPrice { get; set; }
 		
-		[TagDetails(883, TagType.Float)]
+		[TagDetails(Tag = 883, Type = TagType.Float, Offset = 42)]
 		public double? UnderlyingEndPrice { get; set; }
 		
-		[TagDetails(884, TagType.Float)]
+		[TagDetails(Tag = 884, Type = TagType.Float, Offset = 43)]
 		public double? UnderlyingStartValue { get; set; }
 		
-		[TagDetails(885, TagType.Float)]
+		[TagDetails(Tag = 885, Type = TagType.Float, Offset = 44)]
 		public double? UnderlyingCurrentValue { get; set; }
 		
-		[TagDetails(886, TagType.Float)]
+		[TagDetails(Tag = 886, Type = TagType.Float, Offset = 45)]
 		public double? UnderlyingEndValue { get; set; }
 		
-		[Component]
+		[Component(Offset = 46)]
 		public UnderlyingStipulations? UnderlyingStipulations { get; set; }
 		
 	}

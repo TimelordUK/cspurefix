@@ -137,23 +137,23 @@ namespace PureFix.Dictionary.Compiler
         }
 
         // public string? TestReqID { get; set; }
-        public void OnSimple(ContainedSimpleField sf, object? state = null)
+        public void OnSimple(ContainedSimpleField sf, int index)
         {
             var type = Tags.ToCsType(sf.Definition.TagType);
             const string props = "{ get; set; }";
 
-            _builder.WriteLine($"[TagDetails({sf.Definition.Tag}, TagType.{TagTypeUtil.ToType(sf.Definition.Type)})]");
+            _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index})]");
             _builder.WriteLine($"public {type}? {sf.Definition.Name} {props}");
             _builder.WriteLine();
         }
 
-        public void OnComponent(ContainedComponentField cf, object? state = null)
+        public void OnComponent(ContainedComponentField cf,  int index)
         {
             if (cf.Definition == null) return;
             const string props = "{ get; set; }";
             var declared = cf.Name is "StandardHeader" or "StandardTrailer" ? $"override {cf.Name}" : cf.Name;
             
-            _builder.WriteLine("[Component]");
+            _builder.WriteLine($"[Component(Offset = {index})]");
             _builder.WriteLine($"public {declared}? {cf.Name} {props}");
 
             if(cf.Name != "StandardTrailer")
@@ -165,14 +165,14 @@ namespace PureFix.Dictionary.Compiler
             Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, cf.Name));
         }
 
-        public void OnGroup(ContainedGroupField gf, object? state = null)
+        public void OnGroup(ContainedGroupField gf, int index)
         {
             if (gf.Definition == null) return;
             const string props = "{ get; set; }";
 
             var countField = gf.Definition.NoOfField!.Tag;
 
-            _builder.WriteLine($"[Group({countField})]");
+            _builder.WriteLine($"[Group(NoOfTag = {countField}, Offset = {index})]");
             _builder.WriteLine($"public {gf.Name}[]? {gf.Name} {props}");
             _builder.WriteLine();
             // any dependent group also needs to be constructed StandardHeader etc.

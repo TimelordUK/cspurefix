@@ -10,28 +10,28 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("Y", FixVersion.FIX44)]
 	public sealed class MarketDataRequestReject : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(262, TagType.String)]
+		[TagDetails(Tag = 262, Type = TagType.String, Offset = 1)]
 		public string? MDReqID { get; set; }
 		
-		[TagDetails(281, TagType.String)]
+		[TagDetails(Tag = 281, Type = TagType.String, Offset = 2)]
 		public string? MDReqRejReason { get; set; }
 		
-		[Component]
+		[Component(Offset = 3)]
 		public MDRjctGrp? MDRjctGrp { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 4)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 5)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 6)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

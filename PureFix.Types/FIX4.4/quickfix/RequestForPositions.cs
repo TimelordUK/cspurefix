@@ -10,76 +10,76 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AN", FixVersion.FIX44)]
 	public sealed class RequestForPositions : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(710, TagType.String)]
+		[TagDetails(Tag = 710, Type = TagType.String, Offset = 1)]
 		public string? PosReqID { get; set; }
 		
-		[TagDetails(724, TagType.Int)]
+		[TagDetails(Tag = 724, Type = TagType.Int, Offset = 2)]
 		public int? PosReqType { get; set; }
 		
-		[TagDetails(573, TagType.String)]
+		[TagDetails(Tag = 573, Type = TagType.String, Offset = 3)]
 		public string? MatchStatus { get; set; }
 		
-		[TagDetails(263, TagType.String)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 4)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[Component]
+		[Component(Offset = 5)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 6)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 7)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(581, TagType.Int)]
+		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 8)]
 		public int? AccountType { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public Instrument? Instrument { get; set; }
 		
-		[TagDetails(15, TagType.String)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 10)]
 		public string? Currency { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 12)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[TagDetails(715, TagType.LocalDate)]
+		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 13)]
 		public DateTime? ClearingBusinessDate { get; set; }
 		
-		[TagDetails(716, TagType.String)]
+		[TagDetails(Tag = 716, Type = TagType.String, Offset = 14)]
 		public string? SettlSessID { get; set; }
 		
-		[TagDetails(717, TagType.String)]
+		[TagDetails(Tag = 717, Type = TagType.String, Offset = 15)]
 		public string? SettlSessSubID { get; set; }
 		
-		[Component]
+		[Component(Offset = 16)]
 		public TrdgSesGrp? TrdgSesGrp { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 17)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(725, TagType.Int)]
+		[TagDetails(Tag = 725, Type = TagType.Int, Offset = 18)]
 		public int? ResponseTransportType { get; set; }
 		
-		[TagDetails(726, TagType.String)]
+		[TagDetails(Tag = 726, Type = TagType.String, Offset = 19)]
 		public string? ResponseDestination { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 20)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 21)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 22)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 23)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

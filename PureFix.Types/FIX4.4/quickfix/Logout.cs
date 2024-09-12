@@ -10,19 +10,19 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("5", FixVersion.FIX44)]
 	public sealed class Logout : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 1)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 2)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 3)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 4)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

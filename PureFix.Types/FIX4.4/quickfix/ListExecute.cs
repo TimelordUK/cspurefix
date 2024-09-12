@@ -10,31 +10,31 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("L", FixVersion.FIX44)]
 	public sealed class ListExecute : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(66, TagType.String)]
+		[TagDetails(Tag = 66, Type = TagType.String, Offset = 1)]
 		public string? ListID { get; set; }
 		
-		[TagDetails(391, TagType.String)]
+		[TagDetails(Tag = 391, Type = TagType.String, Offset = 2)]
 		public string? ClientBidID { get; set; }
 		
-		[TagDetails(390, TagType.String)]
+		[TagDetails(Tag = 390, Type = TagType.String, Offset = 3)]
 		public string? BidID { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 4)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 5)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 6)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 7)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 8)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

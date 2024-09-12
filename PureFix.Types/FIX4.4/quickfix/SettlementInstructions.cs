@@ -10,40 +10,40 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("T", FixVersion.FIX44)]
 	public sealed class SettlementInstructions : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(777, TagType.String)]
+		[TagDetails(Tag = 777, Type = TagType.String, Offset = 1)]
 		public string? SettlInstMsgID { get; set; }
 		
-		[TagDetails(791, TagType.String)]
+		[TagDetails(Tag = 791, Type = TagType.String, Offset = 2)]
 		public string? SettlInstReqID { get; set; }
 		
-		[TagDetails(160, TagType.String)]
+		[TagDetails(Tag = 160, Type = TagType.String, Offset = 3)]
 		public string? SettlInstMode { get; set; }
 		
-		[TagDetails(792, TagType.Int)]
+		[TagDetails(Tag = 792, Type = TagType.Int, Offset = 4)]
 		public int? SettlInstReqRejCode { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 5)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 6)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 7)]
 		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(11, TagType.String)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 8)]
 		public string? ClOrdID { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 9)]
 		public DateTime? TransactTime { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public SettlInstGrp? SettlInstGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

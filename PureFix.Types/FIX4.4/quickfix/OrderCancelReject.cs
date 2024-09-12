@@ -10,73 +10,73 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("9", FixVersion.FIX44)]
 	public sealed class OrderCancelReject : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(37, TagType.String)]
+		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1)]
 		public string? OrderID { get; set; }
 		
-		[TagDetails(198, TagType.String)]
+		[TagDetails(Tag = 198, Type = TagType.String, Offset = 2)]
 		public string? SecondaryOrderID { get; set; }
 		
-		[TagDetails(526, TagType.String)]
+		[TagDetails(Tag = 526, Type = TagType.String, Offset = 3)]
 		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(11, TagType.String)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 4)]
 		public string? ClOrdID { get; set; }
 		
-		[TagDetails(583, TagType.String)]
+		[TagDetails(Tag = 583, Type = TagType.String, Offset = 5)]
 		public string? ClOrdLinkID { get; set; }
 		
-		[TagDetails(41, TagType.String)]
+		[TagDetails(Tag = 41, Type = TagType.String, Offset = 6)]
 		public string? OrigClOrdID { get; set; }
 		
-		[TagDetails(39, TagType.String)]
+		[TagDetails(Tag = 39, Type = TagType.String, Offset = 7)]
 		public string? OrdStatus { get; set; }
 		
-		[TagDetails(636, TagType.Boolean)]
+		[TagDetails(Tag = 636, Type = TagType.Boolean, Offset = 8)]
 		public bool? WorkingIndicator { get; set; }
 		
-		[TagDetails(586, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 586, Type = TagType.UtcTimestamp, Offset = 9)]
 		public DateTime? OrigOrdModTime { get; set; }
 		
-		[TagDetails(66, TagType.String)]
+		[TagDetails(Tag = 66, Type = TagType.String, Offset = 10)]
 		public string? ListID { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 11)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 12)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(581, TagType.Int)]
+		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 13)]
 		public int? AccountType { get; set; }
 		
-		[TagDetails(229, TagType.LocalDate)]
+		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 14)]
 		public DateTime? TradeOriginationDate { get; set; }
 		
-		[TagDetails(75, TagType.LocalDate)]
+		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 15)]
 		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(60, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 16)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(434, TagType.String)]
+		[TagDetails(Tag = 434, Type = TagType.String, Offset = 17)]
 		public string? CxlRejResponseTo { get; set; }
 		
-		[TagDetails(102, TagType.Int)]
+		[TagDetails(Tag = 102, Type = TagType.Int, Offset = 18)]
 		public int? CxlRejReason { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 19)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 20)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 21)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 22)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

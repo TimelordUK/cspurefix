@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class ContraGrp
 	{
-		[Group(382)]
+		[Group(NoOfTag = 382, Offset = 0)]
 		public NoContraBrokers[]? NoContraBrokers { get; set; }
 		
 	}

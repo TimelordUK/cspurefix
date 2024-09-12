@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoRoutingIDs
 	{
-		[TagDetails(216, TagType.Int)]
+		[TagDetails(Tag = 216, Type = TagType.Int, Offset = 0)]
 		public int? RoutingType { get; set; }
 		
-		[TagDetails(217, TagType.String)]
+		[TagDetails(Tag = 217, Type = TagType.String, Offset = 1)]
 		public string? RoutingID { get; set; }
 		
 	}

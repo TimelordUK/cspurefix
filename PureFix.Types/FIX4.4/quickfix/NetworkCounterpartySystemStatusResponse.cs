@@ -10,25 +10,25 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("BD", FixVersion.FIX44)]
 	public sealed class NetworkCounterpartySystemStatusResponse : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(937, TagType.Int)]
+		[TagDetails(Tag = 937, Type = TagType.Int, Offset = 1)]
 		public int? NetworkStatusResponseType { get; set; }
 		
-		[TagDetails(933, TagType.String)]
+		[TagDetails(Tag = 933, Type = TagType.String, Offset = 2)]
 		public string? NetworkRequestID { get; set; }
 		
-		[TagDetails(932, TagType.String)]
+		[TagDetails(Tag = 932, Type = TagType.String, Offset = 3)]
 		public string? NetworkResponseID { get; set; }
 		
-		[TagDetails(934, TagType.String)]
+		[TagDetails(Tag = 934, Type = TagType.String, Offset = 4)]
 		public string? LastNetworkResponseID { get; set; }
 		
-		[Component]
+		[Component(Offset = 5)]
 		public CompIDStatGrp? CompIDStatGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 6)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

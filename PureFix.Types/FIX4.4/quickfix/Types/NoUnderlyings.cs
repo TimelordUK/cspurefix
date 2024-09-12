@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoUnderlyings
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
 		
 	}

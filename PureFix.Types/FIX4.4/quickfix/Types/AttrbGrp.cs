@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class AttrbGrp
 	{
-		[Group(870)]
+		[Group(NoOfTag = 870, Offset = 0)]
 		public NoInstrAttrib[]? NoInstrAttrib { get; set; }
 		
 	}

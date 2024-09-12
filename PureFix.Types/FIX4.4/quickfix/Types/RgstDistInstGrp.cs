@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class RgstDistInstGrp
 	{
-		[Group(510)]
+		[Group(NoOfTag = 510, Offset = 0)]
 		public NoDistribInsts[]? NoDistribInsts { get; set; }
 		
 	}

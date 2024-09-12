@@ -10,22 +10,25 @@ namespace PureFix.Types
     /// Holds information on an individual tag
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class TagDetailsAttribute : FixAttribute
+    public sealed class TagDetailsAttribute : FixAttribute, ITagOffset
     {
-        public TagDetailsAttribute(int tag, TagType type)
+        public TagDetailsAttribute()
         {
-            this.Tag = tag;
-            this.Type = type;
         }
 
         /// <summary>
         /// The FIX tag number
         /// </summary>
-        public int Tag{get;}
+        public required int Tag{get; init;}
 
         /// <summary>
         /// The FIX type of the field
         /// </summary>
-        public TagType Type{get;}
+        public required TagType Type{get;  init;}
+
+        /// <summary>
+        /// The zero-based position of the field within the message, component or group
+        /// </summary>
+        public required int Offset{get; init;}
     }
 }

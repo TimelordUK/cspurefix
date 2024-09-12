@@ -10,37 +10,37 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("v", FixVersion.FIX44)]
 	public sealed class SecurityTypeRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(320, TagType.String)]
+		[TagDetails(Tag = 320, Type = TagType.String, Offset = 1)]
 		public string? SecurityReqID { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 2)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 3)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 4)]
 		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 5)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 6)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(460, TagType.Int)]
+		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 7)]
 		public int? Product { get; set; }
 		
-		[TagDetails(167, TagType.String)]
+		[TagDetails(Tag = 167, Type = TagType.String, Offset = 8)]
 		public string? SecurityType { get; set; }
 		
-		[TagDetails(762, TagType.String)]
+		[TagDetails(Tag = 762, Type = TagType.String, Offset = 9)]
 		public string? SecuritySubType { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

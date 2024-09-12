@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class BidDescReqGrp
 	{
-		[Group(398)]
+		[Group(NoOfTag = 398, Offset = 0)]
 		public NoBidDescriptors[]? NoBidDescriptors { get; set; }
 		
 	}

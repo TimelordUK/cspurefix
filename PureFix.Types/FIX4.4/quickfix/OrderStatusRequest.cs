@@ -10,46 +10,46 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("H", FixVersion.FIX44)]
 	public sealed class OrderStatusRequest : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(37, TagType.String)]
+		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1)]
 		public string? OrderID { get; set; }
 		
-		[TagDetails(11, TagType.String)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 2)]
 		public string? ClOrdID { get; set; }
 		
-		[TagDetails(526, TagType.String)]
+		[TagDetails(Tag = 526, Type = TagType.String, Offset = 3)]
 		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(583, TagType.String)]
+		[TagDetails(Tag = 583, Type = TagType.String, Offset = 4)]
 		public string? ClOrdLinkID { get; set; }
 		
-		[Component]
+		[Component(Offset = 5)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(790, TagType.String)]
+		[TagDetails(Tag = 790, Type = TagType.String, Offset = 6)]
 		public string? OrdStatusReqID { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 7)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 8)]
 		public int? AcctIDSource { get; set; }
 		
-		[Component]
+		[Component(Offset = 9)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component]
+		[Component(Offset = 10)]
 		public FinancingDetails? FinancingDetails { get; set; }
 		
-		[Component]
+		[Component(Offset = 11)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[TagDetails(54, TagType.String)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 12)]
 		public string? Side { get; set; }
 		
-		[Component]
+		[Component(Offset = 13)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

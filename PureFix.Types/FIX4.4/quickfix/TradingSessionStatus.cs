@@ -10,61 +10,61 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("h", FixVersion.FIX44)]
 	public sealed class TradingSessionStatus : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(335, TagType.String)]
+		[TagDetails(Tag = 335, Type = TagType.String, Offset = 1)]
 		public string? TradSesReqID { get; set; }
 		
-		[TagDetails(336, TagType.String)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 2)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625, TagType.String)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 3)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(338, TagType.Int)]
+		[TagDetails(Tag = 338, Type = TagType.Int, Offset = 4)]
 		public int? TradSesMethod { get; set; }
 		
-		[TagDetails(339, TagType.Int)]
+		[TagDetails(Tag = 339, Type = TagType.Int, Offset = 5)]
 		public int? TradSesMode { get; set; }
 		
-		[TagDetails(325, TagType.Boolean)]
+		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 6)]
 		public bool? UnsolicitedIndicator { get; set; }
 		
-		[TagDetails(340, TagType.Int)]
+		[TagDetails(Tag = 340, Type = TagType.Int, Offset = 7)]
 		public int? TradSesStatus { get; set; }
 		
-		[TagDetails(567, TagType.Int)]
+		[TagDetails(Tag = 567, Type = TagType.Int, Offset = 8)]
 		public int? TradSesStatusRejReason { get; set; }
 		
-		[TagDetails(341, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 341, Type = TagType.UtcTimestamp, Offset = 9)]
 		public DateTime? TradSesStartTime { get; set; }
 		
-		[TagDetails(342, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 342, Type = TagType.UtcTimestamp, Offset = 10)]
 		public DateTime? TradSesOpenTime { get; set; }
 		
-		[TagDetails(343, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 343, Type = TagType.UtcTimestamp, Offset = 11)]
 		public DateTime? TradSesPreCloseTime { get; set; }
 		
-		[TagDetails(344, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 344, Type = TagType.UtcTimestamp, Offset = 12)]
 		public DateTime? TradSesCloseTime { get; set; }
 		
-		[TagDetails(345, TagType.UtcTimestamp)]
+		[TagDetails(Tag = 345, Type = TagType.UtcTimestamp, Offset = 13)]
 		public DateTime? TradSesEndTime { get; set; }
 		
-		[TagDetails(387, TagType.Float)]
+		[TagDetails(Tag = 387, Type = TagType.Float, Offset = 14)]
 		public double? TotalVolumeTraded { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 15)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 16)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 17)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 18)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

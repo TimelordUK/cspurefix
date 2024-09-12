@@ -9,22 +9,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoAllocs
 	{
-		[TagDetails(79, TagType.String)]
+		[TagDetails(Tag = 79, Type = TagType.String, Offset = 0)]
 		public string? AllocAccount { get; set; }
 		
-		[TagDetails(661, TagType.Int)]
+		[TagDetails(Tag = 661, Type = TagType.Int, Offset = 1)]
 		public int? AllocAcctIDSource { get; set; }
 		
-		[TagDetails(736, TagType.String)]
+		[TagDetails(Tag = 736, Type = TagType.String, Offset = 2)]
 		public string? AllocSettlCurrency { get; set; }
 		
-		[TagDetails(467, TagType.String)]
+		[TagDetails(Tag = 467, Type = TagType.String, Offset = 3)]
 		public string? IndividualAllocID { get; set; }
 		
-		[Component]
+		[Component(Offset = 4)]
 		public NestedParties? NestedParties { get; set; }
 		
-		[TagDetails(80, TagType.Float)]
+		[TagDetails(Tag = 80, Type = TagType.Float, Offset = 5)]
 		public double? AllocQty { get; set; }
 		
 	}

@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class RelSymDerivSecGrp
 	{
-		[Group(146)]
+		[Group(NoOfTag = 146, Offset = 0)]
 		public NoRelatedSym[]? NoRelatedSym { get; set; }
 		
 	}

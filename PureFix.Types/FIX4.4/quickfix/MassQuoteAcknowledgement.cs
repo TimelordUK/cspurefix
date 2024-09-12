@@ -10,52 +10,52 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("b", FixVersion.FIX44)]
 	public sealed class MassQuoteAcknowledgement : FixMsg
 	{
-		[Component]
+		[Component(Offset = 0)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(131, TagType.String)]
+		[TagDetails(Tag = 131, Type = TagType.String, Offset = 1)]
 		public string? QuoteReqID { get; set; }
 		
-		[TagDetails(117, TagType.String)]
+		[TagDetails(Tag = 117, Type = TagType.String, Offset = 2)]
 		public string? QuoteID { get; set; }
 		
-		[TagDetails(297, TagType.Int)]
+		[TagDetails(Tag = 297, Type = TagType.Int, Offset = 3)]
 		public int? QuoteStatus { get; set; }
 		
-		[TagDetails(300, TagType.Int)]
+		[TagDetails(Tag = 300, Type = TagType.Int, Offset = 4)]
 		public int? QuoteRejectReason { get; set; }
 		
-		[TagDetails(301, TagType.Int)]
+		[TagDetails(Tag = 301, Type = TagType.Int, Offset = 5)]
 		public int? QuoteResponseLevel { get; set; }
 		
-		[TagDetails(537, TagType.Int)]
+		[TagDetails(Tag = 537, Type = TagType.Int, Offset = 6)]
 		public int? QuoteType { get; set; }
 		
-		[Component]
+		[Component(Offset = 7)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(1, TagType.String)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 8)]
 		public string? Account { get; set; }
 		
-		[TagDetails(660, TagType.Int)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 9)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(581, TagType.Int)]
+		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 10)]
 		public int? AccountType { get; set; }
 		
-		[TagDetails(58, TagType.String)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 11)]
 		public string? Text { get; set; }
 		
-		[TagDetails(354, TagType.Length)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 12)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355, TagType.RawData)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 13)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component]
+		[Component(Offset = 14)]
 		public QuotSetAckGrp? QuotSetAckGrp { get; set; }
 		
-		[Component]
+		[Component(Offset = 15)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

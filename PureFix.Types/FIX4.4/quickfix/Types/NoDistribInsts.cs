@@ -9,28 +9,28 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoDistribInsts
 	{
-		[TagDetails(477, TagType.Int)]
+		[TagDetails(Tag = 477, Type = TagType.Int, Offset = 0)]
 		public int? DistribPaymentMethod { get; set; }
 		
-		[TagDetails(512, TagType.Float)]
+		[TagDetails(Tag = 512, Type = TagType.Float, Offset = 1)]
 		public double? DistribPercentage { get; set; }
 		
-		[TagDetails(478, TagType.String)]
+		[TagDetails(Tag = 478, Type = TagType.String, Offset = 2)]
 		public string? CashDistribCurr { get; set; }
 		
-		[TagDetails(498, TagType.String)]
+		[TagDetails(Tag = 498, Type = TagType.String, Offset = 3)]
 		public string? CashDistribAgentName { get; set; }
 		
-		[TagDetails(499, TagType.String)]
+		[TagDetails(Tag = 499, Type = TagType.String, Offset = 4)]
 		public string? CashDistribAgentCode { get; set; }
 		
-		[TagDetails(500, TagType.String)]
+		[TagDetails(Tag = 500, Type = TagType.String, Offset = 5)]
 		public string? CashDistribAgentAcctNumber { get; set; }
 		
-		[TagDetails(501, TagType.String)]
+		[TagDetails(Tag = 501, Type = TagType.String, Offset = 6)]
 		public string? CashDistribPayRef { get; set; }
 		
-		[TagDetails(502, TagType.String)]
+		[TagDetails(Tag = 502, Type = TagType.String, Offset = 7)]
 		public string? CashDistribAgentAcctName { get; set; }
 		
 	}

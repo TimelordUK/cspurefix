@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class DlvyInstGrp
 	{
-		[Group(85)]
+		[Group(NoOfTag = 85, Offset = 0)]
 		public NoDlvyInst[]? NoDlvyInst { get; set; }
 		
 	}

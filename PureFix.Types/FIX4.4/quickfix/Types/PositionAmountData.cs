@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class PositionAmountData
 	{
-		[Group(753)]
+		[Group(NoOfTag = 753, Offset = 0)]
 		public NoPosAmt[]? NoPosAmt { get; set; }
 		
 	}

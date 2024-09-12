@@ -9,16 +9,14 @@ namespace PureFix.Types
 {
     public abstract class FixMsg
     {
-        [Component]
         public abstract StandardHeader? StandardHeader { get; set; }
         
-        [Component]
         public abstract StandardTrailer? StandardTrailer { get; set; }
         
-        [TagDetails(35, TagType.String)]
+        [TagDetails(Tag = 35, Type = TagType.String, Offset = 2)]
         public string? MsgType => StandardHeader?.MsgType;
         
-        [TagDetails(9, TagType.Length)]
+        [TagDetails(Tag = 9, Type = TagType.Length, Offset = 1)]
         public int? BodyLength => StandardHeader?.BodyLength;
     }
 }

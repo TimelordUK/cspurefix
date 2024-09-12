@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class MDRjctGrp
 	{
-		[Group(816)]
+		[Group(NoOfTag = 816, Offset = 0)]
 		public NoAltMDSource[]? NoAltMDSource { get; set; }
 		
 	}
