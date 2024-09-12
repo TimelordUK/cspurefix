@@ -215,7 +215,12 @@ namespace PureFix.Dictionary.Compiler
             
             _builder.WriteLine("[Component]");
             _builder.WriteLine($"public {declared}? {cf.Name} {props}");
-            _builder.WriteLine();
+
+            if(cf.Name != "StandardTrailer")
+            {
+                _builder.WriteLine();
+            }
+
             // any dependent component also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, cf.Definition, cf.Name));
         }

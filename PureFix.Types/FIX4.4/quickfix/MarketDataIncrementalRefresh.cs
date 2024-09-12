@@ -26,6 +26,5 @@ namespace PureFix.Types.FIX44.QuickFix
 		
 		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
-		
 	}
 }
