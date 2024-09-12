@@ -42,7 +42,6 @@ namespace PureFix.Buffer.Ascii
             if (Tags == null) return;
             if (Structure == null) return;
             if (Segment == null) return;
-            if (Structure.Value.Tags == null) return;
 
             var end = Segment.EndPosition + 1;
             var start = Segment.StartPosition;
@@ -86,11 +85,7 @@ namespace PureFix.Buffer.Ascii
 
         public string? GetString(string name)
         {
-            if (Definitions.Simple.TryGetValue(name, out var typed))
-            {
-                return GetString(typed.Tag);
-            }
-            return null;
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetString(typed.Tag) : null;
         }
 
         public string? GetString(int tag)

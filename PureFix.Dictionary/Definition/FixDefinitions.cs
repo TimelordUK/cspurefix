@@ -31,10 +31,11 @@ namespace PureFix.Dictionary.Definition
         public IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimple => _tagToSimple;
         /**
          * all messages defined from source definition indexed via name
-         * e.g. 'Logon'
+         * e.g. "Logon" or msgType "A"
         */
         public IReadOnlyDictionary<string, MessageDefinition> Message => _message;
         public FixVersion Version { get; private set; }
+
         public void AddSimple(SimpleFieldDefinition simpleField)
         {
             _nameToSimple[simpleField.Name] = simpleField;
@@ -44,7 +45,7 @@ namespace PureFix.Dictionary.Definition
         public void AddMessage(MessageDefinition msg)
         {
             _message[msg.Name] = msg;
-            if (msg.MsgType != null && msg.MsgType != msg.Name)
+            if (msg.MsgType != msg.Name)
             {
                 _message[msg.MsgType] = msg;
             }
@@ -58,6 +59,19 @@ namespace PureFix.Dictionary.Definition
             _component[component.Name] = component;
         }
 
+        /*
+         * a top level definition for either a message or globally defined component
+         */
+        public IContainedSet? GetMsgOrComponent(string type)
+        {
+            return Message.GetValueOrDefault(type) as IContainedSet ?? Component.GetValueOrDefault(type);
+        }
+
+        /*
+         * this path must begin with the message name and using dot notation locates
+         * a nested group or component held within the message.
+         * e.g. GetSet("SecurityList.SecListGrp")
+         */
         public IContainedSet? GetSet(string path)
         {
             var idx = path.IndexOf('.', StringComparison.Ordinal);
@@ -96,24 +110,6 @@ namespace PureFix.Dictionary.Definition
             sb.Append($"simple.Count = {Simple.Count} ");
             sb.Append($"component.Count = {Component.Count} ");
             return sb.ToString();
-        }
-    }
-
-    public static class FixDefinitionExt
-    {
-        public static int GetMajor(this FixDefinitions definitions)
-        {
-            return FixVersionParser.GetMajor(definitions.Version);
-        }
-
-        public static int GetMinor(this FixDefinitions definitions)
-        {
-            return FixVersionParser.GetMinor(definitions.Version);
-        }
-
-        public static int GetServicePack(this FixDefinitions definitions)
-        {
-            return FixVersionParser.GetServicePack(definitions.Version);
         }
     }
 }
