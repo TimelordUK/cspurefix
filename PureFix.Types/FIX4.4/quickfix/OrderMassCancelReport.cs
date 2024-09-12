@@ -9,55 +9,65 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class OrderMassCancelReport : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
 		
-		[TagDetails(526)]
-		public string? SecondaryClOrdID { get; set; } // STRING
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
 		
-		[TagDetails(37)]
-		public string? OrderID { get; set; } // STRING
+		[TagDetails(526, TagType.String)]
+		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(198)]
-		public string? SecondaryOrderID { get; set; } // STRING
+		[TagDetails(37, TagType.String)]
+		public string? OrderID { get; set; }
 		
-		[TagDetails(530)]
-		public string? MassCancelRequestType { get; set; } // CHAR
+		[TagDetails(198, TagType.String)]
+		public string? SecondaryOrderID { get; set; }
 		
-		[TagDetails(531)]
-		public string? MassCancelResponse { get; set; } // CHAR
+		[TagDetails(530, TagType.String)]
+		public string? MassCancelRequestType { get; set; }
 		
-		[TagDetails(532)]
-		public string? MassCancelRejectReason { get; set; } // CHAR
+		[TagDetails(531, TagType.String)]
+		public string? MassCancelResponse { get; set; }
 		
-		[TagDetails(533)]
-		public int? TotalAffectedOrders { get; set; } // INT
+		[TagDetails(532, TagType.String)]
+		public string? MassCancelRejectReason { get; set; }
 		
+		[TagDetails(533, TagType.Int)]
+		public int? TotalAffectedOrders { get; set; }
+		
+		[Component]
 		public AffectedOrdGrp? AffectedOrdGrp { get; set; }
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
+		
+		[Component]
 		public Instrument? Instrument { get; set; }
+		
+		[Component]
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
-		[TagDetails(54)]
-		public string? Side { get; set; } // CHAR
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(54, TagType.String)]
+		public string? Side { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

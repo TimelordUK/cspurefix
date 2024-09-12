@@ -9,36 +9,44 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class MassQuote : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(131)]
-		public string? QuoteReqID { get; set; } // STRING
 		
-		[TagDetails(117)]
-		public string? QuoteID { get; set; } // STRING
+		[TagDetails(131, TagType.String)]
+		public string? QuoteReqID { get; set; }
 		
-		[TagDetails(537)]
-		public int? QuoteType { get; set; } // INT
+		[TagDetails(117, TagType.String)]
+		public string? QuoteID { get; set; }
 		
-		[TagDetails(301)]
-		public int? QuoteResponseLevel { get; set; } // INT
+		[TagDetails(537, TagType.Int)]
+		public int? QuoteType { get; set; }
 		
+		[TagDetails(301, TagType.Int)]
+		public int? QuoteResponseLevel { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(581)]
-		public int? AccountType { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(293)]
-		public double? DefBidSize { get; set; } // QTY
+		[TagDetails(581, TagType.Int)]
+		public int? AccountType { get; set; }
 		
-		[TagDetails(294)]
-		public double? DefOfferSize { get; set; } // QTY
+		[TagDetails(293, TagType.Float)]
+		public double? DefBidSize { get; set; }
 		
+		[TagDetails(294, TagType.Float)]
+		public double? DefOfferSize { get; set; }
+		
+		[Component]
 		public QuotSetGrp? QuotSetGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

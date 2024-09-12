@@ -9,37 +9,47 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class RegistrationInstructions : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(513)]
-		public string? RegistID { get; set; } // STRING
 		
-		[TagDetails(514)]
-		public string? RegistTransType { get; set; } // CHAR
+		[TagDetails(513, TagType.String)]
+		public string? RegistID { get; set; }
 		
-		[TagDetails(508)]
-		public string? RegistRefID { get; set; } // STRING
+		[TagDetails(514, TagType.String)]
+		public string? RegistTransType { get; set; }
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(508, TagType.String)]
+		public string? RegistRefID { get; set; }
 		
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(493)]
-		public string? RegistAcctType { get; set; } // STRING
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(495)]
-		public int? TaxAdvantageType { get; set; } // INT
+		[TagDetails(493, TagType.String)]
+		public string? RegistAcctType { get; set; }
 		
-		[TagDetails(517)]
-		public string? OwnershipType { get; set; } // CHAR
+		[TagDetails(495, TagType.Int)]
+		public int? TaxAdvantageType { get; set; }
 		
+		[TagDetails(517, TagType.String)]
+		public string? OwnershipType { get; set; }
+		
+		[Component]
 		public RgstDtlsGrp? RgstDtlsGrp { get; set; }
+		
+		[Component]
 		public RgstDistInstGrp? RgstDistInstGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

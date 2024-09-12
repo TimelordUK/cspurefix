@@ -9,9 +9,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoQuoteEntries
 	{
+		[Component]
 		public Instrument? Instrument { get; set; }
+		
+		[Component]
 		public FinancingDetails? FinancingDetails { get; set; }
+		
+		[Component]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		
+		[Component]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		
 	}
 }

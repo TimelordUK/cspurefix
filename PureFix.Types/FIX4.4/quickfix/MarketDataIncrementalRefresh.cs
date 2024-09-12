@@ -9,17 +9,23 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class MarketDataIncrementalRefresh : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(262)]
-		public string? MDReqID { get; set; } // STRING
 		
+		[TagDetails(262, TagType.String)]
+		public string? MDReqID { get; set; }
+		
+		[Component]
 		public MDIncGrp? MDIncGrp { get; set; }
-		[TagDetails(813)]
-		public int? ApplQueueDepth { get; set; } // INT
 		
-		[TagDetails(814)]
-		public int? ApplQueueResolution { get; set; } // INT
+		[TagDetails(813, TagType.Int)]
+		public int? ApplQueueDepth { get; set; }
 		
+		[TagDetails(814, TagType.Int)]
+		public int? ApplQueueResolution { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

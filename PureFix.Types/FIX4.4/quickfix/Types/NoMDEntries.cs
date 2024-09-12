@@ -9,104 +9,104 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoMDEntries
 	{
-		[TagDetails(269)]
-		public string? MDEntryType { get; set; } // CHAR
+		[TagDetails(269, TagType.String)]
+		public string? MDEntryType { get; set; }
 		
-		[TagDetails(270)]
-		public double? MDEntryPx { get; set; } // PRICE
+		[TagDetails(270, TagType.Float)]
+		public double? MDEntryPx { get; set; }
 		
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
 		
-		[TagDetails(271)]
-		public double? MDEntrySize { get; set; } // QTY
+		[TagDetails(271, TagType.Float)]
+		public double? MDEntrySize { get; set; }
 		
-		[TagDetails(272)]
-		public DateTime? MDEntryDate { get; set; } // UTCDATEONLY
+		[TagDetails(272, TagType.UtcDateOnly)]
+		public DateTime? MDEntryDate { get; set; }
 		
-		[TagDetails(273)]
-		public DateTime? MDEntryTime { get; set; } // UTCTIMEONLY
+		[TagDetails(273, TagType.UtcTimeOnly)]
+		public DateTime? MDEntryTime { get; set; }
 		
-		[TagDetails(274)]
-		public string? TickDirection { get; set; } // CHAR
+		[TagDetails(274, TagType.String)]
+		public string? TickDirection { get; set; }
 		
-		[TagDetails(275)]
-		public string? MDMkt { get; set; } // EXCHANGE
+		[TagDetails(275, TagType.String)]
+		public string? MDMkt { get; set; }
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(276)]
-		public string? QuoteCondition { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(276, TagType.String)]
+		public string? QuoteCondition { get; set; }
 		
-		[TagDetails(277)]
-		public string? TradeCondition { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(277, TagType.String)]
+		public string? TradeCondition { get; set; }
 		
-		[TagDetails(282)]
-		public string? MDEntryOriginator { get; set; } // STRING
+		[TagDetails(282, TagType.String)]
+		public string? MDEntryOriginator { get; set; }
 		
-		[TagDetails(283)]
-		public string? LocationID { get; set; } // STRING
+		[TagDetails(283, TagType.String)]
+		public string? LocationID { get; set; }
 		
-		[TagDetails(284)]
-		public string? DeskID { get; set; } // STRING
+		[TagDetails(284, TagType.String)]
+		public string? DeskID { get; set; }
 		
-		[TagDetails(286)]
-		public string? OpenCloseSettlFlag { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(286, TagType.String)]
+		public string? OpenCloseSettlFlag { get; set; }
 		
-		[TagDetails(59)]
-		public string? TimeInForce { get; set; } // CHAR
+		[TagDetails(59, TagType.String)]
+		public string? TimeInForce { get; set; }
 		
-		[TagDetails(432)]
-		public DateTime? ExpireDate { get; set; } // LOCALMKTDATE
+		[TagDetails(432, TagType.LocalDate)]
+		public DateTime? ExpireDate { get; set; }
 		
-		[TagDetails(126)]
-		public DateTime? ExpireTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(126, TagType.UtcTimestamp)]
+		public DateTime? ExpireTime { get; set; }
 		
-		[TagDetails(110)]
-		public double? MinQty { get; set; } // QTY
+		[TagDetails(110, TagType.Float)]
+		public double? MinQty { get; set; }
 		
-		[TagDetails(18)]
-		public string? ExecInst { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(18, TagType.String)]
+		public string? ExecInst { get; set; }
 		
-		[TagDetails(287)]
-		public int? SellerDays { get; set; } // INT
+		[TagDetails(287, TagType.Int)]
+		public int? SellerDays { get; set; }
 		
-		[TagDetails(37)]
-		public string? OrderID { get; set; } // STRING
+		[TagDetails(37, TagType.String)]
+		public string? OrderID { get; set; }
 		
-		[TagDetails(299)]
-		public string? QuoteEntryID { get; set; } // STRING
+		[TagDetails(299, TagType.String)]
+		public string? QuoteEntryID { get; set; }
 		
-		[TagDetails(288)]
-		public string? MDEntryBuyer { get; set; } // STRING
+		[TagDetails(288, TagType.String)]
+		public string? MDEntryBuyer { get; set; }
 		
-		[TagDetails(289)]
-		public string? MDEntrySeller { get; set; } // STRING
+		[TagDetails(289, TagType.String)]
+		public string? MDEntrySeller { get; set; }
 		
-		[TagDetails(346)]
-		public int? NumberOfOrders { get; set; } // INT
+		[TagDetails(346, TagType.Int)]
+		public int? NumberOfOrders { get; set; }
 		
-		[TagDetails(290)]
-		public int? MDEntryPositionNo { get; set; } // INT
+		[TagDetails(290, TagType.Int)]
+		public int? MDEntryPositionNo { get; set; }
 		
-		[TagDetails(546)]
-		public string? Scope { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(546, TagType.String)]
+		public string? Scope { get; set; }
 		
-		[TagDetails(811)]
-		public double? PriceDelta { get; set; } // FLOAT
+		[TagDetails(811, TagType.Float)]
+		public double? PriceDelta { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
 	}
 }

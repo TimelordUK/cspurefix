@@ -9,6 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class MiscFeesGrp
 	{
+		[Group]
 		public NoMiscFees? NoMiscFees { get; set; }
+		
 	}
 }

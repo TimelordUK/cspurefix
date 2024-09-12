@@ -9,90 +9,98 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class BidRequest : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(390)]
-		public string? BidID { get; set; } // STRING
 		
-		[TagDetails(391)]
-		public string? ClientBidID { get; set; } // STRING
+		[TagDetails(390, TagType.String)]
+		public string? BidID { get; set; }
 		
-		[TagDetails(374)]
-		public string? BidRequestTransType { get; set; } // CHAR
+		[TagDetails(391, TagType.String)]
+		public string? ClientBidID { get; set; }
 		
-		[TagDetails(392)]
-		public string? ListName { get; set; } // STRING
+		[TagDetails(374, TagType.String)]
+		public string? BidRequestTransType { get; set; }
 		
-		[TagDetails(393)]
-		public int? TotNoRelatedSym { get; set; } // INT
+		[TagDetails(392, TagType.String)]
+		public string? ListName { get; set; }
 		
-		[TagDetails(394)]
-		public int? BidType { get; set; } // INT
+		[TagDetails(393, TagType.Int)]
+		public int? TotNoRelatedSym { get; set; }
 		
-		[TagDetails(395)]
-		public int? NumTickets { get; set; } // INT
+		[TagDetails(394, TagType.Int)]
+		public int? BidType { get; set; }
 		
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
+		[TagDetails(395, TagType.Int)]
+		public int? NumTickets { get; set; }
 		
-		[TagDetails(396)]
-		public double? SideValue1 { get; set; } // AMT
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
 		
-		[TagDetails(397)]
-		public double? SideValue2 { get; set; } // AMT
+		[TagDetails(396, TagType.Float)]
+		public double? SideValue1 { get; set; }
 		
+		[TagDetails(397, TagType.Float)]
+		public double? SideValue2 { get; set; }
+		
+		[Component]
 		public BidDescReqGrp? BidDescReqGrp { get; set; }
+		
+		[Component]
 		public BidCompReqGrp? BidCompReqGrp { get; set; }
-		[TagDetails(409)]
-		public int? LiquidityIndType { get; set; } // INT
 		
-		[TagDetails(410)]
-		public double? WtAverageLiquidity { get; set; } // PERCENTAGE
+		[TagDetails(409, TagType.Int)]
+		public int? LiquidityIndType { get; set; }
 		
-		[TagDetails(411)]
-		public bool? ExchangeForPhysical { get; set; } // BOOLEAN
+		[TagDetails(410, TagType.Float)]
+		public double? WtAverageLiquidity { get; set; }
 		
-		[TagDetails(412)]
-		public double? OutMainCntryUIndex { get; set; } // AMT
+		[TagDetails(411, TagType.Boolean)]
+		public bool? ExchangeForPhysical { get; set; }
 		
-		[TagDetails(413)]
-		public double? CrossPercent { get; set; } // PERCENTAGE
+		[TagDetails(412, TagType.Float)]
+		public double? OutMainCntryUIndex { get; set; }
 		
-		[TagDetails(414)]
-		public int? ProgRptReqs { get; set; } // INT
+		[TagDetails(413, TagType.Float)]
+		public double? CrossPercent { get; set; }
 		
-		[TagDetails(415)]
-		public int? ProgPeriodInterval { get; set; } // INT
+		[TagDetails(414, TagType.Int)]
+		public int? ProgRptReqs { get; set; }
 		
-		[TagDetails(416)]
-		public int? IncTaxInd { get; set; } // INT
+		[TagDetails(415, TagType.Int)]
+		public int? ProgPeriodInterval { get; set; }
 		
-		[TagDetails(121)]
-		public bool? ForexReq { get; set; } // BOOLEAN
+		[TagDetails(416, TagType.Int)]
+		public int? IncTaxInd { get; set; }
 		
-		[TagDetails(417)]
-		public int? NumBidders { get; set; } // INT
+		[TagDetails(121, TagType.Boolean)]
+		public bool? ForexReq { get; set; }
 		
-		[TagDetails(75)]
-		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		[TagDetails(417, TagType.Int)]
+		public int? NumBidders { get; set; }
 		
-		[TagDetails(418)]
-		public string? BidTradeType { get; set; } // CHAR
+		[TagDetails(75, TagType.LocalDate)]
+		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(419)]
-		public string? BasisPxType { get; set; } // CHAR
+		[TagDetails(418, TagType.String)]
+		public string? BidTradeType { get; set; }
 		
-		[TagDetails(443)]
-		public DateTime? StrikeTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(419, TagType.String)]
+		public string? BasisPxType { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(443, TagType.UtcTimestamp)]
+		public DateTime? StrikeTime { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

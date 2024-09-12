@@ -9,10 +9,14 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class Heartbeat : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(112)]
-		public string? TestReqID { get; set; } // STRING
 		
+		[TagDetails(112, TagType.String)]
+		public string? TestReqID { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

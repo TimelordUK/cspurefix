@@ -9,27 +9,29 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoRegistDtls
 	{
-		[TagDetails(509)]
-		public string? RegistDtls { get; set; } // STRING
+		[TagDetails(509, TagType.String)]
+		public string? RegistDtls { get; set; }
 		
-		[TagDetails(511)]
-		public string? RegistEmail { get; set; } // STRING
+		[TagDetails(511, TagType.String)]
+		public string? RegistEmail { get; set; }
 		
-		[TagDetails(474)]
-		public string? MailingDtls { get; set; } // STRING
+		[TagDetails(474, TagType.String)]
+		public string? MailingDtls { get; set; }
 		
-		[TagDetails(482)]
-		public string? MailingInst { get; set; } // STRING
+		[TagDetails(482, TagType.String)]
+		public string? MailingInst { get; set; }
 		
+		[Component]
 		public NestedParties? NestedParties { get; set; }
-		[TagDetails(522)]
-		public int? OwnerType { get; set; } // INT
 		
-		[TagDetails(486)]
-		public DateTime? DateOfBirth { get; set; } // LOCALMKTDATE
+		[TagDetails(522, TagType.Int)]
+		public int? OwnerType { get; set; }
 		
-		[TagDetails(475)]
-		public string? InvestorCountryOfResidence { get; set; } // COUNTRY
+		[TagDetails(486, TagType.LocalDate)]
+		public DateTime? DateOfBirth { get; set; }
+		
+		[TagDetails(475, TagType.String)]
+		public string? InvestorCountryOfResidence { get; set; }
 		
 	}
 }

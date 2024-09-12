@@ -9,41 +9,47 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class SecurityTypes : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(320)]
-		public string? SecurityReqID { get; set; } // STRING
 		
-		[TagDetails(322)]
-		public string? SecurityResponseID { get; set; } // STRING
+		[TagDetails(320, TagType.String)]
+		public string? SecurityReqID { get; set; }
 		
-		[TagDetails(323)]
-		public int? SecurityResponseType { get; set; } // INT
+		[TagDetails(322, TagType.String)]
+		public string? SecurityResponseID { get; set; }
 		
-		[TagDetails(557)]
-		public int? TotNoSecurityTypes { get; set; } // INT
+		[TagDetails(323, TagType.Int)]
+		public int? SecurityResponseType { get; set; }
 		
-		[TagDetails(893)]
-		public bool? LastFragment { get; set; } // BOOLEAN
+		[TagDetails(557, TagType.Int)]
+		public int? TotNoSecurityTypes { get; set; }
 		
+		[TagDetails(893, TagType.Boolean)]
+		public bool? LastFragment { get; set; }
+		
+		[Component]
 		public SecTypesGrp? SecTypesGrp { get; set; }
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(263)]
-		public string? SubscriptionRequestType { get; set; } // CHAR
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
 		
+		[TagDetails(263, TagType.String)]
+		public string? SubscriptionRequestType { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

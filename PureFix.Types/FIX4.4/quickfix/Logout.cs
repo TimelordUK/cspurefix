@@ -9,16 +9,20 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class Logout : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

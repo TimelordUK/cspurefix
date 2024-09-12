@@ -9,6 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class SecTypesGrp
 	{
+		[Group]
 		public NoSecurityTypes? NoSecurityTypes { get; set; }
+		
 	}
 }

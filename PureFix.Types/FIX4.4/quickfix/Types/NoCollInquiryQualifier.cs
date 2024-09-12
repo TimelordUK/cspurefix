@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoCollInquiryQualifier
 	{
-		[TagDetails(896)]
-		public int? CollInquiryQualifier { get; set; } // INT
+		[TagDetails(896, TagType.Int)]
+		public int? CollInquiryQualifier { get; set; }
 		
 	}
 }

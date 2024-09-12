@@ -9,18 +9,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class SettlInstructionsData
 	{
-		[TagDetails(172)]
-		public int? SettlDeliveryType { get; set; } // INT
+		[TagDetails(172, TagType.Int)]
+		public int? SettlDeliveryType { get; set; }
 		
-		[TagDetails(169)]
-		public int? StandInstDbType { get; set; } // INT
+		[TagDetails(169, TagType.Int)]
+		public int? StandInstDbType { get; set; }
 		
-		[TagDetails(170)]
-		public string? StandInstDbName { get; set; } // STRING
+		[TagDetails(170, TagType.String)]
+		public string? StandInstDbName { get; set; }
 		
-		[TagDetails(171)]
-		public string? StandInstDbID { get; set; } // STRING
+		[TagDetails(171, TagType.String)]
+		public string? StandInstDbID { get; set; }
 		
+		[Component]
 		public DlvyInstGrp? DlvyInstGrp { get; set; }
+		
 	}
 }

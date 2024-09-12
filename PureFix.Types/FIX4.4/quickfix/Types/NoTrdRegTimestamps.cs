@@ -9,14 +9,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoTrdRegTimestamps
 	{
-		[TagDetails(769)]
-		public DateTime? TrdRegTimestamp { get; set; } // UTCTIMESTAMP
+		[TagDetails(769, TagType.UtcTimestamp)]
+		public DateTime? TrdRegTimestamp { get; set; }
 		
-		[TagDetails(770)]
-		public int? TrdRegTimestampType { get; set; } // INT
+		[TagDetails(770, TagType.Int)]
+		public int? TrdRegTimestampType { get; set; }
 		
-		[TagDetails(771)]
-		public string? TrdRegTimestampOrigin { get; set; } // STRING
+		[TagDetails(771, TagType.String)]
+		public string? TrdRegTimestampOrigin { get; set; }
 		
 	}
 }

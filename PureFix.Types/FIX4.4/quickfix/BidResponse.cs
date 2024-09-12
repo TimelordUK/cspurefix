@@ -9,14 +9,20 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class BidResponse : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(390)]
-		public string? BidID { get; set; } // STRING
 		
-		[TagDetails(391)]
-		public string? ClientBidID { get; set; } // STRING
+		[TagDetails(390, TagType.String)]
+		public string? BidID { get; set; }
 		
+		[TagDetails(391, TagType.String)]
+		public string? ClientBidID { get; set; }
+		
+		[Component]
 		public BidCompRspGrp? BidCompRspGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

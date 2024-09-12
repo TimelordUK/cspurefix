@@ -9,41 +9,47 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class ListStatus : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(66)]
-		public string? ListID { get; set; } // STRING
 		
-		[TagDetails(429)]
-		public int? ListStatusType { get; set; } // INT
+		[TagDetails(66, TagType.String)]
+		public string? ListID { get; set; }
 		
-		[TagDetails(82)]
-		public int? NoRpts { get; set; } // INT
+		[TagDetails(429, TagType.Int)]
+		public int? ListStatusType { get; set; }
 		
-		[TagDetails(431)]
-		public int? ListOrderStatus { get; set; } // INT
+		[TagDetails(82, TagType.Int)]
+		public int? NoRpts { get; set; }
 		
-		[TagDetails(83)]
-		public int? RptSeq { get; set; } // INT
+		[TagDetails(431, TagType.Int)]
+		public int? ListOrderStatus { get; set; }
 		
-		[TagDetails(444)]
-		public string? ListStatusText { get; set; } // STRING
+		[TagDetails(83, TagType.Int)]
+		public int? RptSeq { get; set; }
 		
-		[TagDetails(445)]
-		public int? EncodedListStatusTextLen { get; set; } // LENGTH
+		[TagDetails(444, TagType.String)]
+		public string? ListStatusText { get; set; }
 		
-		[TagDetails(446)]
-		public byte[]? EncodedListStatusText { get; set; } // DATA
+		[TagDetails(445, TagType.Length)]
+		public int? EncodedListStatusTextLen { get; set; }
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(446, TagType.RawData)]
+		public byte[]? EncodedListStatusText { get; set; }
 		
-		[TagDetails(68)]
-		public int? TotNoOrders { get; set; } // INT
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(893)]
-		public bool? LastFragment { get; set; } // BOOLEAN
+		[TagDetails(68, TagType.Int)]
+		public int? TotNoOrders { get; set; }
 		
+		[TagDetails(893, TagType.Boolean)]
+		public bool? LastFragment { get; set; }
+		
+		[Component]
 		public OrdListStatGrp? OrdListStatGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

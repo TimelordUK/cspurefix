@@ -9,50 +9,56 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class SettlementInstructionRequest : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(791)]
-		public string? SettlInstReqID { get; set; } // STRING
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(791, TagType.String)]
+		public string? SettlInstReqID { get; set; }
 		
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(79)]
-		public string? AllocAccount { get; set; } // STRING
 		
-		[TagDetails(661)]
-		public int? AllocAcctIDSource { get; set; } // INT
+		[TagDetails(79, TagType.String)]
+		public string? AllocAccount { get; set; }
 		
-		[TagDetails(54)]
-		public string? Side { get; set; } // CHAR
+		[TagDetails(661, TagType.Int)]
+		public int? AllocAcctIDSource { get; set; }
 		
-		[TagDetails(460)]
-		public int? Product { get; set; } // INT
+		[TagDetails(54, TagType.String)]
+		public string? Side { get; set; }
 		
-		[TagDetails(167)]
-		public string? SecurityType { get; set; } // STRING
+		[TagDetails(460, TagType.Int)]
+		public int? Product { get; set; }
 		
-		[TagDetails(461)]
-		public string? CFICode { get; set; } // STRING
+		[TagDetails(167, TagType.String)]
+		public string? SecurityType { get; set; }
 		
-		[TagDetails(168)]
-		public DateTime? EffectiveTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(461, TagType.String)]
+		public string? CFICode { get; set; }
 		
-		[TagDetails(126)]
-		public DateTime? ExpireTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(168, TagType.UtcTimestamp)]
+		public DateTime? EffectiveTime { get; set; }
 		
-		[TagDetails(779)]
-		public DateTime? LastUpdateTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(126, TagType.UtcTimestamp)]
+		public DateTime? ExpireTime { get; set; }
 		
-		[TagDetails(169)]
-		public int? StandInstDbType { get; set; } // INT
+		[TagDetails(779, TagType.UtcTimestamp)]
+		public DateTime? LastUpdateTime { get; set; }
 		
-		[TagDetails(170)]
-		public string? StandInstDbName { get; set; } // STRING
+		[TagDetails(169, TagType.Int)]
+		public int? StandInstDbType { get; set; }
 		
-		[TagDetails(171)]
-		public string? StandInstDbID { get; set; } // STRING
+		[TagDetails(170, TagType.String)]
+		public string? StandInstDbName { get; set; }
 		
+		[TagDetails(171, TagType.String)]
+		public string? StandInstDbID { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

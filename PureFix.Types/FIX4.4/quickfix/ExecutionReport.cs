@@ -9,391 +9,425 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class ExecutionReport : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(37)]
-		public string? OrderID { get; set; } // STRING
 		
-		[TagDetails(198)]
-		public string? SecondaryOrderID { get; set; } // STRING
+		[TagDetails(37, TagType.String)]
+		public string? OrderID { get; set; }
 		
-		[TagDetails(526)]
-		public string? SecondaryClOrdID { get; set; } // STRING
+		[TagDetails(198, TagType.String)]
+		public string? SecondaryOrderID { get; set; }
 		
-		[TagDetails(527)]
-		public string? SecondaryExecID { get; set; } // STRING
+		[TagDetails(526, TagType.String)]
+		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(527, TagType.String)]
+		public string? SecondaryExecID { get; set; }
 		
-		[TagDetails(41)]
-		public string? OrigClOrdID { get; set; } // STRING
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
 		
-		[TagDetails(583)]
-		public string? ClOrdLinkID { get; set; } // STRING
+		[TagDetails(41, TagType.String)]
+		public string? OrigClOrdID { get; set; }
 		
-		[TagDetails(693)]
-		public string? QuoteRespID { get; set; } // STRING
+		[TagDetails(583, TagType.String)]
+		public string? ClOrdLinkID { get; set; }
 		
-		[TagDetails(790)]
-		public string? OrdStatusReqID { get; set; } // STRING
+		[TagDetails(693, TagType.String)]
+		public string? QuoteRespID { get; set; }
 		
-		[TagDetails(584)]
-		public string? MassStatusReqID { get; set; } // STRING
+		[TagDetails(790, TagType.String)]
+		public string? OrdStatusReqID { get; set; }
 		
-		[TagDetails(911)]
-		public int? TotNumReports { get; set; } // INT
+		[TagDetails(584, TagType.String)]
+		public string? MassStatusReqID { get; set; }
 		
-		[TagDetails(912)]
-		public bool? LastRptRequested { get; set; } // BOOLEAN
+		[TagDetails(911, TagType.Int)]
+		public int? TotNumReports { get; set; }
 		
+		[TagDetails(912, TagType.Boolean)]
+		public bool? LastRptRequested { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(229)]
-		public DateTime? TradeOriginationDate { get; set; } // LOCALMKTDATE
 		
+		[TagDetails(229, TagType.LocalDate)]
+		public DateTime? TradeOriginationDate { get; set; }
+		
+		[Component]
 		public ContraGrp? ContraGrp { get; set; }
-		[TagDetails(66)]
-		public string? ListID { get; set; } // STRING
 		
-		[TagDetails(548)]
-		public string? CrossID { get; set; } // STRING
+		[TagDetails(66, TagType.String)]
+		public string? ListID { get; set; }
 		
-		[TagDetails(551)]
-		public string? OrigCrossID { get; set; } // STRING
+		[TagDetails(548, TagType.String)]
+		public string? CrossID { get; set; }
 		
-		[TagDetails(549)]
-		public int? CrossType { get; set; } // INT
+		[TagDetails(551, TagType.String)]
+		public string? OrigCrossID { get; set; }
 		
-		[TagDetails(17)]
-		public string? ExecID { get; set; } // STRING
+		[TagDetails(549, TagType.Int)]
+		public int? CrossType { get; set; }
 		
-		[TagDetails(19)]
-		public string? ExecRefID { get; set; } // STRING
+		[TagDetails(17, TagType.String)]
+		public string? ExecID { get; set; }
 		
-		[TagDetails(150)]
-		public string? ExecType { get; set; } // CHAR
+		[TagDetails(19, TagType.String)]
+		public string? ExecRefID { get; set; }
 		
-		[TagDetails(39)]
-		public string? OrdStatus { get; set; } // CHAR
+		[TagDetails(150, TagType.String)]
+		public string? ExecType { get; set; }
 		
-		[TagDetails(636)]
-		public bool? WorkingIndicator { get; set; } // BOOLEAN
+		[TagDetails(39, TagType.String)]
+		public string? OrdStatus { get; set; }
 		
-		[TagDetails(103)]
-		public int? OrdRejReason { get; set; } // INT
+		[TagDetails(636, TagType.Boolean)]
+		public bool? WorkingIndicator { get; set; }
 		
-		[TagDetails(378)]
-		public int? ExecRestatementReason { get; set; } // INT
+		[TagDetails(103, TagType.Int)]
+		public int? OrdRejReason { get; set; }
 		
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
+		[TagDetails(378, TagType.Int)]
+		public int? ExecRestatementReason { get; set; }
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(581)]
-		public int? AccountType { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(589)]
-		public string? DayBookingInst { get; set; } // CHAR
+		[TagDetails(581, TagType.Int)]
+		public int? AccountType { get; set; }
 		
-		[TagDetails(590)]
-		public string? BookingUnit { get; set; } // CHAR
+		[TagDetails(589, TagType.String)]
+		public string? DayBookingInst { get; set; }
 		
-		[TagDetails(591)]
-		public string? PreallocMethod { get; set; } // CHAR
+		[TagDetails(590, TagType.String)]
+		public string? BookingUnit { get; set; }
 		
-		[TagDetails(63)]
-		public string? SettlType { get; set; } // CHAR
+		[TagDetails(591, TagType.String)]
+		public string? PreallocMethod { get; set; }
 		
-		[TagDetails(64)]
-		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		[TagDetails(63, TagType.String)]
+		public string? SettlType { get; set; }
 		
-		[TagDetails(544)]
-		public string? CashMargin { get; set; } // CHAR
+		[TagDetails(64, TagType.LocalDate)]
+		public DateTime? SettlDate { get; set; }
 		
-		[TagDetails(635)]
-		public string? ClearingFeeIndicator { get; set; } // STRING
+		[TagDetails(544, TagType.String)]
+		public string? CashMargin { get; set; }
 		
+		[TagDetails(635, TagType.String)]
+		public string? ClearingFeeIndicator { get; set; }
+		
+		[Component]
 		public Instrument? Instrument { get; set; }
+		
+		[Component]
 		public FinancingDetails? FinancingDetails { get; set; }
+		
+		[Component]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		[TagDetails(54)]
-		public string? Side { get; set; } // CHAR
 		
+		[TagDetails(54, TagType.String)]
+		public string? Side { get; set; }
+		
+		[Component]
 		public Stipulations? Stipulations { get; set; }
-		[TagDetails(854)]
-		public int? QtyType { get; set; } // INT
 		
+		[TagDetails(854, TagType.Int)]
+		public int? QtyType { get; set; }
+		
+		[Component]
 		public OrderQtyData? OrderQtyData { get; set; }
-		[TagDetails(40)]
-		public string? OrdType { get; set; } // CHAR
 		
-		[TagDetails(423)]
-		public int? PriceType { get; set; } // INT
+		[TagDetails(40, TagType.String)]
+		public string? OrdType { get; set; }
 		
-		[TagDetails(44)]
-		public double? Price { get; set; } // PRICE
+		[TagDetails(423, TagType.Int)]
+		public int? PriceType { get; set; }
 		
-		[TagDetails(99)]
-		public double? StopPx { get; set; } // PRICE
+		[TagDetails(44, TagType.Float)]
+		public double? Price { get; set; }
 		
+		[TagDetails(99, TagType.Float)]
+		public double? StopPx { get; set; }
+		
+		[Component]
 		public PegInstructions? PegInstructions { get; set; }
+		
+		[Component]
 		public DiscretionInstructions? DiscretionInstructions { get; set; }
-		[TagDetails(839)]
-		public double? PeggedPrice { get; set; } // PRICE
 		
-		[TagDetails(845)]
-		public double? DiscretionPrice { get; set; } // PRICE
+		[TagDetails(839, TagType.Float)]
+		public double? PeggedPrice { get; set; }
 		
-		[TagDetails(847)]
-		public int? TargetStrategy { get; set; } // INT
+		[TagDetails(845, TagType.Float)]
+		public double? DiscretionPrice { get; set; }
 		
-		[TagDetails(848)]
-		public string? TargetStrategyParameters { get; set; } // STRING
+		[TagDetails(847, TagType.Int)]
+		public int? TargetStrategy { get; set; }
 		
-		[TagDetails(849)]
-		public double? ParticipationRate { get; set; } // PERCENTAGE
+		[TagDetails(848, TagType.String)]
+		public string? TargetStrategyParameters { get; set; }
 		
-		[TagDetails(850)]
-		public double? TargetStrategyPerformance { get; set; } // FLOAT
+		[TagDetails(849, TagType.Float)]
+		public double? ParticipationRate { get; set; }
 		
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
+		[TagDetails(850, TagType.Float)]
+		public double? TargetStrategyPerformance { get; set; }
 		
-		[TagDetails(376)]
-		public string? ComplianceID { get; set; } // STRING
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
 		
-		[TagDetails(377)]
-		public bool? SolicitedFlag { get; set; } // BOOLEAN
+		[TagDetails(376, TagType.String)]
+		public string? ComplianceID { get; set; }
 		
-		[TagDetails(59)]
-		public string? TimeInForce { get; set; } // CHAR
+		[TagDetails(377, TagType.Boolean)]
+		public bool? SolicitedFlag { get; set; }
 		
-		[TagDetails(168)]
-		public DateTime? EffectiveTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(59, TagType.String)]
+		public string? TimeInForce { get; set; }
 		
-		[TagDetails(432)]
-		public DateTime? ExpireDate { get; set; } // LOCALMKTDATE
+		[TagDetails(168, TagType.UtcTimestamp)]
+		public DateTime? EffectiveTime { get; set; }
 		
-		[TagDetails(126)]
-		public DateTime? ExpireTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(432, TagType.LocalDate)]
+		public DateTime? ExpireDate { get; set; }
 		
-		[TagDetails(18)]
-		public string? ExecInst { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(126, TagType.UtcTimestamp)]
+		public DateTime? ExpireTime { get; set; }
 		
-		[TagDetails(528)]
-		public string? OrderCapacity { get; set; } // CHAR
+		[TagDetails(18, TagType.String)]
+		public string? ExecInst { get; set; }
 		
-		[TagDetails(529)]
-		public string? OrderRestrictions { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(528, TagType.String)]
+		public string? OrderCapacity { get; set; }
 		
-		[TagDetails(582)]
-		public int? CustOrderCapacity { get; set; } // INT
+		[TagDetails(529, TagType.String)]
+		public string? OrderRestrictions { get; set; }
 		
-		[TagDetails(32)]
-		public double? LastQty { get; set; } // QTY
+		[TagDetails(582, TagType.Int)]
+		public int? CustOrderCapacity { get; set; }
 		
-		[TagDetails(652)]
-		public double? UnderlyingLastQty { get; set; } // QTY
+		[TagDetails(32, TagType.Float)]
+		public double? LastQty { get; set; }
 		
-		[TagDetails(31)]
-		public double? LastPx { get; set; } // PRICE
+		[TagDetails(652, TagType.Float)]
+		public double? UnderlyingLastQty { get; set; }
 		
-		[TagDetails(651)]
-		public double? UnderlyingLastPx { get; set; } // PRICE
+		[TagDetails(31, TagType.Float)]
+		public double? LastPx { get; set; }
 		
-		[TagDetails(669)]
-		public double? LastParPx { get; set; } // PRICE
+		[TagDetails(651, TagType.Float)]
+		public double? UnderlyingLastPx { get; set; }
 		
-		[TagDetails(194)]
-		public double? LastSpotRate { get; set; } // PRICE
+		[TagDetails(669, TagType.Float)]
+		public double? LastParPx { get; set; }
 		
-		[TagDetails(195)]
-		public double? LastForwardPoints { get; set; } // PRICEOFFSET
+		[TagDetails(194, TagType.Float)]
+		public double? LastSpotRate { get; set; }
 		
-		[TagDetails(30)]
-		public string? LastMkt { get; set; } // EXCHANGE
+		[TagDetails(195, TagType.Float)]
+		public double? LastForwardPoints { get; set; }
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(30, TagType.String)]
+		public string? LastMkt { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(943)]
-		public string? TimeBracket { get; set; } // STRING
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(29)]
-		public string? LastCapacity { get; set; } // CHAR
+		[TagDetails(943, TagType.String)]
+		public string? TimeBracket { get; set; }
 		
-		[TagDetails(151)]
-		public double? LeavesQty { get; set; } // QTY
+		[TagDetails(29, TagType.String)]
+		public string? LastCapacity { get; set; }
 		
-		[TagDetails(14)]
-		public double? CumQty { get; set; } // QTY
+		[TagDetails(151, TagType.Float)]
+		public double? LeavesQty { get; set; }
 		
-		[TagDetails(6)]
-		public double? AvgPx { get; set; } // PRICE
+		[TagDetails(14, TagType.Float)]
+		public double? CumQty { get; set; }
 		
-		[TagDetails(424)]
-		public double? DayOrderQty { get; set; } // QTY
+		[TagDetails(6, TagType.Float)]
+		public double? AvgPx { get; set; }
 		
-		[TagDetails(425)]
-		public double? DayCumQty { get; set; } // QTY
+		[TagDetails(424, TagType.Float)]
+		public double? DayOrderQty { get; set; }
 		
-		[TagDetails(426)]
-		public double? DayAvgPx { get; set; } // PRICE
+		[TagDetails(425, TagType.Float)]
+		public double? DayCumQty { get; set; }
 		
-		[TagDetails(427)]
-		public int? GTBookingInst { get; set; } // INT
+		[TagDetails(426, TagType.Float)]
+		public double? DayAvgPx { get; set; }
 		
-		[TagDetails(75)]
-		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		[TagDetails(427, TagType.Int)]
+		public int? GTBookingInst { get; set; }
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(75, TagType.LocalDate)]
+		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(113)]
-		public bool? ReportToExch { get; set; } // BOOLEAN
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
 		
+		[TagDetails(113, TagType.Boolean)]
+		public bool? ReportToExch { get; set; }
+		
+		[Component]
 		public CommissionData? CommissionData { get; set; }
+		
+		[Component]
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
+		
+		[Component]
 		public YieldData? YieldData { get; set; }
-		[TagDetails(381)]
-		public double? GrossTradeAmt { get; set; } // AMT
 		
-		[TagDetails(157)]
-		public int? NumDaysInterest { get; set; } // INT
+		[TagDetails(381, TagType.Float)]
+		public double? GrossTradeAmt { get; set; }
 		
-		[TagDetails(230)]
-		public DateTime? ExDate { get; set; } // LOCALMKTDATE
+		[TagDetails(157, TagType.Int)]
+		public int? NumDaysInterest { get; set; }
 		
-		[TagDetails(158)]
-		public double? AccruedInterestRate { get; set; } // PERCENTAGE
+		[TagDetails(230, TagType.LocalDate)]
+		public DateTime? ExDate { get; set; }
 		
-		[TagDetails(159)]
-		public double? AccruedInterestAmt { get; set; } // AMT
+		[TagDetails(158, TagType.Float)]
+		public double? AccruedInterestRate { get; set; }
 		
-		[TagDetails(738)]
-		public double? InterestAtMaturity { get; set; } // AMT
+		[TagDetails(159, TagType.Float)]
+		public double? AccruedInterestAmt { get; set; }
 		
-		[TagDetails(920)]
-		public double? EndAccruedInterestAmt { get; set; } // AMT
+		[TagDetails(738, TagType.Float)]
+		public double? InterestAtMaturity { get; set; }
 		
-		[TagDetails(921)]
-		public double? StartCash { get; set; } // AMT
+		[TagDetails(920, TagType.Float)]
+		public double? EndAccruedInterestAmt { get; set; }
 		
-		[TagDetails(922)]
-		public double? EndCash { get; set; } // AMT
+		[TagDetails(921, TagType.Float)]
+		public double? StartCash { get; set; }
 		
-		[TagDetails(258)]
-		public bool? TradedFlatSwitch { get; set; } // BOOLEAN
+		[TagDetails(922, TagType.Float)]
+		public double? EndCash { get; set; }
 		
-		[TagDetails(259)]
-		public DateTime? BasisFeatureDate { get; set; } // LOCALMKTDATE
+		[TagDetails(258, TagType.Boolean)]
+		public bool? TradedFlatSwitch { get; set; }
 		
-		[TagDetails(260)]
-		public double? BasisFeaturePrice { get; set; } // PRICE
+		[TagDetails(259, TagType.LocalDate)]
+		public DateTime? BasisFeatureDate { get; set; }
 		
-		[TagDetails(238)]
-		public double? Concession { get; set; } // AMT
+		[TagDetails(260, TagType.Float)]
+		public double? BasisFeaturePrice { get; set; }
 		
-		[TagDetails(237)]
-		public double? TotalTakedown { get; set; } // AMT
+		[TagDetails(238, TagType.Float)]
+		public double? Concession { get; set; }
 		
-		[TagDetails(118)]
-		public double? NetMoney { get; set; } // AMT
+		[TagDetails(237, TagType.Float)]
+		public double? TotalTakedown { get; set; }
 		
-		[TagDetails(119)]
-		public double? SettlCurrAmt { get; set; } // AMT
+		[TagDetails(118, TagType.Float)]
+		public double? NetMoney { get; set; }
 		
-		[TagDetails(120)]
-		public string? SettlCurrency { get; set; } // CURRENCY
+		[TagDetails(119, TagType.Float)]
+		public double? SettlCurrAmt { get; set; }
 		
-		[TagDetails(155)]
-		public double? SettlCurrFxRate { get; set; } // FLOAT
+		[TagDetails(120, TagType.String)]
+		public string? SettlCurrency { get; set; }
 		
-		[TagDetails(156)]
-		public string? SettlCurrFxRateCalc { get; set; } // CHAR
+		[TagDetails(155, TagType.Float)]
+		public double? SettlCurrFxRate { get; set; }
 		
-		[TagDetails(21)]
-		public string? HandlInst { get; set; } // CHAR
+		[TagDetails(156, TagType.String)]
+		public string? SettlCurrFxRateCalc { get; set; }
 		
-		[TagDetails(110)]
-		public double? MinQty { get; set; } // QTY
+		[TagDetails(21, TagType.String)]
+		public string? HandlInst { get; set; }
 		
-		[TagDetails(111)]
-		public double? MaxFloor { get; set; } // QTY
+		[TagDetails(110, TagType.Float)]
+		public double? MinQty { get; set; }
 		
-		[TagDetails(77)]
-		public string? PositionEffect { get; set; } // CHAR
+		[TagDetails(111, TagType.Float)]
+		public double? MaxFloor { get; set; }
 		
-		[TagDetails(210)]
-		public double? MaxShow { get; set; } // QTY
+		[TagDetails(77, TagType.String)]
+		public string? PositionEffect { get; set; }
 		
-		[TagDetails(775)]
-		public int? BookingType { get; set; } // INT
+		[TagDetails(210, TagType.Float)]
+		public double? MaxShow { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(775, TagType.Int)]
+		public int? BookingType { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(193)]
-		public DateTime? SettlDate2 { get; set; } // LOCALMKTDATE
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(192)]
-		public double? OrderQty2 { get; set; } // QTY
+		[TagDetails(193, TagType.LocalDate)]
+		public DateTime? SettlDate2 { get; set; }
 		
-		[TagDetails(641)]
-		public double? LastForwardPoints2 { get; set; } // PRICEOFFSET
+		[TagDetails(192, TagType.Float)]
+		public double? OrderQty2 { get; set; }
 		
-		[TagDetails(442)]
-		public string? MultiLegReportingType { get; set; } // CHAR
+		[TagDetails(641, TagType.Float)]
+		public double? LastForwardPoints2 { get; set; }
 		
-		[TagDetails(480)]
-		public string? CancellationRights { get; set; } // CHAR
+		[TagDetails(442, TagType.String)]
+		public string? MultiLegReportingType { get; set; }
 		
-		[TagDetails(481)]
-		public string? MoneyLaunderingStatus { get; set; } // CHAR
+		[TagDetails(480, TagType.String)]
+		public string? CancellationRights { get; set; }
 		
-		[TagDetails(513)]
-		public string? RegistID { get; set; } // STRING
+		[TagDetails(481, TagType.String)]
+		public string? MoneyLaunderingStatus { get; set; }
 		
-		[TagDetails(494)]
-		public string? Designation { get; set; } // STRING
+		[TagDetails(513, TagType.String)]
+		public string? RegistID { get; set; }
 		
-		[TagDetails(483)]
-		public DateTime? TransBkdTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(494, TagType.String)]
+		public string? Designation { get; set; }
 		
-		[TagDetails(515)]
-		public DateTime? ExecValuationPoint { get; set; } // UTCTIMESTAMP
+		[TagDetails(483, TagType.UtcTimestamp)]
+		public DateTime? TransBkdTime { get; set; }
 		
-		[TagDetails(484)]
-		public string? ExecPriceType { get; set; } // CHAR
+		[TagDetails(515, TagType.UtcTimestamp)]
+		public DateTime? ExecValuationPoint { get; set; }
 		
-		[TagDetails(485)]
-		public double? ExecPriceAdjustment { get; set; } // FLOAT
+		[TagDetails(484, TagType.String)]
+		public string? ExecPriceType { get; set; }
 		
-		[TagDetails(638)]
-		public int? PriorityIndicator { get; set; } // INT
+		[TagDetails(485, TagType.Float)]
+		public double? ExecPriceAdjustment { get; set; }
 		
-		[TagDetails(639)]
-		public double? PriceImprovement { get; set; } // PRICEOFFSET
+		[TagDetails(638, TagType.Int)]
+		public int? PriorityIndicator { get; set; }
 		
-		[TagDetails(851)]
-		public int? LastLiquidityInd { get; set; } // INT
+		[TagDetails(639, TagType.Float)]
+		public double? PriceImprovement { get; set; }
 		
+		[TagDetails(851, TagType.Int)]
+		public int? LastLiquidityInd { get; set; }
+		
+		[Component]
 		public ContAmtGrp? ContAmtGrp { get; set; }
-		public InstrmtLegExecGrp? InstrmtLegExecGrp { get; set; }
-		[TagDetails(797)]
-		public bool? CopyMsgIndicator { get; set; } // BOOLEAN
 		
+		[Component]
+		public InstrmtLegExecGrp? InstrmtLegExecGrp { get; set; }
+		
+		[TagDetails(797, TagType.Boolean)]
+		public bool? CopyMsgIndicator { get; set; }
+		
+		[Component]
 		public MiscFeesGrp? MiscFeesGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

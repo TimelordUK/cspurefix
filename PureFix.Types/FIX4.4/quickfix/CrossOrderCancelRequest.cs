@@ -9,29 +9,41 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class CrossOrderCancelRequest : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(37)]
-		public string? OrderID { get; set; } // STRING
 		
-		[TagDetails(548)]
-		public string? CrossID { get; set; } // STRING
+		[TagDetails(37, TagType.String)]
+		public string? OrderID { get; set; }
 		
-		[TagDetails(551)]
-		public string? OrigCrossID { get; set; } // STRING
+		[TagDetails(548, TagType.String)]
+		public string? CrossID { get; set; }
 		
-		[TagDetails(549)]
-		public int? CrossType { get; set; } // INT
+		[TagDetails(551, TagType.String)]
+		public string? OrigCrossID { get; set; }
 		
-		[TagDetails(550)]
-		public int? CrossPrioritization { get; set; } // INT
+		[TagDetails(549, TagType.Int)]
+		public int? CrossType { get; set; }
 		
+		[TagDetails(550, TagType.Int)]
+		public int? CrossPrioritization { get; set; }
+		
+		[Component]
 		public SideCrossOrdCxlGrp? SideCrossOrdCxlGrp { get; set; }
-		public Instrument? Instrument { get; set; }
-		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
 		
+		[Component]
+		public Instrument? Instrument { get; set; }
+		
+		[Component]
+		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		
+		[Component]
+		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

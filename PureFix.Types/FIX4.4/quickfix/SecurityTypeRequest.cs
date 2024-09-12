@@ -9,34 +9,38 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class SecurityTypeRequest : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(320)]
-		public string? SecurityReqID { get; set; } // STRING
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(320, TagType.String)]
+		public string? SecurityReqID { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(460)]
-		public int? Product { get; set; } // INT
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(167)]
-		public string? SecurityType { get; set; } // STRING
+		[TagDetails(460, TagType.Int)]
+		public int? Product { get; set; }
 		
-		[TagDetails(762)]
-		public string? SecuritySubType { get; set; } // STRING
+		[TagDetails(167, TagType.String)]
+		public string? SecurityType { get; set; }
 		
+		[TagDetails(762, TagType.String)]
+		public string? SecuritySubType { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

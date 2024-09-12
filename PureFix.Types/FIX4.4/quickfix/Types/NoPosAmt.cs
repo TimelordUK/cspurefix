@@ -9,11 +9,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoPosAmt
 	{
-		[TagDetails(707)]
-		public string? PosAmtType { get; set; } // STRING
+		[TagDetails(707, TagType.String)]
+		public string? PosAmtType { get; set; }
 		
-		[TagDetails(708)]
-		public double? PosAmt { get; set; } // AMT
+		[TagDetails(708, TagType.Float)]
+		public double? PosAmt { get; set; }
 		
 	}
 }

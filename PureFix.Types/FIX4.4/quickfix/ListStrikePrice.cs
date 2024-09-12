@@ -9,18 +9,26 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class ListStrikePrice : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(66)]
-		public string? ListID { get; set; } // STRING
 		
-		[TagDetails(422)]
-		public int? TotNoStrikes { get; set; } // INT
+		[TagDetails(66, TagType.String)]
+		public string? ListID { get; set; }
 		
-		[TagDetails(893)]
-		public bool? LastFragment { get; set; } // BOOLEAN
+		[TagDetails(422, TagType.Int)]
+		public int? TotNoStrikes { get; set; }
 		
+		[TagDetails(893, TagType.Boolean)]
+		public bool? LastFragment { get; set; }
+		
+		[Component]
 		public InstrmtStrkPxGrp? InstrmtStrkPxGrp { get; set; }
+		
+		[Component]
 		public UndInstrmtStrkPxGrp? UndInstrmtStrkPxGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

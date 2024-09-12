@@ -9,35 +9,41 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class RegistrationInstructionsResponse : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(513)]
-		public string? RegistID { get; set; } // STRING
 		
-		[TagDetails(514)]
-		public string? RegistTransType { get; set; } // CHAR
+		[TagDetails(513, TagType.String)]
+		public string? RegistID { get; set; }
 		
-		[TagDetails(508)]
-		public string? RegistRefID { get; set; } // STRING
+		[TagDetails(514, TagType.String)]
+		public string? RegistTransType { get; set; }
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(508, TagType.String)]
+		public string? RegistRefID { get; set; }
 		
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(506)]
-		public string? RegistStatus { get; set; } // CHAR
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(507)]
-		public int? RegistRejReasonCode { get; set; } // INT
+		[TagDetails(506, TagType.String)]
+		public string? RegistStatus { get; set; }
 		
-		[TagDetails(496)]
-		public string? RegistRejReasonText { get; set; } // STRING
+		[TagDetails(507, TagType.Int)]
+		public int? RegistRejReasonCode { get; set; }
 		
+		[TagDetails(496, TagType.String)]
+		public string? RegistRejReasonText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

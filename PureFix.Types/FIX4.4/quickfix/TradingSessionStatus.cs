@@ -9,58 +9,62 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class TradingSessionStatus : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(335)]
-		public string? TradSesReqID { get; set; } // STRING
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(335, TagType.String)]
+		public string? TradSesReqID { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(338)]
-		public int? TradSesMethod { get; set; } // INT
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(339)]
-		public int? TradSesMode { get; set; } // INT
+		[TagDetails(338, TagType.Int)]
+		public int? TradSesMethod { get; set; }
 		
-		[TagDetails(325)]
-		public bool? UnsolicitedIndicator { get; set; } // BOOLEAN
+		[TagDetails(339, TagType.Int)]
+		public int? TradSesMode { get; set; }
 		
-		[TagDetails(340)]
-		public int? TradSesStatus { get; set; } // INT
+		[TagDetails(325, TagType.Boolean)]
+		public bool? UnsolicitedIndicator { get; set; }
 		
-		[TagDetails(567)]
-		public int? TradSesStatusRejReason { get; set; } // INT
+		[TagDetails(340, TagType.Int)]
+		public int? TradSesStatus { get; set; }
 		
-		[TagDetails(341)]
-		public DateTime? TradSesStartTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(567, TagType.Int)]
+		public int? TradSesStatusRejReason { get; set; }
 		
-		[TagDetails(342)]
-		public DateTime? TradSesOpenTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(341, TagType.UtcTimestamp)]
+		public DateTime? TradSesStartTime { get; set; }
 		
-		[TagDetails(343)]
-		public DateTime? TradSesPreCloseTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(342, TagType.UtcTimestamp)]
+		public DateTime? TradSesOpenTime { get; set; }
 		
-		[TagDetails(344)]
-		public DateTime? TradSesCloseTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(343, TagType.UtcTimestamp)]
+		public DateTime? TradSesPreCloseTime { get; set; }
 		
-		[TagDetails(345)]
-		public DateTime? TradSesEndTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(344, TagType.UtcTimestamp)]
+		public DateTime? TradSesCloseTime { get; set; }
 		
-		[TagDetails(387)]
-		public double? TotalVolumeTraded { get; set; } // QTY
+		[TagDetails(345, TagType.UtcTimestamp)]
+		public DateTime? TradSesEndTime { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(387, TagType.Float)]
+		public double? TotalVolumeTraded { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

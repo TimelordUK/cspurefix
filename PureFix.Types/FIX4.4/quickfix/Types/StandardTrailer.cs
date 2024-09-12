@@ -9,14 +9,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class StandardTrailer
 	{
-		[TagDetails(93)]
-		public int? SignatureLength { get; set; } // LENGTH
+		[TagDetails(93, TagType.Length)]
+		public int? SignatureLength { get; set; }
 		
-		[TagDetails(89)]
-		public byte[]? Signature { get; set; } // DATA
+		[TagDetails(89, TagType.RawData)]
+		public byte[]? Signature { get; set; }
 		
-		[TagDetails(10)]
-		public string? CheckSum { get; set; } // STRING
+		[TagDetails(10, TagType.String)]
+		public string? CheckSum { get; set; }
 		
 	}
 }

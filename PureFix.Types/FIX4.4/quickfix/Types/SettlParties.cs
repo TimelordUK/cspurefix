@@ -9,6 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class SettlParties
 	{
+		[Group]
 		public NoSettlPartyIDs? NoSettlPartyIDs { get; set; }
+		
 	}
 }

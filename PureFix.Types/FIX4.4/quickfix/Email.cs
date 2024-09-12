@@ -9,42 +9,56 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class Email : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(164)]
-		public string? EmailThreadID { get; set; } // STRING
 		
-		[TagDetails(94)]
-		public string? EmailType { get; set; } // CHAR
+		[TagDetails(164, TagType.String)]
+		public string? EmailThreadID { get; set; }
 		
-		[TagDetails(42)]
-		public DateTime? OrigTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(94, TagType.String)]
+		public string? EmailType { get; set; }
 		
-		[TagDetails(147)]
-		public string? Subject { get; set; } // STRING
+		[TagDetails(42, TagType.UtcTimestamp)]
+		public DateTime? OrigTime { get; set; }
 		
-		[TagDetails(356)]
-		public int? EncodedSubjectLen { get; set; } // LENGTH
+		[TagDetails(147, TagType.String)]
+		public string? Subject { get; set; }
 		
-		[TagDetails(357)]
-		public byte[]? EncodedSubject { get; set; } // DATA
+		[TagDetails(356, TagType.Length)]
+		public int? EncodedSubjectLen { get; set; }
 		
+		[TagDetails(357, TagType.RawData)]
+		public byte[]? EncodedSubject { get; set; }
+		
+		[Component]
 		public RoutingGrp? RoutingGrp { get; set; }
+		
+		[Component]
 		public InstrmtGrp? InstrmtGrp { get; set; }
+		
+		[Component]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		
+		[Component]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
-		[TagDetails(37)]
-		public string? OrderID { get; set; } // STRING
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(37, TagType.String)]
+		public string? OrderID { get; set; }
 		
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
+		
+		[Component]
 		public LinesOfTextGrp? LinesOfTextGrp { get; set; }
-		[TagDetails(95)]
-		public int? RawDataLength { get; set; } // LENGTH
 		
-		[TagDetails(96)]
-		public byte[]? RawData { get; set; } // DATA
+		[TagDetails(95, TagType.Length)]
+		public int? RawDataLength { get; set; }
 		
+		[TagDetails(96, TagType.RawData)]
+		public byte[]? RawData { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

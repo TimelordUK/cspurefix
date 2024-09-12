@@ -9,29 +9,35 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class QuoteRequest : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(131)]
-		public string? QuoteReqID { get; set; } // STRING
 		
-		[TagDetails(644)]
-		public string? RFQReqID { get; set; } // STRING
+		[TagDetails(131, TagType.String)]
+		public string? QuoteReqID { get; set; }
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(644, TagType.String)]
+		public string? RFQReqID { get; set; }
 		
-		[TagDetails(528)]
-		public string? OrderCapacity { get; set; } // CHAR
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
 		
+		[TagDetails(528, TagType.String)]
+		public string? OrderCapacity { get; set; }
+		
+		[Component]
 		public QuotReqGrp? QuotReqGrp { get; set; }
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

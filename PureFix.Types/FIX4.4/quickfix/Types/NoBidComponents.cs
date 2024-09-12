@@ -9,32 +9,32 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoBidComponents
 	{
-		[TagDetails(66)]
-		public string? ListID { get; set; } // STRING
+		[TagDetails(66, TagType.String)]
+		public string? ListID { get; set; }
 		
-		[TagDetails(54)]
-		public string? Side { get; set; } // CHAR
+		[TagDetails(54, TagType.String)]
+		public string? Side { get; set; }
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(430)]
-		public int? NetGrossInd { get; set; } // INT
+		[TagDetails(430, TagType.Int)]
+		public int? NetGrossInd { get; set; }
 		
-		[TagDetails(63)]
-		public string? SettlType { get; set; } // CHAR
+		[TagDetails(63, TagType.String)]
+		public string? SettlType { get; set; }
 		
-		[TagDetails(64)]
-		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		[TagDetails(64, TagType.LocalDate)]
+		public DateTime? SettlDate { get; set; }
 		
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
 	}
 }

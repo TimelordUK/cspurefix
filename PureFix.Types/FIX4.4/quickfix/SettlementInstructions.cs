@@ -9,35 +9,41 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class SettlementInstructions : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(777)]
-		public string? SettlInstMsgID { get; set; } // STRING
 		
-		[TagDetails(791)]
-		public string? SettlInstReqID { get; set; } // STRING
+		[TagDetails(777, TagType.String)]
+		public string? SettlInstMsgID { get; set; }
 		
-		[TagDetails(160)]
-		public string? SettlInstMode { get; set; } // CHAR
+		[TagDetails(791, TagType.String)]
+		public string? SettlInstReqID { get; set; }
 		
-		[TagDetails(792)]
-		public int? SettlInstReqRejCode { get; set; } // INT
+		[TagDetails(160, TagType.String)]
+		public string? SettlInstMode { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(792, TagType.Int)]
+		public int? SettlInstReqRejCode { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
 		
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
+		
+		[Component]
 		public SettlInstGrp? SettlInstGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

@@ -9,23 +9,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoExecs
 	{
-		[TagDetails(32)]
-		public double? LastQty { get; set; } // QTY
+		[TagDetails(32, TagType.Float)]
+		public double? LastQty { get; set; }
 		
-		[TagDetails(17)]
-		public string? ExecID { get; set; } // STRING
+		[TagDetails(17, TagType.String)]
+		public string? ExecID { get; set; }
 		
-		[TagDetails(527)]
-		public string? SecondaryExecID { get; set; } // STRING
+		[TagDetails(527, TagType.String)]
+		public string? SecondaryExecID { get; set; }
 		
-		[TagDetails(31)]
-		public double? LastPx { get; set; } // PRICE
+		[TagDetails(31, TagType.Float)]
+		public double? LastPx { get; set; }
 		
-		[TagDetails(669)]
-		public double? LastParPx { get; set; } // PRICE
+		[TagDetails(669, TagType.Float)]
+		public double? LastParPx { get; set; }
 		
-		[TagDetails(29)]
-		public string? LastCapacity { get; set; } // CHAR
+		[TagDetails(29, TagType.String)]
+		public string? LastCapacity { get; set; }
 		
 	}
 }

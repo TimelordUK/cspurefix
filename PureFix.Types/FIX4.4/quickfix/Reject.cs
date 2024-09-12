@@ -9,28 +9,32 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class Reject : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(45)]
-		public int? RefSeqNum { get; set; } // SEQNUM
 		
-		[TagDetails(371)]
-		public int? RefTagID { get; set; } // INT
+		[TagDetails(45, TagType.Int)]
+		public int? RefSeqNum { get; set; }
 		
-		[TagDetails(372)]
-		public string? RefMsgType { get; set; } // STRING
+		[TagDetails(371, TagType.Int)]
+		public int? RefTagID { get; set; }
 		
-		[TagDetails(373)]
-		public int? SessionRejectReason { get; set; } // INT
+		[TagDetails(372, TagType.String)]
+		public string? RefMsgType { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(373, TagType.Int)]
+		public int? SessionRejectReason { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

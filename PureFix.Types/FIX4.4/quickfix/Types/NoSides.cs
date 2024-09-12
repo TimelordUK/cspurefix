@@ -9,96 +9,104 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoSides
 	{
-		[TagDetails(54)]
-		public string? Side { get; set; } // CHAR
+		[TagDetails(54, TagType.String)]
+		public string? Side { get; set; }
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
 		
-		[TagDetails(526)]
-		public string? SecondaryClOrdID { get; set; } // STRING
+		[TagDetails(526, TagType.String)]
+		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(583)]
-		public string? ClOrdLinkID { get; set; } // STRING
+		[TagDetails(583, TagType.String)]
+		public string? ClOrdLinkID { get; set; }
 		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(229)]
-		public DateTime? TradeOriginationDate { get; set; } // LOCALMKTDATE
 		
-		[TagDetails(75)]
-		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		[TagDetails(229, TagType.LocalDate)]
+		public DateTime? TradeOriginationDate { get; set; }
 		
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
+		[TagDetails(75, TagType.LocalDate)]
+		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(581)]
-		public int? AccountType { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(589)]
-		public string? DayBookingInst { get; set; } // CHAR
+		[TagDetails(581, TagType.Int)]
+		public int? AccountType { get; set; }
 		
-		[TagDetails(590)]
-		public string? BookingUnit { get; set; } // CHAR
+		[TagDetails(589, TagType.String)]
+		public string? DayBookingInst { get; set; }
 		
-		[TagDetails(591)]
-		public string? PreallocMethod { get; set; } // CHAR
+		[TagDetails(590, TagType.String)]
+		public string? BookingUnit { get; set; }
 		
-		[TagDetails(70)]
-		public string? AllocID { get; set; } // STRING
+		[TagDetails(591, TagType.String)]
+		public string? PreallocMethod { get; set; }
 		
+		[TagDetails(70, TagType.String)]
+		public string? AllocID { get; set; }
+		
+		[Component]
 		public PreAllocGrp? PreAllocGrp { get; set; }
-		[TagDetails(854)]
-		public int? QtyType { get; set; } // INT
 		
+		[TagDetails(854, TagType.Int)]
+		public int? QtyType { get; set; }
+		
+		[Component]
 		public OrderQtyData? OrderQtyData { get; set; }
+		
+		[Component]
 		public CommissionData? CommissionData { get; set; }
-		[TagDetails(528)]
-		public string? OrderCapacity { get; set; } // CHAR
 		
-		[TagDetails(529)]
-		public string? OrderRestrictions { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(528, TagType.String)]
+		public string? OrderCapacity { get; set; }
 		
-		[TagDetails(582)]
-		public int? CustOrderCapacity { get; set; } // INT
+		[TagDetails(529, TagType.String)]
+		public string? OrderRestrictions { get; set; }
 		
-		[TagDetails(121)]
-		public bool? ForexReq { get; set; } // BOOLEAN
+		[TagDetails(582, TagType.Int)]
+		public int? CustOrderCapacity { get; set; }
 		
-		[TagDetails(120)]
-		public string? SettlCurrency { get; set; } // CURRENCY
+		[TagDetails(121, TagType.Boolean)]
+		public bool? ForexReq { get; set; }
 		
-		[TagDetails(775)]
-		public int? BookingType { get; set; } // INT
+		[TagDetails(120, TagType.String)]
+		public string? SettlCurrency { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(775, TagType.Int)]
+		public int? BookingType { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(77)]
-		public string? PositionEffect { get; set; } // CHAR
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(203)]
-		public int? CoveredOrUncovered { get; set; } // INT
+		[TagDetails(77, TagType.String)]
+		public string? PositionEffect { get; set; }
 		
-		[TagDetails(544)]
-		public string? CashMargin { get; set; } // CHAR
+		[TagDetails(203, TagType.Int)]
+		public int? CoveredOrUncovered { get; set; }
 		
-		[TagDetails(635)]
-		public string? ClearingFeeIndicator { get; set; } // STRING
+		[TagDetails(544, TagType.String)]
+		public string? CashMargin { get; set; }
 		
-		[TagDetails(377)]
-		public bool? SolicitedFlag { get; set; } // BOOLEAN
+		[TagDetails(635, TagType.String)]
+		public string? ClearingFeeIndicator { get; set; }
 		
-		[TagDetails(659)]
-		public string? SideComplianceID { get; set; } // STRING
+		[TagDetails(377, TagType.Boolean)]
+		public bool? SolicitedFlag { get; set; }
+		
+		[TagDetails(659, TagType.String)]
+		public string? SideComplianceID { get; set; }
 		
 	}
 }

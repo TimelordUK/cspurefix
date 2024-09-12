@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoQuoteQualifiers
 	{
-		[TagDetails(695)]
-		public string? QuoteQualifier { get; set; } // CHAR
+		[TagDetails(695, TagType.String)]
+		public string? QuoteQualifier { get; set; }
 		
 	}
 }

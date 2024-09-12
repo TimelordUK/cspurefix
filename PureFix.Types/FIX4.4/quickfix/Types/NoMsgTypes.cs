@@ -9,11 +9,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoMsgTypes
 	{
-		[TagDetails(372)]
-		public string? RefMsgType { get; set; } // STRING
+		[TagDetails(372, TagType.String)]
+		public string? RefMsgType { get; set; }
 		
-		[TagDetails(385)]
-		public string? MsgDirection { get; set; } // CHAR
+		[TagDetails(385, TagType.String)]
+		public string? MsgDirection { get; set; }
 		
 	}
 }

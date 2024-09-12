@@ -9,17 +9,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoCompIDs
 	{
-		[TagDetails(930)]
-		public string? RefCompID { get; set; } // STRING
+		[TagDetails(930, TagType.String)]
+		public string? RefCompID { get; set; }
 		
-		[TagDetails(931)]
-		public string? RefSubID { get; set; } // STRING
+		[TagDetails(931, TagType.String)]
+		public string? RefSubID { get; set; }
 		
-		[TagDetails(283)]
-		public string? LocationID { get; set; } // STRING
+		[TagDetails(283, TagType.String)]
+		public string? LocationID { get; set; }
 		
-		[TagDetails(284)]
-		public string? DeskID { get; set; } // STRING
+		[TagDetails(284, TagType.String)]
+		public string? DeskID { get; set; }
 		
 	}
 }

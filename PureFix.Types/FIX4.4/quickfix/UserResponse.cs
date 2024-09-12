@@ -9,19 +9,23 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class UserResponse : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(923)]
-		public string? UserRequestID { get; set; } // STRING
 		
-		[TagDetails(553)]
-		public string? Username { get; set; } // STRING
+		[TagDetails(923, TagType.String)]
+		public string? UserRequestID { get; set; }
 		
-		[TagDetails(926)]
-		public int? UserStatus { get; set; } // INT
+		[TagDetails(553, TagType.String)]
+		public string? Username { get; set; }
 		
-		[TagDetails(927)]
-		public string? UserStatusText { get; set; } // STRING
+		[TagDetails(926, TagType.Int)]
+		public int? UserStatus { get; set; }
 		
+		[TagDetails(927, TagType.String)]
+		public string? UserStatusText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

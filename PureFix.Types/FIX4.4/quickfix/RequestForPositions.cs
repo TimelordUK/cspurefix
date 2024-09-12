@@ -9,63 +9,77 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class RequestForPositions : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(710)]
-		public string? PosReqID { get; set; } // STRING
 		
-		[TagDetails(724)]
-		public int? PosReqType { get; set; } // INT
+		[TagDetails(710, TagType.String)]
+		public string? PosReqID { get; set; }
 		
-		[TagDetails(573)]
-		public string? MatchStatus { get; set; } // CHAR
+		[TagDetails(724, TagType.Int)]
+		public int? PosReqType { get; set; }
 		
-		[TagDetails(263)]
-		public string? SubscriptionRequestType { get; set; } // CHAR
+		[TagDetails(573, TagType.String)]
+		public string? MatchStatus { get; set; }
 		
+		[TagDetails(263, TagType.String)]
+		public string? SubscriptionRequestType { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(581)]
-		public int? AccountType { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
+		[TagDetails(581, TagType.Int)]
+		public int? AccountType { get; set; }
+		
+		[Component]
 		public Instrument? Instrument { get; set; }
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
 		
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
+		
+		[Component]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		
+		[Component]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		[TagDetails(715)]
-		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
 		
-		[TagDetails(716)]
-		public string? SettlSessID { get; set; } // STRING
+		[TagDetails(715, TagType.LocalDate)]
+		public DateTime? ClearingBusinessDate { get; set; }
 		
-		[TagDetails(717)]
-		public string? SettlSessSubID { get; set; } // STRING
+		[TagDetails(716, TagType.String)]
+		public string? SettlSessID { get; set; }
 		
+		[TagDetails(717, TagType.String)]
+		public string? SettlSessSubID { get; set; }
+		
+		[Component]
 		public TrdgSesGrp? TrdgSesGrp { get; set; }
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
 		
-		[TagDetails(725)]
-		public int? ResponseTransportType { get; set; } // INT
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(726)]
-		public string? ResponseDestination { get; set; } // STRING
+		[TagDetails(725, TagType.Int)]
+		public int? ResponseTransportType { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(726, TagType.String)]
+		public string? ResponseDestination { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

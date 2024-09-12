@@ -9,14 +9,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoCapacities
 	{
-		[TagDetails(528)]
-		public string? OrderCapacity { get; set; } // CHAR
+		[TagDetails(528, TagType.String)]
+		public string? OrderCapacity { get; set; }
 		
-		[TagDetails(529)]
-		public string? OrderRestrictions { get; set; } // MULTIPLEVALUESTRING
+		[TagDetails(529, TagType.String)]
+		public string? OrderRestrictions { get; set; }
 		
-		[TagDetails(863)]
-		public double? OrderCapacityQty { get; set; } // QTY
+		[TagDetails(863, TagType.Float)]
+		public double? OrderCapacityQty { get; set; }
 		
 	}
 }

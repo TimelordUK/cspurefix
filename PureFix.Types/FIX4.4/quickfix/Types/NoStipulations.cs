@@ -9,11 +9,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoStipulations
 	{
-		[TagDetails(233)]
-		public string? StipulationType { get; set; } // STRING
+		[TagDetails(233, TagType.String)]
+		public string? StipulationType { get; set; }
 		
-		[TagDetails(234)]
-		public string? StipulationValue { get; set; } // STRING
+		[TagDetails(234, TagType.String)]
+		public string? StipulationValue { get; set; }
 		
 	}
 }

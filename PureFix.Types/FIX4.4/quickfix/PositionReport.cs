@@ -9,79 +9,95 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class PositionReport : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(721)]
-		public string? PosMaintRptID { get; set; } // STRING
 		
-		[TagDetails(710)]
-		public string? PosReqID { get; set; } // STRING
+		[TagDetails(721, TagType.String)]
+		public string? PosMaintRptID { get; set; }
 		
-		[TagDetails(724)]
-		public int? PosReqType { get; set; } // INT
+		[TagDetails(710, TagType.String)]
+		public string? PosReqID { get; set; }
 		
-		[TagDetails(263)]
-		public string? SubscriptionRequestType { get; set; } // CHAR
+		[TagDetails(724, TagType.Int)]
+		public int? PosReqType { get; set; }
 		
-		[TagDetails(727)]
-		public int? TotalNumPosReports { get; set; } // INT
+		[TagDetails(263, TagType.String)]
+		public string? SubscriptionRequestType { get; set; }
 		
-		[TagDetails(325)]
-		public bool? UnsolicitedIndicator { get; set; } // BOOLEAN
+		[TagDetails(727, TagType.Int)]
+		public int? TotalNumPosReports { get; set; }
 		
-		[TagDetails(728)]
-		public int? PosReqResult { get; set; } // INT
+		[TagDetails(325, TagType.Boolean)]
+		public bool? UnsolicitedIndicator { get; set; }
 		
-		[TagDetails(715)]
-		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
+		[TagDetails(728, TagType.Int)]
+		public int? PosReqResult { get; set; }
 		
-		[TagDetails(716)]
-		public string? SettlSessID { get; set; } // STRING
+		[TagDetails(715, TagType.LocalDate)]
+		public DateTime? ClearingBusinessDate { get; set; }
 		
-		[TagDetails(717)]
-		public string? SettlSessSubID { get; set; } // STRING
+		[TagDetails(716, TagType.String)]
+		public string? SettlSessID { get; set; }
 		
+		[TagDetails(717, TagType.String)]
+		public string? SettlSessSubID { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(581)]
-		public int? AccountType { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
+		[TagDetails(581, TagType.Int)]
+		public int? AccountType { get; set; }
+		
+		[Component]
 		public Instrument? Instrument { get; set; }
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
 		
-		[TagDetails(730)]
-		public double? SettlPrice { get; set; } // PRICE
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
 		
-		[TagDetails(731)]
-		public int? SettlPriceType { get; set; } // INT
+		[TagDetails(730, TagType.Float)]
+		public double? SettlPrice { get; set; }
 		
-		[TagDetails(734)]
-		public double? PriorSettlPrice { get; set; } // PRICE
+		[TagDetails(731, TagType.Int)]
+		public int? SettlPriceType { get; set; }
 		
+		[TagDetails(734, TagType.Float)]
+		public double? PriorSettlPrice { get; set; }
+		
+		[Component]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		
+		[Component]
 		public PosUndInstrmtGrp? PosUndInstrmtGrp { get; set; }
+		
+		[Component]
 		public PositionQty? PositionQty { get; set; }
+		
+		[Component]
 		public PositionAmountData? PositionAmountData { get; set; }
-		[TagDetails(506)]
-		public string? RegistStatus { get; set; } // CHAR
 		
-		[TagDetails(743)]
-		public DateTime? DeliveryDate { get; set; } // LOCALMKTDATE
+		[TagDetails(506, TagType.String)]
+		public string? RegistStatus { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(743, TagType.LocalDate)]
+		public DateTime? DeliveryDate { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

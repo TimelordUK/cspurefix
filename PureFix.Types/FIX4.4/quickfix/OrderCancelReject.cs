@@ -9,70 +9,74 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class OrderCancelReject : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(37)]
-		public string? OrderID { get; set; } // STRING
 		
-		[TagDetails(198)]
-		public string? SecondaryOrderID { get; set; } // STRING
+		[TagDetails(37, TagType.String)]
+		public string? OrderID { get; set; }
 		
-		[TagDetails(526)]
-		public string? SecondaryClOrdID { get; set; } // STRING
+		[TagDetails(198, TagType.String)]
+		public string? SecondaryOrderID { get; set; }
 		
-		[TagDetails(11)]
-		public string? ClOrdID { get; set; } // STRING
+		[TagDetails(526, TagType.String)]
+		public string? SecondaryClOrdID { get; set; }
 		
-		[TagDetails(583)]
-		public string? ClOrdLinkID { get; set; } // STRING
+		[TagDetails(11, TagType.String)]
+		public string? ClOrdID { get; set; }
 		
-		[TagDetails(41)]
-		public string? OrigClOrdID { get; set; } // STRING
+		[TagDetails(583, TagType.String)]
+		public string? ClOrdLinkID { get; set; }
 		
-		[TagDetails(39)]
-		public string? OrdStatus { get; set; } // CHAR
+		[TagDetails(41, TagType.String)]
+		public string? OrigClOrdID { get; set; }
 		
-		[TagDetails(636)]
-		public bool? WorkingIndicator { get; set; } // BOOLEAN
+		[TagDetails(39, TagType.String)]
+		public string? OrdStatus { get; set; }
 		
-		[TagDetails(586)]
-		public DateTime? OrigOrdModTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(636, TagType.Boolean)]
+		public bool? WorkingIndicator { get; set; }
 		
-		[TagDetails(66)]
-		public string? ListID { get; set; } // STRING
+		[TagDetails(586, TagType.UtcTimestamp)]
+		public DateTime? OrigOrdModTime { get; set; }
 		
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
+		[TagDetails(66, TagType.String)]
+		public string? ListID { get; set; }
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(581)]
-		public int? AccountType { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(229)]
-		public DateTime? TradeOriginationDate { get; set; } // LOCALMKTDATE
+		[TagDetails(581, TagType.Int)]
+		public int? AccountType { get; set; }
 		
-		[TagDetails(75)]
-		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		[TagDetails(229, TagType.LocalDate)]
+		public DateTime? TradeOriginationDate { get; set; }
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(75, TagType.LocalDate)]
+		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(434)]
-		public string? CxlRejResponseTo { get; set; } // CHAR
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(102)]
-		public int? CxlRejReason { get; set; } // INT
+		[TagDetails(434, TagType.String)]
+		public string? CxlRejResponseTo { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(102, TagType.Int)]
+		public int? CxlRejReason { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

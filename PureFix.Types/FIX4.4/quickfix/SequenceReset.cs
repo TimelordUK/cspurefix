@@ -9,13 +9,17 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class SequenceReset : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(123)]
-		public bool? GapFillFlag { get; set; } // BOOLEAN
 		
-		[TagDetails(36)]
-		public int? NewSeqNo { get; set; } // SEQNUM
+		[TagDetails(123, TagType.Boolean)]
+		public bool? GapFillFlag { get; set; }
 		
+		[TagDetails(36, TagType.Int)]
+		public int? NewSeqNo { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

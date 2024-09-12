@@ -9,68 +9,92 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class IOI : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(23)]
-		public string? IOIID { get; set; } // STRING
 		
-		[TagDetails(28)]
-		public string? IOITransType { get; set; } // CHAR
+		[TagDetails(23, TagType.String)]
+		public string? IOIID { get; set; }
 		
-		[TagDetails(26)]
-		public string? IOIRefID { get; set; } // STRING
+		[TagDetails(28, TagType.String)]
+		public string? IOITransType { get; set; }
 		
+		[TagDetails(26, TagType.String)]
+		public string? IOIRefID { get; set; }
+		
+		[Component]
 		public Instrument? Instrument { get; set; }
+		
+		[Component]
 		public FinancingDetails? FinancingDetails { get; set; }
+		
+		[Component]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		[TagDetails(54)]
-		public string? Side { get; set; } // CHAR
 		
-		[TagDetails(854)]
-		public int? QtyType { get; set; } // INT
+		[TagDetails(54, TagType.String)]
+		public string? Side { get; set; }
 		
+		[TagDetails(854, TagType.Int)]
+		public int? QtyType { get; set; }
+		
+		[Component]
 		public OrderQtyData? OrderQtyData { get; set; }
-		[TagDetails(27)]
-		public string? IOIQty { get; set; } // STRING
 		
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
+		[TagDetails(27, TagType.String)]
+		public string? IOIQty { get; set; }
 		
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
+		
+		[Component]
 		public Stipulations? Stipulations { get; set; }
+		
+		[Component]
 		public InstrmtLegIOIGrp? InstrmtLegIOIGrp { get; set; }
-		[TagDetails(423)]
-		public int? PriceType { get; set; } // INT
 		
-		[TagDetails(44)]
-		public double? Price { get; set; } // PRICE
+		[TagDetails(423, TagType.Int)]
+		public int? PriceType { get; set; }
 		
-		[TagDetails(62)]
-		public DateTime? ValidUntilTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(44, TagType.Float)]
+		public double? Price { get; set; }
 		
-		[TagDetails(25)]
-		public string? IOIQltyInd { get; set; } // CHAR
+		[TagDetails(62, TagType.UtcTimestamp)]
+		public DateTime? ValidUntilTime { get; set; }
 		
-		[TagDetails(130)]
-		public bool? IOINaturalFlag { get; set; } // BOOLEAN
+		[TagDetails(25, TagType.String)]
+		public string? IOIQltyInd { get; set; }
 		
+		[TagDetails(130, TagType.Boolean)]
+		public bool? IOINaturalFlag { get; set; }
+		
+		[Component]
 		public IOIQualGrp? IOIQualGrp { get; set; }
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(149)]
-		public string? URLLink { get; set; } // STRING
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
 		
+		[TagDetails(149, TagType.String)]
+		public string? URLLink { get; set; }
+		
+		[Component]
 		public RoutingGrp? RoutingGrp { get; set; }
+		
+		[Component]
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
+		
+		[Component]
 		public YieldData? YieldData { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

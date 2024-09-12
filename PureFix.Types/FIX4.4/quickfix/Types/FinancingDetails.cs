@@ -9,32 +9,32 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class FinancingDetails
 	{
-		[TagDetails(913)]
-		public string? AgreementDesc { get; set; } // STRING
+		[TagDetails(913, TagType.String)]
+		public string? AgreementDesc { get; set; }
 		
-		[TagDetails(914)]
-		public string? AgreementID { get; set; } // STRING
+		[TagDetails(914, TagType.String)]
+		public string? AgreementID { get; set; }
 		
-		[TagDetails(915)]
-		public DateTime? AgreementDate { get; set; } // LOCALMKTDATE
+		[TagDetails(915, TagType.LocalDate)]
+		public DateTime? AgreementDate { get; set; }
 		
-		[TagDetails(918)]
-		public string? AgreementCurrency { get; set; } // CURRENCY
+		[TagDetails(918, TagType.String)]
+		public string? AgreementCurrency { get; set; }
 		
-		[TagDetails(788)]
-		public int? TerminationType { get; set; } // INT
+		[TagDetails(788, TagType.Int)]
+		public int? TerminationType { get; set; }
 		
-		[TagDetails(916)]
-		public DateTime? StartDate { get; set; } // LOCALMKTDATE
+		[TagDetails(916, TagType.LocalDate)]
+		public DateTime? StartDate { get; set; }
 		
-		[TagDetails(917)]
-		public DateTime? EndDate { get; set; } // LOCALMKTDATE
+		[TagDetails(917, TagType.LocalDate)]
+		public DateTime? EndDate { get; set; }
 		
-		[TagDetails(919)]
-		public int? DeliveryType { get; set; } // INT
+		[TagDetails(919, TagType.Int)]
+		public int? DeliveryType { get; set; }
 		
-		[TagDetails(898)]
-		public double? MarginRatio { get; set; } // PERCENTAGE
+		[TagDetails(898, TagType.Float)]
+		public double? MarginRatio { get; set; }
 		
 	}
 }

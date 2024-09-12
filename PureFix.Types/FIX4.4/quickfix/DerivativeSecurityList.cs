@@ -9,24 +9,32 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class DerivativeSecurityList : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(320)]
-		public string? SecurityReqID { get; set; } // STRING
 		
-		[TagDetails(322)]
-		public string? SecurityResponseID { get; set; } // STRING
+		[TagDetails(320, TagType.String)]
+		public string? SecurityReqID { get; set; }
 		
-		[TagDetails(560)]
-		public int? SecurityRequestResult { get; set; } // INT
+		[TagDetails(322, TagType.String)]
+		public string? SecurityResponseID { get; set; }
 		
+		[TagDetails(560, TagType.Int)]
+		public int? SecurityRequestResult { get; set; }
+		
+		[Component]
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
-		[TagDetails(393)]
-		public int? TotNoRelatedSym { get; set; } // INT
 		
-		[TagDetails(893)]
-		public bool? LastFragment { get; set; } // BOOLEAN
+		[TagDetails(393, TagType.Int)]
+		public int? TotNoRelatedSym { get; set; }
 		
+		[TagDetails(893, TagType.Boolean)]
+		public bool? LastFragment { get; set; }
+		
+		[Component]
 		public RelSymDerivSecGrp? RelSymDerivSecGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

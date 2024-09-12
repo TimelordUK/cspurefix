@@ -9,14 +9,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoContAmts
 	{
-		[TagDetails(519)]
-		public int? ContAmtType { get; set; } // INT
+		[TagDetails(519, TagType.Int)]
+		public int? ContAmtType { get; set; }
 		
-		[TagDetails(520)]
-		public double? ContAmtValue { get; set; } // FLOAT
+		[TagDetails(520, TagType.Float)]
+		public double? ContAmtValue { get; set; }
 		
-		[TagDetails(521)]
-		public string? ContAmtCurr { get; set; } // CURRENCY
+		[TagDetails(521, TagType.String)]
+		public string? ContAmtCurr { get; set; }
 		
 	}
 }

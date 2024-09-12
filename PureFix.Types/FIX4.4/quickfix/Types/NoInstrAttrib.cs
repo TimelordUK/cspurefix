@@ -9,11 +9,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoInstrAttrib
 	{
-		[TagDetails(871)]
-		public int? InstrAttribType { get; set; } // INT
+		[TagDetails(871, TagType.Int)]
+		public int? InstrAttribType { get; set; }
 		
-		[TagDetails(872)]
-		public string? InstrAttribValue { get; set; } // STRING
+		[TagDetails(872, TagType.String)]
+		public string? InstrAttribValue { get; set; }
 		
 	}
 }

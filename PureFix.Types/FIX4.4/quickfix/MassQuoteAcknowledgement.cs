@@ -9,45 +9,53 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class MassQuoteAcknowledgement : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(131)]
-		public string? QuoteReqID { get; set; } // STRING
 		
-		[TagDetails(117)]
-		public string? QuoteID { get; set; } // STRING
+		[TagDetails(131, TagType.String)]
+		public string? QuoteReqID { get; set; }
 		
-		[TagDetails(297)]
-		public int? QuoteStatus { get; set; } // INT
+		[TagDetails(117, TagType.String)]
+		public string? QuoteID { get; set; }
 		
-		[TagDetails(300)]
-		public int? QuoteRejectReason { get; set; } // INT
+		[TagDetails(297, TagType.Int)]
+		public int? QuoteStatus { get; set; }
 		
-		[TagDetails(301)]
-		public int? QuoteResponseLevel { get; set; } // INT
+		[TagDetails(300, TagType.Int)]
+		public int? QuoteRejectReason { get; set; }
 		
-		[TagDetails(537)]
-		public int? QuoteType { get; set; } // INT
+		[TagDetails(301, TagType.Int)]
+		public int? QuoteResponseLevel { get; set; }
 		
+		[TagDetails(537, TagType.Int)]
+		public int? QuoteType { get; set; }
+		
+		[Component]
 		public Parties? Parties { get; set; }
-		[TagDetails(1)]
-		public string? Account { get; set; } // STRING
 		
-		[TagDetails(660)]
-		public int? AcctIDSource { get; set; } // INT
+		[TagDetails(1, TagType.String)]
+		public string? Account { get; set; }
 		
-		[TagDetails(581)]
-		public int? AccountType { get; set; } // INT
+		[TagDetails(660, TagType.Int)]
+		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(581, TagType.Int)]
+		public int? AccountType { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
+		
+		[Component]
 		public QuotSetAckGrp? QuotSetAckGrp { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

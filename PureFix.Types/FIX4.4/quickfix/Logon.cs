@@ -9,38 +9,44 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class Logon : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(98)]
-		public int? EncryptMethod { get; set; } // INT
 		
-		[TagDetails(108)]
-		public int? HeartBtInt { get; set; } // INT
+		[TagDetails(98, TagType.Int)]
+		public int? EncryptMethod { get; set; }
 		
-		[TagDetails(95)]
-		public int? RawDataLength { get; set; } // LENGTH
+		[TagDetails(108, TagType.Int)]
+		public int? HeartBtInt { get; set; }
 		
-		[TagDetails(96)]
-		public byte[]? RawData { get; set; } // DATA
+		[TagDetails(95, TagType.Length)]
+		public int? RawDataLength { get; set; }
 		
-		[TagDetails(141)]
-		public bool? ResetSeqNumFlag { get; set; } // BOOLEAN
+		[TagDetails(96, TagType.RawData)]
+		public byte[]? RawData { get; set; }
 		
-		[TagDetails(789)]
-		public int? NextExpectedMsgSeqNum { get; set; } // SEQNUM
+		[TagDetails(141, TagType.Boolean)]
+		public bool? ResetSeqNumFlag { get; set; }
 		
-		[TagDetails(383)]
-		public int? MaxMessageSize { get; set; } // LENGTH
+		[TagDetails(789, TagType.Int)]
+		public int? NextExpectedMsgSeqNum { get; set; }
 		
+		[TagDetails(383, TagType.Length)]
+		public int? MaxMessageSize { get; set; }
+		
+		[Group]
 		public NoMsgTypes? NoMsgTypes { get; set; }
-		[TagDetails(464)]
-		public bool? TestMessageIndicator { get; set; } // BOOLEAN
 		
-		[TagDetails(553)]
-		public string? Username { get; set; } // STRING
+		[TagDetails(464, TagType.Boolean)]
+		public bool? TestMessageIndicator { get; set; }
 		
-		[TagDetails(554)]
-		public string? Password { get; set; } // STRING
+		[TagDetails(553, TagType.String)]
+		public string? Username { get; set; }
 		
+		[TagDetails(554, TagType.String)]
+		public string? Password { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

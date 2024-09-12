@@ -9,29 +9,29 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class SpreadOrBenchmarkCurveData
 	{
-		[TagDetails(218)]
-		public double? Spread { get; set; } // PRICEOFFSET
+		[TagDetails(218, TagType.Float)]
+		public double? Spread { get; set; }
 		
-		[TagDetails(220)]
-		public string? BenchmarkCurveCurrency { get; set; } // CURRENCY
+		[TagDetails(220, TagType.String)]
+		public string? BenchmarkCurveCurrency { get; set; }
 		
-		[TagDetails(221)]
-		public string? BenchmarkCurveName { get; set; } // STRING
+		[TagDetails(221, TagType.String)]
+		public string? BenchmarkCurveName { get; set; }
 		
-		[TagDetails(222)]
-		public string? BenchmarkCurvePoint { get; set; } // STRING
+		[TagDetails(222, TagType.String)]
+		public string? BenchmarkCurvePoint { get; set; }
 		
-		[TagDetails(662)]
-		public double? BenchmarkPrice { get; set; } // PRICE
+		[TagDetails(662, TagType.Float)]
+		public double? BenchmarkPrice { get; set; }
 		
-		[TagDetails(663)]
-		public int? BenchmarkPriceType { get; set; } // INT
+		[TagDetails(663, TagType.Int)]
+		public int? BenchmarkPriceType { get; set; }
 		
-		[TagDetails(699)]
-		public string? BenchmarkSecurityID { get; set; } // STRING
+		[TagDetails(699, TagType.String)]
+		public string? BenchmarkSecurityID { get; set; }
 		
-		[TagDetails(761)]
-		public string? BenchmarkSecurityIDSource { get; set; } // STRING
+		[TagDetails(761, TagType.String)]
+		public string? BenchmarkSecurityIDSource { get; set; }
 		
 	}
 }

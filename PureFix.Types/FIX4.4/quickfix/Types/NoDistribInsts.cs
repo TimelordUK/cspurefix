@@ -9,29 +9,29 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoDistribInsts
 	{
-		[TagDetails(477)]
-		public int? DistribPaymentMethod { get; set; } // INT
+		[TagDetails(477, TagType.Int)]
+		public int? DistribPaymentMethod { get; set; }
 		
-		[TagDetails(512)]
-		public double? DistribPercentage { get; set; } // PERCENTAGE
+		[TagDetails(512, TagType.Float)]
+		public double? DistribPercentage { get; set; }
 		
-		[TagDetails(478)]
-		public string? CashDistribCurr { get; set; } // CURRENCY
+		[TagDetails(478, TagType.String)]
+		public string? CashDistribCurr { get; set; }
 		
-		[TagDetails(498)]
-		public string? CashDistribAgentName { get; set; } // STRING
+		[TagDetails(498, TagType.String)]
+		public string? CashDistribAgentName { get; set; }
 		
-		[TagDetails(499)]
-		public string? CashDistribAgentCode { get; set; } // STRING
+		[TagDetails(499, TagType.String)]
+		public string? CashDistribAgentCode { get; set; }
 		
-		[TagDetails(500)]
-		public string? CashDistribAgentAcctNumber { get; set; } // STRING
+		[TagDetails(500, TagType.String)]
+		public string? CashDistribAgentAcctNumber { get; set; }
 		
-		[TagDetails(501)]
-		public string? CashDistribPayRef { get; set; } // STRING
+		[TagDetails(501, TagType.String)]
+		public string? CashDistribPayRef { get; set; }
 		
-		[TagDetails(502)]
-		public string? CashDistribAgentAcctName { get; set; } // STRING
+		[TagDetails(502, TagType.String)]
+		public string? CashDistribAgentAcctName { get; set; }
 		
 	}
 }

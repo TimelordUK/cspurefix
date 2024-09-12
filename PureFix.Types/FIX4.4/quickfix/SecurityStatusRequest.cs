@@ -9,26 +9,38 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class SecurityStatusRequest : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(324)]
-		public string? SecurityStatusReqID { get; set; } // STRING
 		
+		[TagDetails(324, TagType.String)]
+		public string? SecurityStatusReqID { get; set; }
+		
+		[Component]
 		public Instrument? Instrument { get; set; }
+		
+		[Component]
 		public InstrumentExtension? InstrumentExtension { get; set; }
+		
+		[Component]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		
+		[Component]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
 		
-		[TagDetails(263)]
-		public string? SubscriptionRequestType { get; set; } // CHAR
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(263, TagType.String)]
+		public string? SubscriptionRequestType { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

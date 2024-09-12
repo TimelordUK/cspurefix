@@ -9,6 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class SideCrossOrdCxlGrp
 	{
+		[Group]
 		public NoSides? NoSides { get; set; }
+		
 	}
 }

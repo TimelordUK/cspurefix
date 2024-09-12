@@ -9,7 +9,11 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class XMLnonFIX : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }

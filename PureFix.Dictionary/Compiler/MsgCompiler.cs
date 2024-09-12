@@ -202,8 +202,8 @@ namespace PureFix.Dictionary.Compiler
             var type = Tags.ToCsType(sf.Definition.TagType);
             const string props = "{ get; set; }";
 
-            _builder.WriteLine($"[TagDetails({sf.Definition.Tag})]");
-            _builder.WriteLine($"public {type}? {sf.Definition.Name} {props} // {sf.Definition.Type}");
+            _builder.WriteLine($"[TagDetails({sf.Definition.Tag}, TagType.{TagTypeUtil.ToType(sf.Definition.Type)})]");
+            _builder.WriteLine($"public {type}? {sf.Definition.Name} {props}");
             _builder.WriteLine();
         }
 
@@ -212,7 +212,10 @@ namespace PureFix.Dictionary.Compiler
             if (cf.Definition == null) return;
             const string props = "{ get; set; }";
             var declared = cf.Name is "StandardHeader" or "StandardTrailer" ? $"override {cf.Name}" : cf.Name;
+            
+            _builder.WriteLine("[Component]");
             _builder.WriteLine($"public {declared}? {cf.Name} {props}");
+            _builder.WriteLine();
             // any dependent component also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, cf.Definition, cf.Name));
         }
@@ -221,7 +224,10 @@ namespace PureFix.Dictionary.Compiler
         {
             if (gf.Definition == null) return;
             const string props = "{ get; set; }";
+
+            _builder.WriteLine("[Group]");
             _builder.WriteLine($"public {gf.Name}? {gf.Name} {props}");
+            _builder.WriteLine();
             // any dependent group also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, gf.Definition, gf.Name));
         }

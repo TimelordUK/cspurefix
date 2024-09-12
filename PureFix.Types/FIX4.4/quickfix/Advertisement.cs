@@ -9,61 +9,71 @@ namespace PureFix.Types.FIX44.QuickFix
 {
 	public sealed class Advertisement : FixMsg
 	{
+		[Component]
 		public override StandardHeader? StandardHeader { get; set; }
-		[TagDetails(2)]
-		public string? AdvId { get; set; } // STRING
 		
-		[TagDetails(5)]
-		public string? AdvTransType { get; set; } // STRING
+		[TagDetails(2, TagType.String)]
+		public string? AdvId { get; set; }
 		
-		[TagDetails(3)]
-		public string? AdvRefID { get; set; } // STRING
+		[TagDetails(5, TagType.String)]
+		public string? AdvTransType { get; set; }
 		
+		[TagDetails(3, TagType.String)]
+		public string? AdvRefID { get; set; }
+		
+		[Component]
 		public Instrument? Instrument { get; set; }
+		
+		[Component]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		
+		[Component]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		[TagDetails(4)]
-		public string? AdvSide { get; set; } // CHAR
 		
-		[TagDetails(53)]
-		public double? Quantity { get; set; } // QTY
+		[TagDetails(4, TagType.String)]
+		public string? AdvSide { get; set; }
 		
-		[TagDetails(854)]
-		public int? QtyType { get; set; } // INT
+		[TagDetails(53, TagType.Float)]
+		public double? Quantity { get; set; }
 		
-		[TagDetails(44)]
-		public double? Price { get; set; } // PRICE
+		[TagDetails(854, TagType.Int)]
+		public int? QtyType { get; set; }
 		
-		[TagDetails(15)]
-		public string? Currency { get; set; } // CURRENCY
+		[TagDetails(44, TagType.Float)]
+		public double? Price { get; set; }
 		
-		[TagDetails(75)]
-		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		[TagDetails(15, TagType.String)]
+		public string? Currency { get; set; }
 		
-		[TagDetails(60)]
-		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		[TagDetails(75, TagType.LocalDate)]
+		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(58)]
-		public string? Text { get; set; } // STRING
+		[TagDetails(60, TagType.UtcTimestamp)]
+		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(354)]
-		public int? EncodedTextLen { get; set; } // LENGTH
+		[TagDetails(58, TagType.String)]
+		public string? Text { get; set; }
 		
-		[TagDetails(355)]
-		public byte[]? EncodedText { get; set; } // DATA
+		[TagDetails(354, TagType.Length)]
+		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(149)]
-		public string? URLLink { get; set; } // STRING
+		[TagDetails(355, TagType.RawData)]
+		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(30)]
-		public string? LastMkt { get; set; } // EXCHANGE
+		[TagDetails(149, TagType.String)]
+		public string? URLLink { get; set; }
 		
-		[TagDetails(336)]
-		public string? TradingSessionID { get; set; } // STRING
+		[TagDetails(30, TagType.String)]
+		public string? LastMkt { get; set; }
 		
-		[TagDetails(625)]
-		public string? TradingSessionSubID { get; set; } // STRING
+		[TagDetails(336, TagType.String)]
+		public string? TradingSessionID { get; set; }
 		
+		[TagDetails(625, TagType.String)]
+		public string? TradingSessionSubID { get; set; }
+		
+		[Component]
 		public override StandardTrailer? StandardTrailer { get; set; }
+		
 	}
 }
