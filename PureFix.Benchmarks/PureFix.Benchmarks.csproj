@@ -18,11 +18,16 @@
 
 	<ItemGroup>
 	  <Folder Include="Data\" />
-	  <Folder Include="Messages\" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Update="Data\FIX44.xml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Messages\OrderCancelReject.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Messages\MarketDataSnapshot.txt">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Messages\ExecutionReport.txt">
@@ -32,6 +37,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Messages\Logon.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Messages\QuoteRequest.txt">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
