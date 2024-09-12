@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class RFQRequest : FixMsg
+	public sealed class RFQRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? RFQReqID { get; set; } // 644 STRING

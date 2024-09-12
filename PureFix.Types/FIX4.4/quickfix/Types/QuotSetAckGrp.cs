@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class QuotSetAckGrp
+	public sealed class QuotSetAckGrp
 	{
 		public NoQuoteSets? NoQuoteSets { get; set; }
 	}

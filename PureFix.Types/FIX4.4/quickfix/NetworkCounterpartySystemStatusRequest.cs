@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class NetworkCounterpartySystemStatusRequest : FixMsg
+	public sealed class NetworkCounterpartySystemStatusRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public int? NetworkRequestType { get; set; } // 935 INT

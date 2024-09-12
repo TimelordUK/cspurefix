@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class InstrmtLegExecGrp
+	public sealed class InstrmtLegExecGrp
 	{
 		public NoLegs? NoLegs { get; set; }
 	}

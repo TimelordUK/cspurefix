@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoAltMDSource
+	public sealed class NoAltMDSource
 	{
 		public string? AltMDSourceID { get; set; } // 817 STRING
 	}

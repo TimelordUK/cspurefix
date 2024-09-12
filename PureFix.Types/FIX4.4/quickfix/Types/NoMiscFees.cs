@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoMiscFees
+	public sealed class NoMiscFees
 	{
 		public double? MiscFeeAmt { get; set; } // 137 AMT
 		public string? MiscFeeCurr { get; set; } // 138 CURRENCY

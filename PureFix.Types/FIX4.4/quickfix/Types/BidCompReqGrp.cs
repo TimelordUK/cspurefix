@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class BidCompReqGrp
+	public sealed class BidCompReqGrp
 	{
 		public NoBidComponents? NoBidComponents { get; set; }
 	}

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class TrdCapDtGrp
+	public sealed class TrdCapDtGrp
 	{
 		public NoDates? NoDates { get; set; }
 	}

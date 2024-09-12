@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class Advertisement : FixMsg
+	public sealed class Advertisement : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? AdvId { get; set; } // 2 STRING

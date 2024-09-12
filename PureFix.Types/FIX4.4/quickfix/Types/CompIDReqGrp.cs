@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class CompIDReqGrp
+	public sealed class CompIDReqGrp
 	{
 		public NoCompIDs? NoCompIDs { get; set; }
 	}

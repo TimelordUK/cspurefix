@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoEvents
+	public sealed class NoEvents
 	{
 		public int? EventType { get; set; } // 865 INT
 		public DateTime? EventDate { get; set; } // 866 LOCALMKTDATE

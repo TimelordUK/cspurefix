@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class OrderQtyData
+	public sealed class OrderQtyData
 	{
 		public double? OrderQty { get; set; } // 38 QTY
 		public double? CashOrderQty { get; set; } // 152 QTY

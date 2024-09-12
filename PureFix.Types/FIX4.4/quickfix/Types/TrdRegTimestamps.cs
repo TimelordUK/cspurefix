@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class TrdRegTimestamps
+	public sealed class TrdRegTimestamps
 	{
 		public NoTrdRegTimestamps? NoTrdRegTimestamps { get; set; }
 	}

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class RelSymDerivSecGrp
+	public sealed class RelSymDerivSecGrp
 	{
 		public NoRelatedSym? NoRelatedSym { get; set; }
 	}

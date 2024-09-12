@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class SecurityStatus : FixMsg
+	public sealed class SecurityStatus : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? SecurityStatusReqID { get; set; } // 324 STRING

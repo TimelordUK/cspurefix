@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class Parties
+	public sealed class Parties
 	{
 		public NoPartyIDs? NoPartyIDs { get; set; }
 	}

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class SecTypesGrp
+	public sealed class SecTypesGrp
 	{
 		public NoSecurityTypes? NoSecurityTypes { get; set; }
 	}

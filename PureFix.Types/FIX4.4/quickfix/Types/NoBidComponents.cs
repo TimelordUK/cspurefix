@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoBidComponents
+	public sealed class NoBidComponents
 	{
 		public string? ListID { get; set; } // 66 STRING
 		public string? Side { get; set; } // 54 CHAR

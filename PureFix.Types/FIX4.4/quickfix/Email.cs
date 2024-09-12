@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class Email : FixMsg
+	public sealed class Email : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? EmailThreadID { get; set; } // 164 STRING

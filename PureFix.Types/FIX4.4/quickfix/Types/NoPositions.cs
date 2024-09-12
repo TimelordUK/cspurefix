@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoPositions
+	public sealed class NoPositions
 	{
 		public string? PosType { get; set; } // 703 STRING
 		public double? LongQty { get; set; } // 704 QTY

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class MDRjctGrp
+	public sealed class MDRjctGrp
 	{
 		public NoAltMDSource? NoAltMDSource { get; set; }
 	}

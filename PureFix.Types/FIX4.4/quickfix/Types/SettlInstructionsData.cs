@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class SettlInstructionsData
+	public sealed class SettlInstructionsData
 	{
 		public int? SettlDeliveryType { get; set; } // 172 INT
 		public int? StandInstDbType { get; set; } // 169 INT

@@ -166,7 +166,7 @@ namespace PureFix.Dictionary.Compiler
 
             using(_builder.BeginBlock($"namespace {ns}"))
             {
-                using(_builder.BeginBlock($"public class {compilerType.Name}{inheritsDeclaration}"))
+                using(_builder.BeginBlock($"public sealed class {compilerType.Name}{inheritsDeclaration}"))
                 {
                     compilerType.Set.Iterate(this, "\t\t");
                 }

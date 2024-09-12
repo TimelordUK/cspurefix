@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoUnderlyingSecurityAltID
+	public sealed class NoUnderlyingSecurityAltID
 	{
 		public string? UnderlyingSecurityAltID { get; set; } // 458 STRING
 		public string? UnderlyingSecurityAltIDSource { get; set; } // 459 STRING

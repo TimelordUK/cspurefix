@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class StandardTrailer
+	public sealed class StandardTrailer
 	{
 		public int? SignatureLength { get; set; } // 93 LENGTH
 		public byte[]? Signature { get; set; } // 89 DATA

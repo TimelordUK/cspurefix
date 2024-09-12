@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class ContAmtGrp
+	public sealed class ContAmtGrp
 	{
 		public NoContAmts? NoContAmts { get; set; }
 	}

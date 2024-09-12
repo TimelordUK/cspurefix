@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class NewOrderSingle : FixMsg
+	public sealed class NewOrderSingle : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? ClOrdID { get; set; } // 11 STRING

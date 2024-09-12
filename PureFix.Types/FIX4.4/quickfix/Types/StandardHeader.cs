@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class StandardHeader
+	public sealed class StandardHeader
 	{
 		public string? BeginString { get; set; } // 8 STRING
 		public int? BodyLength { get; set; } // 9 LENGTH

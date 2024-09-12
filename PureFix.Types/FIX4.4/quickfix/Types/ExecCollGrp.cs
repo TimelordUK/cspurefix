@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class ExecCollGrp
+	public sealed class ExecCollGrp
 	{
 		public NoExecs? NoExecs { get; set; }
 	}

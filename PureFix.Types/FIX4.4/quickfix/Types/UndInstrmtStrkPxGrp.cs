@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class UndInstrmtStrkPxGrp
+	public sealed class UndInstrmtStrkPxGrp
 	{
 		public NoUnderlyings? NoUnderlyings { get; set; }
 	}

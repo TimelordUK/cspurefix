@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class TrdAllocGrp
+	public sealed class TrdAllocGrp
 	{
 		public NoAllocs? NoAllocs { get; set; }
 	}

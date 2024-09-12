@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class AllocationInstructionAck : FixMsg
+	public sealed class AllocationInstructionAck : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? AllocID { get; set; } // 70 STRING

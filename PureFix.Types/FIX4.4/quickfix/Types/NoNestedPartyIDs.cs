@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoNestedPartyIDs
+	public sealed class NoNestedPartyIDs
 	{
 		public string? NestedPartyID { get; set; } // 524 STRING
 		public string? NestedPartyIDSource { get; set; } // 525 CHAR

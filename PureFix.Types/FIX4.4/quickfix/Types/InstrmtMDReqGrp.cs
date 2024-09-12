@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class InstrmtMDReqGrp
+	public sealed class InstrmtMDReqGrp
 	{
 		public NoRelatedSym? NoRelatedSym { get; set; }
 	}

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoAffectedOrders
+	public sealed class NoAffectedOrders
 	{
 		public string? OrigClOrdID { get; set; } // 41 STRING
 		public string? AffectedOrderID { get; set; } // 535 STRING

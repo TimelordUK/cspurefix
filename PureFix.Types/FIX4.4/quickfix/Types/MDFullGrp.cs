@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class MDFullGrp
+	public sealed class MDFullGrp
 	{
 		public NoMDEntries? NoMDEntries { get; set; }
 	}

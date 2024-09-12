@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class OrderMassCancelReport : FixMsg
+	public sealed class OrderMassCancelReport : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? ClOrdID { get; set; } // 11 STRING

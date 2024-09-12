@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoBidDescriptors
+	public sealed class NoBidDescriptors
 	{
 		public int? BidDescriptorType { get; set; } // 399 INT
 		public string? BidDescriptor { get; set; } // 400 STRING

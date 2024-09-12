@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class BidResponse : FixMsg
+	public sealed class BidResponse : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? BidID { get; set; } // 390 STRING

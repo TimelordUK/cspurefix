@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class FinancingDetails
+	public sealed class FinancingDetails
 	{
 		public string? AgreementDesc { get; set; } // 913 STRING
 		public string? AgreementID { get; set; } // 914 STRING

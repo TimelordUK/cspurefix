@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoLinesOfText
+	public sealed class NoLinesOfText
 	{
 		public string? Text { get; set; } // 58 STRING
 		public int? EncodedTextLen { get; set; } // 354 LENGTH

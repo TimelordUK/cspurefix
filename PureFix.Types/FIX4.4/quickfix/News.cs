@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class News : FixMsg
+	public sealed class News : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public DateTime? OrigTime { get; set; } // 42 UTCTIMESTAMP

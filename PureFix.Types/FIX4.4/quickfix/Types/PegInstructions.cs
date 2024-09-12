@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class PegInstructions
+	public sealed class PegInstructions
 	{
 		public double? PegOffsetValue { get; set; } // 211 FLOAT
 		public int? PegMoveType { get; set; } // 835 INT

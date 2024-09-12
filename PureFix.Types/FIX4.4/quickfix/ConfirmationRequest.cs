@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class ConfirmationRequest : FixMsg
+	public sealed class ConfirmationRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? ConfirmReqID { get; set; } // 859 STRING

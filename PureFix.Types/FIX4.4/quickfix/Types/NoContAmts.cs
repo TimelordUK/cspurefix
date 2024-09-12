@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoContAmts
+	public sealed class NoContAmts
 	{
 		public int? ContAmtType { get; set; } // 519 INT
 		public double? ContAmtValue { get; set; } // 520 FLOAT

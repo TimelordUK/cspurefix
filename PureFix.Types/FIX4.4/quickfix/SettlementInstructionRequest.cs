@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class SettlementInstructionRequest : FixMsg
+	public sealed class SettlementInstructionRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? SettlInstReqID { get; set; } // 791 STRING

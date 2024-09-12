@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoRegistDtls
+	public sealed class NoRegistDtls
 	{
 		public string? RegistDtls { get; set; } // 509 STRING
 		public string? RegistEmail { get; set; } // 511 STRING

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class RgstDtlsGrp
+	public sealed class RgstDtlsGrp
 	{
 		public NoRegistDtls? NoRegistDtls { get; set; }
 	}

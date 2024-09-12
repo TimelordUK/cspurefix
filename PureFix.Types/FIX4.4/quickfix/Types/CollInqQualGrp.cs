@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class CollInqQualGrp
+	public sealed class CollInqQualGrp
 	{
 		public NoCollInquiryQualifier? NoCollInquiryQualifier { get; set; }
 	}

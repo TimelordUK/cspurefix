@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoRoutingIDs
+	public sealed class NoRoutingIDs
 	{
 		public int? RoutingType { get; set; } // 216 INT
 		public string? RoutingID { get; set; } // 217 STRING

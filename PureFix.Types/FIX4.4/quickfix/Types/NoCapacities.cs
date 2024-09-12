@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoCapacities
+	public sealed class NoCapacities
 	{
 		public string? OrderCapacity { get; set; } // 528 CHAR
 		public string? OrderRestrictions { get; set; } // 529 MULTIPLEVALUESTRING

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoStrikes
+	public sealed class NoStrikes
 	{
 		public Instrument? Instrument { get; set; }
 	}

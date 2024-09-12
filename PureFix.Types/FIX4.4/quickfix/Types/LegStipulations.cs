@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class LegStipulations
+	public sealed class LegStipulations
 	{
 		public NoLegStipulations? NoLegStipulations { get; set; }
 	}

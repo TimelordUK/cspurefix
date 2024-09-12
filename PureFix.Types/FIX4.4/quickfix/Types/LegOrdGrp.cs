@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class LegOrdGrp
+	public sealed class LegOrdGrp
 	{
 		public NoLegs? NoLegs { get; set; }
 	}

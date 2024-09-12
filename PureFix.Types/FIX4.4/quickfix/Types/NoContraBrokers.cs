@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoContraBrokers
+	public sealed class NoContraBrokers
 	{
 		public string? ContraBroker { get; set; } // 375 STRING
 		public string? ContraTrader { get; set; } // 337 STRING

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class PositionMaintenanceReport : FixMsg
+	public sealed class PositionMaintenanceReport : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? PosMaintRptID { get; set; } // 721 STRING

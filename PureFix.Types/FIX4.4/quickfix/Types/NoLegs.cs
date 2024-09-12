@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoLegs
+	public sealed class NoLegs
 	{
 		public InstrumentLeg? InstrumentLeg { get; set; }
 		public string? LegIOIQty { get; set; } // 682 STRING

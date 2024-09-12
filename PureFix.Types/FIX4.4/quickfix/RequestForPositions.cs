@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class RequestForPositions : FixMsg
+	public sealed class RequestForPositions : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? PosReqID { get; set; } // 710 STRING

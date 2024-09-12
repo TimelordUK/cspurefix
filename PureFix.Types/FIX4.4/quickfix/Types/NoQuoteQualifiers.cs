@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoQuoteQualifiers
+	public sealed class NoQuoteQualifiers
 	{
 		public string? QuoteQualifier { get; set; } // 695 CHAR
 	}

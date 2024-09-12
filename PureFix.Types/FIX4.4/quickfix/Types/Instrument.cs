@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class Instrument
+	public sealed class Instrument
 	{
 		public string? Symbol { get; set; } // 55 STRING
 		public string? SymbolSfx { get; set; } // 65 STRING

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NstdPtysSubGrp
+	public sealed class NstdPtysSubGrp
 	{
 		public NoNestedPartySubIDs? NoNestedPartySubIDs { get; set; }
 	}

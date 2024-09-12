@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class CommissionData
+	public sealed class CommissionData
 	{
 		public double? Commission { get; set; } // 12 AMT
 		public string? CommType { get; set; } // 13 CHAR

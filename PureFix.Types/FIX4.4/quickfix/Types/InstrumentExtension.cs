@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class InstrumentExtension
+	public sealed class InstrumentExtension
 	{
 		public int? DeliveryForm { get; set; } // 668 INT
 		public double? PctAtRisk { get; set; } // 869 PERCENTAGE

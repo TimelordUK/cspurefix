@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoExecs
+	public sealed class NoExecs
 	{
 		public double? LastQty { get; set; } // 32 QTY
 		public string? ExecID { get; set; } // 17 STRING

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class IOI : FixMsg
+	public sealed class IOI : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? IOIID { get; set; } // 23 STRING

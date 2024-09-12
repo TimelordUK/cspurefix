@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class SideCrossOrdCxlGrp
+	public sealed class SideCrossOrdCxlGrp
 	{
 		public NoSides? NoSides { get; set; }
 	}

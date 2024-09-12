@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoHops
+	public sealed class NoHops
 	{
 		public string? HopCompID { get; set; } // 628 STRING
 		public DateTime? HopSendingTime { get; set; } // 629 UTCTIMESTAMP

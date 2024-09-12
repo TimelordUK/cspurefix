@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class MassQuote : FixMsg
+	public sealed class MassQuote : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? QuoteReqID { get; set; } // 131 STRING

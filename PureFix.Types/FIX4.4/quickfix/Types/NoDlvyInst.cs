@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoDlvyInst
+	public sealed class NoDlvyInst
 	{
 		public string? SettlInstSource { get; set; } // 165 CHAR
 		public string? DlvyInstType { get; set; } // 787 CHAR

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoQuoteSets
+	public sealed class NoQuoteSets
 	{
 		public string? QuoteSetID { get; set; } // 302 STRING
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }

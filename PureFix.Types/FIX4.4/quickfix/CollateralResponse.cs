@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class CollateralResponse : FixMsg
+	public sealed class CollateralResponse : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? CollRespID { get; set; } // 904 STRING

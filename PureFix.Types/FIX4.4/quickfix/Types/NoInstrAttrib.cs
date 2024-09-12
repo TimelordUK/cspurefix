@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoInstrAttrib
+	public sealed class NoInstrAttrib
 	{
 		public int? InstrAttribType { get; set; } // 871 INT
 		public string? InstrAttribValue { get; set; } // 872 STRING

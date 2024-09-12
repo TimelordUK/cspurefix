@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class BusinessMessageReject : FixMsg
+	public sealed class BusinessMessageReject : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public int? RefSeqNum { get; set; } // 45 SEQNUM

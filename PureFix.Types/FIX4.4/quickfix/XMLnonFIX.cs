@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class XMLnonFIX : FixMsg
+	public sealed class XMLnonFIX : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }

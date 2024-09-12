@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoDistribInsts
+	public sealed class NoDistribInsts
 	{
 		public int? DistribPaymentMethod { get; set; } // 477 INT
 		public double? DistribPercentage { get; set; } // 512 PERCENTAGE

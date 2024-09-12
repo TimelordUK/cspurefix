@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class YieldData
+	public sealed class YieldData
 	{
 		public string? YieldType { get; set; } // 235 STRING
 		public double? Yield { get; set; } // 236 PERCENTAGE

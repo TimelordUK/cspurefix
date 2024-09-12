@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class Logon : FixMsg
+	public sealed class Logon : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public int? EncryptMethod { get; set; } // 98 INT

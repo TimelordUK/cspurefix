@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class DiscretionInstructions
+	public sealed class DiscretionInstructions
 	{
 		public string? DiscretionInst { get; set; } // 388 CHAR
 		public double? DiscretionOffsetValue { get; set; } // 389 FLOAT

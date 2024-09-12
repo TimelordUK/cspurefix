@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoMDEntryTypes
+	public sealed class NoMDEntryTypes
 	{
 		public string? MDEntryType { get; set; } // 269 CHAR
 	}

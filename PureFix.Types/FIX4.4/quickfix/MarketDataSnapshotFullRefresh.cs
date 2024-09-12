@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class MarketDataSnapshotFullRefresh : FixMsg
+	public sealed class MarketDataSnapshotFullRefresh : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? MDReqID { get; set; } // 262 STRING

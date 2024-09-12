@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class NewOrderCross : FixMsg
+	public sealed class NewOrderCross : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? CrossID { get; set; } // 548 STRING

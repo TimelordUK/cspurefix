@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class TradeCaptureReport : FixMsg
+	public sealed class TradeCaptureReport : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? TradeReportID { get; set; } // 571 STRING

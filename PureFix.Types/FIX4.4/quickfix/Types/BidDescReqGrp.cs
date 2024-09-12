@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class BidDescReqGrp
+	public sealed class BidDescReqGrp
 	{
 		public NoBidDescriptors? NoBidDescriptors { get; set; }
 	}

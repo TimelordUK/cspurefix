@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class ListOrdGrp
+	public sealed class ListOrdGrp
 	{
 		public NoOrders? NoOrders { get; set; }
 	}

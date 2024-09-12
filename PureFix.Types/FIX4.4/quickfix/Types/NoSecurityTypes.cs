@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoSecurityTypes
+	public sealed class NoSecurityTypes
 	{
 		public string? SecurityType { get; set; } // 167 STRING
 		public string? SecuritySubType { get; set; } // 762 STRING

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class SpreadOrBenchmarkCurveData
+	public sealed class SpreadOrBenchmarkCurveData
 	{
 		public double? Spread { get; set; } // 218 PRICEOFFSET
 		public string? BenchmarkCurveCurrency { get; set; } // 220 CURRENCY

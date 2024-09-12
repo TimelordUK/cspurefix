@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class ResendRequest : FixMsg
+	public sealed class ResendRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public int? BeginSeqNo { get; set; } // 7 SEQNUM

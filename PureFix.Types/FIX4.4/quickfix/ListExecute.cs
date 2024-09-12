@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix
 {
-	public class ListExecute : FixMsg
+	public sealed class ListExecute : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
 		public string? ListID { get; set; } // 66 STRING

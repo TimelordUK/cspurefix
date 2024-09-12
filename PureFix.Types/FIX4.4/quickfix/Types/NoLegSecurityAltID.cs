@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoLegSecurityAltID
+	public sealed class NoLegSecurityAltID
 	{
 		public string? LegSecurityAltID { get; set; } // 605 STRING
 		public string? LegSecurityAltIDSource { get; set; } // 606 STRING

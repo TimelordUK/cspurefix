@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class SettlInstGrp
+	public sealed class SettlInstGrp
 	{
 		public NoSettlInst? NoSettlInst { get; set; }
 	}

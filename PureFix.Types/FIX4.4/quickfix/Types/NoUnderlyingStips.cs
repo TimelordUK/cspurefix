@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class NoUnderlyingStips
+	public sealed class NoUnderlyingStips
 	{
 		public string? UnderlyingStipType { get; set; } // 888 STRING
 		public string? UnderlyingStipValue { get; set; } // 889 STRING

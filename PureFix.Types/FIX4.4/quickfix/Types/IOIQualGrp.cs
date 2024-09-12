@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public class IOIQualGrp
+	public sealed class IOIQualGrp
 	{
 		public NoIOIQualifiers? NoIOIQualifiers { get; set; }
 	}
