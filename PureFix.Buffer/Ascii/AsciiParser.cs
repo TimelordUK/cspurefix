@@ -90,14 +90,15 @@ namespace PureFix.Buffer.Ascii
 
         private void Msg(int ptr, Action<int, AsciiView>? onMsg)
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            var startTicks = Stopwatch.GetTimestamp();
             var view = GetView(ptr);
-            sw.Stop();
-            _totalElapsedSegmentParseMicros += sw.Elapsed.TotalMicroseconds;
+            var elapsed = Stopwatch.GetElapsedTime(startTicks);
+            _totalElapsedSegmentParseMicros += elapsed.TotalMicroseconds;
+            
             if (view == null) return;
             _parsedMessages++;
             onMsg?.Invoke(ptr, view);
+            
             // storage for this message will be re-used on next invocation now its been handed to
             // application
             if (_state.Storage != null) _pool.Deliver(_state.Storage);
@@ -138,9 +139,11 @@ namespace PureFix.Buffer.Ascii
             var end = readFrom.Length;
             var readBuffer = readFrom;
             _receivedBytes += readFrom.Length;
-            var sw = new Stopwatch();
-            sw.Start();
+
+            var startTicks = Stopwatch.GetTimestamp();
+            
             if (_state.Buffer == null) return;
+            
             try
             {
                 while (readPtr < end)
@@ -235,13 +238,14 @@ namespace PureFix.Buffer.Ascii
                 // return buffer given this message has failed to deliver
                 if (_state.Storage != null) _pool.Deliver(_state.Storage);
                 throw;
-            } finally
+            } 
+            finally
             {
                 // any views dispatched on the callback from previous call are considered ready to be reclaimed, the expectation
                 // being the recipient must have extracted required data or parsed into a concrete type within the callbak itself.s
                 _pool.Reclaim();
-                sw.Stop();
-                _totalElapsedParseMicros += sw.Elapsed.TotalMicroseconds;
+                var elapsedTime = Stopwatch.GetElapsedTime(startTicks);
+                _totalElapsedParseMicros += elapsedTime.TotalMicroseconds;
             }
         }
     }
