@@ -70,7 +70,7 @@ namespace PureFix.Tag
                     return "double";
 
                 case TagType.RawData:
-                    return "Memory<byte>";
+                    return "byte[]";
 
                 case TagType.Boolean:
                     return "bool";

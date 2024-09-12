@@ -8,13 +8,13 @@ namespace PureFix.Dictionary.Contained
 {
     public interface ISetDispatchReceiver
     {
-        void OnSimple(ContainedSimpleField sf);
-        void OnComponent(ContainedComponentField cf);
-        void OnGroup(ContainedGroupField cf);
+        void OnSimple(ContainedSimpleField sf, object? state = null);
+        void OnComponent(ContainedComponentField cf, object? state = null);
+        void OnGroup(ContainedGroupField cf, object? state = null);
     }
     public static class ContainedSetExt
     {
-        public static void Iterate(this IContainedSet set, ISetDispatchReceiver dispatcher)
+        public static void Iterate(this IContainedSet set, ISetDispatchReceiver dispatcher, object? state = null)
         {
             var fields = set.Fields;
             for (var i = 0; i < fields.Count; i++)
@@ -24,15 +24,15 @@ namespace PureFix.Dictionary.Contained
                 switch (k.Type)
                 {
                     case ContainedFieldType.Simple:
-                        dispatcher.OnSimple((ContainedSimpleField)k);
+                        dispatcher.OnSimple((ContainedSimpleField)k, state);
                         break;
 
                     case ContainedFieldType.Group:
-                        dispatcher.OnGroup((ContainedGroupField)k);
+                        dispatcher.OnGroup((ContainedGroupField)k, state);
                         break;
 
                     case ContainedFieldType.Component:
-                        dispatcher.OnComponent((ContainedComponentField)k);
+                        dispatcher.OnComponent((ContainedComponentField)k, state);
                         break;
                 }
             }
