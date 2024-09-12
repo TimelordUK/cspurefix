@@ -36,24 +36,24 @@ namespace PureFix.Dictionary.Compiler
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX4.4", "quickfix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX4._4.quickfix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX4.4", "QuickFix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX44.QuickFix"
                         };
 
                     case FixVersion.FIX50SP2:
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX.50SP2", "quickfix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX4._50SP2.quickfix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX.50SP2", "QuickFix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX450SP2.QuickFix"
                         };
 
                     default:
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX", "quickfix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX.quickfix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX", "QuickFix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX.QuickFix"
                         };
                 }
             }
@@ -142,6 +142,10 @@ namespace PureFix.Dictionary.Compiler
                 var compilerType = _workQueue.Dequeue();
                 var compiledType = GenerateMessages(compilerType);
                 var fullName = GetFileName(compilerType);
+
+                var directory = Path.GetDirectoryName(fullName);
+                if (directory is not null) Directory.CreateDirectory(directory);
+
                 await File.WriteAllTextAsync(fullName, compiledType);
             }
         }
@@ -151,13 +155,15 @@ namespace PureFix.Dictionary.Compiler
             var isMsg = compilerType.Set.Type == ContainedSetType.Msg;
             var ns = isMsg
                 ? $"{CompilerOptions.BackingTypeNamespace}"
-                : $"{CompilerOptions.BackingTypeNamespace}.set";
+                : $"{CompilerOptions.BackingTypeNamespace}.Types";
             _builder.Reset();
 
-            var usingDeclaration = string.Join(Environment.NewLine, CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {CompilerOptions.BackingTypeNamespace}.set;"]));
+            var usingDeclaration = string.Join(Environment.NewLine, CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {CompilerOptions.BackingTypeNamespace}.Types;"]));
             var inheritsDeclaration = isMsg ? $" : {CompilerOptions.MsgInheritsFrom}" : "";
             
             _builder.WriteLine(usingDeclaration);
+            _builder.WriteLine();
+
             using(_builder.BeginBlock($"namespace {ns}"))
             {
                 using(_builder.BeginBlock($"public class {compilerType.Name}{inheritsDeclaration}"))
@@ -187,7 +193,7 @@ namespace PureFix.Dictionary.Compiler
             {
                 return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, $"{name}")}.cs";
             }
-            return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, "set", $"{name}")}.cs";
+            return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, "Types", $"{name}")}.cs";
         }
 
         // public string? TestReqID { get; set; }

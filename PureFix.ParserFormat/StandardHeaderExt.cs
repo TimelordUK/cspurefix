@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using PureFix.Buffer.Ascii;
-using PureFix.Types.FIX4._4.quickfix.set;
+using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.ParserFormat
 {

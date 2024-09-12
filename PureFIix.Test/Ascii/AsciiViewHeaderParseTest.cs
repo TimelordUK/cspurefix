@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.ParserFormat;
-using PureFix.Types.FIX4._4.quickfix.set;
+using PureFix.Types.FIX44.QuickFix.Types;
 using NUnit.Framework;
 
 namespace PureFIix.Test.Ascii

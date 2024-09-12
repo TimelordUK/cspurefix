@@ -1,6 +1,6 @@
 ﻿using PureFix.Buffer.Ascii;
-using PureFix.Types.FIX4._4.quickfix;
-using PureFix.Types.FIX4._4.quickfix.set;
+using PureFix.Types.FIX44.QuickFix;
+using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

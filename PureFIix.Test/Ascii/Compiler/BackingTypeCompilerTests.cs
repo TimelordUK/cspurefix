@@ -1,6 +1,6 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
-using PureFix.Types.FIX4._4.quickfix;
+using PureFix.Types.FIX44.QuickFix;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace PureFIix.Test.Ascii.Compiler
         }
 
         [Test]
-        public async Task Compiler_Heartbeat_Test()
+        public async Task GenerateTypes()
         {
             var compiler = new MsgCompiler(_testEntity.Definitions);
             // await compiler.CreateTypes(new List<string>(["0"]));
