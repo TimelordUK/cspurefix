@@ -31,8 +31,8 @@ namespace PureFix.Buffer.Segment
 
         public ContainedField? CurrentField { get; private set; }
         private List<int>? _delimterPositions;
-        private HashSet<int>? _containedDelimiterPositions;
-        public IReadOnlySet<int> DelimiterPositions => _containedDelimiterPositions ?? [];
+        private List<int>? _containedDelimiterPositions;
+        public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)Array.Empty<int>();
 
         public override string ToString()
         {

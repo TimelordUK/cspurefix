@@ -15,7 +15,7 @@ namespace PureFix.Buffer.Ascii
         {
             public string MsgType { get; } = message.MsgType;
             public List<SegmentDescription> Segments { get; } = [];
-            public Stack<SegmentDescription> StructureStack { get; } = [];
+            public Stack<SegmentDescription> StructureStack { get; } = new(8);
             public int CurrentTagPosition { get; set; }
             public Tags Tags { get; } = tags;
             public int Last { get; } = last;
