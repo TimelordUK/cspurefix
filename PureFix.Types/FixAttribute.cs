@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 namespace PureFix.Types
 {
     /// <summary>
-    /// Flags a property as being a FIX component
+    /// Base class for all FIX attributes
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public sealed class ComponentAttribute : FixAttribute
+    public abstract class FixAttribute : Attribute
     {
+        protected FixAttribute()
+        {
+        }
     }
 }

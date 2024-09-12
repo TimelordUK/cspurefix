@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace PureFix.Types
 {
+    /// <summary>
+    /// Holds information on an individual tag
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class TagDetailsAttribute : Attribute
+    public sealed class TagDetailsAttribute : FixAttribute
     {
         public TagDetailsAttribute(int tag, TagType type)
         {
@@ -15,8 +18,14 @@ namespace PureFix.Types
             this.Type = type;
         }
 
+        /// <summary>
+        /// The FIX tag number
+        /// </summary>
         public int Tag{get;}
 
+        /// <summary>
+        /// The FIX type of the field
+        /// </summary>
         public TagType Type{get;}
     }
 }
