@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PureFix.Benchmarks": {
+      "commandName": "Project",
+      "commandLineArgs": "0"
+    }
+  }
+}
