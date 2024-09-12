@@ -101,7 +101,7 @@ namespace PureFix.Dictionary.Compiler
         public Options CompilerOptions { get; }
         private readonly Queue<CompilerType> _workQueue = [];
         private readonly Dictionary<string, CompilerType> _completed = [];
-        private readonly StringBuilder _builder = new();
+        private readonly CodeGenerator _builder = new();
 
 
         public MsgCompiler(FixDefinitions definitions, Options? options = null)
@@ -142,8 +142,7 @@ namespace PureFix.Dictionary.Compiler
                 var compilerType = _workQueue.Dequeue();
                 var compiledType = GenerateMessages(compilerType);
                 var fullName = GetFileName(compilerType);
-                using var streamReader = File.WriteAllTextAsync(fullName, compiledType);
-                await streamReader;
+                await File.WriteAllTextAsync(fullName, compiledType);
             }
         }
 
@@ -153,18 +152,19 @@ namespace PureFix.Dictionary.Compiler
             var ns = isMsg
                 ? $"{CompilerOptions.BackingTypeNamespace}"
                 : $"{CompilerOptions.BackingTypeNamespace}.set";
-            _builder.Clear();
+            _builder.Reset();
+
             var usingDeclaration = string.Join(Environment.NewLine, CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {CompilerOptions.BackingTypeNamespace}.set;"]));
             var inheritsDeclaration = isMsg ? $" : {CompilerOptions.MsgInheritsFrom}" : "";
-            _builder.AppendFormat(usingDeclaration);
-            _builder.AppendLine();
-            _builder.AppendLine($"namespace {ns}");
-            _builder.AppendLine("{");
-            _builder.AppendLine($"\tpublic class {compilerType.Name}{inheritsDeclaration}");
-            _builder.AppendLine("\t{");
-            compilerType.Set.Iterate(this, "\t\t");
-            _builder.AppendLine("\t}");
-            _builder.AppendLine("}");
+            
+            _builder.WriteLine(usingDeclaration);
+            using(_builder.BeginBlock($"namespace {ns}"))
+            {
+                using(_builder.BeginBlock($"public class {compilerType.Name}{inheritsDeclaration}"))
+                {
+                    compilerType.Set.Iterate(this, "\t\t");
+                }
+            }
             return _builder.ToString();
         }
 
@@ -194,18 +194,16 @@ namespace PureFix.Dictionary.Compiler
         public void OnSimple(ContainedSimpleField sf, object? state = null)
         {
             var type = Tags.ToCsType(sf.Definition.TagType);
-            var indent = state?.ToString() ?? "\t";
             const string props = "{ get; set; }";
-            _builder.AppendLine($"{indent}public {type}? {sf.Definition.Name} {props} // {sf.Definition.Tag} {sf.Definition.Type}");
+            _builder.WriteLine($"public {type}? {sf.Definition.Name} {props} // {sf.Definition.Tag} {sf.Definition.Type}");
         }
 
         public void OnComponent(ContainedComponentField cf, object? state = null)
         {
             if (cf.Definition == null) return;
-            var indent = state?.ToString() ?? "\t";
             const string props = "{ get; set; }";
             var declared = cf.Name is "StandardHeader" or "StandardTrailer" ? $"override {cf.Name}" : cf.Name;
-            _builder.AppendLine($"{indent}public {declared}? {cf.Name} {props}");
+            _builder.WriteLine($"public {declared}? {cf.Name} {props}");
             // any dependent component also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, cf.Definition, cf.Name));
         }
@@ -213,9 +211,8 @@ namespace PureFix.Dictionary.Compiler
         public void OnGroup(ContainedGroupField gf, object? state = null)
         {
             if (gf.Definition == null) return;
-            var indent = state?.ToString() ?? "\t";
             const string props = "{ get; set; }";
-            _builder.AppendLine($"{indent}public {gf.Name}? {gf.Name} {props}");
+            _builder.WriteLine($"public {gf.Name}? {gf.Name} {props}");
             // any dependent group also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, gf.Definition, gf.Name));
         }
