@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class DlvyInstGrp
 	{
-		[Group]
-		public NoDlvyInst? NoDlvyInst { get; set; }
+		[Group(85)]
+		public NoDlvyInst[]? NoDlvyInst { get; set; }
 		
 	}
 }

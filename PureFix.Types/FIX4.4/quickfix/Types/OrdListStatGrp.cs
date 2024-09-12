@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class OrdListStatGrp
 	{
-		[Group]
-		public NoOrders? NoOrders { get; set; }
+		[Group(73)]
+		public NoOrders[]? NoOrders { get; set; }
 		
 	}
 }

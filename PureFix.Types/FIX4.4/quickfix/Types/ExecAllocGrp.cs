@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class ExecAllocGrp
 	{
-		[Group]
-		public NoExecs? NoExecs { get; set; }
+		[Group(124)]
+		public NoExecs[]? NoExecs { get; set; }
 		
 	}
 }

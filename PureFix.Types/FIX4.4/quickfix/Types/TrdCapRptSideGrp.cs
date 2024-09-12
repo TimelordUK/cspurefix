@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class TrdCapRptSideGrp
 	{
-		[Group]
-		public NoSides? NoSides { get; set; }
+		[Group(552)]
+		public NoSides[]? NoSides { get; set; }
 		
 	}
 }

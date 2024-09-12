@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class AllocAckGrp
 	{
-		[Group]
-		public NoAllocs? NoAllocs { get; set; }
+		[Group(78)]
+		public NoAllocs[]? NoAllocs { get; set; }
 		
 	}
 }

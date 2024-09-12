@@ -9,5 +9,11 @@ namespace PureFix.Types
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class GroupAttribute : Attribute
     {
+        public GroupAttribute(int noOfTag)
+        {
+            this.NoOfTag = noOfTag;
+        }
+
+        public int NoOfTag{get;}
     }
 }

@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class RoutingGrp
 	{
-		[Group]
-		public NoRoutingIDs? NoRoutingIDs { get; set; }
+		[Group(215)]
+		public NoRoutingIDs[]? NoRoutingIDs { get; set; }
 		
 	}
 }

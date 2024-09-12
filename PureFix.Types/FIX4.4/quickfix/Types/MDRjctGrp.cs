@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class MDRjctGrp
 	{
-		[Group]
-		public NoAltMDSource? NoAltMDSource { get; set; }
+		[Group(816)]
+		public NoAltMDSource[]? NoAltMDSource { get; set; }
 		
 	}
 }

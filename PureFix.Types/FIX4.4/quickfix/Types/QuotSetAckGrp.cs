@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class QuotSetAckGrp
 	{
-		[Group]
-		public NoQuoteSets? NoQuoteSets { get; set; }
+		[Group(296)]
+		public NoQuoteSets[]? NoQuoteSets { get; set; }
 		
 	}
 }

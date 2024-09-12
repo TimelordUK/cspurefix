@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class LegSecAltIDGrp
 	{
-		[Group]
-		public NoLegSecurityAltID? NoLegSecurityAltID { get; set; }
+		[Group(604)]
+		public NoLegSecurityAltID[]? NoLegSecurityAltID { get; set; }
 		
 	}
 }

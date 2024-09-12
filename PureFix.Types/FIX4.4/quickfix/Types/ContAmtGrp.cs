@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class ContAmtGrp
 	{
-		[Group]
-		public NoContAmts? NoContAmts { get; set; }
+		[Group(518)]
+		public NoContAmts[]? NoContAmts { get; set; }
 		
 	}
 }

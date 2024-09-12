@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class CollInqQualGrp
 	{
-		[Group]
-		public NoCollInquiryQualifier? NoCollInquiryQualifier { get; set; }
+		[Group(938)]
+		public NoCollInquiryQualifier[]? NoCollInquiryQualifier { get; set; }
 		
 	}
 }

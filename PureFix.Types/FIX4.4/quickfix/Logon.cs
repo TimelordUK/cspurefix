@@ -34,8 +34,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		[TagDetails(383, TagType.Length)]
 		public int? MaxMessageSize { get; set; }
 		
-		[Group]
-		public NoMsgTypes? NoMsgTypes { get; set; }
+		[Group(384)]
+		public NoMsgTypes[]? NoMsgTypes { get; set; }
 		
 		[TagDetails(464, TagType.Boolean)]
 		public bool? TestMessageIndicator { get; set; }

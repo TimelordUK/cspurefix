@@ -9,8 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class LegQuotStatGrp
 	{
-		[Group]
-		public NoLegs? NoLegs { get; set; }
+		[Group(555)]
+		public NoLegs[]? NoLegs { get; set; }
 		
 	}
 }
