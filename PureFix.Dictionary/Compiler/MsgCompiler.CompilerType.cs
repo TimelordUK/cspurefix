@@ -17,13 +17,12 @@ namespace PureFix.Dictionary.Compiler
             public Options CompilerOptions { get; }
             public IContainedSet Set { get; }
             public string Name { get; }
-            public string Indent { get; set; } = "\t";
+            public string Declaration => Name 
+                is "StandardHeader" 
+                or "StandardTrailer" ? 
+                $"override {Name}" : 
+                Name;
             
-            public bool IsMsg => Set.Type == ContainedSetType.Msg;
-            public string BackingTypeNamespace => IsMsg
-                ? $"{CompilerOptions.BackingTypeNamespace}"
-            : $"{CompilerOptions.BackingTypeNamespace}.set";
-
             public CompilerType(FixDefinitions definitions, Options options, IContainedSet set, string name)
             {
                 Definitions = definitions;
