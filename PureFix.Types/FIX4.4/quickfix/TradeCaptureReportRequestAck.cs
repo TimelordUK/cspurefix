@@ -10,21 +10,45 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class TradeCaptureReportRequestAck : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? TradeRequestID { get; set; } // 568 STRING
-		public int? TradeRequestType { get; set; } // 569 INT
-		public string? SubscriptionRequestType { get; set; } // 263 CHAR
-		public int? TotNumTradeReports { get; set; } // 748 INT
-		public int? TradeRequestResult { get; set; } // 749 INT
-		public int? TradeRequestStatus { get; set; } // 750 INT
+		[TagDetails(568)]
+		public string? TradeRequestID { get; set; } // STRING
+		
+		[TagDetails(569)]
+		public int? TradeRequestType { get; set; } // INT
+		
+		[TagDetails(263)]
+		public string? SubscriptionRequestType { get; set; } // CHAR
+		
+		[TagDetails(748)]
+		public int? TotNumTradeReports { get; set; } // INT
+		
+		[TagDetails(749)]
+		public int? TradeRequestResult { get; set; } // INT
+		
+		[TagDetails(750)]
+		public int? TradeRequestStatus { get; set; } // INT
+		
 		public Instrument? Instrument { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
-		public string? MultiLegReportingType { get; set; } // 442 CHAR
-		public int? ResponseTransportType { get; set; } // 725 INT
-		public string? ResponseDestination { get; set; } // 726 STRING
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(442)]
+		public string? MultiLegReportingType { get; set; } // CHAR
+		
+		[TagDetails(725)]
+		public int? ResponseTransportType { get; set; } // INT
+		
+		[TagDetails(726)]
+		public string? ResponseDestination { get; set; } // STRING
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

@@ -10,21 +10,41 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class Email : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? EmailThreadID { get; set; } // 164 STRING
-		public string? EmailType { get; set; } // 94 CHAR
-		public DateTime? OrigTime { get; set; } // 42 UTCTIMESTAMP
-		public string? Subject { get; set; } // 147 STRING
-		public int? EncodedSubjectLen { get; set; } // 356 LENGTH
-		public byte[]? EncodedSubject { get; set; } // 357 DATA
+		[TagDetails(164)]
+		public string? EmailThreadID { get; set; } // STRING
+		
+		[TagDetails(94)]
+		public string? EmailType { get; set; } // CHAR
+		
+		[TagDetails(42)]
+		public DateTime? OrigTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(147)]
+		public string? Subject { get; set; } // STRING
+		
+		[TagDetails(356)]
+		public int? EncodedSubjectLen { get; set; } // LENGTH
+		
+		[TagDetails(357)]
+		public byte[]? EncodedSubject { get; set; } // DATA
+		
 		public RoutingGrp? RoutingGrp { get; set; }
 		public InstrmtGrp? InstrmtGrp { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
-		public string? OrderID { get; set; } // 37 STRING
-		public string? ClOrdID { get; set; } // 11 STRING
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
 		public LinesOfTextGrp? LinesOfTextGrp { get; set; }
-		public int? RawDataLength { get; set; } // 95 LENGTH
-		public byte[]? RawData { get; set; } // 96 DATA
+		[TagDetails(95)]
+		public int? RawDataLength { get; set; } // LENGTH
+		
+		[TagDetails(96)]
+		public byte[]? RawData { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

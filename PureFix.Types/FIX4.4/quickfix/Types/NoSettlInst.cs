@@ -9,26 +9,64 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoSettlInst
 	{
-		public string? SettlInstID { get; set; } // 162 STRING
-		public string? SettlInstTransType { get; set; } // 163 CHAR
-		public string? SettlInstRefID { get; set; } // 214 STRING
+		[TagDetails(162)]
+		public string? SettlInstID { get; set; } // STRING
+		
+		[TagDetails(163)]
+		public string? SettlInstTransType { get; set; } // CHAR
+		
+		[TagDetails(214)]
+		public string? SettlInstRefID { get; set; } // STRING
+		
 		public Parties? Parties { get; set; }
-		public string? Side { get; set; } // 54 CHAR
-		public int? Product { get; set; } // 460 INT
-		public string? SecurityType { get; set; } // 167 STRING
-		public string? CFICode { get; set; } // 461 STRING
-		public DateTime? EffectiveTime { get; set; } // 168 UTCTIMESTAMP
-		public DateTime? ExpireTime { get; set; } // 126 UTCTIMESTAMP
-		public DateTime? LastUpdateTime { get; set; } // 779 UTCTIMESTAMP
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
+		[TagDetails(460)]
+		public int? Product { get; set; } // INT
+		
+		[TagDetails(167)]
+		public string? SecurityType { get; set; } // STRING
+		
+		[TagDetails(461)]
+		public string? CFICode { get; set; } // STRING
+		
+		[TagDetails(168)]
+		public DateTime? EffectiveTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(126)]
+		public DateTime? ExpireTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(779)]
+		public DateTime? LastUpdateTime { get; set; } // UTCTIMESTAMP
+		
 		public SettlInstructionsData? SettlInstructionsData { get; set; }
-		public int? PaymentMethod { get; set; } // 492 INT
-		public string? PaymentRef { get; set; } // 476 STRING
-		public string? CardHolderName { get; set; } // 488 STRING
-		public string? CardNumber { get; set; } // 489 STRING
-		public DateTime? CardStartDate { get; set; } // 503 LOCALMKTDATE
-		public DateTime? CardExpDate { get; set; } // 490 LOCALMKTDATE
-		public string? CardIssNum { get; set; } // 491 STRING
-		public DateTime? PaymentDate { get; set; } // 504 LOCALMKTDATE
-		public string? PaymentRemitterID { get; set; } // 505 STRING
+		[TagDetails(492)]
+		public int? PaymentMethod { get; set; } // INT
+		
+		[TagDetails(476)]
+		public string? PaymentRef { get; set; } // STRING
+		
+		[TagDetails(488)]
+		public string? CardHolderName { get; set; } // STRING
+		
+		[TagDetails(489)]
+		public string? CardNumber { get; set; } // STRING
+		
+		[TagDetails(503)]
+		public DateTime? CardStartDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(490)]
+		public DateTime? CardExpDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(491)]
+		public string? CardIssNum { get; set; } // STRING
+		
+		[TagDetails(504)]
+		public DateTime? PaymentDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(505)]
+		public string? PaymentRemitterID { get; set; } // STRING
+		
 	}
 }

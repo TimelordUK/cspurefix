@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureFix.Tag;
+using PureFix.Types;
 using Microsoft.Extensions.ObjectPool;
 
 namespace PureFix.Buffer.Ascii

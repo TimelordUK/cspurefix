@@ -10,16 +10,28 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class CrossOrderCancelRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? OrderID { get; set; } // 37 STRING
-		public string? CrossID { get; set; } // 548 STRING
-		public string? OrigCrossID { get; set; } // 551 STRING
-		public int? CrossType { get; set; } // 549 INT
-		public int? CrossPrioritization { get; set; } // 550 INT
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(548)]
+		public string? CrossID { get; set; } // STRING
+		
+		[TagDetails(551)]
+		public string? OrigCrossID { get; set; } // STRING
+		
+		[TagDetails(549)]
+		public int? CrossType { get; set; } // INT
+		
+		[TagDetails(550)]
+		public int? CrossPrioritization { get; set; } // INT
+		
 		public SideCrossOrdCxlGrp? SideCrossOrdCxlGrp { get; set; }
 		public Instrument? Instrument { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

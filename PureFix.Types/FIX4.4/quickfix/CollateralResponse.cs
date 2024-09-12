@@ -10,48 +10,110 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class CollateralResponse : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? CollRespID { get; set; } // 904 STRING
-		public string? CollAsgnID { get; set; } // 902 STRING
-		public string? CollReqID { get; set; } // 894 STRING
-		public int? CollAsgnReason { get; set; } // 895 INT
-		public int? CollAsgnTransType { get; set; } // 903 INT
-		public int? CollAsgnRespType { get; set; } // 905 INT
-		public int? CollAsgnRejectReason { get; set; } // 906 INT
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
+		[TagDetails(904)]
+		public string? CollRespID { get; set; } // STRING
+		
+		[TagDetails(902)]
+		public string? CollAsgnID { get; set; } // STRING
+		
+		[TagDetails(894)]
+		public string? CollReqID { get; set; } // STRING
+		
+		[TagDetails(895)]
+		public int? CollAsgnReason { get; set; } // INT
+		
+		[TagDetails(903)]
+		public int? CollAsgnTransType { get; set; } // INT
+		
+		[TagDetails(905)]
+		public int? CollAsgnRespType { get; set; } // INT
+		
+		[TagDetails(906)]
+		public int? CollAsgnRejectReason { get; set; } // INT
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AccountType { get; set; } // 581 INT
-		public string? ClOrdID { get; set; } // 11 STRING
-		public string? OrderID { get; set; } // 37 STRING
-		public string? SecondaryOrderID { get; set; } // 198 STRING
-		public string? SecondaryClOrdID { get; set; } // 526 STRING
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(198)]
+		public string? SecondaryOrderID { get; set; } // STRING
+		
+		[TagDetails(526)]
+		public string? SecondaryClOrdID { get; set; } // STRING
+		
 		public ExecCollGrp? ExecCollGrp { get; set; }
 		public TrdCollGrp? TrdCollGrp { get; set; }
 		public Instrument? Instrument { get; set; }
 		public FinancingDetails? FinancingDetails { get; set; }
-		public DateTime? SettlDate { get; set; } // 64 LOCALMKTDATE
-		public double? Quantity { get; set; } // 53 QTY
-		public int? QtyType { get; set; } // 854 INT
-		public string? Currency { get; set; } // 15 CURRENCY
+		[TagDetails(64)]
+		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(53)]
+		public double? Quantity { get; set; } // QTY
+		
+		[TagDetails(854)]
+		public int? QtyType { get; set; } // INT
+		
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		public UndInstrmtCollGrp? UndInstrmtCollGrp { get; set; }
-		public double? MarginExcess { get; set; } // 899 AMT
-		public double? TotalNetValue { get; set; } // 900 AMT
-		public double? CashOutstanding { get; set; } // 901 AMT
+		[TagDetails(899)]
+		public double? MarginExcess { get; set; } // AMT
+		
+		[TagDetails(900)]
+		public double? TotalNetValue { get; set; } // AMT
+		
+		[TagDetails(901)]
+		public double? CashOutstanding { get; set; } // AMT
+		
 		public TrdRegTimestamps? TrdRegTimestamps { get; set; }
-		public string? Side { get; set; } // 54 CHAR
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
 		public MiscFeesGrp? MiscFeesGrp { get; set; }
-		public double? Price { get; set; } // 44 PRICE
-		public int? PriceType { get; set; } // 423 INT
-		public double? AccruedInterestAmt { get; set; } // 159 AMT
-		public double? EndAccruedInterestAmt { get; set; } // 920 AMT
-		public double? StartCash { get; set; } // 921 AMT
-		public double? EndCash { get; set; } // 922 AMT
+		[TagDetails(44)]
+		public double? Price { get; set; } // PRICE
+		
+		[TagDetails(423)]
+		public int? PriceType { get; set; } // INT
+		
+		[TagDetails(159)]
+		public double? AccruedInterestAmt { get; set; } // AMT
+		
+		[TagDetails(920)]
+		public double? EndAccruedInterestAmt { get; set; } // AMT
+		
+		[TagDetails(921)]
+		public double? StartCash { get; set; } // AMT
+		
+		[TagDetails(922)]
+		public double? EndCash { get; set; } // AMT
+		
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
 		public Stipulations? Stipulations { get; set; }
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

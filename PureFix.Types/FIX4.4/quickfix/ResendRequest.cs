@@ -10,8 +10,12 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class ResendRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public int? BeginSeqNo { get; set; } // 7 SEQNUM
-		public int? EndSeqNo { get; set; } // 16 SEQNUM
+		[TagDetails(7)]
+		public int? BeginSeqNo { get; set; } // SEQNUM
+		
+		[TagDetails(16)]
+		public int? EndSeqNo { get; set; } // SEQNUM
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

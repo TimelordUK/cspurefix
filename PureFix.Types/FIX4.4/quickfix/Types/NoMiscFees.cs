@@ -9,9 +9,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoMiscFees
 	{
-		public double? MiscFeeAmt { get; set; } // 137 AMT
-		public string? MiscFeeCurr { get; set; } // 138 CURRENCY
-		public string? MiscFeeType { get; set; } // 139 CHAR
-		public int? MiscFeeBasis { get; set; } // 891 INT
+		[TagDetails(137)]
+		public double? MiscFeeAmt { get; set; } // AMT
+		
+		[TagDetails(138)]
+		public string? MiscFeeCurr { get; set; } // CURRENCY
+		
+		[TagDetails(139)]
+		public string? MiscFeeType { get; set; } // CHAR
+		
+		[TagDetails(891)]
+		public int? MiscFeeBasis { get; set; } // INT
+		
 	}
 }

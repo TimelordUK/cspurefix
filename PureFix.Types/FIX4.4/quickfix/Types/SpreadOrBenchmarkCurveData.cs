@@ -9,13 +9,29 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class SpreadOrBenchmarkCurveData
 	{
-		public double? Spread { get; set; } // 218 PRICEOFFSET
-		public string? BenchmarkCurveCurrency { get; set; } // 220 CURRENCY
-		public string? BenchmarkCurveName { get; set; } // 221 STRING
-		public string? BenchmarkCurvePoint { get; set; } // 222 STRING
-		public double? BenchmarkPrice { get; set; } // 662 PRICE
-		public int? BenchmarkPriceType { get; set; } // 663 INT
-		public string? BenchmarkSecurityID { get; set; } // 699 STRING
-		public string? BenchmarkSecurityIDSource { get; set; } // 761 STRING
+		[TagDetails(218)]
+		public double? Spread { get; set; } // PRICEOFFSET
+		
+		[TagDetails(220)]
+		public string? BenchmarkCurveCurrency { get; set; } // CURRENCY
+		
+		[TagDetails(221)]
+		public string? BenchmarkCurveName { get; set; } // STRING
+		
+		[TagDetails(222)]
+		public string? BenchmarkCurvePoint { get; set; } // STRING
+		
+		[TagDetails(662)]
+		public double? BenchmarkPrice { get; set; } // PRICE
+		
+		[TagDetails(663)]
+		public int? BenchmarkPriceType { get; set; } // INT
+		
+		[TagDetails(699)]
+		public string? BenchmarkSecurityID { get; set; } // STRING
+		
+		[TagDetails(761)]
+		public string? BenchmarkSecurityIDSource { get; set; } // STRING
+		
 	}
 }

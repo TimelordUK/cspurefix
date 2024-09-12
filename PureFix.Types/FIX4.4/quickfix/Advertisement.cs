@@ -10,26 +10,60 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class Advertisement : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? AdvId { get; set; } // 2 STRING
-		public string? AdvTransType { get; set; } // 5 STRING
-		public string? AdvRefID { get; set; } // 3 STRING
+		[TagDetails(2)]
+		public string? AdvId { get; set; } // STRING
+		
+		[TagDetails(5)]
+		public string? AdvTransType { get; set; } // STRING
+		
+		[TagDetails(3)]
+		public string? AdvRefID { get; set; } // STRING
+		
 		public Instrument? Instrument { get; set; }
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public string? AdvSide { get; set; } // 4 CHAR
-		public double? Quantity { get; set; } // 53 QTY
-		public int? QtyType { get; set; } // 854 INT
-		public double? Price { get; set; } // 44 PRICE
-		public string? Currency { get; set; } // 15 CURRENCY
-		public DateTime? TradeDate { get; set; } // 75 LOCALMKTDATE
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
-		public string? URLLink { get; set; } // 149 STRING
-		public string? LastMkt { get; set; } // 30 EXCHANGE
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
+		[TagDetails(4)]
+		public string? AdvSide { get; set; } // CHAR
+		
+		[TagDetails(53)]
+		public double? Quantity { get; set; } // QTY
+		
+		[TagDetails(854)]
+		public int? QtyType { get; set; } // INT
+		
+		[TagDetails(44)]
+		public double? Price { get; set; } // PRICE
+		
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
+		[TagDetails(75)]
+		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
+		[TagDetails(149)]
+		public string? URLLink { get; set; } // STRING
+		
+		[TagDetails(30)]
+		public string? LastMkt { get; set; } // EXCHANGE
+		
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

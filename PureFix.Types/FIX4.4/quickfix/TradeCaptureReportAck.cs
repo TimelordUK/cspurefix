@@ -10,42 +10,108 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class TradeCaptureReportAck : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? TradeReportID { get; set; } // 571 STRING
-		public int? TradeReportTransType { get; set; } // 487 INT
-		public int? TradeReportType { get; set; } // 856 INT
-		public int? TrdType { get; set; } // 828 INT
-		public int? TrdSubType { get; set; } // 829 INT
-		public int? SecondaryTrdType { get; set; } // 855 INT
-		public string? TransferReason { get; set; } // 830 STRING
-		public string? ExecType { get; set; } // 150 CHAR
-		public string? TradeReportRefID { get; set; } // 572 STRING
-		public string? SecondaryTradeReportRefID { get; set; } // 881 STRING
-		public int? TrdRptStatus { get; set; } // 939 INT
-		public int? TradeReportRejectReason { get; set; } // 751 INT
-		public string? SecondaryTradeReportID { get; set; } // 818 STRING
-		public string? SubscriptionRequestType { get; set; } // 263 CHAR
-		public string? TradeLinkID { get; set; } // 820 STRING
-		public string? TrdMatchID { get; set; } // 880 STRING
-		public string? ExecID { get; set; } // 17 STRING
-		public string? SecondaryExecID { get; set; } // 527 STRING
+		[TagDetails(571)]
+		public string? TradeReportID { get; set; } // STRING
+		
+		[TagDetails(487)]
+		public int? TradeReportTransType { get; set; } // INT
+		
+		[TagDetails(856)]
+		public int? TradeReportType { get; set; } // INT
+		
+		[TagDetails(828)]
+		public int? TrdType { get; set; } // INT
+		
+		[TagDetails(829)]
+		public int? TrdSubType { get; set; } // INT
+		
+		[TagDetails(855)]
+		public int? SecondaryTrdType { get; set; } // INT
+		
+		[TagDetails(830)]
+		public string? TransferReason { get; set; } // STRING
+		
+		[TagDetails(150)]
+		public string? ExecType { get; set; } // CHAR
+		
+		[TagDetails(572)]
+		public string? TradeReportRefID { get; set; } // STRING
+		
+		[TagDetails(881)]
+		public string? SecondaryTradeReportRefID { get; set; } // STRING
+		
+		[TagDetails(939)]
+		public int? TrdRptStatus { get; set; } // INT
+		
+		[TagDetails(751)]
+		public int? TradeReportRejectReason { get; set; } // INT
+		
+		[TagDetails(818)]
+		public string? SecondaryTradeReportID { get; set; } // STRING
+		
+		[TagDetails(263)]
+		public string? SubscriptionRequestType { get; set; } // CHAR
+		
+		[TagDetails(820)]
+		public string? TradeLinkID { get; set; } // STRING
+		
+		[TagDetails(880)]
+		public string? TrdMatchID { get; set; } // STRING
+		
+		[TagDetails(17)]
+		public string? ExecID { get; set; } // STRING
+		
+		[TagDetails(527)]
+		public string? SecondaryExecID { get; set; } // STRING
+		
 		public Instrument? Instrument { get; set; }
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
 		public TrdRegTimestamps? TrdRegTimestamps { get; set; }
-		public int? ResponseTransportType { get; set; } // 725 INT
-		public string? ResponseDestination { get; set; } // 726 STRING
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(725)]
+		public int? ResponseTransportType { get; set; } // INT
+		
+		[TagDetails(726)]
+		public string? ResponseDestination { get; set; } // STRING
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public TrdInstrmtLegGrp? TrdInstrmtLegGrp { get; set; }
-		public string? ClearingFeeIndicator { get; set; } // 635 STRING
-		public string? OrderCapacity { get; set; } // 528 CHAR
-		public string? OrderRestrictions { get; set; } // 529 MULTIPLEVALUESTRING
-		public int? CustOrderCapacity { get; set; } // 582 INT
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public int? AccountType { get; set; } // 581 INT
-		public string? PositionEffect { get; set; } // 77 CHAR
-		public string? PreallocMethod { get; set; } // 591 CHAR
+		[TagDetails(635)]
+		public string? ClearingFeeIndicator { get; set; } // STRING
+		
+		[TagDetails(528)]
+		public string? OrderCapacity { get; set; } // CHAR
+		
+		[TagDetails(529)]
+		public string? OrderRestrictions { get; set; } // MULTIPLEVALUESTRING
+		
+		[TagDetails(582)]
+		public int? CustOrderCapacity { get; set; } // INT
+		
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
+		[TagDetails(77)]
+		public string? PositionEffect { get; set; } // CHAR
+		
+		[TagDetails(591)]
+		public string? PreallocMethod { get; set; } // CHAR
+		
 		public TrdAllocGrp? TrdAllocGrp { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}

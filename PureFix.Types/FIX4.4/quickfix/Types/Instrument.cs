@@ -9,48 +9,130 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class Instrument
 	{
-		public string? Symbol { get; set; } // 55 STRING
-		public string? SymbolSfx { get; set; } // 65 STRING
-		public string? SecurityID { get; set; } // 48 STRING
-		public string? SecurityIDSource { get; set; } // 22 STRING
+		[TagDetails(55)]
+		public string? Symbol { get; set; } // STRING
+		
+		[TagDetails(65)]
+		public string? SymbolSfx { get; set; } // STRING
+		
+		[TagDetails(48)]
+		public string? SecurityID { get; set; } // STRING
+		
+		[TagDetails(22)]
+		public string? SecurityIDSource { get; set; } // STRING
+		
 		public SecAltIDGrp? SecAltIDGrp { get; set; }
-		public int? Product { get; set; } // 460 INT
-		public string? CFICode { get; set; } // 461 STRING
-		public string? SecurityType { get; set; } // 167 STRING
-		public string? SecuritySubType { get; set; } // 762 STRING
-		public string? MaturityMonthYear { get; set; } // 200 MONTHYEAR
-		public DateTime? MaturityDate { get; set; } // 541 LOCALMKTDATE
-		public int? PutOrCall { get; set; } // 201 INT
-		public DateTime? CouponPaymentDate { get; set; } // 224 LOCALMKTDATE
-		public DateTime? IssueDate { get; set; } // 225 LOCALMKTDATE
-		public string? RepoCollateralSecurityType { get; set; } // 239 STRING
-		public int? RepurchaseTerm { get; set; } // 226 INT
-		public double? RepurchaseRate { get; set; } // 227 PERCENTAGE
-		public double? Factor { get; set; } // 228 FLOAT
-		public string? CreditRating { get; set; } // 255 STRING
-		public string? InstrRegistry { get; set; } // 543 STRING
-		public string? CountryOfIssue { get; set; } // 470 COUNTRY
-		public string? StateOrProvinceOfIssue { get; set; } // 471 STRING
-		public string? LocaleOfIssue { get; set; } // 472 STRING
-		public DateTime? RedemptionDate { get; set; } // 240 LOCALMKTDATE
-		public double? StrikePrice { get; set; } // 202 PRICE
-		public string? StrikeCurrency { get; set; } // 947 CURRENCY
-		public string? OptAttribute { get; set; } // 206 CHAR
-		public double? ContractMultiplier { get; set; } // 231 FLOAT
-		public double? CouponRate { get; set; } // 223 PERCENTAGE
-		public string? SecurityExchange { get; set; } // 207 EXCHANGE
-		public string? Issuer { get; set; } // 106 STRING
-		public int? EncodedIssuerLen { get; set; } // 348 LENGTH
-		public byte[]? EncodedIssuer { get; set; } // 349 DATA
-		public string? SecurityDesc { get; set; } // 107 STRING
-		public int? EncodedSecurityDescLen { get; set; } // 350 LENGTH
-		public byte[]? EncodedSecurityDesc { get; set; } // 351 DATA
-		public string? Pool { get; set; } // 691 STRING
-		public string? ContractSettlMonth { get; set; } // 667 MONTHYEAR
-		public int? CPProgram { get; set; } // 875 INT
-		public string? CPRegType { get; set; } // 876 STRING
+		[TagDetails(460)]
+		public int? Product { get; set; } // INT
+		
+		[TagDetails(461)]
+		public string? CFICode { get; set; } // STRING
+		
+		[TagDetails(167)]
+		public string? SecurityType { get; set; } // STRING
+		
+		[TagDetails(762)]
+		public string? SecuritySubType { get; set; } // STRING
+		
+		[TagDetails(200)]
+		public string? MaturityMonthYear { get; set; } // MONTHYEAR
+		
+		[TagDetails(541)]
+		public DateTime? MaturityDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(201)]
+		public int? PutOrCall { get; set; } // INT
+		
+		[TagDetails(224)]
+		public DateTime? CouponPaymentDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(225)]
+		public DateTime? IssueDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(239)]
+		public string? RepoCollateralSecurityType { get; set; } // STRING
+		
+		[TagDetails(226)]
+		public int? RepurchaseTerm { get; set; } // INT
+		
+		[TagDetails(227)]
+		public double? RepurchaseRate { get; set; } // PERCENTAGE
+		
+		[TagDetails(228)]
+		public double? Factor { get; set; } // FLOAT
+		
+		[TagDetails(255)]
+		public string? CreditRating { get; set; } // STRING
+		
+		[TagDetails(543)]
+		public string? InstrRegistry { get; set; } // STRING
+		
+		[TagDetails(470)]
+		public string? CountryOfIssue { get; set; } // COUNTRY
+		
+		[TagDetails(471)]
+		public string? StateOrProvinceOfIssue { get; set; } // STRING
+		
+		[TagDetails(472)]
+		public string? LocaleOfIssue { get; set; } // STRING
+		
+		[TagDetails(240)]
+		public DateTime? RedemptionDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(202)]
+		public double? StrikePrice { get; set; } // PRICE
+		
+		[TagDetails(947)]
+		public string? StrikeCurrency { get; set; } // CURRENCY
+		
+		[TagDetails(206)]
+		public string? OptAttribute { get; set; } // CHAR
+		
+		[TagDetails(231)]
+		public double? ContractMultiplier { get; set; } // FLOAT
+		
+		[TagDetails(223)]
+		public double? CouponRate { get; set; } // PERCENTAGE
+		
+		[TagDetails(207)]
+		public string? SecurityExchange { get; set; } // EXCHANGE
+		
+		[TagDetails(106)]
+		public string? Issuer { get; set; } // STRING
+		
+		[TagDetails(348)]
+		public int? EncodedIssuerLen { get; set; } // LENGTH
+		
+		[TagDetails(349)]
+		public byte[]? EncodedIssuer { get; set; } // DATA
+		
+		[TagDetails(107)]
+		public string? SecurityDesc { get; set; } // STRING
+		
+		[TagDetails(350)]
+		public int? EncodedSecurityDescLen { get; set; } // LENGTH
+		
+		[TagDetails(351)]
+		public byte[]? EncodedSecurityDesc { get; set; } // DATA
+		
+		[TagDetails(691)]
+		public string? Pool { get; set; } // STRING
+		
+		[TagDetails(667)]
+		public string? ContractSettlMonth { get; set; } // MONTHYEAR
+		
+		[TagDetails(875)]
+		public int? CPProgram { get; set; } // INT
+		
+		[TagDetails(876)]
+		public string? CPRegType { get; set; } // STRING
+		
 		public EvntGrp? EvntGrp { get; set; }
-		public DateTime? DatedDate { get; set; } // 873 LOCALMKTDATE
-		public DateTime? InterestAccrualDate { get; set; } // 874 LOCALMKTDATE
+		[TagDetails(873)]
+		public DateTime? DatedDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(874)]
+		public DateTime? InterestAccrualDate { get; set; } // LOCALMKTDATE
+		
 	}
 }

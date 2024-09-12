@@ -9,8 +9,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoDlvyInst
 	{
-		public string? SettlInstSource { get; set; } // 165 CHAR
-		public string? DlvyInstType { get; set; } // 787 CHAR
+		[TagDetails(165)]
+		public string? SettlInstSource { get; set; } // CHAR
+		
+		[TagDetails(787)]
+		public string? DlvyInstType { get; set; } // CHAR
+		
 		public SettlParties? SettlParties { get; set; }
 	}
 }

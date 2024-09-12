@@ -10,81 +10,207 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class OrderCancelReplaceRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? OrderID { get; set; } // 37 STRING
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
 		public Parties? Parties { get; set; }
-		public DateTime? TradeOriginationDate { get; set; } // 229 LOCALMKTDATE
-		public DateTime? TradeDate { get; set; } // 75 LOCALMKTDATE
-		public string? OrigClOrdID { get; set; } // 41 STRING
-		public string? ClOrdID { get; set; } // 11 STRING
-		public string? SecondaryClOrdID { get; set; } // 526 STRING
-		public string? ClOrdLinkID { get; set; } // 583 STRING
-		public string? ListID { get; set; } // 66 STRING
-		public DateTime? OrigOrdModTime { get; set; } // 586 UTCTIMESTAMP
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public int? AccountType { get; set; } // 581 INT
-		public string? DayBookingInst { get; set; } // 589 CHAR
-		public string? BookingUnit { get; set; } // 590 CHAR
-		public string? PreallocMethod { get; set; } // 591 CHAR
-		public string? AllocID { get; set; } // 70 STRING
+		[TagDetails(229)]
+		public DateTime? TradeOriginationDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(75)]
+		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(41)]
+		public string? OrigClOrdID { get; set; } // STRING
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(526)]
+		public string? SecondaryClOrdID { get; set; } // STRING
+		
+		[TagDetails(583)]
+		public string? ClOrdLinkID { get; set; } // STRING
+		
+		[TagDetails(66)]
+		public string? ListID { get; set; } // STRING
+		
+		[TagDetails(586)]
+		public DateTime? OrigOrdModTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
+		[TagDetails(589)]
+		public string? DayBookingInst { get; set; } // CHAR
+		
+		[TagDetails(590)]
+		public string? BookingUnit { get; set; } // CHAR
+		
+		[TagDetails(591)]
+		public string? PreallocMethod { get; set; } // CHAR
+		
+		[TagDetails(70)]
+		public string? AllocID { get; set; } // STRING
+		
 		public PreAllocGrp? PreAllocGrp { get; set; }
-		public string? SettlType { get; set; } // 63 CHAR
-		public DateTime? SettlDate { get; set; } // 64 LOCALMKTDATE
-		public string? CashMargin { get; set; } // 544 CHAR
-		public string? ClearingFeeIndicator { get; set; } // 635 STRING
-		public string? HandlInst { get; set; } // 21 CHAR
-		public string? ExecInst { get; set; } // 18 MULTIPLEVALUESTRING
-		public double? MinQty { get; set; } // 110 QTY
-		public double? MaxFloor { get; set; } // 111 QTY
-		public string? ExDestination { get; set; } // 100 EXCHANGE
+		[TagDetails(63)]
+		public string? SettlType { get; set; } // CHAR
+		
+		[TagDetails(64)]
+		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(544)]
+		public string? CashMargin { get; set; } // CHAR
+		
+		[TagDetails(635)]
+		public string? ClearingFeeIndicator { get; set; } // STRING
+		
+		[TagDetails(21)]
+		public string? HandlInst { get; set; } // CHAR
+		
+		[TagDetails(18)]
+		public string? ExecInst { get; set; } // MULTIPLEVALUESTRING
+		
+		[TagDetails(110)]
+		public double? MinQty { get; set; } // QTY
+		
+		[TagDetails(111)]
+		public double? MaxFloor { get; set; } // QTY
+		
+		[TagDetails(100)]
+		public string? ExDestination { get; set; } // EXCHANGE
+		
 		public TrdgSesGrp? TrdgSesGrp { get; set; }
 		public Instrument? Instrument { get; set; }
 		public FinancingDetails? FinancingDetails { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public string? Side { get; set; } // 54 CHAR
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
-		public int? QtyType { get; set; } // 854 INT
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(854)]
+		public int? QtyType { get; set; } // INT
+		
 		public OrderQtyData? OrderQtyData { get; set; }
-		public string? OrdType { get; set; } // 40 CHAR
-		public int? PriceType { get; set; } // 423 INT
-		public double? Price { get; set; } // 44 PRICE
-		public double? StopPx { get; set; } // 99 PRICE
+		[TagDetails(40)]
+		public string? OrdType { get; set; } // CHAR
+		
+		[TagDetails(423)]
+		public int? PriceType { get; set; } // INT
+		
+		[TagDetails(44)]
+		public double? Price { get; set; } // PRICE
+		
+		[TagDetails(99)]
+		public double? StopPx { get; set; } // PRICE
+		
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
 		public YieldData? YieldData { get; set; }
 		public PegInstructions? PegInstructions { get; set; }
 		public DiscretionInstructions? DiscretionInstructions { get; set; }
-		public int? TargetStrategy { get; set; } // 847 INT
-		public string? TargetStrategyParameters { get; set; } // 848 STRING
-		public double? ParticipationRate { get; set; } // 849 PERCENTAGE
-		public string? ComplianceID { get; set; } // 376 STRING
-		public bool? SolicitedFlag { get; set; } // 377 BOOLEAN
-		public string? Currency { get; set; } // 15 CURRENCY
-		public string? TimeInForce { get; set; } // 59 CHAR
-		public DateTime? EffectiveTime { get; set; } // 168 UTCTIMESTAMP
-		public DateTime? ExpireDate { get; set; } // 432 LOCALMKTDATE
-		public DateTime? ExpireTime { get; set; } // 126 UTCTIMESTAMP
-		public int? GTBookingInst { get; set; } // 427 INT
+		[TagDetails(847)]
+		public int? TargetStrategy { get; set; } // INT
+		
+		[TagDetails(848)]
+		public string? TargetStrategyParameters { get; set; } // STRING
+		
+		[TagDetails(849)]
+		public double? ParticipationRate { get; set; } // PERCENTAGE
+		
+		[TagDetails(376)]
+		public string? ComplianceID { get; set; } // STRING
+		
+		[TagDetails(377)]
+		public bool? SolicitedFlag { get; set; } // BOOLEAN
+		
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
+		[TagDetails(59)]
+		public string? TimeInForce { get; set; } // CHAR
+		
+		[TagDetails(168)]
+		public DateTime? EffectiveTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(432)]
+		public DateTime? ExpireDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(126)]
+		public DateTime? ExpireTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(427)]
+		public int? GTBookingInst { get; set; } // INT
+		
 		public CommissionData? CommissionData { get; set; }
-		public string? OrderCapacity { get; set; } // 528 CHAR
-		public string? OrderRestrictions { get; set; } // 529 MULTIPLEVALUESTRING
-		public int? CustOrderCapacity { get; set; } // 582 INT
-		public bool? ForexReq { get; set; } // 121 BOOLEAN
-		public string? SettlCurrency { get; set; } // 120 CURRENCY
-		public int? BookingType { get; set; } // 775 INT
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
-		public DateTime? SettlDate2 { get; set; } // 193 LOCALMKTDATE
-		public double? OrderQty2 { get; set; } // 192 QTY
-		public double? Price2 { get; set; } // 640 PRICE
-		public string? PositionEffect { get; set; } // 77 CHAR
-		public int? CoveredOrUncovered { get; set; } // 203 INT
-		public double? MaxShow { get; set; } // 210 QTY
-		public bool? LocateReqd { get; set; } // 114 BOOLEAN
-		public string? CancellationRights { get; set; } // 480 CHAR
-		public string? MoneyLaunderingStatus { get; set; } // 481 CHAR
-		public string? RegistID { get; set; } // 513 STRING
-		public string? Designation { get; set; } // 494 STRING
+		[TagDetails(528)]
+		public string? OrderCapacity { get; set; } // CHAR
+		
+		[TagDetails(529)]
+		public string? OrderRestrictions { get; set; } // MULTIPLEVALUESTRING
+		
+		[TagDetails(582)]
+		public int? CustOrderCapacity { get; set; } // INT
+		
+		[TagDetails(121)]
+		public bool? ForexReq { get; set; } // BOOLEAN
+		
+		[TagDetails(120)]
+		public string? SettlCurrency { get; set; } // CURRENCY
+		
+		[TagDetails(775)]
+		public int? BookingType { get; set; } // INT
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
+		[TagDetails(193)]
+		public DateTime? SettlDate2 { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(192)]
+		public double? OrderQty2 { get; set; } // QTY
+		
+		[TagDetails(640)]
+		public double? Price2 { get; set; } // PRICE
+		
+		[TagDetails(77)]
+		public string? PositionEffect { get; set; } // CHAR
+		
+		[TagDetails(203)]
+		public int? CoveredOrUncovered { get; set; } // INT
+		
+		[TagDetails(210)]
+		public double? MaxShow { get; set; } // QTY
+		
+		[TagDetails(114)]
+		public bool? LocateReqd { get; set; } // BOOLEAN
+		
+		[TagDetails(480)]
+		public string? CancellationRights { get; set; } // CHAR
+		
+		[TagDetails(481)]
+		public string? MoneyLaunderingStatus { get; set; } // CHAR
+		
+		[TagDetails(513)]
+		public string? RegistID { get; set; } // STRING
+		
+		[TagDetails(494)]
+		public string? Designation { get; set; } // STRING
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

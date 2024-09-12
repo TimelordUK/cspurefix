@@ -10,21 +10,49 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class SettlementInstructionRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? SettlInstReqID { get; set; } // 791 STRING
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
+		[TagDetails(791)]
+		public string? SettlInstReqID { get; set; } // STRING
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
 		public Parties? Parties { get; set; }
-		public string? AllocAccount { get; set; } // 79 STRING
-		public int? AllocAcctIDSource { get; set; } // 661 INT
-		public string? Side { get; set; } // 54 CHAR
-		public int? Product { get; set; } // 460 INT
-		public string? SecurityType { get; set; } // 167 STRING
-		public string? CFICode { get; set; } // 461 STRING
-		public DateTime? EffectiveTime { get; set; } // 168 UTCTIMESTAMP
-		public DateTime? ExpireTime { get; set; } // 126 UTCTIMESTAMP
-		public DateTime? LastUpdateTime { get; set; } // 779 UTCTIMESTAMP
-		public int? StandInstDbType { get; set; } // 169 INT
-		public string? StandInstDbName { get; set; } // 170 STRING
-		public string? StandInstDbID { get; set; } // 171 STRING
+		[TagDetails(79)]
+		public string? AllocAccount { get; set; } // STRING
+		
+		[TagDetails(661)]
+		public int? AllocAcctIDSource { get; set; } // INT
+		
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
+		[TagDetails(460)]
+		public int? Product { get; set; } // INT
+		
+		[TagDetails(167)]
+		public string? SecurityType { get; set; } // STRING
+		
+		[TagDetails(461)]
+		public string? CFICode { get; set; } // STRING
+		
+		[TagDetails(168)]
+		public DateTime? EffectiveTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(126)]
+		public DateTime? ExpireTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(779)]
+		public DateTime? LastUpdateTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(169)]
+		public int? StandInstDbType { get; set; } // INT
+		
+		[TagDetails(170)]
+		public string? StandInstDbName { get; set; } // STRING
+		
+		[TagDetails(171)]
+		public string? StandInstDbID { get; set; } // STRING
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

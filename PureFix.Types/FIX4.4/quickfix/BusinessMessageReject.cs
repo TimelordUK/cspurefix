@@ -10,13 +10,27 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class BusinessMessageReject : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public int? RefSeqNum { get; set; } // 45 SEQNUM
-		public string? RefMsgType { get; set; } // 372 STRING
-		public string? BusinessRejectRefID { get; set; } // 379 STRING
-		public int? BusinessRejectReason { get; set; } // 380 INT
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(45)]
+		public int? RefSeqNum { get; set; } // SEQNUM
+		
+		[TagDetails(372)]
+		public string? RefMsgType { get; set; } // STRING
+		
+		[TagDetails(379)]
+		public string? BusinessRejectRefID { get; set; } // STRING
+		
+		[TagDetails(380)]
+		public int? BusinessRejectReason { get; set; } // INT
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

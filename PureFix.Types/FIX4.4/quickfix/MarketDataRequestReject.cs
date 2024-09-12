@@ -10,12 +10,22 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class MarketDataRequestReject : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? MDReqID { get; set; } // 262 STRING
-		public string? MDReqRejReason { get; set; } // 281 CHAR
+		[TagDetails(262)]
+		public string? MDReqID { get; set; } // STRING
+		
+		[TagDetails(281)]
+		public string? MDReqRejReason { get; set; } // CHAR
+		
 		public MDRjctGrp? MDRjctGrp { get; set; }
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

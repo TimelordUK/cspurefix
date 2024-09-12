@@ -10,16 +10,30 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class OrderMassStatusRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? MassStatusReqID { get; set; } // 584 STRING
-		public int? MassStatusReqType { get; set; } // 585 INT
+		[TagDetails(584)]
+		public string? MassStatusReqID { get; set; } // STRING
+		
+		[TagDetails(585)]
+		public int? MassStatusReqType { get; set; } // INT
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
 		public Instrument? Instrument { get; set; }
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
-		public string? Side { get; set; } // 54 CHAR
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

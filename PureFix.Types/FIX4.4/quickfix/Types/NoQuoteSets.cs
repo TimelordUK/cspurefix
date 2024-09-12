@@ -9,10 +9,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoQuoteSets
 	{
-		public string? QuoteSetID { get; set; } // 302 STRING
+		[TagDetails(302)]
+		public string? QuoteSetID { get; set; } // STRING
+		
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
-		public int? TotNoQuoteEntries { get; set; } // 304 INT
-		public bool? LastFragment { get; set; } // 893 BOOLEAN
+		[TagDetails(304)]
+		public int? TotNoQuoteEntries { get; set; } // INT
+		
+		[TagDetails(893)]
+		public bool? LastFragment { get; set; } // BOOLEAN
+		
 		public QuotEntryAckGrp? QuotEntryAckGrp { get; set; }
 	}
 }

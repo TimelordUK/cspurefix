@@ -10,15 +10,33 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class SettlementInstructions : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? SettlInstMsgID { get; set; } // 777 STRING
-		public string? SettlInstReqID { get; set; } // 791 STRING
-		public string? SettlInstMode { get; set; } // 160 CHAR
-		public int? SettlInstReqRejCode { get; set; } // 792 INT
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
-		public string? ClOrdID { get; set; } // 11 STRING
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
+		[TagDetails(777)]
+		public string? SettlInstMsgID { get; set; } // STRING
+		
+		[TagDetails(791)]
+		public string? SettlInstReqID { get; set; } // STRING
+		
+		[TagDetails(160)]
+		public string? SettlInstMode { get; set; } // CHAR
+		
+		[TagDetails(792)]
+		public int? SettlInstReqRejCode { get; set; } // INT
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
 		public SettlInstGrp? SettlInstGrp { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}

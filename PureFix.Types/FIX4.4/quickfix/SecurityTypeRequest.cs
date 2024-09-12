@@ -10,15 +10,33 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class SecurityTypeRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? SecurityReqID { get; set; } // 320 STRING
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
-		public int? Product { get; set; } // 460 INT
-		public string? SecurityType { get; set; } // 167 STRING
-		public string? SecuritySubType { get; set; } // 762 STRING
+		[TagDetails(320)]
+		public string? SecurityReqID { get; set; } // STRING
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
+		[TagDetails(460)]
+		public int? Product { get; set; } // INT
+		
+		[TagDetails(167)]
+		public string? SecurityType { get; set; } // STRING
+		
+		[TagDetails(762)]
+		public string? SecuritySubType { get; set; } // STRING
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

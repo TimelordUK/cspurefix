@@ -9,10 +9,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoPositions
 	{
-		public string? PosType { get; set; } // 703 STRING
-		public double? LongQty { get; set; } // 704 QTY
-		public double? ShortQty { get; set; } // 705 QTY
-		public int? PosQtyStatus { get; set; } // 706 INT
+		[TagDetails(703)]
+		public string? PosType { get; set; } // STRING
+		
+		[TagDetails(704)]
+		public double? LongQty { get; set; } // QTY
+		
+		[TagDetails(705)]
+		public double? ShortQty { get; set; } // QTY
+		
+		[TagDetails(706)]
+		public int? PosQtyStatus { get; set; } // INT
+		
 		public NestedParties? NestedParties { get; set; }
 	}
 }

@@ -10,8 +10,12 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class SequenceReset : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public bool? GapFillFlag { get; set; } // 123 BOOLEAN
-		public int? NewSeqNo { get; set; } // 36 SEQNUM
+		[TagDetails(123)]
+		public bool? GapFillFlag { get; set; } // BOOLEAN
+		
+		[TagDetails(36)]
+		public int? NewSeqNo { get; set; } // SEQNUM
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

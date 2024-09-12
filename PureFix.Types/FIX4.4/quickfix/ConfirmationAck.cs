@@ -10,15 +10,33 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class ConfirmationAck : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? ConfirmID { get; set; } // 664 STRING
-		public DateTime? TradeDate { get; set; } // 75 LOCALMKTDATE
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
-		public int? AffirmStatus { get; set; } // 940 INT
-		public int? ConfirmRejReason { get; set; } // 774 INT
-		public string? MatchStatus { get; set; } // 573 CHAR
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(664)]
+		public string? ConfirmID { get; set; } // STRING
+		
+		[TagDetails(75)]
+		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(940)]
+		public int? AffirmStatus { get; set; } // INT
+		
+		[TagDetails(774)]
+		public int? ConfirmRejReason { get; set; } // INT
+		
+		[TagDetails(573)]
+		public string? MatchStatus { get; set; } // CHAR
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

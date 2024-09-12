@@ -10,18 +10,34 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class OrderStatusRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? OrderID { get; set; } // 37 STRING
-		public string? ClOrdID { get; set; } // 11 STRING
-		public string? SecondaryClOrdID { get; set; } // 526 STRING
-		public string? ClOrdLinkID { get; set; } // 583 STRING
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(526)]
+		public string? SecondaryClOrdID { get; set; } // STRING
+		
+		[TagDetails(583)]
+		public string? ClOrdLinkID { get; set; } // STRING
+		
 		public Parties? Parties { get; set; }
-		public string? OrdStatusReqID { get; set; } // 790 STRING
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
+		[TagDetails(790)]
+		public string? OrdStatusReqID { get; set; } // STRING
+		
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
 		public Instrument? Instrument { get; set; }
 		public FinancingDetails? FinancingDetails { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public string? Side { get; set; } // 54 CHAR
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

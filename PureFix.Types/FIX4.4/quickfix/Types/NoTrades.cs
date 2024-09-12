@@ -9,7 +9,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoTrades
 	{
-		public string? TradeReportID { get; set; } // 571 STRING
-		public string? SecondaryTradeReportID { get; set; } // 818 STRING
+		[TagDetails(571)]
+		public string? TradeReportID { get; set; } // STRING
+		
+		[TagDetails(818)]
+		public string? SecondaryTradeReportID { get; set; } // STRING
+		
 	}
 }

@@ -10,21 +10,49 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class AllocationInstructionAck : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? AllocID { get; set; } // 70 STRING
+		[TagDetails(70)]
+		public string? AllocID { get; set; } // STRING
+		
 		public Parties? Parties { get; set; }
-		public string? SecondaryAllocID { get; set; } // 793 STRING
-		public DateTime? TradeDate { get; set; } // 75 LOCALMKTDATE
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
-		public int? AllocStatus { get; set; } // 87 INT
-		public int? AllocRejCode { get; set; } // 88 INT
-		public int? AllocType { get; set; } // 626 INT
-		public int? AllocIntermedReqType { get; set; } // 808 INT
-		public string? MatchStatus { get; set; } // 573 CHAR
-		public int? Product { get; set; } // 460 INT
-		public string? SecurityType { get; set; } // 167 STRING
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(793)]
+		public string? SecondaryAllocID { get; set; } // STRING
+		
+		[TagDetails(75)]
+		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(87)]
+		public int? AllocStatus { get; set; } // INT
+		
+		[TagDetails(88)]
+		public int? AllocRejCode { get; set; } // INT
+		
+		[TagDetails(626)]
+		public int? AllocType { get; set; } // INT
+		
+		[TagDetails(808)]
+		public int? AllocIntermedReqType { get; set; } // INT
+		
+		[TagDetails(573)]
+		public string? MatchStatus { get; set; } // CHAR
+		
+		[TagDetails(460)]
+		public int? Product { get; set; } // INT
+		
+		[TagDetails(167)]
+		public string? SecurityType { get; set; } // STRING
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public AllocAckGrp? AllocAckGrp { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}

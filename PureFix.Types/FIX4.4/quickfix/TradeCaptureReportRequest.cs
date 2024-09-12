@@ -10,22 +10,54 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class TradeCaptureReportRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? TradeRequestID { get; set; } // 568 STRING
-		public int? TradeRequestType { get; set; } // 569 INT
-		public string? SubscriptionRequestType { get; set; } // 263 CHAR
-		public string? TradeReportID { get; set; } // 571 STRING
-		public string? SecondaryTradeReportID { get; set; } // 818 STRING
-		public string? ExecID { get; set; } // 17 STRING
-		public string? ExecType { get; set; } // 150 CHAR
-		public string? OrderID { get; set; } // 37 STRING
-		public string? ClOrdID { get; set; } // 11 STRING
-		public string? MatchStatus { get; set; } // 573 CHAR
-		public int? TrdType { get; set; } // 828 INT
-		public int? TrdSubType { get; set; } // 829 INT
-		public string? TransferReason { get; set; } // 830 STRING
-		public int? SecondaryTrdType { get; set; } // 855 INT
-		public string? TradeLinkID { get; set; } // 820 STRING
-		public string? TrdMatchID { get; set; } // 880 STRING
+		[TagDetails(568)]
+		public string? TradeRequestID { get; set; } // STRING
+		
+		[TagDetails(569)]
+		public int? TradeRequestType { get; set; } // INT
+		
+		[TagDetails(263)]
+		public string? SubscriptionRequestType { get; set; } // CHAR
+		
+		[TagDetails(571)]
+		public string? TradeReportID { get; set; } // STRING
+		
+		[TagDetails(818)]
+		public string? SecondaryTradeReportID { get; set; } // STRING
+		
+		[TagDetails(17)]
+		public string? ExecID { get; set; } // STRING
+		
+		[TagDetails(150)]
+		public string? ExecType { get; set; } // CHAR
+		
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(573)]
+		public string? MatchStatus { get; set; } // CHAR
+		
+		[TagDetails(828)]
+		public int? TrdType { get; set; } // INT
+		
+		[TagDetails(829)]
+		public int? TrdSubType { get; set; } // INT
+		
+		[TagDetails(830)]
+		public string? TransferReason { get; set; } // STRING
+		
+		[TagDetails(855)]
+		public int? SecondaryTrdType { get; set; } // INT
+		
+		[TagDetails(820)]
+		public string? TradeLinkID { get; set; } // STRING
+		
+		[TagDetails(880)]
+		public string? TrdMatchID { get; set; } // STRING
+		
 		public Parties? Parties { get; set; }
 		public Instrument? Instrument { get; set; }
 		public InstrumentExtension? InstrumentExtension { get; set; }
@@ -33,19 +65,45 @@ namespace PureFix.Types.FIX44.QuickFix
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		public TrdCapDtGrp? TrdCapDtGrp { get; set; }
-		public DateTime? ClearingBusinessDate { get; set; } // 715 LOCALMKTDATE
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
-		public string? TimeBracket { get; set; } // 943 STRING
-		public string? Side { get; set; } // 54 CHAR
-		public string? MultiLegReportingType { get; set; } // 442 CHAR
-		public string? TradeInputSource { get; set; } // 578 STRING
-		public string? TradeInputDevice { get; set; } // 579 STRING
-		public int? ResponseTransportType { get; set; } // 725 INT
-		public string? ResponseDestination { get; set; } // 726 STRING
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(715)]
+		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
+		[TagDetails(943)]
+		public string? TimeBracket { get; set; } // STRING
+		
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
+		[TagDetails(442)]
+		public string? MultiLegReportingType { get; set; } // CHAR
+		
+		[TagDetails(578)]
+		public string? TradeInputSource { get; set; } // STRING
+		
+		[TagDetails(579)]
+		public string? TradeInputDevice { get; set; } // STRING
+		
+		[TagDetails(725)]
+		public int? ResponseTransportType { get; set; } // INT
+		
+		[TagDetails(726)]
+		public string? ResponseDestination { get; set; } // STRING
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

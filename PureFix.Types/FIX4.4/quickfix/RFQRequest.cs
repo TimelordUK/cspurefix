@@ -10,9 +10,13 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class RFQRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? RFQReqID { get; set; } // 644 STRING
+		[TagDetails(644)]
+		public string? RFQReqID { get; set; } // STRING
+		
 		public RFQReqGrp? RFQReqGrp { get; set; }
-		public string? SubscriptionRequestType { get; set; } // 263 CHAR
+		[TagDetails(263)]
+		public string? SubscriptionRequestType { get; set; } // CHAR
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

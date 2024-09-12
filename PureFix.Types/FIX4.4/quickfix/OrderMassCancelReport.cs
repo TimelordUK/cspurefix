@@ -10,24 +10,54 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class OrderMassCancelReport : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? ClOrdID { get; set; } // 11 STRING
-		public string? SecondaryClOrdID { get; set; } // 526 STRING
-		public string? OrderID { get; set; } // 37 STRING
-		public string? SecondaryOrderID { get; set; } // 198 STRING
-		public string? MassCancelRequestType { get; set; } // 530 CHAR
-		public string? MassCancelResponse { get; set; } // 531 CHAR
-		public string? MassCancelRejectReason { get; set; } // 532 CHAR
-		public int? TotalAffectedOrders { get; set; } // 533 INT
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(526)]
+		public string? SecondaryClOrdID { get; set; } // STRING
+		
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(198)]
+		public string? SecondaryOrderID { get; set; } // STRING
+		
+		[TagDetails(530)]
+		public string? MassCancelRequestType { get; set; } // CHAR
+		
+		[TagDetails(531)]
+		public string? MassCancelResponse { get; set; } // CHAR
+		
+		[TagDetails(532)]
+		public string? MassCancelRejectReason { get; set; } // CHAR
+		
+		[TagDetails(533)]
+		public int? TotalAffectedOrders { get; set; } // INT
+		
 		public AffectedOrdGrp? AffectedOrdGrp { get; set; }
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
 		public Instrument? Instrument { get; set; }
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
-		public string? Side { get; set; } // 54 CHAR
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

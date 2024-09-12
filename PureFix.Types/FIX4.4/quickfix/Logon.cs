@@ -10,17 +10,37 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class Logon : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public int? EncryptMethod { get; set; } // 98 INT
-		public int? HeartBtInt { get; set; } // 108 INT
-		public int? RawDataLength { get; set; } // 95 LENGTH
-		public byte[]? RawData { get; set; } // 96 DATA
-		public bool? ResetSeqNumFlag { get; set; } // 141 BOOLEAN
-		public int? NextExpectedMsgSeqNum { get; set; } // 789 SEQNUM
-		public int? MaxMessageSize { get; set; } // 383 LENGTH
+		[TagDetails(98)]
+		public int? EncryptMethod { get; set; } // INT
+		
+		[TagDetails(108)]
+		public int? HeartBtInt { get; set; } // INT
+		
+		[TagDetails(95)]
+		public int? RawDataLength { get; set; } // LENGTH
+		
+		[TagDetails(96)]
+		public byte[]? RawData { get; set; } // DATA
+		
+		[TagDetails(141)]
+		public bool? ResetSeqNumFlag { get; set; } // BOOLEAN
+		
+		[TagDetails(789)]
+		public int? NextExpectedMsgSeqNum { get; set; } // SEQNUM
+		
+		[TagDetails(383)]
+		public int? MaxMessageSize { get; set; } // LENGTH
+		
 		public NoMsgTypes? NoMsgTypes { get; set; }
-		public bool? TestMessageIndicator { get; set; } // 464 BOOLEAN
-		public string? Username { get; set; } // 553 STRING
-		public string? Password { get; set; } // 554 STRING
+		[TagDetails(464)]
+		public bool? TestMessageIndicator { get; set; } // BOOLEAN
+		
+		[TagDetails(553)]
+		public string? Username { get; set; } // STRING
+		
+		[TagDetails(554)]
+		public string? Password { get; set; } // STRING
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

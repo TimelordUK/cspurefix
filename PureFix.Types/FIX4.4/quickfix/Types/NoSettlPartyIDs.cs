@@ -9,9 +9,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoSettlPartyIDs
 	{
-		public string? SettlPartyID { get; set; } // 782 STRING
-		public string? SettlPartyIDSource { get; set; } // 783 CHAR
-		public int? SettlPartyRole { get; set; } // 784 INT
+		[TagDetails(782)]
+		public string? SettlPartyID { get; set; } // STRING
+		
+		[TagDetails(783)]
+		public string? SettlPartyIDSource { get; set; } // CHAR
+		
+		[TagDetails(784)]
+		public int? SettlPartyRole { get; set; } // INT
+		
 		public SettlPtysSubGrp? SettlPtysSubGrp { get; set; }
 	}
 }

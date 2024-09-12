@@ -9,9 +9,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoEvents
 	{
-		public int? EventType { get; set; } // 865 INT
-		public DateTime? EventDate { get; set; } // 866 LOCALMKTDATE
-		public double? EventPx { get; set; } // 867 PRICE
-		public string? EventText { get; set; } // 868 STRING
+		[TagDetails(865)]
+		public int? EventType { get; set; } // INT
+		
+		[TagDetails(866)]
+		public DateTime? EventDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(867)]
+		public double? EventPx { get; set; } // PRICE
+		
+		[TagDetails(868)]
+		public string? EventText { get; set; } // STRING
+		
 	}
 }

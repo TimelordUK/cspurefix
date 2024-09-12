@@ -10,16 +10,34 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class RegistrationInstructions : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? RegistID { get; set; } // 513 STRING
-		public string? RegistTransType { get; set; } // 514 CHAR
-		public string? RegistRefID { get; set; } // 508 STRING
-		public string? ClOrdID { get; set; } // 11 STRING
+		[TagDetails(513)]
+		public string? RegistID { get; set; } // STRING
+		
+		[TagDetails(514)]
+		public string? RegistTransType { get; set; } // CHAR
+		
+		[TagDetails(508)]
+		public string? RegistRefID { get; set; } // STRING
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public string? RegistAcctType { get; set; } // 493 STRING
-		public int? TaxAdvantageType { get; set; } // 495 INT
-		public string? OwnershipType { get; set; } // 517 CHAR
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(493)]
+		public string? RegistAcctType { get; set; } // STRING
+		
+		[TagDetails(495)]
+		public int? TaxAdvantageType { get; set; } // INT
+		
+		[TagDetails(517)]
+		public string? OwnershipType { get; set; } // CHAR
+		
 		public RgstDtlsGrp? RgstDtlsGrp { get; set; }
 		public RgstDistInstGrp? RgstDistInstGrp { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }

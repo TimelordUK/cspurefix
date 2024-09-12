@@ -10,38 +10,86 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class CollateralInquiryAck : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? CollInquiryID { get; set; } // 909 STRING
-		public int? CollInquiryStatus { get; set; } // 945 INT
-		public int? CollInquiryResult { get; set; } // 946 INT
+		[TagDetails(909)]
+		public string? CollInquiryID { get; set; } // STRING
+		
+		[TagDetails(945)]
+		public int? CollInquiryStatus { get; set; } // INT
+		
+		[TagDetails(946)]
+		public int? CollInquiryResult { get; set; } // INT
+		
 		public CollInqQualGrp? CollInqQualGrp { get; set; }
-		public int? TotNumReports { get; set; } // 911 INT
+		[TagDetails(911)]
+		public int? TotNumReports { get; set; } // INT
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AccountType { get; set; } // 581 INT
-		public string? ClOrdID { get; set; } // 11 STRING
-		public string? OrderID { get; set; } // 37 STRING
-		public string? SecondaryOrderID { get; set; } // 198 STRING
-		public string? SecondaryClOrdID { get; set; } // 526 STRING
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(198)]
+		public string? SecondaryOrderID { get; set; } // STRING
+		
+		[TagDetails(526)]
+		public string? SecondaryClOrdID { get; set; } // STRING
+		
 		public ExecCollGrp? ExecCollGrp { get; set; }
 		public TrdCollGrp? TrdCollGrp { get; set; }
 		public Instrument? Instrument { get; set; }
 		public FinancingDetails? FinancingDetails { get; set; }
-		public DateTime? SettlDate { get; set; } // 64 LOCALMKTDATE
-		public double? Quantity { get; set; } // 53 QTY
-		public int? QtyType { get; set; } // 854 INT
-		public string? Currency { get; set; } // 15 CURRENCY
+		[TagDetails(64)]
+		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(53)]
+		public double? Quantity { get; set; } // QTY
+		
+		[TagDetails(854)]
+		public int? QtyType { get; set; } // INT
+		
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
-		public string? SettlSessID { get; set; } // 716 STRING
-		public string? SettlSessSubID { get; set; } // 717 STRING
-		public DateTime? ClearingBusinessDate { get; set; } // 715 LOCALMKTDATE
-		public int? ResponseTransportType { get; set; } // 725 INT
-		public string? ResponseDestination { get; set; } // 726 STRING
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
+		[TagDetails(716)]
+		public string? SettlSessID { get; set; } // STRING
+		
+		[TagDetails(717)]
+		public string? SettlSessSubID { get; set; } // STRING
+		
+		[TagDetails(715)]
+		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(725)]
+		public int? ResponseTransportType { get; set; } // INT
+		
+		[TagDetails(726)]
+		public string? ResponseDestination { get; set; } // STRING
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

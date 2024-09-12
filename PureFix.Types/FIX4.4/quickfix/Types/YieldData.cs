@@ -9,11 +9,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class YieldData
 	{
-		public string? YieldType { get; set; } // 235 STRING
-		public double? Yield { get; set; } // 236 PERCENTAGE
-		public DateTime? YieldCalcDate { get; set; } // 701 LOCALMKTDATE
-		public DateTime? YieldRedemptionDate { get; set; } // 696 LOCALMKTDATE
-		public double? YieldRedemptionPrice { get; set; } // 697 PRICE
-		public int? YieldRedemptionPriceType { get; set; } // 698 INT
+		[TagDetails(235)]
+		public string? YieldType { get; set; } // STRING
+		
+		[TagDetails(236)]
+		public double? Yield { get; set; } // PERCENTAGE
+		
+		[TagDetails(701)]
+		public DateTime? YieldCalcDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(696)]
+		public DateTime? YieldRedemptionDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(697)]
+		public double? YieldRedemptionPrice { get; set; } // PRICE
+		
+		[TagDetails(698)]
+		public int? YieldRedemptionPriceType { get; set; } // INT
+		
 	}
 }

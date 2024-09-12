@@ -9,10 +9,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoContraBrokers
 	{
-		public string? ContraBroker { get; set; } // 375 STRING
-		public string? ContraTrader { get; set; } // 337 STRING
-		public double? ContraTradeQty { get; set; } // 437 QTY
-		public DateTime? ContraTradeTime { get; set; } // 438 UTCTIMESTAMP
-		public string? ContraLegRefID { get; set; } // 655 STRING
+		[TagDetails(375)]
+		public string? ContraBroker { get; set; } // STRING
+		
+		[TagDetails(337)]
+		public string? ContraTrader { get; set; } // STRING
+		
+		[TagDetails(437)]
+		public double? ContraTradeQty { get; set; } // QTY
+		
+		[TagDetails(438)]
+		public DateTime? ContraTradeTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(655)]
+		public string? ContraLegRefID { get; set; } // STRING
+		
 	}
 }

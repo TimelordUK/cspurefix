@@ -10,33 +10,75 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class AssignmentReport : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? AsgnRptID { get; set; } // 833 STRING
-		public int? TotNumAssignmentReports { get; set; } // 832 INT
-		public bool? LastRptRequested { get; set; } // 912 BOOLEAN
+		[TagDetails(833)]
+		public string? AsgnRptID { get; set; } // STRING
+		
+		[TagDetails(832)]
+		public int? TotNumAssignmentReports { get; set; } // INT
+		
+		[TagDetails(912)]
+		public bool? LastRptRequested { get; set; } // BOOLEAN
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AccountType { get; set; } // 581 INT
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
 		public Instrument? Instrument { get; set; }
-		public string? Currency { get; set; } // 15 CURRENCY
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		public PositionQty? PositionQty { get; set; }
 		public PositionAmountData? PositionAmountData { get; set; }
-		public double? ThresholdAmount { get; set; } // 834 PRICEOFFSET
-		public double? SettlPrice { get; set; } // 730 PRICE
-		public int? SettlPriceType { get; set; } // 731 INT
-		public double? UnderlyingSettlPrice { get; set; } // 732 PRICE
-		public DateTime? ExpireDate { get; set; } // 432 LOCALMKTDATE
-		public string? AssignmentMethod { get; set; } // 744 CHAR
-		public double? AssignmentUnit { get; set; } // 745 QTY
-		public double? OpenInterest { get; set; } // 746 AMT
-		public string? ExerciseMethod { get; set; } // 747 CHAR
-		public string? SettlSessID { get; set; } // 716 STRING
-		public string? SettlSessSubID { get; set; } // 717 STRING
-		public DateTime? ClearingBusinessDate { get; set; } // 715 LOCALMKTDATE
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(834)]
+		public double? ThresholdAmount { get; set; } // PRICEOFFSET
+		
+		[TagDetails(730)]
+		public double? SettlPrice { get; set; } // PRICE
+		
+		[TagDetails(731)]
+		public int? SettlPriceType { get; set; } // INT
+		
+		[TagDetails(732)]
+		public double? UnderlyingSettlPrice { get; set; } // PRICE
+		
+		[TagDetails(432)]
+		public DateTime? ExpireDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(744)]
+		public string? AssignmentMethod { get; set; } // CHAR
+		
+		[TagDetails(745)]
+		public double? AssignmentUnit { get; set; } // QTY
+		
+		[TagDetails(746)]
+		public double? OpenInterest { get; set; } // AMT
+		
+		[TagDetails(747)]
+		public string? ExerciseMethod { get; set; } // CHAR
+		
+		[TagDetails(716)]
+		public string? SettlSessID { get; set; } // STRING
+		
+		[TagDetails(717)]
+		public string? SettlSessSubID { get; set; } // STRING
+		
+		[TagDetails(715)]
+		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

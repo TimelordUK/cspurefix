@@ -10,20 +10,40 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class DontKnowTrade : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? OrderID { get; set; } // 37 STRING
-		public string? SecondaryOrderID { get; set; } // 198 STRING
-		public string? ExecID { get; set; } // 17 STRING
-		public string? DKReason { get; set; } // 127 CHAR
+		[TagDetails(37)]
+		public string? OrderID { get; set; } // STRING
+		
+		[TagDetails(198)]
+		public string? SecondaryOrderID { get; set; } // STRING
+		
+		[TagDetails(17)]
+		public string? ExecID { get; set; } // STRING
+		
+		[TagDetails(127)]
+		public string? DKReason { get; set; } // CHAR
+		
 		public Instrument? Instrument { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
-		public string? Side { get; set; } // 54 CHAR
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
 		public OrderQtyData? OrderQtyData { get; set; }
-		public double? LastQty { get; set; } // 32 QTY
-		public double? LastPx { get; set; } // 31 PRICE
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(32)]
+		public double? LastQty { get; set; } // QTY
+		
+		[TagDetails(31)]
+		public double? LastPx { get; set; } // PRICE
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

@@ -10,13 +10,25 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class QuoteRequestReject : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? QuoteReqID { get; set; } // 131 STRING
-		public string? RFQReqID { get; set; } // 644 STRING
-		public int? QuoteRequestRejectReason { get; set; } // 658 INT
+		[TagDetails(131)]
+		public string? QuoteReqID { get; set; } // STRING
+		
+		[TagDetails(644)]
+		public string? RFQReqID { get; set; } // STRING
+		
+		[TagDetails(658)]
+		public int? QuoteRequestRejectReason { get; set; } // INT
+		
 		public QuotReqRjctGrp? QuotReqRjctGrp { get; set; }
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

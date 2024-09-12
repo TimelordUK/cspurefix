@@ -10,24 +10,60 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class NewOrderList : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? ListID { get; set; } // 66 STRING
-		public string? BidID { get; set; } // 390 STRING
-		public string? ClientBidID { get; set; } // 391 STRING
-		public int? ProgRptReqs { get; set; } // 414 INT
-		public int? BidType { get; set; } // 394 INT
-		public int? ProgPeriodInterval { get; set; } // 415 INT
-		public string? CancellationRights { get; set; } // 480 CHAR
-		public string? MoneyLaunderingStatus { get; set; } // 481 CHAR
-		public string? RegistID { get; set; } // 513 STRING
-		public string? ListExecInstType { get; set; } // 433 CHAR
-		public string? ListExecInst { get; set; } // 69 STRING
-		public int? EncodedListExecInstLen { get; set; } // 352 LENGTH
-		public byte[]? EncodedListExecInst { get; set; } // 353 DATA
-		public double? AllowableOneSidednessPct { get; set; } // 765 PERCENTAGE
-		public double? AllowableOneSidednessValue { get; set; } // 766 AMT
-		public string? AllowableOneSidednessCurr { get; set; } // 767 CURRENCY
-		public int? TotNoOrders { get; set; } // 68 INT
-		public bool? LastFragment { get; set; } // 893 BOOLEAN
+		[TagDetails(66)]
+		public string? ListID { get; set; } // STRING
+		
+		[TagDetails(390)]
+		public string? BidID { get; set; } // STRING
+		
+		[TagDetails(391)]
+		public string? ClientBidID { get; set; } // STRING
+		
+		[TagDetails(414)]
+		public int? ProgRptReqs { get; set; } // INT
+		
+		[TagDetails(394)]
+		public int? BidType { get; set; } // INT
+		
+		[TagDetails(415)]
+		public int? ProgPeriodInterval { get; set; } // INT
+		
+		[TagDetails(480)]
+		public string? CancellationRights { get; set; } // CHAR
+		
+		[TagDetails(481)]
+		public string? MoneyLaunderingStatus { get; set; } // CHAR
+		
+		[TagDetails(513)]
+		public string? RegistID { get; set; } // STRING
+		
+		[TagDetails(433)]
+		public string? ListExecInstType { get; set; } // CHAR
+		
+		[TagDetails(69)]
+		public string? ListExecInst { get; set; } // STRING
+		
+		[TagDetails(352)]
+		public int? EncodedListExecInstLen { get; set; } // LENGTH
+		
+		[TagDetails(353)]
+		public byte[]? EncodedListExecInst { get; set; } // DATA
+		
+		[TagDetails(765)]
+		public double? AllowableOneSidednessPct { get; set; } // PERCENTAGE
+		
+		[TagDetails(766)]
+		public double? AllowableOneSidednessValue { get; set; } // AMT
+		
+		[TagDetails(767)]
+		public string? AllowableOneSidednessCurr { get; set; } // CURRENCY
+		
+		[TagDetails(68)]
+		public int? TotNoOrders { get; set; } // INT
+		
+		[TagDetails(893)]
+		public bool? LastFragment { get; set; } // BOOLEAN
+		
 		public ListOrdGrp? ListOrdGrp { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}

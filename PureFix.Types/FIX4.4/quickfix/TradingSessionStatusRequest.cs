@@ -10,12 +10,24 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class TradingSessionStatusRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? TradSesReqID { get; set; } // 335 STRING
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
-		public int? TradSesMethod { get; set; } // 338 INT
-		public int? TradSesMode { get; set; } // 339 INT
-		public string? SubscriptionRequestType { get; set; } // 263 CHAR
+		[TagDetails(335)]
+		public string? TradSesReqID { get; set; } // STRING
+		
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
+		[TagDetails(338)]
+		public int? TradSesMethod { get; set; } // INT
+		
+		[TagDetails(339)]
+		public int? TradSesMode { get; set; } // INT
+		
+		[TagDetails(263)]
+		public string? SubscriptionRequestType { get; set; } // CHAR
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

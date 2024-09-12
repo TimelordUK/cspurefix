@@ -9,8 +9,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoHops
 	{
-		public string? HopCompID { get; set; } // 628 STRING
-		public DateTime? HopSendingTime { get; set; } // 629 UTCTIMESTAMP
-		public int? HopRefID { get; set; } // 630 SEQNUM
+		[TagDetails(628)]
+		public string? HopCompID { get; set; } // STRING
+		
+		[TagDetails(629)]
+		public DateTime? HopSendingTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(630)]
+		public int? HopRefID { get; set; } // SEQNUM
+		
 	}
 }

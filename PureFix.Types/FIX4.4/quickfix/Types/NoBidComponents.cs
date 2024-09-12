@@ -9,14 +9,32 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoBidComponents
 	{
-		public string? ListID { get; set; } // 66 STRING
-		public string? Side { get; set; } // 54 CHAR
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
-		public int? NetGrossInd { get; set; } // 430 INT
-		public string? SettlType { get; set; } // 63 CHAR
-		public DateTime? SettlDate { get; set; } // 64 LOCALMKTDATE
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
+		[TagDetails(66)]
+		public string? ListID { get; set; } // STRING
+		
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
+		[TagDetails(430)]
+		public int? NetGrossInd { get; set; } // INT
+		
+		[TagDetails(63)]
+		public string? SettlType { get; set; } // CHAR
+		
+		[TagDetails(64)]
+		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
 	}
 }

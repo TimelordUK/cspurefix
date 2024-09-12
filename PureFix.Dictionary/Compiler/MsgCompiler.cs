@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
-using PureFix.Tag;
+using PureFix.Types;
 
 namespace PureFix.Dictionary.Compiler
 {
@@ -201,7 +201,10 @@ namespace PureFix.Dictionary.Compiler
         {
             var type = Tags.ToCsType(sf.Definition.TagType);
             const string props = "{ get; set; }";
-            _builder.WriteLine($"public {type}? {sf.Definition.Name} {props} // {sf.Definition.Tag} {sf.Definition.Type}");
+
+            _builder.WriteLine($"[TagDetails({sf.Definition.Tag})]");
+            _builder.WriteLine($"public {type}? {sf.Definition.Name} {props} // {sf.Definition.Type}");
+            _builder.WriteLine();
         }
 
         public void OnComponent(ContainedComponentField cf, object? state = null)

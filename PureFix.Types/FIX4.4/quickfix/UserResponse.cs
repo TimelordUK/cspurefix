@@ -10,10 +10,18 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class UserResponse : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? UserRequestID { get; set; } // 923 STRING
-		public string? Username { get; set; } // 553 STRING
-		public int? UserStatus { get; set; } // 926 INT
-		public string? UserStatusText { get; set; } // 927 STRING
+		[TagDetails(923)]
+		public string? UserRequestID { get; set; } // STRING
+		
+		[TagDetails(553)]
+		public string? Username { get; set; } // STRING
+		
+		[TagDetails(926)]
+		public int? UserStatus { get; set; } // INT
+		
+		[TagDetails(927)]
+		public string? UserStatusText { get; set; } // STRING
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

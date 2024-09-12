@@ -10,32 +10,72 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class PositionMaintenanceRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? PosReqID { get; set; } // 710 STRING
-		public int? PosTransType { get; set; } // 709 INT
-		public int? PosMaintAction { get; set; } // 712 INT
-		public string? OrigPosReqRefID { get; set; } // 713 STRING
-		public string? PosMaintRptRefID { get; set; } // 714 STRING
-		public DateTime? ClearingBusinessDate { get; set; } // 715 LOCALMKTDATE
-		public string? SettlSessID { get; set; } // 716 STRING
-		public string? SettlSessSubID { get; set; } // 717 STRING
+		[TagDetails(710)]
+		public string? PosReqID { get; set; } // STRING
+		
+		[TagDetails(709)]
+		public int? PosTransType { get; set; } // INT
+		
+		[TagDetails(712)]
+		public int? PosMaintAction { get; set; } // INT
+		
+		[TagDetails(713)]
+		public string? OrigPosReqRefID { get; set; } // STRING
+		
+		[TagDetails(714)]
+		public string? PosMaintRptRefID { get; set; } // STRING
+		
+		[TagDetails(715)]
+		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(716)]
+		public string? SettlSessID { get; set; } // STRING
+		
+		[TagDetails(717)]
+		public string? SettlSessSubID { get; set; } // STRING
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public int? AccountType { get; set; } // 581 INT
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
 		public Instrument? Instrument { get; set; }
-		public string? Currency { get; set; } // 15 CURRENCY
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		public TrdgSesGrp? TrdgSesGrp { get; set; }
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
 		public PositionQty? PositionQty { get; set; }
-		public int? AdjustmentType { get; set; } // 718 INT
-		public bool? ContraryInstructionIndicator { get; set; } // 719 BOOLEAN
-		public bool? PriorSpreadIndicator { get; set; } // 720 BOOLEAN
-		public double? ThresholdAmount { get; set; } // 834 PRICEOFFSET
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(718)]
+		public int? AdjustmentType { get; set; } // INT
+		
+		[TagDetails(719)]
+		public bool? ContraryInstructionIndicator { get; set; } // BOOLEAN
+		
+		[TagDetails(720)]
+		public bool? PriorSpreadIndicator { get; set; } // BOOLEAN
+		
+		[TagDetails(834)]
+		public double? ThresholdAmount { get; set; } // PRICEOFFSET
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

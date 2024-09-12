@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
-    <ProjectReference Include="..\PureFix.Tag\PureFix.Tag.csproj" />
     <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
   </ItemGroup>
 </Project>

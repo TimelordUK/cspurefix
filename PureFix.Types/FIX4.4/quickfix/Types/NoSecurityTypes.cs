@@ -9,9 +9,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoSecurityTypes
 	{
-		public string? SecurityType { get; set; } // 167 STRING
-		public string? SecuritySubType { get; set; } // 762 STRING
-		public int? Product { get; set; } // 460 INT
-		public string? CFICode { get; set; } // 461 STRING
+		[TagDetails(167)]
+		public string? SecurityType { get; set; } // STRING
+		
+		[TagDetails(762)]
+		public string? SecuritySubType { get; set; } // STRING
+		
+		[TagDetails(460)]
+		public int? Product { get; set; } // INT
+		
+		[TagDetails(461)]
+		public string? CFICode { get; set; } // STRING
+		
 	}
 }

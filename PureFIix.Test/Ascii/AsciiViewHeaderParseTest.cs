@@ -1,6 +1,6 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
-using PureFix.Tag;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

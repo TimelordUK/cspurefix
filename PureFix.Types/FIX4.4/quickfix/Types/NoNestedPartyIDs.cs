@@ -9,9 +9,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoNestedPartyIDs
 	{
-		public string? NestedPartyID { get; set; } // 524 STRING
-		public string? NestedPartyIDSource { get; set; } // 525 CHAR
-		public int? NestedPartyRole { get; set; } // 538 INT
+		[TagDetails(524)]
+		public string? NestedPartyID { get; set; } // STRING
+		
+		[TagDetails(525)]
+		public string? NestedPartyIDSource { get; set; } // CHAR
+		
+		[TagDetails(538)]
+		public int? NestedPartyRole { get; set; } // INT
+		
 		public NstdPtysSubGrp? NstdPtysSubGrp { get; set; }
 	}
 }

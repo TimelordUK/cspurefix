@@ -9,6 +9,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoIOIQualifiers
 	{
-		public string? IOIQualifier { get; set; } // 104 CHAR
+		[TagDetails(104)]
+		public string? IOIQualifier { get; set; } // CHAR
+		
 	}
 }

@@ -9,47 +9,129 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class InstrumentLeg
 	{
-		public string? LegSymbol { get; set; } // 600 STRING
-		public string? LegSymbolSfx { get; set; } // 601 STRING
-		public string? LegSecurityID { get; set; } // 602 STRING
-		public string? LegSecurityIDSource { get; set; } // 603 STRING
+		[TagDetails(600)]
+		public string? LegSymbol { get; set; } // STRING
+		
+		[TagDetails(601)]
+		public string? LegSymbolSfx { get; set; } // STRING
+		
+		[TagDetails(602)]
+		public string? LegSecurityID { get; set; } // STRING
+		
+		[TagDetails(603)]
+		public string? LegSecurityIDSource { get; set; } // STRING
+		
 		public LegSecAltIDGrp? LegSecAltIDGrp { get; set; }
-		public int? LegProduct { get; set; } // 607 INT
-		public string? LegCFICode { get; set; } // 608 STRING
-		public string? LegSecurityType { get; set; } // 609 STRING
-		public string? LegSecuritySubType { get; set; } // 764 STRING
-		public string? LegMaturityMonthYear { get; set; } // 610 MONTHYEAR
-		public DateTime? LegMaturityDate { get; set; } // 611 LOCALMKTDATE
-		public DateTime? LegCouponPaymentDate { get; set; } // 248 LOCALMKTDATE
-		public DateTime? LegIssueDate { get; set; } // 249 LOCALMKTDATE
-		public string? LegRepoCollateralSecurityType { get; set; } // 250 STRING
-		public int? LegRepurchaseTerm { get; set; } // 251 INT
-		public double? LegRepurchaseRate { get; set; } // 252 PERCENTAGE
-		public double? LegFactor { get; set; } // 253 FLOAT
-		public string? LegCreditRating { get; set; } // 257 STRING
-		public string? LegInstrRegistry { get; set; } // 599 STRING
-		public string? LegCountryOfIssue { get; set; } // 596 COUNTRY
-		public string? LegStateOrProvinceOfIssue { get; set; } // 597 STRING
-		public string? LegLocaleOfIssue { get; set; } // 598 STRING
-		public DateTime? LegRedemptionDate { get; set; } // 254 LOCALMKTDATE
-		public double? LegStrikePrice { get; set; } // 612 PRICE
-		public string? LegStrikeCurrency { get; set; } // 942 CURRENCY
-		public string? LegOptAttribute { get; set; } // 613 CHAR
-		public double? LegContractMultiplier { get; set; } // 614 FLOAT
-		public double? LegCouponRate { get; set; } // 615 PERCENTAGE
-		public string? LegSecurityExchange { get; set; } // 616 EXCHANGE
-		public string? LegIssuer { get; set; } // 617 STRING
-		public int? EncodedLegIssuerLen { get; set; } // 618 LENGTH
-		public byte[]? EncodedLegIssuer { get; set; } // 619 DATA
-		public string? LegSecurityDesc { get; set; } // 620 STRING
-		public int? EncodedLegSecurityDescLen { get; set; } // 621 LENGTH
-		public byte[]? EncodedLegSecurityDesc { get; set; } // 622 DATA
-		public double? LegRatioQty { get; set; } // 623 FLOAT
-		public string? LegSide { get; set; } // 624 CHAR
-		public string? LegCurrency { get; set; } // 556 CURRENCY
-		public string? LegPool { get; set; } // 740 STRING
-		public DateTime? LegDatedDate { get; set; } // 739 LOCALMKTDATE
-		public string? LegContractSettlMonth { get; set; } // 955 MONTHYEAR
-		public DateTime? LegInterestAccrualDate { get; set; } // 956 LOCALMKTDATE
+		[TagDetails(607)]
+		public int? LegProduct { get; set; } // INT
+		
+		[TagDetails(608)]
+		public string? LegCFICode { get; set; } // STRING
+		
+		[TagDetails(609)]
+		public string? LegSecurityType { get; set; } // STRING
+		
+		[TagDetails(764)]
+		public string? LegSecuritySubType { get; set; } // STRING
+		
+		[TagDetails(610)]
+		public string? LegMaturityMonthYear { get; set; } // MONTHYEAR
+		
+		[TagDetails(611)]
+		public DateTime? LegMaturityDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(248)]
+		public DateTime? LegCouponPaymentDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(249)]
+		public DateTime? LegIssueDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(250)]
+		public string? LegRepoCollateralSecurityType { get; set; } // STRING
+		
+		[TagDetails(251)]
+		public int? LegRepurchaseTerm { get; set; } // INT
+		
+		[TagDetails(252)]
+		public double? LegRepurchaseRate { get; set; } // PERCENTAGE
+		
+		[TagDetails(253)]
+		public double? LegFactor { get; set; } // FLOAT
+		
+		[TagDetails(257)]
+		public string? LegCreditRating { get; set; } // STRING
+		
+		[TagDetails(599)]
+		public string? LegInstrRegistry { get; set; } // STRING
+		
+		[TagDetails(596)]
+		public string? LegCountryOfIssue { get; set; } // COUNTRY
+		
+		[TagDetails(597)]
+		public string? LegStateOrProvinceOfIssue { get; set; } // STRING
+		
+		[TagDetails(598)]
+		public string? LegLocaleOfIssue { get; set; } // STRING
+		
+		[TagDetails(254)]
+		public DateTime? LegRedemptionDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(612)]
+		public double? LegStrikePrice { get; set; } // PRICE
+		
+		[TagDetails(942)]
+		public string? LegStrikeCurrency { get; set; } // CURRENCY
+		
+		[TagDetails(613)]
+		public string? LegOptAttribute { get; set; } // CHAR
+		
+		[TagDetails(614)]
+		public double? LegContractMultiplier { get; set; } // FLOAT
+		
+		[TagDetails(615)]
+		public double? LegCouponRate { get; set; } // PERCENTAGE
+		
+		[TagDetails(616)]
+		public string? LegSecurityExchange { get; set; } // EXCHANGE
+		
+		[TagDetails(617)]
+		public string? LegIssuer { get; set; } // STRING
+		
+		[TagDetails(618)]
+		public int? EncodedLegIssuerLen { get; set; } // LENGTH
+		
+		[TagDetails(619)]
+		public byte[]? EncodedLegIssuer { get; set; } // DATA
+		
+		[TagDetails(620)]
+		public string? LegSecurityDesc { get; set; } // STRING
+		
+		[TagDetails(621)]
+		public int? EncodedLegSecurityDescLen { get; set; } // LENGTH
+		
+		[TagDetails(622)]
+		public byte[]? EncodedLegSecurityDesc { get; set; } // DATA
+		
+		[TagDetails(623)]
+		public double? LegRatioQty { get; set; } // FLOAT
+		
+		[TagDetails(624)]
+		public string? LegSide { get; set; } // CHAR
+		
+		[TagDetails(556)]
+		public string? LegCurrency { get; set; } // CURRENCY
+		
+		[TagDetails(740)]
+		public string? LegPool { get; set; } // STRING
+		
+		[TagDetails(739)]
+		public DateTime? LegDatedDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(955)]
+		public string? LegContractSettlMonth { get; set; } // MONTHYEAR
+		
+		[TagDetails(956)]
+		public DateTime? LegInterestAccrualDate { get; set; } // LOCALMKTDATE
+		
 	}
 }

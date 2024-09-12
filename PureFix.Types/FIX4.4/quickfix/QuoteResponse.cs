@@ -10,65 +10,167 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class QuoteResponse : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? QuoteRespID { get; set; } // 693 STRING
-		public string? QuoteID { get; set; } // 117 STRING
-		public int? QuoteRespType { get; set; } // 694 INT
-		public string? ClOrdID { get; set; } // 11 STRING
-		public string? OrderCapacity { get; set; } // 528 CHAR
-		public string? IOIID { get; set; } // 23 STRING
-		public int? QuoteType { get; set; } // 537 INT
+		[TagDetails(693)]
+		public string? QuoteRespID { get; set; } // STRING
+		
+		[TagDetails(117)]
+		public string? QuoteID { get; set; } // STRING
+		
+		[TagDetails(694)]
+		public int? QuoteRespType { get; set; } // INT
+		
+		[TagDetails(11)]
+		public string? ClOrdID { get; set; } // STRING
+		
+		[TagDetails(528)]
+		public string? OrderCapacity { get; set; } // CHAR
+		
+		[TagDetails(23)]
+		public string? IOIID { get; set; } // STRING
+		
+		[TagDetails(537)]
+		public int? QuoteType { get; set; } // INT
+		
 		public QuotQualGrp? QuotQualGrp { get; set; }
 		public Parties? Parties { get; set; }
-		public string? TradingSessionID { get; set; } // 336 STRING
-		public string? TradingSessionSubID { get; set; } // 625 STRING
+		[TagDetails(336)]
+		public string? TradingSessionID { get; set; } // STRING
+		
+		[TagDetails(625)]
+		public string? TradingSessionSubID { get; set; } // STRING
+		
 		public Instrument? Instrument { get; set; }
 		public FinancingDetails? FinancingDetails { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public string? Side { get; set; } // 54 CHAR
+		[TagDetails(54)]
+		public string? Side { get; set; } // CHAR
+		
 		public OrderQtyData? OrderQtyData { get; set; }
-		public string? SettlType { get; set; } // 63 CHAR
-		public DateTime? SettlDate { get; set; } // 64 LOCALMKTDATE
-		public DateTime? SettlDate2 { get; set; } // 193 LOCALMKTDATE
-		public double? OrderQty2 { get; set; } // 192 QTY
-		public string? Currency { get; set; } // 15 CURRENCY
+		[TagDetails(63)]
+		public string? SettlType { get; set; } // CHAR
+		
+		[TagDetails(64)]
+		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(193)]
+		public DateTime? SettlDate2 { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(192)]
+		public double? OrderQty2 { get; set; } // QTY
+		
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
 		public Stipulations? Stipulations { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public int? AccountType { get; set; } // 581 INT
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
 		public LegQuotGrp? LegQuotGrp { get; set; }
-		public double? BidPx { get; set; } // 132 PRICE
-		public double? OfferPx { get; set; } // 133 PRICE
-		public double? MktBidPx { get; set; } // 645 PRICE
-		public double? MktOfferPx { get; set; } // 646 PRICE
-		public double? MinBidSize { get; set; } // 647 QTY
-		public double? BidSize { get; set; } // 134 QTY
-		public double? MinOfferSize { get; set; } // 648 QTY
-		public double? OfferSize { get; set; } // 135 QTY
-		public DateTime? ValidUntilTime { get; set; } // 62 UTCTIMESTAMP
-		public double? BidSpotRate { get; set; } // 188 PRICE
-		public double? OfferSpotRate { get; set; } // 190 PRICE
-		public double? BidForwardPoints { get; set; } // 189 PRICEOFFSET
-		public double? OfferForwardPoints { get; set; } // 191 PRICEOFFSET
-		public double? MidPx { get; set; } // 631 PRICE
-		public double? BidYield { get; set; } // 632 PERCENTAGE
-		public double? MidYield { get; set; } // 633 PERCENTAGE
-		public double? OfferYield { get; set; } // 634 PERCENTAGE
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
-		public string? OrdType { get; set; } // 40 CHAR
-		public double? BidForwardPoints2 { get; set; } // 642 PRICEOFFSET
-		public double? OfferForwardPoints2 { get; set; } // 643 PRICEOFFSET
-		public double? SettlCurrBidFxRate { get; set; } // 656 FLOAT
-		public double? SettlCurrOfferFxRate { get; set; } // 657 FLOAT
-		public string? SettlCurrFxRateCalc { get; set; } // 156 CHAR
-		public double? Commission { get; set; } // 12 AMT
-		public string? CommType { get; set; } // 13 CHAR
-		public int? CustOrderCapacity { get; set; } // 582 INT
-		public string? ExDestination { get; set; } // 100 EXCHANGE
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
-		public double? Price { get; set; } // 44 PRICE
-		public int? PriceType { get; set; } // 423 INT
+		[TagDetails(132)]
+		public double? BidPx { get; set; } // PRICE
+		
+		[TagDetails(133)]
+		public double? OfferPx { get; set; } // PRICE
+		
+		[TagDetails(645)]
+		public double? MktBidPx { get; set; } // PRICE
+		
+		[TagDetails(646)]
+		public double? MktOfferPx { get; set; } // PRICE
+		
+		[TagDetails(647)]
+		public double? MinBidSize { get; set; } // QTY
+		
+		[TagDetails(134)]
+		public double? BidSize { get; set; } // QTY
+		
+		[TagDetails(648)]
+		public double? MinOfferSize { get; set; } // QTY
+		
+		[TagDetails(135)]
+		public double? OfferSize { get; set; } // QTY
+		
+		[TagDetails(62)]
+		public DateTime? ValidUntilTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(188)]
+		public double? BidSpotRate { get; set; } // PRICE
+		
+		[TagDetails(190)]
+		public double? OfferSpotRate { get; set; } // PRICE
+		
+		[TagDetails(189)]
+		public double? BidForwardPoints { get; set; } // PRICEOFFSET
+		
+		[TagDetails(191)]
+		public double? OfferForwardPoints { get; set; } // PRICEOFFSET
+		
+		[TagDetails(631)]
+		public double? MidPx { get; set; } // PRICE
+		
+		[TagDetails(632)]
+		public double? BidYield { get; set; } // PERCENTAGE
+		
+		[TagDetails(633)]
+		public double? MidYield { get; set; } // PERCENTAGE
+		
+		[TagDetails(634)]
+		public double? OfferYield { get; set; } // PERCENTAGE
+		
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(40)]
+		public string? OrdType { get; set; } // CHAR
+		
+		[TagDetails(642)]
+		public double? BidForwardPoints2 { get; set; } // PRICEOFFSET
+		
+		[TagDetails(643)]
+		public double? OfferForwardPoints2 { get; set; } // PRICEOFFSET
+		
+		[TagDetails(656)]
+		public double? SettlCurrBidFxRate { get; set; } // FLOAT
+		
+		[TagDetails(657)]
+		public double? SettlCurrOfferFxRate { get; set; } // FLOAT
+		
+		[TagDetails(156)]
+		public string? SettlCurrFxRateCalc { get; set; } // CHAR
+		
+		[TagDetails(12)]
+		public double? Commission { get; set; } // AMT
+		
+		[TagDetails(13)]
+		public string? CommType { get; set; } // CHAR
+		
+		[TagDetails(582)]
+		public int? CustOrderCapacity { get; set; } // INT
+		
+		[TagDetails(100)]
+		public string? ExDestination { get; set; } // EXCHANGE
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
+		[TagDetails(44)]
+		public double? Price { get; set; } // PRICE
+		
+		[TagDetails(423)]
+		public int? PriceType { get; set; } // INT
+		
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
 		public YieldData? YieldData { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }

@@ -9,16 +9,38 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoBidDescriptors
 	{
-		public int? BidDescriptorType { get; set; } // 399 INT
-		public string? BidDescriptor { get; set; } // 400 STRING
-		public int? SideValueInd { get; set; } // 401 INT
-		public double? LiquidityValue { get; set; } // 404 AMT
-		public int? LiquidityNumSecurities { get; set; } // 441 INT
-		public double? LiquidityPctLow { get; set; } // 402 PERCENTAGE
-		public double? LiquidityPctHigh { get; set; } // 403 PERCENTAGE
-		public double? EFPTrackingError { get; set; } // 405 PERCENTAGE
-		public double? FairValue { get; set; } // 406 AMT
-		public double? OutsideIndexPct { get; set; } // 407 PERCENTAGE
-		public double? ValueOfFutures { get; set; } // 408 AMT
+		[TagDetails(399)]
+		public int? BidDescriptorType { get; set; } // INT
+		
+		[TagDetails(400)]
+		public string? BidDescriptor { get; set; } // STRING
+		
+		[TagDetails(401)]
+		public int? SideValueInd { get; set; } // INT
+		
+		[TagDetails(404)]
+		public double? LiquidityValue { get; set; } // AMT
+		
+		[TagDetails(441)]
+		public int? LiquidityNumSecurities { get; set; } // INT
+		
+		[TagDetails(402)]
+		public double? LiquidityPctLow { get; set; } // PERCENTAGE
+		
+		[TagDetails(403)]
+		public double? LiquidityPctHigh { get; set; } // PERCENTAGE
+		
+		[TagDetails(405)]
+		public double? EFPTrackingError { get; set; } // PERCENTAGE
+		
+		[TagDetails(406)]
+		public double? FairValue { get; set; } // AMT
+		
+		[TagDetails(407)]
+		public double? OutsideIndexPct { get; set; } // PERCENTAGE
+		
+		[TagDetails(408)]
+		public double? ValueOfFutures { get; set; } // AMT
+		
 	}
 }

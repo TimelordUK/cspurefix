@@ -10,7 +10,9 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class TestRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? TestReqID { get; set; } // 112 STRING
+		[TagDetails(112)]
+		public string? TestReqID { get; set; } // STRING
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

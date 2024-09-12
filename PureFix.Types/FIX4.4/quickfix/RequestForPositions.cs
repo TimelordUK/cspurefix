@@ -10,28 +10,62 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class RequestForPositions : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? PosReqID { get; set; } // 710 STRING
-		public int? PosReqType { get; set; } // 724 INT
-		public string? MatchStatus { get; set; } // 573 CHAR
-		public string? SubscriptionRequestType { get; set; } // 263 CHAR
+		[TagDetails(710)]
+		public string? PosReqID { get; set; } // STRING
+		
+		[TagDetails(724)]
+		public int? PosReqType { get; set; } // INT
+		
+		[TagDetails(573)]
+		public string? MatchStatus { get; set; } // CHAR
+		
+		[TagDetails(263)]
+		public string? SubscriptionRequestType { get; set; } // CHAR
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public int? AccountType { get; set; } // 581 INT
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
 		public Instrument? Instrument { get; set; }
-		public string? Currency { get; set; } // 15 CURRENCY
+		[TagDetails(15)]
+		public string? Currency { get; set; } // CURRENCY
+		
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public DateTime? ClearingBusinessDate { get; set; } // 715 LOCALMKTDATE
-		public string? SettlSessID { get; set; } // 716 STRING
-		public string? SettlSessSubID { get; set; } // 717 STRING
+		[TagDetails(715)]
+		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(716)]
+		public string? SettlSessID { get; set; } // STRING
+		
+		[TagDetails(717)]
+		public string? SettlSessSubID { get; set; } // STRING
+		
 		public TrdgSesGrp? TrdgSesGrp { get; set; }
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
-		public int? ResponseTransportType { get; set; } // 725 INT
-		public string? ResponseDestination { get; set; } // 726 STRING
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
+		[TagDetails(725)]
+		public int? ResponseTransportType { get; set; } // INT
+		
+		[TagDetails(726)]
+		public string? ResponseDestination { get; set; } // STRING
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

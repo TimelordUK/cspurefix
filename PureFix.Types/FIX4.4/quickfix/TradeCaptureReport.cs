@@ -10,63 +10,157 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class TradeCaptureReport : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? TradeReportID { get; set; } // 571 STRING
-		public int? TradeReportTransType { get; set; } // 487 INT
-		public int? TradeReportType { get; set; } // 856 INT
-		public string? TradeRequestID { get; set; } // 568 STRING
-		public int? TrdType { get; set; } // 828 INT
-		public int? TrdSubType { get; set; } // 829 INT
-		public int? SecondaryTrdType { get; set; } // 855 INT
-		public string? TransferReason { get; set; } // 830 STRING
-		public string? ExecType { get; set; } // 150 CHAR
-		public int? TotNumTradeReports { get; set; } // 748 INT
-		public bool? LastRptRequested { get; set; } // 912 BOOLEAN
-		public bool? UnsolicitedIndicator { get; set; } // 325 BOOLEAN
-		public string? SubscriptionRequestType { get; set; } // 263 CHAR
-		public string? TradeReportRefID { get; set; } // 572 STRING
-		public string? SecondaryTradeReportRefID { get; set; } // 881 STRING
-		public string? SecondaryTradeReportID { get; set; } // 818 STRING
-		public string? TradeLinkID { get; set; } // 820 STRING
-		public string? TrdMatchID { get; set; } // 880 STRING
-		public string? ExecID { get; set; } // 17 STRING
-		public string? OrdStatus { get; set; } // 39 CHAR
-		public string? SecondaryExecID { get; set; } // 527 STRING
-		public int? ExecRestatementReason { get; set; } // 378 INT
-		public bool? PreviouslyReported { get; set; } // 570 BOOLEAN
-		public int? PriceType { get; set; } // 423 INT
+		[TagDetails(571)]
+		public string? TradeReportID { get; set; } // STRING
+		
+		[TagDetails(487)]
+		public int? TradeReportTransType { get; set; } // INT
+		
+		[TagDetails(856)]
+		public int? TradeReportType { get; set; } // INT
+		
+		[TagDetails(568)]
+		public string? TradeRequestID { get; set; } // STRING
+		
+		[TagDetails(828)]
+		public int? TrdType { get; set; } // INT
+		
+		[TagDetails(829)]
+		public int? TrdSubType { get; set; } // INT
+		
+		[TagDetails(855)]
+		public int? SecondaryTrdType { get; set; } // INT
+		
+		[TagDetails(830)]
+		public string? TransferReason { get; set; } // STRING
+		
+		[TagDetails(150)]
+		public string? ExecType { get; set; } // CHAR
+		
+		[TagDetails(748)]
+		public int? TotNumTradeReports { get; set; } // INT
+		
+		[TagDetails(912)]
+		public bool? LastRptRequested { get; set; } // BOOLEAN
+		
+		[TagDetails(325)]
+		public bool? UnsolicitedIndicator { get; set; } // BOOLEAN
+		
+		[TagDetails(263)]
+		public string? SubscriptionRequestType { get; set; } // CHAR
+		
+		[TagDetails(572)]
+		public string? TradeReportRefID { get; set; } // STRING
+		
+		[TagDetails(881)]
+		public string? SecondaryTradeReportRefID { get; set; } // STRING
+		
+		[TagDetails(818)]
+		public string? SecondaryTradeReportID { get; set; } // STRING
+		
+		[TagDetails(820)]
+		public string? TradeLinkID { get; set; } // STRING
+		
+		[TagDetails(880)]
+		public string? TrdMatchID { get; set; } // STRING
+		
+		[TagDetails(17)]
+		public string? ExecID { get; set; } // STRING
+		
+		[TagDetails(39)]
+		public string? OrdStatus { get; set; } // CHAR
+		
+		[TagDetails(527)]
+		public string? SecondaryExecID { get; set; } // STRING
+		
+		[TagDetails(378)]
+		public int? ExecRestatementReason { get; set; } // INT
+		
+		[TagDetails(570)]
+		public bool? PreviouslyReported { get; set; } // BOOLEAN
+		
+		[TagDetails(423)]
+		public int? PriceType { get; set; } // INT
+		
 		public Instrument? Instrument { get; set; }
 		public FinancingDetails? FinancingDetails { get; set; }
 		public OrderQtyData? OrderQtyData { get; set; }
-		public int? QtyType { get; set; } // 854 INT
+		[TagDetails(854)]
+		public int? QtyType { get; set; } // INT
+		
 		public YieldData? YieldData { get; set; }
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
-		public string? UnderlyingTradingSessionID { get; set; } // 822 STRING
-		public string? UnderlyingTradingSessionSubID { get; set; } // 823 STRING
-		public double? LastQty { get; set; } // 32 QTY
-		public double? LastPx { get; set; } // 31 PRICE
-		public double? LastParPx { get; set; } // 669 PRICE
-		public double? LastSpotRate { get; set; } // 194 PRICE
-		public double? LastForwardPoints { get; set; } // 195 PRICEOFFSET
-		public string? LastMkt { get; set; } // 30 EXCHANGE
-		public DateTime? TradeDate { get; set; } // 75 LOCALMKTDATE
-		public DateTime? ClearingBusinessDate { get; set; } // 715 LOCALMKTDATE
-		public double? AvgPx { get; set; } // 6 PRICE
+		[TagDetails(822)]
+		public string? UnderlyingTradingSessionID { get; set; } // STRING
+		
+		[TagDetails(823)]
+		public string? UnderlyingTradingSessionSubID { get; set; } // STRING
+		
+		[TagDetails(32)]
+		public double? LastQty { get; set; } // QTY
+		
+		[TagDetails(31)]
+		public double? LastPx { get; set; } // PRICE
+		
+		[TagDetails(669)]
+		public double? LastParPx { get; set; } // PRICE
+		
+		[TagDetails(194)]
+		public double? LastSpotRate { get; set; } // PRICE
+		
+		[TagDetails(195)]
+		public double? LastForwardPoints { get; set; } // PRICEOFFSET
+		
+		[TagDetails(30)]
+		public string? LastMkt { get; set; } // EXCHANGE
+		
+		[TagDetails(75)]
+		public DateTime? TradeDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(715)]
+		public DateTime? ClearingBusinessDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(6)]
+		public double? AvgPx { get; set; } // PRICE
+		
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
-		public int? AvgPxIndicator { get; set; } // 819 INT
+		[TagDetails(819)]
+		public int? AvgPxIndicator { get; set; } // INT
+		
 		public PositionAmountData? PositionAmountData { get; set; }
-		public string? MultiLegReportingType { get; set; } // 442 CHAR
-		public string? TradeLegRefID { get; set; } // 824 STRING
+		[TagDetails(442)]
+		public string? MultiLegReportingType { get; set; } // CHAR
+		
+		[TagDetails(824)]
+		public string? TradeLegRefID { get; set; } // STRING
+		
 		public TrdInstrmtLegGrp? TrdInstrmtLegGrp { get; set; }
-		public DateTime? TransactTime { get; set; } // 60 UTCTIMESTAMP
+		[TagDetails(60)]
+		public DateTime? TransactTime { get; set; } // UTCTIMESTAMP
+		
 		public TrdRegTimestamps? TrdRegTimestamps { get; set; }
-		public string? SettlType { get; set; } // 63 CHAR
-		public DateTime? SettlDate { get; set; } // 64 LOCALMKTDATE
-		public string? MatchStatus { get; set; } // 573 CHAR
-		public string? MatchType { get; set; } // 574 STRING
+		[TagDetails(63)]
+		public string? SettlType { get; set; } // CHAR
+		
+		[TagDetails(64)]
+		public DateTime? SettlDate { get; set; } // LOCALMKTDATE
+		
+		[TagDetails(573)]
+		public string? MatchStatus { get; set; } // CHAR
+		
+		[TagDetails(574)]
+		public string? MatchType { get; set; } // STRING
+		
 		public TrdCapRptSideGrp? TrdCapRptSideGrp { get; set; }
-		public bool? CopyMsgIndicator { get; set; } // 797 BOOLEAN
-		public bool? PublishTrdIndicator { get; set; } // 852 BOOLEAN
-		public int? ShortSaleReason { get; set; } // 853 INT
+		[TagDetails(797)]
+		public bool? CopyMsgIndicator { get; set; } // BOOLEAN
+		
+		[TagDetails(852)]
+		public bool? PublishTrdIndicator { get; set; } // BOOLEAN
+		
+		[TagDetails(853)]
+		public int? ShortSaleReason { get; set; } // INT
+		
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

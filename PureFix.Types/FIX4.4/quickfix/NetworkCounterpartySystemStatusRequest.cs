@@ -10,8 +10,12 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class NetworkCounterpartySystemStatusRequest : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public int? NetworkRequestType { get; set; } // 935 INT
-		public string? NetworkRequestID { get; set; } // 933 STRING
+		[TagDetails(935)]
+		public int? NetworkRequestType { get; set; } // INT
+		
+		[TagDetails(933)]
+		public string? NetworkRequestID { get; set; } // STRING
+		
 		public CompIDReqGrp? CompIDReqGrp { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}

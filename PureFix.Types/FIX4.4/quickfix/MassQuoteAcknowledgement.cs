@@ -10,19 +10,43 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class MassQuoteAcknowledgement : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? QuoteReqID { get; set; } // 131 STRING
-		public string? QuoteID { get; set; } // 117 STRING
-		public int? QuoteStatus { get; set; } // 297 INT
-		public int? QuoteRejectReason { get; set; } // 300 INT
-		public int? QuoteResponseLevel { get; set; } // 301 INT
-		public int? QuoteType { get; set; } // 537 INT
+		[TagDetails(131)]
+		public string? QuoteReqID { get; set; } // STRING
+		
+		[TagDetails(117)]
+		public string? QuoteID { get; set; } // STRING
+		
+		[TagDetails(297)]
+		public int? QuoteStatus { get; set; } // INT
+		
+		[TagDetails(300)]
+		public int? QuoteRejectReason { get; set; } // INT
+		
+		[TagDetails(301)]
+		public int? QuoteResponseLevel { get; set; } // INT
+		
+		[TagDetails(537)]
+		public int? QuoteType { get; set; } // INT
+		
 		public Parties? Parties { get; set; }
-		public string? Account { get; set; } // 1 STRING
-		public int? AcctIDSource { get; set; } // 660 INT
-		public int? AccountType { get; set; } // 581 INT
-		public string? Text { get; set; } // 58 STRING
-		public int? EncodedTextLen { get; set; } // 354 LENGTH
-		public byte[]? EncodedText { get; set; } // 355 DATA
+		[TagDetails(1)]
+		public string? Account { get; set; } // STRING
+		
+		[TagDetails(660)]
+		public int? AcctIDSource { get; set; } // INT
+		
+		[TagDetails(581)]
+		public int? AccountType { get; set; } // INT
+		
+		[TagDetails(58)]
+		public string? Text { get; set; } // STRING
+		
+		[TagDetails(354)]
+		public int? EncodedTextLen { get; set; } // LENGTH
+		
+		[TagDetails(355)]
+		public byte[]? EncodedText { get; set; } // DATA
+		
 		public QuotSetAckGrp? QuotSetAckGrp { get; set; }
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
