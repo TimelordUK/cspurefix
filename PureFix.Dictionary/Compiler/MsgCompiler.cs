@@ -108,7 +108,7 @@ namespace PureFix.Dictionary.Compiler
 
                 using(_builder.BeginBlock($"public sealed class {compilerType.Name}{inheritsDeclaration}"))
                 {
-                    compilerType.Set.Iterate(this, "\t\t");
+                    compilerType.Set.Iterate(this);
                 }
             }
             return _builder.ToString();

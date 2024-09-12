@@ -14,7 +14,7 @@ namespace PureFix.Dictionary.Contained
     }
     public static class ContainedSetExt
     {
-        public static void Iterate(this IContainedSet set, ISetDispatchReceiver dispatcher, object? state = null)
+        public static void Iterate(this IContainedSet set, ISetDispatchReceiver dispatcher)
         {
             var fields = set.Fields;
             for (var i = 0; i < fields.Count; i++)
