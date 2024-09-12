@@ -15,31 +15,8 @@ using PureFix.Tag;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiSegmentParser(FixDefinitions definitions)
+    public partial class AsciiSegmentParser(FixDefinitions definitions)
     {
-        // the internal state should a fatal error be encountered.
-        public record Summary(
-            string MsgType,
-            TagPos[] Tags,
-            int Last,
-            string MsgDefinition,
-            int CurrentTagPosition,
-            string Peek,
-            string[] Segments,
-            string[] StructureStack);
-
-        public class Context(MessageDefinition message, Tags tags, int last)
-        {
-            public string MsgType { get; } = message.MsgType;
-            public List<SegmentDescription> Segments { get; } = [];
-            public Stack<SegmentDescription> StructureStack { get; } = [];
-            public int CurrentTagPosition { get; set; }
-            public Tags Tags { get; } = tags;
-            public int Last { get; } = last;
-            public MessageDefinition? MsgDefinition { get; } = message;
-            public SegmentDescription? Peek => StructureStack.Peek();
-        }
-
         public FixDefinitions Definitions { get; } = definitions;
 
         public Structure? Parse(string msgType, Tags tags, int last)

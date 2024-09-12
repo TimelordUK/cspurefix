@@ -14,54 +14,8 @@ using Microsoft.Extensions.ObjectPool;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiParser
+    public partial class AsciiParser
     {
-        public readonly record struct Stats(long ReceivedBytes, long ParsedMessages, long Rents, long Returns, double TotalSegmentParseMicro, double TotalElapsedParseMicro);
-        public class Pool
-        {
-            public class Storage
-            {
-                public ElasticBuffer Buffer { get; } = new();
-                public Tags Locations { get; } = new();
-
-                public void Reset()
-                {
-                    Buffer.Reset();
-                    Locations.Reset();
-                }
-                public override string ToString()
-                {
-                    return $"[{Buffer.Pos}, {Locations.NextTagPos}]";
-                }
-            }
-            public Storage Rent()
-            {
-                var instance = _pool.Get();
-                instance.Reset();
-                ++Rents;
-                return instance;
-            }
-            public void Deliver(Storage storage)
-            {
-                _delivered.Enqueue(storage);
-            }
-            public void Reclaim()
-            {
-                while (_delivered.Count > 0)
-                {
-                    Returns++;
-                    var instance = _delivered.Dequeue();
-                    _pool.Return(instance);
-                }
-            }
-            public long Imbalance => Rents - Returns;
-            public long Rents { get; private set; }
-
-            public long Returns { get; private set; }
-
-            private readonly ObjectPool<Storage> _pool = new DefaultObjectPool<Storage>(new DefaultPooledObjectPolicy<Storage>());
-            private readonly Queue<Storage> _delivered = [];
-        }
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
