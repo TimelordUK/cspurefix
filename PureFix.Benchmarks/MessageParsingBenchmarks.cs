@@ -19,7 +19,10 @@ namespace PureFix.Benchmarks
 
         private readonly byte[] _HeartbeatMessage;
         private readonly byte[] _LogonMessage;
-        private readonly byte[] _ExecutionReportMessage;
+        private readonly byte[] _ExecutionReportMessage;        
+        private readonly byte[] _MarketDataSnapshotMessage;
+        private readonly byte[] _OrderCancelRejectMessage;
+        private readonly byte[] _QuoteRequestMessage;
 
         private readonly FixDefinitions _FixDefinitions;
         private readonly AsciiParser _Parser;
@@ -31,6 +34,9 @@ namespace PureFix.Benchmarks
             _HeartbeatMessage = LoadMessage(Fix44PathHelper.HeartbeatFile);
             _LogonMessage = LoadMessage(Fix44PathHelper.LogonFile);
             _ExecutionReportMessage = LoadMessage(Fix44PathHelper.ExecutionReportFile);
+            _MarketDataSnapshotMessage = LoadMessage(Fix44PathHelper.MarketDataSnapshotFile);
+            _OrderCancelRejectMessage = LoadMessage(Fix44PathHelper.OrderCancelRejectFile);
+            _QuoteRequestMessage = LoadMessage(Fix44PathHelper.QuoteRequestFile);
 
             _FixDefinitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(_FixDefinitions);
@@ -64,6 +70,24 @@ namespace PureFix.Benchmarks
         public void ExecutionReport()
         {
             _Parser.ParseFrom(_ExecutionReportMessage, NoAction);
+        }
+
+        [Benchmark]
+        public void MarketDataSnapshot()
+        {
+            _Parser.ParseFrom(_MarketDataSnapshotMessage, NoAction);
+        }
+
+        [Benchmark]
+        public void OrderCancelReject()
+        {
+            _Parser.ParseFrom(_OrderCancelRejectMessage, NoAction);
+        }
+
+        [Benchmark]
+        public void QuoteRequest()
+        {
+            _Parser.ParseFrom(_QuoteRequestMessage, NoAction);
         }
     }
 }
