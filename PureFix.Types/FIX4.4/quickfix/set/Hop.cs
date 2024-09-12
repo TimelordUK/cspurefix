@@ -8,5 +8,6 @@ namespace PureFix.Types.FIX4._4.quickfix.set
 {
 	public class Hop
 	{
+		public NoHops? NoHops { get; set; }
 	}
 }

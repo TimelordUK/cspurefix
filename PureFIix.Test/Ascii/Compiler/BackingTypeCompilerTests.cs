@@ -30,7 +30,8 @@ namespace PureFIix.Test.Ascii.Compiler
         public async Task Compiler_Heartbeat_Test()
         {
             var compiler = new MsgCompiler(_testEntity.Definitions);
-            await compiler.CreateTypes(new List<string>(["0"]));
+            // await compiler.CreateTypes(new List<string>(["0"]));
+            await compiler.Generate();
         }
     }
 }

@@ -8,32 +8,32 @@ namespace PureFix.Types.FIX4._4.quickfix.set
 {
 	public class StandardHeader
 	{
-		public string? BeginString { get; set; }
-		public int? BodyLength { get; set; }
-		public string? MsgType { get; set; }
-		public string? SenderCompID { get; set; }
-		public string? TargetCompID { get; set; }
-		public string? OnBehalfOfCompID { get; set; }
-		public string? DeliverToCompID { get; set; }
-		public int? SecureDataLen { get; set; }
-		public byte[]? SecureData { get; set; }
-		public int? MsgSeqNum { get; set; }
-		public string? SenderSubID { get; set; }
-		public string? SenderLocationID { get; set; }
-		public string? TargetSubID { get; set; }
-		public string? TargetLocationID { get; set; }
-		public string? OnBehalfOfSubID { get; set; }
-		public string? OnBehalfOfLocationID { get; set; }
-		public string? DeliverToSubID { get; set; }
-		public string? DeliverToLocationID { get; set; }
-		public bool? PossDupFlag { get; set; }
-		public bool? PossResend { get; set; }
-		public DateTime? SendingTime { get; set; }
-		public DateTime? OrigSendingTime { get; set; }
-		public int? XmlDataLen { get; set; }
-		public byte[]? XmlData { get; set; }
-		public string? MessageEncoding { get; set; }
-		public int? LastMsgSeqNumProcessed { get; set; }
+		public string? BeginString { get; set; } // 8 STRING
+		public int? BodyLength { get; set; } // 9 LENGTH
+		public string? MsgType { get; set; } // 35 STRING
+		public string? SenderCompID { get; set; } // 49 STRING
+		public string? TargetCompID { get; set; } // 56 STRING
+		public string? OnBehalfOfCompID { get; set; } // 115 STRING
+		public string? DeliverToCompID { get; set; } // 128 STRING
+		public int? SecureDataLen { get; set; } // 90 LENGTH
+		public byte[]? SecureData { get; set; } // 91 DATA
+		public int? MsgSeqNum { get; set; } // 34 SEQNUM
+		public string? SenderSubID { get; set; } // 50 STRING
+		public string? SenderLocationID { get; set; } // 142 STRING
+		public string? TargetSubID { get; set; } // 57 STRING
+		public string? TargetLocationID { get; set; } // 143 STRING
+		public string? OnBehalfOfSubID { get; set; } // 116 STRING
+		public string? OnBehalfOfLocationID { get; set; } // 144 STRING
+		public string? DeliverToSubID { get; set; } // 129 STRING
+		public string? DeliverToLocationID { get; set; } // 145 STRING
+		public bool? PossDupFlag { get; set; } // 43 BOOLEAN
+		public bool? PossResend { get; set; } // 97 BOOLEAN
+		public DateTime? SendingTime { get; set; } // 52 UTCTIMESTAMP
+		public DateTime? OrigSendingTime { get; set; } // 122 UTCTIMESTAMP
+		public int? XmlDataLen { get; set; } // 212 LENGTH
+		public byte[]? XmlData { get; set; } // 213 DATA
+		public string? MessageEncoding { get; set; } // 347 STRING
+		public int? LastMsgSeqNumProcessed { get; set; } // 369 SEQNUM
 		public Hop? Hop { get; set; }
 	}
 }

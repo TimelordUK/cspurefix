@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX4._4.quickfix
 	public class Heartbeat : FixMsg
 	{
 		public override StandardHeader? StandardHeader { get; set; }
-		public string? TestReqID { get; set; }
+		public string? TestReqID { get; set; } // 112 STRING
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

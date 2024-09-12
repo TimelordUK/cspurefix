@@ -8,8 +8,8 @@ namespace PureFix.Types.FIX4._4.quickfix.set
 {
 	public class StandardTrailer
 	{
-		public int? SignatureLength { get; set; }
-		public byte[]? Signature { get; set; }
-		public string? CheckSum { get; set; }
+		public int? SignatureLength { get; set; } // 93 LENGTH
+		public byte[]? Signature { get; set; } // 89 DATA
+		public string? CheckSum { get; set; } // 10 STRING
 	}
 }

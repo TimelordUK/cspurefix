@@ -83,6 +83,11 @@ namespace PureFix.Dictionary.Compiler
             public FixDefinitions Definitions { get; }
             public IContainedSet Set { get; }
             public string Name { get; }
+            public string Declaration => Name 
+                is "StandardHeader" 
+                or "StandardTrailer" ? 
+                $"override {Name}" : 
+                Name;
 
             public CompilerType(FixDefinitions definitions, IContainedSet set, string name)
             {
@@ -191,7 +196,7 @@ namespace PureFix.Dictionary.Compiler
             var type = Tags.ToCsType(sf.Definition.TagType);
             var indent = state?.ToString() ?? "\t";
             const string props = "{ get; set; }";
-            _builder.AppendLine($"{indent}public {type}? {sf.Definition.Name} {props}");
+            _builder.AppendLine($"{indent}public {type}? {sf.Definition.Name} {props} // {sf.Definition.Tag} {sf.Definition.Type}");
         }
 
         public void OnComponent(ContainedComponentField cf, object? state = null)
@@ -205,8 +210,14 @@ namespace PureFix.Dictionary.Compiler
             Enqueue(new CompilerType(Definitions, cf.Definition, cf.Name));
         }
 
-        public void OnGroup(ContainedGroupField cf, object? state = null)
+        public void OnGroup(ContainedGroupField gf, object? state = null)
         {
+            if (gf.Definition == null) return;
+            var indent = state?.ToString() ?? "\t";
+            const string props = "{ get; set; }";
+            _builder.AppendLine($"{indent}public {gf.Name}? {gf.Name} {props}");
+            // any dependent group also needs to be constructed StandardHeader etc.
+            Enqueue(new CompilerType(Definitions, gf.Definition, gf.Name));
         }
     }
 }
