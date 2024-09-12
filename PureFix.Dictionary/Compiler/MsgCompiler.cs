@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
-using PureFix.Types;
+using PureFix.Tag;
 
 namespace PureFix.Dictionary.Compiler
 {
     public partial class MsgCompiler : ISetDispatchReceiver
     {
         /***
-         * using PureFix.Types.FIX44.QuickFix.Types;
+         *using PureFix.Types.FIX4._4.quickfix.set;
            using System;
            using System.Collections.Generic;
            using System.Linq;
            using System.Text;
            using System.Threading.Tasks;
 
-           namespace PureFix.Types.FIX44.QuickFix
+           namespace PureFix.Types.FIX4._4.quickfix
            {
                public class Heartbeat
                {
@@ -32,11 +32,12 @@ namespace PureFix.Dictionary.Compiler
            }
          */
 
+
         public FixDefinitions Definitions { get; }
         public Options CompilerOptions { get; }
         private readonly Queue<CompilerType> _workQueue = [];
         private readonly Dictionary<string, CompilerType> _completed = [];
-        private readonly CodeGenerator _builder = new();
+        private readonly StringBuilder _builder = new();
 
 
         public MsgCompiler(FixDefinitions definitions, Options? options = null)
@@ -63,7 +64,7 @@ namespace PureFix.Dictionary.Compiler
                     throw new InvalidDataException($"no type {type} defined");
                 }
 
-                var ct = new CompilerType(Definitions, set, set.Name);
+                var ct = new CompilerType(Definitions, CompilerOptions, set, set.Name);
                 Enqueue(ct);
             }
 
@@ -77,40 +78,29 @@ namespace PureFix.Dictionary.Compiler
                 var compilerType = _workQueue.Dequeue();
                 var compiledType = GenerateMessages(compilerType);
                 var fullName = GetFileName(compilerType);
-
-                var directory = Path.GetDirectoryName(fullName);
-                if (directory is not null) Directory.CreateDirectory(directory);
-
-                await File.WriteAllTextAsync(fullName, compiledType);
+                using var streamReader = File.WriteAllTextAsync(fullName, compiledType);
+                await streamReader;
             }
         }
 
         public string GenerateMessages(CompilerType compilerType)
         {
-            var isMsg = compilerType.Set.Type == ContainedSetType.Msg;
-            var ns = isMsg
-                ? $"{CompilerOptions.BackingTypeNamespace}"
-                : $"{CompilerOptions.BackingTypeNamespace}.Types";
-            _builder.Reset();
-
-            var usingDeclaration = string.Join(Environment.NewLine, CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {CompilerOptions.BackingTypeNamespace}.Types;"]));
+            var isMsg = compilerType.IsMsg;
+            var ns = compilerType.BackingTypeNamespace;
+            _builder.Clear();
+            var usingDeclaration = string.Join(Environment.NewLine, CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {CompilerOptions.BackingTypeNamespace}.set;"]));
             var inheritsDeclaration = isMsg ? $" : {CompilerOptions.MsgInheritsFrom}" : "";
-            
-            _builder.WriteLine(usingDeclaration);
-            _builder.WriteLine();
-
-            using(_builder.BeginBlock($"namespace {ns}"))
-            {
-                if (compilerType.Set is MessageDefinition messageDefinition)
-                {
-                    _builder.WriteLine($"[MessageType(\"{messageDefinition.MsgType}\", FixVersion.{Definitions.Version})]");
-                }
-
-                using(_builder.BeginBlock($"public sealed class {compilerType.Name}{inheritsDeclaration}"))
-                {
-                    compilerType.Set.Iterate(this, "\t\t");
-                }
-            }
+            _builder.AppendFormat(usingDeclaration);
+            _builder.AppendLine();
+            _builder.AppendLine($"namespace {ns}");
+            _builder.AppendLine("{");
+            _builder.AppendLine($"\tpublic class {compilerType.Name}{inheritsDeclaration}");
+            _builder.AppendLine("\t{");
+            compilerType.Indent = "\t\t";
+            compilerType.Set.Iterate(this, compilerType);
+            compilerType.Indent = "\t";
+            _builder.AppendLine("\t}");
+            _builder.AppendLine("}");
             return _builder.ToString();
         }
 
@@ -133,48 +123,40 @@ namespace PureFix.Dictionary.Compiler
             {
                 return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, $"{name}")}.cs";
             }
-            return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, "Types", $"{name}")}.cs";
+            return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, "set", $"{name}")}.cs";
         }
 
         // public string? TestReqID { get; set; }
         public void OnSimple(ContainedSimpleField sf, object? state = null)
         {
             var type = Tags.ToCsType(sf.Definition.TagType);
+            if (state == null) return;
+            var compilerType = (CompilerType)state;
             const string props = "{ get; set; }";
-
-            _builder.WriteLine($"[TagDetails({sf.Definition.Tag}, TagType.{TagTypeUtil.ToType(sf.Definition.Type)})]");
-            _builder.WriteLine($"public {type}? {sf.Definition.Name} {props}");
-            _builder.WriteLine();
+            _builder.AppendLine($"{compilerType.Indent}public {type}? {sf.Definition.Name} {props} // {sf.Definition.Tag} {sf.Definition.Type}");
         }
 
         public void OnComponent(ContainedComponentField cf, object? state = null)
         {
             if (cf.Definition == null) return;
+            if (state == null) return;
+            var compilerType = (CompilerType)state;
             const string props = "{ get; set; }";
             var declared = cf.Name is "StandardHeader" or "StandardTrailer" ? $"override {cf.Name}" : cf.Name;
-            
-            _builder.WriteLine("[Component]");
-            _builder.WriteLine($"public {declared}? {cf.Name} {props}");
-
-            if(cf.Name != "StandardTrailer")
-            {
-                _builder.WriteLine();
-            }
-
+            _builder.AppendLine($"{compilerType.Indent}public {declared}? {cf.Name} {props}");
             // any dependent component also needs to be constructed StandardHeader etc.
-            Enqueue(new CompilerType(Definitions, cf.Definition, cf.Name));
+            Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, cf.Name));
         }
 
         public void OnGroup(ContainedGroupField gf, object? state = null)
         {
             if (gf.Definition == null) return;
+            if (state == null) return;
+            var compilerType = (CompilerType)state;
             const string props = "{ get; set; }";
-
-            _builder.WriteLine("[Group]");
-            _builder.WriteLine($"public {gf.Name}? {gf.Name} {props}");
-            _builder.WriteLine();
+            _builder.AppendLine($"{compilerType.Indent}public {gf.Name}? {gf.Name} {props}");
             // any dependent group also needs to be constructed StandardHeader etc.
-            Enqueue(new CompilerType(Definitions, gf.Definition, gf.Name));
+            Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, gf.Name));
         }
     }
 }

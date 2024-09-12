@@ -1,6 +1,10 @@
 ﻿using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
-using PureFix.Types;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PureFix.Dictionary.Compiler
 {
@@ -29,24 +33,24 @@ namespace PureFix.Dictionary.Compiler
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX4.4", "QuickFix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX44.QuickFix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX4.4", "quickfix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX4._4.quickfix"
                         };
 
                     case FixVersion.FIX50SP2:
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX.50SP2", "QuickFix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX450SP2.QuickFix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX.50SP2", "quickfix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX4._50SP2.quickfix"
                         };
 
                     default:
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX", "QuickFix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX.QuickFix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX", "quickfix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX.quickfix"
                         };
                 }
             }
