@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class CpctyConfGrp
 	{
-		[Group(NoOfTag = 862, Offset = 0)]
+		[Group(NoOfTag = 862, Offset = 0, Required = true)]
 		public NoCapacities[]? NoCapacities { get; set; }
 		
 	}

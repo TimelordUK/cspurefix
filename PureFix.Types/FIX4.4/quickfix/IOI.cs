@@ -10,91 +10,91 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("6", FixVersion.FIX44)]
 	public sealed class IOI : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 23, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 23, Type = TagType.String, Offset = 1, Required = true)]
 		public string? IOIID { get; set; }
 		
-		[TagDetails(Tag = 28, Type = TagType.String, Offset = 2)]
+		[TagDetails(Tag = 28, Type = TagType.String, Offset = 2, Required = true)]
 		public string? IOITransType { get; set; }
 		
-		[TagDetails(Tag = 26, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 26, Type = TagType.String, Offset = 3, Required = false)]
 		public string? IOIRefID { get; set; }
 		
-		[Component(Offset = 4)]
+		[Component(Offset = 4, Required = true)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component(Offset = 5)]
+		[Component(Offset = 5, Required = false)]
 		public FinancingDetails? FinancingDetails { get; set; }
 		
-		[Component(Offset = 6)]
+		[Component(Offset = 6, Required = false)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[TagDetails(Tag = 54, Type = TagType.String, Offset = 7)]
+		[TagDetails(Tag = 54, Type = TagType.String, Offset = 7, Required = true)]
 		public string? Side { get; set; }
 		
-		[TagDetails(Tag = 854, Type = TagType.Int, Offset = 8)]
+		[TagDetails(Tag = 854, Type = TagType.Int, Offset = 8, Required = false)]
 		public int? QtyType { get; set; }
 		
-		[Component(Offset = 9)]
+		[Component(Offset = 9, Required = false)]
 		public OrderQtyData? OrderQtyData { get; set; }
 		
-		[TagDetails(Tag = 27, Type = TagType.String, Offset = 10)]
+		[TagDetails(Tag = 27, Type = TagType.String, Offset = 10, Required = true)]
 		public string? IOIQty { get; set; }
 		
-		[TagDetails(Tag = 15, Type = TagType.String, Offset = 11)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 11, Required = false)]
 		public string? Currency { get; set; }
 		
-		[Component(Offset = 12)]
+		[Component(Offset = 12, Required = false)]
 		public Stipulations? Stipulations { get; set; }
 		
-		[Component(Offset = 13)]
+		[Component(Offset = 13, Required = false)]
 		public InstrmtLegIOIGrp? InstrmtLegIOIGrp { get; set; }
 		
-		[TagDetails(Tag = 423, Type = TagType.Int, Offset = 14)]
+		[TagDetails(Tag = 423, Type = TagType.Int, Offset = 14, Required = false)]
 		public int? PriceType { get; set; }
 		
-		[TagDetails(Tag = 44, Type = TagType.Float, Offset = 15)]
+		[TagDetails(Tag = 44, Type = TagType.Float, Offset = 15, Required = false)]
 		public double? Price { get; set; }
 		
-		[TagDetails(Tag = 62, Type = TagType.UtcTimestamp, Offset = 16)]
+		[TagDetails(Tag = 62, Type = TagType.UtcTimestamp, Offset = 16, Required = false)]
 		public DateTime? ValidUntilTime { get; set; }
 		
-		[TagDetails(Tag = 25, Type = TagType.String, Offset = 17)]
+		[TagDetails(Tag = 25, Type = TagType.String, Offset = 17, Required = false)]
 		public string? IOIQltyInd { get; set; }
 		
-		[TagDetails(Tag = 130, Type = TagType.Boolean, Offset = 18)]
+		[TagDetails(Tag = 130, Type = TagType.Boolean, Offset = 18, Required = false)]
 		public bool? IOINaturalFlag { get; set; }
 		
-		[Component(Offset = 19)]
+		[Component(Offset = 19, Required = false)]
 		public IOIQualGrp? IOIQualGrp { get; set; }
 		
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 20)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 20, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 21)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 21, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 22)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 22, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 23)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 23, Required = false)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(Tag = 149, Type = TagType.String, Offset = 24)]
+		[TagDetails(Tag = 149, Type = TagType.String, Offset = 24, Required = false)]
 		public string? URLLink { get; set; }
 		
-		[Component(Offset = 25)]
+		[Component(Offset = 25, Required = false)]
 		public RoutingGrp? RoutingGrp { get; set; }
 		
-		[Component(Offset = 26)]
+		[Component(Offset = 26, Required = false)]
 		public SpreadOrBenchmarkCurveData? SpreadOrBenchmarkCurveData { get; set; }
 		
-		[Component(Offset = 27)]
+		[Component(Offset = 27, Required = false)]
 		public YieldData? YieldData { get; set; }
 		
-		[Component(Offset = 28)]
+		[Component(Offset = 28, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

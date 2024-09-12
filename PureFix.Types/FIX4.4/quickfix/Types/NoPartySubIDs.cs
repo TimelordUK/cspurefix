@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoPartySubIDs
 	{
-		[TagDetails(Tag = 523, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 523, Type = TagType.String, Offset = 0, Required = false)]
 		public string? PartySubID { get; set; }
 		
-		[TagDetails(Tag = 803, Type = TagType.Int, Offset = 1)]
+		[TagDetails(Tag = 803, Type = TagType.Int, Offset = 1, Required = false)]
 		public int? PartySubIDType { get; set; }
 		
 	}

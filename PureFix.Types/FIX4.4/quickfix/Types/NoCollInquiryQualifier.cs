@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoCollInquiryQualifier
 	{
-		[TagDetails(Tag = 896, Type = TagType.Int, Offset = 0)]
+		[TagDetails(Tag = 896, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? CollInquiryQualifier { get; set; }
 		
 	}

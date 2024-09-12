@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoLegSecurityAltID
 	{
-		[TagDetails(Tag = 605, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 605, Type = TagType.String, Offset = 0, Required = false)]
 		public string? LegSecurityAltID { get; set; }
 		
-		[TagDetails(Tag = 606, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 606, Type = TagType.String, Offset = 1, Required = false)]
 		public string? LegSecurityAltIDSource { get; set; }
 		
 	}

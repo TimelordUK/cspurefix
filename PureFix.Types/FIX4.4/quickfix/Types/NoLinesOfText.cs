@@ -9,13 +9,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoLinesOfText
 	{
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 0, Required = true)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 1)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 1, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 2)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 2, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
 	}

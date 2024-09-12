@@ -142,7 +142,7 @@ namespace PureFix.Dictionary.Compiler
             var type = Tags.ToCsType(sf.Definition.TagType);
             const string props = "{ get; set; }";
 
-            _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index})]");
+            _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)})]");
             _builder.WriteLine($"public {type}? {sf.Definition.Name} {props}");
             _builder.WriteLine();
         }
@@ -153,7 +153,7 @@ namespace PureFix.Dictionary.Compiler
             const string props = "{ get; set; }";
             var declared = cf.Name is "StandardHeader" or "StandardTrailer" ? $"override {cf.Name}" : cf.Name;
             
-            _builder.WriteLine($"[Component(Offset = {index})]");
+            _builder.WriteLine($"[Component(Offset = {index}, Required = {MapRequired(cf.Required)})]");
             _builder.WriteLine($"public {declared}? {cf.Name} {props}");
 
             if(cf.Name != "StandardTrailer")
@@ -172,11 +172,16 @@ namespace PureFix.Dictionary.Compiler
 
             var countField = gf.Definition.NoOfField!.Tag;
 
-            _builder.WriteLine($"[Group(NoOfTag = {countField}, Offset = {index})]");
+            _builder.WriteLine($"[Group(NoOfTag = {countField}, Offset = {index}, Required = {MapRequired(gf.Required)})]");
             _builder.WriteLine($"public {gf.Name}[]? {gf.Name} {props}");
             _builder.WriteLine();
             // any dependent group also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, gf.Name));
+        }
+
+        private string MapRequired(bool value)
+        {
+            return value ? "true" : "false";
         }
     }
 }

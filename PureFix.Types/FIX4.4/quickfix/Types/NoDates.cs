@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoDates
 	{
-		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 0)]
+		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 0, Required = false)]
 		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 1)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 1, Required = false)]
 		public DateTime? TransactTime { get; set; }
 		
 	}

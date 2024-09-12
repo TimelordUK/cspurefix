@@ -10,19 +10,19 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("AH", FixVersion.FIX44)]
 	public sealed class RFQRequest : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 644, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 644, Type = TagType.String, Offset = 1, Required = true)]
 		public string? RFQReqID { get; set; }
 		
-		[Component(Offset = 2)]
+		[Component(Offset = 2, Required = true)]
 		public RFQReqGrp? RFQReqGrp { get; set; }
 		
-		[TagDetails(Tag = 263, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 3, Required = false)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[Component(Offset = 4)]
+		[Component(Offset = 4, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

@@ -10,31 +10,31 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("BE", FixVersion.FIX44)]
 	public sealed class UserRequest : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 923, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 923, Type = TagType.String, Offset = 1, Required = true)]
 		public string? UserRequestID { get; set; }
 		
-		[TagDetails(Tag = 924, Type = TagType.Int, Offset = 2)]
+		[TagDetails(Tag = 924, Type = TagType.Int, Offset = 2, Required = true)]
 		public int? UserRequestType { get; set; }
 		
-		[TagDetails(Tag = 553, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 553, Type = TagType.String, Offset = 3, Required = true)]
 		public string? Username { get; set; }
 		
-		[TagDetails(Tag = 554, Type = TagType.String, Offset = 4)]
+		[TagDetails(Tag = 554, Type = TagType.String, Offset = 4, Required = false)]
 		public string? Password { get; set; }
 		
-		[TagDetails(Tag = 925, Type = TagType.String, Offset = 5)]
+		[TagDetails(Tag = 925, Type = TagType.String, Offset = 5, Required = false)]
 		public string? NewPassword { get; set; }
 		
-		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 6)]
+		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 6, Required = false)]
 		public int? RawDataLength { get; set; }
 		
-		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 7)]
+		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 7, Required = false)]
 		public byte[]? RawData { get; set; }
 		
-		[Component(Offset = 8)]
+		[Component(Offset = 8, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

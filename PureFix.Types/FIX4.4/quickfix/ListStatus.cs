@@ -10,46 +10,46 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("N", FixVersion.FIX44)]
 	public sealed class ListStatus : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 66, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 66, Type = TagType.String, Offset = 1, Required = true)]
 		public string? ListID { get; set; }
 		
-		[TagDetails(Tag = 429, Type = TagType.Int, Offset = 2)]
+		[TagDetails(Tag = 429, Type = TagType.Int, Offset = 2, Required = true)]
 		public int? ListStatusType { get; set; }
 		
-		[TagDetails(Tag = 82, Type = TagType.Int, Offset = 3)]
+		[TagDetails(Tag = 82, Type = TagType.Int, Offset = 3, Required = true)]
 		public int? NoRpts { get; set; }
 		
-		[TagDetails(Tag = 431, Type = TagType.Int, Offset = 4)]
+		[TagDetails(Tag = 431, Type = TagType.Int, Offset = 4, Required = true)]
 		public int? ListOrderStatus { get; set; }
 		
-		[TagDetails(Tag = 83, Type = TagType.Int, Offset = 5)]
+		[TagDetails(Tag = 83, Type = TagType.Int, Offset = 5, Required = true)]
 		public int? RptSeq { get; set; }
 		
-		[TagDetails(Tag = 444, Type = TagType.String, Offset = 6)]
+		[TagDetails(Tag = 444, Type = TagType.String, Offset = 6, Required = false)]
 		public string? ListStatusText { get; set; }
 		
-		[TagDetails(Tag = 445, Type = TagType.Length, Offset = 7)]
+		[TagDetails(Tag = 445, Type = TagType.Length, Offset = 7, Required = false)]
 		public int? EncodedListStatusTextLen { get; set; }
 		
-		[TagDetails(Tag = 446, Type = TagType.RawData, Offset = 8)]
+		[TagDetails(Tag = 446, Type = TagType.RawData, Offset = 8, Required = false)]
 		public byte[]? EncodedListStatusText { get; set; }
 		
-		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 9)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 9, Required = false)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(Tag = 68, Type = TagType.Int, Offset = 10)]
+		[TagDetails(Tag = 68, Type = TagType.Int, Offset = 10, Required = true)]
 		public int? TotNoOrders { get; set; }
 		
-		[TagDetails(Tag = 893, Type = TagType.Boolean, Offset = 11)]
+		[TagDetails(Tag = 893, Type = TagType.Boolean, Offset = 11, Required = false)]
 		public bool? LastFragment { get; set; }
 		
-		[Component(Offset = 12)]
+		[Component(Offset = 12, Required = true)]
 		public OrdListStatGrp? OrdListStatGrp { get; set; }
 		
-		[Component(Offset = 13)]
+		[Component(Offset = 13, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

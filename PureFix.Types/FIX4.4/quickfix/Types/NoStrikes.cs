@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoStrikes
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public Instrument? Instrument { get; set; }
 		
 	}

@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class LegOrdGrp
 	{
-		[Group(NoOfTag = 555, Offset = 0)]
+		[Group(NoOfTag = 555, Offset = 0, Required = true)]
 		public NoLegs[]? NoLegs { get; set; }
 		
 	}

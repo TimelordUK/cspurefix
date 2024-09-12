@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class TrdgSesGrp
 	{
-		[Group(NoOfTag = 386, Offset = 0)]
+		[Group(NoOfTag = 386, Offset = 0, Required = false)]
 		public NoTradingSessions[]? NoTradingSessions { get; set; }
 		
 	}

@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoStipulations
 	{
-		[TagDetails(Tag = 233, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 233, Type = TagType.String, Offset = 0, Required = false)]
 		public string? StipulationType { get; set; }
 		
-		[TagDetails(Tag = 234, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 234, Type = TagType.String, Offset = 1, Required = false)]
 		public string? StipulationValue { get; set; }
 		
 	}

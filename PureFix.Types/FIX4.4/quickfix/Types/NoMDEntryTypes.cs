@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoMDEntryTypes
 	{
-		[TagDetails(Tag = 269, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 269, Type = TagType.String, Offset = 0, Required = true)]
 		public string? MDEntryType { get; set; }
 		
 	}

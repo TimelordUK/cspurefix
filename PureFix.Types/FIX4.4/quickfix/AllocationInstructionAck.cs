@@ -10,58 +10,58 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("P", FixVersion.FIX44)]
 	public sealed class AllocationInstructionAck : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 70, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 70, Type = TagType.String, Offset = 1, Required = true)]
 		public string? AllocID { get; set; }
 		
-		[Component(Offset = 2)]
+		[Component(Offset = 2, Required = false)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(Tag = 793, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 793, Type = TagType.String, Offset = 3, Required = false)]
 		public string? SecondaryAllocID { get; set; }
 		
-		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 4)]
+		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 4, Required = false)]
 		public DateTime? TradeDate { get; set; }
 		
-		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 5)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 5, Required = true)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(Tag = 87, Type = TagType.Int, Offset = 6)]
+		[TagDetails(Tag = 87, Type = TagType.Int, Offset = 6, Required = true)]
 		public int? AllocStatus { get; set; }
 		
-		[TagDetails(Tag = 88, Type = TagType.Int, Offset = 7)]
+		[TagDetails(Tag = 88, Type = TagType.Int, Offset = 7, Required = false)]
 		public int? AllocRejCode { get; set; }
 		
-		[TagDetails(Tag = 626, Type = TagType.Int, Offset = 8)]
+		[TagDetails(Tag = 626, Type = TagType.Int, Offset = 8, Required = false)]
 		public int? AllocType { get; set; }
 		
-		[TagDetails(Tag = 808, Type = TagType.Int, Offset = 9)]
+		[TagDetails(Tag = 808, Type = TagType.Int, Offset = 9, Required = false)]
 		public int? AllocIntermedReqType { get; set; }
 		
-		[TagDetails(Tag = 573, Type = TagType.String, Offset = 10)]
+		[TagDetails(Tag = 573, Type = TagType.String, Offset = 10, Required = false)]
 		public string? MatchStatus { get; set; }
 		
-		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 11)]
+		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 11, Required = false)]
 		public int? Product { get; set; }
 		
-		[TagDetails(Tag = 167, Type = TagType.String, Offset = 12)]
+		[TagDetails(Tag = 167, Type = TagType.String, Offset = 12, Required = false)]
 		public string? SecurityType { get; set; }
 		
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 13)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 13, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 14)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 14, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 15)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 15, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component(Offset = 16)]
+		[Component(Offset = 16, Required = false)]
 		public AllocAckGrp? AllocAckGrp { get; set; }
 		
-		[Component(Offset = 17)]
+		[Component(Offset = 17, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

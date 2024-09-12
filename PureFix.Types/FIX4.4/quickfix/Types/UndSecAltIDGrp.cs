@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class UndSecAltIDGrp
 	{
-		[Group(NoOfTag = 457, Offset = 0)]
+		[Group(NoOfTag = 457, Offset = 0, Required = false)]
 		public NoUnderlyingSecurityAltID[]? NoUnderlyingSecurityAltID { get; set; }
 		
 	}

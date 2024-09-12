@@ -10,40 +10,40 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("p", FixVersion.FIX44)]
 	public sealed class RegistrationInstructionsResponse : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 513, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 513, Type = TagType.String, Offset = 1, Required = true)]
 		public string? RegistID { get; set; }
 		
-		[TagDetails(Tag = 514, Type = TagType.String, Offset = 2)]
+		[TagDetails(Tag = 514, Type = TagType.String, Offset = 2, Required = true)]
 		public string? RegistTransType { get; set; }
 		
-		[TagDetails(Tag = 508, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 508, Type = TagType.String, Offset = 3, Required = true)]
 		public string? RegistRefID { get; set; }
 		
-		[TagDetails(Tag = 11, Type = TagType.String, Offset = 4)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 4, Required = false)]
 		public string? ClOrdID { get; set; }
 		
-		[Component(Offset = 5)]
+		[Component(Offset = 5, Required = false)]
 		public Parties? Parties { get; set; }
 		
-		[TagDetails(Tag = 1, Type = TagType.String, Offset = 6)]
+		[TagDetails(Tag = 1, Type = TagType.String, Offset = 6, Required = false)]
 		public string? Account { get; set; }
 		
-		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 7)]
+		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 7, Required = false)]
 		public int? AcctIDSource { get; set; }
 		
-		[TagDetails(Tag = 506, Type = TagType.String, Offset = 8)]
+		[TagDetails(Tag = 506, Type = TagType.String, Offset = 8, Required = true)]
 		public string? RegistStatus { get; set; }
 		
-		[TagDetails(Tag = 507, Type = TagType.Int, Offset = 9)]
+		[TagDetails(Tag = 507, Type = TagType.Int, Offset = 9, Required = false)]
 		public int? RegistRejReasonCode { get; set; }
 		
-		[TagDetails(Tag = 496, Type = TagType.String, Offset = 10)]
+		[TagDetails(Tag = 496, Type = TagType.String, Offset = 10, Required = false)]
 		public string? RegistRejReasonText { get; set; }
 		
-		[Component(Offset = 11)]
+		[Component(Offset = 11, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

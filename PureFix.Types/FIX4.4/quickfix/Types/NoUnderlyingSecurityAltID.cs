@@ -9,10 +9,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoUnderlyingSecurityAltID
 	{
-		[TagDetails(Tag = 458, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 458, Type = TagType.String, Offset = 0, Required = false)]
 		public string? UnderlyingSecurityAltID { get; set; }
 		
-		[TagDetails(Tag = 459, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 459, Type = TagType.String, Offset = 1, Required = false)]
 		public string? UnderlyingSecurityAltIDSource { get; set; }
 		
 	}

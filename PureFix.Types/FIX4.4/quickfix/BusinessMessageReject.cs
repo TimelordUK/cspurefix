@@ -10,31 +10,31 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("j", FixVersion.FIX44)]
 	public sealed class BusinessMessageReject : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 45, Type = TagType.Int, Offset = 1)]
+		[TagDetails(Tag = 45, Type = TagType.Int, Offset = 1, Required = false)]
 		public int? RefSeqNum { get; set; }
 		
-		[TagDetails(Tag = 372, Type = TagType.String, Offset = 2)]
+		[TagDetails(Tag = 372, Type = TagType.String, Offset = 2, Required = true)]
 		public string? RefMsgType { get; set; }
 		
-		[TagDetails(Tag = 379, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 379, Type = TagType.String, Offset = 3, Required = false)]
 		public string? BusinessRejectRefID { get; set; }
 		
-		[TagDetails(Tag = 380, Type = TagType.Int, Offset = 4)]
+		[TagDetails(Tag = 380, Type = TagType.Int, Offset = 4, Required = true)]
 		public int? BusinessRejectReason { get; set; }
 		
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 5)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 5, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 6)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 6, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 7)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 7, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component(Offset = 8)]
+		[Component(Offset = 8, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

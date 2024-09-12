@@ -16,5 +16,7 @@ namespace PureFix.Types
         /// The zero-based position of the field within the message, component or group
         /// </summary>
         public required int Offset{get; init;}
+
+        public required bool Required{get; init;}
     }
 }

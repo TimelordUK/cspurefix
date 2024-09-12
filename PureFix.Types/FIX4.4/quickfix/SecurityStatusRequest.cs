@@ -10,37 +10,37 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("e", FixVersion.FIX44)]
 	public sealed class SecurityStatusRequest : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 324, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 324, Type = TagType.String, Offset = 1, Required = true)]
 		public string? SecurityStatusReqID { get; set; }
 		
-		[Component(Offset = 2)]
+		[Component(Offset = 2, Required = true)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component(Offset = 3)]
+		[Component(Offset = 3, Required = false)]
 		public InstrumentExtension? InstrumentExtension { get; set; }
 		
-		[Component(Offset = 4)]
+		[Component(Offset = 4, Required = false)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component(Offset = 5)]
+		[Component(Offset = 5, Required = false)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[TagDetails(Tag = 15, Type = TagType.String, Offset = 6)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 6, Required = false)]
 		public string? Currency { get; set; }
 		
-		[TagDetails(Tag = 263, Type = TagType.String, Offset = 7)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 7, Required = true)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[TagDetails(Tag = 336, Type = TagType.String, Offset = 8)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 8, Required = false)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(Tag = 625, Type = TagType.String, Offset = 9)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 9, Required = false)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[Component(Offset = 10)]
+		[Component(Offset = 10, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

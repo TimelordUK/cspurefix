@@ -9,16 +9,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoSecurityTypes
 	{
-		[TagDetails(Tag = 167, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 167, Type = TagType.String, Offset = 0, Required = false)]
 		public string? SecurityType { get; set; }
 		
-		[TagDetails(Tag = 762, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 762, Type = TagType.String, Offset = 1, Required = false)]
 		public string? SecuritySubType { get; set; }
 		
-		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 2)]
+		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 2, Required = false)]
 		public int? Product { get; set; }
 		
-		[TagDetails(Tag = 461, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 461, Type = TagType.String, Offset = 3, Required = false)]
 		public string? CFICode { get; set; }
 		
 	}

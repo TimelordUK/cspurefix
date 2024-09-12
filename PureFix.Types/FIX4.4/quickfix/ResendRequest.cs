@@ -10,16 +10,16 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("2", FixVersion.FIX44)]
 	public sealed class ResendRequest : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 7, Type = TagType.Int, Offset = 1)]
+		[TagDetails(Tag = 7, Type = TagType.Int, Offset = 1, Required = true)]
 		public int? BeginSeqNo { get; set; }
 		
-		[TagDetails(Tag = 16, Type = TagType.Int, Offset = 2)]
+		[TagDetails(Tag = 16, Type = TagType.Int, Offset = 2, Required = true)]
 		public int? EndSeqNo { get; set; }
 		
-		[Component(Offset = 3)]
+		[Component(Offset = 3, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

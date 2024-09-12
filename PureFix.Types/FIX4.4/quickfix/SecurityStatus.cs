@@ -10,85 +10,85 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("f", FixVersion.FIX44)]
 	public sealed class SecurityStatus : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 324, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 324, Type = TagType.String, Offset = 1, Required = false)]
 		public string? SecurityStatusReqID { get; set; }
 		
-		[Component(Offset = 2)]
+		[Component(Offset = 2, Required = true)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component(Offset = 3)]
+		[Component(Offset = 3, Required = false)]
 		public InstrumentExtension? InstrumentExtension { get; set; }
 		
-		[Component(Offset = 4)]
+		[Component(Offset = 4, Required = false)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component(Offset = 5)]
+		[Component(Offset = 5, Required = false)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
-		[TagDetails(Tag = 15, Type = TagType.String, Offset = 6)]
+		[TagDetails(Tag = 15, Type = TagType.String, Offset = 6, Required = false)]
 		public string? Currency { get; set; }
 		
-		[TagDetails(Tag = 336, Type = TagType.String, Offset = 7)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 7, Required = false)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(Tag = 625, Type = TagType.String, Offset = 8)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 8, Required = false)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 9)]
+		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 9, Required = false)]
 		public bool? UnsolicitedIndicator { get; set; }
 		
-		[TagDetails(Tag = 326, Type = TagType.Int, Offset = 10)]
+		[TagDetails(Tag = 326, Type = TagType.Int, Offset = 10, Required = false)]
 		public int? SecurityTradingStatus { get; set; }
 		
-		[TagDetails(Tag = 291, Type = TagType.String, Offset = 11)]
+		[TagDetails(Tag = 291, Type = TagType.String, Offset = 11, Required = false)]
 		public string? FinancialStatus { get; set; }
 		
-		[TagDetails(Tag = 292, Type = TagType.String, Offset = 12)]
+		[TagDetails(Tag = 292, Type = TagType.String, Offset = 12, Required = false)]
 		public string? CorporateAction { get; set; }
 		
-		[TagDetails(Tag = 327, Type = TagType.String, Offset = 13)]
+		[TagDetails(Tag = 327, Type = TagType.String, Offset = 13, Required = false)]
 		public string? HaltReasonChar { get; set; }
 		
-		[TagDetails(Tag = 328, Type = TagType.Boolean, Offset = 14)]
+		[TagDetails(Tag = 328, Type = TagType.Boolean, Offset = 14, Required = false)]
 		public bool? InViewOfCommon { get; set; }
 		
-		[TagDetails(Tag = 329, Type = TagType.Boolean, Offset = 15)]
+		[TagDetails(Tag = 329, Type = TagType.Boolean, Offset = 15, Required = false)]
 		public bool? DueToRelated { get; set; }
 		
-		[TagDetails(Tag = 330, Type = TagType.Float, Offset = 16)]
+		[TagDetails(Tag = 330, Type = TagType.Float, Offset = 16, Required = false)]
 		public double? BuyVolume { get; set; }
 		
-		[TagDetails(Tag = 331, Type = TagType.Float, Offset = 17)]
+		[TagDetails(Tag = 331, Type = TagType.Float, Offset = 17, Required = false)]
 		public double? SellVolume { get; set; }
 		
-		[TagDetails(Tag = 332, Type = TagType.Float, Offset = 18)]
+		[TagDetails(Tag = 332, Type = TagType.Float, Offset = 18, Required = false)]
 		public double? HighPx { get; set; }
 		
-		[TagDetails(Tag = 333, Type = TagType.Float, Offset = 19)]
+		[TagDetails(Tag = 333, Type = TagType.Float, Offset = 19, Required = false)]
 		public double? LowPx { get; set; }
 		
-		[TagDetails(Tag = 31, Type = TagType.Float, Offset = 20)]
+		[TagDetails(Tag = 31, Type = TagType.Float, Offset = 20, Required = false)]
 		public double? LastPx { get; set; }
 		
-		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 21)]
+		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 21, Required = false)]
 		public DateTime? TransactTime { get; set; }
 		
-		[TagDetails(Tag = 334, Type = TagType.Int, Offset = 22)]
+		[TagDetails(Tag = 334, Type = TagType.Int, Offset = 22, Required = false)]
 		public int? Adjustment { get; set; }
 		
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 23)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 23, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 24)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 24, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 25)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 25, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component(Offset = 26)]
+		[Component(Offset = 26, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

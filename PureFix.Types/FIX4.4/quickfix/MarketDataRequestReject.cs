@@ -10,28 +10,28 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("Y", FixVersion.FIX44)]
 	public sealed class MarketDataRequestReject : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 262, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 262, Type = TagType.String, Offset = 1, Required = true)]
 		public string? MDReqID { get; set; }
 		
-		[TagDetails(Tag = 281, Type = TagType.String, Offset = 2)]
+		[TagDetails(Tag = 281, Type = TagType.String, Offset = 2, Required = false)]
 		public string? MDReqRejReason { get; set; }
 		
-		[Component(Offset = 3)]
+		[Component(Offset = 3, Required = false)]
 		public MDRjctGrp? MDRjctGrp { get; set; }
 		
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 4)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 4, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 5)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 5, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 6)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 6, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component(Offset = 7)]
+		[Component(Offset = 7, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

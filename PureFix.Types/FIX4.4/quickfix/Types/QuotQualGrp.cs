@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class QuotQualGrp
 	{
-		[Group(NoOfTag = 735, Offset = 0)]
+		[Group(NoOfTag = 735, Offset = 0, Required = false)]
 		public NoQuoteQualifiers[]? NoQuoteQualifiers { get; set; }
 		
 	}

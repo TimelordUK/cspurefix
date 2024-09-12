@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoRelatedSym
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = false)]
 		public Instrument? Instrument { get; set; }
 		
 	}

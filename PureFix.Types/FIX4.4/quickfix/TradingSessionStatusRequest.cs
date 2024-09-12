@@ -10,28 +10,28 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("g", FixVersion.FIX44)]
 	public sealed class TradingSessionStatusRequest : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 335, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 335, Type = TagType.String, Offset = 1, Required = true)]
 		public string? TradSesReqID { get; set; }
 		
-		[TagDetails(Tag = 336, Type = TagType.String, Offset = 2)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 2, Required = false)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(Tag = 625, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 3, Required = false)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(Tag = 338, Type = TagType.Int, Offset = 4)]
+		[TagDetails(Tag = 338, Type = TagType.Int, Offset = 4, Required = false)]
 		public int? TradSesMethod { get; set; }
 		
-		[TagDetails(Tag = 339, Type = TagType.Int, Offset = 5)]
+		[TagDetails(Tag = 339, Type = TagType.Int, Offset = 5, Required = false)]
 		public int? TradSesMode { get; set; }
 		
-		[TagDetails(Tag = 263, Type = TagType.String, Offset = 6)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 6, Required = true)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[Component(Offset = 7)]
+		[Component(Offset = 7, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

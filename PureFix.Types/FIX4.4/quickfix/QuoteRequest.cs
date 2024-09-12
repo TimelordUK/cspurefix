@@ -10,34 +10,34 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("R", FixVersion.FIX44)]
 	public sealed class QuoteRequest : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 131, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 131, Type = TagType.String, Offset = 1, Required = true)]
 		public string? QuoteReqID { get; set; }
 		
-		[TagDetails(Tag = 644, Type = TagType.String, Offset = 2)]
+		[TagDetails(Tag = 644, Type = TagType.String, Offset = 2, Required = false)]
 		public string? RFQReqID { get; set; }
 		
-		[TagDetails(Tag = 11, Type = TagType.String, Offset = 3)]
+		[TagDetails(Tag = 11, Type = TagType.String, Offset = 3, Required = false)]
 		public string? ClOrdID { get; set; }
 		
-		[TagDetails(Tag = 528, Type = TagType.String, Offset = 4)]
+		[TagDetails(Tag = 528, Type = TagType.String, Offset = 4, Required = false)]
 		public string? OrderCapacity { get; set; }
 		
-		[Component(Offset = 5)]
+		[Component(Offset = 5, Required = true)]
 		public QuotReqGrp? QuotReqGrp { get; set; }
 		
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 6)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 6, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 7)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 7, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 8)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 8, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
-		[Component(Offset = 9)]
+		[Component(Offset = 9, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }

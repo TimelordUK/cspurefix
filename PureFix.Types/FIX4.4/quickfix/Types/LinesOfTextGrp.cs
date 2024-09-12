@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class LinesOfTextGrp
 	{
-		[Group(NoOfTag = 33, Offset = 0)]
+		[Group(NoOfTag = 33, Offset = 0, Required = true)]
 		public NoLinesOfText[]? NoLinesOfText { get; set; }
 		
 	}

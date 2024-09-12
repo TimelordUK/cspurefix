@@ -9,16 +9,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoQuoteEntries
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = false)]
 		public Instrument? Instrument { get; set; }
 		
-		[Component(Offset = 1)]
+		[Component(Offset = 1, Required = false)]
 		public FinancingDetails? FinancingDetails { get; set; }
 		
-		[Component(Offset = 2)]
+		[Component(Offset = 2, Required = false)]
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
-		[Component(Offset = 3)]
+		[Component(Offset = 3, Required = false)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
 	}

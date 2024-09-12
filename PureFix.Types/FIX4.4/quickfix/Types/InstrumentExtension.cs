@@ -9,13 +9,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class InstrumentExtension
 	{
-		[TagDetails(Tag = 668, Type = TagType.Int, Offset = 0)]
+		[TagDetails(Tag = 668, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? DeliveryForm { get; set; }
 		
-		[TagDetails(Tag = 869, Type = TagType.Float, Offset = 1)]
+		[TagDetails(Tag = 869, Type = TagType.Float, Offset = 1, Required = false)]
 		public double? PctAtRisk { get; set; }
 		
-		[Component(Offset = 2)]
+		[Component(Offset = 2, Required = false)]
 		public AttrbGrp? AttrbGrp { get; set; }
 		
 	}

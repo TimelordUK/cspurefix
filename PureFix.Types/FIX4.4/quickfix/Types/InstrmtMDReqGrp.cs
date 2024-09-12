@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class InstrmtMDReqGrp
 	{
-		[Group(NoOfTag = 146, Offset = 0)]
+		[Group(NoOfTag = 146, Offset = 0, Required = true)]
 		public NoRelatedSym[]? NoRelatedSym { get; set; }
 		
 	}

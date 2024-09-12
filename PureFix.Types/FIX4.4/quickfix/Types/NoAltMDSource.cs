@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class NoAltMDSource
 	{
-		[TagDetails(Tag = 817, Type = TagType.String, Offset = 0)]
+		[TagDetails(Tag = 817, Type = TagType.String, Offset = 0, Required = false)]
 		public string? AltMDSourceID { get; set; }
 		
 	}

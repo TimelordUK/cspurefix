@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public sealed class InstrmtStrkPxGrp
 	{
-		[Group(NoOfTag = 428, Offset = 0)]
+		[Group(NoOfTag = 428, Offset = 0, Required = true)]
 		public NoStrikes[]? NoStrikes { get; set; }
 		
 	}

@@ -10,46 +10,46 @@ namespace PureFix.Types.FIX44.QuickFix
 	[MessageType("w", FixVersion.FIX44)]
 	public sealed class SecurityTypes : FixMsg
 	{
-		[Component(Offset = 0)]
+		[Component(Offset = 0, Required = true)]
 		public override StandardHeader? StandardHeader { get; set; }
 		
-		[TagDetails(Tag = 320, Type = TagType.String, Offset = 1)]
+		[TagDetails(Tag = 320, Type = TagType.String, Offset = 1, Required = true)]
 		public string? SecurityReqID { get; set; }
 		
-		[TagDetails(Tag = 322, Type = TagType.String, Offset = 2)]
+		[TagDetails(Tag = 322, Type = TagType.String, Offset = 2, Required = true)]
 		public string? SecurityResponseID { get; set; }
 		
-		[TagDetails(Tag = 323, Type = TagType.Int, Offset = 3)]
+		[TagDetails(Tag = 323, Type = TagType.Int, Offset = 3, Required = true)]
 		public int? SecurityResponseType { get; set; }
 		
-		[TagDetails(Tag = 557, Type = TagType.Int, Offset = 4)]
+		[TagDetails(Tag = 557, Type = TagType.Int, Offset = 4, Required = false)]
 		public int? TotNoSecurityTypes { get; set; }
 		
-		[TagDetails(Tag = 893, Type = TagType.Boolean, Offset = 5)]
+		[TagDetails(Tag = 893, Type = TagType.Boolean, Offset = 5, Required = false)]
 		public bool? LastFragment { get; set; }
 		
-		[Component(Offset = 6)]
+		[Component(Offset = 6, Required = false)]
 		public SecTypesGrp? SecTypesGrp { get; set; }
 		
-		[TagDetails(Tag = 58, Type = TagType.String, Offset = 7)]
+		[TagDetails(Tag = 58, Type = TagType.String, Offset = 7, Required = false)]
 		public string? Text { get; set; }
 		
-		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 8)]
+		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 8, Required = false)]
 		public int? EncodedTextLen { get; set; }
 		
-		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 9)]
+		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 9, Required = false)]
 		public byte[]? EncodedText { get; set; }
 		
-		[TagDetails(Tag = 336, Type = TagType.String, Offset = 10)]
+		[TagDetails(Tag = 336, Type = TagType.String, Offset = 10, Required = false)]
 		public string? TradingSessionID { get; set; }
 		
-		[TagDetails(Tag = 625, Type = TagType.String, Offset = 11)]
+		[TagDetails(Tag = 625, Type = TagType.String, Offset = 11, Required = false)]
 		public string? TradingSessionSubID { get; set; }
 		
-		[TagDetails(Tag = 263, Type = TagType.String, Offset = 12)]
+		[TagDetails(Tag = 263, Type = TagType.String, Offset = 12, Required = false)]
 		public string? SubscriptionRequestType { get; set; }
 		
-		[Component(Offset = 13)]
+		[Component(Offset = 13, Required = true)]
 		public override StandardTrailer? StandardTrailer { get; set; }
 	}
 }
