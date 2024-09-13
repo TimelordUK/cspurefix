@@ -15,10 +15,20 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.AllocReportID = view.GetString(755);
 			instance.AllocID = view.GetString(70);
+			if (view.GetView("Parties") is MsgView groupViewParties)
+			{
+				instance.Parties = new Parties();
+				instance.Parties!.Parse(groupViewParties);
+			}
 			instance.Parties = new Parties();
 			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.SecondaryAllocID = view.GetString(793);
@@ -34,8 +44,18 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
+			if (view.GetView("AllocAckGrp") is MsgView groupViewAllocAckGrp)
+			{
+				instance.AllocAckGrp = new AllocAckGrp();
+				instance.AllocAckGrp!.Parse(groupViewAllocAckGrp);
+			}
 			instance.AllocAckGrp = new AllocAckGrp();
 			instance.AllocAckGrp?.Parse(view.GetView("AllocAckGrp"));
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

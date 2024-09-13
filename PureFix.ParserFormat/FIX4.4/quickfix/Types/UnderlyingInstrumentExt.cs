@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.UnderlyingSymbolSfx = view.GetString(312);
 			instance.UnderlyingSecurityID = view.GetString(309);
 			instance.UnderlyingSecurityIDSource = view.GetString(305);
+			if (view.GetView("UndSecAltIDGrp") is MsgView groupViewUndSecAltIDGrp)
+			{
+				instance.UndSecAltIDGrp = new UndSecAltIDGrp();
+				instance.UndSecAltIDGrp!.Parse(groupViewUndSecAltIDGrp);
+			}
 			instance.UndSecAltIDGrp = new UndSecAltIDGrp();
 			instance.UndSecAltIDGrp?.Parse(view.GetView("UndSecAltIDGrp"));
 			instance.UnderlyingProduct = view.GetInt32(462);
@@ -61,6 +66,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.UnderlyingStartValue = view.GetDouble(884);
 			instance.UnderlyingCurrentValue = view.GetDouble(885);
 			instance.UnderlyingEndValue = view.GetDouble(886);
+			if (view.GetView("UnderlyingStipulations") is MsgView groupViewUnderlyingStipulations)
+			{
+				instance.UnderlyingStipulations = new UnderlyingStipulations();
+				instance.UnderlyingStipulations!.Parse(groupViewUnderlyingStipulations);
+			}
 			instance.UnderlyingStipulations = new UnderlyingStipulations();
 			instance.UnderlyingStipulations?.Parse(view.GetView("UnderlyingStipulations"));
 		}

@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.TradeRequestID = view.GetString(568);
@@ -33,18 +38,53 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.SecondaryTrdType = view.GetInt32(855);
 			instance.TradeLinkID = view.GetString(820);
 			instance.TrdMatchID = view.GetString(880);
+			if (view.GetView("Parties") is MsgView groupViewParties)
+			{
+				instance.Parties = new Parties();
+				instance.Parties!.Parse(groupViewParties);
+			}
 			instance.Parties = new Parties();
 			instance.Parties?.Parse(view.GetView("Parties"));
+			if (view.GetView("Instrument") is MsgView groupViewInstrument)
+			{
+				instance.Instrument = new Instrument();
+				instance.Instrument!.Parse(groupViewInstrument);
+			}
 			instance.Instrument = new Instrument();
 			instance.Instrument?.Parse(view.GetView("Instrument"));
+			if (view.GetView("InstrumentExtension") is MsgView groupViewInstrumentExtension)
+			{
+				instance.InstrumentExtension = new InstrumentExtension();
+				instance.InstrumentExtension!.Parse(groupViewInstrumentExtension);
+			}
 			instance.InstrumentExtension = new InstrumentExtension();
 			instance.InstrumentExtension?.Parse(view.GetView("InstrumentExtension"));
+			if (view.GetView("FinancingDetails") is MsgView groupViewFinancingDetails)
+			{
+				instance.FinancingDetails = new FinancingDetails();
+				instance.FinancingDetails!.Parse(groupViewFinancingDetails);
+			}
 			instance.FinancingDetails = new FinancingDetails();
 			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
+			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
+			{
+				instance.UndInstrmtGrp = new UndInstrmtGrp();
+				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
+			}
 			instance.UndInstrmtGrp = new UndInstrmtGrp();
 			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
+			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
+			{
+				instance.InstrmtLegGrp = new InstrmtLegGrp();
+				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
+			}
 			instance.InstrmtLegGrp = new InstrmtLegGrp();
 			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
+			if (view.GetView("TrdCapDtGrp") is MsgView groupViewTrdCapDtGrp)
+			{
+				instance.TrdCapDtGrp = new TrdCapDtGrp();
+				instance.TrdCapDtGrp!.Parse(groupViewTrdCapDtGrp);
+			}
 			instance.TrdCapDtGrp = new TrdCapDtGrp();
 			instance.TrdCapDtGrp?.Parse(view.GetView("TrdCapDtGrp"));
 			instance.ClearingBusinessDate = view.GetDateTime(715);
@@ -60,6 +100,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

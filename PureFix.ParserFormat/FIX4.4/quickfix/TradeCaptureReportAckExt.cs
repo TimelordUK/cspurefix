@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.TradeReportID = view.GetString(571);
@@ -35,9 +40,19 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.TrdMatchID = view.GetString(880);
 			instance.ExecID = view.GetString(17);
 			instance.SecondaryExecID = view.GetString(527);
+			if (view.GetView("Instrument") is MsgView groupViewInstrument)
+			{
+				instance.Instrument = new Instrument();
+				instance.Instrument!.Parse(groupViewInstrument);
+			}
 			instance.Instrument = new Instrument();
 			instance.Instrument?.Parse(view.GetView("Instrument"));
 			instance.TransactTime = view.GetDateTime(60);
+			if (view.GetView("TrdRegTimestamps") is MsgView groupViewTrdRegTimestamps)
+			{
+				instance.TrdRegTimestamps = new TrdRegTimestamps();
+				instance.TrdRegTimestamps!.Parse(groupViewTrdRegTimestamps);
+			}
 			instance.TrdRegTimestamps = new TrdRegTimestamps();
 			instance.TrdRegTimestamps?.Parse(view.GetView("TrdRegTimestamps"));
 			instance.ResponseTransportType = view.GetInt32(725);
@@ -45,6 +60,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
+			if (view.GetView("TrdInstrmtLegGrp") is MsgView groupViewTrdInstrmtLegGrp)
+			{
+				instance.TrdInstrmtLegGrp = new TrdInstrmtLegGrp();
+				instance.TrdInstrmtLegGrp!.Parse(groupViewTrdInstrmtLegGrp);
+			}
 			instance.TrdInstrmtLegGrp = new TrdInstrmtLegGrp();
 			instance.TrdInstrmtLegGrp?.Parse(view.GetView("TrdInstrmtLegGrp"));
 			instance.ClearingFeeIndicator = view.GetString(635);
@@ -56,8 +76,18 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.AccountType = view.GetInt32(581);
 			instance.PositionEffect = view.GetString(77);
 			instance.PreallocMethod = view.GetString(591);
+			if (view.GetView("TrdAllocGrp") is MsgView groupViewTrdAllocGrp)
+			{
+				instance.TrdAllocGrp = new TrdAllocGrp();
+				instance.TrdAllocGrp!.Parse(groupViewTrdAllocGrp);
+			}
 			instance.TrdAllocGrp = new TrdAllocGrp();
 			instance.TrdAllocGrp?.Parse(view.GetView("TrdAllocGrp"));
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

@@ -14,6 +14,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		{
 			if (view is null) return;
 			
+			if (view.GetView("CommissionData") is MsgView groupViewCommissionData)
+			{
+				instance.CommissionData = new CommissionData();
+				instance.CommissionData!.Parse(groupViewCommissionData);
+			}
 			instance.CommissionData = new CommissionData();
 			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.ListID = view.GetString(66);

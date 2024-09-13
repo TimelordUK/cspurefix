@@ -16,6 +16,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			
 			instance.DeliveryForm = view.GetInt32(668);
 			instance.PctAtRisk = view.GetDouble(869);
+			if (view.GetView("AttrbGrp") is MsgView groupViewAttrbGrp)
+			{
+				instance.AttrbGrp = new AttrbGrp();
+				instance.AttrbGrp!.Parse(groupViewAttrbGrp);
+			}
 			instance.AttrbGrp = new AttrbGrp();
 			instance.AttrbGrp?.Parse(view.GetView("AttrbGrp"));
 		}

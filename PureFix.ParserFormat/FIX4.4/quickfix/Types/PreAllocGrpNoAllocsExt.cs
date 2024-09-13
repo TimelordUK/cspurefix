@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.AllocAcctIDSource = view.GetInt32(661);
 			instance.AllocSettlCurrency = view.GetString(736);
 			instance.IndividualAllocID = view.GetString(467);
+			if (view.GetView("NestedParties") is MsgView groupViewNestedParties)
+			{
+				instance.NestedParties = new NestedParties();
+				instance.NestedParties!.Parse(groupViewNestedParties);
+			}
 			instance.NestedParties = new NestedParties();
 			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 			instance.AllocQty = view.GetDouble(80);

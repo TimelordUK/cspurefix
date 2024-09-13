@@ -40,6 +40,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.XmlData = view.GetByteArray(213);
 			instance.MessageEncoding = view.GetString(347);
 			instance.LastMsgSeqNumProcessed = view.GetInt32(369);
+			if (view.GetView("Hop") is MsgView groupViewHop)
+			{
+				instance.Hop = new Hop();
+				instance.Hop!.Parse(groupViewHop);
+			}
 			instance.Hop = new Hop();
 			instance.Hop?.Parse(view.GetView("Hop"));
 		}

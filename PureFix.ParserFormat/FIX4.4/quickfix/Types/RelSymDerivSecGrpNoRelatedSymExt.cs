@@ -14,12 +14,27 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		{
 			if (view is null) return;
 			
+			if (view.GetView("Instrument") is MsgView groupViewInstrument)
+			{
+				instance.Instrument = new Instrument();
+				instance.Instrument!.Parse(groupViewInstrument);
+			}
 			instance.Instrument = new Instrument();
 			instance.Instrument?.Parse(view.GetView("Instrument"));
 			instance.Currency = view.GetString(15);
 			instance.ExpirationCycle = view.GetInt32(827);
+			if (view.GetView("InstrumentExtension") is MsgView groupViewInstrumentExtension)
+			{
+				instance.InstrumentExtension = new InstrumentExtension();
+				instance.InstrumentExtension!.Parse(groupViewInstrumentExtension);
+			}
 			instance.InstrumentExtension = new InstrumentExtension();
 			instance.InstrumentExtension?.Parse(view.GetView("InstrumentExtension"));
+			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
+			{
+				instance.InstrmtLegGrp = new InstrmtLegGrp();
+				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
+			}
 			instance.InstrmtLegGrp = new InstrmtLegGrp();
 			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			instance.TradingSessionID = view.GetString(336);

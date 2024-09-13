@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.LongQty = view.GetDouble(704);
 			instance.ShortQty = view.GetDouble(705);
 			instance.PosQtyStatus = view.GetInt32(706);
+			if (view.GetView("NestedParties") is MsgView groupViewNestedParties)
+			{
+				instance.NestedParties = new NestedParties();
+				instance.NestedParties!.Parse(groupViewNestedParties);
+			}
 			instance.NestedParties = new NestedParties();
 			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 		}

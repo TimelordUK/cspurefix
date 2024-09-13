@@ -15,15 +15,35 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.AdvId = view.GetString(2);
 			instance.AdvTransType = view.GetString(5);
 			instance.AdvRefID = view.GetString(3);
+			if (view.GetView("Instrument") is MsgView groupViewInstrument)
+			{
+				instance.Instrument = new Instrument();
+				instance.Instrument!.Parse(groupViewInstrument);
+			}
 			instance.Instrument = new Instrument();
 			instance.Instrument?.Parse(view.GetView("Instrument"));
+			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
+			{
+				instance.InstrmtLegGrp = new InstrmtLegGrp();
+				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
+			}
 			instance.InstrmtLegGrp = new InstrmtLegGrp();
 			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
+			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
+			{
+				instance.UndInstrmtGrp = new UndInstrmtGrp();
+				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
+			}
 			instance.UndInstrmtGrp = new UndInstrmtGrp();
 			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.AdvSide = view.GetString(4);
@@ -40,6 +60,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.LastMkt = view.GetString(30);
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

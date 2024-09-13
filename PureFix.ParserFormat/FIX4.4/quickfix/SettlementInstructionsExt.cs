@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.SettlInstMsgID = view.GetString(777);
@@ -26,8 +31,18 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.EncodedText = view.GetByteArray(355);
 			instance.ClOrdID = view.GetString(11);
 			instance.TransactTime = view.GetDateTime(60);
+			if (view.GetView("SettlInstGrp") is MsgView groupViewSettlInstGrp)
+			{
+				instance.SettlInstGrp = new SettlInstGrp();
+				instance.SettlInstGrp!.Parse(groupViewSettlInstGrp);
+			}
 			instance.SettlInstGrp = new SettlInstGrp();
 			instance.SettlInstGrp?.Parse(view.GetView("SettlInstGrp"));
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

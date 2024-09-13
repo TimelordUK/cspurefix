@@ -20,10 +20,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.SecondaryClOrdID = view.GetString(526);
 			instance.ClOrdLinkID = view.GetString(583);
 			instance.OrigOrdModTime = view.GetDateTime(586);
+			if (view.GetView("Parties") is MsgView groupViewParties)
+			{
+				instance.Parties = new Parties();
+				instance.Parties!.Parse(groupViewParties);
+			}
 			instance.Parties = new Parties();
 			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.TradeOriginationDate = view.GetDateTime(229);
 			instance.TradeDate = view.GetDateTime(75);
+			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
+			{
+				instance.OrderQtyData = new OrderQtyData();
+				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
+			}
 			instance.OrderQtyData = new OrderQtyData();
 			instance.OrderQtyData?.Parse(view.GetView("OrderQtyData"));
 			instance.ComplianceID = view.GetString(376);

@@ -198,6 +198,14 @@ namespace PureFix.Dictionary.Compiler
         {
             if (cf.Definition == null) return;
             var extended = _currentCompilerType?.GetExtended(cf) ?? cf.Name;
+
+            var variableName = $"groupView{cf.Name}";
+            using(_builder.BeginBlock($"if (view.GetView(\"{cf.Name}\") is MsgView {variableName})"))
+            {
+                _builder.WriteLine($"instance.{cf.Name} = new {extended}();");
+                _builder.WriteLine($"instance.{cf.Name}!.Parse({variableName});");
+            }
+
             _builder.WriteLine($"instance.{cf.Name} = new {extended}();");
             _builder.WriteLine($"instance.{cf.Name}?.Parse(view.GetView(\"{cf.Name}\"));");
             Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, extended));

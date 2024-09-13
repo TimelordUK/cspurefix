@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.MDReqID = view.GetString(262);
@@ -25,14 +30,34 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.OpenCloseSettlFlag = view.GetString(286);
 			instance.Scope = view.GetString(546);
 			instance.MDImplicitDelete = view.GetBool(547);
+			if (view.GetView("MDReqGrp") is MsgView groupViewMDReqGrp)
+			{
+				instance.MDReqGrp = new MDReqGrp();
+				instance.MDReqGrp!.Parse(groupViewMDReqGrp);
+			}
 			instance.MDReqGrp = new MDReqGrp();
 			instance.MDReqGrp?.Parse(view.GetView("MDReqGrp"));
+			if (view.GetView("InstrmtMDReqGrp") is MsgView groupViewInstrmtMDReqGrp)
+			{
+				instance.InstrmtMDReqGrp = new InstrmtMDReqGrp();
+				instance.InstrmtMDReqGrp!.Parse(groupViewInstrmtMDReqGrp);
+			}
 			instance.InstrmtMDReqGrp = new InstrmtMDReqGrp();
 			instance.InstrmtMDReqGrp?.Parse(view.GetView("InstrmtMDReqGrp"));
+			if (view.GetView("TrdgSesGrp") is MsgView groupViewTrdgSesGrp)
+			{
+				instance.TrdgSesGrp = new TrdgSesGrp();
+				instance.TrdgSesGrp!.Parse(groupViewTrdgSesGrp);
+			}
 			instance.TrdgSesGrp = new TrdgSesGrp();
 			instance.TrdgSesGrp?.Parse(view.GetView("TrdgSesGrp"));
 			instance.ApplQueueAction = view.GetInt32(815);
 			instance.ApplQueueMax = view.GetInt32(812);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

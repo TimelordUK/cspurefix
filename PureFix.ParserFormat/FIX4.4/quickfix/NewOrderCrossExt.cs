@@ -15,17 +15,42 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.CrossID = view.GetString(548);
 			instance.CrossType = view.GetInt32(549);
 			instance.CrossPrioritization = view.GetInt32(550);
+			if (view.GetView("SideCrossOrdModGrp") is MsgView groupViewSideCrossOrdModGrp)
+			{
+				instance.SideCrossOrdModGrp = new SideCrossOrdModGrp();
+				instance.SideCrossOrdModGrp!.Parse(groupViewSideCrossOrdModGrp);
+			}
 			instance.SideCrossOrdModGrp = new SideCrossOrdModGrp();
 			instance.SideCrossOrdModGrp?.Parse(view.GetView("SideCrossOrdModGrp"));
+			if (view.GetView("Instrument") is MsgView groupViewInstrument)
+			{
+				instance.Instrument = new Instrument();
+				instance.Instrument!.Parse(groupViewInstrument);
+			}
 			instance.Instrument = new Instrument();
 			instance.Instrument?.Parse(view.GetView("Instrument"));
+			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
+			{
+				instance.UndInstrmtGrp = new UndInstrmtGrp();
+				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
+			}
 			instance.UndInstrmtGrp = new UndInstrmtGrp();
 			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
+			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
+			{
+				instance.InstrmtLegGrp = new InstrmtLegGrp();
+				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
+			}
 			instance.InstrmtLegGrp = new InstrmtLegGrp();
 			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			instance.SettlType = view.GetString(63);
@@ -35,20 +60,40 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.MinQty = view.GetDouble(110);
 			instance.MaxFloor = view.GetDouble(111);
 			instance.ExDestination = view.GetString(100);
+			if (view.GetView("TrdgSesGrp") is MsgView groupViewTrdgSesGrp)
+			{
+				instance.TrdgSesGrp = new TrdgSesGrp();
+				instance.TrdgSesGrp!.Parse(groupViewTrdgSesGrp);
+			}
 			instance.TrdgSesGrp = new TrdgSesGrp();
 			instance.TrdgSesGrp?.Parse(view.GetView("TrdgSesGrp"));
 			instance.ProcessCode = view.GetString(81);
 			instance.PrevClosePx = view.GetDouble(140);
 			instance.LocateReqd = view.GetBool(114);
 			instance.TransactTime = view.GetDateTime(60);
+			if (view.GetView("Stipulations") is MsgView groupViewStipulations)
+			{
+				instance.Stipulations = new Stipulations();
+				instance.Stipulations!.Parse(groupViewStipulations);
+			}
 			instance.Stipulations = new Stipulations();
 			instance.Stipulations?.Parse(view.GetView("Stipulations"));
 			instance.OrdType = view.GetString(40);
 			instance.PriceType = view.GetInt32(423);
 			instance.Price = view.GetDouble(44);
 			instance.StopPx = view.GetDouble(99);
+			if (view.GetView("SpreadOrBenchmarkCurveData") is MsgView groupViewSpreadOrBenchmarkCurveData)
+			{
+				instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
+				instance.SpreadOrBenchmarkCurveData!.Parse(groupViewSpreadOrBenchmarkCurveData);
+			}
 			instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
 			instance.SpreadOrBenchmarkCurveData?.Parse(view.GetView("SpreadOrBenchmarkCurveData"));
+			if (view.GetView("YieldData") is MsgView groupViewYieldData)
+			{
+				instance.YieldData = new YieldData();
+				instance.YieldData!.Parse(groupViewYieldData);
+			}
 			instance.YieldData = new YieldData();
 			instance.YieldData?.Parse(view.GetView("YieldData"));
 			instance.Currency = view.GetString(15);
@@ -61,8 +106,18 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.ExpireTime = view.GetDateTime(126);
 			instance.GTBookingInst = view.GetInt32(427);
 			instance.MaxShow = view.GetDouble(210);
+			if (view.GetView("PegInstructions") is MsgView groupViewPegInstructions)
+			{
+				instance.PegInstructions = new PegInstructions();
+				instance.PegInstructions!.Parse(groupViewPegInstructions);
+			}
 			instance.PegInstructions = new PegInstructions();
 			instance.PegInstructions?.Parse(view.GetView("PegInstructions"));
+			if (view.GetView("DiscretionInstructions") is MsgView groupViewDiscretionInstructions)
+			{
+				instance.DiscretionInstructions = new DiscretionInstructions();
+				instance.DiscretionInstructions!.Parse(groupViewDiscretionInstructions);
+			}
 			instance.DiscretionInstructions = new DiscretionInstructions();
 			instance.DiscretionInstructions?.Parse(view.GetView("DiscretionInstructions"));
 			instance.TargetStrategy = view.GetInt32(847);
@@ -72,6 +127,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.MoneyLaunderingStatus = view.GetString(481);
 			instance.RegistID = view.GetString(513);
 			instance.Designation = view.GetString(494);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

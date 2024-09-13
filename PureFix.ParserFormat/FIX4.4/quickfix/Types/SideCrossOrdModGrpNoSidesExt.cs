@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.ClOrdID = view.GetString(11);
 			instance.SecondaryClOrdID = view.GetString(526);
 			instance.ClOrdLinkID = view.GetString(583);
+			if (view.GetView("Parties") is MsgView groupViewParties)
+			{
+				instance.Parties = new Parties();
+				instance.Parties!.Parse(groupViewParties);
+			}
 			instance.Parties = new Parties();
 			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.TradeOriginationDate = view.GetDateTime(229);
@@ -29,11 +34,26 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.BookingUnit = view.GetString(590);
 			instance.PreallocMethod = view.GetString(591);
 			instance.AllocID = view.GetString(70);
+			if (view.GetView("PreAllocGrp") is MsgView groupViewPreAllocGrp)
+			{
+				instance.PreAllocGrp = new PreAllocGrp();
+				instance.PreAllocGrp!.Parse(groupViewPreAllocGrp);
+			}
 			instance.PreAllocGrp = new PreAllocGrp();
 			instance.PreAllocGrp?.Parse(view.GetView("PreAllocGrp"));
 			instance.QtyType = view.GetInt32(854);
+			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
+			{
+				instance.OrderQtyData = new OrderQtyData();
+				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
+			}
 			instance.OrderQtyData = new OrderQtyData();
 			instance.OrderQtyData?.Parse(view.GetView("OrderQtyData"));
+			if (view.GetView("CommissionData") is MsgView groupViewCommissionData)
+			{
+				instance.CommissionData = new CommissionData();
+				instance.CommissionData!.Parse(groupViewCommissionData);
+			}
 			instance.CommissionData = new CommissionData();
 			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.OrderCapacity = view.GetString(528);

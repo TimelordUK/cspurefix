@@ -17,6 +17,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.PartyID = view.GetString(448);
 			instance.PartyIDSource = view.GetString(447);
 			instance.PartyRole = view.GetInt32(452);
+			if (view.GetView("PtysSubGrp") is MsgView groupViewPtysSubGrp)
+			{
+				instance.PtysSubGrp = new PtysSubGrp();
+				instance.PtysSubGrp!.Parse(groupViewPtysSubGrp);
+			}
 			instance.PtysSubGrp = new PtysSubGrp();
 			instance.PtysSubGrp?.Parse(view.GetView("PtysSubGrp"));
 		}

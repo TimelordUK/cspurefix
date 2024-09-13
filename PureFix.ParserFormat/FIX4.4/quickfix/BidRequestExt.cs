@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.BidID = view.GetString(390);
@@ -27,8 +32,18 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Currency = view.GetString(15);
 			instance.SideValue1 = view.GetDouble(396);
 			instance.SideValue2 = view.GetDouble(397);
+			if (view.GetView("BidDescReqGrp") is MsgView groupViewBidDescReqGrp)
+			{
+				instance.BidDescReqGrp = new BidDescReqGrp();
+				instance.BidDescReqGrp!.Parse(groupViewBidDescReqGrp);
+			}
 			instance.BidDescReqGrp = new BidDescReqGrp();
 			instance.BidDescReqGrp?.Parse(view.GetView("BidDescReqGrp"));
+			if (view.GetView("BidCompReqGrp") is MsgView groupViewBidCompReqGrp)
+			{
+				instance.BidCompReqGrp = new BidCompReqGrp();
+				instance.BidCompReqGrp!.Parse(groupViewBidCompReqGrp);
+			}
 			instance.BidCompReqGrp = new BidCompReqGrp();
 			instance.BidCompReqGrp?.Parse(view.GetView("BidCompReqGrp"));
 			instance.LiquidityIndType = view.GetInt32(409);
@@ -48,6 +63,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

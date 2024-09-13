@@ -14,6 +14,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		{
 			if (view is null) return;
 			
+			if (view.GetView("InstrumentLeg") is MsgView groupViewInstrumentLeg)
+			{
+				instance.InstrumentLeg = new InstrumentLeg();
+				instance.InstrumentLeg!.Parse(groupViewInstrumentLeg);
+			}
 			instance.InstrumentLeg = new InstrumentLeg();
 			instance.InstrumentLeg?.Parse(view.GetView("InstrumentLeg"));
 		}

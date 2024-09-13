@@ -20,6 +20,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.ClOrdID = view.GetString(11);
 			instance.SecondaryClOrdID = view.GetString(526);
 			instance.ListID = view.GetString(66);
+			if (view.GetView("Parties") is MsgView groupViewParties)
+			{
+				instance.Parties = new Parties();
+				instance.Parties!.Parse(groupViewParties);
+			}
 			instance.Parties = new Parties();
 			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Account = view.GetString(1);
@@ -27,6 +32,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.AccountType = view.GetInt32(581);
 			instance.ProcessCode = view.GetString(81);
 			instance.OddLot = view.GetBool(575);
+			if (view.GetView("ClrInstGrp") is MsgView groupViewClrInstGrp)
+			{
+				instance.ClrInstGrp = new ClrInstGrp();
+				instance.ClrInstGrp!.Parse(groupViewClrInstGrp);
+			}
 			instance.ClrInstGrp = new ClrInstGrp();
 			instance.ClrInstGrp?.Parse(view.GetView("ClrInstGrp"));
 			instance.TradeInputSource = view.GetString(578);
@@ -44,6 +54,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
 			instance.TimeBracket = view.GetString(943);
+			if (view.GetView("CommissionData") is MsgView groupViewCommissionData)
+			{
+				instance.CommissionData = new CommissionData();
+				instance.CommissionData!.Parse(groupViewCommissionData);
+			}
 			instance.CommissionData = new CommissionData();
 			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.GrossTradeAmt = view.GetDouble(381);
@@ -67,16 +82,36 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
 			instance.SideMultiLegReportingType = view.GetInt32(752);
+			if (view.GetView("ContAmtGrp") is MsgView groupViewContAmtGrp)
+			{
+				instance.ContAmtGrp = new ContAmtGrp();
+				instance.ContAmtGrp!.Parse(groupViewContAmtGrp);
+			}
 			instance.ContAmtGrp = new ContAmtGrp();
 			instance.ContAmtGrp?.Parse(view.GetView("ContAmtGrp"));
+			if (view.GetView("Stipulations") is MsgView groupViewStipulations)
+			{
+				instance.Stipulations = new Stipulations();
+				instance.Stipulations!.Parse(groupViewStipulations);
+			}
 			instance.Stipulations = new Stipulations();
 			instance.Stipulations?.Parse(view.GetView("Stipulations"));
+			if (view.GetView("MiscFeesGrp") is MsgView groupViewMiscFeesGrp)
+			{
+				instance.MiscFeesGrp = new MiscFeesGrp();
+				instance.MiscFeesGrp!.Parse(groupViewMiscFeesGrp);
+			}
 			instance.MiscFeesGrp = new MiscFeesGrp();
 			instance.MiscFeesGrp?.Parse(view.GetView("MiscFeesGrp"));
 			instance.ExchangeRule = view.GetString(825);
 			instance.TradeAllocIndicator = view.GetInt32(826);
 			instance.PreallocMethod = view.GetString(591);
 			instance.AllocID = view.GetString(70);
+			if (view.GetView("TrdAllocGrp") is MsgView groupViewTrdAllocGrp)
+			{
+				instance.TrdAllocGrp = new TrdAllocGrp();
+				instance.TrdAllocGrp!.Parse(groupViewTrdAllocGrp);
+			}
 			instance.TrdAllocGrp = new TrdAllocGrp();
 			instance.TrdAllocGrp?.Parse(view.GetView("TrdAllocGrp"));
 		}

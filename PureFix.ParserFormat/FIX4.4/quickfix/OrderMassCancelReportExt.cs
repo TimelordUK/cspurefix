@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.ClOrdID = view.GetString(11);
@@ -25,12 +30,27 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.MassCancelResponse = view.GetString(531);
 			instance.MassCancelRejectReason = view.GetString(532);
 			instance.TotalAffectedOrders = view.GetInt32(533);
+			if (view.GetView("AffectedOrdGrp") is MsgView groupViewAffectedOrdGrp)
+			{
+				instance.AffectedOrdGrp = new AffectedOrdGrp();
+				instance.AffectedOrdGrp!.Parse(groupViewAffectedOrdGrp);
+			}
 			instance.AffectedOrdGrp = new AffectedOrdGrp();
 			instance.AffectedOrdGrp?.Parse(view.GetView("AffectedOrdGrp"));
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
+			if (view.GetView("Instrument") is MsgView groupViewInstrument)
+			{
+				instance.Instrument = new Instrument();
+				instance.Instrument!.Parse(groupViewInstrument);
+			}
 			instance.Instrument = new Instrument();
 			instance.Instrument?.Parse(view.GetView("Instrument"));
+			if (view.GetView("UnderlyingInstrument") is MsgView groupViewUnderlyingInstrument)
+			{
+				instance.UnderlyingInstrument = new UnderlyingInstrument();
+				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
+			}
 			instance.UnderlyingInstrument = new UnderlyingInstrument();
 			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.Side = view.GetString(54);
@@ -38,6 +58,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

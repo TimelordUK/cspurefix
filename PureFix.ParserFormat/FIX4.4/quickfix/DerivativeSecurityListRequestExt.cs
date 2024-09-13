@@ -15,10 +15,20 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.SecurityReqID = view.GetString(320);
 			instance.SecurityListRequestType = view.GetInt32(559);
+			if (view.GetView("UnderlyingInstrument") is MsgView groupViewUnderlyingInstrument)
+			{
+				instance.UnderlyingInstrument = new UnderlyingInstrument();
+				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
+			}
 			instance.UnderlyingInstrument = new UnderlyingInstrument();
 			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.SecuritySubType = view.GetString(762);
@@ -29,6 +39,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
 			instance.SubscriptionRequestType = view.GetString(263);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

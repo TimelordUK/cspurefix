@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.SymbolSfx = view.GetString(65);
 			instance.SecurityID = view.GetString(48);
 			instance.SecurityIDSource = view.GetString(22);
+			if (view.GetView("SecAltIDGrp") is MsgView groupViewSecAltIDGrp)
+			{
+				instance.SecAltIDGrp = new SecAltIDGrp();
+				instance.SecAltIDGrp!.Parse(groupViewSecAltIDGrp);
+			}
 			instance.SecAltIDGrp = new SecAltIDGrp();
 			instance.SecAltIDGrp?.Parse(view.GetView("SecAltIDGrp"));
 			instance.Product = view.GetInt32(460);
@@ -55,6 +60,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.ContractSettlMonth = view.GetString(667);
 			instance.CPProgram = view.GetInt32(875);
 			instance.CPRegType = view.GetString(876);
+			if (view.GetView("EvntGrp") is MsgView groupViewEvntGrp)
+			{
+				instance.EvntGrp = new EvntGrp();
+				instance.EvntGrp!.Parse(groupViewEvntGrp);
+			}
 			instance.EvntGrp = new EvntGrp();
 			instance.EvntGrp?.Parse(view.GetView("EvntGrp"));
 			instance.DatedDate = view.GetDateTime(873);

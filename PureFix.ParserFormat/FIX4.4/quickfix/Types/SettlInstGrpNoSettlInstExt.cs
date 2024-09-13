@@ -17,6 +17,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.SettlInstID = view.GetString(162);
 			instance.SettlInstTransType = view.GetString(163);
 			instance.SettlInstRefID = view.GetString(214);
+			if (view.GetView("Parties") is MsgView groupViewParties)
+			{
+				instance.Parties = new Parties();
+				instance.Parties!.Parse(groupViewParties);
+			}
 			instance.Parties = new Parties();
 			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Side = view.GetString(54);
@@ -26,6 +31,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.EffectiveTime = view.GetDateTime(168);
 			instance.ExpireTime = view.GetDateTime(126);
 			instance.LastUpdateTime = view.GetDateTime(779);
+			if (view.GetView("SettlInstructionsData") is MsgView groupViewSettlInstructionsData)
+			{
+				instance.SettlInstructionsData = new SettlInstructionsData();
+				instance.SettlInstructionsData!.Parse(groupViewSettlInstructionsData);
+			}
 			instance.SettlInstructionsData = new SettlInstructionsData();
 			instance.SettlInstructionsData?.Parse(view.GetView("SettlInstructionsData"));
 			instance.PaymentMethod = view.GetInt32(492);

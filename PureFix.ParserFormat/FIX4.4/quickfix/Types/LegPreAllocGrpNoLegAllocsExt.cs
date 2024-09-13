@@ -16,6 +16,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			
 			instance.LegAllocAccount = view.GetString(671);
 			instance.LegIndividualAllocID = view.GetString(672);
+			if (view.GetView("NestedParties2") is MsgView groupViewNestedParties2)
+			{
+				instance.NestedParties2 = new NestedParties2();
+				instance.NestedParties2!.Parse(groupViewNestedParties2);
+			}
 			instance.NestedParties2 = new NestedParties2();
 			instance.NestedParties2?.Parse(view.GetView("NestedParties2"));
 			instance.LegAllocQty = view.GetDouble(673);

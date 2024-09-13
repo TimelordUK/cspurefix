@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.SecurityReqID = view.GetString(320);
@@ -22,6 +27,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.SecurityResponseType = view.GetInt32(323);
 			instance.TotNoSecurityTypes = view.GetInt32(557);
 			instance.LastFragment = view.GetBool(893);
+			if (view.GetView("SecTypesGrp") is MsgView groupViewSecTypesGrp)
+			{
+				instance.SecTypesGrp = new SecTypesGrp();
+				instance.SecTypesGrp!.Parse(groupViewSecTypesGrp);
+			}
 			instance.SecTypesGrp = new SecTypesGrp();
 			instance.SecTypesGrp?.Parse(view.GetView("SecTypesGrp"));
 			instance.Text = view.GetString(58);
@@ -30,6 +40,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
 			instance.SubscriptionRequestType = view.GetString(263);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

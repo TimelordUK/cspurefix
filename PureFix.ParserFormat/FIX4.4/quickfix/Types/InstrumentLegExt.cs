@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.LegSymbolSfx = view.GetString(601);
 			instance.LegSecurityID = view.GetString(602);
 			instance.LegSecurityIDSource = view.GetString(603);
+			if (view.GetView("LegSecAltIDGrp") is MsgView groupViewLegSecAltIDGrp)
+			{
+				instance.LegSecAltIDGrp = new LegSecAltIDGrp();
+				instance.LegSecAltIDGrp!.Parse(groupViewLegSecAltIDGrp);
+			}
 			instance.LegSecAltIDGrp = new LegSecAltIDGrp();
 			instance.LegSecAltIDGrp?.Parse(view.GetView("LegSecAltIDGrp"));
 			instance.LegProduct = view.GetInt32(607);

@@ -15,12 +15,27 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.NetworkRequestType = view.GetInt32(935);
 			instance.NetworkRequestID = view.GetString(933);
+			if (view.GetView("CompIDReqGrp") is MsgView groupViewCompIDReqGrp)
+			{
+				instance.CompIDReqGrp = new CompIDReqGrp();
+				instance.CompIDReqGrp!.Parse(groupViewCompIDReqGrp);
+			}
 			instance.CompIDReqGrp = new CompIDReqGrp();
 			instance.CompIDReqGrp?.Parse(view.GetView("CompIDReqGrp"));
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}

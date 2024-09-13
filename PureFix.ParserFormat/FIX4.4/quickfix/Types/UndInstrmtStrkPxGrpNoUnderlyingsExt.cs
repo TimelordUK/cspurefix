@@ -14,6 +14,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		{
 			if (view is null) return;
 			
+			if (view.GetView("UnderlyingInstrument") is MsgView groupViewUnderlyingInstrument)
+			{
+				instance.UnderlyingInstrument = new UnderlyingInstrument();
+				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
+			}
 			instance.UnderlyingInstrument = new UnderlyingInstrument();
 			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.PrevClosePx = view.GetDouble(140);

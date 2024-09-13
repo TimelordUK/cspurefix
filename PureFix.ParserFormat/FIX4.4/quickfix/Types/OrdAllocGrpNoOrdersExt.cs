@@ -19,6 +19,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.SecondaryOrderID = view.GetString(198);
 			instance.SecondaryClOrdID = view.GetString(526);
 			instance.ListID = view.GetString(66);
+			if (view.GetView("NestedParties2") is MsgView groupViewNestedParties2)
+			{
+				instance.NestedParties2 = new NestedParties2();
+				instance.NestedParties2!.Parse(groupViewNestedParties2);
+			}
 			instance.NestedParties2 = new NestedParties2();
 			instance.NestedParties2?.Parse(view.GetView("NestedParties2"));
 			instance.OrderQty = view.GetDouble(38);

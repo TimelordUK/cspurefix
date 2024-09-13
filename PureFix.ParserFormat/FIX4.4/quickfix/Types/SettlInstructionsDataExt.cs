@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.StandInstDbType = view.GetInt32(169);
 			instance.StandInstDbName = view.GetString(170);
 			instance.StandInstDbID = view.GetString(171);
+			if (view.GetView("DlvyInstGrp") is MsgView groupViewDlvyInstGrp)
+			{
+				instance.DlvyInstGrp = new DlvyInstGrp();
+				instance.DlvyInstGrp!.Parse(groupViewDlvyInstGrp);
+			}
 			instance.DlvyInstGrp = new DlvyInstGrp();
 			instance.DlvyInstGrp?.Parse(view.GetView("DlvyInstGrp"));
 		}

@@ -18,6 +18,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.RegistEmail = view.GetString(511);
 			instance.MailingDtls = view.GetString(474);
 			instance.MailingInst = view.GetString(482);
+			if (view.GetView("NestedParties") is MsgView groupViewNestedParties)
+			{
+				instance.NestedParties = new NestedParties();
+				instance.NestedParties!.Parse(groupViewNestedParties);
+			}
 			instance.NestedParties = new NestedParties();
 			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 			instance.OwnerType = view.GetInt32(522);

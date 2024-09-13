@@ -15,6 +15,11 @@ namespace PureFix.Types.FIX44.QuickFix
 		{
 			if (view is null) return;
 			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
 			instance.StandardHeader = new StandardHeader();
 			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.QuoteReqID = view.GetString(131);
@@ -23,6 +28,11 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.QuoteRejectReason = view.GetInt32(300);
 			instance.QuoteResponseLevel = view.GetInt32(301);
 			instance.QuoteType = view.GetInt32(537);
+			if (view.GetView("Parties") is MsgView groupViewParties)
+			{
+				instance.Parties = new Parties();
+				instance.Parties!.Parse(groupViewParties);
+			}
 			instance.Parties = new Parties();
 			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Account = view.GetString(1);
@@ -31,8 +41,18 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
+			if (view.GetView("QuotSetAckGrp") is MsgView groupViewQuotSetAckGrp)
+			{
+				instance.QuotSetAckGrp = new QuotSetAckGrp();
+				instance.QuotSetAckGrp!.Parse(groupViewQuotSetAckGrp);
+			}
 			instance.QuotSetAckGrp = new QuotSetAckGrp();
 			instance.QuotSetAckGrp?.Parse(view.GetView("QuotSetAckGrp"));
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
 			instance.StandardTrailer = new StandardTrailer();
 			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
