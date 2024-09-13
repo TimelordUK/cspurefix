@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.ObjectPool;
 using PureFix.Types.FIX44.QuickFix;
+using PureFix.Buffer.Segment;
+using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFIix.Test.Ascii
 {
@@ -46,7 +48,7 @@ namespace PureFIix.Test.Ascii
             var mv = _views[0];
             Assert.That(mv, Is.Not.Null);
             var values = mv.GetStrings(803);
-            Assert.That(values,Is.EqualTo((string[]) ["22","10","12","13","18","6"]));
+            Assert.That(values, Is.EqualTo((string[])["22", "10", "12", "13", "18", "6"]));
         }
 
         [Test]
@@ -79,6 +81,24 @@ namespace PureFIix.Test.Ascii
             var l0 = mv.GetView("InstrmtLegExecGrp.NoLegs")?[0];
             Assert.That(l0, Is.Not.Null);
             Assert.That(l0.GetString("LegSymbol"), Is.EqualTo("posuere"));
+        }
+
+        [Test]
+        public void Parties_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var parties = structure?.Segments.FirstOrDefault(s => s.Name == "Parties");
+            var noPartyIDs = structure?.Segments.FirstOrDefault(s => s.Name == "NoPartyIDs");
+            Assert.That(parties, Is.Not.Null);
+            Assert.That(parties.StartPosition, Is.EqualTo(20));
+            Assert.That(parties.EndPosition, Is.EqualTo(44));
+            Assert.That(parties.Depth, Is.EqualTo(1));
+            Assert.That(parties.Type, Is.EqualTo(SegmentType.Component));
+            Assert.That(noPartyIDs, Is.Not.Null);
+            Assert.That(noPartyIDs.StartPosition, Is.EqualTo(20));
+            Assert.That(noPartyIDs.EndPosition, Is.EqualTo(44));
+            Assert.That(noPartyIDs.Depth, Is.EqualTo(2));
+            Assert.That(noPartyIDs.Type, Is.EqualTo(SegmentType.Group));
         }
     }
 }
