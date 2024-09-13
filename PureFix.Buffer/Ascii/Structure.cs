@@ -30,6 +30,11 @@ namespace PureFix.Buffer.Ascii
             return _arrays?.GetValueOrDefault(name);
         }
 
+        public readonly SegmentDescription? GetInstance(string name)
+        {
+            return _singletons?.GetValueOrDefault(name);
+        }
+
         public readonly SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
 
         public readonly SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
@@ -94,11 +99,6 @@ namespace PureFix.Buffer.Ascii
                 switch (current.Type)
                 {
                     case SegmentType.Group:
-                        {
-                            AddToGroup(current);
-                            break;
-                        }
-
                     case SegmentType.Component:
                     case SegmentType.Msg:
                     case SegmentType.Batch:

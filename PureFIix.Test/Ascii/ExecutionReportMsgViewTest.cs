@@ -128,10 +128,45 @@ namespace PureFIix.Test.Ascii
                 var noPartySubIDs = structure?.GetInstances("NoPartySubIDs");
                 Assert.That(noPartySubIDs, Is.Not.Null);
                 Assert.That(noPartySubIDs, Has.Count.EqualTo(3));
+
                 Assert.That(noPartySubIDs[0].DelimiterTag, Is.EqualTo(523));
                 Assert.That(noPartySubIDs[0].Type, Is.EqualTo(SegmentType.Group));
                 Assert.That(noPartySubIDs[0].DelimiterPositions, Is.EqualTo(new List<int>([25,27])));
                 Assert.That(noPartySubIDs[0].Depth, Is.EqualTo(4));
+
+                Assert.That(noPartySubIDs[1].DelimiterTag, Is.EqualTo(523));
+                Assert.That(noPartySubIDs[1].Type, Is.EqualTo(SegmentType.Group));
+                Assert.That(noPartySubIDs[1].DelimiterPositions, Is.EqualTo(new List<int>([33, 35, 37])));
+                Assert.That(noPartySubIDs[1].Depth, Is.EqualTo(4));
+
+                Assert.That(noPartySubIDs[2].DelimiterTag, Is.EqualTo(523));
+                Assert.That(noPartySubIDs[2].Type, Is.EqualTo(SegmentType.Group));
+                Assert.That(noPartySubIDs[2].DelimiterPositions, Is.EqualTo(new List<int>([43])));
+                Assert.That(noPartySubIDs[2].Depth, Is.EqualTo(4));
+            });
+        }
+
+        [Test]
+        public void ContraGrp_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var contraGrp = structure?.GetInstance("ContraGrp");
+            Assert.Multiple(() =>
+            {
+                Assert.That(contraGrp, Is.Not.Null);
+                Assert.That(contraGrp.StartPosition, Is.EqualTo(46));
+                Assert.That(contraGrp.EndPosition, Is.EqualTo(61));
+                Assert.That(contraGrp.Depth, Is.EqualTo(1));
+                Assert.That(contraGrp.Type, Is.EqualTo(SegmentType.Component));
+
+                var noContraBrokers = structure?.GetInstance("NoContraBrokers");
+                Assert.That(noContraBrokers, Is.Not.Null);
+                Assert.That(noContraBrokers.Type, Is.EqualTo(SegmentType.Group));
+                Assert.That(noContraBrokers.Depth, Is.EqualTo(2));
+                Assert.That(noContraBrokers.DelimiterTag, Is.EqualTo(375));
+                Assert.That(noContraBrokers.DelimiterPositions, Is.EqualTo(new List<int>([47, 52, 57])));
             });
         }
 
