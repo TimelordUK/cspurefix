@@ -114,6 +114,8 @@ namespace PureFix.Dictionary.Compiler
                     using (_builder.BeginBlock($"public static class {compilerType.QualifiedName}Ext"))
                     using (_builder.BeginBlock($"public static void Parse(this {compilerType.QualifiedName} instance, MsgView? view)"))
                     {
+                        _builder.WriteLine("if (view is null) return;");
+                        _builder.WriteLine();
                         compilerType.Set.Iterate(this);
                     }
                 }
@@ -164,31 +166,31 @@ namespace PureFix.Dictionary.Compiler
             switch (sf.Definition.TagType)
             {
                 case TagType.Boolean:
-                    _builder.WriteLine($"instance.{sf.Name} = view?.GetBool({sf.Definition.Tag});");
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetBool({sf.Definition.Tag});");
                     break;
 
                 case TagType.Length:
                 case TagType.Int:
-                    _builder.WriteLine($"instance.{sf.Name} = view?.GetInt32({sf.Definition.Tag});");
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetInt32({sf.Definition.Tag});");
                     break;
 
                 case TagType.Float:
-                    _builder.WriteLine($"instance.{sf.Name} = view?.GetDouble({sf.Definition.Tag});");
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetDouble({sf.Definition.Tag});");
                     break;
 
                 case TagType.RawData:
-                    _builder.WriteLine($"instance.{sf.Name} = view?.GetByteArray({sf.Definition.Tag});");
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetByteArray({sf.Definition.Tag});");
                     break;
 
                 case TagType.LocalDate:
                 case TagType.UtcDateOnly:
                 case TagType.UtcTimeOnly:
                 case TagType.UtcTimestamp:
-                    _builder.WriteLine($"instance.{sf.Name} = view?.GetDateTime({sf.Definition.Tag});");
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetDateTime({sf.Definition.Tag});");
                     break;
 
                 default:
-                    _builder.WriteLine($"instance.{sf.Name} = view?.GetString({sf.Definition.Tag});");
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetString({sf.Definition.Tag});");
                     break;
             }
         }
@@ -217,13 +219,18 @@ namespace PureFix.Dictionary.Compiler
         public void OnGroup(ContainedGroupField gf, int index)
         {
             if (gf.Definition == null) return;
+
+            _builder.WriteLine($"var groupView = view.GetView(\"{gf.Name}\");");
+            _builder.WriteLine($"if (groupView is null) return;");
+            _builder.WriteLine();
+
             var extended = _currentCompilerType?.GetExtended(gf) ?? gf.Name;
-            _builder.WriteLine("var count = view?.GroupCount() ?? 0;");
-            _builder.WriteLine($"instance.{gf.Name} = new {extended} [count];");
+            _builder.WriteLine("var count = groupView.GroupCount();");
+            _builder.WriteLine($"instance.{gf.Name} = new {extended}[count];");
             using (_builder.BeginBlock("for (var i = 0; i < count; ++i)"))
             {
                 _builder.WriteLine($"instance.{gf.Name}[i] = new();");
-                _builder.WriteLine($"instance.{gf.Name}[i].Parse(view?[i]);");
+                _builder.WriteLine($"instance.{gf.Name}[i].Parse(groupView[i]);");
             }
             Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, extended));
         }

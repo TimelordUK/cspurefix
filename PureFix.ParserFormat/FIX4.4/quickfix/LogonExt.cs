@@ -29,12 +29,15 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.ResetSeqNumFlag = view.GetBool(141);
 			instance.NextExpectedMsgSeqNum = view.GetInt32(789);
 			instance.MaxMessageSize = view.GetInt32(383);
-			var count = view.GroupCount();
-			instance.NoMsgTypes = new LogonNoMsgTypes [count];
+			var groupView = view.GetView("NoMsgTypes");
+			if (groupView is null) return;
+			
+			var count = groupView.GroupCount();
+			instance.NoMsgTypes = new LogonNoMsgTypes[count];
 			for (var i = 0; i < count; ++i)
 			{
 				instance.NoMsgTypes[i] = new();
-				instance.NoMsgTypes[i].Parse(view[i]);
+				instance.NoMsgTypes[i].Parse(groupView[i]);
 			}
 			instance.TestMessageIndicator = view.GetBool(464);
 			instance.Username = view.GetString(553);

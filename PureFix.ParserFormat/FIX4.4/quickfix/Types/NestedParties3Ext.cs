@@ -14,12 +14,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		{
 			if (view is null) return;
 			
-			var count = view.GroupCount();
-			instance.NoNested3PartyIDs = new NestedParties3NoNested3PartyIDs [count];
+			var groupView = view.GetView("NoNested3PartyIDs");
+			if (groupView is null) return;
+			
+			var count = groupView.GroupCount();
+			instance.NoNested3PartyIDs = new NestedParties3NoNested3PartyIDs[count];
 			for (var i = 0; i < count; ++i)
 			{
 				instance.NoNested3PartyIDs[i] = new();
-				instance.NoNested3PartyIDs[i].Parse(view[i]);
+				instance.NoNested3PartyIDs[i].Parse(groupView[i]);
 			}
 		}
 	}
