@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class ConfirmationRequest : FixMsg
 	{
 		[Component(Offset = 0, Required = true)]
-		public override StandardHeader? StandardHeader { get; set; }
+		public StandardHeader? StandardHeader { get; set; }
 		
 		[TagDetails(Tag = 859, Type = TagType.String, Offset = 1, Required = true)]
 		public string? ConfirmReqID { get; set; }
@@ -53,6 +53,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		public byte[]? EncodedText { get; set; }
 		
 		[Component(Offset = 14, Required = true)]
-		public override StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailer? StandardTrailer { get; set; }
+		public override string? MsgType => StandardHeader?.MsgType;
+		public override int? BodyLength => StandardHeader?.BodyLength;
 	}
 }

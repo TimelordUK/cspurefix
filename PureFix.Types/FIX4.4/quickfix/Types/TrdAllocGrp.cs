@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class TrdAllocGrp
 	{
 		[Group(NoOfTag = 78, Offset = 0, Required = false)]
-		public NoAllocs[]? NoAllocs { get; set; }
+		public TrdAllocGrpNoAllocs[]? NoAllocs { get; set; }
 		
 	}
 }

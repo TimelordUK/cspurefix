@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class QuotReqGrp
 	{
 		[Group(NoOfTag = 146, Offset = 0, Required = true)]
-		public NoRelatedSym[]? NoRelatedSym { get; set; }
+		public QuotReqGrpNoRelatedSym[]? NoRelatedSym { get; set; }
 		
 	}
 }

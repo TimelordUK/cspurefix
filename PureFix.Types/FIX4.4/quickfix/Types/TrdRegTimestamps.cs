@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class TrdRegTimestamps
 	{
 		[Group(NoOfTag = 768, Offset = 0, Required = false)]
-		public NoTrdRegTimestamps[]? NoTrdRegTimestamps { get; set; }
+		public TrdRegTimestampsNoTrdRegTimestamps[]? NoTrdRegTimestamps { get; set; }
 		
 	}
 }

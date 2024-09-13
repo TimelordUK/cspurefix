@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class QuotEntryAckGrp
 	{
 		[Group(NoOfTag = 295, Offset = 0, Required = false)]
-		public NoQuoteEntries[]? NoQuoteEntries { get; set; }
+		public QuotEntryAckGrpNoQuoteEntries[]? NoQuoteEntries { get; set; }
 		
 	}
 }

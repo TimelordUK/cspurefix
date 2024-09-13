@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class OrdListStatGrp
 	{
 		[Group(NoOfTag = 73, Offset = 0, Required = true)]
-		public NoOrders[]? NoOrders { get; set; }
+		public OrdListStatGrpNoOrders[]? NoOrders { get; set; }
 		
 	}
 }

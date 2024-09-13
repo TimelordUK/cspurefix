@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class CompIDReqGrp
 	{
 		[Group(NoOfTag = 936, Offset = 0, Required = false)]
-		public NoCompIDs[]? NoCompIDs { get; set; }
+		public CompIDReqGrpNoCompIDs[]? NoCompIDs { get; set; }
 		
 	}
 }

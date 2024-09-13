@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class SettlParties
 	{
 		[Group(NoOfTag = 781, Offset = 0, Required = false)]
-		public NoSettlPartyIDs[]? NoSettlPartyIDs { get; set; }
+		public SettlPartiesNoSettlPartyIDs[]? NoSettlPartyIDs { get; set; }
 		
 	}
 }

@@ -36,6 +36,7 @@ namespace PureFix.Dictionary.Definition
         */
         public IReadOnlyDictionary<string, MessageDefinition> Message => _message;
         public FixVersion Version { get; private set; }
+        public FixDefinitionSource Source { get; private set; } = FixDefinitionSource.QuickFix;
 
         public void AddSimple(SimpleFieldDefinition simpleField)
         {
@@ -89,9 +90,10 @@ namespace PureFix.Dictionary.Definition
             return Message.GetValueOrDefault(name)?.GetSet(path[(idx + 1)..]);
         }
 
-        public void SetVersion(FixVersion version)
+        public void SetVersion(FixVersion version, FixDefinitionSource source = FixDefinitionSource.QuickFix)
         {
             Version = version;
+            Source = source;
         }
 
         public IEnumerator<MessageDefinition> GetEnumerator()

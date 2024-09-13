@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class SettlInstGrp
 	{
 		[Group(NoOfTag = 778, Offset = 0, Required = false)]
-		public NoSettlInst[]? NoSettlInst { get; set; }
+		public SettlInstGrpNoSettlInst[]? NoSettlInst { get; set; }
 		
 	}
 }

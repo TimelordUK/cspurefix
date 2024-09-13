@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class EvntGrp
 	{
 		[Group(NoOfTag = 864, Offset = 0, Required = false)]
-		public NoEvents[]? NoEvents { get; set; }
+		public EvntGrpNoEvents[]? NoEvents { get; set; }
 		
 	}
 }

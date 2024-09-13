@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +10,7 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Types;
+
 
 namespace PureFix.Dictionary.Compiler
 {
@@ -41,6 +44,7 @@ namespace PureFix.Dictionary.Compiler
         private readonly CodeGenerator _builder = new();
 
         private ContainedSimpleField? _LastSimpleField;
+        private CompilerType? _currentCompilerType;
 
 
         public MsgCompiler(FixDefinitions definitions, Options? options = null)
@@ -96,7 +100,7 @@ namespace PureFix.Dictionary.Compiler
                 ? $"{CompilerOptions.BackingTypeNamespace}"
                 : $"{CompilerOptions.BackingTypeNamespace}.Types";
             _builder.Reset();
-
+            _currentCompilerType = compilerType;
             var usingDeclaration = string.Join(Environment.NewLine, CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {CompilerOptions.BackingTypeNamespace}.Types;"]));
             var inheritsDeclaration = isMsg ? $" : {CompilerOptions.MsgInheritsFrom}" : "";
             
@@ -110,9 +114,21 @@ namespace PureFix.Dictionary.Compiler
                     _builder.WriteLine($"[MessageType(\"{messageDefinition.MsgType}\", FixVersion.{Definitions.Version})]");
                 }
 
-                using(_builder.BeginBlock($"public sealed class {compilerType.Name}{inheritsDeclaration}"))
+                using(_builder.BeginBlock($"public sealed class {compilerType.QualifiedName}{inheritsDeclaration}"))
                 {
                     compilerType.Set.Iterate(this);
+                    if (isMsg)
+                    {
+                        foreach (var headerOverride in CompilerOptions.HeaderOverrides)
+                        {
+                            var sf = Definitions.Simple.GetValueOrDefault(headerOverride);
+                            if (sf != null)
+                            {
+                                var getter = $"=> StandardHeader?.{sf.Name}";
+                                _builder.WriteLine($"public override {Tags.ToCsType(sf.TagType)}? {sf.Name} {getter};");
+                            }
+                        }
+                    }
                 }
             }
             return _builder.ToString();
@@ -132,7 +148,7 @@ namespace PureFix.Dictionary.Compiler
         private string GetFileName(CompilerType ct)
         {
             var isMsg = ct.Set.Type == ContainedSetType.Msg;
-            var name = isMsg ? ((MessageDefinition)ct.Set).Name : ct.Set.Name;
+            var name = isMsg ? ((MessageDefinition)ct.Set).Name : ct.QualifiedName;
             if (isMsg)
             {
                 return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, $"{name}")}.cs";
@@ -159,8 +175,8 @@ namespace PureFix.Dictionary.Compiler
             }
 
             _LastSimpleField = sf;
-
-            _builder.WriteLine($"public {type}? {sf.Definition.Name} {GetSet}");
+            var name = sf.Definition.Name;
+            _builder.WriteLine($"public {type}? {name} {GetSet}");
             _builder.WriteLine();
 
             if (sf.Definition.Enums is not null)
@@ -172,10 +188,11 @@ namespace PureFix.Dictionary.Compiler
         public void OnComponent(ContainedComponentField cf,  int index)
         {
             if (cf.Definition == null) return;
-            var declared = cf.Name is "StandardHeader" or "StandardTrailer" ? $"override {cf.Name}" : cf.Name;
+            var extended = _currentCompilerType?.GetExtended(cf) ?? cf.Name;
+            
             
             _builder.WriteLine($"[Component(Offset = {index}, Required = {MapRequired(cf.Required)})]");
-            _builder.WriteLine($"public {declared}? {cf.Name} {GetSet}");
+            _builder.WriteLine($"public {cf.Name}? {cf.Name} {GetSet}");
 
             if(cf.Name != "StandardTrailer")
             {
@@ -183,7 +200,7 @@ namespace PureFix.Dictionary.Compiler
             }
 
             // any dependent component also needs to be constructed StandardHeader etc.
-            Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, cf.Name));
+            Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, extended));
         }
 
         public void OnGroup(ContainedGroupField gf, int index)
@@ -191,12 +208,14 @@ namespace PureFix.Dictionary.Compiler
             if (gf.Definition == null) return;
 
             var countField = gf.Definition.NoOfField!.Tag;
+            var extended = _currentCompilerType?.GetExtended(gf) ?? gf.Name;
+            var name = _currentCompilerType?.GetFieldGroupName(gf) ?? gf.Name;
 
             _builder.WriteLine($"[Group(NoOfTag = {countField}, Offset = {index}, Required = {MapRequired(gf.Required)})]");
-            _builder.WriteLine($"public {gf.Name}[]? {gf.Name} {GetSet}");
+            _builder.WriteLine($"public {extended}[]? {name} {GetSet}");
             _builder.WriteLine();
             // any dependent group also needs to be constructed StandardHeader etc.
-            Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, gf.Name));
+            Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, extended));
         }
 
         private void GenerateEnumValues(string csharpBaseType, TagType tagType, string fieldName, IReadOnlyDictionary<string, FieldEnum> enums)

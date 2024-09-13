@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class SecurityTypeRequest : FixMsg
 	{
 		[Component(Offset = 0, Required = true)]
-		public override StandardHeader? StandardHeader { get; set; }
+		public StandardHeader? StandardHeader { get; set; }
 		
 		[TagDetails(Tag = 320, Type = TagType.String, Offset = 1, Required = true)]
 		public string? SecurityReqID { get; set; }
@@ -41,6 +41,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SecuritySubType { get; set; }
 		
 		[Component(Offset = 10, Required = true)]
-		public override StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailer? StandardTrailer { get; set; }
+		public override string? MsgType => StandardHeader?.MsgType;
+		public override int? BodyLength => StandardHeader?.BodyLength;
 	}
 }

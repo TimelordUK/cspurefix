@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class News : FixMsg
 	{
 		[Component(Offset = 0, Required = true)]
-		public override StandardHeader? StandardHeader { get; set; }
+		public StandardHeader? StandardHeader { get; set; }
 		
 		[TagDetails(Tag = 42, Type = TagType.UtcTimestamp, Offset = 1, Required = false)]
 		public DateTime? OrigTime { get; set; }
@@ -53,6 +53,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		public byte[]? RawData { get; set; }
 		
 		[Component(Offset = 14, Required = true)]
-		public override StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailer? StandardTrailer { get; set; }
+		public override string? MsgType => StandardHeader?.MsgType;
+		public override int? BodyLength => StandardHeader?.BodyLength;
 	}
 }

@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class Logon : FixMsg
 	{
 		[Component(Offset = 0, Required = true)]
-		public override StandardHeader? StandardHeader { get; set; }
+		public StandardHeader? StandardHeader { get; set; }
 		
 		[TagDetails(Tag = 98, Type = TagType.Int, Offset = 1, Required = true)]
 		public int? EncryptMethod { get; set; }
@@ -35,7 +35,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public int? MaxMessageSize { get; set; }
 		
 		[Group(NoOfTag = 384, Offset = 8, Required = false)]
-		public NoMsgTypes[]? NoMsgTypes { get; set; }
+		public LogonNoMsgTypes[]? NoMsgTypes { get; set; }
 		
 		[TagDetails(Tag = 464, Type = TagType.Boolean, Offset = 9, Required = false)]
 		public bool? TestMessageIndicator { get; set; }
@@ -47,6 +47,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? Password { get; set; }
 		
 		[Component(Offset = 12, Required = true)]
-		public override StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailer? StandardTrailer { get; set; }
+		public override string? MsgType => StandardHeader?.MsgType;
+		public override int? BodyLength => StandardHeader?.BodyLength;
 	}
 }

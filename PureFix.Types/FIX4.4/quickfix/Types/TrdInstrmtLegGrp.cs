@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class TrdInstrmtLegGrp
 	{
 		[Group(NoOfTag = 555, Offset = 0, Required = false)]
-		public NoLegs[]? NoLegs { get; set; }
+		public TrdInstrmtLegGrpNoLegs[]? NoLegs { get; set; }
 		
 	}
 }

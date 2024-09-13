@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class CrossOrderCancelReplaceRequest : FixMsg
 	{
 		[Component(Offset = 0, Required = true)]
-		public override StandardHeader? StandardHeader { get; set; }
+		public StandardHeader? StandardHeader { get; set; }
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1, Required = false)]
 		public string? OrderID { get; set; }
@@ -155,6 +155,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? Designation { get; set; }
 		
 		[Component(Offset = 48, Required = true)]
-		public override StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailer? StandardTrailer { get; set; }
+		public override string? MsgType => StandardHeader?.MsgType;
+		public override int? BodyLength => StandardHeader?.BodyLength;
 	}
 }

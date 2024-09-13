@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class RgstDtlsGrp
 	{
 		[Group(NoOfTag = 473, Offset = 0, Required = false)]
-		public NoRegistDtls[]? NoRegistDtls { get; set; }
+		public RgstDtlsGrpNoRegistDtls[]? NoRegistDtls { get; set; }
 		
 	}
 }

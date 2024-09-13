@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class ResendRequest : FixMsg
 	{
 		[Component(Offset = 0, Required = true)]
-		public override StandardHeader? StandardHeader { get; set; }
+		public StandardHeader? StandardHeader { get; set; }
 		
 		[TagDetails(Tag = 7, Type = TagType.Int, Offset = 1, Required = true)]
 		public int? BeginSeqNo { get; set; }
@@ -20,6 +20,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		public int? EndSeqNo { get; set; }
 		
 		[Component(Offset = 3, Required = true)]
-		public override StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailer? StandardTrailer { get; set; }
+		public override string? MsgType => StandardHeader?.MsgType;
+		public override int? BodyLength => StandardHeader?.BodyLength;
 	}
 }

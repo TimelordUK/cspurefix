@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class TrdCollGrp
 	{
 		[Group(NoOfTag = 897, Offset = 0, Required = false)]
-		public NoTrades[]? NoTrades { get; set; }
+		public TrdCollGrpNoTrades[]? NoTrades { get; set; }
 		
 	}
 }

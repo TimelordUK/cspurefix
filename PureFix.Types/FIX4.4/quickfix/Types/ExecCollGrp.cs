@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class ExecCollGrp
 	{
 		[Group(NoOfTag = 124, Offset = 0, Required = false)]
-		public NoExecs[]? NoExecs { get; set; }
+		public ExecCollGrpNoExecs[]? NoExecs { get; set; }
 		
 	}
 }

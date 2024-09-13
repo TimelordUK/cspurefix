@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class NestedParties
 	{
 		[Group(NoOfTag = 539, Offset = 0, Required = false)]
-		public NoNestedPartyIDs[]? NoNestedPartyIDs { get; set; }
+		public NestedPartiesNoNestedPartyIDs[]? NoNestedPartyIDs { get; set; }
 		
 	}
 }

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class SideCrossOrdModGrp
 	{
 		[Group(NoOfTag = 552, Offset = 0, Required = true)]
-		public NoSides[]? NoSides { get; set; }
+		public SideCrossOrdModGrpNoSides[]? NoSides { get; set; }
 		
 	}
 }

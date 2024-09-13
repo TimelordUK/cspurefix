@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class Parties
 	{
 		[Group(NoOfTag = 453, Offset = 0, Required = false)]
-		public NoPartyIDs[]? NoPartyIDs { get; set; }
+		public PartiesNoPartyIDs[]? NoPartyIDs { get; set; }
 		
 	}
 }

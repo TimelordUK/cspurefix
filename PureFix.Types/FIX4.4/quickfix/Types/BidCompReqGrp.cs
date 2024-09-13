@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class BidCompReqGrp
 	{
 		[Group(NoOfTag = 420, Offset = 0, Required = false)]
-		public NoBidComponents[]? NoBidComponents { get; set; }
+		public BidCompReqGrpNoBidComponents[]? NoBidComponents { get; set; }
 		
 	}
 }

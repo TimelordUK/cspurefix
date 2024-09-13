@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class Stipulations
 	{
 		[Group(NoOfTag = 232, Offset = 0, Required = false)]
-		public NoStipulations[]? NoStipulations { get; set; }
+		public StipulationsNoStipulations[]? NoStipulations { get; set; }
 		
 	}
 }

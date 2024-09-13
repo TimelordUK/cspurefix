@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class UnderlyingStipulations
 	{
 		[Group(NoOfTag = 887, Offset = 0, Required = false)]
-		public NoUnderlyingStips[]? NoUnderlyingStips { get; set; }
+		public UnderlyingStipulationsNoUnderlyingStips[]? NoUnderlyingStips { get; set; }
 		
 	}
 }

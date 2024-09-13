@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class NstdPtysSubGrp
 	{
 		[Group(NoOfTag = 804, Offset = 0, Required = false)]
-		public NoNestedPartySubIDs[]? NoNestedPartySubIDs { get; set; }
+		public NstdPtysSubGrpNoNestedPartySubIDs[]? NoNestedPartySubIDs { get; set; }
 		
 	}
 }

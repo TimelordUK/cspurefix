@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class PosUndInstrmtGrp
 	{
 		[Group(NoOfTag = 711, Offset = 0, Required = false)]
-		public NoUnderlyings[]? NoUnderlyings { get; set; }
+		public PosUndInstrmtGrpNoUnderlyings[]? NoUnderlyings { get; set; }
 		
 	}
 }

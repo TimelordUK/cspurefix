@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class LegStipulations
 	{
 		[Group(NoOfTag = 683, Offset = 0, Required = false)]
-		public NoLegStipulations[]? NoLegStipulations { get; set; }
+		public LegStipulationsNoLegStipulations[]? NoLegStipulations { get; set; }
 		
 	}
 }

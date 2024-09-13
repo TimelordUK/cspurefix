@@ -20,6 +20,8 @@ namespace PureFix.Dictionary.Compiler
             public IReadOnlyList<string> DefaultUsing =
                 ["System", "System.Collections.Generic", "System.Linq", "System.Text", "System.Threading.Tasks"];
 
+            public HashSet<string> HeaderOverrides = ["MsgType","BodyLength"];
+
             public static string DefaultRootOutputPath { get; set; } = Path.Join(Directory.GetCurrentDirectory(), "..",
                 "..",
                 "..", "..", "PureFix.Types");

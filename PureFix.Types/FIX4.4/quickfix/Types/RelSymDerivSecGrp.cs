@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class RelSymDerivSecGrp
 	{
 		[Group(NoOfTag = 146, Offset = 0, Required = false)]
-		public NoRelatedSym[]? NoRelatedSym { get; set; }
+		public RelSymDerivSecGrpNoRelatedSym[]? NoRelatedSym { get; set; }
 		
 	}
 }

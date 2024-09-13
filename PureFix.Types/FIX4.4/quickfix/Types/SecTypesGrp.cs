@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class SecTypesGrp
 	{
 		[Group(NoOfTag = 558, Offset = 0, Required = false)]
-		public NoSecurityTypes[]? NoSecurityTypes { get; set; }
+		public SecTypesGrpNoSecurityTypes[]? NoSecurityTypes { get; set; }
 		
 	}
 }

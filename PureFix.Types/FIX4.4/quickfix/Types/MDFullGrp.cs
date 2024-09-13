@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class MDFullGrp
 	{
 		[Group(NoOfTag = 268, Offset = 0, Required = true)]
-		public NoMDEntries[]? NoMDEntries { get; set; }
+		public MDFullGrpNoMDEntries[]? NoMDEntries { get; set; }
 		
 	}
 }

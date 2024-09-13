@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class IOIQualGrp
 	{
 		[Group(NoOfTag = 199, Offset = 0, Required = false)]
-		public NoIOIQualifiers[]? NoIOIQualifiers { get; set; }
+		public IOIQualGrpNoIOIQualifiers[]? NoIOIQualifiers { get; set; }
 		
 	}
 }

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed class MiscFeesGrp
 	{
 		[Group(NoOfTag = 136, Offset = 0, Required = false)]
-		public NoMiscFees[]? NoMiscFees { get; set; }
+		public MiscFeesGrpNoMiscFees[]? NoMiscFees { get; set; }
 		
 	}
 }

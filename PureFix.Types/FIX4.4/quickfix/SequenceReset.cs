@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed class SequenceReset : FixMsg
 	{
 		[Component(Offset = 0, Required = true)]
-		public override StandardHeader? StandardHeader { get; set; }
+		public StandardHeader? StandardHeader { get; set; }
 		
 		[TagDetails(Tag = 123, Type = TagType.Boolean, Offset = 1, Required = false)]
 		public bool? GapFillFlag { get; set; }
@@ -20,6 +20,8 @@ namespace PureFix.Types.FIX44.QuickFix
 		public int? NewSeqNo { get; set; }
 		
 		[Component(Offset = 3, Required = true)]
-		public override StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailer? StandardTrailer { get; set; }
+		public override string? MsgType => StandardHeader?.MsgType;
+		public override int? BodyLength => StandardHeader?.BodyLength;
 	}
 }
