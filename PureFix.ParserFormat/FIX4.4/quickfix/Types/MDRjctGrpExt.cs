@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this MDRjctGrp instance, MsgView? view)
 		{
-			var count = view?.GroupCount() ?? 0;
+			if (view is null) return;
+			
+			var count = view.GroupCount();
 			instance.NoAltMDSource = new MDRjctGrpNoAltMDSource [count];
 			for (var i = 0; i < count; ++i)
 			{
 				instance.NoAltMDSource[i] = new();
-				instance.NoAltMDSource[i].Parse(view?[i]);
+				instance.NoAltMDSource[i].Parse(view[i]);
 			}
 		}
 	}

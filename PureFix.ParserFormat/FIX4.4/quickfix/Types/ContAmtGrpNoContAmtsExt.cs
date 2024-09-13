@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this ContAmtGrpNoContAmts instance, MsgView? view)
 		{
-			instance.ContAmtType = view?.GetInt32(519);
-			instance.ContAmtValue = view?.GetDouble(520);
-			instance.ContAmtCurr = view?.GetString(521);
+			if (view is null) return;
+			
+			instance.ContAmtType = view.GetInt32(519);
+			instance.ContAmtValue = view.GetDouble(520);
+			instance.ContAmtCurr = view.GetString(521);
 		}
 	}
 }

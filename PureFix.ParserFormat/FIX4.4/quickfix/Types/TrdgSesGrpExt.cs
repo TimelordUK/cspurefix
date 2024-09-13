@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this TrdgSesGrp instance, MsgView? view)
 		{
-			var count = view?.GroupCount() ?? 0;
+			if (view is null) return;
+			
+			var count = view.GroupCount();
 			instance.NoTradingSessions = new TrdgSesGrpNoTradingSessions [count];
 			for (var i = 0; i < count; ++i)
 			{
 				instance.NoTradingSessions[i] = new();
-				instance.NoTradingSessions[i].Parse(view?[i]);
+				instance.NoTradingSessions[i].Parse(view[i]);
 			}
 		}
 	}

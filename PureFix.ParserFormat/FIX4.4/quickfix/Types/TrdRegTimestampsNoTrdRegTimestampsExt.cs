@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this TrdRegTimestampsNoTrdRegTimestamps instance, MsgView? view)
 		{
-			instance.TrdRegTimestamp = view?.GetDateTime(769);
-			instance.TrdRegTimestampType = view?.GetInt32(770);
-			instance.TrdRegTimestampOrigin = view?.GetString(771);
+			if (view is null) return;
+			
+			instance.TrdRegTimestamp = view.GetDateTime(769);
+			instance.TrdRegTimestampType = view.GetInt32(770);
+			instance.TrdRegTimestampOrigin = view.GetString(771);
 		}
 	}
 }

@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this LegSecAltIDGrpNoLegSecurityAltID instance, MsgView? view)
 		{
-			instance.LegSecurityAltID = view?.GetString(605);
-			instance.LegSecurityAltIDSource = view?.GetString(606);
+			if (view is null) return;
+			
+			instance.LegSecurityAltID = view.GetString(605);
+			instance.LegSecurityAltIDSource = view.GetString(606);
 		}
 	}
 }

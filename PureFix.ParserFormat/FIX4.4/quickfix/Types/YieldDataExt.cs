@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this YieldData instance, MsgView? view)
 		{
-			instance.YieldType = view?.GetString(235);
-			instance.Yield = view?.GetDouble(236);
-			instance.YieldCalcDate = view?.GetDateTime(701);
-			instance.YieldRedemptionDate = view?.GetDateTime(696);
-			instance.YieldRedemptionPrice = view?.GetDouble(697);
-			instance.YieldRedemptionPriceType = view?.GetInt32(698);
+			if (view is null) return;
+			
+			instance.YieldType = view.GetString(235);
+			instance.Yield = view.GetDouble(236);
+			instance.YieldCalcDate = view.GetDateTime(701);
+			instance.YieldRedemptionDate = view.GetDateTime(696);
+			instance.YieldRedemptionPrice = view.GetDouble(697);
+			instance.YieldRedemptionPriceType = view.GetInt32(698);
 		}
 	}
 }

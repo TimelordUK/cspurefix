@@ -12,7 +12,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this ClrInstGrpNoClearingInstructions instance, MsgView? view)
 		{
-			instance.ClearingInstruction = view?.GetInt32(577);
+			if (view is null) return;
+			
+			instance.ClearingInstruction = view.GetInt32(577);
 		}
 	}
 }

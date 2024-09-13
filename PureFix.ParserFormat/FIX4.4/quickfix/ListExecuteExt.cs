@@ -13,15 +13,17 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this ListExecute instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.ListID = view?.GetString(66);
-			instance.ClientBidID = view?.GetString(391);
-			instance.BidID = view?.GetString(390);
-			instance.TransactTime = view?.GetDateTime(60);
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.ListID = view.GetString(66);
+			instance.ClientBidID = view.GetString(391);
+			instance.BidID = view.GetString(390);
+			instance.TransactTime = view.GetDateTime(60);
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

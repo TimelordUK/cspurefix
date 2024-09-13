@@ -13,12 +13,14 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this UserResponse instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.UserRequestID = view?.GetString(923);
-			instance.Username = view?.GetString(553);
-			instance.UserStatus = view?.GetInt32(926);
-			instance.UserStatusText = view?.GetString(927);
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.UserRequestID = view.GetString(923);
+			instance.Username = view.GetString(553);
+			instance.UserStatus = view.GetInt32(926);
+			instance.UserStatusText = view.GetString(927);
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

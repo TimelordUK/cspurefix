@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this TrdCollGrpNoTrades instance, MsgView? view)
 		{
-			instance.TradeReportID = view?.GetString(571);
-			instance.SecondaryTradeReportID = view?.GetString(818);
+			if (view is null) return;
+			
+			instance.TradeReportID = view.GetString(571);
+			instance.SecondaryTradeReportID = view.GetString(818);
 		}
 	}
 }

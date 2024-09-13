@@ -12,14 +12,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this AllocAckGrpNoAllocs instance, MsgView? view)
 		{
-			instance.AllocAccount = view?.GetString(79);
-			instance.AllocAcctIDSource = view?.GetInt32(661);
-			instance.AllocPrice = view?.GetDouble(366);
-			instance.IndividualAllocID = view?.GetString(467);
-			instance.IndividualAllocRejCode = view?.GetInt32(776);
-			instance.AllocText = view?.GetString(161);
-			instance.EncodedAllocTextLen = view?.GetInt32(360);
-			instance.EncodedAllocText = view?.GetByteArray(361);
+			if (view is null) return;
+			
+			instance.AllocAccount = view.GetString(79);
+			instance.AllocAcctIDSource = view.GetInt32(661);
+			instance.AllocPrice = view.GetDouble(366);
+			instance.IndividualAllocID = view.GetString(467);
+			instance.IndividualAllocRejCode = view.GetInt32(776);
+			instance.AllocText = view.GetString(161);
+			instance.EncodedAllocTextLen = view.GetInt32(360);
+			instance.EncodedAllocText = view.GetByteArray(361);
 		}
 	}
 }

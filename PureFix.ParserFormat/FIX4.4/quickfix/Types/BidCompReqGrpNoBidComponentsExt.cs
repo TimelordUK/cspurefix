@@ -12,15 +12,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this BidCompReqGrpNoBidComponents instance, MsgView? view)
 		{
-			instance.ListID = view?.GetString(66);
-			instance.Side = view?.GetString(54);
-			instance.TradingSessionID = view?.GetString(336);
-			instance.TradingSessionSubID = view?.GetString(625);
-			instance.NetGrossInd = view?.GetInt32(430);
-			instance.SettlType = view?.GetString(63);
-			instance.SettlDate = view?.GetDateTime(64);
-			instance.Account = view?.GetString(1);
-			instance.AcctIDSource = view?.GetInt32(660);
+			if (view is null) return;
+			
+			instance.ListID = view.GetString(66);
+			instance.Side = view.GetString(54);
+			instance.TradingSessionID = view.GetString(336);
+			instance.TradingSessionSubID = view.GetString(625);
+			instance.NetGrossInd = view.GetInt32(430);
+			instance.SettlType = view.GetString(63);
+			instance.SettlDate = view.GetDateTime(64);
+			instance.Account = view.GetString(1);
+			instance.AcctIDSource = view.GetInt32(660);
 		}
 	}
 }

@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this NestedParties instance, MsgView? view)
 		{
-			var count = view?.GroupCount() ?? 0;
+			if (view is null) return;
+			
+			var count = view.GroupCount();
 			instance.NoNestedPartyIDs = new NestedPartiesNoNestedPartyIDs [count];
 			for (var i = 0; i < count; ++i)
 			{
 				instance.NoNestedPartyIDs[i] = new();
-				instance.NoNestedPartyIDs[i].Parse(view?[i]);
+				instance.NoNestedPartyIDs[i].Parse(view[i]);
 			}
 		}
 	}

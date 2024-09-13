@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this InstrumentExtension instance, MsgView? view)
 		{
-			instance.DeliveryForm = view?.GetInt32(668);
-			instance.PctAtRisk = view?.GetDouble(869);
-			instance.AttrbGrp?.Parse(view?.GetView("AttrbGrp"));
+			if (view is null) return;
+			
+			instance.DeliveryForm = view.GetInt32(668);
+			instance.PctAtRisk = view.GetDouble(869);
+			instance.AttrbGrp?.Parse(view.GetView("AttrbGrp"));
 		}
 	}
 }

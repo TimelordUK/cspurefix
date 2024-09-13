@@ -12,15 +12,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this FinancingDetails instance, MsgView? view)
 		{
-			instance.AgreementDesc = view?.GetString(913);
-			instance.AgreementID = view?.GetString(914);
-			instance.AgreementDate = view?.GetDateTime(915);
-			instance.AgreementCurrency = view?.GetString(918);
-			instance.TerminationType = view?.GetInt32(788);
-			instance.StartDate = view?.GetDateTime(916);
-			instance.EndDate = view?.GetDateTime(917);
-			instance.DeliveryType = view?.GetInt32(919);
-			instance.MarginRatio = view?.GetDouble(898);
+			if (view is null) return;
+			
+			instance.AgreementDesc = view.GetString(913);
+			instance.AgreementID = view.GetString(914);
+			instance.AgreementDate = view.GetDateTime(915);
+			instance.AgreementCurrency = view.GetString(918);
+			instance.TerminationType = view.GetInt32(788);
+			instance.StartDate = view.GetDateTime(916);
+			instance.EndDate = view.GetDateTime(917);
+			instance.DeliveryType = view.GetInt32(919);
+			instance.MarginRatio = view.GetDouble(898);
 		}
 	}
 }

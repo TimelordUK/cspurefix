@@ -12,11 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this SettlInstructionsData instance, MsgView? view)
 		{
-			instance.SettlDeliveryType = view?.GetInt32(172);
-			instance.StandInstDbType = view?.GetInt32(169);
-			instance.StandInstDbName = view?.GetString(170);
-			instance.StandInstDbID = view?.GetString(171);
-			instance.DlvyInstGrp?.Parse(view?.GetView("DlvyInstGrp"));
+			if (view is null) return;
+			
+			instance.SettlDeliveryType = view.GetInt32(172);
+			instance.StandInstDbType = view.GetInt32(169);
+			instance.StandInstDbName = view.GetString(170);
+			instance.StandInstDbID = view.GetString(171);
+			instance.DlvyInstGrp?.Parse(view.GetView("DlvyInstGrp"));
 		}
 	}
 }

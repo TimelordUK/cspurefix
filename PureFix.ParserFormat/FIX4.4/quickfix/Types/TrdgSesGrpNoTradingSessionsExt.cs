@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this TrdgSesGrpNoTradingSessions instance, MsgView? view)
 		{
-			instance.TradingSessionID = view?.GetString(336);
-			instance.TradingSessionSubID = view?.GetString(625);
+			if (view is null) return;
+			
+			instance.TradingSessionID = view.GetString(336);
+			instance.TradingSessionSubID = view.GetString(625);
 		}
 	}
 }

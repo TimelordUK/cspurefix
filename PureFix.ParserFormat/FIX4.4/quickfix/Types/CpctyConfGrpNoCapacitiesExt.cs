@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this CpctyConfGrpNoCapacities instance, MsgView? view)
 		{
-			instance.OrderCapacity = view?.GetString(528);
-			instance.OrderRestrictions = view?.GetString(529);
-			instance.OrderCapacityQty = view?.GetDouble(863);
+			if (view is null) return;
+			
+			instance.OrderCapacity = view.GetString(528);
+			instance.OrderRestrictions = view.GetString(529);
+			instance.OrderCapacityQty = view.GetDouble(863);
 		}
 	}
 }

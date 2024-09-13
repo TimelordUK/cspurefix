@@ -12,7 +12,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this ExecCollGrpNoExecs instance, MsgView? view)
 		{
-			instance.ExecID = view?.GetString(17);
+			if (view is null) return;
+			
+			instance.ExecID = view.GetString(17);
 		}
 	}
 }

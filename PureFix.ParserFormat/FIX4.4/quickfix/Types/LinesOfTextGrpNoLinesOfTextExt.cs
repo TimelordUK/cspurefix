@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this LinesOfTextGrpNoLinesOfText instance, MsgView? view)
 		{
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
+			if (view is null) return;
+			
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
 		}
 	}
 }

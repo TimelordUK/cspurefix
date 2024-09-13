@@ -12,27 +12,29 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this SettlInstGrpNoSettlInst instance, MsgView? view)
 		{
-			instance.SettlInstID = view?.GetString(162);
-			instance.SettlInstTransType = view?.GetString(163);
-			instance.SettlInstRefID = view?.GetString(214);
-			instance.Parties?.Parse(view?.GetView("Parties"));
-			instance.Side = view?.GetString(54);
-			instance.Product = view?.GetInt32(460);
-			instance.SecurityType = view?.GetString(167);
-			instance.CFICode = view?.GetString(461);
-			instance.EffectiveTime = view?.GetDateTime(168);
-			instance.ExpireTime = view?.GetDateTime(126);
-			instance.LastUpdateTime = view?.GetDateTime(779);
-			instance.SettlInstructionsData?.Parse(view?.GetView("SettlInstructionsData"));
-			instance.PaymentMethod = view?.GetInt32(492);
-			instance.PaymentRef = view?.GetString(476);
-			instance.CardHolderName = view?.GetString(488);
-			instance.CardNumber = view?.GetString(489);
-			instance.CardStartDate = view?.GetDateTime(503);
-			instance.CardExpDate = view?.GetDateTime(490);
-			instance.CardIssNum = view?.GetString(491);
-			instance.PaymentDate = view?.GetDateTime(504);
-			instance.PaymentRemitterID = view?.GetString(505);
+			if (view is null) return;
+			
+			instance.SettlInstID = view.GetString(162);
+			instance.SettlInstTransType = view.GetString(163);
+			instance.SettlInstRefID = view.GetString(214);
+			instance.Parties?.Parse(view.GetView("Parties"));
+			instance.Side = view.GetString(54);
+			instance.Product = view.GetInt32(460);
+			instance.SecurityType = view.GetString(167);
+			instance.CFICode = view.GetString(461);
+			instance.EffectiveTime = view.GetDateTime(168);
+			instance.ExpireTime = view.GetDateTime(126);
+			instance.LastUpdateTime = view.GetDateTime(779);
+			instance.SettlInstructionsData?.Parse(view.GetView("SettlInstructionsData"));
+			instance.PaymentMethod = view.GetInt32(492);
+			instance.PaymentRef = view.GetString(476);
+			instance.CardHolderName = view.GetString(488);
+			instance.CardNumber = view.GetString(489);
+			instance.CardStartDate = view.GetDateTime(503);
+			instance.CardExpDate = view.GetDateTime(490);
+			instance.CardIssNum = view.GetString(491);
+			instance.PaymentDate = view.GetDateTime(504);
+			instance.PaymentRemitterID = view.GetString(505);
 		}
 	}
 }

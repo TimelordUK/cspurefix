@@ -12,16 +12,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this RelSymDerivSecGrpNoRelatedSym instance, MsgView? view)
 		{
-			instance.Instrument?.Parse(view?.GetView("Instrument"));
-			instance.Currency = view?.GetString(15);
-			instance.ExpirationCycle = view?.GetInt32(827);
-			instance.InstrumentExtension?.Parse(view?.GetView("InstrumentExtension"));
-			instance.InstrmtLegGrp?.Parse(view?.GetView("InstrmtLegGrp"));
-			instance.TradingSessionID = view?.GetString(336);
-			instance.TradingSessionSubID = view?.GetString(625);
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
+			if (view is null) return;
+			
+			instance.Instrument?.Parse(view.GetView("Instrument"));
+			instance.Currency = view.GetString(15);
+			instance.ExpirationCycle = view.GetInt32(827);
+			instance.InstrumentExtension?.Parse(view.GetView("InstrumentExtension"));
+			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
+			instance.TradingSessionID = view.GetString(336);
+			instance.TradingSessionSubID = view.GetString(625);
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
 		}
 	}
 }

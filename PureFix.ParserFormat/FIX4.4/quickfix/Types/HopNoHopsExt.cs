@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this HopNoHops instance, MsgView? view)
 		{
-			instance.HopCompID = view?.GetString(628);
-			instance.HopSendingTime = view?.GetDateTime(629);
-			instance.HopRefID = view?.GetInt32(630);
+			if (view is null) return;
+			
+			instance.HopCompID = view.GetString(628);
+			instance.HopSendingTime = view.GetDateTime(629);
+			instance.HopRefID = view.GetInt32(630);
 		}
 	}
 }

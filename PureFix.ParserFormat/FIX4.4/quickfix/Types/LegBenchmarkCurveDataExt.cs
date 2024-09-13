@@ -12,11 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this LegBenchmarkCurveData instance, MsgView? view)
 		{
-			instance.LegBenchmarkCurveCurrency = view?.GetString(676);
-			instance.LegBenchmarkCurveName = view?.GetString(677);
-			instance.LegBenchmarkCurvePoint = view?.GetString(678);
-			instance.LegBenchmarkPrice = view?.GetDouble(679);
-			instance.LegBenchmarkPriceType = view?.GetInt32(680);
+			if (view is null) return;
+			
+			instance.LegBenchmarkCurveCurrency = view.GetString(676);
+			instance.LegBenchmarkCurveName = view.GetString(677);
+			instance.LegBenchmarkCurvePoint = view.GetString(678);
+			instance.LegBenchmarkPrice = view.GetDouble(679);
+			instance.LegBenchmarkPriceType = view.GetInt32(680);
 		}
 	}
 }

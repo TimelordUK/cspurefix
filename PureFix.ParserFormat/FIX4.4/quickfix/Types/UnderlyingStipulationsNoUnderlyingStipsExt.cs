@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this UnderlyingStipulationsNoUnderlyingStips instance, MsgView? view)
 		{
-			instance.UnderlyingStipType = view?.GetString(888);
-			instance.UnderlyingStipValue = view?.GetString(889);
+			if (view is null) return;
+			
+			instance.UnderlyingStipType = view.GetString(888);
+			instance.UnderlyingStipValue = view.GetString(889);
 		}
 	}
 }

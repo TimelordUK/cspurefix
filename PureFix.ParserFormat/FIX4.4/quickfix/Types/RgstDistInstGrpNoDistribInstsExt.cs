@@ -12,14 +12,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this RgstDistInstGrpNoDistribInsts instance, MsgView? view)
 		{
-			instance.DistribPaymentMethod = view?.GetInt32(477);
-			instance.DistribPercentage = view?.GetDouble(512);
-			instance.CashDistribCurr = view?.GetString(478);
-			instance.CashDistribAgentName = view?.GetString(498);
-			instance.CashDistribAgentCode = view?.GetString(499);
-			instance.CashDistribAgentAcctNumber = view?.GetString(500);
-			instance.CashDistribPayRef = view?.GetString(501);
-			instance.CashDistribAgentAcctName = view?.GetString(502);
+			if (view is null) return;
+			
+			instance.DistribPaymentMethod = view.GetInt32(477);
+			instance.DistribPercentage = view.GetDouble(512);
+			instance.CashDistribCurr = view.GetString(478);
+			instance.CashDistribAgentName = view.GetString(498);
+			instance.CashDistribAgentCode = view.GetString(499);
+			instance.CashDistribAgentAcctNumber = view.GetString(500);
+			instance.CashDistribPayRef = view.GetString(501);
+			instance.CashDistribAgentAcctName = view.GetString(502);
 		}
 	}
 }

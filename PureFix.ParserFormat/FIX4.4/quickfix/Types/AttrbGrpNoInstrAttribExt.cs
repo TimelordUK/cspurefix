@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this AttrbGrpNoInstrAttrib instance, MsgView? view)
 		{
-			instance.InstrAttribType = view?.GetInt32(871);
-			instance.InstrAttribValue = view?.GetString(872);
+			if (view is null) return;
+			
+			instance.InstrAttribType = view.GetInt32(871);
+			instance.InstrAttribValue = view.GetString(872);
 		}
 	}
 }

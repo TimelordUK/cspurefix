@@ -12,10 +12,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this PartiesNoPartyIDs instance, MsgView? view)
 		{
-			instance.PartyID = view?.GetString(448);
-			instance.PartyIDSource = view?.GetString(447);
-			instance.PartyRole = view?.GetInt32(452);
-			instance.PtysSubGrp?.Parse(view?.GetView("PtysSubGrp"));
+			if (view is null) return;
+			
+			instance.PartyID = view.GetString(448);
+			instance.PartyIDSource = view.GetString(447);
+			instance.PartyRole = view.GetInt32(452);
+			instance.PtysSubGrp?.Parse(view.GetView("PtysSubGrp"));
 		}
 	}
 }

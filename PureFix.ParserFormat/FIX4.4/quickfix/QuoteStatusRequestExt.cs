@@ -13,21 +13,23 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this QuoteStatusRequest instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.QuoteStatusReqID = view?.GetString(649);
-			instance.QuoteID = view?.GetString(117);
-			instance.Instrument?.Parse(view?.GetView("Instrument"));
-			instance.FinancingDetails?.Parse(view?.GetView("FinancingDetails"));
-			instance.UndInstrmtGrp?.Parse(view?.GetView("UndInstrmtGrp"));
-			instance.InstrmtLegGrp?.Parse(view?.GetView("InstrmtLegGrp"));
-			instance.Parties?.Parse(view?.GetView("Parties"));
-			instance.Account = view?.GetString(1);
-			instance.AcctIDSource = view?.GetInt32(660);
-			instance.AccountType = view?.GetInt32(581);
-			instance.TradingSessionID = view?.GetString(336);
-			instance.TradingSessionSubID = view?.GetString(625);
-			instance.SubscriptionRequestType = view?.GetString(263);
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.QuoteStatusReqID = view.GetString(649);
+			instance.QuoteID = view.GetString(117);
+			instance.Instrument?.Parse(view.GetView("Instrument"));
+			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
+			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
+			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
+			instance.Parties?.Parse(view.GetView("Parties"));
+			instance.Account = view.GetString(1);
+			instance.AcctIDSource = view.GetInt32(660);
+			instance.AccountType = view.GetInt32(581);
+			instance.TradingSessionID = view.GetString(336);
+			instance.TradingSessionSubID = view.GetString(625);
+			instance.SubscriptionRequestType = view.GetString(263);
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this PositionAmountDataNoPosAmt instance, MsgView? view)
 		{
-			instance.PosAmtType = view?.GetString(707);
-			instance.PosAmt = view?.GetDouble(708);
+			if (view is null) return;
+			
+			instance.PosAmtType = view.GetString(707);
+			instance.PosAmt = view.GetDouble(708);
 		}
 	}
 }

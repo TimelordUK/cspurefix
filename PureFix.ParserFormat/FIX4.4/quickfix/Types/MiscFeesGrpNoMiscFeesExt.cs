@@ -12,10 +12,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this MiscFeesGrpNoMiscFees instance, MsgView? view)
 		{
-			instance.MiscFeeAmt = view?.GetDouble(137);
-			instance.MiscFeeCurr = view?.GetString(138);
-			instance.MiscFeeType = view?.GetString(139);
-			instance.MiscFeeBasis = view?.GetInt32(891);
+			if (view is null) return;
+			
+			instance.MiscFeeAmt = view.GetDouble(137);
+			instance.MiscFeeCurr = view.GetString(138);
+			instance.MiscFeeType = view.GetString(139);
+			instance.MiscFeeBasis = view.GetInt32(891);
 		}
 	}
 }

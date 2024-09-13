@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this ExecAllocGrpNoExecs instance, MsgView? view)
 		{
-			instance.LastQty = view?.GetDouble(32);
-			instance.ExecID = view?.GetString(17);
-			instance.SecondaryExecID = view?.GetString(527);
-			instance.LastPx = view?.GetDouble(31);
-			instance.LastParPx = view?.GetDouble(669);
-			instance.LastCapacity = view?.GetString(29);
+			if (view is null) return;
+			
+			instance.LastQty = view.GetDouble(32);
+			instance.ExecID = view.GetString(17);
+			instance.SecondaryExecID = view.GetString(527);
+			instance.LastPx = view.GetDouble(31);
+			instance.LastParPx = view.GetDouble(669);
+			instance.LastCapacity = view.GetString(29);
 		}
 	}
 }

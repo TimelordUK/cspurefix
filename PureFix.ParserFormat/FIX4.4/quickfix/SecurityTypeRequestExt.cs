@@ -13,17 +13,19 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this SecurityTypeRequest instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.SecurityReqID = view?.GetString(320);
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
-			instance.TradingSessionID = view?.GetString(336);
-			instance.TradingSessionSubID = view?.GetString(625);
-			instance.Product = view?.GetInt32(460);
-			instance.SecurityType = view?.GetString(167);
-			instance.SecuritySubType = view?.GetString(762);
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.SecurityReqID = view.GetString(320);
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
+			instance.TradingSessionID = view.GetString(336);
+			instance.TradingSessionSubID = view.GetString(625);
+			instance.Product = view.GetInt32(460);
+			instance.SecurityType = view.GetString(167);
+			instance.SecuritySubType = view.GetString(762);
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

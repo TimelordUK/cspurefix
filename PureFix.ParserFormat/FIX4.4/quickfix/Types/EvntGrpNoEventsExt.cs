@@ -12,10 +12,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this EvntGrpNoEvents instance, MsgView? view)
 		{
-			instance.EventType = view?.GetInt32(865);
-			instance.EventDate = view?.GetDateTime(866);
-			instance.EventPx = view?.GetDouble(867);
-			instance.EventText = view?.GetString(868);
+			if (view is null) return;
+			
+			instance.EventType = view.GetInt32(865);
+			instance.EventDate = view.GetDateTime(866);
+			instance.EventPx = view.GetDouble(867);
+			instance.EventText = view.GetString(868);
 		}
 	}
 }

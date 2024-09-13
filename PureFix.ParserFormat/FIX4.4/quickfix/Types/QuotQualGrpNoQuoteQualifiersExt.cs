@@ -12,7 +12,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this QuotQualGrpNoQuoteQualifiers instance, MsgView? view)
 		{
-			instance.QuoteQualifier = view?.GetString(695);
+			if (view is null) return;
+			
+			instance.QuoteQualifier = view.GetString(695);
 		}
 	}
 }

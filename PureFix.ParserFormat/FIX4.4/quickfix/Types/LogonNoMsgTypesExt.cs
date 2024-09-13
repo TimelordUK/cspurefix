@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this LogonNoMsgTypes instance, MsgView? view)
 		{
-			instance.RefMsgType = view?.GetString(372);
-			instance.MsgDirection = view?.GetString(385);
+			if (view is null) return;
+			
+			instance.RefMsgType = view.GetString(372);
+			instance.MsgDirection = view.GetString(385);
 		}
 	}
 }

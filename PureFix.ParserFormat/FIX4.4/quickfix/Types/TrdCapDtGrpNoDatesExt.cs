@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this TrdCapDtGrpNoDates instance, MsgView? view)
 		{
-			instance.TradeDate = view?.GetDateTime(75);
-			instance.TransactTime = view?.GetDateTime(60);
+			if (view is null) return;
+			
+			instance.TradeDate = view.GetDateTime(75);
+			instance.TransactTime = view.GetDateTime(60);
 		}
 	}
 }

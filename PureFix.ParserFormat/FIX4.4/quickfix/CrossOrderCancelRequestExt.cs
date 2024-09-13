@@ -13,18 +13,20 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this CrossOrderCancelRequest instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.OrderID = view?.GetString(37);
-			instance.CrossID = view?.GetString(548);
-			instance.OrigCrossID = view?.GetString(551);
-			instance.CrossType = view?.GetInt32(549);
-			instance.CrossPrioritization = view?.GetInt32(550);
-			instance.SideCrossOrdCxlGrp?.Parse(view?.GetView("SideCrossOrdCxlGrp"));
-			instance.Instrument?.Parse(view?.GetView("Instrument"));
-			instance.UndInstrmtGrp?.Parse(view?.GetView("UndInstrmtGrp"));
-			instance.InstrmtLegGrp?.Parse(view?.GetView("InstrmtLegGrp"));
-			instance.TransactTime = view?.GetDateTime(60);
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.OrderID = view.GetString(37);
+			instance.CrossID = view.GetString(548);
+			instance.OrigCrossID = view.GetString(551);
+			instance.CrossType = view.GetInt32(549);
+			instance.CrossPrioritization = view.GetInt32(550);
+			instance.SideCrossOrdCxlGrp?.Parse(view.GetView("SideCrossOrdCxlGrp"));
+			instance.Instrument?.Parse(view.GetView("Instrument"));
+			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
+			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
+			instance.TransactTime = view.GetDateTime(60);
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

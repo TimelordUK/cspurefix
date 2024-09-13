@@ -12,14 +12,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this RFQReqGrpNoRelatedSym instance, MsgView? view)
 		{
-			instance.Instrument?.Parse(view?.GetView("Instrument"));
-			instance.UndInstrmtGrp?.Parse(view?.GetView("UndInstrmtGrp"));
-			instance.InstrmtLegGrp?.Parse(view?.GetView("InstrmtLegGrp"));
-			instance.PrevClosePx = view?.GetDouble(140);
-			instance.QuoteRequestType = view?.GetInt32(303);
-			instance.QuoteType = view?.GetInt32(537);
-			instance.TradingSessionID = view?.GetString(336);
-			instance.TradingSessionSubID = view?.GetString(625);
+			if (view is null) return;
+			
+			instance.Instrument?.Parse(view.GetView("Instrument"));
+			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
+			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
+			instance.PrevClosePx = view.GetDouble(140);
+			instance.QuoteRequestType = view.GetInt32(303);
+			instance.QuoteType = view.GetInt32(537);
+			instance.TradingSessionID = view.GetString(336);
+			instance.TradingSessionSubID = view.GetString(625);
 		}
 	}
 }

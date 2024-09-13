@@ -12,13 +12,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this DiscretionInstructions instance, MsgView? view)
 		{
-			instance.DiscretionInst = view?.GetString(388);
-			instance.DiscretionOffsetValue = view?.GetDouble(389);
-			instance.DiscretionMoveType = view?.GetInt32(841);
-			instance.DiscretionOffsetType = view?.GetInt32(842);
-			instance.DiscretionLimitType = view?.GetInt32(843);
-			instance.DiscretionRoundDirection = view?.GetInt32(844);
-			instance.DiscretionScope = view?.GetInt32(846);
+			if (view is null) return;
+			
+			instance.DiscretionInst = view.GetString(388);
+			instance.DiscretionOffsetValue = view.GetDouble(389);
+			instance.DiscretionMoveType = view.GetInt32(841);
+			instance.DiscretionOffsetType = view.GetInt32(842);
+			instance.DiscretionLimitType = view.GetInt32(843);
+			instance.DiscretionRoundDirection = view.GetInt32(844);
+			instance.DiscretionScope = view.GetInt32(846);
 		}
 	}
 }

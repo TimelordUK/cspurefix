@@ -13,22 +13,24 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this MassQuoteAcknowledgement instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.QuoteReqID = view?.GetString(131);
-			instance.QuoteID = view?.GetString(117);
-			instance.QuoteStatus = view?.GetInt32(297);
-			instance.QuoteRejectReason = view?.GetInt32(300);
-			instance.QuoteResponseLevel = view?.GetInt32(301);
-			instance.QuoteType = view?.GetInt32(537);
-			instance.Parties?.Parse(view?.GetView("Parties"));
-			instance.Account = view?.GetString(1);
-			instance.AcctIDSource = view?.GetInt32(660);
-			instance.AccountType = view?.GetInt32(581);
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
-			instance.QuotSetAckGrp?.Parse(view?.GetView("QuotSetAckGrp"));
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.QuoteReqID = view.GetString(131);
+			instance.QuoteID = view.GetString(117);
+			instance.QuoteStatus = view.GetInt32(297);
+			instance.QuoteRejectReason = view.GetInt32(300);
+			instance.QuoteResponseLevel = view.GetInt32(301);
+			instance.QuoteType = view.GetInt32(537);
+			instance.Parties?.Parse(view.GetView("Parties"));
+			instance.Account = view.GetString(1);
+			instance.AcctIDSource = view.GetInt32(660);
+			instance.AccountType = view.GetInt32(581);
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
+			instance.QuotSetAckGrp?.Parse(view.GetView("QuotSetAckGrp"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

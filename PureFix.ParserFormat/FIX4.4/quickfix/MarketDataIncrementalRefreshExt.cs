@@ -13,12 +13,14 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this MarketDataIncrementalRefresh instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.MDReqID = view?.GetString(262);
-			instance.MDIncGrp?.Parse(view?.GetView("MDIncGrp"));
-			instance.ApplQueueDepth = view?.GetInt32(813);
-			instance.ApplQueueResolution = view?.GetInt32(814);
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.MDReqID = view.GetString(262);
+			instance.MDIncGrp?.Parse(view.GetView("MDIncGrp"));
+			instance.ApplQueueDepth = view.GetInt32(813);
+			instance.ApplQueueResolution = view.GetInt32(814);
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

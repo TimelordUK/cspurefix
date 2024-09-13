@@ -12,10 +12,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this CommissionData instance, MsgView? view)
 		{
-			instance.Commission = view?.GetDouble(12);
-			instance.CommType = view?.GetString(13);
-			instance.CommCurrency = view?.GetString(479);
-			instance.FundRenewWaiv = view?.GetString(497);
+			if (view is null) return;
+			
+			instance.Commission = view.GetDouble(12);
+			instance.CommType = view.GetString(13);
+			instance.CommCurrency = view.GetString(479);
+			instance.FundRenewWaiv = view.GetString(497);
 		}
 	}
 }

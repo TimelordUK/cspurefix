@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this AffectedOrdGrpNoAffectedOrders instance, MsgView? view)
 		{
-			instance.OrigClOrdID = view?.GetString(41);
-			instance.AffectedOrderID = view?.GetString(535);
-			instance.AffectedSecondaryOrderID = view?.GetString(536);
+			if (view is null) return;
+			
+			instance.OrigClOrdID = view.GetString(41);
+			instance.AffectedOrderID = view.GetString(535);
+			instance.AffectedSecondaryOrderID = view.GetString(536);
 		}
 	}
 }

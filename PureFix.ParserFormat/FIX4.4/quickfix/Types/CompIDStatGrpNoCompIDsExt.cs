@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this CompIDStatGrpNoCompIDs instance, MsgView? view)
 		{
-			instance.RefCompID = view?.GetString(930);
-			instance.RefSubID = view?.GetString(931);
-			instance.LocationID = view?.GetString(283);
-			instance.DeskID = view?.GetString(284);
-			instance.StatusValue = view?.GetInt32(928);
-			instance.StatusText = view?.GetString(929);
+			if (view is null) return;
+			
+			instance.RefCompID = view.GetString(930);
+			instance.RefSubID = view.GetString(931);
+			instance.LocationID = view.GetString(283);
+			instance.DeskID = view.GetString(284);
+			instance.StatusValue = view.GetInt32(928);
+			instance.StatusText = view.GetString(929);
 		}
 	}
 }

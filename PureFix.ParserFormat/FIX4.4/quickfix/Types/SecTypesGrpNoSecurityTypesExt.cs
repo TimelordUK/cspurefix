@@ -12,10 +12,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this SecTypesGrpNoSecurityTypes instance, MsgView? view)
 		{
-			instance.SecurityType = view?.GetString(167);
-			instance.SecuritySubType = view?.GetString(762);
-			instance.Product = view?.GetInt32(460);
-			instance.CFICode = view?.GetString(461);
+			if (view is null) return;
+			
+			instance.SecurityType = view.GetString(167);
+			instance.SecuritySubType = view.GetString(762);
+			instance.Product = view.GetInt32(460);
+			instance.CFICode = view.GetString(461);
 		}
 	}
 }

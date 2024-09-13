@@ -12,7 +12,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this InstrmtLegGrpNoLegs instance, MsgView? view)
 		{
-			instance.InstrumentLeg?.Parse(view?.GetView("InstrumentLeg"));
+			if (view is null) return;
+			
+			instance.InstrumentLeg?.Parse(view.GetView("InstrumentLeg"));
 		}
 	}
 }

@@ -12,11 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this OrderQtyData instance, MsgView? view)
 		{
-			instance.OrderQty = view?.GetDouble(38);
-			instance.CashOrderQty = view?.GetDouble(152);
-			instance.OrderPercent = view?.GetDouble(516);
-			instance.RoundingDirection = view?.GetString(468);
-			instance.RoundingModulus = view?.GetDouble(469);
+			if (view is null) return;
+			
+			instance.OrderQty = view.GetDouble(38);
+			instance.CashOrderQty = view.GetDouble(152);
+			instance.OrderPercent = view.GetDouble(516);
+			instance.RoundingDirection = view.GetString(468);
+			instance.RoundingModulus = view.GetDouble(469);
 		}
 	}
 }

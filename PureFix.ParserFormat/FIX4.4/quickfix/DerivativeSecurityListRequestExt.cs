@@ -13,19 +13,21 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this DerivativeSecurityListRequest instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.SecurityReqID = view?.GetString(320);
-			instance.SecurityListRequestType = view?.GetInt32(559);
-			instance.UnderlyingInstrument?.Parse(view?.GetView("UnderlyingInstrument"));
-			instance.SecuritySubType = view?.GetString(762);
-			instance.Currency = view?.GetString(15);
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
-			instance.TradingSessionID = view?.GetString(336);
-			instance.TradingSessionSubID = view?.GetString(625);
-			instance.SubscriptionRequestType = view?.GetString(263);
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.SecurityReqID = view.GetString(320);
+			instance.SecurityListRequestType = view.GetInt32(559);
+			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
+			instance.SecuritySubType = view.GetString(762);
+			instance.Currency = view.GetString(15);
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
+			instance.TradingSessionID = view.GetString(336);
+			instance.TradingSessionSubID = view.GetString(625);
+			instance.SubscriptionRequestType = view.GetString(263);
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

@@ -13,11 +13,13 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this BidResponse instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.BidID = view?.GetString(390);
-			instance.ClientBidID = view?.GetString(391);
-			instance.BidCompRspGrp?.Parse(view?.GetView("BidCompRspGrp"));
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.BidID = view.GetString(390);
+			instance.ClientBidID = view.GetString(391);
+			instance.BidCompRspGrp?.Parse(view.GetView("BidCompRspGrp"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

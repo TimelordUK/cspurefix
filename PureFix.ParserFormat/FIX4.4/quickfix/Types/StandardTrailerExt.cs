@@ -12,9 +12,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this StandardTrailer instance, MsgView? view)
 		{
-			instance.SignatureLength = view?.GetInt32(93);
-			instance.Signature = view?.GetByteArray(89);
-			instance.CheckSum = view?.GetString(10);
+			if (view is null) return;
+			
+			instance.SignatureLength = view.GetInt32(93);
+			instance.Signature = view.GetByteArray(89);
+			instance.CheckSum = view.GetString(10);
 		}
 	}
 }

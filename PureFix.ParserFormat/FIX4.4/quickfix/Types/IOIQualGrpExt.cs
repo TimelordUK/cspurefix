@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this IOIQualGrp instance, MsgView? view)
 		{
-			var count = view?.GroupCount() ?? 0;
+			if (view is null) return;
+			
+			var count = view.GroupCount();
 			instance.NoIOIQualifiers = new IOIQualGrpNoIOIQualifiers [count];
 			for (var i = 0; i < count; ++i)
 			{
 				instance.NoIOIQualifiers[i] = new();
-				instance.NoIOIQualifiers[i].Parse(view?[i]);
+				instance.NoIOIQualifiers[i].Parse(view[i]);
 			}
 		}
 	}

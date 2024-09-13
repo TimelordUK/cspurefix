@@ -12,11 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this QuotSetAckGrpNoQuoteSets instance, MsgView? view)
 		{
-			instance.QuoteSetID = view?.GetString(302);
-			instance.UnderlyingInstrument?.Parse(view?.GetView("UnderlyingInstrument"));
-			instance.TotNoQuoteEntries = view?.GetInt32(304);
-			instance.LastFragment = view?.GetBool(893);
-			instance.QuotEntryAckGrp?.Parse(view?.GetView("QuotEntryAckGrp"));
+			if (view is null) return;
+			
+			instance.QuoteSetID = view.GetString(302);
+			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
+			instance.TotNoQuoteEntries = view.GetInt32(304);
+			instance.LastFragment = view.GetBool(893);
+			instance.QuotEntryAckGrp?.Parse(view.GetView("QuotEntryAckGrp"));
 		}
 	}
 }

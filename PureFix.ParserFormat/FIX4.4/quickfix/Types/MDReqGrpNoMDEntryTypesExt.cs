@@ -12,7 +12,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this MDReqGrpNoMDEntryTypes instance, MsgView? view)
 		{
-			instance.MDEntryType = view?.GetString(269);
+			if (view is null) return;
+			
+			instance.MDEntryType = view.GetString(269);
 		}
 	}
 }

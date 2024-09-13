@@ -12,8 +12,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this RoutingGrpNoRoutingIDs instance, MsgView? view)
 		{
-			instance.RoutingType = view?.GetInt32(216);
-			instance.RoutingID = view?.GetString(217);
+			if (view is null) return;
+			
+			instance.RoutingType = view.GetInt32(216);
+			instance.RoutingID = view.GetString(217);
 		}
 	}
 }

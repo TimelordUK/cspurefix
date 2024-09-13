@@ -12,11 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this ContraGrpNoContraBrokers instance, MsgView? view)
 		{
-			instance.ContraBroker = view?.GetString(375);
-			instance.ContraTrader = view?.GetString(337);
-			instance.ContraTradeQty = view?.GetDouble(437);
-			instance.ContraTradeTime = view?.GetDateTime(438);
-			instance.ContraLegRefID = view?.GetString(655);
+			if (view is null) return;
+			
+			instance.ContraBroker = view.GetString(375);
+			instance.ContraTrader = view.GetString(337);
+			instance.ContraTradeQty = view.GetDouble(437);
+			instance.ContraTradeTime = view.GetDateTime(438);
+			instance.ContraLegRefID = view.GetString(655);
 		}
 	}
 }

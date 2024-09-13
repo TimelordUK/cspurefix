@@ -12,10 +12,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this NestedPartiesNoNestedPartyIDs instance, MsgView? view)
 		{
-			instance.NestedPartyID = view?.GetString(524);
-			instance.NestedPartyIDSource = view?.GetString(525);
-			instance.NestedPartyRole = view?.GetInt32(538);
-			instance.NstdPtysSubGrp?.Parse(view?.GetView("NstdPtysSubGrp"));
+			if (view is null) return;
+			
+			instance.NestedPartyID = view.GetString(524);
+			instance.NestedPartyIDSource = view.GetString(525);
+			instance.NestedPartyRole = view.GetInt32(538);
+			instance.NstdPtysSubGrp?.Parse(view.GetView("NstdPtysSubGrp"));
 		}
 	}
 }

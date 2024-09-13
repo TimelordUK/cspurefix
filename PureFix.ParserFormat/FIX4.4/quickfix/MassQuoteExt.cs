@@ -13,19 +13,21 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this MassQuote instance, MsgView? view)
 		{
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.QuoteReqID = view?.GetString(131);
-			instance.QuoteID = view?.GetString(117);
-			instance.QuoteType = view?.GetInt32(537);
-			instance.QuoteResponseLevel = view?.GetInt32(301);
-			instance.Parties?.Parse(view?.GetView("Parties"));
-			instance.Account = view?.GetString(1);
-			instance.AcctIDSource = view?.GetInt32(660);
-			instance.AccountType = view?.GetInt32(581);
-			instance.DefBidSize = view?.GetDouble(293);
-			instance.DefOfferSize = view?.GetDouble(294);
-			instance.QuotSetGrp?.Parse(view?.GetView("QuotSetGrp"));
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			if (view is null) return;
+			
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.QuoteReqID = view.GetString(131);
+			instance.QuoteID = view.GetString(117);
+			instance.QuoteType = view.GetInt32(537);
+			instance.QuoteResponseLevel = view.GetInt32(301);
+			instance.Parties?.Parse(view.GetView("Parties"));
+			instance.Account = view.GetString(1);
+			instance.AcctIDSource = view.GetInt32(660);
+			instance.AccountType = view.GetInt32(581);
+			instance.DefBidSize = view.GetDouble(293);
+			instance.DefOfferSize = view.GetDouble(294);
+			instance.QuotSetGrp?.Parse(view.GetView("QuotSetGrp"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }
