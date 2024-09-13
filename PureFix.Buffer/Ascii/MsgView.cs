@@ -125,8 +125,16 @@ namespace PureFix.Buffer.Ascii
 
         public MsgView? GetView(string name)
         {
+            // As this is the most common case we'll optimize for it
+            if (name.IndexOf('.') == -1)
+            {
+                return Process(this, name);
+            }
+
             var parts = name.Split('.');
-            return parts.Aggregate(this, static (a, current) =>
+            return parts.Aggregate(this, static (a, current) => Process(a, current)!);
+            
+            static MsgView? Process(MsgView a, string current)
             {
                 var subStructure = a.Structure;
                 if (a.Segment == null)
@@ -149,7 +157,7 @@ namespace PureFix.Buffer.Ascii
                     }
                 }
                 return null;
-            });
+            }
         }
 
         protected int GetPosition(int tag)
