@@ -13,11 +13,11 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this Heartbeat instance, MsgView? view)
 		{
-			if (view is null) return;
-			
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
-			instance.TestReqID = view.GetString(112);
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
+			instance.StandardHeader = new StandardHeader();
+			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
+			instance.TestReqID = view?.GetString(112);
+			instance.StandardTrailer = new StandardTrailer();
+			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
 		}
 	}
 }

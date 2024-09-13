@@ -13,27 +13,27 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this Logon instance, MsgView? view)
 		{
-			if (view is null) return;
-			
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
-			instance.EncryptMethod = view.GetInt32(98);
-			instance.HeartBtInt = view.GetInt32(108);
-			instance.RawDataLength = view.GetInt32(95);
-			instance.RawData = view.GetByteArray(96);
-			instance.ResetSeqNumFlag = view.GetBool(141);
-			instance.NextExpectedMsgSeqNum = view.GetInt32(789);
-			instance.MaxMessageSize = view.GetInt32(383);
-			var count = view.GroupCount();
+			instance.StandardHeader = new StandardHeader();
+			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
+			instance.EncryptMethod = view?.GetInt32(98);
+			instance.HeartBtInt = view?.GetInt32(108);
+			instance.RawDataLength = view?.GetInt32(95);
+			instance.RawData = view?.GetByteArray(96);
+			instance.ResetSeqNumFlag = view?.GetBool(141);
+			instance.NextExpectedMsgSeqNum = view?.GetInt32(789);
+			instance.MaxMessageSize = view?.GetInt32(383);
+			var count = view?.GroupCount() ?? 0;
 			instance.NoMsgTypes = new LogonNoMsgTypes [count];
 			for (var i = 0; i < count; ++i)
 			{
 				instance.NoMsgTypes[i] = new();
-				instance.NoMsgTypes[i].Parse(view[i]);
+				instance.NoMsgTypes[i].Parse(view?[i]);
 			}
-			instance.TestMessageIndicator = view.GetBool(464);
-			instance.Username = view.GetString(553);
-			instance.Password = view.GetString(554);
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
+			instance.TestMessageIndicator = view?.GetBool(464);
+			instance.Username = view?.GetString(553);
+			instance.Password = view?.GetString(554);
+			instance.StandardTrailer = new StandardTrailer();
+			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
 		}
 	}
 }

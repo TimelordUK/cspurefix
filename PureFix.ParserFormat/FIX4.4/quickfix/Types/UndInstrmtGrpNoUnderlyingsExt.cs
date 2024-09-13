@@ -12,9 +12,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this UndInstrmtGrpNoUnderlyings instance, MsgView? view)
 		{
-			if (view is null) return;
-			
-			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
+			instance.UnderlyingInstrument = new UnderlyingInstrument();
+			instance.UnderlyingInstrument?.Parse(view?.GetView("UnderlyingInstrument"));
 		}
 	}
 }

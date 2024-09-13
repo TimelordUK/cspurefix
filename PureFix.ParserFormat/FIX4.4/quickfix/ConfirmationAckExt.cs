@@ -13,19 +13,19 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this ConfirmationAck instance, MsgView? view)
 		{
-			if (view is null) return;
-			
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
-			instance.ConfirmID = view.GetString(664);
-			instance.TradeDate = view.GetDateTime(75);
-			instance.TransactTime = view.GetDateTime(60);
-			instance.AffirmStatus = view.GetInt32(940);
-			instance.ConfirmRejReason = view.GetInt32(774);
-			instance.MatchStatus = view.GetString(573);
-			instance.Text = view.GetString(58);
-			instance.EncodedTextLen = view.GetInt32(354);
-			instance.EncodedText = view.GetByteArray(355);
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
+			instance.StandardHeader = new StandardHeader();
+			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
+			instance.ConfirmID = view?.GetString(664);
+			instance.TradeDate = view?.GetDateTime(75);
+			instance.TransactTime = view?.GetDateTime(60);
+			instance.AffirmStatus = view?.GetInt32(940);
+			instance.ConfirmRejReason = view?.GetInt32(774);
+			instance.MatchStatus = view?.GetString(573);
+			instance.Text = view?.GetString(58);
+			instance.EncodedTextLen = view?.GetInt32(354);
+			instance.EncodedText = view?.GetByteArray(355);
+			instance.StandardTrailer = new StandardTrailer();
+			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
 		}
 	}
 }

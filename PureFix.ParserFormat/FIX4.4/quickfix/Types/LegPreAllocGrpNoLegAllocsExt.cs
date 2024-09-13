@@ -12,14 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this LegPreAllocGrpNoLegAllocs instance, MsgView? view)
 		{
-			if (view is null) return;
-			
-			instance.LegAllocAccount = view.GetString(671);
-			instance.LegIndividualAllocID = view.GetString(672);
-			instance.NestedParties2?.Parse(view.GetView("NestedParties2"));
-			instance.LegAllocQty = view.GetDouble(673);
-			instance.LegAllocAcctIDSource = view.GetString(674);
-			instance.LegSettlCurrency = view.GetString(675);
+			instance.LegAllocAccount = view?.GetString(671);
+			instance.LegIndividualAllocID = view?.GetString(672);
+			instance.NestedParties2 = new NestedParties2();
+			instance.NestedParties2?.Parse(view?.GetView("NestedParties2"));
+			instance.LegAllocQty = view?.GetDouble(673);
+			instance.LegAllocAcctIDSource = view?.GetString(674);
+			instance.LegSettlCurrency = view?.GetString(675);
 		}
 	}
 }
