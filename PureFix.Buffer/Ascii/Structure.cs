@@ -33,7 +33,7 @@ namespace PureFix.Buffer.Ascii
             {
                 if (_groups != null && _groups.TryGetValue(name, out var instances))
                 {
-                    return instances.FirstOrDefault(segment.Contains);
+                    return GetSegmentDescription(instances, segment);
                 }
                 return null;
             }
@@ -42,7 +42,7 @@ namespace PureFix.Buffer.Ascii
             {
                 if (_groups != null && _groups.TryGetValue(name, out var instances))
                 {
-                    return instances.FirstOrDefault(segment.Contains);
+                    return GetSegmentDescription(instances, segment);
                 }
             }
             else
@@ -51,6 +51,20 @@ namespace PureFix.Buffer.Ascii
             }
 
             return null;
+
+            static SegmentDescription? GetSegmentDescription(IReadOnlyList<SegmentDescription> descriptions, SegmentDescription segment)
+            {
+                for (int i = 0, length = descriptions.Count; i < length; i++)
+                {
+                    var item = descriptions[i];
+                    if (segment.Contains(item))
+                    {
+                        return item;
+                    }
+                }
+
+                return null;
+            }
         }
 
         private void BoundLayout(SegmentDescription? segment = null)
