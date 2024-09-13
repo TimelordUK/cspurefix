@@ -11,9 +11,9 @@ namespace PureFix.Buffer.Ascii
 {
     public record struct Structure 
     {
-        private Dictionary<string, SegmentDescription>? _components;
+        private Dictionary<string, SegmentDescription>? _singletons;
         // do not create unless needed
-        private Dictionary<string, List<SegmentDescription>>? _groups;
+        private Dictionary<string, List<SegmentDescription>>? _arrays;
         public IReadOnlyList<SegmentDescription> Segments { get; }
 
         public Tags Tags { get; }
@@ -25,22 +25,27 @@ namespace PureFix.Buffer.Ascii
             BoundLayout();
         }
 
+        public readonly IReadOnlyList<SegmentDescription>? GetInstances(string name)
+        {
+            return _arrays?.GetValueOrDefault(name);
+        }
+
         public readonly SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
 
         public readonly SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
         {
-            if (_components == null)
+            if (_singletons == null)
             {
-                if (_groups != null && _groups.TryGetValue(name, out var instances))
+                if (_arrays != null && _arrays.TryGetValue(name, out var instances))
                 {
                     return GetSegmentDescription(instances, segment);
                 }
                 return null;
             }
 
-            if (!_components.TryGetValue(name, out var component))
+            if (!_singletons.TryGetValue(name, out var component))
             {
-                if (_groups != null && _groups.TryGetValue(name, out var instances))
+                if (_arrays != null && _arrays.TryGetValue(name, out var instances))
                 {
                     return GetSegmentDescription(instances, segment);
                 }
@@ -67,6 +72,17 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
+        private void AddToGroup(SegmentDescription current)
+        {
+            if (current.Name == null) return;
+            _arrays ??= [];
+            if (!_arrays.TryGetValue(current.Name, out var instances))
+            {
+                _arrays[current.Name] = instances = [];
+            }
+            instances.Add(current);
+        }
+
         private void BoundLayout(SegmentDescription? segment = null)
         {
             for (var i = 0; i < Segments.Count; i++)
@@ -78,22 +94,28 @@ namespace PureFix.Buffer.Ascii
                 switch (current.Type)
                 {
                     case SegmentType.Group:
-                    {
-                        _groups ??= [];
-                        if (!_groups.TryGetValue(current.Name, out var instances))
                         {
-                            _groups[current.Name] = instances = [];
+                            AddToGroup(current);
+                            break;
                         }
-
-                        instances.Add(current);
-                        break;
-                    }
 
                     case SegmentType.Component:
                     case SegmentType.Msg:
                     case SegmentType.Batch:
-                        _components ??= [];
-                        _components[current.Name] = current;
+                        _singletons ??= [];
+                        if (_arrays != null && _arrays.ContainsKey(current.Name) )
+                        {
+                            // this is a component but repeated within a group and we need to store all instances
+                            AddToGroup(current);
+                        } else if (_singletons.TryGetValue(current.Name, out var single)) {
+                            _singletons.Remove(current.Name);
+                            AddToGroup(single);
+                            AddToGroup(current);
+                        }
+                        else
+                        {
+                            _singletons[current.Name] = current;
+                        }
                         break;
                 }
             }

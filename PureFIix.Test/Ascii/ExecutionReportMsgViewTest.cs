@@ -87,18 +87,44 @@ namespace PureFIix.Test.Ascii
         public void Parties_Structure_Test()
         {
             var structure = _views[0].Structure;
-            var parties = structure?.Segments.FirstOrDefault(s => s.Name == "Parties");
-            var noPartyIDs = structure?.Segments.FirstOrDefault(s => s.Name == "NoPartyIDs");
-            Assert.That(parties, Is.Not.Null);
-            Assert.That(parties.StartPosition, Is.EqualTo(20));
-            Assert.That(parties.EndPosition, Is.EqualTo(44));
-            Assert.That(parties.Depth, Is.EqualTo(1));
-            Assert.That(parties.Type, Is.EqualTo(SegmentType.Component));
-            Assert.That(noPartyIDs, Is.Not.Null);
-            Assert.That(noPartyIDs.StartPosition, Is.EqualTo(20));
-            Assert.That(noPartyIDs.EndPosition, Is.EqualTo(44));
-            Assert.That(noPartyIDs.Depth, Is.EqualTo(2));
-            Assert.That(noPartyIDs.Type, Is.EqualTo(SegmentType.Group));
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var parties = structure?.FirstContainedWithin("Parties", msg);
+            var noPartyIDs = structure?.FirstContainedWithin("NoPartyIDs", msg);
+            Assert.Multiple(() =>
+            {
+                Assert.That(parties, Is.Not.Null);
+                Assert.That(parties.StartPosition, Is.EqualTo(20));
+                Assert.That(parties.EndPosition, Is.EqualTo(44));
+                Assert.That(parties.Depth, Is.EqualTo(1));
+                Assert.That(parties.Type, Is.EqualTo(SegmentType.Component));
+
+                Assert.That(noPartyIDs, Is.Not.Null);
+                Assert.That(noPartyIDs.StartPosition, Is.EqualTo(20));
+                Assert.That(noPartyIDs.EndPosition, Is.EqualTo(44));
+                Assert.That(noPartyIDs.Depth, Is.EqualTo(2));
+                Assert.That(noPartyIDs.Type, Is.EqualTo(SegmentType.Group));
+            });
+        }
+
+        [Test]
+        public void Parties_PartySubIDType_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var ptysSubGrp = structure?.GetInstances("PtysSubGrp");
+            Assert.Multiple(() =>
+            {
+                Assert.That(ptysSubGrp, Is.Not.Null);
+                Assert.That(ptysSubGrp, Has.Count.EqualTo(3));
+                Assert.That(ptysSubGrp[0].StartPosition, Is.EqualTo(24));
+                Assert.That(ptysSubGrp[0].Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(ptysSubGrp[1].StartPosition, Is.EqualTo(32));
+                Assert.That(ptysSubGrp[1].Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(ptysSubGrp[2].StartPosition, Is.EqualTo(42));
+                Assert.That(ptysSubGrp[2].Type, Is.EqualTo(SegmentType.Component));
+            });
         }
     }
 }
