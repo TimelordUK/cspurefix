@@ -8,7 +8,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 namespace PureFix.Types.FIX44.QuickFix
 {
 	[MessageType("u", FixVersion.FIX44)]
-	public sealed class CrossOrderCancelRequest : FixMsg
+	public sealed class CrossOrderCancelRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
 		public StandardHeader? StandardHeader { get; set; }
@@ -45,7 +45,9 @@ namespace PureFix.Types.FIX44.QuickFix
 		
 		[Component(Offset = 11, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
-		public override string? MsgType => StandardHeader?.MsgType;
-		public override int? BodyLength => StandardHeader?.BodyLength;
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 	}
 }

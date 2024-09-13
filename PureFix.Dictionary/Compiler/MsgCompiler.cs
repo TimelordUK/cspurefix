@@ -121,7 +121,7 @@ namespace PureFix.Dictionary.Compiler
                 CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {MakeTypesNamespace()};"])
             );
 
-            var inheritsDeclaration = isMsg ? $" : {CompilerOptions.MsgInheritsFrom}" : "";
+            var inheritsDeclaration = MakeBase(compilerType);
             
             _builder.WriteLine(usingDeclaration);
             _builder.WriteLine();
@@ -138,6 +138,12 @@ namespace PureFix.Dictionary.Compiler
                     compilerType.Set.Iterate(this);
                     if (isMsg)
                     {
+                        _builder.WriteLine();
+                        _builder.WriteLine("IStandardHeader? IFixMessage.StandardHeader => StandardHeader;");
+                        _builder.WriteLine();
+                        _builder.WriteLine("IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;");
+
+                        /*
                         foreach (var headerOverride in CompilerOptions.HeaderOverrides)
                         {
                             var sf = Definitions.Simple.GetValueOrDefault(headerOverride);
@@ -146,11 +152,26 @@ namespace PureFix.Dictionary.Compiler
                                 var getter = $"=> StandardHeader?.{sf.Name}";
                                 _builder.WriteLine($"public override {Tags.ToCsType(sf.TagType)}? {sf.Name} {getter};");
                             }
-                        }
+                        }*/
                     }
                 }
             }
             return _builder.ToString();
+        }
+
+        private string MakeBase(CompilerType compilerType)
+        {
+            if(compilerType.Set.Type == ContainedSetType.Msg)
+            {
+                return $" : IFixMessage";
+            }
+
+            return compilerType.QualifiedName switch
+            {
+                "StandardHeader"    => " : IStandardHeader",
+                "StandardTrailer"   => " : IStandardTrailer",
+                _                   => ""
+            };
         }
 
         private void Enqueue(CompilerType ct)

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class StandardTrailer
+	public sealed class StandardTrailer : IStandardTrailer
 	{
 		[TagDetails(Tag = 93, Type = TagType.Length, Offset = 0, Required = false, LinksToTag = 89)]
 		public int? SignatureLength { get; set; }

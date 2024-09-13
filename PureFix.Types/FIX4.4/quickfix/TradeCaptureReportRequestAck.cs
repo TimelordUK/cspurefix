@@ -8,7 +8,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 namespace PureFix.Types.FIX44.QuickFix
 {
 	[MessageType("AQ", FixVersion.FIX44)]
-	public sealed class TradeCaptureReportRequestAck : FixMsg
+	public sealed class TradeCaptureReportRequestAck : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
 		public StandardHeader? StandardHeader { get; set; }
@@ -60,7 +60,9 @@ namespace PureFix.Types.FIX44.QuickFix
 		
 		[Component(Offset = 16, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
-		public override string? MsgType => StandardHeader?.MsgType;
-		public override int? BodyLength => StandardHeader?.BodyLength;
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 	}
 }
