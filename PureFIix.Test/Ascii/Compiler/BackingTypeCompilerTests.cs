@@ -26,11 +26,10 @@ namespace PureFIix.Test.Ascii.Compiler
         }
 
         [Test]
-        public async Task GenerateTypes()
+        public void GenerateTypes()
         {
             var compiler = new MsgCompiler(_testEntity.Definitions);
-            // await compiler.CreateTypes(new List<string>(["0"]));
-            await compiler.Generate();
+            compiler.Generate();
         }
     }
 }

@@ -6,10 +6,12 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Types;
+using static PureFix.Dictionary.Compiler.MsgCompiler;
 
 
 namespace PureFix.Dictionary.Compiler
@@ -54,14 +56,14 @@ namespace PureFix.Dictionary.Compiler
             CompilerOptions = options;
         }
 
-        public async Task Generate(IReadOnlyList<string>? types = null)
+        public void Generate(IReadOnlyList<string>? types = null)
         {
             types ??= CompilerOptions.MsgTypes;
             if (types == null) throw new InvalidDataException("no types defined to create");
-            await CreateTypes(types);
+            CreateTypes(types);
         }
 
-        public async Task CreateTypes(IReadOnlyList<string> types)
+        public void CreateTypes(IReadOnlyList<string> types)
         {
             foreach (var type in types)
             {
@@ -75,10 +77,10 @@ namespace PureFix.Dictionary.Compiler
                 Enqueue(ct);
             }
 
-            await Work();
+            Work();
         }
 
-        private async Task Work()
+        private void Work()
         {
             while (_workQueue.Count > 0)
             {
@@ -86,11 +88,21 @@ namespace PureFix.Dictionary.Compiler
                 var compiledType = GenerateMessages(compilerType);
                 var fullName = GetFileName(compilerType);
 
-                var directory = Path.GetDirectoryName(fullName);
-                if (directory is not null) Directory.CreateDirectory(directory);
-
-                await File.WriteAllTextAsync(fullName, compiledType);
+                WriteFile(fullName, compiledType);
             }
+        }
+
+        private void WriteFile(string filename, string content)
+        {
+            var directory = Path.GetDirectoryName(filename);
+            if (directory is not null) Directory.CreateDirectory(directory);
+
+            File.WriteAllText(filename, content);
+        }
+
+        private string MakeTypesNamespace()
+        {
+            return $"{CompilerOptions.BackingTypeNamespace}.Types";
         }
 
         public string GenerateMessages(CompilerType compilerType)
@@ -98,10 +110,17 @@ namespace PureFix.Dictionary.Compiler
             var isMsg = compilerType.Set.Type == ContainedSetType.Msg;
             var ns = isMsg
                 ? $"{CompilerOptions.BackingTypeNamespace}"
-                : $"{CompilerOptions.BackingTypeNamespace}.Types";
+                : MakeTypesNamespace();
+
             _builder.Reset();
             _currentCompilerType = compilerType;
-            var usingDeclaration = string.Join(Environment.NewLine, CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {CompilerOptions.BackingTypeNamespace}.Types;"]));
+
+            var usingDeclaration = string.Join
+            (
+                Environment.NewLine, 
+                CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {MakeTypesNamespace()};"])
+            );
+
             var inheritsDeclaration = isMsg ? $" : {CompilerOptions.MsgInheritsFrom}" : "";
             
             _builder.WriteLine(usingDeclaration);
@@ -153,7 +172,13 @@ namespace PureFix.Dictionary.Compiler
             {
                 return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, $"{name}")}.cs";
             }
-            return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, "Types", $"{name}")}.cs";
+
+            return MakesTypesFilename(name);
+        }
+
+        private string MakesTypesFilename(string typename)
+        {
+            return $"{Path.Join(CompilerOptions.BackingTypeOutputPath, "Types", $"{typename}")}.cs";
         }
 
         // public string? TestReqID { get; set; }
@@ -181,7 +206,7 @@ namespace PureFix.Dictionary.Compiler
 
             if (sf.Definition.Enums is not null)
             {
-                Console.WriteLine();
+                GenerateEnumValues(type, sf.Definition.TagType, name, sf.Definition.Enums);
             }
         }
 
@@ -224,6 +249,7 @@ namespace PureFix.Dictionary.Compiler
 
             var enumName = $"{fieldName}Values";
 
+            using(builder.BeginBlock($"namespace {MakeTypesNamespace()}"))
             using(builder.BeginBlock($"public static class {enumName}"))
             {
                 foreach(var field in enums.Values)
@@ -234,8 +260,15 @@ namespace PureFix.Dictionary.Compiler
                         TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
                         _               => field.Key.ToString()
                     };
+
+                    var constantName = field.Description.UnderscoreToCamelCase();
+                    builder.WriteLine($"public const {csharpBaseType} {constantName} = {value};");
                 }
             }
+
+            var code = builder.ToString();
+            var filename = MakesTypesFilename(enumName);
+            WriteFile(filename, code);
         }
 
         private string MapRequired(bool value)
