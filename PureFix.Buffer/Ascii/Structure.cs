@@ -107,8 +107,7 @@ namespace PureFix.Buffer.Ascii
                         {
                             // this is a component but repeated within a group and we need to store all instances
                             AddToGroup(current);
-                        } else if (_singletons.TryGetValue(current.Name, out var single)) {
-                            _singletons.Remove(current.Name);
+                        } else if (_singletons.Remove(current.Name, out var single)) {
                             AddToGroup(single);
                             AddToGroup(current);
                         }
