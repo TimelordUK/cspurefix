@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.OrderID = view.GetString(37);
 			instance.CrossID = view.GetString(548);
 			instance.OrigCrossID = view.GetString(551);
@@ -32,37 +30,27 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.SideCrossOrdCxlGrp = new SideCrossOrdCxlGrp();
 				instance.SideCrossOrdCxlGrp!.Parse(groupViewSideCrossOrdCxlGrp);
 			}
-			instance.SideCrossOrdCxlGrp = new SideCrossOrdCxlGrp();
-			instance.SideCrossOrdCxlGrp?.Parse(view.GetView("SideCrossOrdCxlGrp"));
 			if (view.GetView("Instrument") is MsgView groupViewInstrument)
 			{
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
 			{
 				instance.InstrmtLegGrp = new InstrmtLegGrp();
 				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
 			}
-			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			instance.TransactTime = view.GetDateTime(60);
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

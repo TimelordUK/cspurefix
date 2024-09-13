@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.SecurityReqID = view.GetString(320);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
@@ -36,8 +34,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

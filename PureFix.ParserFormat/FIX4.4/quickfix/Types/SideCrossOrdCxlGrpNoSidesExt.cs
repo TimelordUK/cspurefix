@@ -25,8 +25,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.TradeOriginationDate = view.GetDateTime(229);
 			instance.TradeDate = view.GetDateTime(75);
 			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
@@ -34,8 +32,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.OrderQtyData = new OrderQtyData();
 				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
 			}
-			instance.OrderQtyData = new OrderQtyData();
-			instance.OrderQtyData?.Parse(view.GetView("OrderQtyData"));
 			instance.ComplianceID = view.GetString(376);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);

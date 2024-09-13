@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.MDReqID = view.GetString(262);
 			instance.SubscriptionRequestType = view.GetString(263);
 			instance.MarketDepth = view.GetInt32(264);
@@ -35,22 +33,16 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.MDReqGrp = new MDReqGrp();
 				instance.MDReqGrp!.Parse(groupViewMDReqGrp);
 			}
-			instance.MDReqGrp = new MDReqGrp();
-			instance.MDReqGrp?.Parse(view.GetView("MDReqGrp"));
 			if (view.GetView("InstrmtMDReqGrp") is MsgView groupViewInstrmtMDReqGrp)
 			{
 				instance.InstrmtMDReqGrp = new InstrmtMDReqGrp();
 				instance.InstrmtMDReqGrp!.Parse(groupViewInstrmtMDReqGrp);
 			}
-			instance.InstrmtMDReqGrp = new InstrmtMDReqGrp();
-			instance.InstrmtMDReqGrp?.Parse(view.GetView("InstrmtMDReqGrp"));
 			if (view.GetView("TrdgSesGrp") is MsgView groupViewTrdgSesGrp)
 			{
 				instance.TrdgSesGrp = new TrdgSesGrp();
 				instance.TrdgSesGrp!.Parse(groupViewTrdgSesGrp);
 			}
-			instance.TrdgSesGrp = new TrdgSesGrp();
-			instance.TrdgSesGrp?.Parse(view.GetView("TrdgSesGrp"));
 			instance.ApplQueueAction = view.GetInt32(815);
 			instance.ApplQueueMax = view.GetInt32(812);
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
@@ -58,8 +50,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

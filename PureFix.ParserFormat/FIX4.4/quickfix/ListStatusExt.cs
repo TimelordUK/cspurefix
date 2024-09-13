@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.ListID = view.GetString(66);
 			instance.ListStatusType = view.GetInt32(429);
 			instance.NoRpts = view.GetInt32(82);
@@ -38,15 +36,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.OrdListStatGrp = new OrdListStatGrp();
 				instance.OrdListStatGrp!.Parse(groupViewOrdListStatGrp);
 			}
-			instance.OrdListStatGrp = new OrdListStatGrp();
-			instance.OrdListStatGrp?.Parse(view.GetView("OrdListStatGrp"));
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

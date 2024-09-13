@@ -19,8 +19,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 		}
 	}
 }

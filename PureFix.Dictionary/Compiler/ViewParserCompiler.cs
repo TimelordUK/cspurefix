@@ -208,8 +208,6 @@ namespace PureFix.Dictionary.Compiler
                 _builder.WriteLine($"instance.{cf.Name}!.Parse({variableName});");
             }
 
-            _builder.WriteLine($"instance.{cf.Name} = new {extended}();");
-            _builder.WriteLine($"instance.{cf.Name}?.Parse(view.GetView(\"{cf.Name}\"));");
             Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, extended));
         }
 

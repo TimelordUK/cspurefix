@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.BidID = view.GetString(390);
 			instance.ClientBidID = view.GetString(391);
 			instance.BidRequestTransType = view.GetString(374);
@@ -37,15 +35,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.BidDescReqGrp = new BidDescReqGrp();
 				instance.BidDescReqGrp!.Parse(groupViewBidDescReqGrp);
 			}
-			instance.BidDescReqGrp = new BidDescReqGrp();
-			instance.BidDescReqGrp?.Parse(view.GetView("BidDescReqGrp"));
 			if (view.GetView("BidCompReqGrp") is MsgView groupViewBidCompReqGrp)
 			{
 				instance.BidCompReqGrp = new BidCompReqGrp();
 				instance.BidCompReqGrp!.Parse(groupViewBidCompReqGrp);
 			}
-			instance.BidCompReqGrp = new BidCompReqGrp();
-			instance.BidCompReqGrp?.Parse(view.GetView("BidCompReqGrp"));
 			instance.LiquidityIndType = view.GetInt32(409);
 			instance.WtAverageLiquidity = view.GetDouble(410);
 			instance.ExchangeForPhysical = view.GetBool(411);
@@ -68,8 +62,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

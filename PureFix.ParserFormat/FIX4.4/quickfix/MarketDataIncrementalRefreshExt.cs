@@ -20,16 +20,12 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.MDReqID = view.GetString(262);
 			if (view.GetView("MDIncGrp") is MsgView groupViewMDIncGrp)
 			{
 				instance.MDIncGrp = new MDIncGrp();
 				instance.MDIncGrp!.Parse(groupViewMDIncGrp);
 			}
-			instance.MDIncGrp = new MDIncGrp();
-			instance.MDIncGrp?.Parse(view.GetView("MDIncGrp"));
 			instance.ApplQueueDepth = view.GetInt32(813);
 			instance.ApplQueueResolution = view.GetInt32(814);
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
@@ -37,8 +33,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

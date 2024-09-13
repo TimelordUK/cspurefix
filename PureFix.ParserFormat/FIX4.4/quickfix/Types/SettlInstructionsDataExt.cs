@@ -23,8 +23,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.DlvyInstGrp = new DlvyInstGrp();
 				instance.DlvyInstGrp!.Parse(groupViewDlvyInstGrp);
 			}
-			instance.DlvyInstGrp = new DlvyInstGrp();
-			instance.DlvyInstGrp?.Parse(view.GetView("DlvyInstGrp"));
 		}
 	}
 }

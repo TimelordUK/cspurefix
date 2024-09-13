@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.OrderID = view.GetString(37);
 			instance.ClOrdID = view.GetString(11);
 			instance.SecondaryClOrdID = view.GetString(526);
@@ -31,8 +29,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.OrdStatusReqID = view.GetString(790);
 			instance.Account = view.GetString(1);
 			instance.AcctIDSource = view.GetInt32(660);
@@ -41,30 +37,22 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("FinancingDetails") is MsgView groupViewFinancingDetails)
 			{
 				instance.FinancingDetails = new FinancingDetails();
 				instance.FinancingDetails!.Parse(groupViewFinancingDetails);
 			}
-			instance.FinancingDetails = new FinancingDetails();
-			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.Side = view.GetString(54);
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

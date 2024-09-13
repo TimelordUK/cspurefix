@@ -26,8 +26,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.NestedParties = new NestedParties();
 				instance.NestedParties!.Parse(groupViewNestedParties);
 			}
-			instance.NestedParties = new NestedParties();
-			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 			instance.NotifyBrokerOfCredit = view.GetBool(208);
 			instance.AllocHandlInst = view.GetInt32(209);
 			instance.AllocText = view.GetString(161);
@@ -38,8 +36,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.CommissionData = new CommissionData();
 				instance.CommissionData!.Parse(groupViewCommissionData);
 			}
-			instance.CommissionData = new CommissionData();
-			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.AllocAvgPx = view.GetDouble(153);
 			instance.AllocNetMoney = view.GetDouble(154);
 			instance.SettlCurrAmt = view.GetDouble(119);
@@ -55,23 +51,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.MiscFeesGrp = new MiscFeesGrp();
 				instance.MiscFeesGrp!.Parse(groupViewMiscFeesGrp);
 			}
-			instance.MiscFeesGrp = new MiscFeesGrp();
-			instance.MiscFeesGrp?.Parse(view.GetView("MiscFeesGrp"));
 			if (view.GetView("ClrInstGrp") is MsgView groupViewClrInstGrp)
 			{
 				instance.ClrInstGrp = new ClrInstGrp();
 				instance.ClrInstGrp!.Parse(groupViewClrInstGrp);
 			}
-			instance.ClrInstGrp = new ClrInstGrp();
-			instance.ClrInstGrp?.Parse(view.GetView("ClrInstGrp"));
 			instance.AllocSettlInstType = view.GetInt32(780);
 			if (view.GetView("SettlInstructionsData") is MsgView groupViewSettlInstructionsData)
 			{
 				instance.SettlInstructionsData = new SettlInstructionsData();
 				instance.SettlInstructionsData!.Parse(groupViewSettlInstructionsData);
 			}
-			instance.SettlInstructionsData = new SettlInstructionsData();
-			instance.SettlInstructionsData?.Parse(view.GetView("SettlInstructionsData"));
 		}
 	}
 }

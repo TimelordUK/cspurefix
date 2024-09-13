@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.RegistID = view.GetString(513);
 			instance.RegistTransType = view.GetString(514);
 			instance.RegistRefID = view.GetString(508);
@@ -31,8 +29,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Account = view.GetString(1);
 			instance.AcctIDSource = view.GetInt32(660);
 			instance.RegistAcctType = view.GetString(493);
@@ -43,22 +39,16 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.RgstDtlsGrp = new RgstDtlsGrp();
 				instance.RgstDtlsGrp!.Parse(groupViewRgstDtlsGrp);
 			}
-			instance.RgstDtlsGrp = new RgstDtlsGrp();
-			instance.RgstDtlsGrp?.Parse(view.GetView("RgstDtlsGrp"));
 			if (view.GetView("RgstDistInstGrp") is MsgView groupViewRgstDistInstGrp)
 			{
 				instance.RgstDistInstGrp = new RgstDistInstGrp();
 				instance.RgstDistInstGrp!.Parse(groupViewRgstDistInstGrp);
 			}
-			instance.RgstDistInstGrp = new RgstDistInstGrp();
-			instance.RgstDistInstGrp?.Parse(view.GetView("RgstDistInstGrp"));
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

@@ -21,8 +21,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.AttrbGrp = new AttrbGrp();
 				instance.AttrbGrp!.Parse(groupViewAttrbGrp);
 			}
-			instance.AttrbGrp = new AttrbGrp();
-			instance.AttrbGrp?.Parse(view.GetView("AttrbGrp"));
 		}
 	}
 }

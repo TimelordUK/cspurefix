@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.UnderlyingInstrument = new UnderlyingInstrument();
 				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
 			}
-			instance.UnderlyingInstrument = new UnderlyingInstrument();
-			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.QuoteSetValidUntilTime = view.GetDateTime(367);
 			instance.TotNoQuoteEntries = view.GetInt32(304);
 			instance.LastFragment = view.GetBool(893);
@@ -30,8 +28,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.QuotEntryGrp = new QuotEntryGrp();
 				instance.QuotEntryGrp!.Parse(groupViewQuotEntryGrp);
 			}
-			instance.QuotEntryGrp = new QuotEntryGrp();
-			instance.QuotEntryGrp?.Parse(view.GetView("QuotEntryGrp"));
 		}
 	}
 }

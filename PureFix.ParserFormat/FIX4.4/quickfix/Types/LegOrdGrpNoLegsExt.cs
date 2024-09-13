@@ -19,8 +19,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.InstrumentLeg = new InstrumentLeg();
 				instance.InstrumentLeg!.Parse(groupViewInstrumentLeg);
 			}
-			instance.InstrumentLeg = new InstrumentLeg();
-			instance.InstrumentLeg?.Parse(view.GetView("InstrumentLeg"));
 			instance.LegQty = view.GetDouble(687);
 			instance.LegSwapType = view.GetInt32(690);
 			if (view.GetView("LegStipulations") is MsgView groupViewLegStipulations)
@@ -28,15 +26,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.LegStipulations = new LegStipulations();
 				instance.LegStipulations!.Parse(groupViewLegStipulations);
 			}
-			instance.LegStipulations = new LegStipulations();
-			instance.LegStipulations?.Parse(view.GetView("LegStipulations"));
 			if (view.GetView("LegPreAllocGrp") is MsgView groupViewLegPreAllocGrp)
 			{
 				instance.LegPreAllocGrp = new LegPreAllocGrp();
 				instance.LegPreAllocGrp!.Parse(groupViewLegPreAllocGrp);
 			}
-			instance.LegPreAllocGrp = new LegPreAllocGrp();
-			instance.LegPreAllocGrp?.Parse(view.GetView("LegPreAllocGrp"));
 			instance.LegPositionEffect = view.GetString(564);
 			instance.LegCoveredOrUncovered = view.GetInt32(565);
 			if (view.GetView("NestedParties") is MsgView groupViewNestedParties)
@@ -44,8 +38,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.NestedParties = new NestedParties();
 				instance.NestedParties!.Parse(groupViewNestedParties);
 			}
-			instance.NestedParties = new NestedParties();
-			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 			instance.LegRefID = view.GetString(654);
 			instance.LegPrice = view.GetDouble(566);
 			instance.LegSettlType = view.GetString(587);

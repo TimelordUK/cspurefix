@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.QuoteReqID = view.GetString(131);
 			instance.RFQReqID = view.GetString(644);
 			instance.ClOrdID = view.GetString(11);
@@ -31,8 +29,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.QuotReqGrp = new QuotReqGrp();
 				instance.QuotReqGrp!.Parse(groupViewQuotReqGrp);
 			}
-			instance.QuotReqGrp = new QuotReqGrp();
-			instance.QuotReqGrp?.Parse(view.GetView("QuotReqGrp"));
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
@@ -41,8 +37,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

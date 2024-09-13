@@ -19,8 +19,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.UnderlyingInstrument = new UnderlyingInstrument();
 				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
 			}
-			instance.UnderlyingInstrument = new UnderlyingInstrument();
-			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.CollAction = view.GetInt32(944);
 		}
 	}

@@ -22,8 +22,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Side = view.GetString(54);
 			instance.Product = view.GetInt32(460);
 			instance.SecurityType = view.GetString(167);
@@ -36,8 +34,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.SettlInstructionsData = new SettlInstructionsData();
 				instance.SettlInstructionsData!.Parse(groupViewSettlInstructionsData);
 			}
-			instance.SettlInstructionsData = new SettlInstructionsData();
-			instance.SettlInstructionsData?.Parse(view.GetView("SettlInstructionsData"));
 			instance.PaymentMethod = view.GetInt32(492);
 			instance.PaymentRef = view.GetString(476);
 			instance.CardHolderName = view.GetString(488);

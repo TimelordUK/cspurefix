@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.MDReqID = view.GetString(262);
 			instance.MDReqRejReason = view.GetString(281);
 			if (view.GetView("MDRjctGrp") is MsgView groupViewMDRjctGrp)
@@ -29,8 +27,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.MDRjctGrp = new MDRjctGrp();
 				instance.MDRjctGrp!.Parse(groupViewMDRjctGrp);
 			}
-			instance.MDRjctGrp = new MDRjctGrp();
-			instance.MDRjctGrp?.Parse(view.GetView("MDRjctGrp"));
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
@@ -39,8 +35,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

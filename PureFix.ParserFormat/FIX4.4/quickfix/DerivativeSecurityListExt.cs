@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.SecurityReqID = view.GetString(320);
 			instance.SecurityResponseID = view.GetString(322);
 			instance.SecurityRequestResult = view.GetInt32(560);
@@ -30,8 +28,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.UnderlyingInstrument = new UnderlyingInstrument();
 				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
 			}
-			instance.UnderlyingInstrument = new UnderlyingInstrument();
-			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.TotNoRelatedSym = view.GetInt32(393);
 			instance.LastFragment = view.GetBool(893);
 			if (view.GetView("RelSymDerivSecGrp") is MsgView groupViewRelSymDerivSecGrp)
@@ -39,15 +35,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.RelSymDerivSecGrp = new RelSymDerivSecGrp();
 				instance.RelSymDerivSecGrp!.Parse(groupViewRelSymDerivSecGrp);
 			}
-			instance.RelSymDerivSecGrp = new RelSymDerivSecGrp();
-			instance.RelSymDerivSecGrp?.Parse(view.GetView("RelSymDerivSecGrp"));
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

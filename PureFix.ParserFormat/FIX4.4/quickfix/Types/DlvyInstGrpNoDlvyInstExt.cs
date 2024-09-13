@@ -21,8 +21,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.SettlParties = new SettlParties();
 				instance.SettlParties!.Parse(groupViewSettlParties);
 			}
-			instance.SettlParties = new SettlParties();
-			instance.SettlParties?.Parse(view.GetView("SettlParties"));
 		}
 	}
 }

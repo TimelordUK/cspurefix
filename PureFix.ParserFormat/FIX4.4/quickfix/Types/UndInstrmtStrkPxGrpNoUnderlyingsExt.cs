@@ -19,8 +19,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.UnderlyingInstrument = new UnderlyingInstrument();
 				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
 			}
-			instance.UnderlyingInstrument = new UnderlyingInstrument();
-			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.PrevClosePx = view.GetDouble(140);
 			instance.ClOrdID = view.GetString(11);
 			instance.SecondaryClOrdID = view.GetString(526);

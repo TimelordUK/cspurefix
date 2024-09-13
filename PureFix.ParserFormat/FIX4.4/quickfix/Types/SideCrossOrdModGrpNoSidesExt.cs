@@ -23,8 +23,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.TradeOriginationDate = view.GetDateTime(229);
 			instance.TradeDate = view.GetDateTime(75);
 			instance.Account = view.GetString(1);
@@ -39,23 +37,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.PreAllocGrp = new PreAllocGrp();
 				instance.PreAllocGrp!.Parse(groupViewPreAllocGrp);
 			}
-			instance.PreAllocGrp = new PreAllocGrp();
-			instance.PreAllocGrp?.Parse(view.GetView("PreAllocGrp"));
 			instance.QtyType = view.GetInt32(854);
 			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
 			{
 				instance.OrderQtyData = new OrderQtyData();
 				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
 			}
-			instance.OrderQtyData = new OrderQtyData();
-			instance.OrderQtyData?.Parse(view.GetView("OrderQtyData"));
 			if (view.GetView("CommissionData") is MsgView groupViewCommissionData)
 			{
 				instance.CommissionData = new CommissionData();
 				instance.CommissionData!.Parse(groupViewCommissionData);
 			}
-			instance.CommissionData = new CommissionData();
-			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.OrderCapacity = view.GetString(528);
 			instance.OrderRestrictions = view.GetString(529);
 			instance.CustOrderCapacity = view.GetInt32(582);

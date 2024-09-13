@@ -19,16 +19,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.InstrumentLeg = new InstrumentLeg();
 				instance.InstrumentLeg!.Parse(groupViewInstrumentLeg);
 			}
-			instance.InstrumentLeg = new InstrumentLeg();
-			instance.InstrumentLeg?.Parse(view.GetView("InstrumentLeg"));
 			instance.LegIOIQty = view.GetString(682);
 			if (view.GetView("LegStipulations") is MsgView groupViewLegStipulations)
 			{
 				instance.LegStipulations = new LegStipulations();
 				instance.LegStipulations!.Parse(groupViewLegStipulations);
 			}
-			instance.LegStipulations = new LegStipulations();
-			instance.LegStipulations?.Parse(view.GetView("LegStipulations"));
 		}
 	}
 }

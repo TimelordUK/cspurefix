@@ -24,8 +24,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.TradeOriginationDate = view.GetDateTime(229);
 			instance.TradeDate = view.GetDateTime(75);
 			instance.Account = view.GetString(1);
@@ -40,8 +38,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.PreAllocGrp = new PreAllocGrp();
 				instance.PreAllocGrp!.Parse(groupViewPreAllocGrp);
 			}
-			instance.PreAllocGrp = new PreAllocGrp();
-			instance.PreAllocGrp?.Parse(view.GetView("PreAllocGrp"));
 			instance.SettlType = view.GetString(63);
 			instance.SettlDate = view.GetDateTime(64);
 			instance.CashMargin = view.GetString(544);
@@ -56,23 +52,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.TrdgSesGrp = new TrdgSesGrp();
 				instance.TrdgSesGrp!.Parse(groupViewTrdgSesGrp);
 			}
-			instance.TrdgSesGrp = new TrdgSesGrp();
-			instance.TrdgSesGrp?.Parse(view.GetView("TrdgSesGrp"));
 			instance.ProcessCode = view.GetString(81);
 			if (view.GetView("Instrument") is MsgView groupViewInstrument)
 			{
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.PrevClosePx = view.GetDouble(140);
 			instance.Side = view.GetString(54);
 			instance.SideValueInd = view.GetInt32(401);
@@ -83,16 +73,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Stipulations = new Stipulations();
 				instance.Stipulations!.Parse(groupViewStipulations);
 			}
-			instance.Stipulations = new Stipulations();
-			instance.Stipulations?.Parse(view.GetView("Stipulations"));
 			instance.QtyType = view.GetInt32(854);
 			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
 			{
 				instance.OrderQtyData = new OrderQtyData();
 				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
 			}
-			instance.OrderQtyData = new OrderQtyData();
-			instance.OrderQtyData?.Parse(view.GetView("OrderQtyData"));
 			instance.OrdType = view.GetString(40);
 			instance.PriceType = view.GetInt32(423);
 			instance.Price = view.GetDouble(44);
@@ -102,15 +88,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
 				instance.SpreadOrBenchmarkCurveData!.Parse(groupViewSpreadOrBenchmarkCurveData);
 			}
-			instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
-			instance.SpreadOrBenchmarkCurveData?.Parse(view.GetView("SpreadOrBenchmarkCurveData"));
 			if (view.GetView("YieldData") is MsgView groupViewYieldData)
 			{
 				instance.YieldData = new YieldData();
 				instance.YieldData!.Parse(groupViewYieldData);
 			}
-			instance.YieldData = new YieldData();
-			instance.YieldData?.Parse(view.GetView("YieldData"));
 			instance.Currency = view.GetString(15);
 			instance.ComplianceID = view.GetString(376);
 			instance.SolicitedFlag = view.GetBool(377);
@@ -126,8 +108,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.CommissionData = new CommissionData();
 				instance.CommissionData!.Parse(groupViewCommissionData);
 			}
-			instance.CommissionData = new CommissionData();
-			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.OrderCapacity = view.GetString(528);
 			instance.OrderRestrictions = view.GetString(529);
 			instance.CustOrderCapacity = view.GetInt32(582);
@@ -148,15 +128,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.PegInstructions = new PegInstructions();
 				instance.PegInstructions!.Parse(groupViewPegInstructions);
 			}
-			instance.PegInstructions = new PegInstructions();
-			instance.PegInstructions?.Parse(view.GetView("PegInstructions"));
 			if (view.GetView("DiscretionInstructions") is MsgView groupViewDiscretionInstructions)
 			{
 				instance.DiscretionInstructions = new DiscretionInstructions();
 				instance.DiscretionInstructions!.Parse(groupViewDiscretionInstructions);
 			}
-			instance.DiscretionInstructions = new DiscretionInstructions();
-			instance.DiscretionInstructions?.Parse(view.GetView("DiscretionInstructions"));
 			instance.TargetStrategy = view.GetInt32(847);
 			instance.TargetStrategyParameters = view.GetString(848);
 			instance.ParticipationRate = view.GetDouble(849);

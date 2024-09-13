@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.UnderlyingInstrument = new UnderlyingInstrument();
 				instance.UnderlyingInstrument!.Parse(groupViewUnderlyingInstrument);
 			}
-			instance.UnderlyingInstrument = new UnderlyingInstrument();
-			instance.UnderlyingInstrument?.Parse(view.GetView("UnderlyingInstrument"));
 			instance.TotNoQuoteEntries = view.GetInt32(304);
 			instance.LastFragment = view.GetBool(893);
 			if (view.GetView("QuotEntryAckGrp") is MsgView groupViewQuotEntryAckGrp)
@@ -29,8 +27,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.QuotEntryAckGrp = new QuotEntryAckGrp();
 				instance.QuotEntryAckGrp!.Parse(groupViewQuotEntryAckGrp);
 			}
-			instance.QuotEntryAckGrp = new QuotEntryAckGrp();
-			instance.QuotEntryAckGrp?.Parse(view.GetView("QuotEntryAckGrp"));
 		}
 	}
 }

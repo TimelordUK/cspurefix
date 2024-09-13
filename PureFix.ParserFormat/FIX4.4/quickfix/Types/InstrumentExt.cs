@@ -23,8 +23,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.SecAltIDGrp = new SecAltIDGrp();
 				instance.SecAltIDGrp!.Parse(groupViewSecAltIDGrp);
 			}
-			instance.SecAltIDGrp = new SecAltIDGrp();
-			instance.SecAltIDGrp?.Parse(view.GetView("SecAltIDGrp"));
 			instance.Product = view.GetInt32(460);
 			instance.CFICode = view.GetString(461);
 			instance.SecurityType = view.GetString(167);
@@ -65,8 +63,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.EvntGrp = new EvntGrp();
 				instance.EvntGrp!.Parse(groupViewEvntGrp);
 			}
-			instance.EvntGrp = new EvntGrp();
-			instance.EvntGrp?.Parse(view.GetView("EvntGrp"));
 			instance.DatedDate = view.GetDateTime(873);
 			instance.InterestAccrualDate = view.GetDateTime(874);
 		}

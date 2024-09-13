@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.ConfirmID = view.GetString(664);
 			instance.ConfirmRefID = view.GetString(772);
 			instance.ConfirmReqID = view.GetString(859);
@@ -35,15 +33,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			if (view.GetView("OrdAllocGrp") is MsgView groupViewOrdAllocGrp)
 			{
 				instance.OrdAllocGrp = new OrdAllocGrp();
 				instance.OrdAllocGrp!.Parse(groupViewOrdAllocGrp);
 			}
-			instance.OrdAllocGrp = new OrdAllocGrp();
-			instance.OrdAllocGrp?.Parse(view.GetView("OrdAllocGrp"));
 			instance.AllocID = view.GetString(70);
 			instance.SecondaryAllocID = view.GetString(793);
 			instance.IndividualAllocID = view.GetString(467);
@@ -54,50 +48,36 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.TrdRegTimestamps = new TrdRegTimestamps();
 				instance.TrdRegTimestamps!.Parse(groupViewTrdRegTimestamps);
 			}
-			instance.TrdRegTimestamps = new TrdRegTimestamps();
-			instance.TrdRegTimestamps?.Parse(view.GetView("TrdRegTimestamps"));
 			if (view.GetView("Instrument") is MsgView groupViewInstrument)
 			{
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("InstrumentExtension") is MsgView groupViewInstrumentExtension)
 			{
 				instance.InstrumentExtension = new InstrumentExtension();
 				instance.InstrumentExtension!.Parse(groupViewInstrumentExtension);
 			}
-			instance.InstrumentExtension = new InstrumentExtension();
-			instance.InstrumentExtension?.Parse(view.GetView("InstrumentExtension"));
 			if (view.GetView("FinancingDetails") is MsgView groupViewFinancingDetails)
 			{
 				instance.FinancingDetails = new FinancingDetails();
 				instance.FinancingDetails!.Parse(groupViewFinancingDetails);
 			}
-			instance.FinancingDetails = new FinancingDetails();
-			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
 			{
 				instance.InstrmtLegGrp = new InstrmtLegGrp();
 				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
 			}
-			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			if (view.GetView("YieldData") is MsgView groupViewYieldData)
 			{
 				instance.YieldData = new YieldData();
 				instance.YieldData!.Parse(groupViewYieldData);
 			}
-			instance.YieldData = new YieldData();
-			instance.YieldData?.Parse(view.GetView("YieldData"));
 			instance.AllocQty = view.GetDouble(80);
 			instance.QtyType = view.GetInt32(854);
 			instance.Side = view.GetString(54);
@@ -108,8 +88,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.CpctyConfGrp = new CpctyConfGrp();
 				instance.CpctyConfGrp!.Parse(groupViewCpctyConfGrp);
 			}
-			instance.CpctyConfGrp = new CpctyConfGrp();
-			instance.CpctyConfGrp?.Parse(view.GetView("CpctyConfGrp"));
 			instance.AllocAccount = view.GetString(79);
 			instance.AllocAcctIDSource = view.GetInt32(661);
 			instance.AllocAccountType = view.GetInt32(798);
@@ -122,8 +100,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
 				instance.SpreadOrBenchmarkCurveData!.Parse(groupViewSpreadOrBenchmarkCurveData);
 			}
-			instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
-			instance.SpreadOrBenchmarkCurveData?.Parse(view.GetView("SpreadOrBenchmarkCurveData"));
 			instance.ReportedPx = view.GetDouble(861);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
@@ -153,37 +129,27 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.SettlInstructionsData = new SettlInstructionsData();
 				instance.SettlInstructionsData!.Parse(groupViewSettlInstructionsData);
 			}
-			instance.SettlInstructionsData = new SettlInstructionsData();
-			instance.SettlInstructionsData?.Parse(view.GetView("SettlInstructionsData"));
 			if (view.GetView("CommissionData") is MsgView groupViewCommissionData)
 			{
 				instance.CommissionData = new CommissionData();
 				instance.CommissionData!.Parse(groupViewCommissionData);
 			}
-			instance.CommissionData = new CommissionData();
-			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.SharedCommission = view.GetDouble(858);
 			if (view.GetView("Stipulations") is MsgView groupViewStipulations)
 			{
 				instance.Stipulations = new Stipulations();
 				instance.Stipulations!.Parse(groupViewStipulations);
 			}
-			instance.Stipulations = new Stipulations();
-			instance.Stipulations?.Parse(view.GetView("Stipulations"));
 			if (view.GetView("MiscFeesGrp") is MsgView groupViewMiscFeesGrp)
 			{
 				instance.MiscFeesGrp = new MiscFeesGrp();
 				instance.MiscFeesGrp!.Parse(groupViewMiscFeesGrp);
 			}
-			instance.MiscFeesGrp = new MiscFeesGrp();
-			instance.MiscFeesGrp?.Parse(view.GetView("MiscFeesGrp"));
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

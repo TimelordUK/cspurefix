@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.IOIID = view.GetString(23);
 			instance.IOITransType = view.GetString(28);
 			instance.IOIRefID = view.GetString(26);
@@ -30,22 +28,16 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("FinancingDetails") is MsgView groupViewFinancingDetails)
 			{
 				instance.FinancingDetails = new FinancingDetails();
 				instance.FinancingDetails!.Parse(groupViewFinancingDetails);
 			}
-			instance.FinancingDetails = new FinancingDetails();
-			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.Side = view.GetString(54);
 			instance.QtyType = view.GetInt32(854);
 			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
@@ -53,8 +45,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.OrderQtyData = new OrderQtyData();
 				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
 			}
-			instance.OrderQtyData = new OrderQtyData();
-			instance.OrderQtyData?.Parse(view.GetView("OrderQtyData"));
 			instance.IOIQty = view.GetString(27);
 			instance.Currency = view.GetString(15);
 			if (view.GetView("Stipulations") is MsgView groupViewStipulations)
@@ -62,15 +52,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Stipulations = new Stipulations();
 				instance.Stipulations!.Parse(groupViewStipulations);
 			}
-			instance.Stipulations = new Stipulations();
-			instance.Stipulations?.Parse(view.GetView("Stipulations"));
 			if (view.GetView("InstrmtLegIOIGrp") is MsgView groupViewInstrmtLegIOIGrp)
 			{
 				instance.InstrmtLegIOIGrp = new InstrmtLegIOIGrp();
 				instance.InstrmtLegIOIGrp!.Parse(groupViewInstrmtLegIOIGrp);
 			}
-			instance.InstrmtLegIOIGrp = new InstrmtLegIOIGrp();
-			instance.InstrmtLegIOIGrp?.Parse(view.GetView("InstrmtLegIOIGrp"));
 			instance.PriceType = view.GetInt32(423);
 			instance.Price = view.GetDouble(44);
 			instance.ValidUntilTime = view.GetDateTime(62);
@@ -81,8 +67,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.IOIQualGrp = new IOIQualGrp();
 				instance.IOIQualGrp!.Parse(groupViewIOIQualGrp);
 			}
-			instance.IOIQualGrp = new IOIQualGrp();
-			instance.IOIQualGrp?.Parse(view.GetView("IOIQualGrp"));
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
@@ -93,29 +77,21 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.RoutingGrp = new RoutingGrp();
 				instance.RoutingGrp!.Parse(groupViewRoutingGrp);
 			}
-			instance.RoutingGrp = new RoutingGrp();
-			instance.RoutingGrp?.Parse(view.GetView("RoutingGrp"));
 			if (view.GetView("SpreadOrBenchmarkCurveData") is MsgView groupViewSpreadOrBenchmarkCurveData)
 			{
 				instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
 				instance.SpreadOrBenchmarkCurveData!.Parse(groupViewSpreadOrBenchmarkCurveData);
 			}
-			instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
-			instance.SpreadOrBenchmarkCurveData?.Parse(view.GetView("SpreadOrBenchmarkCurveData"));
 			if (view.GetView("YieldData") is MsgView groupViewYieldData)
 			{
 				instance.YieldData = new YieldData();
 				instance.YieldData!.Parse(groupViewYieldData);
 			}
-			instance.YieldData = new YieldData();
-			instance.YieldData?.Parse(view.GetView("YieldData"));
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

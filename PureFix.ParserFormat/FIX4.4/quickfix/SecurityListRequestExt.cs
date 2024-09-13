@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.SecurityReqID = view.GetString(320);
 			instance.SecurityListRequestType = view.GetInt32(559);
 			if (view.GetView("Instrument") is MsgView groupViewInstrument)
@@ -29,36 +27,26 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("InstrumentExtension") is MsgView groupViewInstrumentExtension)
 			{
 				instance.InstrumentExtension = new InstrumentExtension();
 				instance.InstrumentExtension!.Parse(groupViewInstrumentExtension);
 			}
-			instance.InstrumentExtension = new InstrumentExtension();
-			instance.InstrumentExtension?.Parse(view.GetView("InstrumentExtension"));
 			if (view.GetView("FinancingDetails") is MsgView groupViewFinancingDetails)
 			{
 				instance.FinancingDetails = new FinancingDetails();
 				instance.FinancingDetails!.Parse(groupViewFinancingDetails);
 			}
-			instance.FinancingDetails = new FinancingDetails();
-			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
 			{
 				instance.InstrmtLegGrp = new InstrmtLegGrp();
 				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
 			}
-			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			instance.Currency = view.GetString(15);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
@@ -71,8 +59,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

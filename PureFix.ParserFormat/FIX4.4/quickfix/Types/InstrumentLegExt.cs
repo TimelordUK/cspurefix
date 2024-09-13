@@ -23,8 +23,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.LegSecAltIDGrp = new LegSecAltIDGrp();
 				instance.LegSecAltIDGrp!.Parse(groupViewLegSecAltIDGrp);
 			}
-			instance.LegSecAltIDGrp = new LegSecAltIDGrp();
-			instance.LegSecAltIDGrp?.Parse(view.GetView("LegSecAltIDGrp"));
 			instance.LegProduct = view.GetInt32(607);
 			instance.LegCFICode = view.GetString(608);
 			instance.LegSecurityType = view.GetString(609);

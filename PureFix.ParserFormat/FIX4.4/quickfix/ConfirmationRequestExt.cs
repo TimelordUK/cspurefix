@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.ConfirmReqID = view.GetString(859);
 			instance.ConfirmType = view.GetInt32(773);
 			if (view.GetView("OrdAllocGrp") is MsgView groupViewOrdAllocGrp)
@@ -29,8 +27,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.OrdAllocGrp = new OrdAllocGrp();
 				instance.OrdAllocGrp!.Parse(groupViewOrdAllocGrp);
 			}
-			instance.OrdAllocGrp = new OrdAllocGrp();
-			instance.OrdAllocGrp?.Parse(view.GetView("OrdAllocGrp"));
 			instance.AllocID = view.GetString(70);
 			instance.SecondaryAllocID = view.GetString(793);
 			instance.IndividualAllocID = view.GetString(467);
@@ -46,8 +42,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

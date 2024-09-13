@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.AllocReportID = view.GetString(755);
 			instance.AllocID = view.GetString(70);
 			if (view.GetView("Parties") is MsgView groupViewParties)
@@ -29,8 +27,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.SecondaryAllocID = view.GetString(793);
 			instance.TradeDate = view.GetDateTime(75);
 			instance.TransactTime = view.GetDateTime(60);
@@ -49,15 +45,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.AllocAckGrp = new AllocAckGrp();
 				instance.AllocAckGrp!.Parse(groupViewAllocAckGrp);
 			}
-			instance.AllocAckGrp = new AllocAckGrp();
-			instance.AllocAckGrp?.Parse(view.GetView("AllocAckGrp"));
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

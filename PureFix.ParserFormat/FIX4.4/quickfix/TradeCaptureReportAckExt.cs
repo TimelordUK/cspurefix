@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.TradeReportID = view.GetString(571);
 			instance.TradeReportTransType = view.GetInt32(487);
 			instance.TradeReportType = view.GetInt32(856);
@@ -45,16 +43,12 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			instance.TransactTime = view.GetDateTime(60);
 			if (view.GetView("TrdRegTimestamps") is MsgView groupViewTrdRegTimestamps)
 			{
 				instance.TrdRegTimestamps = new TrdRegTimestamps();
 				instance.TrdRegTimestamps!.Parse(groupViewTrdRegTimestamps);
 			}
-			instance.TrdRegTimestamps = new TrdRegTimestamps();
-			instance.TrdRegTimestamps?.Parse(view.GetView("TrdRegTimestamps"));
 			instance.ResponseTransportType = view.GetInt32(725);
 			instance.ResponseDestination = view.GetString(726);
 			instance.Text = view.GetString(58);
@@ -65,8 +59,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.TrdInstrmtLegGrp = new TrdInstrmtLegGrp();
 				instance.TrdInstrmtLegGrp!.Parse(groupViewTrdInstrmtLegGrp);
 			}
-			instance.TrdInstrmtLegGrp = new TrdInstrmtLegGrp();
-			instance.TrdInstrmtLegGrp?.Parse(view.GetView("TrdInstrmtLegGrp"));
 			instance.ClearingFeeIndicator = view.GetString(635);
 			instance.OrderCapacity = view.GetString(528);
 			instance.OrderRestrictions = view.GetString(529);
@@ -81,15 +73,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.TrdAllocGrp = new TrdAllocGrp();
 				instance.TrdAllocGrp!.Parse(groupViewTrdAllocGrp);
 			}
-			instance.TrdAllocGrp = new TrdAllocGrp();
-			instance.TrdAllocGrp?.Parse(view.GetView("TrdAllocGrp"));
 			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
 			{
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

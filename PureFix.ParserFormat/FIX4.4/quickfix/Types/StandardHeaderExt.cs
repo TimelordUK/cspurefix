@@ -45,8 +45,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Hop = new Hop();
 				instance.Hop!.Parse(groupViewHop);
 			}
-			instance.Hop = new Hop();
-			instance.Hop?.Parse(view.GetView("Hop"));
 		}
 	}
 }

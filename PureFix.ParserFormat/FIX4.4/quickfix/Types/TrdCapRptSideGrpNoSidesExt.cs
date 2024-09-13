@@ -25,8 +25,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Account = view.GetString(1);
 			instance.AcctIDSource = view.GetInt32(660);
 			instance.AccountType = view.GetInt32(581);
@@ -37,8 +35,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.ClrInstGrp = new ClrInstGrp();
 				instance.ClrInstGrp!.Parse(groupViewClrInstGrp);
 			}
-			instance.ClrInstGrp = new ClrInstGrp();
-			instance.ClrInstGrp?.Parse(view.GetView("ClrInstGrp"));
 			instance.TradeInputSource = view.GetString(578);
 			instance.TradeInputDevice = view.GetString(579);
 			instance.OrderInputDevice = view.GetString(821);
@@ -59,8 +55,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.CommissionData = new CommissionData();
 				instance.CommissionData!.Parse(groupViewCommissionData);
 			}
-			instance.CommissionData = new CommissionData();
-			instance.CommissionData?.Parse(view.GetView("CommissionData"));
 			instance.GrossTradeAmt = view.GetDouble(381);
 			instance.NumDaysInterest = view.GetInt32(157);
 			instance.ExDate = view.GetDateTime(230);
@@ -87,22 +81,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.ContAmtGrp = new ContAmtGrp();
 				instance.ContAmtGrp!.Parse(groupViewContAmtGrp);
 			}
-			instance.ContAmtGrp = new ContAmtGrp();
-			instance.ContAmtGrp?.Parse(view.GetView("ContAmtGrp"));
 			if (view.GetView("Stipulations") is MsgView groupViewStipulations)
 			{
 				instance.Stipulations = new Stipulations();
 				instance.Stipulations!.Parse(groupViewStipulations);
 			}
-			instance.Stipulations = new Stipulations();
-			instance.Stipulations?.Parse(view.GetView("Stipulations"));
 			if (view.GetView("MiscFeesGrp") is MsgView groupViewMiscFeesGrp)
 			{
 				instance.MiscFeesGrp = new MiscFeesGrp();
 				instance.MiscFeesGrp!.Parse(groupViewMiscFeesGrp);
 			}
-			instance.MiscFeesGrp = new MiscFeesGrp();
-			instance.MiscFeesGrp?.Parse(view.GetView("MiscFeesGrp"));
 			instance.ExchangeRule = view.GetString(825);
 			instance.TradeAllocIndicator = view.GetInt32(826);
 			instance.PreallocMethod = view.GetString(591);
@@ -112,8 +100,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.TrdAllocGrp = new TrdAllocGrp();
 				instance.TrdAllocGrp!.Parse(groupViewTrdAllocGrp);
 			}
-			instance.TrdAllocGrp = new TrdAllocGrp();
-			instance.TrdAllocGrp?.Parse(view.GetView("TrdAllocGrp"));
 		}
 	}
 }

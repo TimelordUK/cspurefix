@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.ObjectPool;
+using PureFix.Types.FIX44.QuickFix;
 
 namespace PureFIix.Test.Ascii
 {
@@ -46,6 +47,17 @@ namespace PureFIix.Test.Ascii
             Assert.That(mv, Is.Not.Null);
             var values = mv.GetStrings(803);
             Assert.That(values,Is.EqualTo((string[]) ["22","10","12","13","18","6"]));
+        }
+
+        [Test]
+        public void Parse_Header_View_Test()
+        {
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var mv = _views[0];
+            Assert.That(mv, Is.Not.Null);
+            var message = new ExecutionReport();
+            message.Parse(mv);
         }
 
         [Test]

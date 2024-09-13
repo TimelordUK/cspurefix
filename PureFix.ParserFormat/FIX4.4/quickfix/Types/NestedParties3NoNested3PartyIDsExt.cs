@@ -22,8 +22,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.NstdPtys3SubGrp = new NstdPtys3SubGrp();
 				instance.NstdPtys3SubGrp!.Parse(groupViewNstdPtys3SubGrp);
 			}
-			instance.NstdPtys3SubGrp = new NstdPtys3SubGrp();
-			instance.NstdPtys3SubGrp?.Parse(view.GetView("NstdPtys3SubGrp"));
 		}
 	}
 }

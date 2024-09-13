@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.PosReqID = view.GetString(710);
 			instance.PosReqType = view.GetInt32(724);
 			instance.MatchStatus = view.GetString(573);
@@ -31,8 +29,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Account = view.GetString(1);
 			instance.AcctIDSource = view.GetInt32(660);
 			instance.AccountType = view.GetInt32(581);
@@ -41,23 +37,17 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			instance.Currency = view.GetString(15);
 			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
 			{
 				instance.InstrmtLegGrp = new InstrmtLegGrp();
 				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
 			}
-			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.ClearingBusinessDate = view.GetDateTime(715);
 			instance.SettlSessID = view.GetString(716);
 			instance.SettlSessSubID = view.GetString(717);
@@ -66,8 +56,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.TrdgSesGrp = new TrdgSesGrp();
 				instance.TrdgSesGrp!.Parse(groupViewTrdgSesGrp);
 			}
-			instance.TrdgSesGrp = new TrdgSesGrp();
-			instance.TrdgSesGrp?.Parse(view.GetView("TrdgSesGrp"));
 			instance.TransactTime = view.GetDateTime(60);
 			instance.ResponseTransportType = view.GetInt32(725);
 			instance.ResponseDestination = view.GetString(726);
@@ -79,8 +67,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

@@ -19,8 +19,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.InstrumentLeg = new InstrumentLeg();
 				instance.InstrumentLeg!.Parse(groupViewInstrumentLeg);
 			}
-			instance.InstrumentLeg = new InstrumentLeg();
-			instance.InstrumentLeg?.Parse(view.GetView("InstrumentLeg"));
 			instance.LegQty = view.GetDouble(687);
 			instance.LegSwapType = view.GetInt32(690);
 			instance.LegSettlType = view.GetString(587);
@@ -30,15 +28,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.LegStipulations = new LegStipulations();
 				instance.LegStipulations!.Parse(groupViewLegStipulations);
 			}
-			instance.LegStipulations = new LegStipulations();
-			instance.LegStipulations?.Parse(view.GetView("LegStipulations"));
 			if (view.GetView("NestedParties") is MsgView groupViewNestedParties)
 			{
 				instance.NestedParties = new NestedParties();
 				instance.NestedParties!.Parse(groupViewNestedParties);
 			}
-			instance.NestedParties = new NestedParties();
-			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 		}
 	}
 }

@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.SecurityReqID = view.GetString(320);
 			instance.SecurityResponseID = view.GetString(322);
 			instance.SecurityResponseType = view.GetInt32(323);
@@ -30,22 +28,16 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("InstrumentExtension") is MsgView groupViewInstrumentExtension)
 			{
 				instance.InstrumentExtension = new InstrumentExtension();
 				instance.InstrumentExtension!.Parse(groupViewInstrumentExtension);
 			}
-			instance.InstrumentExtension = new InstrumentExtension();
-			instance.InstrumentExtension?.Parse(view.GetView("InstrumentExtension"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.Currency = view.GetString(15);
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
@@ -57,8 +49,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.InstrmtLegGrp = new InstrmtLegGrp();
 				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
 			}
-			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			instance.ExpirationCycle = view.GetInt32(827);
 			instance.RoundLot = view.GetDouble(561);
 			instance.MinTradeVol = view.GetDouble(562);
@@ -67,8 +57,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

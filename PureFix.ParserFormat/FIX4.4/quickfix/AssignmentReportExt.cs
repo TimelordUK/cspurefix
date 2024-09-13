@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.AsgnRptID = view.GetString(833);
 			instance.TotNumAssignmentReports = view.GetInt32(832);
 			instance.LastRptRequested = view.GetBool(912);
@@ -30,8 +28,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.Account = view.GetString(1);
 			instance.AccountType = view.GetInt32(581);
 			if (view.GetView("Instrument") is MsgView groupViewInstrument)
@@ -39,37 +35,27 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			instance.Currency = view.GetString(15);
 			if (view.GetView("InstrmtLegGrp") is MsgView groupViewInstrmtLegGrp)
 			{
 				instance.InstrmtLegGrp = new InstrmtLegGrp();
 				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
 			}
-			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			if (view.GetView("PositionQty") is MsgView groupViewPositionQty)
 			{
 				instance.PositionQty = new PositionQty();
 				instance.PositionQty!.Parse(groupViewPositionQty);
 			}
-			instance.PositionQty = new PositionQty();
-			instance.PositionQty?.Parse(view.GetView("PositionQty"));
 			if (view.GetView("PositionAmountData") is MsgView groupViewPositionAmountData)
 			{
 				instance.PositionAmountData = new PositionAmountData();
 				instance.PositionAmountData!.Parse(groupViewPositionAmountData);
 			}
-			instance.PositionAmountData = new PositionAmountData();
-			instance.PositionAmountData?.Parse(view.GetView("PositionAmountData"));
 			instance.ThresholdAmount = view.GetDouble(834);
 			instance.SettlPrice = view.GetDouble(730);
 			instance.SettlPriceType = view.GetInt32(731);
@@ -90,8 +76,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

@@ -23,8 +23,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.UndSecAltIDGrp = new UndSecAltIDGrp();
 				instance.UndSecAltIDGrp!.Parse(groupViewUndSecAltIDGrp);
 			}
-			instance.UndSecAltIDGrp = new UndSecAltIDGrp();
-			instance.UndSecAltIDGrp?.Parse(view.GetView("UndSecAltIDGrp"));
 			instance.UnderlyingProduct = view.GetInt32(462);
 			instance.UnderlyingCFICode = view.GetString(463);
 			instance.UnderlyingSecurityType = view.GetString(310);
@@ -71,8 +69,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.UnderlyingStipulations = new UnderlyingStipulations();
 				instance.UnderlyingStipulations!.Parse(groupViewUnderlyingStipulations);
 			}
-			instance.UnderlyingStipulations = new UnderlyingStipulations();
-			instance.UnderlyingStipulations?.Parse(view.GetView("UnderlyingStipulations"));
 		}
 	}
 }

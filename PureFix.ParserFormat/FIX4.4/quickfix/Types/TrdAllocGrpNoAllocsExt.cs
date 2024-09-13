@@ -23,8 +23,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.NestedParties2 = new NestedParties2();
 				instance.NestedParties2!.Parse(groupViewNestedParties2);
 			}
-			instance.NestedParties2 = new NestedParties2();
-			instance.NestedParties2?.Parse(view.GetView("NestedParties2"));
 			instance.AllocQty = view.GetDouble(80);
 		}
 	}

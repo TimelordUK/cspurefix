@@ -20,8 +20,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader = new StandardHeader();
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
-			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
 			instance.QuoteReqID = view.GetString(131);
 			instance.QuoteID = view.GetString(117);
 			instance.QuoteRespID = view.GetString(693);
@@ -31,16 +29,12 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.QuotQualGrp = new QuotQualGrp();
 				instance.QuotQualGrp!.Parse(groupViewQuotQualGrp);
 			}
-			instance.QuotQualGrp = new QuotQualGrp();
-			instance.QuotQualGrp?.Parse(view.GetView("QuotQualGrp"));
 			instance.QuoteResponseLevel = view.GetInt32(301);
 			if (view.GetView("Parties") is MsgView groupViewParties)
 			{
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.Parties = new Parties();
-			instance.Parties?.Parse(view.GetView("Parties"));
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
 			if (view.GetView("Instrument") is MsgView groupViewInstrument)
@@ -48,30 +42,22 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Instrument = new Instrument();
 				instance.Instrument!.Parse(groupViewInstrument);
 			}
-			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view.GetView("Instrument"));
 			if (view.GetView("FinancingDetails") is MsgView groupViewFinancingDetails)
 			{
 				instance.FinancingDetails = new FinancingDetails();
 				instance.FinancingDetails!.Parse(groupViewFinancingDetails);
 			}
-			instance.FinancingDetails = new FinancingDetails();
-			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
 			if (view.GetView("UndInstrmtGrp") is MsgView groupViewUndInstrmtGrp)
 			{
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.Side = view.GetString(54);
 			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
 			{
 				instance.OrderQtyData = new OrderQtyData();
 				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
 			}
-			instance.OrderQtyData = new OrderQtyData();
-			instance.OrderQtyData?.Parse(view.GetView("OrderQtyData"));
 			instance.SettlType = view.GetString(63);
 			instance.SettlDate = view.GetDateTime(64);
 			instance.SettlDate2 = view.GetDateTime(193);
@@ -82,8 +68,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Stipulations = new Stipulations();
 				instance.Stipulations!.Parse(groupViewStipulations);
 			}
-			instance.Stipulations = new Stipulations();
-			instance.Stipulations?.Parse(view.GetView("Stipulations"));
 			instance.Account = view.GetString(1);
 			instance.AcctIDSource = view.GetInt32(660);
 			instance.AccountType = view.GetInt32(581);
@@ -92,8 +76,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.LegQuotGrp = new LegQuotGrp();
 				instance.LegQuotGrp!.Parse(groupViewLegQuotGrp);
 			}
-			instance.LegQuotGrp = new LegQuotGrp();
-			instance.LegQuotGrp?.Parse(view.GetView("LegQuotGrp"));
 			instance.BidPx = view.GetDouble(132);
 			instance.OfferPx = view.GetDouble(133);
 			instance.MktBidPx = view.GetDouble(645);
@@ -129,15 +111,11 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
 				instance.SpreadOrBenchmarkCurveData!.Parse(groupViewSpreadOrBenchmarkCurveData);
 			}
-			instance.SpreadOrBenchmarkCurveData = new SpreadOrBenchmarkCurveData();
-			instance.SpreadOrBenchmarkCurveData?.Parse(view.GetView("SpreadOrBenchmarkCurveData"));
 			if (view.GetView("YieldData") is MsgView groupViewYieldData)
 			{
 				instance.YieldData = new YieldData();
 				instance.YieldData!.Parse(groupViewYieldData);
 			}
-			instance.YieldData = new YieldData();
-			instance.YieldData?.Parse(view.GetView("YieldData"));
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
@@ -146,8 +124,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardTrailer = new StandardTrailer();
 				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
 			}
-			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }
