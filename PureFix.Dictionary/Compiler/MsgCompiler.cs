@@ -11,7 +11,6 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Types;
-using static PureFix.Dictionary.Compiler.MsgCompiler;
 
 
 namespace PureFix.Dictionary.Compiler

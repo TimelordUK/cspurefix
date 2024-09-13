@@ -1,10 +1,6 @@
 ﻿using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PureFix.Types;
 
 namespace PureFix.Dictionary.Compiler
 {
@@ -13,7 +9,9 @@ namespace PureFix.Dictionary.Compiler
         public class Options
         {
             public string? BackingTypeOutputPath { get; set; }
+            public string? ParserFormatterOutputPath { get; set; }
             public string? BackingTypeNamespace { get; set; }
+            public string? ParserFormatterNamespace { get; set; }
             public string? MsgInheritsFrom { get; set; } = "FixMsg";
             public IReadOnlyList<string>? MsgTypes { get; set; }
 
@@ -22,10 +20,8 @@ namespace PureFix.Dictionary.Compiler
 
             public HashSet<string> HeaderOverrides = ["MsgType","BodyLength"];
 
-            public static string DefaultRootOutputPath { get; set; } = Path.Join(Directory.GetCurrentDirectory(), "..",
-                "..",
-                "..", "..", "PureFix.Types");
-
+            public static string DefaultRootOutputPath { get; set; } = Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..");
+            
 
             public static Options FromVersion(FixDefinitions definitions)
             {
@@ -35,24 +31,30 @@ namespace PureFix.Dictionary.Compiler
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX4.4", "quickfix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX4._4.quickfix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.Types", "FIX4.4", "QuickFix"),
+                            ParserFormatterOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.ParserFormat", "FIX4.4", "QuickFix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX44.QuickFix",
+                            ParserFormatterNamespace = "PureFix.ParserFormat.FIX44.QuickFix"
                         };
 
                     case FixVersion.FIX50SP2:
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX.50SP2", "quickfix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX4._50SP2.quickfix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.Types", "FIX.50SP2", "QuickFix"),
+                            ParserFormatterOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.ParserFormat", "FIX.50SP2", "QuickFix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX450SP2.QuickFix",
+                            ParserFormatterNamespace = "PureFix.ParserFormat.FIX450SP2.QuickFix"
                         };
 
                     default:
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "FIX", "quickfix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX.quickfix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.Types", "FIX", "QuickFix"),
+                            ParserFormatterOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.ParserFormat", "FIX", "QuickFix"),
+                            ParserFormatterNamespace = "PureFix.ParserFormat.FIX.QuickFix",
+                            BackingTypeNamespace = "PureFix.Types.FIX.QuickFix"
                         };
                 }
             }

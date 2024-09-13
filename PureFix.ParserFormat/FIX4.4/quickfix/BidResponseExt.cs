@@ -1,0 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PureFix.Types.FIX44.QuickFix.Types;
+using PureFix.Buffer.Ascii;
+
+namespace PureFix.Types.FIX44.QuickFix
+{
+	[MessageType("l", FixVersion.FIX44)]
+	public static class BidResponseExt
+	{
+		public static void Parse(this BidResponse instance, MsgView? view)
+		{
+			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
+			instance.BidID = view?.GetString(390);
+			instance.ClientBidID = view?.GetString(391);
+			instance.BidCompRspGrp?.Parse(view?.GetView("BidCompRspGrp"));
+			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+		}
+	}
+}
