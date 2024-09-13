@@ -19,7 +19,7 @@ namespace PureFix.Benchmarks
 
         private readonly byte[] _HeartbeatMessage;
         private readonly byte[] _LogonMessage;
-        private readonly byte[] _ExecutionReportMessage;        
+        private readonly byte[] _ExecutionReportMessage;
         private readonly byte[] _MarketDataSnapshotMessage;
         private readonly byte[] _OrderCancelRejectMessage;
         private readonly byte[] _QuoteRequestMessage;
@@ -34,6 +34,7 @@ namespace PureFix.Benchmarks
             _HeartbeatMessage = LoadMessage(Fix44PathHelper.HeartbeatFile);
             _LogonMessage = LoadMessage(Fix44PathHelper.LogonFile);
             _ExecutionReportMessage = LoadMessage(Fix44PathHelper.ExecutionReportFile);
+            
             _MarketDataSnapshotMessage = LoadMessage(Fix44PathHelper.MarketDataSnapshotFile);
             _OrderCancelRejectMessage = LoadMessage(Fix44PathHelper.OrderCancelRejectFile);
             _QuoteRequestMessage = LoadMessage(Fix44PathHelper.QuoteRequestFile);
