@@ -1,0 +1,25 @@
+namespace PureFix.Types.FIX44.QuickFix.Types
+{
+	public static class SecurityIDSourceValues
+	{
+		public const string Cusip = "1";
+		public const string Sedol = "2";
+		public const string Quik = "3";
+		public const string IsinNumber = "4";
+		public const string RicCode = "5";
+		public const string IsoCurrencyCode = "6";
+		public const string IsoCountryCode = "7";
+		public const string ExchangeSymbol = "8";
+		public const string ConsolidatedTapeAssociation = "9";
+		public const string BloombergSymbol = "A";
+		public const string Wertpapier = "B";
+		public const string Dutch = "C";
+		public const string Valoren = "D";
+		public const string Sicovam = "E";
+		public const string Belgian = "F";
+		public const string Common = "G";
+		public const string ClearingHouse = "H";
+		public const string IsdaFpmlProductSpecification = "I";
+		public const string OptionsPriceReportingAuthority = "J";
+	}
+}

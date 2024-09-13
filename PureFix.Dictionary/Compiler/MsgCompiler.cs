@@ -262,6 +262,10 @@ namespace PureFix.Dictionary.Compiler
                     };
 
                     var constantName = field.Description.UnderscoreToCamelCase();
+
+                    // Some descriptions start with a number, which won't map to a valid C# symbol
+                    if(char.IsDigit(constantName[0])) constantName = "_" + constantName;
+
                     builder.WriteLine($"public const {csharpBaseType} {constantName} = {value};");
                 }
             }
