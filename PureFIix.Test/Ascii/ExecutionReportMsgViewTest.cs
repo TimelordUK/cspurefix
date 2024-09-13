@@ -124,7 +124,25 @@ namespace PureFIix.Test.Ascii
                 Assert.That(ptysSubGrp[1].Type, Is.EqualTo(SegmentType.Component));
                 Assert.That(ptysSubGrp[2].StartPosition, Is.EqualTo(42));
                 Assert.That(ptysSubGrp[2].Type, Is.EqualTo(SegmentType.Component));
+
+                var noPartySubIDs = structure?.GetInstances("NoPartySubIDs");
+                Assert.That(noPartySubIDs, Is.Not.Null);
+                Assert.That(noPartySubIDs, Has.Count.EqualTo(3));
+                Assert.That(noPartySubIDs[0].DelimiterTag, Is.EqualTo(523));
+                Assert.That(noPartySubIDs[0].Type, Is.EqualTo(SegmentType.Group));
+                Assert.That(noPartySubIDs[0].DelimiterPositions, Is.EqualTo(new List<int>([25,27])));
+                Assert.That(noPartySubIDs[0].Depth, Is.EqualTo(4));
             });
+        }
+
+        [Test]
+        public void View_To_Execution_Report_Test()
+        {
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var mv = _views[0];
+            var er = new ExecutionReport();
+            er.Parse(mv);
         }
     }
 }
