@@ -162,6 +162,11 @@ namespace PureFix.Dictionary.Compiler
 
             _builder.WriteLine($"public {type}? {sf.Definition.Name} {GetSet}");
             _builder.WriteLine();
+
+            if (sf.Definition.Enums is not null)
+            {
+                Console.WriteLine();
+            }
         }
 
         public void OnComponent(ContainedComponentField cf,  int index)
@@ -192,6 +197,26 @@ namespace PureFix.Dictionary.Compiler
             _builder.WriteLine();
             // any dependent group also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, gf.Name));
+        }
+
+        private void GenerateEnumValues(string csharpBaseType, TagType tagType, string fieldName, IReadOnlyDictionary<string, FieldEnum> enums)
+        {
+            var builder = new CodeGenerator();
+
+            var enumName = $"{fieldName}Values";
+
+            using(builder.BeginBlock($"public static class {enumName}"))
+            {
+                foreach(var field in enums.Values)
+                {
+                    var value = tagType switch
+                    {
+                        TagType.String  => $"\"{field.Key}\"",
+                        TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
+                        _               => field.Key.ToString()
+                    };
+                }
+            }
         }
 
         private string MapRequired(bool value)
