@@ -12,15 +12,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this RgstDtlsGrpNoRegistDtls instance, MsgView? view)
 		{
-			instance.RegistDtls = view?.GetString(509);
-			instance.RegistEmail = view?.GetString(511);
-			instance.MailingDtls = view?.GetString(474);
-			instance.MailingInst = view?.GetString(482);
+			if (view is null) return;
+			
+			instance.RegistDtls = view.GetString(509);
+			instance.RegistEmail = view.GetString(511);
+			instance.MailingDtls = view.GetString(474);
+			instance.MailingInst = view.GetString(482);
 			instance.NestedParties = new NestedParties();
-			instance.NestedParties?.Parse(view?.GetView("NestedParties"));
-			instance.OwnerType = view?.GetInt32(522);
-			instance.DateOfBirth = view?.GetDateTime(486);
-			instance.InvestorCountryOfResidence = view?.GetString(475);
+			instance.NestedParties?.Parse(view.GetView("NestedParties"));
+			instance.OwnerType = view.GetInt32(522);
+			instance.DateOfBirth = view.GetDateTime(486);
+			instance.InvestorCountryOfResidence = view.GetString(475);
 		}
 	}
 }

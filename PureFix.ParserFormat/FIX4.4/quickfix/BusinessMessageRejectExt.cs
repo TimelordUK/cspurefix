@@ -13,17 +13,19 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this BusinessMessageReject instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.RefSeqNum = view?.GetInt32(45);
-			instance.RefMsgType = view?.GetString(372);
-			instance.BusinessRejectRefID = view?.GetString(379);
-			instance.BusinessRejectReason = view?.GetInt32(380);
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.RefSeqNum = view.GetInt32(45);
+			instance.RefMsgType = view.GetString(372);
+			instance.BusinessRejectRefID = view.GetString(379);
+			instance.BusinessRejectReason = view.GetInt32(380);
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

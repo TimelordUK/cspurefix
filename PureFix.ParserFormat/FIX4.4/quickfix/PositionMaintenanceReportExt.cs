@@ -13,44 +13,46 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this PositionMaintenanceReport instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.PosMaintRptID = view?.GetString(721);
-			instance.PosTransType = view?.GetInt32(709);
-			instance.PosReqID = view?.GetString(710);
-			instance.PosMaintAction = view?.GetInt32(712);
-			instance.OrigPosReqRefID = view?.GetString(713);
-			instance.PosMaintStatus = view?.GetInt32(722);
-			instance.PosMaintResult = view?.GetInt32(723);
-			instance.ClearingBusinessDate = view?.GetDateTime(715);
-			instance.SettlSessID = view?.GetString(716);
-			instance.SettlSessSubID = view?.GetString(717);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.PosMaintRptID = view.GetString(721);
+			instance.PosTransType = view.GetInt32(709);
+			instance.PosReqID = view.GetString(710);
+			instance.PosMaintAction = view.GetInt32(712);
+			instance.OrigPosReqRefID = view.GetString(713);
+			instance.PosMaintStatus = view.GetInt32(722);
+			instance.PosMaintResult = view.GetInt32(723);
+			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.SettlSessID = view.GetString(716);
+			instance.SettlSessSubID = view.GetString(717);
 			instance.Parties = new Parties();
-			instance.Parties?.Parse(view?.GetView("Parties"));
-			instance.Account = view?.GetString(1);
-			instance.AcctIDSource = view?.GetInt32(660);
-			instance.AccountType = view?.GetInt32(581);
+			instance.Parties?.Parse(view.GetView("Parties"));
+			instance.Account = view.GetString(1);
+			instance.AcctIDSource = view.GetInt32(660);
+			instance.AccountType = view.GetInt32(581);
 			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view?.GetView("Instrument"));
-			instance.Currency = view?.GetString(15);
+			instance.Instrument?.Parse(view.GetView("Instrument"));
+			instance.Currency = view.GetString(15);
 			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view?.GetView("InstrmtLegGrp"));
+			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view?.GetView("UndInstrmtGrp"));
+			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.TrdgSesGrp = new TrdgSesGrp();
-			instance.TrdgSesGrp?.Parse(view?.GetView("TrdgSesGrp"));
-			instance.TransactTime = view?.GetDateTime(60);
+			instance.TrdgSesGrp?.Parse(view.GetView("TrdgSesGrp"));
+			instance.TransactTime = view.GetDateTime(60);
 			instance.PositionQty = new PositionQty();
-			instance.PositionQty?.Parse(view?.GetView("PositionQty"));
+			instance.PositionQty?.Parse(view.GetView("PositionQty"));
 			instance.PositionAmountData = new PositionAmountData();
-			instance.PositionAmountData?.Parse(view?.GetView("PositionAmountData"));
-			instance.AdjustmentType = view?.GetInt32(718);
-			instance.ThresholdAmount = view?.GetDouble(834);
-			instance.Text = view?.GetString(58);
-			instance.EncodedTextLen = view?.GetInt32(354);
-			instance.EncodedText = view?.GetByteArray(355);
+			instance.PositionAmountData?.Parse(view.GetView("PositionAmountData"));
+			instance.AdjustmentType = view.GetInt32(718);
+			instance.ThresholdAmount = view.GetDouble(834);
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

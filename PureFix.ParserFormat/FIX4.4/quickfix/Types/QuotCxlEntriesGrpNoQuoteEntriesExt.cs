@@ -12,14 +12,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this QuotCxlEntriesGrpNoQuoteEntries instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.Instrument = new Instrument();
-			instance.Instrument?.Parse(view?.GetView("Instrument"));
+			instance.Instrument?.Parse(view.GetView("Instrument"));
 			instance.FinancingDetails = new FinancingDetails();
-			instance.FinancingDetails?.Parse(view?.GetView("FinancingDetails"));
+			instance.FinancingDetails?.Parse(view.GetView("FinancingDetails"));
 			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view?.GetView("UndInstrmtGrp"));
+			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view?.GetView("InstrmtLegGrp"));
+			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 		}
 	}
 }

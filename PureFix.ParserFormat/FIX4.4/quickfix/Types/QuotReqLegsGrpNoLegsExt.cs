@@ -12,18 +12,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this QuotReqLegsGrpNoLegs instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.InstrumentLeg = new InstrumentLeg();
-			instance.InstrumentLeg?.Parse(view?.GetView("InstrumentLeg"));
-			instance.LegQty = view?.GetDouble(687);
-			instance.LegSwapType = view?.GetInt32(690);
-			instance.LegSettlType = view?.GetString(587);
-			instance.LegSettlDate = view?.GetDateTime(588);
+			instance.InstrumentLeg?.Parse(view.GetView("InstrumentLeg"));
+			instance.LegQty = view.GetDouble(687);
+			instance.LegSwapType = view.GetInt32(690);
+			instance.LegSettlType = view.GetString(587);
+			instance.LegSettlDate = view.GetDateTime(588);
 			instance.LegStipulations = new LegStipulations();
-			instance.LegStipulations?.Parse(view?.GetView("LegStipulations"));
+			instance.LegStipulations?.Parse(view.GetView("LegStipulations"));
 			instance.NestedParties = new NestedParties();
-			instance.NestedParties?.Parse(view?.GetView("NestedParties"));
+			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 			instance.LegBenchmarkCurveData = new LegBenchmarkCurveData();
-			instance.LegBenchmarkCurveData?.Parse(view?.GetView("LegBenchmarkCurveData"));
+			instance.LegBenchmarkCurveData?.Parse(view.GetView("LegBenchmarkCurveData"));
 		}
 	}
 }

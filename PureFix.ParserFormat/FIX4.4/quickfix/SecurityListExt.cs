@@ -13,17 +13,19 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this SecurityList instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.SecurityReqID = view?.GetString(320);
-			instance.SecurityResponseID = view?.GetString(322);
-			instance.SecurityRequestResult = view?.GetInt32(560);
-			instance.TotNoRelatedSym = view?.GetInt32(393);
-			instance.LastFragment = view?.GetBool(893);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.SecurityReqID = view.GetString(320);
+			instance.SecurityResponseID = view.GetString(322);
+			instance.SecurityRequestResult = view.GetInt32(560);
+			instance.TotNoRelatedSym = view.GetInt32(393);
+			instance.LastFragment = view.GetBool(893);
 			instance.SecListGrp = new SecListGrp();
-			instance.SecListGrp?.Parse(view?.GetView("SecListGrp"));
+			instance.SecListGrp?.Parse(view.GetView("SecListGrp"));
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

@@ -13,12 +13,14 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this ResendRequest instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.BeginSeqNo = view?.GetInt32(7);
-			instance.EndSeqNo = view?.GetInt32(16);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.BeginSeqNo = view.GetInt32(7);
+			instance.EndSeqNo = view.GetInt32(16);
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

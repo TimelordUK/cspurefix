@@ -13,28 +13,30 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this News instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.OrigTime = view?.GetDateTime(42);
-			instance.Urgency = view?.GetString(61);
-			instance.Headline = view?.GetString(148);
-			instance.EncodedHeadlineLen = view?.GetInt32(358);
-			instance.EncodedHeadline = view?.GetByteArray(359);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.OrigTime = view.GetDateTime(42);
+			instance.Urgency = view.GetString(61);
+			instance.Headline = view.GetString(148);
+			instance.EncodedHeadlineLen = view.GetInt32(358);
+			instance.EncodedHeadline = view.GetByteArray(359);
 			instance.RoutingGrp = new RoutingGrp();
-			instance.RoutingGrp?.Parse(view?.GetView("RoutingGrp"));
+			instance.RoutingGrp?.Parse(view.GetView("RoutingGrp"));
 			instance.InstrmtGrp = new InstrmtGrp();
-			instance.InstrmtGrp?.Parse(view?.GetView("InstrmtGrp"));
+			instance.InstrmtGrp?.Parse(view.GetView("InstrmtGrp"));
 			instance.InstrmtLegGrp = new InstrmtLegGrp();
-			instance.InstrmtLegGrp?.Parse(view?.GetView("InstrmtLegGrp"));
+			instance.InstrmtLegGrp?.Parse(view.GetView("InstrmtLegGrp"));
 			instance.UndInstrmtGrp = new UndInstrmtGrp();
-			instance.UndInstrmtGrp?.Parse(view?.GetView("UndInstrmtGrp"));
+			instance.UndInstrmtGrp?.Parse(view.GetView("UndInstrmtGrp"));
 			instance.LinesOfTextGrp = new LinesOfTextGrp();
-			instance.LinesOfTextGrp?.Parse(view?.GetView("LinesOfTextGrp"));
-			instance.URLLink = view?.GetString(149);
-			instance.RawDataLength = view?.GetInt32(95);
-			instance.RawData = view?.GetByteArray(96);
+			instance.LinesOfTextGrp?.Parse(view.GetView("LinesOfTextGrp"));
+			instance.URLLink = view.GetString(149);
+			instance.RawDataLength = view.GetInt32(95);
+			instance.RawData = view.GetByteArray(96);
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

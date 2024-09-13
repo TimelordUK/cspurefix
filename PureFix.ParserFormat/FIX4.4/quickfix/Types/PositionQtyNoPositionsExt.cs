@@ -12,12 +12,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this PositionQtyNoPositions instance, MsgView? view)
 		{
-			instance.PosType = view?.GetString(703);
-			instance.LongQty = view?.GetDouble(704);
-			instance.ShortQty = view?.GetDouble(705);
-			instance.PosQtyStatus = view?.GetInt32(706);
+			if (view is null) return;
+			
+			instance.PosType = view.GetString(703);
+			instance.LongQty = view.GetDouble(704);
+			instance.ShortQty = view.GetDouble(705);
+			instance.PosQtyStatus = view.GetInt32(706);
 			instance.NestedParties = new NestedParties();
-			instance.NestedParties?.Parse(view?.GetView("NestedParties"));
+			instance.NestedParties?.Parse(view.GetView("NestedParties"));
 		}
 	}
 }

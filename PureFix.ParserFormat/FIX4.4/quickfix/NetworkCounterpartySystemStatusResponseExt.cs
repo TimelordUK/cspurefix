@@ -13,16 +13,18 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this NetworkCounterpartySystemStatusResponse instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.NetworkStatusResponseType = view?.GetInt32(937);
-			instance.NetworkRequestID = view?.GetString(933);
-			instance.NetworkResponseID = view?.GetString(932);
-			instance.LastNetworkResponseID = view?.GetString(934);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.NetworkStatusResponseType = view.GetInt32(937);
+			instance.NetworkRequestID = view.GetString(933);
+			instance.NetworkResponseID = view.GetString(932);
+			instance.LastNetworkResponseID = view.GetString(934);
 			instance.CompIDStatGrp = new CompIDStatGrp();
-			instance.CompIDStatGrp?.Parse(view?.GetView("CompIDStatGrp"));
+			instance.CompIDStatGrp?.Parse(view.GetView("CompIDStatGrp"));
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

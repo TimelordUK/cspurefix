@@ -12,10 +12,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	{
 		public static void Parse(this DlvyInstGrpNoDlvyInst instance, MsgView? view)
 		{
-			instance.SettlInstSource = view?.GetString(165);
-			instance.DlvyInstType = view?.GetString(787);
+			if (view is null) return;
+			
+			instance.SettlInstSource = view.GetString(165);
+			instance.DlvyInstType = view.GetString(787);
 			instance.SettlParties = new SettlParties();
-			instance.SettlParties?.Parse(view?.GetView("SettlParties"));
+			instance.SettlParties?.Parse(view.GetView("SettlParties"));
 		}
 	}
 }

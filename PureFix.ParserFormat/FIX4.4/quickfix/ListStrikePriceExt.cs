@@ -13,17 +13,19 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this ListStrikePrice instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.ListID = view?.GetString(66);
-			instance.TotNoStrikes = view?.GetInt32(422);
-			instance.LastFragment = view?.GetBool(893);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.ListID = view.GetString(66);
+			instance.TotNoStrikes = view.GetInt32(422);
+			instance.LastFragment = view.GetBool(893);
 			instance.InstrmtStrkPxGrp = new InstrmtStrkPxGrp();
-			instance.InstrmtStrkPxGrp?.Parse(view?.GetView("InstrmtStrkPxGrp"));
+			instance.InstrmtStrkPxGrp?.Parse(view.GetView("InstrmtStrkPxGrp"));
 			instance.UndInstrmtStrkPxGrp = new UndInstrmtStrkPxGrp();
-			instance.UndInstrmtStrkPxGrp?.Parse(view?.GetView("UndInstrmtStrkPxGrp"));
+			instance.UndInstrmtStrkPxGrp?.Parse(view.GetView("UndInstrmtStrkPxGrp"));
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

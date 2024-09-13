@@ -13,14 +13,16 @@ namespace PureFix.Types.FIX44.QuickFix
 	{
 		public static void Parse(this RFQRequest instance, MsgView? view)
 		{
+			if (view is null) return;
+			
 			instance.StandardHeader = new StandardHeader();
-			instance.StandardHeader?.Parse(view?.GetView("StandardHeader"));
-			instance.RFQReqID = view?.GetString(644);
+			instance.StandardHeader?.Parse(view.GetView("StandardHeader"));
+			instance.RFQReqID = view.GetString(644);
 			instance.RFQReqGrp = new RFQReqGrp();
-			instance.RFQReqGrp?.Parse(view?.GetView("RFQReqGrp"));
-			instance.SubscriptionRequestType = view?.GetString(263);
+			instance.RFQReqGrp?.Parse(view.GetView("RFQReqGrp"));
+			instance.SubscriptionRequestType = view.GetString(263);
 			instance.StandardTrailer = new StandardTrailer();
-			instance.StandardTrailer?.Parse(view?.GetView("StandardTrailer"));
+			instance.StandardTrailer?.Parse(view.GetView("StandardTrailer"));
 		}
 	}
 }

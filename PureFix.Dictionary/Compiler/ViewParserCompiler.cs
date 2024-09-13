@@ -199,7 +199,7 @@ namespace PureFix.Dictionary.Compiler
             if (cf.Definition == null) return;
             var extended = _currentCompilerType?.GetExtended(cf) ?? cf.Name;
             _builder.WriteLine($"instance.{cf.Name} = new {extended}();");
-            _builder.WriteLine($"instance.{cf.Name}?.Parse(view?.GetView(\"{cf.Name}\"));");
+            _builder.WriteLine($"instance.{cf.Name}?.Parse(view.GetView(\"{cf.Name}\"));");
             Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, extended));
         }
 
