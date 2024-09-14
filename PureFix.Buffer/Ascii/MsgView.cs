@@ -107,6 +107,11 @@ namespace PureFix.Buffer.Ascii
             return AllStrings();
         }
 
+        public string?[]? GetStrings(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetStrings(typed.Tag) : null;
+        }
+
         public string?[]? GetStrings(int tag)
         {
             var range = GetPositions(tag);

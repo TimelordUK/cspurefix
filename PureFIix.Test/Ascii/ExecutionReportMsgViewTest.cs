@@ -980,5 +980,18 @@ namespace PureFIix.Test.Ascii
                 Assert.That(erView.GetInt32("StrikePrice"), Is.EqualTo(52639));
             });
         }
+
+        [Test]
+        public void View_Simple_Repeat_Tag_Decode_Test()
+        {
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var erView = _views[0];
+            Assert.That(erView, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(erView.GetStrings("PartyID"), Is.EqualTo((string[]) ["magna.", "iaculis", "vitae,"]));
+            });
+        }
     }
 }
