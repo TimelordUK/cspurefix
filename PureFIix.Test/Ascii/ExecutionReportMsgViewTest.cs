@@ -1003,7 +1003,7 @@ namespace PureFIix.Test.Ascii
             var instance = JsonSerializer.Deserialize<T>(s, options2);
             return instance;
         }
-        
+
         string ToJson<T>(T instance)
         {
             JsonSerializerOptions options = new()
@@ -1047,7 +1047,7 @@ namespace PureFIix.Test.Ascii
                            }
                            """;
 
-          
+
             var instance = FromJson<PartiesNoPartyIDs>(expected);
             Assert.That(parties.NoPartyIDs[0], DIs.DeepEqualTo(instance));
 
@@ -1163,6 +1163,70 @@ namespace PureFIix.Test.Ascii
             Assert.That(er2.SecurityID, Is.EqualTo(er.Instrument.SecurityID));
 
 
+        }
+
+
+        [Test]
+        public void View_UndInstrmtGrp_Component_Decode_Test()
+        {
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var erView = _views[0];
+            Assert.That(erView, Is.Not.Null);
+            var undInstrmtGrpView = erView.GetView("UndInstrmtGrp");
+            Assert.That(undInstrmtGrpView, Is.Not.Null);
+            var uig = new UndInstrmtGrp();
+            uig.Parse(undInstrmtGrpView);
+            Assert.That(uig.NoUnderlyings, Is.Not.Null);
+            Assert.That(uig.NoUnderlyings.Length, Is.EqualTo(2));
+            var u0 = uig.NoUnderlyings[0];
+            Assert.That(u0, Is.Not.Null);
+            var underlying0 = u0.UnderlyingInstrument;
+            Assert.That(underlying0, Is.Not.Null);
+            Assert.That(underlying0.UnderlyingSymbol, Is.EqualTo("massa."));
+
+            var expected0 = """
+{
+  "NoUnderlyingSecurityAltID": [
+  {
+     "UnderlyingSecurityAltID": "ornare",
+     "UnderlyingSecurityAltIDSource": "magna."
+   },
+   {
+     "UnderlyingSecurityAltID": "non",
+     "UnderlyingSecurityAltIDSource": "at"
+   },
+   {
+     "UnderlyingSecurityAltID": "hendrerit",
+     "UnderlyingSecurityAltIDSource": "Pellentesque"
+    }
+  ]
+}
+""";
+            /*
+              "UnderlyingInstrument": {
+          "UnderlyingSymbol": "erat",
+          "UnderlyingSymbolSfx": "In",
+          "UnderlyingSecurityID": "feugiat",
+          "UnderlyingSecurityIDSource": "ut",
+          "UndSecAltIDGrp": {
+            "NoUnderlyingSecurityAltID": [
+              {
+                "UnderlyingSecurityAltID": "Quisque",
+                "UnderlyingSecurityAltIDSource": "tortor"
+              }
+            ]
+          },
+             */
+            var expectedInst = FromJson<UndSecAltIDGrp>(expected0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(expectedInst, Is.Not.Null);
+                Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
+                Assert.That(uig.NoUnderlyings[1].UnderlyingInstrument.UnderlyingSymbol, Is.EqualTo("erat"));
+                Assert.That(uig.NoUnderlyings[1].UnderlyingInstrument.UndSecAltIDGrp.NoUnderlyingSecurityAltID[0].UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
+                Assert.That(uig.NoUnderlyings[1].UnderlyingInstrument.UndSecAltIDGrp.NoUnderlyingSecurityAltID[0].UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
+            });
         }
     }
 }
