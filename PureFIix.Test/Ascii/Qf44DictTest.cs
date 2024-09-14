@@ -1,4 +1,5 @@
 ﻿using PureFIix.Test.Env;
+using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
@@ -15,7 +16,7 @@ namespace PureFIix.Test.Ascii
     {
         private FixDefinitions _definitions;
         private SetConstraintHelper _setHelper;
-        
+
         [OneTimeSetUp]
         public void OnceSetup()
         {
@@ -96,7 +97,7 @@ namespace PureFIix.Test.Ascii
            </message>
          */
         [Test]
-        public void Check_Heartbeat_Fields()
+        public void Check_Heartbeat_Fields_Test()
         {
             var hb = _definitions.Message["Heartbeat"];
             Assert.That(hb, Is.Not.Null);
@@ -115,7 +116,7 @@ namespace PureFIix.Test.Ascii
          */
 
         [Test]
-        public void Check_ResendRequest_Fields()
+        public void Check_ResendRequest_Fields_Test()
         {
             var hb = _definitions.Message["ResendRequest"];
             Assert.That(hb, Is.Not.Null);
@@ -125,6 +126,38 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsSimple(hb, index++, "EndSeqNo", true);
             _setHelper.IsComponent(hb, index++, "StandardTrailer", true);
             Assert.That(hb.Fields, Has.Count.EqualTo(index));
+        }
+
+        [Test]
+        public void Check_Instrument_Contained_Tags_Test()
+        {
+            var instrumnet = _definitions.Component["Instrument"];
+            Assert.That(instrumnet, Is.Not.Null);
+            var tags = string.Join(",", instrumnet.ContainedTag.Keys.ToList());
+            // make sure all tags are held from all contained fields.
+            int[] t = [
+                 55,65,48,22,460,461,167,762,200,541,201,224,225,239,226,227,228,255,543,470,471,472,240,202,947,206,231,223,207,106,348,349,107,350,351,691,667,875,876,873,874,454,455,456,864,865,866,867,868
+                ];
+            // Console.WriteLine($"{tags}");
+            foreach (var tag in t)
+            {
+                Assert.That(instrumnet.ContainedTag.ContainsKey(tag), Is.True); 
+            }
+            Assert.That(instrumnet.ContainedTag, Has.Count.EqualTo(49));
+        }
+
+        [Test]
+        public void Check_Instrument_IndexTest()
+        {
+            var instrumnet = _definitions.Component["Instrument"];
+            Assert.That(instrumnet, Is.Not.Null);
+            var collector = new ContainedFieldCollector();
+            var res = collector.Compute(instrumnet);
+            var tags = res.Select(kv=>kv.child).OfType<ContainedSimpleField>().Select(sf=>sf.Definition.Tag).Distinct().ToList();
+            // sim[le field collection will be missing the 2 NoOfGroup fields.
+            Assert.That(tags, Has.Count.EqualTo(47));
+            var tags2 = res.Select(kv => kv.child).OfType<ContainedGroupField>().Select(sf => sf.Definition.NoOfField?.Tag).Distinct().ToList();
+            Assert.That(tags2, Is.EqualTo(new List<int>() { 454, 864 }));
         }
     }
 }
