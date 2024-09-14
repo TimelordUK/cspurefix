@@ -175,6 +175,7 @@ namespace PureFIix.Test.Ascii
         public void Instrument_Structure_Test()
         {
             var i = _testEntity.Definitions.Component.GetValueOrDefault("Instrument");
+            Assert.That(i, Is.Not.Null);
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
@@ -188,6 +189,25 @@ namespace PureFIix.Test.Ascii
                 Assert.That(instrument.Depth, Is.EqualTo(1));
                 Assert.That(instrument.EndTag, Is.EqualTo(874));
                 Assert.That(instrument.Type, Is.EqualTo(SegmentType.Component));   
+            });
+        }
+
+        [Test]
+        public void FinancingDetails_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var financingDetails = structure?.GetInstance("FinancingDetails");
+            Assert.Multiple(() =>
+            {
+                Assert.That(financingDetails, Is.Not.Null);
+                Assert.That(financingDetails.StartPosition, Is.EqualTo(134));
+                Assert.That(financingDetails.StartTag, Is.EqualTo(913));
+                Assert.That(financingDetails.EndPosition, Is.EqualTo(142));
+                Assert.That(financingDetails.Depth, Is.EqualTo(1));
+                Assert.That(financingDetails.EndTag, Is.EqualTo(898));
+                Assert.That(financingDetails.Type, Is.EqualTo(SegmentType.Component));
             });
         }
 

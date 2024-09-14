@@ -15,10 +15,11 @@ namespace PureFix.Dictionary.Parser.QuickFix
         public class IndexVisitor : ISetDispatchReceiver
         {
             private readonly Queue<IContainedSet> _work = [];
-            private HashSet<IContainedSet> _visited = [];
-            private int _indexCount = 0;
-            private List<(string name, double elapsed)> _elapsed = [];
-            private Stopwatch _sw = new Stopwatch();
+            private readonly HashSet<IContainedSet> _visited = [];
+            private readonly List<(string name, double elapsed)> _elapsed = [];
+            private readonly Stopwatch _sw = new();
+            public IReadOnlyList<(string name, double elapsed)> Elapsed => _elapsed;
+            public int Count { get; private set; } = 0;
 
 
             public void Compute(FixDefinitions definitions)
@@ -37,11 +38,12 @@ namespace PureFix.Dictionary.Parser.QuickFix
                 {
                     var set = _work.Dequeue();
                     if (_visited.Contains(set)) continue;
+                    ++Count;
                     set.Index();
                     _elapsed.Add((set.Name, _sw.Elapsed.TotalMilliseconds));
                     set.Iterate(this);
                     _elapsed.Add((set.Name, _sw.Elapsed.TotalMilliseconds));
-                    ++_indexCount;
+                    ++Count;
                     _visited.Add(set);
                 }
             }

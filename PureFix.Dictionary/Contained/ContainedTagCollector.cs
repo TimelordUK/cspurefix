@@ -8,11 +8,11 @@ namespace PureFix.Dictionary.Contained
 {
     public class ContainedFieldCollector : ISetDispatchReceiver
     {
-        private static Dictionary<IContainedSet, IReadOnlyList<(IContainedSet parent, ContainedField child)>> _memoised = [];
-        private List<(IContainedSet parent, ContainedField child)> _fields = [];
+        private static readonly Dictionary<IContainedSet, IReadOnlyList<(IContainedSet parent, ContainedField child)>> _memoised = [];
+        private readonly List<(IContainedSet parent, ContainedField child)> _fields = [];
         private IReadOnlyList<(IContainedSet parent, ContainedField child)> Fields => _fields;
         public Queue<IContainedSet> _queue = [];
-        IContainedSet? _current;
+        private IContainedSet? _current;
 
         public IReadOnlyList<(IContainedSet parent, ContainedField child)> Compute(IContainedSet set)
         {
@@ -23,7 +23,7 @@ namespace PureFix.Dictionary.Contained
             _fields.Clear();
             _queue.Enqueue(set);
             Work();
-            _memoised[set] = _fields[0..];
+            _memoised[set] = _fields[..];
             return Fields;
         }
 
