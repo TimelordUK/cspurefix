@@ -14,15 +14,12 @@ namespace PureFix.Types
         private const byte AsciiNine = (byte)'9';
         private const byte WeekByte = (byte)'w';
 
-        private readonly int m_Length;
         private readonly EncodedData m_Data;
 
         private MonthYear(bool _, int year, int month, int length)
         {
             if(year < 0 || year > 9999) throw new ArgumentException("invalid year");
             if(month < 1 || month > 12) throw new ArgumentException("invalid month");
-
-            m_Length = length;
 
             m_Data[3] = (byte)((year % 10) + '0');
             year /= 10;
@@ -42,7 +39,6 @@ namespace PureFix.Types
             if(IsValidEncoding(data))
             {
                 data.CopyTo(m_Data);
-                m_Length = data.Length;
             }
             else
             {
@@ -83,12 +79,18 @@ namespace PureFix.Types
 
         public int Length
         {
-            get{return m_Length;}
+            get
+            {
+                if(m_Data[0] == 0) return 0;
+
+                // We're always at least 6 characters long, but 8 if there's a day/week part
+                return m_Data[6] == 0 ? 6 : 8;
+            }
         }
 
         public bool IsValid
         {
-            get{return m_Length != 0;}
+            get{return m_Data[0] != 0;}
         }
 
         /// <summary>
@@ -101,12 +103,12 @@ namespace PureFix.Types
         {
             get
             {
-                if(index >= 0 && index < this.Length)
+                if((uint)index >= (uint)this.Length)
                 {
-                    return m_Data[index];
+                    throw new IndexOutOfRangeException();
                 }
 
-                throw new IndexOutOfRangeException();
+                return m_Data[index];
             }
         }
 
@@ -117,7 +119,7 @@ namespace PureFix.Types
         /// <returns>The number of bytes written</returns>
         public int CopyTo(scoped Span<byte> destination)
         {
-            ReadOnlySpan<byte> data = m_Data[0..m_Length];
+            ReadOnlySpan<byte> data = m_Data[0..this.Length];
             data.CopyTo(destination);
             return data.Length;
         }
@@ -125,9 +127,9 @@ namespace PureFix.Types
         public string AsString()
         {
             // We can creates the integer directly into the string buffer
-            return string.Create(m_Length, this, static (span, state) =>
+            return string.Create(this.Length, this, static (span, state) =>
             {
-                var length = state.m_Length;
+                var length = state.Length;
 
                 for(var i = 0; i < length; i++)
                 {
