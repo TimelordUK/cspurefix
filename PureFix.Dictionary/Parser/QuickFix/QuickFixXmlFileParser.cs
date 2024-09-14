@@ -44,6 +44,14 @@ public partial class QuickFixXmlFileParser(FixDefinitions definitions)
         {
             Work(Queue.Dequeue());
         }
+        /*
+         * At this point all fields on all sets are placed, however the parent to say an instrument
+         * is not aware of the tags contained in these sub fields, this indexer will start from every
+         * message and re-index itself and all child components and groups such that at each level
+         * they contain all tags below them - this is essential for the segment parser to work.
+         */
+        var indexer = new IndexVisitor();
+        indexer.Compute(Definitions);
     }
 
     public void Work(Node node)

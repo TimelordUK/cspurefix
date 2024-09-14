@@ -95,13 +95,13 @@ namespace PureFix.Dictionary.Contained
             {
                 case ContainedFieldType.Group:
                 {
-                    AddGroupFieldDef(parent, (ContainedGroupField)field);
+                    AddGroupFieldDef((ContainedGroupField)field);
                     break;
                 }
 
                 case ContainedFieldType.Component:
                 {
-                    AddComponentFieldDef(parent, (ContainedComponentField)field);
+                    AddComponentFieldDef((ContainedComponentField)field);
                     break;
                 }
 
@@ -113,7 +113,7 @@ namespace PureFix.Dictionary.Contained
             }
         }
 
-        private void AddGroupFieldDef(ContainedFieldSet containedField, ContainedGroupField groupField)
+        private void AddGroupFieldDef(ContainedGroupField groupField)
         {
             if (_groups.ContainsKey(groupField.Name)) { return; }
 
@@ -135,7 +135,7 @@ namespace PureFix.Dictionary.Contained
             }
         }
 
-        private void AddComponentFieldDef(ContainedFieldSet containedField, ContainedComponentField componentField)
+        private void AddComponentFieldDef(ContainedComponentField componentField)
         {
             if (_components.ContainsKey(componentField.Name))
             {
@@ -197,6 +197,31 @@ namespace PureFix.Dictionary.Contained
             for (int i = 0; i < fields.Count; i++)
             {
                 AddContained(containedField, fields[i]);
+            }
+        }
+
+        public void Index()
+        {
+            // we need to keep _fields as they are the actual list representing
+            // this set - but for all fields below us, need to ensure our tag set
+            // is up to date.  This will re-compute the index.
+
+            var level0 = _fields.ToList();
+            var tg = new ContainedFieldCollector();
+            var fields = tg.Compute(this);
+            Reset();
+
+            // add back our saved top level fields.
+            
+            foreach (var field in level0)
+            {
+                Add(field);
+            }
+
+            // for everything below us, add to our indices
+            foreach (var (parent, child) in fields)
+            {
+                AddContained((ContainedFieldSet)parent, child);
             }
         }
     }

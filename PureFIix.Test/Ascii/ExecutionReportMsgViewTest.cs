@@ -9,6 +9,7 @@ using Microsoft.Extensions.ObjectPool;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Buffer.Segment;
 using PureFix.Types.FIX44.QuickFix.Types;
+using PureFix.Dictionary.Contained;
 
 namespace PureFIix.Test.Ascii
 {
@@ -167,6 +168,26 @@ namespace PureFIix.Test.Ascii
                 Assert.That(noContraBrokers.Depth, Is.EqualTo(2));
                 Assert.That(noContraBrokers.DelimiterTag, Is.EqualTo(375));
                 Assert.That(noContraBrokers.DelimiterPositions, Is.EqualTo(new List<int>([47, 52, 57])));
+            });
+        }
+
+        [Test]
+        public void Instrument_Structure_Test()
+        {
+            var i = _testEntity.Definitions.Component.GetValueOrDefault("Instrument");
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var instrument = structure?.GetInstance("Instrument");
+            Assert.Multiple(() =>
+            {
+                Assert.That(instrument, Is.Not.Null);
+                Assert.That(instrument.StartPosition, Is.EqualTo(83));
+                Assert.That(instrument.StartTag, Is.EqualTo(55));
+                Assert.That(instrument.EndPosition, Is.EqualTo(133));
+                Assert.That(instrument.Depth, Is.EqualTo(1));
+                Assert.That(instrument.EndTag, Is.EqualTo(874));
+                Assert.That(instrument.Type, Is.EqualTo(SegmentType.Component));   
             });
         }
 
