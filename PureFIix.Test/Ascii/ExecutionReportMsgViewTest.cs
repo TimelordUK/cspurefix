@@ -147,6 +147,20 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+
+        /*
+[46] 382 (NoContraBrokers) = 3, [47] 375 (ContraBroker) = Quisque
+[48] 337 (ContraTrader) = tincidunt, [49] 437 (ContraTradeQty) = 18171
+[50] 438 (ContraTradeTime) = 20180528-16:38:03.972, [51] 655 (ContraLegRefID) = Class
+[52] 375 (ContraBroker) = taciti, [53] 337 (ContraTrader) = ad
+[54] 437 (ContraTradeQty) = 91261, [55] 438 (ContraTradeTime) = 20180528-16:38:03.972
+[56] 655 (ContraLegRefID) = torquent, [57] 375 (ContraBroker) = conubia
+[58] 337 (ContraTrader) = per, [59] 437 (ContraTradeQty) = 97017
+[60] 438 (ContraTradeTime) = 20180528-16:38:03.972, [61] 655 (ContraLegRefID) = himenaeos.
+ */
+
+
+
         [Test]
         public void ContraGrp_Structure_Test()
         {
@@ -171,6 +185,36 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+
+        /*
+[82] 635 (ClearingFeeIndicator) = 5[5TH_YEAR_DELEGATE_TRADING_FOR_HIS_OWN_ACCOUNT], [83] 55 (Symbol) = ac,
+[84] 65 (SymbolSfx) = non, [85] 48 (SecurityID) = Pellentesque
+[86] 22 (SecurityIDSource) = B[WERTPAPIER], [87] 454 (NoSecurityAltID) = 2
+[88] 455 (SecurityAltID) = lorem, [89] 456 (SecurityAltIDSource) = consequat
+[90] 455 (SecurityAltID) = sapien, [91] 456 (SecurityAltIDSource) = tempor
+[92] 460 (Product) = 2[COMMODITY], [93] 461 (CFICode) = a
+[94] 167 (SecurityType) = SECLOAN[SECURITIES_LOAN], [95] 762 (SecuritySubType) = purus
+[96] 200 (MaturityMonthYear) = ut, [97] 541 (MaturityDate) = 20180528-16:38:03.972
+[98] 201 (PutOrCall) = 1[CALL], [99] 224 (CouponPaymentDate) = 20180528-16:38:03.972
+[100] 225 (IssueDate) = 20180528-16:38:03.972, [101] 239 (RepoCollateralSecurityType) = Proin
+[102] 226 (RepurchaseTerm) = 62025, [103] 227 (RepurchaseRate) = 27005
+[104] 228 (Factor) = 68810, [105] 255 (CreditRating) = justo
+[106] 543 (InstrRegistry) = ut, [107] 470 (CountryOfIssue) = nibh
+[108] 471 (StateOrProvinceOfIssue) = at., [109] 472 (LocaleOfIssue) = fermentum
+[110] 240 (RedemptionDate) = 20180528-16:38:03.972, [111] 202 (StrikePrice) = 52639
+[112] 947 (StrikeCurrency) = 50824, [113] 206 (OptAttribute) = risus,
+[114] 231 (ContractMultiplier) = 10378, [115] 223 (CouponRate) = 25946
+[116] 207 (SecurityExchange) = placerat, [117] 106 (Issuer) = luctus
+[118] 348 (EncodedIssuerLen) = 20, [119] 349 (EncodedIssuer) = zqJsegy0CQ8EyKQ1bmLw
+[120] 107 (SecurityDesc) = Vivamus, [121] 350 (EncodedSecurityDescLen) = 20
+[122] 351 (EncodedSecurityDesc) = A1xB4jDS31E4zM1xAbk5, [123] 691 (Pool) = mi
+[124] 667 (ContractSettlMonth) = arcu, [125] 875 (CPProgram) = 2[4]
+[126] 876 (CPRegType) = rhoncus, [127] 864 (NoEvents) = 1
+[128] 865 (EventType) = 1[PUT], [129] 866 (EventDate) = 20180528-16:38:03.973
+[130] 867 (EventPx) = 16817, [131] 868 (EventText) = amet
+[132] 873 (DatedDate) = 20180528-16:38:03.973, [133] 874 (InterestAccrualDate) = 20180528-16:38:03.973
+ */
+
         [Test]
         public void Instrument_Structure_Test()
         {
@@ -192,6 +236,14 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+        /*
+[134] 913 (AgreementDesc) = sit, [135] 914 (AgreementID) = eleifend
+[136] 915 (AgreementDate) = 20180528-16:38:03.973, [137] 918 (AgreementCurrency) = 78552
+[138] 788 (TerminationType) = 2[TERM], [139] 916 (StartDate) = 20180528-16:38:03.973
+[140] 917 (EndDate) = 20180528-16:38:03.973, [141] 919 (DeliveryType) = 3[HOLD_IN_CUSTODY]
+[142] 898 (MarginRatio) = 13625, [143] 711 (NoUnderlyings) = 2
+ */
+
         [Test]
         public void FinancingDetails_Structure_Test()
         {
@@ -210,6 +262,83 @@ namespace PureFIix.Test.Ascii
                 Assert.That(financingDetails.Type, Is.EqualTo(SegmentType.Component));
             });
         }
+
+        /*
+[272] 211 (PegOffsetValue) = 38459, [273] 835 (PegMoveType) = 1[FIXED]
+[274] 836 (PegOffsetType) = [undefined], [275] 837 (PegLimitType) = 2
+[276] 838 (PegRoundDirection) = 2, [277] 840 (PegScope) = 4[NATIONAL_EXCLUDING_LOCAL]
+ */
+
+        [Test]
+        public void PegInstructions_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var pegInstructions = structure?.GetInstance("PegInstructions");
+            Assert.Multiple(() =>
+            {
+                Assert.That(pegInstructions, Is.Not.Null);
+                Assert.That(pegInstructions.StartPosition, Is.EqualTo(272));
+                Assert.That(pegInstructions.StartTag, Is.EqualTo(211));
+                Assert.That(pegInstructions.EndPosition, Is.EqualTo(277));
+                Assert.That(pegInstructions.Depth, Is.EqualTo(1));
+                Assert.That(pegInstructions.EndTag, Is.EqualTo(840));
+                Assert.That(pegInstructions.Type, Is.EqualTo(SegmentType.Component));
+            });
+        }
+
+        /*
+[278] 388 (DiscretionInst) = 2[RELATED_TO_PRIMARY_PRICE], [279] 389 (DiscretionOffsetValue) = 48430
+[280] 841 (DiscretionMoveType) = 1[FIXED], [281] 842 (DiscretionOffsetType) = 3[PRICE_TIER]
+[282] 843 (DiscretionLimitType) = 2, [283] 844 (DiscretionRoundDirection) = 2
+[284] 846 (DiscretionScope) = 4[NATIONAL_EXCLUDING_LOCAL], [285] 839 (PeggedPrice) = 18644
+ */
+
+
+        [Test]
+        public void DiscretionInstructions_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var discretionInstructions = structure?.GetInstance("DiscretionInstructions");
+            Assert.Multiple(() =>
+            {
+                Assert.That(discretionInstructions, Is.Not.Null);
+                Assert.That(discretionInstructions.StartPosition, Is.EqualTo(278));
+                Assert.That(discretionInstructions.StartTag, Is.EqualTo(388));
+                Assert.That(discretionInstructions.EndPosition, Is.EqualTo(284));
+                Assert.That(discretionInstructions.Depth, Is.EqualTo(1));
+                Assert.That(discretionInstructions.EndTag, Is.EqualTo(846));
+                Assert.That(discretionInstructions.Type, Is.EqualTo(SegmentType.Component));
+            });
+        }
+
+        /*
+[324] 12 (Commission) = 3339, [325] 13 (CommType) = 1[PER_UNIT]
+[326] 479 (CommCurrency) = 25841, [327] 497 (FundRenewWaiv) = N[NO]
+ */
+
+        [Test]
+        public void CommissionData_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var commisionData = structure?.GetInstance("CommissionData");
+            Assert.Multiple(() =>
+            {
+                Assert.That(commisionData, Is.Not.Null);
+                Assert.That(commisionData.StartPosition, Is.EqualTo(324));
+                Assert.That(commisionData.StartTag, Is.EqualTo(12));
+                Assert.That(commisionData.EndPosition, Is.EqualTo(327));
+                Assert.That(commisionData.Depth, Is.EqualTo(1));
+                Assert.That(commisionData.EndTag, Is.EqualTo(497));
+                Assert.That(commisionData.Type, Is.EqualTo(SegmentType.Component));
+            });
+        }
+
 
         [Test]
         public void View_To_Execution_Report_Test()
