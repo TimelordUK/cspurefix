@@ -192,6 +192,10 @@ namespace PureFix.Dictionary.Compiler
                     _builder.WriteLine($"instance.{sf.Name} = view.GetDateTime({sf.Definition.Tag});");
                     break;
 
+                case TagType.MonthYear:
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetMonthYear({sf.Definition.Tag});");
+                    break;
+
                 default:
                     _builder.WriteLine($"instance.{sf.Name} = view.GetString({sf.Definition.Tag});");
                     break;

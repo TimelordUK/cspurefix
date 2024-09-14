@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.CFICode = view.GetString(461);
 			instance.SecurityType = view.GetString(167);
 			instance.SecuritySubType = view.GetString(762);
-			instance.MaturityMonthYear = view.GetString(200);
+			instance.MaturityMonthYear = view.GetMonthYear(200);
 			instance.MaturityDate = view.GetDateOnly(541);
 			instance.PutOrCall = view.GetInt32(201);
 			instance.CouponPaymentDate = view.GetDateOnly(224);
@@ -55,7 +55,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.EncodedSecurityDescLen = view.GetInt32(350);
 			instance.EncodedSecurityDesc = view.GetByteArray(351);
 			instance.Pool = view.GetString(691);
-			instance.ContractSettlMonth = view.GetString(667);
+			instance.ContractSettlMonth = view.GetMonthYear(667);
 			instance.CPProgram = view.GetInt32(875);
 			instance.CPRegType = view.GetString(876);
 			if (view.GetView("EvntGrp") is MsgView groupViewEvntGrp)

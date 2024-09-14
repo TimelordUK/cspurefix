@@ -36,8 +36,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 764, Type = TagType.String, Offset = 8, Required = false)]
 		public string? LegSecuritySubType { get; set; }
 		
-		[TagDetails(Tag = 610, Type = TagType.String, Offset = 9, Required = false)]
-		public string? LegMaturityMonthYear { get; set; }
+		[TagDetails(Tag = 610, Type = TagType.MonthYear, Offset = 9, Required = false)]
+		public MonthYear? LegMaturityMonthYear { get; set; }
 		
 		[TagDetails(Tag = 611, Type = TagType.LocalDate, Offset = 10, Required = false)]
 		public DateOnly? LegMaturityDate { get; set; }
@@ -129,8 +129,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 739, Type = TagType.LocalDate, Offset = 39, Required = false)]
 		public DateOnly? LegDatedDate { get; set; }
 		
-		[TagDetails(Tag = 955, Type = TagType.String, Offset = 40, Required = false)]
-		public string? LegContractSettlMonth { get; set; }
+		[TagDetails(Tag = 955, Type = TagType.MonthYear, Offset = 40, Required = false)]
+		public MonthYear? LegContractSettlMonth { get; set; }
 		
 		[TagDetails(Tag = 956, Type = TagType.LocalDate, Offset = 41, Required = false)]
 		public DateOnly? LegInterestAccrualDate { get; set; }

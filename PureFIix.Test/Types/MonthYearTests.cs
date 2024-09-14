@@ -48,6 +48,26 @@ namespace PureFIix.Test.Types
         }
 
         [Test]
+        [TestCase("20240131", true)]
+        [TestCase("20240915", true)]
+        [TestCase("20240931", false)] // Invalid day of month
+        [TestCase("20240930", true)]
+        [TestCase("202409w0", false)]
+        [TestCase("202409w1", true)]
+        [TestCase("202409w2", true)]
+        [TestCase("202409w3", true)]
+        [TestCase("202409w4", true)]
+        [TestCase("202409w5", true)]
+        [TestCase("202409w6", false)]
+        [TestCase("20240229", true)] // leap day
+        [TestCase("20250229", false)] // invalid leap day
+        public void TryParseString(string value, bool expected)
+        {
+            var parsed = MonthYear.TryParse(value, out var monthYear);
+            Assert.That(parsed, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void Construction_Default()
         {
             var my = new MonthYear();

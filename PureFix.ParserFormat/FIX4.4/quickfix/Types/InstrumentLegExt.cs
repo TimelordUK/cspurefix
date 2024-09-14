@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.LegCFICode = view.GetString(608);
 			instance.LegSecurityType = view.GetString(609);
 			instance.LegSecuritySubType = view.GetString(764);
-			instance.LegMaturityMonthYear = view.GetString(610);
+			instance.LegMaturityMonthYear = view.GetMonthYear(610);
 			instance.LegMaturityDate = view.GetDateOnly(611);
 			instance.LegCouponPaymentDate = view.GetDateOnly(248);
 			instance.LegIssueDate = view.GetDateOnly(249);
@@ -58,7 +58,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.LegCurrency = view.GetString(556);
 			instance.LegPool = view.GetString(740);
 			instance.LegDatedDate = view.GetDateOnly(739);
-			instance.LegContractSettlMonth = view.GetString(955);
+			instance.LegContractSettlMonth = view.GetMonthYear(955);
 			instance.LegInterestAccrualDate = view.GetDateOnly(956);
 		}
 	}

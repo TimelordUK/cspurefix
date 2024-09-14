@@ -36,8 +36,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 763, Type = TagType.String, Offset = 8, Required = false)]
 		public string? UnderlyingSecuritySubType { get; set; }
 		
-		[TagDetails(Tag = 313, Type = TagType.String, Offset = 9, Required = false)]
-		public string? UnderlyingMaturityMonthYear { get; set; }
+		[TagDetails(Tag = 313, Type = TagType.MonthYear, Offset = 9, Required = false)]
+		public MonthYear? UnderlyingMaturityMonthYear { get; set; }
 		
 		[TagDetails(Tag = 542, Type = TagType.LocalDate, Offset = 10, Required = false)]
 		public DateOnly? UnderlyingMaturityDate { get; set; }

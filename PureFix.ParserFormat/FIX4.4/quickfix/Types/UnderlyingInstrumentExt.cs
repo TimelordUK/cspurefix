@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.UnderlyingCFICode = view.GetString(463);
 			instance.UnderlyingSecurityType = view.GetString(310);
 			instance.UnderlyingSecuritySubType = view.GetString(763);
-			instance.UnderlyingMaturityMonthYear = view.GetString(313);
+			instance.UnderlyingMaturityMonthYear = view.GetMonthYear(313);
 			instance.UnderlyingMaturityDate = view.GetDateOnly(542);
 			instance.UnderlyingPutOrCall = view.GetInt32(315);
 			instance.UnderlyingCouponPaymentDate = view.GetDateOnly(241);

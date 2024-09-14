@@ -67,6 +67,11 @@
                     return TagType.RawData;
                 }
 
+                case "monthyear":
+                {
+                    return TagType.MonthYear;
+                }
+
                 default:
                 {
                     return TagType.String;

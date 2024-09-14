@@ -36,8 +36,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 762, Type = TagType.String, Offset = 8, Required = false)]
 		public string? SecuritySubType { get; set; }
 		
-		[TagDetails(Tag = 200, Type = TagType.String, Offset = 9, Required = false)]
-		public string? MaturityMonthYear { get; set; }
+		[TagDetails(Tag = 200, Type = TagType.MonthYear, Offset = 9, Required = false)]
+		public MonthYear? MaturityMonthYear { get; set; }
 		
 		[TagDetails(Tag = 541, Type = TagType.LocalDate, Offset = 10, Required = false)]
 		public DateOnly? MaturityDate { get; set; }
@@ -120,8 +120,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 691, Type = TagType.String, Offset = 36, Required = false)]
 		public string? Pool { get; set; }
 		
-		[TagDetails(Tag = 667, Type = TagType.String, Offset = 37, Required = false)]
-		public string? ContractSettlMonth { get; set; }
+		[TagDetails(Tag = 667, Type = TagType.MonthYear, Offset = 37, Required = false)]
+		public MonthYear? ContractSettlMonth { get; set; }
 		
 		[TagDetails(Tag = 875, Type = TagType.Int, Offset = 38, Required = false)]
 		public int? CPProgram { get; set; }
