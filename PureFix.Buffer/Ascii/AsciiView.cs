@@ -220,5 +220,11 @@ namespace PureFix.Buffer.Ascii
                     return default;
             }
         }
+
+        public override MonthYear? GetMonthYear(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetMonthYear(tag.Value.Start, tag.Value.End);
+        }
     }
 }

@@ -82,6 +82,9 @@ namespace PureFix.Types
                 case TagType.UtcTimeOnly:
                     return "DateTime";
 
+                case TagType.MonthYear:
+                    return "MonthYear";
+
                 default:
                     return "string";
             }

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using PureFix.Buffer.Ascii;
+using PureFix.Types;
 
 namespace PureFix.Buffer
 {
@@ -135,6 +136,19 @@ namespace PureFix.Buffer
                 _buffer[Pos++] = (byte)c;
             }
             
+            return Pos;
+        }
+
+        public int WriteMonthYear(MonthYear monthYear)
+        {
+            var length = monthYear.Length;
+            CheckGrowBuffer(length);
+
+            var destination = new Span<byte>(_buffer, Pos, length);
+            monthYear.CopyTo(destination);
+
+            Pos += length;
+
             return Pos;
         }
 
@@ -289,6 +303,17 @@ namespace PureFix.Buffer
                 // decimal with fraction turn to string
                 return WriteString($"{(decimal)v}");
             }
+        }
+
+        public MonthYear? GetMonthYear(int st, int vend)
+        {
+            var ros = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            if (MonthYear.TryParse(ros, out var monthYear))
+            {
+                return monthYear;
+            }
+
+            return null;
         }
 
         public double? GetFloat(int st, int vend)

@@ -77,6 +77,7 @@ namespace PureFix.Buffer.Ascii
         public abstract decimal? GetDecimal(int tag);
         public abstract byte[]? GetByteArray(int tag);
         public abstract Memory<byte>? GetMemory(int tag);
+        public abstract MonthYear? GetMonthYear(int tag);
 
         public int GroupCount()
         {

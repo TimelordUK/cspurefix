@@ -12,6 +12,7 @@
         LocalDate = 8,
         RawData = 9,
         Length = 10,
-        Unknown = 11
+        MonthYear = 11,
+        Unknown = 12
     }
 }
