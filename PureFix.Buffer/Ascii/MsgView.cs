@@ -70,6 +70,7 @@ namespace PureFix.Buffer.Ascii
 
         // "BeginString" or 8
         public abstract DateTime? GetDateTime(int tag);
+        public abstract DateOnly? GetDateOnly(int tag);
         public abstract int? GetInt32(int tag);
         public abstract double? GetDouble(int tag);
         public abstract bool? GetBool(int tag);

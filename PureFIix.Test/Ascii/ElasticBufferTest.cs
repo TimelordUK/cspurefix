@@ -532,9 +532,9 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Write_Utc_Date_Read_Utc_Date_Test()
         {
-            const string ds = "20180610-10:39:01.621";
+            const string ds = "20180610";
             var format = ElasticBuffer.TimeFormats.Date;
-            DateTime.TryParseExact(ds, format, null, DateTimeStyles.AssumeUniversal, out var d);
+            DateOnly.TryParseExact(ds, format, null, DateTimeStyles.AssumeUniversal, out var d);
             var b = new ElasticBuffer(1);
             b.WriteUtcDateOnly(d);
             var dt = b.GetUtcDateOnly(0, b.Pos - 1);
@@ -545,9 +545,9 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Write_Local_Date_Read_Utc_Date_Test()
         {
-            const string ds = "20180610-10:39:01.621";
+            const string ds = "20180610";
             var format = ElasticBuffer.TimeFormats.Date;
-            DateTime.TryParseExact(ds, format, null, DateTimeStyles.AssumeLocal, out var d);
+            DateOnly.TryParseExact(ds, format, null, DateTimeStyles.AssumeLocal, out var d);
             var b = new ElasticBuffer(1);
             b.WriteLocalDateOnly(d);
             var dt = b.GetLocalDateOnly(0, b.Pos - 1);

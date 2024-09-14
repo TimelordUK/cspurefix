@@ -93,7 +93,7 @@ namespace PureFix.Buffer.Ascii
             return tag == null ? null : Buffer.GetBoolean(tag.Value.Start);
         }
 
-        protected DateTime? UtcDateOnlyAtPosition(int position)
+        protected DateOnly? UtcDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetUtcDateOnly(tag.Value.Start, tag.Value.End);
@@ -104,7 +104,7 @@ namespace PureFix.Buffer.Ascii
             return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Value.Start, tag.Value.End);
         }
 
-        protected DateTime? LocalDateOnlyAtPosition(int position)
+        protected DateOnly? LocalDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetLocalDateOnly(tag.Value.Start, tag.Value.End);
@@ -186,14 +186,32 @@ namespace PureFix.Buffer.Ascii
 
             switch (sf.TagType)
             {
-                case TagType.UtcDateOnly:
-                    return UtcDateOnlyAtPosition(position);
-
                 case TagType.UtcTimeOnly:
                     return UtcTimeOnlyAtPosition(position);
 
                 case TagType.UtcTimestamp:
                     return UtcTimestampAtPosition(position);
+
+                default:
+                    return default;
+            }
+        } 
+
+        public override DateOnly? GetDateOnly(int tag)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                return default;
+            }
+
+            var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
+            if (sf == null) return default;
+
+            switch (sf.TagType)
+            {
+                case TagType.UtcDateOnly:
+                    return UtcDateOnlyAtPosition(position);
 
                 case TagType.LocalDate:
                     return LocalDateOnlyAtPosition(position);
@@ -201,6 +219,6 @@ namespace PureFix.Buffer.Ascii
                 default:
                     return default;
             }
-        }     
+        }
     }
 }

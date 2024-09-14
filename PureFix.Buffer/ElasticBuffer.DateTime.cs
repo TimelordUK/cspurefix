@@ -79,24 +79,24 @@ namespace PureFix.Buffer
             return WriteFormat(dateTime.ToUniversalTime(), TimeFormats.Timestamp);
         }
 
-        public int WriteUtcDateOnly(DateTime dateTime)
-        {
-            return WriteFormat(dateTime.ToUniversalTime(), TimeFormats.Date);
-        }
-
-        public int WriteLocalDateOnly(DateTime dateTime)
+        public int WriteUtcDateOnly(DateOnly dateTime)
         {
             return WriteFormat(dateTime, TimeFormats.Date);
         }
 
-        public DateTime? GetUtcDateOnly(int st, int vend)
+        public int WriteLocalDateOnly(DateOnly dateTime)
         {
-            return GetDateTimeWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeUniversal);
+            return WriteFormat(dateTime, TimeFormats.Date);
         }
 
-        public DateTime? GetLocalDateOnly(int st, int vend)
+        public DateOnly? GetUtcDateOnly(int st, int vend)
         {
-            return GetDateTimeWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeLocal);
+            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeUniversal);
+        }
+
+        public DateOnly? GetLocalDateOnly(int st, int vend)
+        {
+            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeLocal);
         }
 
         private int WriteFormat(DateTime dateTime, string format)
@@ -107,6 +107,16 @@ namespace PureFix.Buffer
             Pos += written;
             return Pos;
         }
+
+        private int WriteFormat(DateOnly dateTime, string format)
+        {
+            CheckGrowBuffer(format.Length);
+            var span = _buffer.AsSpan()[Pos..format.Length];
+            dateTime.TryFormat(span, out var written, format);
+            Pos += written;
+            return Pos;
+        }
+
 
         public DateTime? GetUtcTimeStamp(int st, int vend)
         {
@@ -120,6 +130,19 @@ namespace PureFix.Buffer
             span.CopyByteSpanToCharSpan(chars);
 
             if (DateTime.TryParseExact(chars, format, null, style, out var d))
+            {
+                return d;
+            }
+            return null;
+        }
+
+        private DateOnly? GetDateOnlyWithFormat(int st, int vend, string format, DateTimeStyles style)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            Span<char> chars = stackalloc char[span.Length];
+            span.CopyByteSpanToCharSpan(chars);
+
+            if (DateOnly.TryParseExact(chars, format, null, style, out var d))
             {
                 return d;
             }
