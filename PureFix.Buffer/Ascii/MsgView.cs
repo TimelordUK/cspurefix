@@ -72,10 +72,15 @@ namespace PureFix.Buffer.Ascii
         public abstract DateTime? GetDateTime(int tag);
         public abstract TimeOnly? GetTimeOnly(int tag);
         public abstract DateOnly? GetDateOnly(int tag);
+        public abstract int? GetInt32(string name);
         public abstract int? GetInt32(int tag);
         public abstract double? GetDouble(int tag);
+        public abstract double? GetDouble(string name);
+        public abstract bool? GetBool(string name);
         public abstract bool? GetBool(int tag);
+        public abstract decimal? GetDecimal(string name);
         public abstract decimal? GetDecimal(int tag);
+        public abstract byte[]? GetByteArray(string name);
         public abstract byte[]? GetByteArray(int tag);
         public abstract Memory<byte>? GetMemory(int tag);
         public abstract MonthYear? GetMonthYear(int tag);

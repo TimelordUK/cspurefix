@@ -50,7 +50,7 @@ namespace PureFIix.Test.Ascii
             var mv = _views[0];
             Assert.That(mv, Is.Not.Null);
             var values = mv.GetStrings(803);
-            Assert.That(values, Is.EqualTo((string[])["22", "10", "12", "13", "18", "6"]));
+            Assert.That(values, Is.EqualTo((string[]) ["22", "10", "12", "13", "18", "6"]));
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace PureFIix.Test.Ascii
 
                 Assert.That(noPartySubIDs[0].DelimiterTag, Is.EqualTo(523));
                 Assert.That(noPartySubIDs[0].Type, Is.EqualTo(SegmentType.Group));
-                Assert.That(noPartySubIDs[0].DelimiterPositions, Is.EqualTo(new List<int>([25,27])));
+                Assert.That(noPartySubIDs[0].DelimiterPositions, Is.EqualTo(new List<int>([25, 27])));
                 Assert.That(noPartySubIDs[0].Depth, Is.EqualTo(4));
 
                 Assert.That(noPartySubIDs[1].DelimiterTag, Is.EqualTo(523));
@@ -233,7 +233,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(instrument.EndPosition, Is.EqualTo(133));
                 Assert.That(instrument.Depth, Is.EqualTo(1));
                 Assert.That(instrument.EndTag, Is.EqualTo(874));
-                Assert.That(instrument.Type, Is.EqualTo(SegmentType.Component));   
+                Assert.That(instrument.Type, Is.EqualTo(SegmentType.Component));
             });
         }
 
@@ -429,7 +429,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(noContAmts.Depth, Is.EqualTo(2));
                 Assert.That(noContAmts.EndTag, Is.EqualTo(521));
                 Assert.That(noContAmts.DelimiterTag, Is.EqualTo(519));
-                Assert.That(noContAmts.DelimiterPositions, Is.EqualTo(new List<int>{ 386, 389, 392 }));
+                Assert.That(noContAmts.DelimiterPositions, Is.EqualTo(new List<int> { 386, 389, 392 }));
                 Assert.That(noContAmts.Type, Is.EqualTo(SegmentType.Group));
             });
         }
@@ -602,7 +602,8 @@ namespace PureFIix.Test.Ascii
                 Assert.That(noUnderlyingSecurityAltID[0].Type, Is.EqualTo(SegmentType.Group));
                 Assert.That(noUnderlyingSecurityAltID[0].StartPosition, Is.EqualTo(148));
                 Assert.That(noUnderlyingSecurityAltID[0].EndPosition, Is.EqualTo(154));
-                Assert.That(noUnderlyingSecurityAltID[0].DelimiterPositions, Is.EqualTo(new List<int> { 149, 151, 153 }));
+                Assert.That(noUnderlyingSecurityAltID[0].DelimiterPositions,
+                    Is.EqualTo(new List<int> { 149, 151, 153 }));
             });
 
             Assert.Multiple(() =>
@@ -834,7 +835,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(msg, Is.Not.Null);
             var noLegSecurityAltID = structure?.GetInstances("NoLegSecurityAltID");
             Assert.That(noLegSecurityAltID, Is.Not.Null);
-            Assert.Multiple(()=>
+            Assert.Multiple(() =>
             {
                 Assert.That(noLegSecurityAltID, Is.Not.Null);
                 Assert.That(noLegSecurityAltID, Has.Count.EqualTo(3));
@@ -953,12 +954,31 @@ namespace PureFIix.Test.Ascii
             var mv = _views[0];
             var er = new ExecutionReport();
             er.Parse(mv);
+            Assert.That(er.StandardHeader, Is.Not.Null);
+            Assert.That(er.StandardHeader.BeginString, Is.EqualTo("FIX4.4"));
             JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
             {
                 WriteIndented = true
             };
-            string json = JsonSerializer.Serialize<ExecutionReport>(er, options);
+            string json = JsonSerializer.Serialize(er, options);
+        }
 
+        [Test]
+        public void View_Execution_Report_Tag_Decode_Test()
+        {
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var erView = _views[0];
+            Assert.That(erView, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(erView.GetString(35), Is.EqualTo("8"));
+                Assert.That(erView.GetString("MsgType"), Is.EqualTo("8"));
+                Assert.That(erView.GetString(8), Is.EqualTo("FIX4.4"));
+                Assert.That(erView.GetInt32(9), Is.EqualTo(6545));
+                Assert.That(erView.GetInt32("TotNumReports"), Is.EqualTo(19404));
+                Assert.That(erView.GetInt32("StrikePrice"), Is.EqualTo(52639));
+            });
         }
     }
 }

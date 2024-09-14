@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types;
 using Microsoft.Extensions.ObjectPool;
+using System.Xml.Linq;
 
 namespace PureFix.Buffer.Ascii
 {
@@ -117,6 +118,11 @@ namespace PureFix.Buffer.Ascii
             return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Value.Start, tag.Value.End);
         }
 
+        public override int? GetInt32(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetInt32(typed.Tag) : null;
+        }
+
         public override int? GetInt32(int tag)
         {
             var position = GetPosition(tag);
@@ -129,6 +135,11 @@ namespace PureFix.Buffer.Ascii
             return value is null ? null : (int)value.Value;
         }
 
+        public override double? GetDouble(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetDouble(typed.Tag) : null;
+        }
+
         public override double? GetDouble(int tag)
         {
             return GetPosition(tag) switch
@@ -136,6 +147,11 @@ namespace PureFix.Buffer.Ascii
                 var position when position < 0 => default,
                 var position => FloatAtPosition(position)
             };
+        }
+
+        public override bool? GetBool(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetBool(typed.Tag) : null;
         }
 
         public override bool? GetBool(int tag)
@@ -147,6 +163,11 @@ namespace PureFix.Buffer.Ascii
             };
         }
 
+        public override decimal? GetDecimal(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetDecimal(typed.Tag) : null;
+        }
+
         public override decimal? GetDecimal(int tag)
         {
             return GetPosition(tag) switch
@@ -154,6 +175,11 @@ namespace PureFix.Buffer.Ascii
                 var position when position < 0 => default,
                 var position => DecimalAtPosition(position)
             };
+        }
+
+        public override byte[]? GetByteArray(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetByteArray(typed.Tag) : null;
         }
 
         public override byte[]? GetByteArray(int tag)
