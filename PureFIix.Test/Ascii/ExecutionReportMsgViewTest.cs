@@ -115,7 +115,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var ptysSubGrp = structure?.GetInstances("PtysSubGrp");
+            var ptysSubGrp = structure.Value.GetInstances("PtysSubGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(ptysSubGrp, Is.Not.Null);
@@ -127,7 +127,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(ptysSubGrp[2].StartPosition, Is.EqualTo(42));
                 Assert.That(ptysSubGrp[2].Type, Is.EqualTo(SegmentType.Component));
 
-                var noPartySubIDs = structure?.GetInstances("NoPartySubIDs");
+                var noPartySubIDs = structure.Value.GetInstances("NoPartySubIDs");
                 Assert.That(noPartySubIDs, Is.Not.Null);
                 Assert.That(noPartySubIDs, Has.Count.EqualTo(3));
 
@@ -168,7 +168,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var contraGrp = structure?.GetInstance("ContraGrp");
+            var contraGrp = structure.Value.GetInstance("ContraGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(contraGrp, Is.Not.Null);
@@ -177,7 +177,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(contraGrp.Depth, Is.EqualTo(1));
                 Assert.That(contraGrp.Type, Is.EqualTo(SegmentType.Component));
 
-                var noContraBrokers = structure?.GetInstance("NoContraBrokers");
+                var noContraBrokers = structure.Value.GetInstance("NoContraBrokers");
                 Assert.That(noContraBrokers, Is.Not.Null);
                 Assert.That(noContraBrokers.Type, Is.EqualTo(SegmentType.Group));
                 Assert.That(noContraBrokers.Depth, Is.EqualTo(2));
@@ -224,7 +224,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var instrument = structure?.GetInstance("Instrument");
+            var instrument = structure.Value.GetInstance("Instrument");
             Assert.Multiple(() =>
             {
                 Assert.That(instrument, Is.Not.Null);
@@ -251,7 +251,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var financingDetails = structure?.GetInstance("FinancingDetails");
+            var financingDetails = structure.Value.GetInstance("FinancingDetails");
             Assert.Multiple(() =>
             {
                 Assert.That(financingDetails, Is.Not.Null);
@@ -276,7 +276,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var pegInstructions = structure?.GetInstance("PegInstructions");
+            var pegInstructions = structure.Value.GetInstance("PegInstructions");
             Assert.Multiple(() =>
             {
                 Assert.That(pegInstructions, Is.Not.Null);
@@ -303,7 +303,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var discretionInstructions = structure?.GetInstance("DiscretionInstructions");
+            var discretionInstructions = structure.Value.GetInstance("DiscretionInstructions");
             Assert.Multiple(() =>
             {
                 Assert.That(discretionInstructions, Is.Not.Null);
@@ -327,7 +327,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var commisionData = structure?.GetInstance("CommissionData");
+            var commisionData = structure.Value.GetInstance("CommissionData");
             Assert.Multiple(() =>
             {
                 Assert.That(commisionData, Is.Not.Null);
@@ -448,7 +448,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var contAmtGrp = structure?.GetInstance("MiscFeesGrp");
+            var contAmtGrp = structure.Value.GetInstance("MiscFeesGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(contAmtGrp, Is.Not.Null);
