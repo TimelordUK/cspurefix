@@ -12,6 +12,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 using PureFix.Dictionary.Contained;
 using System.Text.Json;
 using DIs = NUnit.DeepObjectCompare.Is;
+using static PureFix.Dictionary.Compiler.MsgCompiler;
 namespace PureFIix.Test.Ascii
 {
 
@@ -50,7 +51,7 @@ namespace PureFIix.Test.Ascii
             var mv = _views[0];
             Assert.That(mv, Is.Not.Null);
             var values = mv.GetStrings(803);
-            Assert.That(values, Is.EqualTo((string[]) ["22", "10", "12", "13", "18", "6"]));
+            Assert.That(values, Is.EqualTo((string[])["22", "10", "12", "13", "18", "6"]));
         }
 
         [Test]
@@ -990,8 +991,27 @@ namespace PureFIix.Test.Ascii
             Assert.That(erView, Is.Not.Null);
             Assert.Multiple(() =>
             {
-                Assert.That(erView.GetStrings("PartyID"), Is.EqualTo((string[]) ["magna.", "iaculis", "vitae,"]));
+                Assert.That(erView.GetStrings("PartyID"), Is.EqualTo((string[])["magna.", "iaculis", "vitae,"]));
             });
+        }
+
+        T FromJson<T>(string s) {
+            JsonSerializerOptions options2 = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var instance = JsonSerializer.Deserialize<T>(s, options2);
+            return instance;
+        }
+        
+        string ToJson<T>(T instance)
+        {
+            JsonSerializerOptions options = new()
+            {
+                WriteIndented = true
+            };
+            var json = JsonSerializer.Serialize(instance, options);
+            return json;
         }
 
         [Test]
@@ -1005,12 +1025,8 @@ namespace PureFIix.Test.Ascii
             Assert.That(partyView, Is.Not.Null);
             var parties = new Parties();
             parties.Parse(partyView);
-            JsonSerializerOptions options = new()
-            {
-                WriteIndented = true
-            };
             Assert.That(parties.NoPartyIDs, Is.Not.Null);
-            var json = JsonSerializer.Serialize(parties.NoPartyIDs[0], options);
+            var json = ToJson(parties.NoPartyIDs[0]);
             var expected = """
                            {
                              "partyID": "magna.",
@@ -1031,28 +1047,122 @@ namespace PureFIix.Test.Ascii
                            }
                            """;
 
-            JsonSerializerOptions options2 = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var instance = JsonSerializer.Deserialize<PartiesNoPartyIDs>(expected, options2);
+          
+            var instance = FromJson<PartiesNoPartyIDs>(expected);
             Assert.That(parties.NoPartyIDs[0], DIs.DeepEqualTo(instance));
 
-
             var noParties = partyView?.GetView("NoPartyIDs");
-            Assert.That(noParties, Is.Not.Null);
-            Assert.That(noParties.GroupCount(), Is.EqualTo(3));
             var np0View = noParties?.GetGroupInstance(0);
-            Assert.That(np0View, Is.Not.Null);
-
-            Assert.That(np0View?.GetString("PartyID"), Is.EqualTo("magna."));
-            Assert.That(np0View?.GetString("PartyIDSource"), Is.EqualTo("9"));
-
             var np0ViewPtysSubGrp = np0View?.GetView("PtysSubGrp");
             var psg = new PtysSubGrp();
             psg.Parse(np0ViewPtysSubGrp);
-            Assert.That(np0ViewPtysSubGrp, Is.Not.Null);
-            Assert.That(psg, DIs.DeepEqualTo(instance.PtysSubGrp));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(noParties, Is.Not.Null);
+                Assert.That(noParties.GroupCount(), Is.EqualTo(3));
+                Assert.That(np0View, Is.Not.Null);
+                Assert.That(np0View?.GetString("PartyID"), Is.EqualTo("magna."));
+                Assert.That(np0View?.GetString("PartyIDSource"), Is.EqualTo("9"));
+                Assert.That(np0ViewPtysSubGrp, Is.Not.Null);
+                Assert.That(psg, DIs.DeepEqualTo(instance.PtysSubGrp));
+            });
+        }
+
+        [Test]
+        public void View_Instrument_Decode_Test()
+        {
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var erView = _views[0];
+            Assert.That(erView, Is.Not.Null);
+            // check the instrument component
+            var instrumentView = erView.GetView("Instrument");
+            Assert.That(instrumentView, Is.Not.Null);
+            Assert.That(instrumentView.GetString("Symbol"), Is.EqualTo("ac,"));
+            var secAltIDGrpAsObject = instrumentView?.GetView("SecAltIDGrp");
+            var sag = new SecAltIDGrp();
+            sag.Parse(secAltIDGrpAsObject);
+            Assert.Multiple(() =>
+            {
+                Assert.That(sag.NoSecurityAltID, Is.Not.Null);
+                Assert.That(sag.NoSecurityAltID.Length, Is.EqualTo(2));
+            });
+            var er = new ExecutionReport();
+            er.Parse(erView);
+            var json = ToJson(er);
+            var expected = """
+{
+    "Symbol": "ac,",
+    "SymbolSfx": "non",
+    "SecurityID": "Pellentesque",
+    "SecurityIDSource": "B",
+    "SecAltIDGrp": {
+      "NoSecurityAltID": [
+        {
+          "SecurityAltID": "lorem",
+          "SecurityAltIDSource": "consequat"
+        },
+        {
+          "SecurityAltID": "sapien",
+          "SecurityAltIDSource": "tempor"
+        }
+      ]
+    },
+    "Product": 2,
+    "CFICode": "a",
+    "SecurityType": "SECLOAN",
+    "SecuritySubType": "purus",
+    "MaturityMonthYear": null,
+    "MaturityDate": null,
+    "PutOrCall": 1,
+    "CouponPaymentDate": null,
+    "IssueDate": null,
+    "RepoCollateralSecurityType": "Proin",
+    "RepurchaseTerm": 62025,
+    "RepurchaseRate": 27005,
+    "Factor": 68810,
+    "CreditRating": "justo",
+    "InstrRegistry": "ut",
+    "CountryOfIssue": "nibh",
+    "StateOrProvinceOfIssue": "at.",
+    "LocaleOfIssue": "fermentum",
+    "RedemptionDate": null,
+    "StrikePrice": 52639,
+    "StrikeCurrency": "magna.",
+    "OptAttribute": "risus,",
+    "ContractMultiplier": 10378,
+    "CouponRate": 25946,
+    "SecurityExchange": "placerat",
+    "Issuer": "luctus",
+    "EncodedIssuerLen": 20,
+    "EncodedIssuer": "enFKc2VneTBDUThFeUtRMWJtTHc=",
+    "SecurityDesc": "Vivamus",
+    "EncodedSecurityDescLen": 20,
+    "EncodedSecurityDesc": "QTF4QjRqRFMzMUU0ek0xeEFiazU=",
+    "Pool": "mi",
+    "ContractSettlMonth": null,
+    "CPProgram": 2,
+    "CPRegType": "rhoncus",
+    "EvntGrp": {
+      "NoEvents": [
+        {
+          "EventType": 1,
+          "EventDate": null,
+          "EventPx": 16817,
+          "EventText": "amet"
+        }
+      ]
+    },
+    "DatedDate": null,
+    "InterestAccrualDate": null
+  }
+""";
+
+            var er2 = FromJson<Instrument>(expected);
+            Assert.That(er2.SecurityID, Is.EqualTo(er.Instrument.SecurityID));
+
+
         }
     }
 }
