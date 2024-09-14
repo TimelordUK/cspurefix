@@ -339,6 +339,100 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+        /*
+        [328] 218 (Spread) = 72687, [329] 220 (BenchmarkCurveCurrency) = 84249
+        [330] 221 (BenchmarkCurveName) = Pellentesque, [331] 222 (BenchmarkCurvePoint) = luctus
+        [332] 662 (BenchmarkPrice) = 90721, [333] 663 (BenchmarkPriceType) = 66615
+        [334] 699 (BenchmarkSecurityID) = et, [335] 761 (BenchmarkSecurityIDSource) = nunc.
+         */
+
+        [Test]
+        public void SpreadOrBenchmarkCurveData_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var commisionData = structure?.GetInstance("SpreadOrBenchmarkCurveData");
+            Assert.Multiple(() =>
+            {
+                Assert.That(commisionData, Is.Not.Null);
+                Assert.That(commisionData.StartPosition, Is.EqualTo(328));
+                Assert.That(commisionData.StartTag, Is.EqualTo(218));
+                Assert.That(commisionData.EndPosition, Is.EqualTo(335));
+                Assert.That(commisionData.Depth, Is.EqualTo(1));
+                Assert.That(commisionData.EndTag, Is.EqualTo(761));
+                Assert.That(commisionData.Type, Is.EqualTo(SegmentType.Component));
+            });
+        }
+
+        /*
+[336] 235 (YieldType) = INVERSEFLOATER[INVERSE_FLOATER_BOND_YIELD], [337] 236 (Yield) = 34183
+[338] 701 (YieldCalcDate) = 20180528-16:38:03.973, [339] 696 (YieldRedemptionDate) = 20180528-16:38:03.973
+[340] 697 (YieldRedemptionPrice) = 3652, [341] 698 (YieldRedemptionPriceType) = 10535
+ */
+
+
+        [Test]
+        public void YieldData_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var commisionData = structure?.GetInstance("YieldData");
+            Assert.Multiple(() =>
+            {
+                Assert.That(commisionData, Is.Not.Null);
+                Assert.That(commisionData.StartPosition, Is.EqualTo(336));
+                Assert.That(commisionData.StartTag, Is.EqualTo(235));
+                Assert.That(commisionData.EndPosition, Is.EqualTo(341));
+                Assert.That(commisionData.Depth, Is.EqualTo(1));
+                Assert.That(commisionData.EndTag, Is.EqualTo(698));
+                Assert.That(commisionData.Type, Is.EqualTo(SegmentType.Component));
+            });
+        }
+
+        /*
+        [384] 851 (LastLiquidityInd) = 3[LIQUIDITY_ROUTED_OUT], [385] 518 (NoContAmts) = 3
+        [386] 519 (ContAmtType) = 5[DISCOUNT_AMOUNT], [387] 520 (ContAmtValue) = 95673
+        [388] 521 (ContAmtCurr) = 87528, [389] 519 (ContAmtType) = 14[FUND_BASED_RENEWAL_COMMISSION_AMOUNT_14]
+        [390] 520 (ContAmtValue) = 56344, [391] 521 (ContAmtCurr) = 46066
+        [392] 519 (ContAmtType) = 11[FUND_BASED_RENEWAL_COMMISSION], [393] 520 (ContAmtValue) = 94762
+        [394] 521 (ContAmtCurr) = 6779, [395] 555 (NoLegs) = 3
+         */
+
+        [Test]
+        public void ContAmtGrp_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var contAmtGrp = structure?.GetInstance("ContAmtGrp");
+            Assert.Multiple(() =>
+            {
+                Assert.That(contAmtGrp, Is.Not.Null);
+                Assert.That(contAmtGrp.StartPosition, Is.EqualTo(385));
+                Assert.That(contAmtGrp.StartTag, Is.EqualTo(518));
+                Assert.That(contAmtGrp.EndPosition, Is.EqualTo(394));
+                Assert.That(contAmtGrp.Depth, Is.EqualTo(1));
+                Assert.That(contAmtGrp.EndTag, Is.EqualTo(521));
+                Assert.That(contAmtGrp.Type, Is.EqualTo(SegmentType.Component));
+            });
+
+            var noContAmts = structure?.GetInstance("NoContAmts");
+            Assert.Multiple(() =>
+            {
+                Assert.That(noContAmts, Is.Not.Null);
+                Assert.That(noContAmts.StartPosition, Is.EqualTo(385));
+                Assert.That(noContAmts.StartTag, Is.EqualTo(518));
+                Assert.That(noContAmts.EndPosition, Is.EqualTo(394));
+                Assert.That(noContAmts.Depth, Is.EqualTo(2));
+                Assert.That(noContAmts.EndTag, Is.EqualTo(521));
+                Assert.That(noContAmts.DelimiterTag, Is.EqualTo(519));
+                Assert.That(noContAmts.DelimiterPositions, Is.EqualTo(new List<int>{ 386, 389, 392 }));
+                Assert.That(noContAmts.Type, Is.EqualTo(SegmentType.Group));
+            });
+        }
+
 
         [Test]
         public void View_To_Execution_Report_Test()
