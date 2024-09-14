@@ -603,7 +603,6 @@ namespace PureFIix.Test.Ascii
                 Assert.That(noUnderlyingSecurityAltID[0].StartPosition, Is.EqualTo(148));
                 Assert.That(noUnderlyingSecurityAltID[0].EndPosition, Is.EqualTo(154));
                 Assert.That(noUnderlyingSecurityAltID[0].DelimiterPositions, Is.EqualTo(new List<int> { 149, 151, 153 }));
-
             });
 
             Assert.Multiple(() =>
@@ -621,6 +620,165 @@ namespace PureFIix.Test.Ascii
                 "NoUnderlyingSecurityAltID",
                 underlyingInstrument[1]);
             Assert.That(boundNoUnderlyingSecurityAltID, Is.Not.Null);
+        }
+
+        /*
+[394] 521 (ContAmtCurr) = 6779, [395] 555 (NoLegs) = 3
+[396] 600 (LegSymbol) = posuere, [397] 601 (LegSymbolSfx) = nibh.
+[398] 602 (LegSecurityID) = ornare,, [399] 603 (LegSecurityIDSource) = semper
+[400] 604 (NoLegSecurityAltID) = 3, [401] 605 (LegSecurityAltID) = laoreet,
+[402] 606 (LegSecurityAltIDSource) = odio, [403] 605 (LegSecurityAltID) = velit,
+[404] 606 (LegSecurityAltIDSource) = sollicitudin, [405] 605 (LegSecurityAltID) = augue
+[406] 606 (LegSecurityAltIDSource) = odio., [407] 607 (LegProduct) = 12438
+[408] 608 (LegCFICode) = tempor, [409] 609 (LegSecurityType) = nisi,
+[410] 764 (LegSecuritySubType) = euismod, [411] 610 (LegMaturityMonthYear) = convallis
+[412] 611 (LegMaturityDate) = 20180528-16:38:03.973, [413] 248 (LegCouponPaymentDate) = 20180528-16:38:03.973
+[414] 249 (LegIssueDate) = 20180528-16:38:03.973, [415] 250 (LegRepoCollateralSecurityType) = Donec
+[416] 251 (LegRepurchaseTerm) = 50636, [417] 252 (LegRepurchaseRate) = 29567
+[418] 253 (LegFactor) = 12603, [419] 257 (LegCreditRating) = erat
+[420] 599 (LegInstrRegistry) = vel, [421] 596 (LegCountryOfIssue) = nulla
+[422] 597 (LegStateOrProvinceOfIssue) = ac., [423] 598 (LegLocaleOfIssue) = vel
+[424] 254 (LegRedemptionDate) = 20180528-16:38:03.973, [425] 612 (LegStrikePrice) = 45964
+[426] 942 (LegStrikeCurrency) = 52294, [427] 613 (LegOptAttribute) = eros.
+[428] 614 (LegContractMultiplier) = 15566, [429] 615 (LegCouponRate) = 29897
+[430] 616 (LegSecurityExchange) = urna,, [431] 617 (LegIssuer) = sit
+[432] 618 (EncodedLegIssuerLen) = 20, [433] 619 (EncodedLegIssuer) = bsCdR5NlOBXt99NrTSbA
+[434] 620 (LegSecurityDesc) = bibendum, [435] 621 (EncodedLegSecurityDescLen) = 20
+[436] 622 (EncodedLegSecurityDesc) = 3Mzh9ClDlcxCLLtgAZ0x, [437] 623 (LegRatioQty) = 47570
+[438] 624 (LegSide) = amet,, [439] 556 (LegCurrency) = 18817
+[440] 740 (LegPool) = non, [441] 739 (LegDatedDate) = 20180528-16:38:03.973
+[442] 955 (LegContractSettlMonth) = Nam, [443] 956 (LegInterestAccrualDate) = 20180528-16:38:03.973
+[444] 687 (LegQty) = 38413, [445] 690 (LegSwapType) = 4[RISK]
+[446] 683 (NoLegStipulations) = 2, [447] 688 (LegStipulationType) = mi,
+[448] 689 (LegStipulationValue) = et, [449] 688 (LegStipulationType) = in,
+[450] 689 (LegStipulationValue) = sed, [451] 564 (LegPositionEffect) = Nulla
+[452] 565 (LegCoveredOrUncovered) = 45098, [453] 539 (NoNestedPartyIDs) = 1
+[454] 524 (NestedPartyID) = leo, [455] 525 (NestedPartyIDSource) = odio
+[456] 538 (NestedPartyRole) = 59224, [457] 804 (NoNestedPartySubIDs) = 1
+[458] 545 (NestedPartySubID) = placerat., [459] 805 (NestedPartySubIDType) = 83297
+[460] 654 (LegRefID) = felis, [461] 566 (LegPrice) = 39429
+[462] 587 (LegSettlType) = elementum, [463] 588 (LegSettlDate) = 20180528-16:38:03.973
+[464] 637 (LegLastPx) = 75387, [465] 600 (LegSymbol) = mollis
+[466] 601 (LegSymbolSfx) = euismod, [467] 602 (LegSecurityID) = diam.
+[468] 603 (LegSecurityIDSource) = porttitor, [469] 604 (NoLegSecurityAltID) = 3
+[470] 605 (LegSecurityAltID) = eget, [471] 606 (LegSecurityAltIDSource) = cursus,
+[472] 605 (LegSecurityAltID) = hendrerit, [473] 606 (LegSecurityAltIDSource) = tempus.
+[474] 605 (LegSecurityAltID) = et, [475] 606 (LegSecurityAltIDSource) = fames
+[476] 607 (LegProduct) = 6990, [477] 608 (LegCFICode) = ante
+[478] 609 (LegSecurityType) = primis, [479] 764 (LegSecuritySubType) = faucibus.
+[480] 610 (LegMaturityMonthYear) = egestas, [481] 611 (LegMaturityDate) = 20180528-16:38:03.973
+[482] 248 (LegCouponPaymentDate) = 20180528-16:38:03.973, [483] 249 (LegIssueDate) = 20180528-16:38:03.973
+[484] 250 (LegRepoCollateralSecurityType) = ac, [485] 251 (LegRepurchaseTerm) = 58397
+[486] 252 (LegRepurchaseRate) = 22917, [487] 253 (LegFactor) = 96132
+[488] 257 (LegCreditRating) = semper., [489] 599 (LegInstrRegistry) = rhoncus
+[490] 596 (LegCountryOfIssue) = nulla,, [491] 597 (LegStateOrProvinceOfIssue) = ornare
+[492] 598 (LegLocaleOfIssue) = iaculis, [493] 254 (LegRedemptionDate) = 20180528-16:38:03.973
+[494] 612 (LegStrikePrice) = 86522, [495] 942 (LegStrikeCurrency) = 3727
+[496] 613 (LegOptAttribute) = Aliquam, [497] 614 (LegContractMultiplier) = 18485
+[498] 615 (LegCouponRate) = 36169, [499] 616 (LegSecurityExchange) = volutpat.
+[500] 617 (LegIssuer) = condimentum, [501] 618 (EncodedLegIssuerLen) = 20
+[502] 619 (EncodedLegIssuer) = P813lip75NKBgG1C8re8, [503] 620 (LegSecurityDesc) = sem
+[504] 621 (EncodedLegSecurityDescLen) = 20, [505] 622 (EncodedLegSecurityDesc) = 8qbetIHVFcKFS7EY3XOK
+[506] 623 (LegRatioQty) = 42919, [507] 624 (LegSide) = porttitor.
+[508] 556 (LegCurrency) = 34832, [509] 740 (LegPool) = pellentesque
+[510] 739 (LegDatedDate) = 20180528-16:38:03.973, [511] 955 (LegContractSettlMonth) = eget
+[512] 956 (LegInterestAccrualDate) = 20180528-16:38:03.973, [513] 687 (LegQty) = 16560
+[514] 690 (LegSwapType) = 1[PAR_FOR_PAR], [515] 683 (NoLegStipulations) = 3
+[516] 688 (LegStipulationType) = tincidunt, [517] 689 (LegStipulationValue) = ipsum
+[518] 688 (LegStipulationType) = sit, [519] 689 (LegStipulationValue) = consectetur
+[520] 688 (LegStipulationType) = elit., [521] 689 (LegStipulationValue) = odio
+[522] 564 (LegPositionEffect) = blandit, [523] 565 (LegCoveredOrUncovered) = 61021
+[524] 539 (NoNestedPartyIDs) = 3, [525] 524 (NestedPartyID) = semper
+[526] 525 (NestedPartyIDSource) = bibendum, [527] 538 (NestedPartyRole) = 33332
+[528] 804 (NoNestedPartySubIDs) = 1, [529] 545 (NestedPartySubID) = lectus.
+[530] 805 (NestedPartySubIDType) = 78292, [531] 524 (NestedPartyID) = vel
+[532] 525 (NestedPartyIDSource) = magna., [533] 538 (NestedPartyRole) = 8563
+[534] 804 (NoNestedPartySubIDs) = 3, [535] 545 (NestedPartySubID) = et
+[536] 805 (NestedPartySubIDType) = 91784, [537] 545 (NestedPartySubID) = leo,
+[538] 805 (NestedPartySubIDType) = 69741, [539] 545 (NestedPartySubID) = iaculis
+[540] 805 (NestedPartySubIDType) = 88660, [541] 524 (NestedPartyID) = Nullam
+[542] 525 (NestedPartyIDSource) = lectus,, [543] 538 (NestedPartyRole) = 92219
+[544] 804 (NoNestedPartySubIDs) = 2, [545] 545 (NestedPartySubID) = eget
+[546] 805 (NestedPartySubIDType) = 61048, [547] 545 (NestedPartySubID) = vitae,
+[548] 805 (NestedPartySubIDType) = 82229, [549] 654 (LegRefID) = ac
+[550] 566 (LegPrice) = 87104, [551] 587 (LegSettlType) = Quisque
+[552] 588 (LegSettlDate) = 20180528-16:38:03.974, [553] 637 (LegLastPx) = 56182
+[554] 600 (LegSymbol) = tincidunt, [555] 601 (LegSymbolSfx) = Class
+[556] 602 (LegSecurityID) = taciti, [557] 603 (LegSecurityIDSource) = ad
+[558] 604 (NoLegSecurityAltID) = 3, [559] 605 (LegSecurityAltID) = torquent
+[560] 606 (LegSecurityAltIDSource) = conubia, [561] 605 (LegSecurityAltID) = per
+[562] 606 (LegSecurityAltIDSource) = himenaeos., [563] 605 (LegSecurityAltID) = eu
+[564] 606 (LegSecurityAltIDSource) = risus,, [565] 607 (LegProduct) = 36203
+[566] 608 (LegCFICode) = tincidunt, [567] 609 (LegSecurityType) = Morbi
+[568] 764 (LegSecuritySubType) = mi,, [569] 610 (LegMaturityMonthYear) = vel
+[570] 611 (LegMaturityDate) = 20180528-16:38:03.974, [571] 248 (LegCouponPaymentDate) = 20180528-16:38:03.974
+[572] 249 (LegIssueDate) = 20180528-16:38:03.974, [573] 250 (LegRepoCollateralSecurityType) = ac,
+[574] 251 (LegRepurchaseTerm) = 89976, [575] 252 (LegRepurchaseRate) = 16951
+[576] 253 (LegFactor) = 28912, [577] 257 (LegCreditRating) = non
+[578] 599 (LegInstrRegistry) = Pellentesque, [579] 596 (LegCountryOfIssue) = lorem
+[580] 597 (LegStateOrProvinceOfIssue) = consequat, [581] 598 (LegLocaleOfIssue) = sapien
+[582] 254 (LegRedemptionDate) = 20180528-16:38:03.974, [583] 612 (LegStrikePrice) = 97965
+[584] 942 (LegStrikeCurrency) = 62977, [585] 613 (LegOptAttribute) = tempor
+[586] 614 (LegContractMultiplier) = 4694, [587] 615 (LegCouponRate) = 20263
+[588] 616 (LegSecurityExchange) = a, [589] 617 (LegIssuer) = purus
+[590] 618 (EncodedLegIssuerLen) = 20, [591] 619 (EncodedLegIssuer) = Z2GKqFkA713xSVG2nqOx
+[592] 620 (LegSecurityDesc) = ut, [593] 621 (EncodedLegSecurityDescLen) = 20
+[594] 622 (EncodedLegSecurityDesc) = lyQLPxezPpjDNJnvSnCo, [595] 623 (LegRatioQty) = 24444
+[596] 624 (LegSide) = Proin, [597] 556 (LegCurrency) = 86893
+[598] 740 (LegPool) = justo, [599] 739 (LegDatedDate) = 20180528-16:38:03.974
+[600] 955 (LegContractSettlMonth) = ut, [601] 956 (LegInterestAccrualDate) = 20180528-16:38:03.974
+[602] 687 (LegQty) = 33589, [603] 690 (LegSwapType) = 4[RISK]
+[604] 683 (NoLegStipulations) = 2, [605] 688 (LegStipulationType) = nibh
+[606] 689 (LegStipulationValue) = at., [607] 688 (LegStipulationType) = fermentum
+[608] 689 (LegStipulationValue) = risus,, [609] 564 (LegPositionEffect) = placerat
+[610] 565 (LegCoveredOrUncovered) = 74238, [611] 539 (NoNestedPartyIDs) = 2
+[612] 524 (NestedPartyID) = luctus, [613] 525 (NestedPartyIDSource) = Vivamus
+[614] 538 (NestedPartyRole) = 41104, [615] 804 (NoNestedPartySubIDs) = 3
+[616] 545 (NestedPartySubID) = mi, [617] 805 (NestedPartySubIDType) = 26305
+[618] 545 (NestedPartySubID) = arcu, [619] 805 (NestedPartySubIDType) = 97537
+[620] 545 (NestedPartySubID) = rhoncus, [621] 805 (NestedPartySubIDType) = 71231
+[622] 524 (NestedPartyID) = amet, [623] 525 (NestedPartyIDSource) = sit
+[624] 538 (NestedPartyRole) = 66844, [625] 804 (NoNestedPartySubIDs) = 2
+[626] 545 (NestedPartySubID) = eleifend, [627] 805 (NestedPartySubIDType) = 8186
+[628] 545 (NestedPartySubID) = massa., [629] 805 (NestedPartySubIDType) = 82689
+[630] 654 (LegRefID) = metus, [631] 566 (LegPrice) = 6725
+[632] 587 (LegSettlType) = maximus, [633] 588 (LegSettlDate) = 20180528-16:38:03.974
+[634] 637 (LegLastPx) = 88665, [635] 797 (CopyMsgIndicator) = Y
+ */
+
+        [Test]
+        public void InstrmtLegExecGrp_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var instrmtLegExecGrp = structure?.GetInstance("InstrmtLegExecGrp");
+            Assert.That(instrmtLegExecGrp, Is.Not.Null);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(instrmtLegExecGrp, Is.Not.Null);
+                Assert.That(instrmtLegExecGrp.Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(instrmtLegExecGrp.StartPosition, Is.EqualTo(395));
+                Assert.That(instrmtLegExecGrp.StartTag, Is.EqualTo(555));
+                Assert.That(instrmtLegExecGrp.EndTag, Is.EqualTo(637));
+                Assert.That(instrmtLegExecGrp.EndPosition, Is.EqualTo(634));
+                Assert.That(instrmtLegExecGrp.Depth, Is.EqualTo(1));
+            });
+
+            var noLegs = structure?.GetInstance("NoLegs");
+            Assert.Multiple(() =>
+            {
+                Assert.That(noLegs, Is.Not.Null);
+                Assert.That(noLegs.Type, Is.EqualTo(SegmentType.Group));
+                Assert.That(noLegs.StartPosition, Is.EqualTo(395));
+                Assert.That(noLegs.StartTag, Is.EqualTo(555));
+                Assert.That(noLegs.EndTag, Is.EqualTo(637));
+                Assert.That(noLegs.EndPosition, Is.EqualTo(634));
+                Assert.That(noLegs.Depth, Is.EqualTo(2));
+                Assert.That(noLegs.DelimiterTag, Is.EqualTo(600));
+                Assert.That(noLegs.DelimiterPositions, Is.EqualTo(new List<int> { 396, 465, 554 }));
+            });
         }
 
 
