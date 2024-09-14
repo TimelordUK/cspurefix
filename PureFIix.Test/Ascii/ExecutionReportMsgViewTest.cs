@@ -1037,7 +1037,22 @@ namespace PureFIix.Test.Ascii
             };
             var instance = JsonSerializer.Deserialize<PartiesNoPartyIDs>(expected, options2);
             Assert.That(parties.NoPartyIDs[0], DIs.DeepEqualTo(instance));
-            
+
+
+            var noParties = partyView?.GetView("NoPartyIDs");
+            Assert.That(noParties, Is.Not.Null);
+            Assert.That(noParties.GroupCount(), Is.EqualTo(3));
+            var np0View = noParties?.GetGroupInstance(0);
+            Assert.That(np0View, Is.Not.Null);
+
+            Assert.That(np0View?.GetString("PartyID"), Is.EqualTo("magna."));
+            Assert.That(np0View?.GetString("PartyIDSource"), Is.EqualTo("9"));
+
+            var np0ViewPtysSubGrp = np0View?.GetView("PtysSubGrp");
+            var psg = new PtysSubGrp();
+            psg.Parse(np0ViewPtysSubGrp);
+            Assert.That(np0ViewPtysSubGrp, Is.Not.Null);
+            Assert.That(psg, DIs.DeepEqualTo(instance.PtysSubGrp));
         }
     }
 }
