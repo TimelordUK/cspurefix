@@ -8,6 +8,7 @@ namespace PureFix.Types
 {
     public enum WeekCode
     {
+        None,
         W1,
         W2,
         W3,

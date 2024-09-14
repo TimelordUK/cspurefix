@@ -45,6 +45,11 @@ namespace PureFIix.Test.Types
             Assert.That(my.AsString(), Is.EqualTo(expected));
             Assert.That(my.Length, Is.EqualTo(8));
             Assert.That(my.IsValid, Is.True);
+            Assert.That(my.Year, Is.EqualTo(year));
+            Assert.That(my.Month, Is.EqualTo(month));
+            
+            Assert.That(my.TryGetWeekCode(out var w), Is.True);
+            Assert.That(w, Is.EqualTo(weekCode));
         }
 
         [Test]
@@ -74,6 +79,11 @@ namespace PureFIix.Test.Types
             Assert.That(my.AsString(), Is.EqualTo(""));
             Assert.That(my.Length, Is.EqualTo(0));
             Assert.That(my.IsValid, Is.False);
+            Assert.That(my.Year, Is.EqualTo(0));
+            Assert.That(my.Month, Is.EqualTo(0));
+
+            Assert.That(my.TryGetWeekCode(out var _), Is.False);
+            Assert.That(my.TryGetDayOfMonth(out var _), Is.False);
         }
 
         [Test]

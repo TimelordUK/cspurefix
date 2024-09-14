@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,6 +9,16 @@ using System.Threading.Tasks;
 
 namespace PureFix.Types
 {
+    /// <summary>
+    /// Models a FIX Month-Year type/
+    /// Valid encodings are:
+    /// 
+    ///     YYYYMM
+    ///     YYYYMMDD
+    ///     YYYYMMWW
+    ///     
+    ///     Where WW is w1, w2, w3, d4 or w5
+    /// </summary>
     public readonly struct MonthYear
     {
         private const byte AsciiZero = (byte)'0';
@@ -34,6 +45,11 @@ namespace PureFix.Types
             m_Data[4] = (byte)((month % 10) + '0');
         }
 
+        /// <summary>
+        /// Initialises the instance from a chunk of memory
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="ArgumentException"></exception>
         public MonthYear(scoped ReadOnlySpan<byte> data)
         {
             if(IsValidEncoding(data))
@@ -46,37 +62,57 @@ namespace PureFix.Types
             }
         }
 
+        /// <summary>
+        /// Initializes the instance for a year and month
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
         public MonthYear(int year, int month) : this(true, year, month, 6)
         {
         }
 
+        /// <summary>
+        /// Initializes the instance for a year, month and day
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="dayOfMonth"></param>
+        /// <exception cref="ArgumentException"></exception>
         public MonthYear(int year, int month, int dayOfMonth) : this(true, year, month, 8)
         {
             if(dayOfMonth < 1 || dayOfMonth > 31) throw new ArgumentException("invalid day of month");
             
-            if(dayOfMonth == 31 && (month == 4 || month == 6 || month == 9 || month == 11))
+            var daysInTheMonth = DateTime.DaysInMonth(year, month);
+            if(dayOfMonth < 1 || dayOfMonth > daysInTheMonth)
             {
-                throw new ArgumentException("month can only have 30 days");
+                throw new ArgumentException("invalid day of month");
             }
-
-            // Let's give February the love it deserves!
-            if(month == 2 && dayOfMonth > 29) throw new ArgumentException("invalid day of month");
-            if(month == 2 && DateTime.IsLeapYear(year) == false && dayOfMonth == 29) throw new ArgumentException("invalid day of month for non leap year");
 
             m_Data[7] = (byte)((dayOfMonth % 10) + '0');
             dayOfMonth /= 10;
             m_Data[6] = (byte)((dayOfMonth % 10) + '0');
         }
 
+        /// <summary>
+        /// Initializes the instance for a year, month and week
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="weekCode"></param>
+        /// <exception cref="ArgumentException"></exception>
         public MonthYear(int year, int month, WeekCode weekCode) : this(true, year, month, 8)
         {
-            if(weekCode < 0 || weekCode > WeekCode.W5) throw new ArgumentException("invalid week code");
+            if(weekCode < WeekCode.W1 || weekCode > WeekCode.W5) throw new ArgumentException("invalid week code");
 
             var asInt = (int)weekCode;
-            m_Data[7] = (byte)((asInt + 1) + '0');
+            m_Data[7] = (byte)(asInt + '0');
             m_Data[6] = (byte)('w');
         }
 
+        /// <summary>
+        /// Returns the lenth of the month year.
+        /// This will be either 6 or 8, or 0 for an invalid month-year
+        /// </summary>
         public int Length
         {
             get
@@ -91,6 +127,77 @@ namespace PureFix.Types
         public bool IsValid
         {
             get{return m_Data[0] != 0;}
+        }
+
+        /// <summary>
+        /// Returns the year, or zero if not valid
+        /// </summary>
+        public int Year
+        {
+            get
+            {
+                if(!IsValid) return 0;
+                return (IntAt(0) * 1000) + (IntAt(1) * 100) + (IntAt(2) * 10) + IntAt(3);
+            }
+        }
+
+        /// <summary>
+        /// Returns the month, or zero if not valid
+        /// </summary>
+        public int Month
+        {
+            get
+            {
+                if(!IsValid) return 0;
+                return (IntAt(4) * 10) + IntAt(5);
+            }
+        }
+
+        /// <summary>
+        /// Attempts to get the day of the month if it is part of the value
+        /// </summary>
+        /// <param name="dayOfMonth"></param>
+        /// <returns>true if the instance contains a day of the month, otherwise false</returns>
+        public bool TryGetDayOfMonth(out int dayOfMonth)
+        {
+            if(this.Length != 8)
+            {
+                dayOfMonth = 0;
+                return false;
+            }
+
+            if(m_Data[6] == WeekByte)
+            {
+                dayOfMonth = 0;
+                return false;
+            }
+
+            dayOfMonth = (IntAt(6) * 10) + IntAt(7);
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to get the week code if it is part of the value
+        /// </summary>
+        /// <param name="weekCode"></param>
+        /// <returns>true if the instance contains a week code, otherwise false</returns>
+        public bool TryGetWeekCode(out WeekCode weekCode)
+        {
+            if(this.Length != 8)
+            {
+                weekCode = WeekCode.None;
+                return false;
+            }
+
+            if(m_Data[6] != WeekByte)
+            {
+                weekCode = WeekCode.None;
+                return false;
+            }
+
+            var index = IntAt(7);
+            weekCode = (WeekCode)index;
+            return true;
         }
 
         /// <summary>
@@ -124,6 +231,10 @@ namespace PureFix.Types
             return data.Length;
         }
 
+        /// <summary>
+        /// Returns the MonthYear as a FIX encoded string
+        /// </summary>
+        /// <returns></returns>
         public string AsString()
         {
             // We can creates the integer directly into the string buffer
@@ -141,10 +252,21 @@ namespace PureFix.Types
         /// <inheritdoc/>
         public override string ToString()
         {
-            return this.IsValid ? AsString() : "<invalid>";
+            return this.IsValid ? AsString() : "";
         }
 
-        public static bool TryParse(scoped ReadOnlySpan<byte> buffer, out MonthYear? monthYear)
+        private int IntAt(int index)
+        {
+            return m_Data[index] - AsciiZero;
+        }
+
+        /// <summary>
+        /// Attempts to parse the MonthYear from a byte buffer
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="monthYear"></param>
+        /// <returns>trie if successfully parsed, otherwise false</returns>
+        public static bool TryParse(scoped ReadOnlySpan<byte> buffer, out MonthYear monthYear)
         {
             if(IsValidEncoding(buffer))
             {
@@ -156,7 +278,13 @@ namespace PureFix.Types
             return false;
         }
 
-        public static bool TryParse(string value, out MonthYear? monthYear)
+        /// <summary>
+        /// Attempts to parse the MonthYear from a string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="monthYear"></param>
+        /// <returns>trie if successfully parsed, otherwise false</returns>
+        public static bool TryParse(string value, out MonthYear monthYear)
         {
             ArgumentNullException.ThrowIfNull(value);
 
