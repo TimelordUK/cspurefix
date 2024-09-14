@@ -441,7 +441,7 @@ namespace PureFIix.Test.Ascii
             const string ds = "10:39:01.621";
             var b = new ElasticBuffer(1);
             b.WriteString(ds);
-            var dt = b.GetLocalTimeOnly(0, b.Pos - 1);
+            var dt = b.GetTimeOnly(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -458,7 +458,7 @@ namespace PureFIix.Test.Ascii
             const string ds = "10:39:01";
             var b = new ElasticBuffer(1);
             b.WriteString(ds);
-            var dt = b.GetLocalTimeOnly(0, b.Pos - 1);
+            var dt = b.GetTimeOnly(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -475,7 +475,7 @@ namespace PureFIix.Test.Ascii
             var utc = DateTime.Now.ToUniversalTime();
             var b = new ElasticBuffer(1);
             b.WriteUtcTimeOnly(utc);
-            var dt = b.GetUtcTimeOnly(0, b.Pos - 1);
+            var dt = b.GetTimeOnly(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -492,7 +492,7 @@ namespace PureFIix.Test.Ascii
             var local = DateTime.Now;
             var b = new ElasticBuffer(1);
             b.WriteLocalTimeOnly(local);
-            var dt = b.GetLocalTimeOnly(0, b.Pos - 1);
+            var dt = b.GetTimeOnly(0, b.Pos - 1);
             Assert.That(dt, Is.Not.Null);
             Assert.Multiple(() =>
             {

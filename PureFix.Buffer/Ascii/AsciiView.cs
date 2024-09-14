@@ -98,10 +98,11 @@ namespace PureFix.Buffer.Ascii
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetUtcDateOnly(tag.Value.Start, tag.Value.End);
         }
-        protected DateTime? UtcTimeOnlyAtPosition(int position)
+
+        protected TimeOnly? UtcTimeOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetTimeOnly(tag.Value.Start, tag.Value.End);
         }
 
         protected DateOnly? LocalDateOnlyAtPosition(int position)
@@ -181,21 +182,19 @@ namespace PureFix.Buffer.Ascii
                 return default;
             }
 
-            var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
-            if (sf == null) return default;
-
-            switch (sf.TagType)
-            {
-                case TagType.UtcTimeOnly:
-                    return UtcTimeOnlyAtPosition(position);
-
-                case TagType.UtcTimestamp:
-                    return UtcTimestampAtPosition(position);
-
-                default:
-                    return default;
-            }
+            return UtcTimestampAtPosition(position);
         } 
+
+        public override TimeOnly? GetTimeOnly(int tag)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                return default;
+            }
+
+            return UtcTimeOnlyAtPosition(position);
+        }
 
         public override DateOnly? GetDateOnly(int tag)
         {

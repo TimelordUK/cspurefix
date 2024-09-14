@@ -80,8 +80,10 @@ namespace PureFix.Tag
                     return "DateOnly";
 
                 case TagType.UtcTimestamp:
-                case TagType.UtcTimeOnly:
                     return "DateTime";
+
+                case TagType.UtcTimeOnly:
+                    return "TimeOnly";
 
                 case TagType.MonthYear:
                     return "MonthYear";

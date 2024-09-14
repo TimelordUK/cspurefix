@@ -19,7 +19,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.Currency = view.GetString(15);
 			instance.MDEntrySize = view.GetDouble(271);
 			instance.MDEntryDate = view.GetDateOnly(272);
-			instance.MDEntryTime = view.GetDateTime(273);
+			instance.MDEntryTime = view.GetTimeOnly(273);
 			instance.TickDirection = view.GetString(274);
 			instance.MDMkt = view.GetString(275);
 			instance.TradingSessionID = view.GetString(336);

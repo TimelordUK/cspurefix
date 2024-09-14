@@ -43,19 +43,17 @@ namespace PureFix.Buffer
         }
         
         // 10:39:01.621
-        public DateTime? GetLocalTimeOnly(int st, int vend)
+        public DateTime? GetLocalDateTime(int st, int vend)
         {
-            var v = GetTime(st, vend, DateTimeStyles.AssumeLocal);
+            var v = GetDateTime(st, vend, DateTimeStyles.AssumeLocal);
             if (v == null) return v;
             return v.Value.ToLocalTime();
         }
 
         // case "utctimeonly":
-        public DateTime? GetUtcTimeOnly(int st, int vend)
+        public TimeOnly? GetTimeOnly(int st, int vend)
         {
-            var v = GetTime(st, vend, DateTimeStyles.AssumeUniversal);
-            if (v == null) return v;
-            return v.Value.ToUniversalTime();
+            return GetTimeOnly(st, vend, DateTimeStyles.None);
         }
 
         public int WriteUtcTimeOnly(DateTime dateTime)
@@ -149,7 +147,7 @@ namespace PureFix.Buffer
             return null;
         }
 
-        private DateTime? GetTime(int st, int vend, DateTimeStyles style)
+        private DateTime? GetDateTime(int st, int vend, DateTimeStyles style)
         {
             var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
             Span<char> chars = stackalloc char[span.Length];
@@ -161,6 +159,24 @@ namespace PureFix.Buffer
                 return d;
             }
             if (DateTime.TryParseExact(chars, TimeFormats.Time, null, style, out var d1))
+            {
+                return d1;
+            }
+            return null;
+        }
+
+        private TimeOnly? GetTimeOnly(int st, int vend, DateTimeStyles style)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            Span<char> chars = stackalloc char[span.Length];
+            span.CopyByteSpanToCharSpan(chars);
+
+            
+            if (TimeOnly.TryParseExact(chars, TimeFormats.TimeMs, null, style, out var d))
+            {
+                return d;
+            }
+            if (TimeOnly.TryParseExact(chars, TimeFormats.Time, null, style, out var d1))
             {
                 return d1;
             }

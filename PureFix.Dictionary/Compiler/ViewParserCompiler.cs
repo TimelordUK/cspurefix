@@ -188,6 +188,9 @@ namespace PureFix.Dictionary.Compiler
                     break;
 
                 case TagType.UtcTimeOnly:
+                    _builder.WriteLine($"instance.{sf.Name} = view.GetTimeOnly({sf.Definition.Tag});");
+                    break;
+
                 case TagType.UtcTimestamp:
                     _builder.WriteLine($"instance.{sf.Name} = view.GetDateTime({sf.Definition.Tag});");
                     break;

@@ -25,7 +25,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public DateOnly? MDEntryDate { get; set; }
 		
 		[TagDetails(Tag = 273, Type = TagType.UtcTimeOnly, Offset = 5, Required = false)]
-		public DateTime? MDEntryTime { get; set; }
+		public TimeOnly? MDEntryTime { get; set; }
 		
 		[TagDetails(Tag = 274, Type = TagType.String, Offset = 6, Required = false)]
 		public string? TickDirection { get; set; }
