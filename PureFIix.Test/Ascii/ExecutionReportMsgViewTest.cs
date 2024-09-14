@@ -10,6 +10,7 @@ using PureFix.Types.FIX44.QuickFix;
 using PureFix.Buffer.Segment;
 using PureFix.Types.FIX44.QuickFix.Types;
 using PureFix.Dictionary.Contained;
+using System.Text.Json;
 
 namespace PureFIix.Test.Ascii
 {
@@ -474,6 +475,154 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+        /*
+[142] 898 (MarginRatio) = 13625, [143] 711 (NoUnderlyings) = 2
+[144] 311 (UnderlyingSymbol) = massa., [145] 312 (UnderlyingSymbolSfx) = metus
+[146] 309 (UnderlyingSecurityID) = maximus, [147] 305 (UnderlyingSecurityIDSource) = facilisis
+[148] 457 (NoUnderlyingSecurityAltID) = 3, [149] 458 (UnderlyingSecurityAltID) = ornare
+[150] 459 (UnderlyingSecurityAltIDSource) = magna., [151] 458 (UnderlyingSecurityAltID) = non
+[152] 459 (UnderlyingSecurityAltIDSource) = at, [153] 458 (UnderlyingSecurityAltID) = hendrerit
+[154] 459 (UnderlyingSecurityAltIDSource) = Pellentesque, [155] 462 (UnderlyingProduct) = 89682
+[156] 463 (UnderlyingCFICode) = arcu,, [157] 310 (UnderlyingSecurityType) = eu
+[158] 763 (UnderlyingSecuritySubType) = vitae,, [159] 313 (UnderlyingMaturityMonthYear) = ut
+[160] 542 (UnderlyingMaturityDate) = 20180528-16:38:03.973, [161] 315 (UnderlyingPutOrCall) = 81619
+[162] 241 (UnderlyingCouponPaymentDate) = 20180528-16:38:03.973, [163] 242 (UnderlyingIssueDate) = 20180528-16:38:03.973
+[164] 243 (UnderlyingRepoCollateralSecurityType) = Aliquam, [165] 244 (UnderlyingRepurchaseTerm) = 1819
+[166] 245 (UnderlyingRepurchaseRate) = 12004, [167] 246 (UnderlyingFactor) = 81916
+[168] 256 (UnderlyingCreditRating) = erat, [169] 595 (UnderlyingInstrRegistry) = tellus
+[170] 592 (UnderlyingCountryOfIssue) = in, [171] 593 (UnderlyingStateOrProvinceOfIssue) = nisi
+[172] 594 (UnderlyingLocaleOfIssue) = Interdum, [173] 247 (UnderlyingRedemptionDate) = 20180528-16:38:03.973
+[174] 316 (UnderlyingStrikePrice) = 46328, [175] 941 (UnderlyingStrikeCurrency) = 21536
+[176] 317 (UnderlyingOptAttribute) = malesuada, [177] 436 (UnderlyingContractMultiplier) = 83404
+[178] 435 (UnderlyingCouponRate) = 1709, [179] 308 (UnderlyingSecurityExchange) = ac
+[180] 306 (UnderlyingIssuer) = ipsum, [181] 362 (EncodedUnderlyingIssuerLen) = 20
+[182] 363 (EncodedUnderlyingIssuer) = gJ40LPqdkNUGQxMisPLk, [183] 307 (UnderlyingSecurityDesc) = in
+[184] 364 (EncodedUnderlyingSecurityDescLen) = 20, [185] 365 (EncodedUnderlyingSecurityDesc) = RUQjbmg6gsPoWBsuwDCh
+[186] 877 (UnderlyingCPProgram) = Ut, [187] 878 (UnderlyingCPRegType) = massa
+[188] 318 (UnderlyingCurrency) = 47704, [189] 879 (UnderlyingQty) = 31703
+[190] 810 (UnderlyingPx) = 60977, [191] 882 (UnderlyingDirtyPrice) = 67361
+[192] 883 (UnderlyingEndPrice) = 51785, [193] 884 (UnderlyingStartValue) = 80625
+[194] 885 (UnderlyingCurrentValue) = 29888, [195] 886 (UnderlyingEndValue) = 49266
+[196] 887 (NoUnderlyingStips) = 3, [197] 888 (UnderlyingStipType) = cursus
+[198] 889 (UnderlyingStipValue) = Vivamus, [199] 888 (UnderlyingStipType) = convallis
+[200] 889 (UnderlyingStipValue) = nec, [201] 888 (UnderlyingStipType) = urna
+[202] 889 (UnderlyingStipValue) = vitae., [203] 311 (UnderlyingSymbol) = erat
+[204] 312 (UnderlyingSymbolSfx) = In, [205] 309 (UnderlyingSecurityID) = feugiat
+[206] 305 (UnderlyingSecurityIDSource) = ut, [207] 457 (NoUnderlyingSecurityAltID) = 1
+[208] 458 (UnderlyingSecurityAltID) = Quisque, [209] 459 (UnderlyingSecurityAltIDSource) = tortor
+[210] 462 (UnderlyingProduct) = 36068, [211] 463 (UnderlyingCFICode) = est
+[212] 310 (UnderlyingSecurityType) = Lorem, [213] 763 (UnderlyingSecuritySubType) = dolor
+[214] 313 (UnderlyingMaturityMonthYear) = amet,, [215] 542 (UnderlyingMaturityDate) = 20180528-16:38:03.973
+[216] 315 (UnderlyingPutOrCall) = 94032, [217] 241 (UnderlyingCouponPaymentDate) = 20180528-16:38:03.973
+[218] 242 (UnderlyingIssueDate) = 20180528-16:38:03.973, [219] 243 (UnderlyingRepoCollateralSecurityType) = adipiscing
+[220] 244 (UnderlyingRepurchaseTerm) = 17712, [221] 245 (UnderlyingRepurchaseRate) = 95092
+[222] 246 (UnderlyingFactor) = 82914, [223] 256 (UnderlyingCreditRating) = Nunc
+[224] 595 (UnderlyingInstrRegistry) = orci,, [225] 592 (UnderlyingCountryOfIssue) = vel
+[226] 593 (UnderlyingStateOrProvinceOfIssue) = sed,, [227] 594 (UnderlyingLocaleOfIssue) = cursus
+[228] 247 (UnderlyingRedemptionDate) = 20180528-16:38:03.973, [229] 316 (UnderlyingStrikePrice) = 84513
+[230] 941 (UnderlyingStrikeCurrency) = 31556, [231] 317 (UnderlyingOptAttribute) = Aenean
+[232] 436 (UnderlyingContractMultiplier) = 8879, [233] 435 (UnderlyingCouponRate) = 68005
+[234] 308 (UnderlyingSecurityExchange) = diam, [235] 306 (UnderlyingIssuer) = Aenean
+[236] 362 (EncodedUnderlyingIssuerLen) = 20, [237] 363 (EncodedUnderlyingIssuer) = VxRjId4eWuuNiBYgjNpp
+[238] 307 (UnderlyingSecurityDesc) = viverra, [239] 364 (EncodedUnderlyingSecurityDescLen) = 20
+[240] 365 (EncodedUnderlyingSecurityDesc) = fwlY5CmVswvapjFalVLb, [241] 877 (UnderlyingCPProgram) = non
+[242] 878 (UnderlyingCPRegType) = neque., [243] 318 (UnderlyingCurrency) = 53806
+[244] 879 (UnderlyingQty) = 26390, [245] 810 (UnderlyingPx) = 32442
+[246] 882 (UnderlyingDirtyPrice) = 82617, [247] 883 (UnderlyingEndPrice) = 86326
+[248] 884 (UnderlyingStartValue) = 34911, [249] 885 (UnderlyingCurrentValue) = 46867
+[250] 886 (UnderlyingEndValue) = 94014, [251] 887 (NoUnderlyingStips) = 3
+[252] 888 (UnderlyingStipType) = arcu, [253] 889 (UnderlyingStipValue) = dignissim
+[254] 888 (UnderlyingStipType) = auctor, [255] 889 (UnderlyingStipValue) = maximus
+[256] 888 (UnderlyingStipType) = quam., [257] 889 (UnderlyingStipValue) = varius
+ */
+
+        [Test]
+        public void UndInstrmtGrp_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var undInstrmtGrp = structure?.GetInstance("UndInstrmtGrp");
+            Assert.Multiple(() =>
+            {
+                Assert.That(undInstrmtGrp, Is.Not.Null);
+                Assert.That(undInstrmtGrp.StartPosition, Is.EqualTo(143));
+                Assert.That(undInstrmtGrp.StartTag, Is.EqualTo(711));
+                Assert.That(undInstrmtGrp.EndPosition, Is.EqualTo(257));
+                Assert.That(undInstrmtGrp.Depth, Is.EqualTo(1));
+                Assert.That(undInstrmtGrp.EndTag, Is.EqualTo(889));
+                Assert.That(undInstrmtGrp.Type, Is.EqualTo(SegmentType.Component));
+            });
+
+            var noUnderlyings = structure?.GetInstance("NoUnderlyings");
+            Assert.Multiple(() =>
+            {
+                Assert.That(noUnderlyings, Is.Not.Null);
+                Assert.That(noUnderlyings.Depth, Is.EqualTo(2));
+                Assert.That(noUnderlyings.DelimiterTag, Is.EqualTo(311));
+                Assert.That(noUnderlyings.DelimiterPositions, Is.EqualTo(new List<int> { 144, 203 }));
+                Assert.That(noUnderlyings.Type, Is.EqualTo(SegmentType.Group));
+            });
+
+            var underlyingInstrument = structure?.GetInstances("UnderlyingInstrument");
+            Assert.That(underlyingInstrument, Is.Not.Null);
+            Assert.That(underlyingInstrument, Has.Count.EqualTo(2));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(underlyingInstrument, Is.Not.Null);
+                Assert.That(underlyingInstrument[0].StartPosition, Is.EqualTo(144));
+                Assert.That(underlyingInstrument[0].StartTag, Is.EqualTo(311));
+                Assert.That(underlyingInstrument[0].EndPosition, Is.EqualTo(202));
+                Assert.That(underlyingInstrument[0].Depth, Is.EqualTo(3));
+                Assert.That(underlyingInstrument[0].EndTag, Is.EqualTo(889));
+                Assert.That(underlyingInstrument[0].Type, Is.EqualTo(SegmentType.Component));
+            });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(underlyingInstrument, Is.Not.Null);
+                Assert.That(underlyingInstrument[1].StartPosition, Is.EqualTo(203));
+                Assert.That(underlyingInstrument[1].StartTag, Is.EqualTo(311));
+                Assert.That(underlyingInstrument[1].EndPosition, Is.EqualTo(257));
+                Assert.That(underlyingInstrument[1].Depth, Is.EqualTo(3));
+                Assert.That(underlyingInstrument[1].EndTag, Is.EqualTo(889));
+                Assert.That(underlyingInstrument[1].Type, Is.EqualTo(SegmentType.Component));
+            });
+
+            var noUnderlyingSecurityAltID = structure?.GetInstances("NoUnderlyingSecurityAltID");
+            Assert.That(noUnderlyingSecurityAltID, Is.Not.Null);
+            Assert.That(noUnderlyingSecurityAltID, Has.Count.EqualTo(2));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(noUnderlyingSecurityAltID[0], Is.Not.Null);
+                Assert.That(noUnderlyingSecurityAltID[0].Depth, Is.EqualTo(5));
+                Assert.That(noUnderlyingSecurityAltID[0].DelimiterTag, Is.EqualTo(458));
+                Assert.That(noUnderlyingSecurityAltID[0].Type, Is.EqualTo(SegmentType.Group));
+                Assert.That(noUnderlyingSecurityAltID[0].StartPosition, Is.EqualTo(148));
+                Assert.That(noUnderlyingSecurityAltID[0].EndPosition, Is.EqualTo(154));
+                Assert.That(noUnderlyingSecurityAltID[0].DelimiterPositions, Is.EqualTo(new List<int> { 149, 151, 153 }));
+
+            });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(noUnderlyingSecurityAltID[1], Is.Not.Null);
+                Assert.That(noUnderlyingSecurityAltID[1].Depth, Is.EqualTo(5));
+                Assert.That(noUnderlyingSecurityAltID[1].DelimiterTag, Is.EqualTo(458));
+                Assert.That(noUnderlyingSecurityAltID[1].Type, Is.EqualTo(SegmentType.Group));
+                Assert.That(noUnderlyingSecurityAltID[1].StartPosition, Is.EqualTo(207));
+                Assert.That(noUnderlyingSecurityAltID[1].EndPosition, Is.EqualTo(209));
+                Assert.That(noUnderlyingSecurityAltID[1].DelimiterPositions, Is.EqualTo(new List<int> { 208 }));
+            });
+
+            var boundNoUnderlyingSecurityAltID = structure?.FirstContainedWithin(
+                "NoUnderlyingSecurityAltID",
+                underlyingInstrument[1]);
+            Assert.That(boundNoUnderlyingSecurityAltID, Is.Not.Null);
+        }
+
 
         [Test]
         public void View_To_Execution_Report_Test()
@@ -483,6 +632,12 @@ namespace PureFIix.Test.Ascii
             var mv = _views[0];
             var er = new ExecutionReport();
             er.Parse(mv);
+            JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true
+            };
+            string json = JsonSerializer.Serialize<ExecutionReport>(er, options);
+
         }
     }
 }
