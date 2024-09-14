@@ -880,6 +880,72 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void LegSecAltIDGrp_1_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var legSecAltIDGrp = structure?.GetInstances("LegSecAltIDGrp");
+            Assert.That(legSecAltIDGrp, Is.Not.Null);
+            Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(legSecAltIDGrp[1], Is.Not.Null);
+                Assert.That(legSecAltIDGrp[1].Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(legSecAltIDGrp[1].Depth, Is.EqualTo(4));
+                Assert.That(legSecAltIDGrp[1].StartTag, Is.EqualTo(604));
+                Assert.That(legSecAltIDGrp[1].StartPosition, Is.EqualTo(469));
+                Assert.That(legSecAltIDGrp[1].EndPosition, Is.EqualTo(475));
+                Assert.That(legSecAltIDGrp[1].EndTag, Is.EqualTo(606));
+            });
+
+            var noLegSecurityAltID = GetNoLegSecurityAtlID(1);
+            Assert.Multiple(() =>
+            {
+                Assert.That(noLegSecurityAltID, Is.Not.Null);
+                Assert.That(noLegSecurityAltID.StartPosition, Is.EqualTo(469));
+                Assert.That(noLegSecurityAltID.EndPosition, Is.EqualTo(475));
+                Assert.That(noLegSecurityAltID.EndTag, Is.EqualTo(606));
+                Assert.That(noLegSecurityAltID.DelimiterTag, Is.EqualTo(605));
+                Assert.That(noLegSecurityAltID.DelimiterPositions, Is.EqualTo(new List<int> { 470, 472, 474 }));
+            });
+        }
+
+        [Test]
+        public void LegSecAltIDGrp_2_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var legSecAltIDGrp = structure?.GetInstances("LegSecAltIDGrp");
+            Assert.That(legSecAltIDGrp, Is.Not.Null);
+            Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(legSecAltIDGrp[2], Is.Not.Null);
+                Assert.That(legSecAltIDGrp[2].Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(legSecAltIDGrp[2].Depth, Is.EqualTo(4));
+                Assert.That(legSecAltIDGrp[2].StartTag, Is.EqualTo(604));
+                Assert.That(legSecAltIDGrp[2].StartPosition, Is.EqualTo(558));
+                Assert.That(legSecAltIDGrp[2].EndPosition, Is.EqualTo(564));
+                Assert.That(legSecAltIDGrp[2].EndTag, Is.EqualTo(606));
+            });
+
+            var noLegSecurityAltID = GetNoLegSecurityAtlID(2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(noLegSecurityAltID, Is.Not.Null);
+                Assert.That(noLegSecurityAltID.StartPosition, Is.EqualTo(558));
+                Assert.That(noLegSecurityAltID.EndPosition, Is.EqualTo(564));
+                Assert.That(noLegSecurityAltID.EndTag, Is.EqualTo(606));
+                Assert.That(noLegSecurityAltID.DelimiterTag, Is.EqualTo(605));
+                Assert.That(noLegSecurityAltID.DelimiterPositions, Is.EqualTo(new List<int> { 559, 561, 563 }));
+            });
+        }
+
+        [Test]
         public void View_To_Execution_Report_Test()
         {
             Assert.That(_views, Is.Not.Null);
