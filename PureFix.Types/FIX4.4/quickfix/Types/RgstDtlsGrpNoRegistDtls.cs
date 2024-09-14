@@ -28,7 +28,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public int? OwnerType { get; set; }
 		
 		[TagDetails(Tag = 486, Type = TagType.LocalDate, Offset = 6, Required = false)]
-		public DateTime? DateOfBirth { get; set; }
+		public DateOnly? DateOfBirth { get; set; }
 		
 		[TagDetails(Tag = 475, Type = TagType.String, Offset = 7, Required = false)]
 		public string? InvestorCountryOfResidence { get; set; }

@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? SettlType { get; set; }
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 9, Required = false)]
-		public DateTime? SettlDate { get; set; }
+		public DateOnly? SettlDate { get; set; }
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 10, Required = false)]
 		public string? TradingSessionID { get; set; }

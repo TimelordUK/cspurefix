@@ -74,10 +74,12 @@ namespace PureFix.Types
                 case TagType.Boolean:
                     return "bool";
 
-                case TagType.UtcTimestamp:
-                case TagType.UtcDateOnly:
-                case TagType.UtcTimeOnly:
                 case TagType.LocalDate:
+                case TagType.UtcDateOnly:
+                    return "DateOnly";
+
+                case TagType.UtcTimestamp:
+                case TagType.UtcTimeOnly:
                     return "DateTime";
 
                 default:

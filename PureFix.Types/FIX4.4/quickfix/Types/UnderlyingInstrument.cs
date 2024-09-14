@@ -40,16 +40,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? UnderlyingMaturityMonthYear { get; set; }
 		
 		[TagDetails(Tag = 542, Type = TagType.LocalDate, Offset = 10, Required = false)]
-		public DateTime? UnderlyingMaturityDate { get; set; }
+		public DateOnly? UnderlyingMaturityDate { get; set; }
 		
 		[TagDetails(Tag = 315, Type = TagType.Int, Offset = 11, Required = false)]
 		public int? UnderlyingPutOrCall { get; set; }
 		
 		[TagDetails(Tag = 241, Type = TagType.LocalDate, Offset = 12, Required = false)]
-		public DateTime? UnderlyingCouponPaymentDate { get; set; }
+		public DateOnly? UnderlyingCouponPaymentDate { get; set; }
 		
 		[TagDetails(Tag = 242, Type = TagType.LocalDate, Offset = 13, Required = false)]
-		public DateTime? UnderlyingIssueDate { get; set; }
+		public DateOnly? UnderlyingIssueDate { get; set; }
 		
 		[TagDetails(Tag = 243, Type = TagType.String, Offset = 14, Required = false)]
 		public string? UnderlyingRepoCollateralSecurityType { get; set; }
@@ -79,7 +79,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? UnderlyingLocaleOfIssue { get; set; }
 		
 		[TagDetails(Tag = 247, Type = TagType.LocalDate, Offset = 23, Required = false)]
-		public DateTime? UnderlyingRedemptionDate { get; set; }
+		public DateOnly? UnderlyingRedemptionDate { get; set; }
 		
 		[TagDetails(Tag = 316, Type = TagType.Float, Offset = 24, Required = false)]
 		public double? UnderlyingStrikePrice { get; set; }

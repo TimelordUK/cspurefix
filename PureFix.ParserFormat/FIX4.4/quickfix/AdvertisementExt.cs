@@ -43,7 +43,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.QtyType = view.GetInt32(854);
 			instance.Price = view.GetDouble(44);
 			instance.Currency = view.GetString(15);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.TransactTime = view.GetDateTime(60);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);

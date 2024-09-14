@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.FairValue = view.GetDouble(406);
 			instance.NetGrossInd = view.GetInt32(430);
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
 			instance.Text = view.GetString(58);

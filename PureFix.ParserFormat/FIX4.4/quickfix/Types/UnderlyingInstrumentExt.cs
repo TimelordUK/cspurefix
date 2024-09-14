@@ -28,10 +28,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.UnderlyingSecurityType = view.GetString(310);
 			instance.UnderlyingSecuritySubType = view.GetString(763);
 			instance.UnderlyingMaturityMonthYear = view.GetString(313);
-			instance.UnderlyingMaturityDate = view.GetDateTime(542);
+			instance.UnderlyingMaturityDate = view.GetDateOnly(542);
 			instance.UnderlyingPutOrCall = view.GetInt32(315);
-			instance.UnderlyingCouponPaymentDate = view.GetDateTime(241);
-			instance.UnderlyingIssueDate = view.GetDateTime(242);
+			instance.UnderlyingCouponPaymentDate = view.GetDateOnly(241);
+			instance.UnderlyingIssueDate = view.GetDateOnly(242);
 			instance.UnderlyingRepoCollateralSecurityType = view.GetString(243);
 			instance.UnderlyingRepurchaseTerm = view.GetInt32(244);
 			instance.UnderlyingRepurchaseRate = view.GetDouble(245);
@@ -41,7 +41,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.UnderlyingCountryOfIssue = view.GetString(592);
 			instance.UnderlyingStateOrProvinceOfIssue = view.GetString(593);
 			instance.UnderlyingLocaleOfIssue = view.GetString(594);
-			instance.UnderlyingRedemptionDate = view.GetDateTime(247);
+			instance.UnderlyingRedemptionDate = view.GetDateOnly(247);
 			instance.UnderlyingStrikePrice = view.GetDouble(316);
 			instance.UnderlyingStrikeCurrency = view.GetString(941);
 			instance.UnderlyingOptAttribute = view.GetString(317);

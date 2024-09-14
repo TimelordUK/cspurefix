@@ -73,7 +73,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Quantity = view.GetDouble(53);
 			instance.QtyType = view.GetInt32(854);
 			instance.LastMkt = view.GetString(30);
-			instance.TradeOriginationDate = view.GetDateTime(229);
+			instance.TradeOriginationDate = view.GetDateOnly(229);
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
 			instance.PriceType = view.GetInt32(423);
@@ -91,10 +91,10 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.TransactTime = view.GetDateTime(60);
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			instance.BookingType = view.GetInt32(775);
 			instance.GrossTradeAmt = view.GetDouble(381);
 			instance.Concession = view.GetDouble(238);

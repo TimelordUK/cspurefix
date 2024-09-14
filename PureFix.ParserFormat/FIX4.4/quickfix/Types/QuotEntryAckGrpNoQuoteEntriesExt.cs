@@ -41,9 +41,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.TransactTime = view.GetDateTime(60);
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			instance.OrdType = view.GetString(40);
-			instance.SettlDate2 = view.GetDateTime(193);
+			instance.SettlDate2 = view.GetDateOnly(193);
 			instance.OrderQty2 = view.GetDouble(192);
 			instance.BidForwardPoints2 = view.GetDouble(642);
 			instance.OfferForwardPoints2 = view.GetDouble(643);

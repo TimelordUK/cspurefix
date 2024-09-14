@@ -38,10 +38,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.PaymentRef = view.GetString(476);
 			instance.CardHolderName = view.GetString(488);
 			instance.CardNumber = view.GetString(489);
-			instance.CardStartDate = view.GetDateTime(503);
-			instance.CardExpDate = view.GetDateTime(490);
+			instance.CardStartDate = view.GetDateOnly(503);
+			instance.CardExpDate = view.GetDateOnly(490);
 			instance.CardIssNum = view.GetString(491);
-			instance.PaymentDate = view.GetDateTime(504);
+			instance.PaymentDate = view.GetDateOnly(504);
 			instance.PaymentRemitterID = view.GetString(505);
 		}
 	}

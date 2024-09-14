@@ -48,7 +48,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.UndInstrmtGrp = new UndInstrmtGrp();
 				instance.UndInstrmtGrp!.Parse(groupViewUndInstrmtGrp);
 			}
-			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.ClearingBusinessDate = view.GetDateOnly(715);
 			instance.SettlSessID = view.GetString(716);
 			instance.SettlSessSubID = view.GetString(717);
 			if (view.GetView("TrdgSesGrp") is MsgView groupViewTrdgSesGrp)

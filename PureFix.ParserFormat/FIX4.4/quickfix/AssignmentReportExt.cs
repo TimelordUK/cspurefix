@@ -60,14 +60,14 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.SettlPrice = view.GetDouble(730);
 			instance.SettlPriceType = view.GetInt32(731);
 			instance.UnderlyingSettlPrice = view.GetDouble(732);
-			instance.ExpireDate = view.GetDateTime(432);
+			instance.ExpireDate = view.GetDateOnly(432);
 			instance.AssignmentMethod = view.GetString(744);
 			instance.AssignmentUnit = view.GetDouble(745);
 			instance.OpenInterest = view.GetDouble(746);
 			instance.ExerciseMethod = view.GetString(747);
 			instance.SettlSessID = view.GetString(716);
 			instance.SettlSessSubID = view.GetString(717);
-			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.ClearingBusinessDate = view.GetDateOnly(715);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);

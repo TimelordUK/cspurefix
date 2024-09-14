@@ -22,7 +22,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.LegQty = view.GetDouble(687);
 			instance.LegSwapType = view.GetInt32(690);
 			instance.LegSettlType = view.GetString(587);
-			instance.LegSettlDate = view.GetDateTime(588);
+			instance.LegSettlDate = view.GetDateOnly(588);
 			if (view.GetView("LegStipulations") is MsgView groupViewLegStipulations)
 			{
 				instance.LegStipulations = new LegStipulations();

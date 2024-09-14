@@ -53,10 +53,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		public int? AccountType { get; set; }
 		
 		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 14, Required = false)]
-		public DateTime? TradeOriginationDate { get; set; }
+		public DateOnly? TradeOriginationDate { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 15, Required = false)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 16, Required = false)]
 		public DateTime? TransactTime { get; set; }

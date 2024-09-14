@@ -22,8 +22,8 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			instance.ListID = view.GetString(66);
 			instance.TransactTime = view.GetDateTime(60);
-			instance.TradeOriginationDate = view.GetDateTime(229);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeOriginationDate = view.GetDateOnly(229);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);

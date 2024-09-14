@@ -29,7 +29,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? PosMaintRptRefID { get; set; }
 		
 		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 6, Required = true)]
-		public DateTime? ClearingBusinessDate { get; set; }
+		public DateOnly? ClearingBusinessDate { get; set; }
 		
 		[TagDetails(Tag = 716, Type = TagType.String, Offset = 7, Required = false)]
 		public string? SettlSessID { get; set; }

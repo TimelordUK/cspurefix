@@ -41,7 +41,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.LegRefID = view.GetString(654);
 			instance.LegPrice = view.GetDouble(566);
 			instance.LegSettlType = view.GetString(587);
-			instance.LegSettlDate = view.GetDateTime(588);
+			instance.LegSettlDate = view.GetDateOnly(588);
 		}
 	}
 }

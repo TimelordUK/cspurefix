@@ -18,7 +18,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.MDEntryPx = view.GetDouble(270);
 			instance.Currency = view.GetString(15);
 			instance.MDEntrySize = view.GetDouble(271);
-			instance.MDEntryDate = view.GetDateTime(272);
+			instance.MDEntryDate = view.GetDateOnly(272);
 			instance.MDEntryTime = view.GetDateTime(273);
 			instance.TickDirection = view.GetString(274);
 			instance.MDMkt = view.GetString(275);
@@ -31,7 +31,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.DeskID = view.GetString(284);
 			instance.OpenCloseSettlFlag = view.GetString(286);
 			instance.TimeInForce = view.GetString(59);
-			instance.ExpireDate = view.GetDateTime(432);
+			instance.ExpireDate = view.GetDateOnly(432);
 			instance.ExpireTime = view.GetDateTime(126);
 			instance.MinQty = view.GetDouble(110);
 			instance.ExecInst = view.GetString(18);

@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties!.Parse(groupViewParties);
 			}
 			instance.SecondaryAllocID = view.GetString(793);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.TransactTime = view.GetDateTime(60);
 			instance.AllocStatus = view.GetInt32(87);
 			instance.AllocRejCode = view.GetInt32(88);

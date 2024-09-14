@@ -14,7 +14,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		{
 			if (view is null) return;
 			
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.TransactTime = view.GetDateTime(60);
 		}
 	}

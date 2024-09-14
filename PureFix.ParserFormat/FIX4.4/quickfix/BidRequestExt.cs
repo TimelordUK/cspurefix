@@ -50,7 +50,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.IncTaxInd = view.GetInt32(416);
 			instance.ForexReq = view.GetBool(121);
 			instance.NumBidders = view.GetInt32(417);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.BidTradeType = view.GetString(418);
 			instance.BasisPxType = view.GetString(419);
 			instance.StrikeTime = view.GetDateTime(443);

@@ -128,10 +128,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? LastMkt { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 39, Required = true)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 40, Required = false)]
-		public DateTime? ClearingBusinessDate { get; set; }
+		public DateOnly? ClearingBusinessDate { get; set; }
 		
 		[TagDetails(Tag = 6, Type = TagType.Float, Offset = 41, Required = false)]
 		public double? AvgPx { get; set; }
@@ -164,7 +164,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SettlType { get; set; }
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 51, Required = false)]
-		public DateTime? SettlDate { get; set; }
+		public DateOnly? SettlDate { get; set; }
 		
 		[TagDetails(Tag = 573, Type = TagType.String, Offset = 52, Required = false)]
 		public string? MatchStatus { get; set; }

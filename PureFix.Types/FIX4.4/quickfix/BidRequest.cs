@@ -80,7 +80,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public int? NumBidders { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 23, Required = false)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 418, Type = TagType.String, Offset = 24, Required = true)]
 		public string? BidTradeType { get; set; }

@@ -40,16 +40,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? MaturityMonthYear { get; set; }
 		
 		[TagDetails(Tag = 541, Type = TagType.LocalDate, Offset = 10, Required = false)]
-		public DateTime? MaturityDate { get; set; }
+		public DateOnly? MaturityDate { get; set; }
 		
 		[TagDetails(Tag = 201, Type = TagType.Int, Offset = 11, Required = false)]
 		public int? PutOrCall { get; set; }
 		
 		[TagDetails(Tag = 224, Type = TagType.LocalDate, Offset = 12, Required = false)]
-		public DateTime? CouponPaymentDate { get; set; }
+		public DateOnly? CouponPaymentDate { get; set; }
 		
 		[TagDetails(Tag = 225, Type = TagType.LocalDate, Offset = 13, Required = false)]
-		public DateTime? IssueDate { get; set; }
+		public DateOnly? IssueDate { get; set; }
 		
 		[TagDetails(Tag = 239, Type = TagType.String, Offset = 14, Required = false)]
 		public string? RepoCollateralSecurityType { get; set; }
@@ -79,7 +79,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? LocaleOfIssue { get; set; }
 		
 		[TagDetails(Tag = 240, Type = TagType.LocalDate, Offset = 23, Required = false)]
-		public DateTime? RedemptionDate { get; set; }
+		public DateOnly? RedemptionDate { get; set; }
 		
 		[TagDetails(Tag = 202, Type = TagType.Float, Offset = 24, Required = false)]
 		public double? StrikePrice { get; set; }
@@ -133,10 +133,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public EvntGrp? EvntGrp { get; set; }
 		
 		[TagDetails(Tag = 873, Type = TagType.LocalDate, Offset = 41, Required = false)]
-		public DateTime? DatedDate { get; set; }
+		public DateOnly? DatedDate { get; set; }
 		
 		[TagDetails(Tag = 874, Type = TagType.LocalDate, Offset = 42, Required = false)]
-		public DateTime? InterestAccrualDate { get; set; }
+		public DateOnly? InterestAccrualDate { get; set; }
 		
 	}
 }

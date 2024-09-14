@@ -56,7 +56,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public DateTime? TransactTime { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 15, Required = true)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[Component(Offset = 16, Required = false)]
 		public TrdRegTimestamps? TrdRegTimestamps { get; set; }
@@ -143,7 +143,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public int? NumDaysInterest { get; set; }
 		
 		[TagDetails(Tag = 230, Type = TagType.LocalDate, Offset = 44, Required = false)]
-		public DateTime? ExDate { get; set; }
+		public DateOnly? ExDate { get; set; }
 		
 		[TagDetails(Tag = 158, Type = TagType.Float, Offset = 45, Required = false)]
 		public double? AccruedInterestRate { get; set; }
@@ -191,7 +191,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SettlType { get; set; }
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 60, Required = false)]
-		public DateTime? SettlDate { get; set; }
+		public DateOnly? SettlDate { get; set; }
 		
 		[Component(Offset = 61, Required = false)]
 		public SettlInstructionsData? SettlInstructionsData { get; set; }

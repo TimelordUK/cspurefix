@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.TotalNumPosReports = view.GetInt32(727);
 			instance.UnsolicitedIndicator = view.GetBool(325);
 			instance.PosReqResult = view.GetInt32(728);
-			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.ClearingBusinessDate = view.GetDateOnly(715);
 			instance.SettlSessID = view.GetString(716);
 			instance.SettlSessSubID = view.GetString(717);
 			if (view.GetView("Parties") is MsgView groupViewParties)
@@ -68,7 +68,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.PositionAmountData!.Parse(groupViewPositionAmountData);
 			}
 			instance.RegistStatus = view.GetString(506);
-			instance.DeliveryDate = view.GetDateTime(743);
+			instance.DeliveryDate = view.GetDateOnly(743);
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);

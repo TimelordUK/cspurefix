@@ -21,7 +21,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.StandardHeader!.Parse(groupViewStandardHeader);
 			}
 			instance.ConfirmID = view.GetString(664);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.TransactTime = view.GetDateTime(60);
 			instance.AffirmStatus = view.GetInt32(940);
 			instance.ConfirmRejReason = view.GetInt32(774);

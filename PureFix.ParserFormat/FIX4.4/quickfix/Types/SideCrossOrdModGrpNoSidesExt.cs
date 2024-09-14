@@ -23,8 +23,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.TradeOriginationDate = view.GetDateTime(229);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeOriginationDate = view.GetDateOnly(229);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.Account = view.GetString(1);
 			instance.AcctIDSource = view.GetInt32(660);
 			instance.AccountType = view.GetInt32(581);

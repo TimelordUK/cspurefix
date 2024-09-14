@@ -42,7 +42,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.SecondaryAllocID = view.GetString(793);
 			instance.IndividualAllocID = view.GetString(467);
 			instance.TransactTime = view.GetDateTime(60);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			if (view.GetView("TrdRegTimestamps") is MsgView groupViewTrdRegTimestamps)
 			{
 				instance.TrdRegTimestamps = new TrdRegTimestamps();
@@ -107,7 +107,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.ProcessCode = view.GetString(81);
 			instance.GrossTradeAmt = view.GetDouble(381);
 			instance.NumDaysInterest = view.GetInt32(157);
-			instance.ExDate = view.GetDateTime(230);
+			instance.ExDate = view.GetDateOnly(230);
 			instance.AccruedInterestRate = view.GetDouble(158);
 			instance.AccruedInterestAmt = view.GetDouble(159);
 			instance.InterestAtMaturity = view.GetDouble(738);
@@ -123,7 +123,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.SettlCurrFxRate = view.GetDouble(155);
 			instance.SettlCurrFxRateCalc = view.GetString(156);
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			if (view.GetView("SettlInstructionsData") is MsgView groupViewSettlInstructionsData)
 			{
 				instance.SettlInstructionsData = new SettlInstructionsData();

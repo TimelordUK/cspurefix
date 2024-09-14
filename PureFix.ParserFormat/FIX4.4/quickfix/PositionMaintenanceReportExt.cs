@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.OrigPosReqRefID = view.GetString(713);
 			instance.PosMaintStatus = view.GetInt32(722);
 			instance.PosMaintResult = view.GetInt32(723);
-			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.ClearingBusinessDate = view.GetDateOnly(715);
 			instance.SettlSessID = view.GetString(716);
 			instance.SettlSessSubID = view.GetString(717);
 			if (view.GetView("Parties") is MsgView groupViewParties)

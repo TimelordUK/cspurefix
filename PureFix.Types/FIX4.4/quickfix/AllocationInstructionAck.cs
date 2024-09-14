@@ -23,7 +23,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SecondaryAllocID { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 4, Required = false)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 5, Required = true)]
 		public DateTime? TransactTime { get; set; }

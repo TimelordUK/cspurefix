@@ -40,13 +40,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? LegMaturityMonthYear { get; set; }
 		
 		[TagDetails(Tag = 611, Type = TagType.LocalDate, Offset = 10, Required = false)]
-		public DateTime? LegMaturityDate { get; set; }
+		public DateOnly? LegMaturityDate { get; set; }
 		
 		[TagDetails(Tag = 248, Type = TagType.LocalDate, Offset = 11, Required = false)]
-		public DateTime? LegCouponPaymentDate { get; set; }
+		public DateOnly? LegCouponPaymentDate { get; set; }
 		
 		[TagDetails(Tag = 249, Type = TagType.LocalDate, Offset = 12, Required = false)]
-		public DateTime? LegIssueDate { get; set; }
+		public DateOnly? LegIssueDate { get; set; }
 		
 		[TagDetails(Tag = 250, Type = TagType.String, Offset = 13, Required = false)]
 		public string? LegRepoCollateralSecurityType { get; set; }
@@ -76,7 +76,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? LegLocaleOfIssue { get; set; }
 		
 		[TagDetails(Tag = 254, Type = TagType.LocalDate, Offset = 22, Required = false)]
-		public DateTime? LegRedemptionDate { get; set; }
+		public DateOnly? LegRedemptionDate { get; set; }
 		
 		[TagDetails(Tag = 612, Type = TagType.Float, Offset = 23, Required = false)]
 		public double? LegStrikePrice { get; set; }
@@ -127,13 +127,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? LegPool { get; set; }
 		
 		[TagDetails(Tag = 739, Type = TagType.LocalDate, Offset = 39, Required = false)]
-		public DateTime? LegDatedDate { get; set; }
+		public DateOnly? LegDatedDate { get; set; }
 		
 		[TagDetails(Tag = 955, Type = TagType.String, Offset = 40, Required = false)]
 		public string? LegContractSettlMonth { get; set; }
 		
 		[TagDetails(Tag = 956, Type = TagType.LocalDate, Offset = 41, Required = false)]
-		public DateTime? LegInterestAccrualDate { get; set; }
+		public DateOnly? LegInterestAccrualDate { get; set; }
 		
 	}
 }

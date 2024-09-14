@@ -24,7 +24,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.NestedParties!.Parse(groupViewNestedParties);
 			}
 			instance.OwnerType = view.GetInt32(522);
-			instance.DateOfBirth = view.GetDateTime(486);
+			instance.DateOfBirth = view.GetDateOnly(486);
 			instance.InvestorCountryOfResidence = view.GetString(475);
 		}
 	}

@@ -46,7 +46,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.InstrmtLegGrp!.Parse(groupViewInstrmtLegGrp);
 			}
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			instance.HandlInst = view.GetString(21);
 			instance.ExecInst = view.GetString(18);
 			instance.MinQty = view.GetDouble(110);
@@ -86,7 +86,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.QuoteID = view.GetString(117);
 			instance.TimeInForce = view.GetString(59);
 			instance.EffectiveTime = view.GetDateTime(168);
-			instance.ExpireDate = view.GetDateTime(432);
+			instance.ExpireDate = view.GetDateOnly(432);
 			instance.ExpireTime = view.GetDateTime(126);
 			instance.GTBookingInst = view.GetInt32(427);
 			instance.MaxShow = view.GetDouble(210);

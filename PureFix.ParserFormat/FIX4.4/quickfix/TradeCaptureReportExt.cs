@@ -78,8 +78,8 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.LastSpotRate = view.GetDouble(194);
 			instance.LastForwardPoints = view.GetDouble(195);
 			instance.LastMkt = view.GetString(30);
-			instance.TradeDate = view.GetDateTime(75);
-			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.TradeDate = view.GetDateOnly(75);
+			instance.ClearingBusinessDate = view.GetDateOnly(715);
 			instance.AvgPx = view.GetDouble(6);
 			if (view.GetView("SpreadOrBenchmarkCurveData") is MsgView groupViewSpreadOrBenchmarkCurveData)
 			{
@@ -106,7 +106,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.TrdRegTimestamps!.Parse(groupViewTrdRegTimestamps);
 			}
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			instance.MatchStatus = view.GetString(573);
 			instance.MatchType = view.GetString(574);
 			if (view.GetView("TrdCapRptSideGrp") is MsgView groupViewTrdCapRptSideGrp)

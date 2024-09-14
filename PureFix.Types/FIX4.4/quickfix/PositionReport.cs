@@ -35,7 +35,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public int? PosReqResult { get; set; }
 		
 		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 8, Required = true)]
-		public DateTime? ClearingBusinessDate { get; set; }
+		public DateOnly? ClearingBusinessDate { get; set; }
 		
 		[TagDetails(Tag = 716, Type = TagType.String, Offset = 9, Required = false)]
 		public string? SettlSessID { get; set; }
@@ -86,7 +86,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? RegistStatus { get; set; }
 		
 		[TagDetails(Tag = 743, Type = TagType.LocalDate, Offset = 25, Required = false)]
-		public DateTime? DeliveryDate { get; set; }
+		public DateOnly? DeliveryDate { get; set; }
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 26, Required = false)]
 		public string? Text { get; set; }

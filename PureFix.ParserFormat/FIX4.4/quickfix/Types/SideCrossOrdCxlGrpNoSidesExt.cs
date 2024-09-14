@@ -25,8 +25,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.TradeOriginationDate = view.GetDateTime(229);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeOriginationDate = view.GetDateOnly(229);
+			instance.TradeDate = view.GetDateOnly(75);
 			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
 			{
 				instance.OrderQtyData = new OrderQtyData();

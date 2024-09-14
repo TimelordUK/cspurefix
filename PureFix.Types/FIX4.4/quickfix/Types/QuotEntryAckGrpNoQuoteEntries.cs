@@ -67,13 +67,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? TradingSessionSubID { get; set; }
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 19, Required = false)]
-		public DateTime? SettlDate { get; set; }
+		public DateOnly? SettlDate { get; set; }
 		
 		[TagDetails(Tag = 40, Type = TagType.String, Offset = 20, Required = false)]
 		public string? OrdType { get; set; }
 		
 		[TagDetails(Tag = 193, Type = TagType.LocalDate, Offset = 21, Required = false)]
-		public DateTime? SettlDate2 { get; set; }
+		public DateOnly? SettlDate2 { get; set; }
 		
 		[TagDetails(Tag = 192, Type = TagType.Float, Offset = 22, Required = false)]
 		public double? OrderQty2 { get; set; }

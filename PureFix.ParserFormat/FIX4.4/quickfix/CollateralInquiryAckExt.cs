@@ -60,7 +60,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.FinancingDetails = new FinancingDetails();
 				instance.FinancingDetails!.Parse(groupViewFinancingDetails);
 			}
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			instance.Quantity = view.GetDouble(53);
 			instance.QtyType = view.GetInt32(854);
 			instance.Currency = view.GetString(15);
@@ -78,7 +78,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.TradingSessionSubID = view.GetString(625);
 			instance.SettlSessID = view.GetString(716);
 			instance.SettlSessSubID = view.GetString(717);
-			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.ClearingBusinessDate = view.GetDateOnly(715);
 			instance.ResponseTransportType = view.GetInt32(725);
 			instance.ResponseDestination = view.GetString(726);
 			instance.Text = view.GetString(58);

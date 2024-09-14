@@ -20,10 +20,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		public DateTime? TransactTime { get; set; }
 		
 		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 3, Required = false)]
-		public DateTime? TradeOriginationDate { get; set; }
+		public DateOnly? TradeOriginationDate { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 4, Required = false)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 5, Required = false)]
 		public string? Text { get; set; }

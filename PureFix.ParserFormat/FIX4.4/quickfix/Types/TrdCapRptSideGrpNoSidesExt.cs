@@ -57,7 +57,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			instance.GrossTradeAmt = view.GetDouble(381);
 			instance.NumDaysInterest = view.GetInt32(157);
-			instance.ExDate = view.GetDateTime(230);
+			instance.ExDate = view.GetDateOnly(230);
 			instance.AccruedInterestRate = view.GetDouble(158);
 			instance.AccruedInterestAmt = view.GetDouble(159);
 			instance.InterestAtMaturity = view.GetDouble(738);

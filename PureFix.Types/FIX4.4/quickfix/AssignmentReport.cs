@@ -62,7 +62,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public double? UnderlyingSettlPrice { get; set; }
 		
 		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 17, Required = false)]
-		public DateTime? ExpireDate { get; set; }
+		public DateOnly? ExpireDate { get; set; }
 		
 		[TagDetails(Tag = 744, Type = TagType.String, Offset = 18, Required = true)]
 		public string? AssignmentMethod { get; set; }
@@ -83,7 +83,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SettlSessSubID { get; set; }
 		
 		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 24, Required = true)]
-		public DateTime? ClearingBusinessDate { get; set; }
+		public DateOnly? ClearingBusinessDate { get; set; }
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 25, Required = false)]
 		public string? Text { get; set; }

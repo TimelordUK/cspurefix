@@ -34,7 +34,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.QuoteType = view.GetInt32(537);
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
-			instance.TradeOriginationDate = view.GetDateTime(229);
+			instance.TradeOriginationDate = view.GetDateOnly(229);
 			instance.Side = view.GetString(54);
 			instance.QtyType = view.GetInt32(854);
 			if (view.GetView("OrderQtyData") is MsgView groupViewOrderQtyData)
@@ -43,8 +43,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
 			}
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
-			instance.SettlDate2 = view.GetDateTime(193);
+			instance.SettlDate = view.GetDateOnly(64);
+			instance.SettlDate2 = view.GetDateOnly(193);
 			instance.OrderQty2 = view.GetDouble(192);
 			instance.Currency = view.GetString(15);
 			if (view.GetView("Stipulations") is MsgView groupViewStipulations)

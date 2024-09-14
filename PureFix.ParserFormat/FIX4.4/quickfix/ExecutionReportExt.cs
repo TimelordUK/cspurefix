@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.Parties = new Parties();
 				instance.Parties!.Parse(groupViewParties);
 			}
-			instance.TradeOriginationDate = view.GetDateTime(229);
+			instance.TradeOriginationDate = view.GetDateOnly(229);
 			if (view.GetView("ContraGrp") is MsgView groupViewContraGrp)
 			{
 				instance.ContraGrp = new ContraGrp();
@@ -61,7 +61,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.BookingUnit = view.GetString(590);
 			instance.PreallocMethod = view.GetString(591);
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
+			instance.SettlDate = view.GetDateOnly(64);
 			instance.CashMargin = view.GetString(544);
 			instance.ClearingFeeIndicator = view.GetString(635);
 			if (view.GetView("Instrument") is MsgView groupViewInstrument)
@@ -116,7 +116,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.SolicitedFlag = view.GetBool(377);
 			instance.TimeInForce = view.GetString(59);
 			instance.EffectiveTime = view.GetDateTime(168);
-			instance.ExpireDate = view.GetDateTime(432);
+			instance.ExpireDate = view.GetDateOnly(432);
 			instance.ExpireTime = view.GetDateTime(126);
 			instance.ExecInst = view.GetString(18);
 			instance.OrderCapacity = view.GetString(528);
@@ -141,7 +141,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.DayCumQty = view.GetDouble(425);
 			instance.DayAvgPx = view.GetDouble(426);
 			instance.GTBookingInst = view.GetInt32(427);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.TransactTime = view.GetDateTime(60);
 			instance.ReportToExch = view.GetBool(113);
 			if (view.GetView("CommissionData") is MsgView groupViewCommissionData)
@@ -161,7 +161,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			instance.GrossTradeAmt = view.GetDouble(381);
 			instance.NumDaysInterest = view.GetInt32(157);
-			instance.ExDate = view.GetDateTime(230);
+			instance.ExDate = view.GetDateOnly(230);
 			instance.AccruedInterestRate = view.GetDouble(158);
 			instance.AccruedInterestAmt = view.GetDouble(159);
 			instance.InterestAtMaturity = view.GetDouble(738);
@@ -169,7 +169,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.StartCash = view.GetDouble(921);
 			instance.EndCash = view.GetDouble(922);
 			instance.TradedFlatSwitch = view.GetBool(258);
-			instance.BasisFeatureDate = view.GetDateTime(259);
+			instance.BasisFeatureDate = view.GetDateOnly(259);
 			instance.BasisFeaturePrice = view.GetDouble(260);
 			instance.Concession = view.GetDouble(238);
 			instance.TotalTakedown = view.GetDouble(237);
@@ -187,7 +187,7 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Text = view.GetString(58);
 			instance.EncodedTextLen = view.GetInt32(354);
 			instance.EncodedText = view.GetByteArray(355);
-			instance.SettlDate2 = view.GetDateTime(193);
+			instance.SettlDate2 = view.GetDateOnly(193);
 			instance.OrderQty2 = view.GetDouble(192);
 			instance.LastForwardPoints2 = view.GetDouble(641);
 			instance.MultiLegReportingType = view.GetString(442);

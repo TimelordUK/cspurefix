@@ -58,16 +58,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? CardNumber { get; set; }
 		
 		[TagDetails(Tag = 503, Type = TagType.LocalDate, Offset = 16, Required = false)]
-		public DateTime? CardStartDate { get; set; }
+		public DateOnly? CardStartDate { get; set; }
 		
 		[TagDetails(Tag = 490, Type = TagType.LocalDate, Offset = 17, Required = false)]
-		public DateTime? CardExpDate { get; set; }
+		public DateOnly? CardExpDate { get; set; }
 		
 		[TagDetails(Tag = 491, Type = TagType.String, Offset = 18, Required = false)]
 		public string? CardIssNum { get; set; }
 		
 		[TagDetails(Tag = 504, Type = TagType.LocalDate, Offset = 19, Required = false)]
-		public DateTime? PaymentDate { get; set; }
+		public DateOnly? PaymentDate { get; set; }
 		
 		[TagDetails(Tag = 505, Type = TagType.String, Offset = 20, Required = false)]
 		public string? PaymentRemitterID { get; set; }

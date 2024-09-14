@@ -16,10 +16,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public double? Yield { get; set; }
 		
 		[TagDetails(Tag = 701, Type = TagType.LocalDate, Offset = 2, Required = false)]
-		public DateTime? YieldCalcDate { get; set; }
+		public DateOnly? YieldCalcDate { get; set; }
 		
 		[TagDetails(Tag = 696, Type = TagType.LocalDate, Offset = 3, Required = false)]
-		public DateTime? YieldRedemptionDate { get; set; }
+		public DateOnly? YieldRedemptionDate { get; set; }
 		
 		[TagDetails(Tag = 697, Type = TagType.Float, Offset = 4, Required = false)]
 		public double? YieldRedemptionPrice { get; set; }

@@ -43,7 +43,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? LegSettlType { get; set; }
 		
 		[TagDetails(Tag = 588, Type = TagType.LocalDate, Offset = 11, Required = false)]
-		public DateTime? LegSettlDate { get; set; }
+		public DateOnly? LegSettlDate { get; set; }
 		
 	}
 }

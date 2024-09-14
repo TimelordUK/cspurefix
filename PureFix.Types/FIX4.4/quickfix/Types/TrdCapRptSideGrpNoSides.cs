@@ -103,7 +103,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public int? NumDaysInterest { get; set; }
 		
 		[TagDetails(Tag = 230, Type = TagType.LocalDate, Offset = 31, Required = false)]
-		public DateTime? ExDate { get; set; }
+		public DateOnly? ExDate { get; set; }
 		
 		[TagDetails(Tag = 158, Type = TagType.Float, Offset = 32, Required = false)]
 		public double? AccruedInterestRate { get; set; }

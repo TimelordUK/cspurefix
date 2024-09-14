@@ -33,8 +33,8 @@ namespace PureFix.Types.FIX44.QuickFix
 			instance.Account = view.GetString(1);
 			instance.AcctIDSource = view.GetInt32(660);
 			instance.AccountType = view.GetInt32(581);
-			instance.TradeOriginationDate = view.GetDateTime(229);
-			instance.TradeDate = view.GetDateTime(75);
+			instance.TradeOriginationDate = view.GetDateOnly(229);
+			instance.TradeDate = view.GetDateOnly(75);
 			instance.TransactTime = view.GetDateTime(60);
 			instance.CxlRejResponseTo = view.GetString(434);
 			instance.CxlRejReason = view.GetInt32(102);

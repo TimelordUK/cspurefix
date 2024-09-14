@@ -35,10 +35,10 @@ namespace PureFix.Types.FIX44.QuickFix
 		public Parties? Parties { get; set; }
 		
 		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 8, Required = false)]
-		public DateTime? TradeOriginationDate { get; set; }
+		public DateOnly? TradeOriginationDate { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 9, Required = false)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 10, Required = false)]
 		public string? Account { get; set; }
@@ -68,7 +68,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SettlType { get; set; }
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 19, Required = false)]
-		public DateTime? SettlDate { get; set; }
+		public DateOnly? SettlDate { get; set; }
 		
 		[TagDetails(Tag = 544, Type = TagType.String, Offset = 20, Required = false)]
 		public string? CashMargin { get; set; }
@@ -158,7 +158,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public DateTime? EffectiveTime { get; set; }
 		
 		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 49, Required = false)]
-		public DateTime? ExpireDate { get; set; }
+		public DateOnly? ExpireDate { get; set; }
 		
 		[TagDetails(Tag = 126, Type = TagType.UtcTimestamp, Offset = 50, Required = false)]
 		public DateTime? ExpireTime { get; set; }

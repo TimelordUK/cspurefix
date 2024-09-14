@@ -59,8 +59,8 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.OrderQtyData!.Parse(groupViewOrderQtyData);
 			}
 			instance.SettlType = view.GetString(63);
-			instance.SettlDate = view.GetDateTime(64);
-			instance.SettlDate2 = view.GetDateTime(193);
+			instance.SettlDate = view.GetDateOnly(64);
+			instance.SettlDate2 = view.GetDateOnly(193);
 			instance.OrderQty2 = view.GetDouble(192);
 			instance.Currency = view.GetString(15);
 			if (view.GetView("Stipulations") is MsgView groupViewStipulations)

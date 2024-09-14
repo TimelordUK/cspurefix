@@ -28,10 +28,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.SecurityType = view.GetString(167);
 			instance.SecuritySubType = view.GetString(762);
 			instance.MaturityMonthYear = view.GetString(200);
-			instance.MaturityDate = view.GetDateTime(541);
+			instance.MaturityDate = view.GetDateOnly(541);
 			instance.PutOrCall = view.GetInt32(201);
-			instance.CouponPaymentDate = view.GetDateTime(224);
-			instance.IssueDate = view.GetDateTime(225);
+			instance.CouponPaymentDate = view.GetDateOnly(224);
+			instance.IssueDate = view.GetDateOnly(225);
 			instance.RepoCollateralSecurityType = view.GetString(239);
 			instance.RepurchaseTerm = view.GetInt32(226);
 			instance.RepurchaseRate = view.GetDouble(227);
@@ -41,7 +41,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			instance.CountryOfIssue = view.GetString(470);
 			instance.StateOrProvinceOfIssue = view.GetString(471);
 			instance.LocaleOfIssue = view.GetString(472);
-			instance.RedemptionDate = view.GetDateTime(240);
+			instance.RedemptionDate = view.GetDateOnly(240);
 			instance.StrikePrice = view.GetDouble(202);
 			instance.StrikeCurrency = view.GetString(947);
 			instance.OptAttribute = view.GetString(206);
@@ -63,8 +63,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				instance.EvntGrp = new EvntGrp();
 				instance.EvntGrp!.Parse(groupViewEvntGrp);
 			}
-			instance.DatedDate = view.GetDateTime(873);
-			instance.InterestAccrualDate = view.GetDateTime(874);
+			instance.DatedDate = view.GetDateOnly(873);
+			instance.InterestAccrualDate = view.GetDateOnly(874);
 		}
 	}
 }

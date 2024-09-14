@@ -47,7 +47,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? Currency { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 12, Required = false)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 13, Required = false)]
 		public DateTime? TransactTime { get; set; }

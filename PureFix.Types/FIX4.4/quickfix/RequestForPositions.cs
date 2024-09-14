@@ -50,7 +50,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
 		
 		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 13, Required = true)]
-		public DateTime? ClearingBusinessDate { get; set; }
+		public DateOnly? ClearingBusinessDate { get; set; }
 		
 		[TagDetails(Tag = 716, Type = TagType.String, Offset = 14, Required = false)]
 		public string? SettlSessID { get; set; }

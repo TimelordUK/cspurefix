@@ -71,7 +71,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				instance.TrdCapDtGrp = new TrdCapDtGrp();
 				instance.TrdCapDtGrp!.Parse(groupViewTrdCapDtGrp);
 			}
-			instance.ClearingBusinessDate = view.GetDateTime(715);
+			instance.ClearingBusinessDate = view.GetDateOnly(715);
 			instance.TradingSessionID = view.GetString(336);
 			instance.TradingSessionSubID = view.GetString(625);
 			instance.TimeBracket = view.GetString(943);

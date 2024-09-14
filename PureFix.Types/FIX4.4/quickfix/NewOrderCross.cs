@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SettlType { get; set; }
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 9, Required = false)]
-		public DateTime? SettlDate { get; set; }
+		public DateOnly? SettlDate { get; set; }
 		
 		[TagDetails(Tag = 21, Type = TagType.String, Offset = 10, Required = false)]
 		public string? HandlInst { get; set; }
@@ -110,7 +110,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public DateTime? EffectiveTime { get; set; }
 		
 		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 33, Required = false)]
-		public DateTime? ExpireDate { get; set; }
+		public DateOnly? ExpireDate { get; set; }
 		
 		[TagDetails(Tag = 126, Type = TagType.UtcTimestamp, Offset = 34, Required = false)]
 		public DateTime? ExpireTime { get; set; }

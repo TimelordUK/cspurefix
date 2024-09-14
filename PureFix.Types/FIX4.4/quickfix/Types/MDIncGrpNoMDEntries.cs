@@ -49,7 +49,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public double? MDEntrySize { get; set; }
 		
 		[TagDetails(Tag = 272, Type = TagType.UtcDateOnly, Offset = 13, Required = false)]
-		public DateTime? MDEntryDate { get; set; }
+		public DateOnly? MDEntryDate { get; set; }
 		
 		[TagDetails(Tag = 273, Type = TagType.UtcTimeOnly, Offset = 14, Required = false)]
 		public DateTime? MDEntryTime { get; set; }
@@ -88,7 +88,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public string? TimeInForce { get; set; }
 		
 		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 26, Required = false)]
-		public DateTime? ExpireDate { get; set; }
+		public DateOnly? ExpireDate { get; set; }
 		
 		[TagDetails(Tag = 126, Type = TagType.UtcTimestamp, Offset = 27, Required = false)]
 		public DateTime? ExpireTime { get; set; }

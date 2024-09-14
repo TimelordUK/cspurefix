@@ -83,7 +83,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public TrdCapDtGrp? TrdCapDtGrp { get; set; }
 		
 		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 24, Required = false)]
-		public DateTime? ClearingBusinessDate { get; set; }
+		public DateOnly? ClearingBusinessDate { get; set; }
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 25, Required = false)]
 		public string? TradingSessionID { get; set; }

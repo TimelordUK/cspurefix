@@ -17,7 +17,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? ConfirmID { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 2, Required = true)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 3, Required = true)]
 		public DateTime? TransactTime { get; set; }

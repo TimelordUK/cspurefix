@@ -13,7 +13,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public int? EventType { get; set; }
 		
 		[TagDetails(Tag = 866, Type = TagType.LocalDate, Offset = 1, Required = false)]
-		public DateTime? EventDate { get; set; }
+		public DateOnly? EventDate { get; set; }
 		
 		[TagDetails(Tag = 867, Type = TagType.Float, Offset = 2, Required = false)]
 		public double? EventPx { get; set; }

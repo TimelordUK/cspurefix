@@ -101,7 +101,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? LastMkt { get; set; }
 		
 		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 30, Required = false)]
-		public DateTime? TradeOriginationDate { get; set; }
+		public DateOnly? TradeOriginationDate { get; set; }
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 31, Required = false)]
 		public string? TradingSessionID { get; set; }
@@ -131,7 +131,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public Parties? Parties { get; set; }
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 40, Required = true)]
-		public DateTime? TradeDate { get; set; }
+		public DateOnly? TradeDate { get; set; }
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 41, Required = false)]
 		public DateTime? TransactTime { get; set; }
@@ -140,7 +140,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		public string? SettlType { get; set; }
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 43, Required = false)]
-		public DateTime? SettlDate { get; set; }
+		public DateOnly? SettlDate { get; set; }
 		
 		[TagDetails(Tag = 775, Type = TagType.Int, Offset = 44, Required = false)]
 		public int? BookingType { get; set; }

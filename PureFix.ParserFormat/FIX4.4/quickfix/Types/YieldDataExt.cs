@@ -16,8 +16,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			
 			instance.YieldType = view.GetString(235);
 			instance.Yield = view.GetDouble(236);
-			instance.YieldCalcDate = view.GetDateTime(701);
-			instance.YieldRedemptionDate = view.GetDateTime(696);
+			instance.YieldCalcDate = view.GetDateOnly(701);
+			instance.YieldRedemptionDate = view.GetDateOnly(696);
 			instance.YieldRedemptionPrice = view.GetDouble(697);
 			instance.YieldRedemptionPriceType = view.GetInt32(698);
 		}
