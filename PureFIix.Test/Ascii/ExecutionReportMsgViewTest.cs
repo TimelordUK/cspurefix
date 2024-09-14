@@ -783,6 +783,53 @@ namespace PureFIix.Test.Ascii
 
 
         [Test]
+        public void InstrmtLeg_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var instrumentLeg = structure?.GetInstances("InstrumentLeg");
+            Assert.That(instrumentLeg, Is.Not.Null);
+            Assert.That(instrumentLeg, Has.Count.EqualTo(3));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(instrumentLeg[0], Is.Not.Null);
+                Assert.That(instrumentLeg[0].Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(instrumentLeg[0].Depth, Is.EqualTo(3));
+                Assert.That(instrumentLeg[0].StartTag, Is.EqualTo(600));
+                Assert.That(instrumentLeg[0].StartPosition, Is.EqualTo(396));
+                Assert.That(instrumentLeg[0].EndPosition, Is.EqualTo(443));
+                Assert.That(instrumentLeg[0].EndTag, Is.EqualTo(956));
+            });
+
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(instrumentLeg[1], Is.Not.Null);
+                Assert.That(instrumentLeg[1].Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(instrumentLeg[1].Depth, Is.EqualTo(3));
+                Assert.That(instrumentLeg[1].StartTag, Is.EqualTo(600));
+                Assert.That(instrumentLeg[1].StartPosition, Is.EqualTo(465));
+                Assert.That(instrumentLeg[1].EndPosition, Is.EqualTo(512));
+                Assert.That(instrumentLeg[1].EndTag, Is.EqualTo(956));
+            });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(instrumentLeg[2], Is.Not.Null);
+                Assert.That(instrumentLeg[2].Type, Is.EqualTo(SegmentType.Component));
+                Assert.That(instrumentLeg[2].Depth, Is.EqualTo(3));
+                Assert.That(instrumentLeg[2].StartTag, Is.EqualTo(600));
+                Assert.That(instrumentLeg[2].StartPosition, Is.EqualTo(554));
+                Assert.That(instrumentLeg[2].EndPosition, Is.EqualTo(601));
+                Assert.That(instrumentLeg[2].EndTag, Is.EqualTo(956));
+            });
+        }
+
+
+
+        [Test]
         public void View_To_Execution_Report_Test()
         {
             Assert.That(_views, Is.Not.Null);
