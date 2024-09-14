@@ -11,7 +11,7 @@ using PureFix.Buffer.Segment;
 using PureFix.Types.FIX44.QuickFix.Types;
 using PureFix.Dictionary.Contained;
 using System.Text.Json;
-
+using DIs = NUnit.DeepObjectCompare.Is;
 namespace PureFIix.Test.Ascii
 {
 
@@ -992,6 +992,52 @@ namespace PureFIix.Test.Ascii
             {
                 Assert.That(erView.GetStrings("PartyID"), Is.EqualTo((string[]) ["magna.", "iaculis", "vitae,"]));
             });
+        }
+
+        [Test]
+        public void View_Parse_Parties_To_Type_Test()
+        {
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var erView = _views[0];
+            Assert.That(erView, Is.Not.Null);
+            var partyView = erView.GetView("Parties");
+            Assert.That(partyView, Is.Not.Null);
+            var parties = new Parties();
+            parties.Parse(partyView);
+            JsonSerializerOptions options = new()
+            {
+                WriteIndented = true
+            };
+            Assert.That(parties.NoPartyIDs, Is.Not.Null);
+            var json = JsonSerializer.Serialize(parties.NoPartyIDs[0], options);
+            var expected = """
+                           {
+                             "partyID": "magna.",
+                             "partyIDSource": "9",
+                             "partyRole": 28,
+                             "ptysSubGrp": {
+                               "noPartySubIDs": [
+                                 {
+                                   "partySubID": "et",
+                                   "partySubIDType": 22
+                                 },
+                                 {
+                                   "partySubID": "leo,",
+                                   "partySubIDType": 10
+                                 }
+                               ]
+                             }
+                           }
+                           """;
+
+            JsonSerializerOptions options2 = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var instance = JsonSerializer.Deserialize<PartiesNoPartyIDs>(expected, options2);
+            Assert.That(parties.NoPartyIDs[0], DIs.DeepEqualTo(instance));
+            
         }
     }
 }
