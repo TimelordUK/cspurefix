@@ -433,6 +433,47 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+        /*
+[636] 136 (NoMiscFees) = 2, [637] 137 (MiscFeeAmt) = 56059
+[638] 138 (MiscFeeCurr) = 92115, [639] 139 (MiscFeeType) = 7[OTHER]
+[640] 891 (MiscFeeBasis) = [undefined], [641] 137 (MiscFeeAmt) = 93185
+[642] 138 (MiscFeeCurr) = 72195, [643] 139 (MiscFeeType) = 12[AGENT]
+[644] 891 (MiscFeeBasis) = [undefined], [645] 10 (CheckSum) = 59
+ */
+
+        [Test]
+        public void MiscFeesGrp_Structure_Test()
+        {
+            var structure = _views[0].Structure;
+            var msg = structure?.Msg();
+            Assert.That(msg, Is.Not.Null);
+            var contAmtGrp = structure?.GetInstance("MiscFeesGrp");
+            Assert.Multiple(() =>
+            {
+                Assert.That(contAmtGrp, Is.Not.Null);
+                Assert.That(contAmtGrp.StartPosition, Is.EqualTo(636));
+                Assert.That(contAmtGrp.StartTag, Is.EqualTo(136));
+                Assert.That(contAmtGrp.EndPosition, Is.EqualTo(644));
+                Assert.That(contAmtGrp.Depth, Is.EqualTo(1));
+                Assert.That(contAmtGrp.EndTag, Is.EqualTo(891));
+                Assert.That(contAmtGrp.Type, Is.EqualTo(SegmentType.Component));
+            });
+
+            var noContAmts = structure?.GetInstance("NoMiscFees");
+            Assert.Multiple(() =>
+            {
+                Assert.That(noContAmts, Is.Not.Null);
+                Assert.That(noContAmts.StartPosition, Is.EqualTo(636));
+                Assert.That(noContAmts.StartTag, Is.EqualTo(136));
+                Assert.That(noContAmts.EndPosition, Is.EqualTo(644));
+                Assert.That(noContAmts.Depth, Is.EqualTo(2));
+                Assert.That(noContAmts.EndTag, Is.EqualTo(891));
+                Assert.That(noContAmts.DelimiterTag, Is.EqualTo(137));
+                Assert.That(noContAmts.DelimiterPositions, Is.EqualTo(new List<int> { 637, 641 }));
+                Assert.That(noContAmts.Type, Is.EqualTo(SegmentType.Group));
+            });
+        }
+
 
         [Test]
         public void View_To_Execution_Report_Test()
