@@ -9,12 +9,11 @@ using PureFix.Types;
 
 namespace PureFix.Buffer.Ascii
 {
-    public record struct Structure 
+    public readonly record struct Structure 
     {
-        private Dictionary<string, SegmentDescription>? _singletons;
-        // do not create unless needed
-        private Dictionary<string, List<SegmentDescription>>? _arrays;
-        public IReadOnlyList<SegmentDescription> Segments { get; }
+        private readonly Dictionary<string, SegmentDescription>? _singletons;
+        private readonly Dictionary<string, List<SegmentDescription>>? _arrays;
+        public readonly IReadOnlyList<SegmentDescription> Segments { get; }
 
         public Tags Tags { get; }
 
@@ -22,22 +21,22 @@ namespace PureFix.Buffer.Ascii
         {
             Tags = tags;
             Segments = segments;
-            BoundLayout();
+            (_singletons, _arrays) = BoundLayout(Segments);
         }
 
-        public readonly IReadOnlyList<SegmentDescription>? GetInstances(string name)
+        public IReadOnlyList<SegmentDescription>? GetInstances(string name)
         {
             return _arrays?.GetValueOrDefault(name);
         }
 
-        public readonly SegmentDescription? GetInstance(string name)
+        public SegmentDescription? GetInstance(string name)
         {
             return _singletons?.GetValueOrDefault(name);
         }
 
-        public readonly SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
+        public SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
 
-        public readonly SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
+        public SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
         {
             if (_singletons == null)
             {
@@ -77,22 +76,30 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
-        private void AddToGroup(SegmentDescription current)
+        private static Dictionary<string, List<SegmentDescription>>? AddToGroup(Dictionary<string, List<SegmentDescription>>? arrays, SegmentDescription current)
         {
-            if (current.Name == null) return;
-            _arrays ??= [];
-            if (!_arrays.TryGetValue(current.Name, out var instances))
+            if (current.Name == null) return arrays;
+            
+            arrays ??= [];
+            
+            if (!arrays.TryGetValue(current.Name, out var instances))
             {
-                _arrays[current.Name] = instances = [];
+                arrays[current.Name] = instances = [];
             }
+
             instances.Add(current);
+
+            return arrays;
         }
 
-        private void BoundLayout(SegmentDescription? segment = null)
+        private static (Dictionary<string, SegmentDescription>? Singletons, Dictionary<string, List<SegmentDescription>>? Arrays) BoundLayout(IReadOnlyList<SegmentDescription> segments, SegmentDescription? segment = null)
         {
-            for (var i = 0; i < Segments.Count; i++)
+            Dictionary<string, SegmentDescription>? singletons = null;
+            Dictionary<string, List<SegmentDescription>>? arrays = null;
+
+            for (var i = 0; i < segments.Count; i++)
             {
-                var current = Segments[i];
+                var current = segments[i];
 
                 if (current.Name == null) continue;
                 if (segment != null && !segment.Contains(current)) continue;
@@ -102,22 +109,25 @@ namespace PureFix.Buffer.Ascii
                     case SegmentType.Component:
                     case SegmentType.Msg:
                     case SegmentType.Batch:
-                        _singletons ??= [];
-                        if (_arrays != null && _arrays.ContainsKey(current.Name) )
+                        singletons ??= [];
+                        if (arrays != null && arrays.ContainsKey(current.Name) )
                         {
                             // this is a component but repeated within a group and we need to store all instances
-                            AddToGroup(current);
-                        } else if (_singletons.Remove(current.Name, out var single)) {
-                            AddToGroup(single);
-                            AddToGroup(current);
+                            arrays = AddToGroup(arrays, current);
+                        } 
+                        else if (singletons.Remove(current.Name, out var single)) {
+                            arrays = AddToGroup(arrays, single);
+                            arrays = AddToGroup(arrays, current);
                         }
                         else
                         {
-                            _singletons[current.Name] = current;
+                            singletons[current.Name] = current;
                         }
                         break;
                 }
             }
+
+            return (singletons, arrays);
         }
     }
 }
