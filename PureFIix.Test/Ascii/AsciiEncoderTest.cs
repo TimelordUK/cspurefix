@@ -26,11 +26,8 @@ namespace PureFIix.Test.Ascii
             _testEntity.Prepare();
         }
 
-        [Test]
-        public void Encode_Instument_Test()
+        private NewOrderSingle MakeOrder()
         {
-            var def = _testEntity.Definitions.Message.GetValueOrDefault("NewOrderSingle");
-            Assert.That(def, Is.Not.Null);
             var msg = new NewOrderSingle
             {
                 StandardHeader = new StandardHeader
@@ -54,6 +51,15 @@ namespace PureFIix.Test.Ascii
                 Price = 49.38,
                 TimeInForce = TimeInForceValues.Day
             };
+            return msg;
+        }
+
+        [Test]
+        public void Encode_Instument_Test()
+        {
+            var def = _testEntity.Definitions.Message.GetValueOrDefault("NewOrderSingle");
+            Assert.That(def, Is.Not.Null);
+            var msg = MakeOrder();
             var formatter = new AsciiEncoder(_testEntity.Definitions);
             var res = formatter.Encode(msg);
         }

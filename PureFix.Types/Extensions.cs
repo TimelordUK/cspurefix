@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFix.Buffer
+namespace PureFix.Types
 {
     public static class Extensions
     {

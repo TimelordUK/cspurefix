@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class Instrument
+	public sealed partial class Instrument : IFixEncoder
 	{
 		[TagDetails(Tag = 55, Type = TagType.String, Offset = 0, Required = false)]
 		public string? Symbol { get; set; }

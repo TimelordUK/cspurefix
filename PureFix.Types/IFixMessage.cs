@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace PureFix.Types
 {
+    public interface IFixEncoder
+    {
+        public void Encode(ElasticBuffer storage, Tags tags, byte delimiter) { }
+    }
+
     /// <summary>
     /// Defines a generic fix message which is common across all versions
     /// </summary>
-    public interface IFixMessage
+    public interface IFixMessage : IFixEncoder
     {
         /// <summary>
         /// Returns the generic standard header

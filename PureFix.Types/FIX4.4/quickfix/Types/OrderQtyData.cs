@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class OrderQtyData
+	public sealed partial class OrderQtyData : IFixEncoder
 	{
 		[TagDetails(Tag = 38, Type = TagType.Float, Offset = 0, Required = false)]
 		public double? OrderQty { get; set; }

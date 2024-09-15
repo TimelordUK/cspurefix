@@ -10,15 +10,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using PureFix.Buffer.Ascii;
 using PureFix.Types;
-
-namespace PureFix.Buffer
+namespace PureFix.Types
 {
     public partial class ElasticBuffer
     {
         private const byte AsciiZero = (byte)'0';
         private const byte AsciiNine = (byte)'9';
+        private const byte AsciiY = (byte)'Y';
+        private const byte AsciiN = (byte)'N';
 
         private static readonly ArrayPool<byte> _pool = ArrayPool<byte>.Create(128 * 1024, 50);
 
@@ -101,7 +101,7 @@ namespace PureFix.Buffer
 
         public int WriteBoolean(bool v)
         {
-            WriteChar(v ? AsciiChars.Y : AsciiChars.N);
+            WriteChar(v ? AsciiY : AsciiN);
             return Pos;
         }
 
@@ -346,7 +346,7 @@ namespace PureFix.Buffer
 
         public bool GetBoolean(int start)
         {
-            return _buffer[start] == AsciiChars.Y;
+            return _buffer[start] == AsciiY;
         }
 
         public ElasticBuffer Clone()

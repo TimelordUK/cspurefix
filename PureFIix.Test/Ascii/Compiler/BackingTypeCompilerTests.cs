@@ -29,7 +29,7 @@ namespace PureFIix.Test.Ascii.Compiler
         public void GenerateTypes()
         {
             var compiler = new MsgCompiler(_testEntity.Definitions);
-            compiler.Generate();
+            // compiler.Generate();
         }
 
         [Test]

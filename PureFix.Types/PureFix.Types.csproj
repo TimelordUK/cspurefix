@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="FIX4.4\quickfix\Types\" />
-  </ItemGroup>
-
 </Project>
