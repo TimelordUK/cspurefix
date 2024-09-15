@@ -17,9 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.Types", "PureFix.Ty
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.Transport", "PureFix.Transport\PureFix.Transport.csproj", "{31FC87E6-1255-4624-837A-D01484E48105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Tag", "PureFix.Tag\PureFix.Tag.csproj", "{C031FD86-CE4B-4D51-A145-7B1B5FECF2E7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.ParserFormat", "PureFix.ParserFormat\PureFix.ParserFormat.csproj", "{E0FBB392-BA52-4760-84C4-195170E32988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.ParserFormat", "PureFix.ParserFormat\PureFix.ParserFormat.csproj", "{E0FBB392-BA52-4760-84C4-195170E32988}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.Benchmarks", "PureFix.Benchmarks\PureFix.Benchmarks.csproj", "{DE6BF0E3-D857-4490-937A-5994B356913E}"
 EndProject
@@ -57,10 +55,6 @@ Global
 		{31FC87E6-1255-4624-837A-D01484E48105}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31FC87E6-1255-4624-837A-D01484E48105}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31FC87E6-1255-4624-837A-D01484E48105}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C031FD86-CE4B-4D51-A145-7B1B5FECF2E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C031FD86-CE4B-4D51-A145-7B1B5FECF2E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C031FD86-CE4B-4D51-A145-7B1B5FECF2E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C031FD86-CE4B-4D51-A145-7B1B5FECF2E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E0FBB392-BA52-4760-84C4-195170E32988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E0FBB392-BA52-4760-84C4-195170E32988}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0FBB392-BA52-4760-84C4-195170E32988}.Release|Any CPU.ActiveCfg = Release|Any CPU
