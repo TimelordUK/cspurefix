@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace PureFix.Types
@@ -19,7 +20,8 @@ namespace PureFix.Types
     ///     
     ///     Where WW is w1, w2, w3, d4 or w5
     /// </summary>
-    public readonly struct MonthYear
+    [JsonConverter(typeof(Converters.MonthYearJsonConverter))]
+    public readonly struct MonthYear : IEquatable<MonthYear>
     {
         private const byte AsciiZero = (byte)'0';
         private const byte AsciiNine = (byte)'9';
@@ -160,13 +162,7 @@ namespace PureFix.Types
         /// <returns>true if the instance contains a day of the month, otherwise false</returns>
         public bool TryGetDayOfMonth(out int dayOfMonth)
         {
-            if(this.Length != 8)
-            {
-                dayOfMonth = 0;
-                return false;
-            }
-
-            if(m_Data[6] == WeekByte)
+            if(m_Data[6] == 0 || m_Data[6] == WeekByte)
             {
                 dayOfMonth = 0;
                 return false;
@@ -177,27 +173,37 @@ namespace PureFix.Types
         }
 
         /// <summary>
+        /// Returns true if the value contains a day of the month, otherwise false
+        /// </summary>
+        public bool HasDayOfMonth
+        {
+            get{return m_Data[6] != 0 && m_Data[6] != WeekByte;}
+        }
+
+        /// <summary>
         /// Attempts to get the week code if it is part of the value
         /// </summary>
         /// <param name="weekCode"></param>
         /// <returns>true if the instance contains a week code, otherwise false</returns>
         public bool TryGetWeekCode(out WeekCode weekCode)
         {
-            if(this.Length != 8)
+            if(m_Data[6] == WeekByte)
             {
-                weekCode = WeekCode.None;
-                return false;
+                var index = IntAt(7);
+                weekCode = (WeekCode)index;
+                return true;
             }
+                
+            weekCode = WeekCode.None;
+            return false;
+        }
 
-            if(m_Data[6] != WeekByte)
-            {
-                weekCode = WeekCode.None;
-                return false;
-            }
-
-            var index = IntAt(7);
-            weekCode = (WeekCode)index;
-            return true;
+        /// <summary>
+        /// Returns true if the value contains a week code, otherwise false
+        /// </summary>
+        public bool HasWeekCode
+        {
+            get{return m_Data[6] == WeekByte;}
         }
 
         /// <summary>
@@ -235,7 +241,7 @@ namespace PureFix.Types
         /// Returns the MonthYear as a FIX encoded string
         /// </summary>
         /// <returns></returns>
-        public string AsString()
+        public string AsFixString()
         {
             // We can creates the integer directly into the string buffer
             return string.Create(this.Length, this, static (span, state) =>
@@ -250,9 +256,27 @@ namespace PureFix.Types
         }
 
         /// <inheritdoc/>
+        public bool Equals(MonthYear other)
+        {
+            return BitConverter.ToUInt64(m_Data) == BitConverter.ToUInt64(other.m_Data);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals([NotNullWhen(true)] object? obj)
+        {
+            return obj is MonthYear rhs && Equals(rhs);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return BitConverter.ToUInt64(m_Data).GetHashCode();
+        }
+
+        /// <inheritdoc/>
         public override string ToString()
         {
-            return this.IsValid ? AsString() : "";
+            return this.IsValid ? AsFixString() : "";
         }
 
         private int IntAt(int index)
@@ -304,6 +328,13 @@ namespace PureFix.Types
             return false;
         }
 
+        public static MonthYear Parse(string value)
+        {
+            if(TryParse(value, out var monthYear)) return monthYear;
+
+            throw new FormatException("value not in the correct format");
+        }
+
         private static bool IsValidEncoding(scoped ReadOnlySpan<byte> buffer)
         {
             if(buffer.Length == 6 || buffer.Length == 8)
@@ -341,6 +372,28 @@ namespace PureFix.Types
             }
 
             return false;
+        }        
+
+        /// <summary>
+        /// Compares two instances for equality
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator==(MonthYear lhs, MonthYear rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        /// <summary>
+        /// /// Compares two instances for inequality
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator!=(MonthYear lhs, MonthYear rhs)
+        {
+            return !lhs.Equals(rhs);
         }
 
         /// <summary>
