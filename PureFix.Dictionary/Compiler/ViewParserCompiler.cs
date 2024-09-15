@@ -163,46 +163,8 @@ namespace PureFix.Dictionary.Compiler
         // instance.TestReqID = view?.GetString(112);
         public void OnSimple(ContainedSimpleField sf, int index, object? peek)
         {
-            switch (sf.Definition.TagType)
-            {
-                case TagType.Boolean:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetBool({sf.Definition.Tag});");
-                    break;
-
-                case TagType.Length:
-                case TagType.Int:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetInt32({sf.Definition.Tag});");
-                    break;
-
-                case TagType.Float:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetDouble({sf.Definition.Tag});");
-                    break;
-
-                case TagType.RawData:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetByteArray({sf.Definition.Tag});");
-                    break;
-
-                case TagType.LocalDate:
-                case TagType.UtcDateOnly:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetDateOnly({sf.Definition.Tag});");
-                    break;
-
-                case TagType.UtcTimeOnly:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetTimeOnly({sf.Definition.Tag});");
-                    break;
-
-                case TagType.UtcTimestamp:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetDateTime({sf.Definition.Tag});");
-                    break;
-
-                case TagType.MonthYear:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetMonthYear({sf.Definition.Tag});");
-                    break;
-
-                default:
-                    _builder.WriteLine($"instance.{sf.Name} = view.GetString({sf.Definition.Tag});");
-                    break;
-            }
+            var metaData = TagManager.GetTagMetaData(sf.Definition.TagType);
+            _builder.WriteLine($"instance.{sf.Name} = view.{metaData.Getter}({sf.Definition.Tag});");
         }
 
         // assume that the component has its own parser so just give it the view contained within parent view.
