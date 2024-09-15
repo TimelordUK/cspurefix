@@ -56,6 +56,11 @@ namespace PureFix.Types
             return GetTimeOnly(st, vend, DateTimeStyles.None);
         }
 
+        public int WriteTimeOnly(TimeOnly timeOnly)
+        {
+            return WriteFormat(timeOnly, TimeFormats.TimeMs);
+        }
+
         public int WriteUtcTimeOnly(DateTime dateTime)
         {
             return WriteLocalTimeOnly(dateTime.ToUniversalTime());
@@ -111,6 +116,15 @@ namespace PureFix.Types
             CheckGrowBuffer(format.Length);
             var span = _buffer.AsSpan()[Pos..format.Length];
             dateTime.TryFormat(span, out var written, format);
+            Pos += written;
+            return Pos;
+        }
+
+        private int WriteFormat(TimeOnly timeOnly, string format)
+        {
+            CheckGrowBuffer(format.Length);
+            var span = _buffer.AsSpan()[Pos..format.Length];
+            timeOnly.TryFormat(span, out var written, format);
             Pos += written;
             return Pos;
         }

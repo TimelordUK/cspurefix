@@ -12,5 +12,6 @@ namespace PureFix.Types
         public required Type Type{get; init;}
         public required string TypeName{get; init;}
         public required string Getter{get; init;}
+        public required string Writer{get; init;}
     }
 }

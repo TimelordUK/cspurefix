@@ -11,17 +11,17 @@ namespace PureFix.Types
         {
             s_TagTypeToMetaData = new Dictionary<TagType, TagMetaData>()
             {
-                {TagType.String, new TagMetaData{TagType = TagType.String, Type = typeof(string), TypeName = "string", Getter = "GetString"}},
-                {TagType.Int, new TagMetaData{TagType = TagType.Int, Type = typeof(int), TypeName = "int", Getter = "GetInt32"}},
-                {TagType.Float, new TagMetaData{TagType = TagType.Float, Type = typeof(double), TypeName = "double", Getter = "GetDouble"}},
-                {TagType.Boolean, new TagMetaData{TagType = TagType.Boolean, Type = typeof(bool), TypeName = "bool", Getter = "GetBool"}},
-                {TagType.UtcTimestamp, new TagMetaData{TagType = TagType.UtcTimestamp, Type = typeof(DateTime), TypeName = "DateTime", Getter = "GetDateTime"}},
-                {TagType.UtcDateOnly, new TagMetaData{TagType = TagType.UtcDateOnly, Type = typeof(DateOnly), TypeName = "DateOnly", Getter = "GetDateOnly"}},
-                {TagType.UtcTimeOnly, new TagMetaData{TagType = TagType.UtcTimeOnly, Type = typeof(TimeOnly), TypeName = "TimeOnly", Getter = "GetTimeOnly"}},
-                {TagType.LocalDate, new TagMetaData{TagType = TagType.LocalDate, Type = typeof(DateOnly), TypeName = "DateOnly", Getter = "GetDateOnly"}},
-                {TagType.RawData, new TagMetaData{TagType = TagType.RawData, Type = typeof(byte[]), TypeName = "byte[]", Getter = "GetByteArray"}},
-                {TagType.Length, new TagMetaData{TagType = TagType.Length, Type = typeof(int), TypeName = "int", Getter = "GetInt32"}},
-                {TagType.MonthYear, new TagMetaData{TagType = TagType.MonthYear, Type = typeof(MonthYear), TypeName = "MonthYear", Getter = "GetMonthYear"}},
+                {TagType.String, new TagMetaData{TagType = TagType.String, Type = typeof(string), TypeName = "string", Getter = "GetString", Writer = "WriteString"}},
+                {TagType.Int, new TagMetaData{TagType = TagType.Int, Type = typeof(int), TypeName = "int", Getter = "GetInt32", Writer = "WriteWholeNumber"}},
+                {TagType.Float, new TagMetaData{TagType = TagType.Float, Type = typeof(double), TypeName = "double", Getter = "GetDouble", Writer = "WriteNumber"}},
+                {TagType.Boolean, new TagMetaData{TagType = TagType.Boolean, Type = typeof(bool), TypeName = "bool", Getter = "GetBool", Writer = "WriteBoolean"}},
+                {TagType.UtcTimestamp, new TagMetaData{TagType = TagType.UtcTimestamp, Type = typeof(DateTime), TypeName = "DateTime", Getter = "GetDateTime", Writer = "WriteUtcTimeStamp"}},
+                {TagType.UtcDateOnly, new TagMetaData{TagType = TagType.UtcDateOnly, Type = typeof(DateOnly), TypeName = "DateOnly", Getter = "GetDateOnly", Writer = "WriteUtcDateOnly"}},
+                {TagType.UtcTimeOnly, new TagMetaData{TagType = TagType.UtcTimeOnly, Type = typeof(TimeOnly), TypeName = "TimeOnly", Getter = "GetTimeOnly", Writer = "WriteTimeOnly"}},
+                {TagType.LocalDate, new TagMetaData{TagType = TagType.LocalDate, Type = typeof(DateOnly), TypeName = "DateOnly", Getter = "GetDateOnly", Writer = "WriteLocalDateOnly"}},
+                {TagType.RawData, new TagMetaData{TagType = TagType.RawData, Type = typeof(byte[]), TypeName = "byte[]", Getter = "GetByteArray", Writer = "WriteBuffer"}},
+                {TagType.Length, new TagMetaData{TagType = TagType.Length, Type = typeof(int), TypeName = "int", Getter = "GetInt32", Writer = "WriteWholeNumber"}},
+                {TagType.MonthYear, new TagMetaData{TagType = TagType.MonthYear, Type = typeof(MonthYear), TypeName = "MonthYear", Getter = "GetMonthYear", Writer = "WriteMonthYear"}},
             }.ToFrozenDictionary();
 
 
