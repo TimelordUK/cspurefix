@@ -106,7 +106,8 @@ namespace PureFix.Dictionary.Compiler
         {
             if (cf.Definition == null) return;
             var extended = _currentCompilerType?.GetExtended(cf) ?? cf.Name;
-
+            if (cf.Name == "StandardHeader") return;
+            if (cf.Name == "StandardTrailer") return;
             Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, extended));
             //    ((IFixEncoder)Instrument!)?.Encode(storage, tags, delimiter);
             _builder.WriteLine($"((IFixEncoder){extended}!)?.Encode(storage, tags, delimiter);");

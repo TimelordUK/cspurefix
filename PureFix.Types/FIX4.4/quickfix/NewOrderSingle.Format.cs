@@ -12,7 +12,6 @@ namespace PureFix.Types.FIX44.QuickFix
 		void IFixEncoder.Encode(ElasticBuffer storage, Tags tags, byte delimiter)
 		{
 			
-			((IFixEncoder)StandardHeader!)?.Encode(storage, tags, delimiter);
 			if (ClOrdID != null)
 			{
 				var at = storage.Pos;
@@ -593,7 +592,6 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 494);
 			}
-			((IFixEncoder)StandardTrailer!)?.Encode(storage, tags, delimiter);
 		}
 	}
 }
