@@ -48,6 +48,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 305);
 			}
+			((IFixEncoder)UndSecAltIDGrp!)?.Encode(storage, tags, delimiter);
 			if (UnderlyingProduct != null)
 			{
 				var at = storage.Pos;
@@ -417,6 +418,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 886);
 			}
+			((IFixEncoder)UnderlyingStipulations!)?.Encode(storage, tags, delimiter);
 		}
 	}
 }

@@ -48,6 +48,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 467);
 			}
+			((IFixEncoder)NestedParties!)?.Encode(storage, tags, delimiter);
 			if (AllocQty != null)
 			{
 				var at = storage.Pos;

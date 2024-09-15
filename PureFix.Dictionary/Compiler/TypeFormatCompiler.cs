@@ -108,6 +108,8 @@ namespace PureFix.Dictionary.Compiler
             var extended = _currentCompilerType?.GetExtended(cf) ?? cf.Name;
 
             Enqueue(new CompilerType(Definitions, CompilerOptions, cf.Definition, extended));
+            //    ((IFixEncoder)Instrument!)?.Encode(storage, tags, delimiter);
+            _builder.WriteLine($"((IFixEncoder){extended}!)?.Encode(storage, tags, delimiter);");
         }
 
         public void OnGroup(ContainedGroupField gf, int index)

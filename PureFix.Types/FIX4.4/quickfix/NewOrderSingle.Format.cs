@@ -12,6 +12,7 @@ namespace PureFix.Types.FIX44.QuickFix
 		void IFixEncoder.Encode(ElasticBuffer storage, Tags tags, byte delimiter)
 		{
 			
+			((IFixEncoder)StandardHeader!)?.Encode(storage, tags, delimiter);
 			if (ClOrdID != null)
 			{
 				var at = storage.Pos;
@@ -39,6 +40,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 583);
 			}
+			((IFixEncoder)Parties!)?.Encode(storage, tags, delimiter);
 			if (TradeOriginationDate != null)
 			{
 				var at = storage.Pos;
@@ -120,6 +122,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 70);
 			}
+			((IFixEncoder)PreAllocGrp!)?.Encode(storage, tags, delimiter);
 			if (SettlType != null)
 			{
 				var at = storage.Pos;
@@ -201,6 +204,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 100);
 			}
+			((IFixEncoder)TrdgSesGrp!)?.Encode(storage, tags, delimiter);
 			if (ProcessCode != null)
 			{
 				var at = storage.Pos;
@@ -210,6 +214,9 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 81);
 			}
+			((IFixEncoder)Instrument!)?.Encode(storage, tags, delimiter);
+			((IFixEncoder)FinancingDetails!)?.Encode(storage, tags, delimiter);
+			((IFixEncoder)UndInstrmtGrp!)?.Encode(storage, tags, delimiter);
 			if (PrevClosePx != null)
 			{
 				var at = storage.Pos;
@@ -246,6 +253,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 60);
 			}
+			((IFixEncoder)Stipulations!)?.Encode(storage, tags, delimiter);
 			if (QtyType != null)
 			{
 				var at = storage.Pos;
@@ -255,6 +263,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 854);
 			}
+			((IFixEncoder)OrderQtyData!)?.Encode(storage, tags, delimiter);
 			if (OrdType != null)
 			{
 				var at = storage.Pos;
@@ -291,6 +300,8 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 99);
 			}
+			((IFixEncoder)SpreadOrBenchmarkCurveData!)?.Encode(storage, tags, delimiter);
+			((IFixEncoder)YieldData!)?.Encode(storage, tags, delimiter);
 			if (Currency != null)
 			{
 				var at = storage.Pos;
@@ -381,6 +392,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 427);
 			}
+			((IFixEncoder)CommissionData!)?.Encode(storage, tags, delimiter);
 			if (OrderCapacity != null)
 			{
 				var at = storage.Pos;
@@ -516,6 +528,8 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 210);
 			}
+			((IFixEncoder)PegInstructions!)?.Encode(storage, tags, delimiter);
+			((IFixEncoder)DiscretionInstructions!)?.Encode(storage, tags, delimiter);
 			if (TargetStrategy != null)
 			{
 				var at = storage.Pos;
@@ -579,6 +593,7 @@ namespace PureFix.Types.FIX44.QuickFix
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 494);
 			}
+			((IFixEncoder)StandardTrailer!)?.Encode(storage, tags, delimiter);
 		}
 	}
 }

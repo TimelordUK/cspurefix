@@ -39,6 +39,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 538);
 			}
+			((IFixEncoder)NstdPtysSubGrp!)?.Encode(storage, tags, delimiter);
 		}
 	}
 }

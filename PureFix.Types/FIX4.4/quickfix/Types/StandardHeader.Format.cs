@@ -246,6 +246,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				storage.WriteChar(delimiter);
 				tags.Store(at, storage.Pos - at, 369);
 			}
+			((IFixEncoder)Hop!)?.Encode(storage, tags, delimiter);
 		}
 	}
 }
