@@ -65,17 +65,17 @@ namespace PureFix.Dictionary.Compiler
             while (_workQueue.Count > 0)
             {
                 var compilerType = _workQueue.Dequeue();
-                var compiledType = GenerateParsers(compilerType);
+                var compiledType = GenerateTypes(compilerType);
                 var fullName = GetFileName(compilerType);
 
                 WriteFile(fullName, compiledType);
             }
         }
 
-        protected abstract string GenerateParsers(CompilerType compilerType);
+        protected abstract string GenerateTypes(CompilerType compilerType);
         protected abstract string GetFileName(CompilerType ct);
 
-        private void WriteFile(string filename, string content)
+        protected void WriteFile(string filename, string content)
         {
             var directory = Path.GetDirectoryName(filename);
             if (directory is not null) Directory.CreateDirectory(directory);

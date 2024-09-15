@@ -18,20 +18,20 @@ namespace PureFix.Dictionary.Compiler
         {
         }
 
-/*
- * public static class HeartbeatExt
-   {
-       public static void Parse(this Heartbeat instance, MsgView? view)
-       {
-           instance.StandardHeader ??= new StandardHeader();
-           instance.StandardHeader.Parse(view?.GetView("StandardHeader"));
-           instance.TestReqID = view?.GetString(112);
-           instance.StandardTrailer ??= new StandardTrailer();
-           instance.StandardTrailer.Parse(view?.GetView("StandardTrailer"));
-       }
-   }
- */
-        protected override string GenerateParsers(CompilerType compilerType)
+        /*
+         * public static class HeartbeatExt
+           {
+               public static void Parse(this Heartbeat instance, MsgView? view)
+               {
+                   instance.StandardHeader ??= new StandardHeader();
+                   instance.StandardHeader.Parse(view?.GetView("StandardHeader"));
+                   instance.TestReqID = view?.GetString(112);
+                   instance.StandardTrailer ??= new StandardTrailer();
+                   instance.StandardTrailer.Parse(view?.GetView("StandardTrailer"));
+               }
+           }
+         */
+        protected override string GenerateTypes(CompilerType compilerType)
         {
             var isMsg = compilerType.Set.Type == ContainedSetType.Msg;
             var ns = isMsg

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed partial class StandardHeader : IStandardHeader
+	public sealed partial class StandardHeader : IStandardHeader, IFixEncoder
 	{
 		[TagDetails(Tag = 8, Type = TagType.String, Offset = 0, Required = true)]
 		public string? BeginString { get; set; }

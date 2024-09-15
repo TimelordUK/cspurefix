@@ -15,7 +15,7 @@ using PureFix.Types;
 
 namespace PureFix.Dictionary.Compiler
 {
-    public partial class MsgCompiler : ISetDispatchReceiver
+    public partial class MsgCompiler : BaseParserCompiler, ISetDispatchReceiver
     {
         /***
          * using PureFix.Types.FIX44.QuickFix.Types;
@@ -37,66 +37,11 @@ namespace PureFix.Dictionary.Compiler
          */
 
         private const string GetSet = "{ get; set; }";
-
-        public FixDefinitions Definitions { get; }
-        public Options CompilerOptions { get; }
-        private readonly Queue<CompilerType> _workQueue = [];
-        private readonly Dictionary<string, CompilerType> _completed = [];
-        private readonly CodeGenerator _builder = new();
-
         private ContainedSimpleField? _LastSimpleField;
-        private CompilerType? _currentCompilerType;
 
 
-        public MsgCompiler(FixDefinitions definitions, Options? options = null)
+        public MsgCompiler(FixDefinitions definitions, Options? options = null) : base(definitions, options)
         {
-            Definitions = definitions;
-            options ??= Options.FromVersion(definitions);
-            CompilerOptions = options;
-        }
-
-        public void Generate(IReadOnlyList<string>? types = null)
-        {
-            types ??= CompilerOptions.MsgTypes;
-            if (types == null) throw new InvalidDataException("no types defined to create");
-            CreateTypes(types);
-        }
-
-        public void CreateTypes(IReadOnlyList<string> types)
-        {
-            foreach (var type in types)
-            {
-                var set = Definitions.GetMsgOrComponent(type);
-                if (set == null)
-                {
-                    throw new InvalidDataException($"no type {type} defined");
-                }
-
-                var ct = new CompilerType(Definitions, CompilerOptions, set, set.Name);
-                Enqueue(ct);
-            }
-
-            Work();
-        }
-
-        private void Work()
-        {
-            while (_workQueue.Count > 0)
-            {
-                var compilerType = _workQueue.Dequeue();
-                var compiledType = GenerateMessages(compilerType);
-                var fullName = GetFileName(compilerType);
-
-                WriteFile(fullName, compiledType);
-            }
-        }
-
-        private void WriteFile(string filename, string content)
-        {
-            var directory = Path.GetDirectoryName(filename);
-            if (directory is not null) Directory.CreateDirectory(directory);
-
-            File.WriteAllText(filename, content);
         }
 
         private string MakeTypesNamespace()
@@ -104,7 +49,7 @@ namespace PureFix.Dictionary.Compiler
             return $"{CompilerOptions.BackingTypeNamespace}.Types";
         }
 
-        public string GenerateMessages(CompilerType compilerType)
+        protected override string GenerateTypes(CompilerType compilerType)
         {
             var isMsg = compilerType.Set.Type == ContainedSetType.Msg;
             var ns = isMsg
@@ -156,24 +101,13 @@ namespace PureFix.Dictionary.Compiler
 
             return compilerType.QualifiedName switch
             {
-                "StandardHeader"    => " : IStandardHeader",
-                "StandardTrailer"   => " : IStandardTrailer",
+                "StandardHeader"    => " : IStandardHeader, IFixEncoder",
+                "StandardTrailer"   => " : IStandardTrailer, IFixEncoder",
                 _                   => " : IFixValidator, IFixEncoder"
             };
         }
 
-        private void Enqueue(CompilerType ct)
-        {
-            var fullName = GetFileName(ct);
-            if (_completed.ContainsKey(fullName))
-            {
-                return;
-            }
-            _workQueue.Enqueue(ct);
-            _completed[fullName] = ct;
-        }
-
-        private string GetFileName(CompilerType ct)
+        protected override string GetFileName(CompilerType ct)
         {
             var isMsg = ct.Set.Type == ContainedSetType.Msg;
             var name = isMsg ? ((MessageDefinition)ct.Set).Name : ct.QualifiedName;

@@ -38,5 +38,12 @@ namespace PureFIix.Test.Ascii.Compiler
             var compiler = new ViewParserCompiler(_testEntity.Definitions);
             compiler.Generate();
         }
+
+        [Test]
+        public void GenerateFormatFormatTypes()
+        {
+            var compiler = new TypeFormatCompiler(_testEntity.Definitions);
+            compiler.Generate(new List<string>{"0","D"});
+        }
     }
 }
