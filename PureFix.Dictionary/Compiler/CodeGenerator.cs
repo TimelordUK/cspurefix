@@ -24,6 +24,12 @@ namespace PureFix.Dictionary.Compiler
             return new(this);
         }
 
+        public Indenter BeginIndent()
+        {
+            var indent = MakeIndent();
+            return new(this);
+        }
+
         public CodeGenerator WriteLine()
         {
             var indent = MakeIndent();
@@ -71,6 +77,22 @@ namespace PureFix.Dictionary.Compiler
             {
                 _CodeGenerator._TabCount--;
                 _CodeGenerator.WriteLine("}");
+            }
+        }
+
+        public ref struct Indenter
+        {
+            private readonly CodeGenerator _CodeGenerator;
+
+            public Indenter(CodeGenerator codeGenerator)
+            {
+                _CodeGenerator = codeGenerator;
+                _CodeGenerator._TabCount++;
+            }
+
+            public void Dispose()
+            {
+                _CodeGenerator._TabCount--;
             }
         }
     }

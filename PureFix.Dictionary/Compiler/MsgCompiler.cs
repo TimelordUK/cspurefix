@@ -169,7 +169,7 @@ namespace PureFix.Dictionary.Compiler
             {
                 "StandardHeader"    => " : IStandardHeader",
                 "StandardTrailer"   => " : IStandardTrailer",
-                _                   => ""
+                _                   => " : IFixValidator"
             };
         }
 
@@ -261,6 +261,62 @@ namespace PureFix.Dictionary.Compiler
             _builder.WriteLine();
             // any dependent group also needs to be constructed StandardHeader etc.
             Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, extended));
+        }
+
+        public void PostIterate(IContainedSet containedSet)
+        {
+            return; // For now
+
+            _builder.WriteLine();
+            using (_builder.BeginBlock("bool IFixValidator.IsValid()"))
+            {
+                List<string> checks = new();
+
+                foreach (var field in containedSet.Fields)
+                {
+                    if (field.Required)
+                    {
+                        var name = field.Name;
+                        checks.Add($"{name} is not null");
+
+                        if (field.Type == ContainedFieldType.Component)
+                        {
+                            checks.Add($"((IFixValidator){name}).IsValid()");
+                        }
+                        else if (field.Type == ContainedFieldType.Group)
+                        {
+                            checks.Add($"{name}.All(item => ((IFixValidator)item).IsValid())");
+                        }
+                    }
+                }
+
+                if (checks.Count == 0)
+                {
+                    _builder.WriteLine("return true;");
+                }
+                else
+                {
+                    _builder.WriteLine("return");
+                    using (_builder.BeginIndent())
+                    {
+                        for (int i = 0; i < checks.Count; i++)
+                        {
+                            var check = checks[i];
+
+                            var line = (i == 0) ? check : $"&& {check}";
+
+                            if (i == checks.Count - 1)
+                            {
+                                _builder.WriteLine($"{line};");
+                            }
+                            else
+                            {
+                                _builder.WriteLine(line);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void GenerateEnumValues(string csharpBaseType, TagType tagType, string fieldName, IReadOnlyDictionary<string, FieldEnum> enums)

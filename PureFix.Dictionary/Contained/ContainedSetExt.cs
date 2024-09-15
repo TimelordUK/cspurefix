@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace PureFix.Dictionary.Contained
 {
-    public interface ISetDispatchReceiver
-    {
-        void OnSimple(ContainedSimpleField sf, int index, object? peek);
-        void OnComponent(ContainedComponentField cf, int index);
-        void OnGroup(ContainedGroupField cf, int index);
-    }
     public static class ContainedSetExt
     {
         public static void Iterate(this IContainedSet set, ISetDispatchReceiver dispatcher)
         {
+            dispatcher.PreIterate(set);
+
             var fields = set.Fields;
             for (var i = 0; i < fields.Count; i++)
             {
@@ -43,6 +39,8 @@ namespace PureFix.Dictionary.Contained
                         break;
                 }
             }
+
+            dispatcher.PostIterate(set);
         }
     }
 }
