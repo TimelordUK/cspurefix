@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using PureFix.ParserFormat.FIX44.QuickFix;
 
 namespace PureFIix.Test.Ascii
 {
