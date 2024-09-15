@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class LegBenchmarkCurveData
+	public sealed partial class LegBenchmarkCurveData : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 676, Type = TagType.String, Offset = 0, Required = false)]
 		public string? LegBenchmarkCurveCurrency { get; set; }

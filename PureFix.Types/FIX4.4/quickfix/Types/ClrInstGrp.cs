@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ClrInstGrp
+	public sealed partial class ClrInstGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 576, Offset = 0, Required = false)]
 		public ClrInstGrpNoClearingInstructions[]? NoClearingInstructions { get; set; }

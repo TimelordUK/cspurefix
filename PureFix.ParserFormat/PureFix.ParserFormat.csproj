@@ -11,8 +11,4 @@
     <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="FIX4.4\quickfix\" />
-  </ItemGroup>
-
 </Project>

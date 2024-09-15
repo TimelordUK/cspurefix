@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class TrdRegTimestampsNoTrdRegTimestamps
+	public sealed partial class TrdRegTimestampsNoTrdRegTimestamps : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 769, Type = TagType.UtcTimestamp, Offset = 0, Required = false)]
 		public DateTime? TrdRegTimestamp { get; set; }

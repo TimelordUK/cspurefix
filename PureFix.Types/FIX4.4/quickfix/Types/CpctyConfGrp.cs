@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class CpctyConfGrp
+	public sealed partial class CpctyConfGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 862, Offset = 0, Required = true)]
 		public CpctyConfGrpNoCapacities[]? NoCapacities { get; set; }

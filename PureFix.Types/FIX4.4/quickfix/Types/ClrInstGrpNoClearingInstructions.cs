@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ClrInstGrpNoClearingInstructions
+	public sealed partial class ClrInstGrpNoClearingInstructions : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 577, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? ClearingInstruction { get; set; }

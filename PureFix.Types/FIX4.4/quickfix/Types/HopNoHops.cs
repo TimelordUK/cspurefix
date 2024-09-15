@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class HopNoHops
+	public sealed partial class HopNoHops : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 628, Type = TagType.String, Offset = 0, Required = false)]
 		public string? HopCompID { get; set; }

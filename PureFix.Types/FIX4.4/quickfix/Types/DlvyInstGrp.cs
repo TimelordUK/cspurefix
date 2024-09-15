@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class DlvyInstGrp
+	public sealed partial class DlvyInstGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 85, Offset = 0, Required = false)]
 		public DlvyInstGrpNoDlvyInst[]? NoDlvyInst { get; set; }

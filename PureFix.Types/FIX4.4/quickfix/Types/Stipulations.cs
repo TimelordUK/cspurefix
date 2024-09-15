@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class Stipulations
+	public sealed partial class Stipulations : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 232, Offset = 0, Required = false)]
 		public StipulationsNoStipulations[]? NoStipulations { get; set; }

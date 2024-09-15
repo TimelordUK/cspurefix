@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace PureFix.Types
 {
@@ -12,6 +13,9 @@ namespace PureFix.Types
         /// Checks if the message is valid
         /// </summary>
         /// <returns></returns>
-        public bool IsValid();
+        public bool IsValid()
+        {
+            return true;
+        }
     }
 }

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class MDRjctGrpNoAltMDSource
+	public sealed partial class MDRjctGrpNoAltMDSource : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 817, Type = TagType.String, Offset = 0, Required = false)]
 		public string? AltMDSourceID { get; set; }

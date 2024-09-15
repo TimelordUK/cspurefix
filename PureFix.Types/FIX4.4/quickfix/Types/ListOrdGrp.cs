@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ListOrdGrp
+	public sealed partial class ListOrdGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 73, Offset = 0, Required = true)]
 		public ListOrdGrpNoOrders[]? NoOrders { get; set; }

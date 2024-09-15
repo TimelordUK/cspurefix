@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class RgstDistInstGrpNoDistribInsts
+	public sealed partial class RgstDistInstGrpNoDistribInsts : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 477, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? DistribPaymentMethod { get; set; }

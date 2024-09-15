@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class NstdPtys2SubGrp
+	public sealed partial class NstdPtys2SubGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 806, Offset = 0, Required = false)]
 		public NstdPtys2SubGrpNoNested2PartySubIDs[]? NoNested2PartySubIDs { get; set; }

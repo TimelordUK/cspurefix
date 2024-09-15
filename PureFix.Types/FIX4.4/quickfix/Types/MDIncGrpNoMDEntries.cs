@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class MDIncGrpNoMDEntries
+	public sealed partial class MDIncGrpNoMDEntries : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 279, Type = TagType.String, Offset = 0, Required = true)]
 		public string? MDUpdateAction { get; set; }

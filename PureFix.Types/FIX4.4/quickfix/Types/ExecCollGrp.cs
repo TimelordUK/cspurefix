@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ExecCollGrp
+	public sealed partial class ExecCollGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 124, Offset = 0, Required = false)]
 		public ExecCollGrpNoExecs[]? NoExecs { get; set; }

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class TrdgSesGrpNoTradingSessions
+	public sealed partial class TrdgSesGrpNoTradingSessions : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 0, Required = false)]
 		public string? TradingSessionID { get; set; }

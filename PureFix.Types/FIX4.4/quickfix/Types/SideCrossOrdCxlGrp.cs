@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class SideCrossOrdCxlGrp
+	public sealed partial class SideCrossOrdCxlGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 552, Offset = 0, Required = true)]
 		public SideCrossOrdCxlGrpNoSides[]? NoSides { get; set; }

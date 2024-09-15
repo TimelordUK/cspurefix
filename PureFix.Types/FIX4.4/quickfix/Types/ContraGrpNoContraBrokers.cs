@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ContraGrpNoContraBrokers
+	public sealed partial class ContraGrpNoContraBrokers : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 375, Type = TagType.String, Offset = 0, Required = false)]
 		public string? ContraBroker { get; set; }

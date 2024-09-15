@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class SettlInstGrpNoSettlInst
+	public sealed partial class SettlInstGrpNoSettlInst : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 162, Type = TagType.String, Offset = 0, Required = false)]
 		public string? SettlInstID { get; set; }

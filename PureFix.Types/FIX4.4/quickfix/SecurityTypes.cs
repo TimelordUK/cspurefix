@@ -8,7 +8,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 namespace PureFix.Types.FIX44.QuickFix
 {
 	[MessageType("w", FixVersion.FIX44)]
-	public sealed class SecurityTypes : IFixMessage
+	public sealed partial class SecurityTypes : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
 		public StandardHeader? StandardHeader { get; set; }

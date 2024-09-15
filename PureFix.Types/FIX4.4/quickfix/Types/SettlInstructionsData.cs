@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class SettlInstructionsData
+	public sealed partial class SettlInstructionsData : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 172, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? SettlDeliveryType { get; set; }

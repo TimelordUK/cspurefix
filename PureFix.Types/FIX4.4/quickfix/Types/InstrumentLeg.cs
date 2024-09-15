@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class InstrumentLeg
+	public sealed partial class InstrumentLeg : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 600, Type = TagType.String, Offset = 0, Required = false)]
 		public string? LegSymbol { get; set; }

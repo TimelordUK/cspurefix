@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class TrdCapRptSideGrp
+	public sealed partial class TrdCapRptSideGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 552, Offset = 0, Required = true)]
 		public TrdCapRptSideGrpNoSides[]? NoSides { get; set; }

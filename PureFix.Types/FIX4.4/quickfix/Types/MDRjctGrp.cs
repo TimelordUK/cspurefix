@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class MDRjctGrp
+	public sealed partial class MDRjctGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 816, Offset = 0, Required = false)]
 		public MDRjctGrpNoAltMDSource[]? NoAltMDSource { get; set; }

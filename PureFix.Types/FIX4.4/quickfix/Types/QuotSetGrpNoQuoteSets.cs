@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class QuotSetGrpNoQuoteSets
+	public sealed partial class QuotSetGrpNoQuoteSets : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 302, Type = TagType.String, Offset = 0, Required = true)]
 		public string? QuoteSetID { get; set; }

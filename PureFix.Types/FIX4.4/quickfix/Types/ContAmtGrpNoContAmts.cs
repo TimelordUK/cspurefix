@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ContAmtGrpNoContAmts
+	public sealed partial class ContAmtGrpNoContAmts : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 519, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? ContAmtType { get; set; }

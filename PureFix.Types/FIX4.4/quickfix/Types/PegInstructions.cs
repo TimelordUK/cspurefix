@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class PegInstructions
+	public sealed partial class PegInstructions : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 211, Type = TagType.Float, Offset = 0, Required = false)]
 		public double? PegOffsetValue { get; set; }

@@ -23,7 +23,9 @@ namespace PureFix.Dictionary.Compiler
                 or "StandardTrailer" ? 
                 $"override {QualifiedName}" :
                 QualifiedName;
-            
+
+            public bool IsMsg => Set.Type == ContainedSetType.Msg;
+
             public CompilerType(FixDefinitions definitions, Options options, IContainedSet set, string qualifiedName)
             {
                 Definitions = definitions;

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class YieldData
+	public sealed partial class YieldData : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 235, Type = TagType.String, Offset = 0, Required = false)]
 		public string? YieldType { get; set; }

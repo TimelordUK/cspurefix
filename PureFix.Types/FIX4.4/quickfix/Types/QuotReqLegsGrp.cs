@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class QuotReqLegsGrp
+	public sealed partial class QuotReqLegsGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 555, Offset = 0, Required = false)]
 		public QuotReqLegsGrpNoLegs[]? NoLegs { get; set; }

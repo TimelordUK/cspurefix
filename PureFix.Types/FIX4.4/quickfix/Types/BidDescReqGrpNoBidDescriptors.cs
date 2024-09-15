@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class BidDescReqGrpNoBidDescriptors
+	public sealed partial class BidDescReqGrpNoBidDescriptors : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 399, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? BidDescriptorType { get; set; }

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ExecAllocGrpNoExecs
+	public sealed partial class ExecAllocGrpNoExecs : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 32, Type = TagType.Float, Offset = 0, Required = false)]
 		public double? LastQty { get; set; }

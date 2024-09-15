@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class RgstDistInstGrp
+	public sealed partial class RgstDistInstGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 510, Offset = 0, Required = false)]
 		public RgstDistInstGrpNoDistribInsts[]? NoDistribInsts { get; set; }

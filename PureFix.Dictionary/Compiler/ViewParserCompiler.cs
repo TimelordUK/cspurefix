@@ -12,64 +12,10 @@ using static PureFix.Dictionary.Compiler.MsgCompiler;
 
 namespace PureFix.Dictionary.Compiler
 {
-    public class ViewParserCompiler : ISetDispatchReceiver
+    public class ViewParserCompiler : BaseParserCompiler, ISetDispatchReceiver
     {
-        public FixDefinitions Definitions { get; }
-        public Options CompilerOptions { get; }
-        private readonly Queue<CompilerType> _workQueue = [];
-        private readonly Dictionary<string, CompilerType> _completed = [];
-        private readonly CodeGenerator _builder = new();
-        private CompilerType? _currentCompilerType;
-
-        public ViewParserCompiler(FixDefinitions definitions, Options? options = null)
+        public ViewParserCompiler(FixDefinitions definitions, Options? options = null) : base(definitions, options)
         {
-            Definitions = definitions;
-            options ??= Options.FromVersion(definitions);
-            CompilerOptions = options;
-        }
-
-        public void Generate(IReadOnlyList<string>? types = null)
-        {
-            types ??= CompilerOptions.MsgTypes;
-            if (types == null) throw new InvalidDataException("no types defined to create");
-            CreateTypes(types);
-        }
-
-        public void CreateTypes(IReadOnlyList<string> types)
-        {
-            foreach (var type in types)
-            {
-                var set = Definitions.GetMsgOrComponent(type);
-                if (set == null)
-                {
-                    throw new InvalidDataException($"no type {type} defined");
-                }
-
-                var ct = new CompilerType(Definitions, CompilerOptions, set, set.Name);
-                Enqueue(ct);
-            }
-
-            Work();
-        }
-
-        private void Work()
-        {
-            while (_workQueue.Count > 0)
-            {
-                var compilerType = _workQueue.Dequeue();
-                var compiledType = GenerateParsers(compilerType);
-                var fullName = GetFileName(compilerType);
-
-                WriteFile(fullName, compiledType);
-            }
-        }
-
-        private void WriteFile(string filename, string content)
-        {
-            var directory = Path.GetDirectoryName(filename);
-            if (directory is not null) Directory.CreateDirectory(directory);
-
-            File.WriteAllText(filename, content);
         }
 
 /*
@@ -84,53 +30,46 @@ namespace PureFix.Dictionary.Compiler
            instance.StandardTrailer.Parse(view?.GetView("StandardTrailer"));
        }
    }
- */ 
-            public string GenerateParsers(CompilerType compilerType)
-            {
-                var isMsg = compilerType.Set.Type == ContainedSetType.Msg;
-                var ns = isMsg
-                    ? $"{CompilerOptions.BackingTypeNamespace}"
-                    : MakeTypesNamespace();
-
-                _builder.Reset();
-                _currentCompilerType = compilerType;
-
-                var usingDeclaration = string.Join
-                (
-                    Environment.NewLine,
-                    CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {MakeTypesNamespace()};", "using PureFix.Buffer.Ascii;"])
-                );
-
-                _builder.WriteLine(usingDeclaration);
-                _builder.WriteLine();
-
-                using (_builder.BeginBlock($"namespace {ns}"))
-                {
-                    if (compilerType.Set is MessageDefinition messageDefinition)
-                    {
-                        _builder.WriteLine($"[MessageType(\"{messageDefinition.MsgType}\", FixVersion.{Definitions.Version})]");
-                    }
-
-                    using (_builder.BeginBlock($"public static class {compilerType.QualifiedName}Ext"))
-                    using (_builder.BeginBlock($"public static void Parse(this {compilerType.QualifiedName} instance, MsgView? view)"))
-                    {
-                        _builder.WriteLine("if (view is null) return;");
-                        _builder.WriteLine();
-                        compilerType.Set.Iterate(this);
-                    }
-                }
-                return _builder.ToString();
-            }
-            
-        private void Enqueue(CompilerType ct)
+ */
+        protected override string GenerateParsers(CompilerType compilerType)
         {
-            var fullName = GetFileName(ct);
-            if (_completed.ContainsKey(fullName))
+            var isMsg = compilerType.Set.Type == ContainedSetType.Msg;
+            var ns = isMsg
+                ? $"{CompilerOptions.BackingTypeNamespace}"
+                : MakeTypesNamespace();
+
+            _builder.Reset();
+            _currentCompilerType = compilerType;
+
+            var usingDeclaration = string.Join
+            (
+                Environment.NewLine,
+                CompilerOptions.DefaultUsing.Select(s => $"using {s};")
+                    .Union([$"using {MakeTypesNamespace()};", "using PureFix.Buffer.Ascii;"])
+            );
+
+            _builder.WriteLine(usingDeclaration);
+            _builder.WriteLine();
+
+            using (_builder.BeginBlock($"namespace {ns}"))
             {
-                return;
+                if (compilerType.Set is MessageDefinition messageDefinition)
+                {
+                    _builder.WriteLine(
+                        $"[MessageType(\"{messageDefinition.MsgType}\", FixVersion.{Definitions.Version})]");
+                }
+
+                using (_builder.BeginBlock($"public static class {compilerType.QualifiedName}Ext"))
+                using (_builder.BeginBlock(
+                           $"public static void Parse(this {compilerType.QualifiedName} instance, MsgView? view)"))
+                {
+                    _builder.WriteLine("if (view is null) return;");
+                    _builder.WriteLine();
+                    compilerType.Set.Iterate(this);
+                }
             }
-            _workQueue.Enqueue(ct);
-            _completed[fullName] = ct;
+
+            return _builder.ToString();
         }
 
         private string MakeTypesNamespace()
@@ -138,7 +77,7 @@ namespace PureFix.Dictionary.Compiler
             return $"{CompilerOptions.BackingTypeNamespace}.Types";
         }
 
-        private string GetFileName(CompilerType ct)
+        protected override string GetFileName(CompilerType ct)
         {
             var isMsg = ct.Set.Type == ContainedSetType.Msg;
             var name = isMsg ? ((MessageDefinition)ct.Set).Name : ct.QualifiedName;
@@ -169,7 +108,7 @@ namespace PureFix.Dictionary.Compiler
             var extended = _currentCompilerType?.GetExtended(cf) ?? cf.Name;
 
             var variableName = $"groupView{cf.Name}";
-            using(_builder.BeginBlock($"if (view.GetView(\"{cf.Name}\") is MsgView {variableName})"))
+            using (_builder.BeginBlock($"if (view.GetView(\"{cf.Name}\") is MsgView {variableName})"))
             {
                 _builder.WriteLine($"instance.{cf.Name} = new {extended}();");
                 _builder.WriteLine($"instance.{cf.Name}!.Parse({variableName});");
@@ -197,6 +136,7 @@ namespace PureFix.Dictionary.Compiler
                 _builder.WriteLine($"instance.{gf.Name}[i] = new();");
                 _builder.WriteLine($"instance.{gf.Name}[i].Parse(groupView[i]);");
             }
+
             Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, extended));
         }
     }

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class PositionQty
+	public sealed partial class PositionQty : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 702, Offset = 0, Required = false)]
 		public PositionQtyNoPositions[]? NoPositions { get; set; }

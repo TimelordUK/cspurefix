@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class QuotQualGrp
+	public sealed partial class QuotQualGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 735, Offset = 0, Required = false)]
 		public QuotQualGrpNoQuoteQualifiers[]? NoQuoteQualifiers { get; set; }

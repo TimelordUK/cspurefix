@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class CollInqQualGrpNoCollInquiryQualifier
+	public sealed partial class CollInqQualGrpNoCollInquiryQualifier : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 896, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? CollInquiryQualifier { get; set; }

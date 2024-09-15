@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ContraGrp
+	public sealed partial class ContraGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 382, Offset = 0, Required = false)]
 		public ContraGrpNoContraBrokers[]? NoContraBrokers { get; set; }

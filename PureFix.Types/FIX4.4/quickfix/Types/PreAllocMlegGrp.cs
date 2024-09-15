@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class PreAllocMlegGrp
+	public sealed partial class PreAllocMlegGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 78, Offset = 0, Required = false)]
 		public PreAllocMlegGrpNoAllocs[]? NoAllocs { get; set; }

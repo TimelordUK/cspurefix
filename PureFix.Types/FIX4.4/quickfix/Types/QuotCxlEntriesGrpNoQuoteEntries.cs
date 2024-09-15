@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class QuotCxlEntriesGrpNoQuoteEntries
+	public sealed partial class QuotCxlEntriesGrpNoQuoteEntries : IFixValidator, IFixEncoder
 	{
 		[Component(Offset = 0, Required = false)]
 		public Instrument? Instrument { get; set; }

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class RoutingGrpNoRoutingIDs
+	public sealed partial class RoutingGrpNoRoutingIDs : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 216, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? RoutingType { get; set; }

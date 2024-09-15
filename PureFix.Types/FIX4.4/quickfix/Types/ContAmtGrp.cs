@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ContAmtGrp
+	public sealed partial class ContAmtGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 518, Offset = 0, Required = false)]
 		public ContAmtGrpNoContAmts[]? NoContAmts { get; set; }

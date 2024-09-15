@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class LegStipulationsNoLegStipulations
+	public sealed partial class LegStipulationsNoLegStipulations : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 688, Type = TagType.String, Offset = 0, Required = false)]
 		public string? LegStipulationType { get; set; }

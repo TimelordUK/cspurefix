@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class MDReqGrp
+	public sealed partial class MDReqGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 267, Offset = 0, Required = true)]
 		public MDReqGrpNoMDEntryTypes[]? NoMDEntryTypes { get; set; }

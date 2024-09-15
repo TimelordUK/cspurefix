@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class QuotReqLegsGrpNoLegs
+	public sealed partial class QuotReqLegsGrpNoLegs : IFixValidator, IFixEncoder
 	{
 		[Component(Offset = 0, Required = false)]
 		public InstrumentLeg? InstrumentLeg { get; set; }

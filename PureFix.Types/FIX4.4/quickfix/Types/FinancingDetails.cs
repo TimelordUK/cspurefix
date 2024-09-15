@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class FinancingDetails
+	public sealed partial class FinancingDetails : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 913, Type = TagType.String, Offset = 0, Required = false)]
 		public string? AgreementDesc { get; set; }

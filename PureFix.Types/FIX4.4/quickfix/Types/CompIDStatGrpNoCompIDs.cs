@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class CompIDStatGrpNoCompIDs
+	public sealed partial class CompIDStatGrpNoCompIDs : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 930, Type = TagType.String, Offset = 0, Required = false)]
 		public string? RefCompID { get; set; }

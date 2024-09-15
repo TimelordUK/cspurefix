@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class SecTypesGrp
+	public sealed partial class SecTypesGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 558, Offset = 0, Required = false)]
 		public SecTypesGrpNoSecurityTypes[]? NoSecurityTypes { get; set; }

@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class UnderlyingStipulationsNoUnderlyingStips
+	public sealed partial class UnderlyingStipulationsNoUnderlyingStips : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 888, Type = TagType.String, Offset = 0, Required = false)]
 		public string? UnderlyingStipType { get; set; }

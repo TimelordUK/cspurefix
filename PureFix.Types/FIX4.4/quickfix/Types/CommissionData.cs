@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class CommissionData
+	public sealed partial class CommissionData : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 12, Type = TagType.Float, Offset = 0, Required = false)]
 		public double? Commission { get; set; }

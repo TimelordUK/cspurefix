@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class EvntGrpNoEvents
+	public sealed partial class EvntGrpNoEvents : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 865, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? EventType { get; set; }

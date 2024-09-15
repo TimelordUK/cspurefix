@@ -247,7 +247,5 @@ namespace PureFix.Types.FIX44.QuickFix
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
-
-     
-    }
+	}
 }

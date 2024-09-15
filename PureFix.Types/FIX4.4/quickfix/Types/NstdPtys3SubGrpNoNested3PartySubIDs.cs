@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class NstdPtys3SubGrpNoNested3PartySubIDs
+	public sealed partial class NstdPtys3SubGrpNoNested3PartySubIDs : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 953, Type = TagType.String, Offset = 0, Required = false)]
 		public string? Nested3PartySubID { get; set; }

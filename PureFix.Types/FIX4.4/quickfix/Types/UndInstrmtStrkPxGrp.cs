@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class UndInstrmtStrkPxGrp
+	public sealed partial class UndInstrmtStrkPxGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 711, Offset = 0, Required = false)]
 		public UndInstrmtStrkPxGrpNoUnderlyings[]? NoUnderlyings { get; set; }

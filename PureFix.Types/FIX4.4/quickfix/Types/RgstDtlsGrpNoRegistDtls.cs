@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class RgstDtlsGrpNoRegistDtls
+	public sealed partial class RgstDtlsGrpNoRegistDtls : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 509, Type = TagType.String, Offset = 0, Required = false)]
 		public string? RegistDtls { get; set; }

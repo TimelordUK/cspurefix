@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class CpctyConfGrpNoCapacities
+	public sealed partial class CpctyConfGrpNoCapacities : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 528, Type = TagType.String, Offset = 0, Required = true)]
 		public string? OrderCapacity { get; set; }

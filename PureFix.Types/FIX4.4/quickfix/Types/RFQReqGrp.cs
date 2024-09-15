@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class RFQReqGrp
+	public sealed partial class RFQReqGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 146, Offset = 0, Required = true)]
 		public RFQReqGrpNoRelatedSym[]? NoRelatedSym { get; set; }

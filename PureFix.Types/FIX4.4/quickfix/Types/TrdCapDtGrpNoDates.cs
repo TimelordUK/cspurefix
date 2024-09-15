@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class TrdCapDtGrpNoDates
+	public sealed partial class TrdCapDtGrpNoDates : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 0, Required = false)]
 		public DateOnly? TradeDate { get; set; }

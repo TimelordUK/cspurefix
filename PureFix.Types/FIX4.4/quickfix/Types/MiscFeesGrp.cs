@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class MiscFeesGrp
+	public sealed partial class MiscFeesGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 136, Offset = 0, Required = false)]
 		public MiscFeesGrpNoMiscFees[]? NoMiscFees { get; set; }

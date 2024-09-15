@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class TrdRegTimestamps
+	public sealed partial class TrdRegTimestamps : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 768, Offset = 0, Required = false)]
 		public TrdRegTimestampsNoTrdRegTimestamps[]? NoTrdRegTimestamps { get; set; }

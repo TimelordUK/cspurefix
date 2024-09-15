@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class TrdInstrmtLegGrp
+	public sealed partial class TrdInstrmtLegGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 555, Offset = 0, Required = false)]
 		public TrdInstrmtLegGrpNoLegs[]? NoLegs { get; set; }

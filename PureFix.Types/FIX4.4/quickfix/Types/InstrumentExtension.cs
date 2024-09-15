@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class InstrumentExtension
+	public sealed partial class InstrumentExtension : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 668, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? DeliveryForm { get; set; }

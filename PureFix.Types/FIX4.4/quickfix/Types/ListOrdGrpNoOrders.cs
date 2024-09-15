@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class ListOrdGrpNoOrders
+	public sealed partial class ListOrdGrpNoOrders : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 0, Required = true)]
 		public string? ClOrdID { get; set; }

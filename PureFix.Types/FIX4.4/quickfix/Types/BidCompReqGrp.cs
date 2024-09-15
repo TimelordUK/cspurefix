@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class BidCompReqGrp
+	public sealed partial class BidCompReqGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 420, Offset = 0, Required = false)]
 		public BidCompReqGrpNoBidComponents[]? NoBidComponents { get; set; }

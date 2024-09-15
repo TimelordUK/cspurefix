@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class IOIQualGrpNoIOIQualifiers
+	public sealed partial class IOIQualGrpNoIOIQualifiers : IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 104, Type = TagType.String, Offset = 0, Required = false)]
 		public string? IOIQualifier { get; set; }

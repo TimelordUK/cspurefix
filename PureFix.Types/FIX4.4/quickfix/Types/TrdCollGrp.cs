@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class TrdCollGrp
+	public sealed partial class TrdCollGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 897, Offset = 0, Required = false)]
 		public TrdCollGrpNoTrades[]? NoTrades { get; set; }

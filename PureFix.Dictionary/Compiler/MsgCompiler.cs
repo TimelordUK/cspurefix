@@ -132,7 +132,7 @@ namespace PureFix.Dictionary.Compiler
                     _builder.WriteLine($"[MessageType(\"{messageDefinition.MsgType}\", FixVersion.{Definitions.Version})]");
                 }
 
-                using(_builder.BeginBlock($"public sealed class {compilerType.QualifiedName}{inheritsDeclaration}"))
+                using(_builder.BeginBlock($"public sealed partial class {compilerType.QualifiedName}{inheritsDeclaration}"))
                 {
                     compilerType.Set.Iterate(this);
                     if (isMsg)
@@ -141,17 +141,6 @@ namespace PureFix.Dictionary.Compiler
                         _builder.WriteLine("IStandardHeader? IFixMessage.StandardHeader => StandardHeader;");
                         _builder.WriteLine();
                         _builder.WriteLine("IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;");
-
-                        /*
-                        foreach (var headerOverride in CompilerOptions.HeaderOverrides)
-                        {
-                            var sf = Definitions.Simple.GetValueOrDefault(headerOverride);
-                            if (sf != null)
-                            {
-                                var getter = $"=> StandardHeader?.{sf.Name}";
-                                _builder.WriteLine($"public override {Tags.ToCsType(sf.TagType)}? {sf.Name} {getter};");
-                            }
-                        }*/
                     }
                 }
             }
@@ -160,16 +149,16 @@ namespace PureFix.Dictionary.Compiler
 
         private string MakeBase(CompilerType compilerType)
         {
-            if(compilerType.Set.Type == ContainedSetType.Msg)
+            if(compilerType.IsMsg)
             {
-                return $" : IFixMessage";
+                return " : IFixMessage";
             }
 
             return compilerType.QualifiedName switch
             {
                 "StandardHeader"    => " : IStandardHeader",
                 "StandardTrailer"   => " : IStandardTrailer",
-                _                   => " : IFixValidator"
+                _                   => " : IFixValidator, IFixEncoder"
             };
         }
 

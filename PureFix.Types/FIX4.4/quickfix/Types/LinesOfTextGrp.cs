@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed class LinesOfTextGrp
+	public sealed partial class LinesOfTextGrp : IFixValidator, IFixEncoder
 	{
 		[Group(NoOfTag = 33, Offset = 0, Required = true)]
 		public LinesOfTextGrpNoLinesOfText[]? NoLinesOfText { get; set; }
