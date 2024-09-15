@@ -113,10 +113,29 @@ namespace PureFix.Dictionary.Compiler
             _builder.WriteLine($"((IFixEncoder){extended}!)?.Encode(storage, tags, delimiter);");
         }
 
+        /*
+            if (NoSecurityAltID != null)
+			{
+				for (var i = 0; i < NoSecurityAltID.Length; ++i)
+				{
+					((IFixEncoder)NoSecurityAltID[i])?.Encode(storage, tags, delimiter);
+                }
+			}
+         */
+
         public void OnGroup(ContainedGroupField gf, int index)
         {
             if (gf.Definition == null) return;
             var extended = _currentCompilerType?.GetExtended(gf) ?? gf.Name;
+            _builder.WriteLine($"if ({gf.Name} != null)");
+            using (_builder.BeginBlock())
+            {
+                _builder.WriteLine($"for (var i = 0; i < {gf.Name}.Length; ++i)");
+                using (_builder.BeginBlock())
+                {
+                    _builder.WriteLine($"((IFixEncoder){gf.Name}[i])?.Encode(storage, tags, delimiter);");
+                }
+            }
             Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, extended));
         }
     }

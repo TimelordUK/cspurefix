@@ -12,6 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		void IFixEncoder.Encode(ElasticBuffer storage, Tags tags, byte delimiter)
 		{
 			
+			if (NoUnderlyingSecurityAltID != null)
+			{
+				for (var i = 0; i < NoUnderlyingSecurityAltID.Length; ++i)
+				{
+					((IFixEncoder)NoUnderlyingSecurityAltID[i])?.Encode(storage, tags, delimiter);
+				}
+			}
 		}
 	}
 }

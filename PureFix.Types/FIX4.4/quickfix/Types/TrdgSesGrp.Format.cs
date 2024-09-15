@@ -12,6 +12,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		void IFixEncoder.Encode(ElasticBuffer storage, Tags tags, byte delimiter)
 		{
 			
+			if (NoTradingSessions != null)
+			{
+				for (var i = 0; i < NoTradingSessions.Length; ++i)
+				{
+					((IFixEncoder)NoTradingSessions[i])?.Encode(storage, tags, delimiter);
+				}
+			}
 		}
 	}
 }
