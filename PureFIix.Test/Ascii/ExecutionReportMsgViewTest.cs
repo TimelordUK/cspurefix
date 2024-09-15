@@ -5,17 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.ObjectPool;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Buffer.Segment;
 using PureFix.Types.FIX44.QuickFix.Types;
-using PureFix.Dictionary.Contained;
-using System.Text.Json;
 using DIs = NUnit.DeepObjectCompare.Is;
-using static PureFix.Dictionary.Compiler.MsgCompiler;
 namespace PureFIix.Test.Ascii
 {
-
     internal class ExecutionReportMsgViewTest
     {
         private TestEntity _testEntity;
@@ -1152,8 +1147,8 @@ namespace PureFIix.Test.Ascii
             Assert.That(undInstrmtGrpView, Is.Not.Null);
             var uig = new UndInstrmtGrp();
             uig.Parse(undInstrmtGrpView);
-            var u0 = uig.NoUnderlyings[0];
-            var underlying0 = u0.UnderlyingInstrument;
+            var u0 = uig?.NoUnderlyings?[0];
+            var underlying0 = u0?.UnderlyingInstrument;
 
             Assert.Multiple(() =>
             {
@@ -1201,10 +1196,11 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(expectedInst, Is.Not.Null);
-                var u1 = uig.NoUnderlyings[1].UnderlyingInstrument;
+                var u1 = uig?.NoUnderlyings?[1].UnderlyingInstrument;
                 Assert.Multiple(() =>
                 {
-                    Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
+                    Assert.That(underlying0, Is.Not.Null);
+                    Assert.That(underlying0?.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
                     Assert.That(u1?.UnderlyingSymbol, Is.EqualTo("erat"));
                     Assert.That(u1?.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
                     Assert.That(u1?.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
