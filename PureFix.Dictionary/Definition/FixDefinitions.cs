@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
@@ -17,24 +18,29 @@ namespace PureFix.Dictionary.Definition
          * e.g. 'BeginString'
         */
         private readonly Dictionary<string, SimpleFieldDefinition> _nameToSimple = [];
+
         private readonly Dictionary<string, MessageDefinition> _message = [];
         private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimple = [];
         private readonly Dictionary<string, ComponentFieldDefinition> _component = [];
 
         public IReadOnlyDictionary<string, SimpleFieldDefinition> Simple => _nameToSimple;
+
         /**
          * all global scope components - top level.
          */
         public IReadOnlyDictionary<string, ComponentFieldDefinition> Component => _component;
+
         /**
          * numeric tag lookup to field definition.
          */
         public IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimple => _tagToSimple;
+
         /**
          * all messages defined from source definition indexed via name
          * e.g. "Logon" or msgType "A"
         */
         public IReadOnlyDictionary<string, MessageDefinition> Message => _message;
+
         public FixVersion Version { get; private set; }
         public FixDefinitionSource Source { get; private set; } = FixDefinitionSource.QuickFix;
 
@@ -68,6 +74,9 @@ namespace PureFix.Dictionary.Definition
         {
             return Message.GetValueOrDefault(type) as IContainedSet ?? Component.GetValueOrDefault(type);
         }
+
+        public IContainedSet? this[string name] => GetMsgOrComponent(name);
+        public SimpleFieldDefinition? this[int tag] => TagToSimple.GetValueOrDefault(tag);
 
         /*
          * this path must begin with the message name and using dot notation locates
@@ -109,7 +118,7 @@ namespace PureFix.Dictionary.Definition
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append($"message.Count = {Message.Count / 2} "); // lookup via "A" or "Logon"
+            sb.Append($"message.Count = {Message.Count / 2} types = {string.Join(", ", Message.Keys)}"); // lookup via "A" or "Logon"
             sb.Append($"simple.Count = {Simple.Count} ");
             sb.Append($"component.Count = {Component.Count} ");
             return sb.ToString();

@@ -36,7 +36,7 @@ namespace PureFix.Buffer.Ascii
          * tags for repeated groups will have more than one instance.
          */
 
-        private void EnumeratSpan()
+        private void EnumerateSpan()
         {
             if (TagSpans != null) return;
             if (Tags == null) return;
@@ -175,7 +175,7 @@ namespace PureFix.Buffer.Ascii
 
         protected int GetPosition(int tag)
         {
-            if (TagSpans == null) EnumeratSpan();
+            if (TagSpans == null) EnumerateSpan();
             if (TagSpans == null) return -1;
             if (SortedTagPosForwards == null) return -1;
             if (TagSpans.TryGetValue(tag, out var r))
@@ -199,7 +199,7 @@ namespace PureFix.Buffer.Ascii
 
         protected Range? GetPositions(int tag)
         {
-            EnumeratSpan();
+            EnumerateSpan();
             if (TagSpans == null) return null;
             if (!TagSpans.TryGetValue(tag, out var r))
             {
@@ -211,7 +211,7 @@ namespace PureFix.Buffer.Ascii
 
         protected static string AsToken(SimpleFieldDefinition? field, string val, int i, int count, TagPos tagpos)
         {
-            var perLine = 2;
+            const int perLine = 2;
             var newLine = Environment.NewLine;
             // [280] 814 (ApplQueueResolution) = 2[OverlayLast][281] 10 (CheckSum) = 80
             string desc;

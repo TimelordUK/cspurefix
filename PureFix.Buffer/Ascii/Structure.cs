@@ -115,6 +115,7 @@ namespace PureFix.Buffer.Ascii
                             // this is a component but repeated within a group and we need to store all instances
                             arrays = AddToGroup(arrays, current);
                         } 
+                        // an instance previously held as an instance added along with new enty to a list
                         else if (singletons.Remove(current.Name, out var single)) {
                             arrays = AddToGroup(arrays, single);
                             arrays = AddToGroup(arrays, current);

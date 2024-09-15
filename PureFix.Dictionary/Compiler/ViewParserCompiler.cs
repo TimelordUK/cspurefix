@@ -98,7 +98,7 @@ namespace PureFix.Dictionary.Compiler
                 var usingDeclaration = string.Join
                 (
                     Environment.NewLine,
-                    CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {MakeTypesNamespace()};", $"using PureFix.Buffer.Ascii;"])
+                    CompilerOptions.DefaultUsing.Select(s => $"using {s};").Union([$"using {MakeTypesNamespace()};", "using PureFix.Buffer.Ascii;"])
                 );
 
                 _builder.WriteLine(usingDeclaration);
@@ -134,11 +134,6 @@ namespace PureFix.Dictionary.Compiler
         }
 
         private string MakeTypesNamespace()
-        {
-            return $"{CompilerOptions.BackingTypeNamespace}.Types";
-        }
-
-        private string MakeParserTypesNamespace()
         {
             return $"{CompilerOptions.BackingTypeNamespace}.Types";
         }

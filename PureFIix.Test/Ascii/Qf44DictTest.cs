@@ -159,5 +159,28 @@ namespace PureFIix.Test.Ascii
             var tags2 = res.Select(kv => kv.child).OfType<ContainedGroupField>().Select(sf => sf.Definition.NoOfField?.Tag).Distinct().ToList();
             Assert.That(tags2, Is.EqualTo(new List<int>() { 454, 864 }));
         }
+
+        [Test]
+        [TestCase("Instrument")]
+        [TestCase("Logon")]
+        [TestCase("TradeCaptureReport")]
+        [TestCase("ExecutionReport")]
+        public void Check_Get_Msg_Component_Test(string name)
+        {
+            var instrument = _definitions.GetMsgOrComponent(name);
+            Assert.That(instrument, Is.Not.Null);
+            Assert.That(instrument.Name, Is.EqualTo(name));
+        }
+
+        [Test]
+        [TestCase(8)]
+        [TestCase(9)]
+        [TestCase(35)]
+        public void Check_Index_Tag_Fetch_Test(int tag)
+        {
+            var simple = _definitions[tag];
+            Assert.That(simple, Is.Not.Null);
+            Assert.That(simple.Tag, Is.EqualTo(tag));
+        }
     }
 }
