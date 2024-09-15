@@ -44,7 +44,7 @@ namespace PureFix.Dictionary.Definition
             Name = name;
             Type = type;
             Tag = tag;
-            TagType = TagTypeUtil.ToType(type);
+            TagType = TagManager.ToType(type);
             
             if (enums != null && enums.Count > 0)
             {

@@ -53,46 +53,6 @@ namespace PureFix.Types
         public TagPos this[int x] => _tagPos[x];
         public TagPos this[Index i] => _tagPos[i];
 
-        // used by the compiler to produce types representing the dictionary.
-        public static string ToCsType(TagType tagType)
-        {
-            switch (tagType)
-            {
-                case TagType.String:
-                    return "string";
-
-                case TagType.Length:
-                case TagType.Int:
-                    return "int";
-
-                case TagType.Float:
-                    return "double";
-
-                case TagType.RawData:
-                    return "byte[]";
-
-                case TagType.Boolean:
-                    return "bool";
-
-                case TagType.LocalDate:
-                case TagType.UtcDateOnly:
-                    return "DateOnly";
-
-                case TagType.UtcTimestamp:
-                    return "DateTime";
-                
-                case TagType.UtcTimeOnly:
-                    return "TimeOnly";                    
-
-                case TagType.MonthYear:
-                    return "MonthYear";
-
-                default:
-                    return "string";
-            }
-        }
-
-
         public Tags Clone()
         {
             return new Tags(this);

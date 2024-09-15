@@ -204,19 +204,19 @@ namespace PureFix.Dictionary.Compiler
         // public string? TestReqID { get; set; }
         public void OnSimple(ContainedSimpleField sf, int index, object? peek)
         {
-            var type = Tags.ToCsType(sf.Definition.TagType);
+            var type = TagManager.ToCsType(sf.Definition.TagType);
 
             if(sf.Definition.TagType == TagType.Length && peek is ContainedSimpleField peekField && peekField.Definition.TagType == TagType.RawData)
             {
-                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)}, LinksToTag = {peekField.Definition.Tag})]");
+                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagManager.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)}, LinksToTag = {peekField.Definition.Tag})]");
             }
             else if (sf.Definition.TagType == TagType.RawData && _LastSimpleField is not null)
             {
-                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)}, LinksToTag = {_LastSimpleField.Definition.Tag})]");
+                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagManager.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)}, LinksToTag = {_LastSimpleField.Definition.Tag})]");
             }
             else
             {
-                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagTypeUtil.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)})]");
+                _builder.WriteLine($"[TagDetails(Tag = {sf.Definition.Tag}, Type = TagType.{TagManager.ToType(sf.Definition.Type)}, Offset = {index}, Required = {MapRequired(sf.Required)})]");
             }
 
             _LastSimpleField = sf;
