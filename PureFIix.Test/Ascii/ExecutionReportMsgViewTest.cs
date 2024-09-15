@@ -957,11 +957,7 @@ namespace PureFIix.Test.Ascii
             er.Parse(mv);
             Assert.That(er.StandardHeader, Is.Not.Null);
             Assert.That(er.StandardHeader.BeginString, Is.EqualTo("FIX4.4"));
-            JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
-            {
-                WriteIndented = true
-            };
-            string json = JsonSerializer.Serialize(er, options);
+            string json = JsonHelper.ToJson(er);
         }
 
         [Test]
@@ -995,25 +991,6 @@ namespace PureFIix.Test.Ascii
             });
         }
 
-        T FromJson<T>(string s) {
-            JsonSerializerOptions options2 = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var instance = JsonSerializer.Deserialize<T>(s, options2);
-            return instance;
-        }
-
-        string ToJson<T>(T instance)
-        {
-            JsonSerializerOptions options = new()
-            {
-                WriteIndented = true
-            };
-            var json = JsonSerializer.Serialize(instance, options);
-            return json;
-        }
-
         [Test]
         public void View_Parse_Parties_To_Type_Test()
         {
@@ -1026,29 +1003,29 @@ namespace PureFIix.Test.Ascii
             var parties = new Parties();
             parties.Parse(partyView);
             Assert.That(parties.NoPartyIDs, Is.Not.Null);
-            var json = ToJson(parties.NoPartyIDs[0]);
-            var expected = """
-                           {
-                             "partyID": "magna.",
-                             "partyIDSource": "9",
-                             "partyRole": 28,
-                             "ptysSubGrp": {
-                               "noPartySubIDs": [
-                                 {
-                                   "partySubID": "et",
-                                   "partySubIDType": 22
-                                 },
-                                 {
-                                   "partySubID": "leo,",
-                                   "partySubIDType": 10
-                                 }
-                               ]
-                             }
-                           }
-                           """;
+            var json = JsonHelper.ToJson(parties.NoPartyIDs[0]);
+            const string expected = """
+                                    {
+                                      "partyID": "magna.",
+                                      "partyIDSource": "9",
+                                      "partyRole": 28,
+                                      "ptysSubGrp": {
+                                        "noPartySubIDs": [
+                                          {
+                                            "partySubID": "et",
+                                            "partySubIDType": 22
+                                          },
+                                          {
+                                            "partySubID": "leo,",
+                                            "partySubIDType": 10
+                                          }
+                                        ]
+                                      }
+                                    }
+                                    """;
 
 
-            var instance = FromJson<PartiesNoPartyIDs>(expected);
+            var instance = JsonHelper.FromJson<PartiesNoPartyIDs>(expected);
             Assert.That(parties.NoPartyIDs[0], DIs.DeepEqualTo(instance));
 
             var noParties = partyView?.GetView("NoPartyIDs");
@@ -1090,79 +1067,77 @@ namespace PureFIix.Test.Ascii
             });
             var er = new ExecutionReport();
             er.Parse(erView);
-            var json = ToJson(er);
-            var expected = """
-{
-    "Symbol": "ac,",
-    "SymbolSfx": "non",
-    "SecurityID": "Pellentesque",
-    "SecurityIDSource": "B",
-    "SecAltIDGrp": {
-      "NoSecurityAltID": [
-        {
-          "SecurityAltID": "lorem",
-          "SecurityAltIDSource": "consequat"
-        },
-        {
-          "SecurityAltID": "sapien",
-          "SecurityAltIDSource": "tempor"
-        }
-      ]
-    },
-    "Product": 2,
-    "CFICode": "a",
-    "SecurityType": "SECLOAN",
-    "SecuritySubType": "purus",
-    "MaturityMonthYear": null,
-    "MaturityDate": null,
-    "PutOrCall": 1,
-    "CouponPaymentDate": null,
-    "IssueDate": null,
-    "RepoCollateralSecurityType": "Proin",
-    "RepurchaseTerm": 62025,
-    "RepurchaseRate": 27005,
-    "Factor": 68810,
-    "CreditRating": "justo",
-    "InstrRegistry": "ut",
-    "CountryOfIssue": "nibh",
-    "StateOrProvinceOfIssue": "at.",
-    "LocaleOfIssue": "fermentum",
-    "RedemptionDate": null,
-    "StrikePrice": 52639,
-    "StrikeCurrency": "magna.",
-    "OptAttribute": "risus,",
-    "ContractMultiplier": 10378,
-    "CouponRate": 25946,
-    "SecurityExchange": "placerat",
-    "Issuer": "luctus",
-    "EncodedIssuerLen": 20,
-    "EncodedIssuer": "enFKc2VneTBDUThFeUtRMWJtTHc=",
-    "SecurityDesc": "Vivamus",
-    "EncodedSecurityDescLen": 20,
-    "EncodedSecurityDesc": "QTF4QjRqRFMzMUU0ek0xeEFiazU=",
-    "Pool": "mi",
-    "ContractSettlMonth": null,
-    "CPProgram": 2,
-    "CPRegType": "rhoncus",
-    "EvntGrp": {
-      "NoEvents": [
-        {
-          "EventType": 1,
-          "EventDate": null,
-          "EventPx": 16817,
-          "EventText": "amet"
-        }
-      ]
-    },
-    "DatedDate": null,
-    "InterestAccrualDate": null
-  }
-""";
+            var json = JsonHelper.ToJson(er);
+            const string expected = """
+                                    {
+                                        "Symbol": "ac,",
+                                        "SymbolSfx": "non",
+                                        "SecurityID": "Pellentesque",
+                                        "SecurityIDSource": "B",
+                                        "SecAltIDGrp": {
+                                          "NoSecurityAltID": [
+                                            {
+                                              "SecurityAltID": "lorem",
+                                              "SecurityAltIDSource": "consequat"
+                                            },
+                                            {
+                                              "SecurityAltID": "sapien",
+                                              "SecurityAltIDSource": "tempor"
+                                            }
+                                          ]
+                                        },
+                                        "Product": 2,
+                                        "CFICode": "a",
+                                        "SecurityType": "SECLOAN",
+                                        "SecuritySubType": "purus",
+                                        "MaturityMonthYear": null,
+                                        "MaturityDate": null,
+                                        "PutOrCall": 1,
+                                        "CouponPaymentDate": null,
+                                        "IssueDate": null,
+                                        "RepoCollateralSecurityType": "Proin",
+                                        "RepurchaseTerm": 62025,
+                                        "RepurchaseRate": 27005,
+                                        "Factor": 68810,
+                                        "CreditRating": "justo",
+                                        "InstrRegistry": "ut",
+                                        "CountryOfIssue": "nibh",
+                                        "StateOrProvinceOfIssue": "at.",
+                                        "LocaleOfIssue": "fermentum",
+                                        "RedemptionDate": null,
+                                        "StrikePrice": 52639,
+                                        "StrikeCurrency": "magna.",
+                                        "OptAttribute": "risus,",
+                                        "ContractMultiplier": 10378,
+                                        "CouponRate": 25946,
+                                        "SecurityExchange": "placerat",
+                                        "Issuer": "luctus",
+                                        "EncodedIssuerLen": 20,
+                                        "EncodedIssuer": "enFKc2VneTBDUThFeUtRMWJtTHc=",
+                                        "SecurityDesc": "Vivamus",
+                                        "EncodedSecurityDescLen": 20,
+                                        "EncodedSecurityDesc": "QTF4QjRqRFMzMUU0ek0xeEFiazU=",
+                                        "Pool": "mi",
+                                        "ContractSettlMonth": null,
+                                        "CPProgram": 2,
+                                        "CPRegType": "rhoncus",
+                                        "EvntGrp": {
+                                          "NoEvents": [
+                                            {
+                                              "EventType": 1,
+                                              "EventDate": null,
+                                              "EventPx": 16817,
+                                              "EventText": "amet"
+                                            }
+                                          ]
+                                        },
+                                        "DatedDate": null,
+                                        "InterestAccrualDate": null
+                                      }
+                                    """;
 
-            var er2 = FromJson<Instrument>(expected);
+            var er2 = JsonHelper.FromJson<Instrument>(expected);
             Assert.That(er2.SecurityID, Is.EqualTo(er.Instrument.SecurityID));
-
-
         }
 
 
@@ -1177,32 +1152,36 @@ namespace PureFIix.Test.Ascii
             Assert.That(undInstrmtGrpView, Is.Not.Null);
             var uig = new UndInstrmtGrp();
             uig.Parse(undInstrmtGrpView);
-            Assert.That(uig.NoUnderlyings, Is.Not.Null);
-            Assert.That(uig.NoUnderlyings.Length, Is.EqualTo(2));
             var u0 = uig.NoUnderlyings[0];
-            Assert.That(u0, Is.Not.Null);
             var underlying0 = u0.UnderlyingInstrument;
-            Assert.That(underlying0, Is.Not.Null);
-            Assert.That(underlying0.UnderlyingSymbol, Is.EqualTo("massa."));
 
-            var expected0 = """
-{
-  "NoUnderlyingSecurityAltID": [
-  {
-     "UnderlyingSecurityAltID": "ornare",
-     "UnderlyingSecurityAltIDSource": "magna."
-   },
-   {
-     "UnderlyingSecurityAltID": "non",
-     "UnderlyingSecurityAltIDSource": "at"
-   },
-   {
-     "UnderlyingSecurityAltID": "hendrerit",
-     "UnderlyingSecurityAltIDSource": "Pellentesque"
-    }
-  ]
-}
-""";
+            Assert.Multiple(() =>
+            {
+                Assert.That(uig.NoUnderlyings, Is.Not.Null);
+                Assert.That(uig.NoUnderlyings, Has.Length.EqualTo(2));
+                Assert.That(u0, Is.Not.Null);
+                Assert.That(underlying0, Is.Not.Null);
+                Assert.That(underlying0.UnderlyingSymbol, Is.EqualTo("massa."));
+            });
+            
+            const string expected0 = """
+                                     {
+                                       "NoUnderlyingSecurityAltID": [
+                                       {
+                                          "UnderlyingSecurityAltID": "ornare",
+                                          "UnderlyingSecurityAltIDSource": "magna."
+                                        },
+                                        {
+                                          "UnderlyingSecurityAltID": "non",
+                                          "UnderlyingSecurityAltIDSource": "at"
+                                        },
+                                        {
+                                          "UnderlyingSecurityAltID": "hendrerit",
+                                          "UnderlyingSecurityAltIDSource": "Pellentesque"
+                                         }
+                                       ]
+                                     }
+                                     """;
             /*
               "UnderlyingInstrument": {
           "UnderlyingSymbol": "erat",
@@ -1218,14 +1197,18 @@ namespace PureFIix.Test.Ascii
             ]
           },
              */
-            var expectedInst = FromJson<UndSecAltIDGrp>(expected0);
+            var expectedInst = JsonHelper.FromJson<UndSecAltIDGrp>(expected0);
             Assert.Multiple(() =>
             {
                 Assert.That(expectedInst, Is.Not.Null);
-                Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
-                Assert.That(uig.NoUnderlyings[1].UnderlyingInstrument.UnderlyingSymbol, Is.EqualTo("erat"));
-                Assert.That(uig.NoUnderlyings[1].UnderlyingInstrument.UndSecAltIDGrp.NoUnderlyingSecurityAltID[0].UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
-                Assert.That(uig.NoUnderlyings[1].UnderlyingInstrument.UndSecAltIDGrp.NoUnderlyingSecurityAltID[0].UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
+                var u1 = uig.NoUnderlyings[1].UnderlyingInstrument;
+                Assert.Multiple(() =>
+                {
+                    Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
+                    Assert.That(u1?.UnderlyingSymbol, Is.EqualTo("erat"));
+                    Assert.That(u1?.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
+                    Assert.That(u1?.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
+                });
             });
         }
     }

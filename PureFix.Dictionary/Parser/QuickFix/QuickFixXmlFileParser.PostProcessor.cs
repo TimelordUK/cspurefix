@@ -30,6 +30,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
                     _work.Enqueue(msg);
                 }
                 Work();
+                _sw.Stop();
             }
 
             private void Work()
