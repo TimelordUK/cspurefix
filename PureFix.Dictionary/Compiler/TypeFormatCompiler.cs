@@ -12,7 +12,7 @@ using static PureFix.Dictionary.Compiler.MsgCompiler;
 
 namespace PureFix.Dictionary.Compiler
 {
-    public class TypeFormatCompiler : BaseParserCompiler, ISetDispatchReceiver
+    public class TypeFormatCompiler : BaseCompiler, ISetDispatchReceiver
     {
         public TypeFormatCompiler(FixDefinitions definitions, Options? options = null) : base(definitions, options)
         {

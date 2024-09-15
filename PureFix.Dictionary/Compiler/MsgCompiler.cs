@@ -15,7 +15,7 @@ using PureFix.Types;
 
 namespace PureFix.Dictionary.Compiler
 {
-    public partial class MsgCompiler : BaseParserCompiler, ISetDispatchReceiver
+    public partial class MsgCompiler : BaseCompiler, ISetDispatchReceiver
     {
         /***
          * using PureFix.Types.FIX44.QuickFix.Types;

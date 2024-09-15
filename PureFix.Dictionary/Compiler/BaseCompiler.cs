@@ -8,7 +8,7 @@ using static PureFix.Dictionary.Compiler.MsgCompiler;
 
 namespace PureFix.Dictionary.Compiler
 {
-    public abstract class BaseParserCompiler
+    public abstract class BaseCompiler
     {
         public FixDefinitions Definitions { get; }
         public Options CompilerOptions { get; }
@@ -17,7 +17,7 @@ namespace PureFix.Dictionary.Compiler
         protected readonly CodeGenerator _builder = new();
         protected CompilerType? _currentCompilerType;
 
-        protected BaseParserCompiler(FixDefinitions definitions, Options? options = null)
+        protected BaseCompiler(FixDefinitions definitions, Options? options = null)
         {
             Definitions = definitions;
             options ??= Options.FromVersion(definitions);
