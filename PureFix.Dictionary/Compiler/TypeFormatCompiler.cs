@@ -4,6 +4,7 @@ using PureFix.Dictionary.Parser;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace PureFix.Dictionary.Compiler
 {
     public class TypeFormatCompiler : BaseCompiler, ISetDispatchReceiver
     {
+        private ContainedSimpleField? _LastSimpleField;
         public TypeFormatCompiler(FixDefinitions definitions, Options? options = null) : base(definitions, options)
         {
         }
@@ -86,19 +88,49 @@ namespace PureFix.Dictionary.Compiler
            }
          */
 
+        private void WriteTag(ContainedSimpleField sf, string? setter=null)
+        {
+            var metaData = TagManager.GetTagMetaData(sf.Definition.TagType);
+            setter ??= $"storage.{metaData.Writer}(({metaData.TypeName}){sf.Definition.Name});";
+            _builder.WriteLine("var at = storage.Pos;");
+            _builder.WriteLine($"storage.WriteWholeNumber({sf.Definition.Tag});");
+            _builder.WriteLine("storage.WriteChar((byte)'=');");
+            _builder.WriteLine(setter);
+            _builder.WriteLine("storage.WriteChar(delimiter);");
+            _builder.WriteLine($"tags.Store(at, storage.Pos - at, {sf.Definition.Tag});");
+        }
+
         public void OnSimple(ContainedSimpleField sf, int index, object? peek)
         {
             var metaData = TagManager.GetTagMetaData(sf.Definition.TagType);
             _builder.WriteLine($"if ({sf.Definition.Name} != null)");
             using (_builder.BeginBlock())
             {
-                _builder.WriteLine("var at = storage.Pos;");
-                _builder.WriteLine($"storage.WriteWholeNumber({sf.Definition.Tag});");
-                _builder.WriteLine("storage.WriteChar((byte)'=');");
-                _builder.WriteLine($"storage.{metaData.Writer}(({metaData.TypeName}){sf.Definition.Name});");
-                _builder.WriteLine("storage.WriteChar(delimiter);");
-                _builder.WriteLine($"tags.Store(at, storage.Pos - at, {sf.Definition.Tag});");
+                // if this is a raw field and there is an array to send, normally the length field will not have been set
+                // in this case, write the length of the given array of bytes in its place as they both must be present in fix format.
+                if (sf.Definition.TagType == TagType.RawData && _LastSimpleField is not null && _LastSimpleField.Definition.TagType == TagType.Length)
+                {
+                    var prevMetaData = TagManager.GetTagMetaData(_LastSimpleField.Definition.TagType);
+                    _builder.WriteLine($"if ({_LastSimpleField.Name} == null)");
+                    using (_builder.BeginBlock())
+                    {
+                        using (_builder.BeginBlock())
+                        {
+                            WriteTag(_LastSimpleField,
+                                $"storage.{prevMetaData.Writer}(({prevMetaData.TypeName}){sf.Definition.Name}.Length);");
+                        }
+                    }
+                    using (_builder.BeginBlock())
+                    {
+                        WriteTag(sf);
+                    }
+                }
+                else
+                {
+                    WriteTag(sf);
+                }
             }
+            _LastSimpleField = sf;
         }
 
         // assume that the component has its own parser so just give it the view contained within parent view.

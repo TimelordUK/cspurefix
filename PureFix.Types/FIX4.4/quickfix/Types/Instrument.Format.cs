@@ -294,12 +294,25 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			if (EncodedIssuer != null)
 			{
-				var at = storage.Pos;
-				storage.WriteWholeNumber(349);
-				storage.WriteChar((byte)'=');
-				storage.WriteBuffer((byte[])EncodedIssuer);
-				storage.WriteChar(delimiter);
-				tags.Store(at, storage.Pos - at, 349);
+				if (EncodedIssuerLen == null)
+				{
+					{
+						var at = storage.Pos;
+						storage.WriteWholeNumber(348);
+						storage.WriteChar((byte)'=');
+						storage.WriteWholeNumber((int)EncodedIssuer.Length);
+						storage.WriteChar(delimiter);
+						tags.Store(at, storage.Pos - at, 348);
+					}
+				}
+				{
+					var at = storage.Pos;
+					storage.WriteWholeNumber(349);
+					storage.WriteChar((byte)'=');
+					storage.WriteBuffer((byte[])EncodedIssuer);
+					storage.WriteChar(delimiter);
+					tags.Store(at, storage.Pos - at, 349);
+				}
 			}
 			if (SecurityDesc != null)
 			{
@@ -321,12 +334,25 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			if (EncodedSecurityDesc != null)
 			{
-				var at = storage.Pos;
-				storage.WriteWholeNumber(351);
-				storage.WriteChar((byte)'=');
-				storage.WriteBuffer((byte[])EncodedSecurityDesc);
-				storage.WriteChar(delimiter);
-				tags.Store(at, storage.Pos - at, 351);
+				if (EncodedSecurityDescLen == null)
+				{
+					{
+						var at = storage.Pos;
+						storage.WriteWholeNumber(350);
+						storage.WriteChar((byte)'=');
+						storage.WriteWholeNumber((int)EncodedSecurityDesc.Length);
+						storage.WriteChar(delimiter);
+						tags.Store(at, storage.Pos - at, 350);
+					}
+				}
+				{
+					var at = storage.Pos;
+					storage.WriteWholeNumber(351);
+					storage.WriteChar((byte)'=');
+					storage.WriteBuffer((byte[])EncodedSecurityDesc);
+					storage.WriteChar(delimiter);
+					tags.Store(at, storage.Pos - at, 351);
+				}
 			}
 			if (Pool != null)
 			{

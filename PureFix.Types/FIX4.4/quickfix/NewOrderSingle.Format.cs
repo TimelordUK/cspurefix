@@ -466,12 +466,25 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			if (EncodedText != null)
 			{
-				var at = storage.Pos;
-				storage.WriteWholeNumber(355);
-				storage.WriteChar((byte)'=');
-				storage.WriteBuffer((byte[])EncodedText);
-				storage.WriteChar(delimiter);
-				tags.Store(at, storage.Pos - at, 355);
+				if (EncodedTextLen == null)
+				{
+					{
+						var at = storage.Pos;
+						storage.WriteWholeNumber(354);
+						storage.WriteChar((byte)'=');
+						storage.WriteWholeNumber((int)EncodedText.Length);
+						storage.WriteChar(delimiter);
+						tags.Store(at, storage.Pos - at, 354);
+					}
+				}
+				{
+					var at = storage.Pos;
+					storage.WriteWholeNumber(355);
+					storage.WriteChar((byte)'=');
+					storage.WriteBuffer((byte[])EncodedText);
+					storage.WriteChar(delimiter);
+					tags.Store(at, storage.Pos - at, 355);
+				}
 			}
 			if (SettlDate2 != null)
 			{
