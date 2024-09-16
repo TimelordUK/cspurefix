@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PureFix.Types.FIX43.QuickFix.Types;
+using PureFix.Buffer.Ascii;
+
+namespace PureFix.Types.FIX43.QuickFix
+{
+	[MessageType("5", FixVersion.FIX43)]
+	public static class LogoutExt
+	{
+		public static void Parse(this Logout instance, MsgView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
+			instance.Text = view.GetString(58);
+			instance.EncodedTextLen = view.GetInt32(354);
+			instance.EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
+		}
+	}
+}

@@ -9,6 +9,10 @@ namespace PureFix.Types
     public interface IStandardHeader
     {
         public string? MsgType{get;}
-        public int? BodyLength{get;}
+        public int? BodyLength{get; }
+        public string SenderCompID { get; }
+        public string TargetCompID { get; }
+        public string TargetSubID { get; }
+        public string BeginString { get; }
     }
 }

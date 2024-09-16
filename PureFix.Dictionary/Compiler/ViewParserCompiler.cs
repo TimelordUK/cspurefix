@@ -124,17 +124,19 @@ namespace PureFix.Dictionary.Compiler
         {
             if (gf.Definition == null) return;
 
-            _builder.WriteLine($"var groupView = view.GetView(\"{gf.Name}\");");
-            _builder.WriteLine($"if (groupView is null) return;");
+            var groupView = $"groupView{gf.Name}";
+            var count = $"count{gf.Name}";
+            _builder.WriteLine($"var {groupView} = view.GetView(\"{gf.Name}\");");
+            _builder.WriteLine($"if ({groupView} is null) return;");
             _builder.WriteLine();
 
             var extended = _currentCompilerType?.GetExtended(gf) ?? gf.Name;
-            _builder.WriteLine("var count = groupView.GroupCount();");
-            _builder.WriteLine($"instance.{gf.Name} = new {extended}[count];");
-            using (_builder.BeginBlock("for (var i = 0; i < count; ++i)"))
+            _builder.WriteLine($"var {count} = {groupView}.GroupCount();");
+            _builder.WriteLine($"instance.{gf.Name} = new {extended}[{count}];");
+            using (_builder.BeginBlock($"for (var i = 0; i < {count}; ++i)"))
             {
                 _builder.WriteLine($"instance.{gf.Name}[i] = new();");
-                _builder.WriteLine($"instance.{gf.Name}[i].Parse(groupView[i]);");
+                _builder.WriteLine($"instance.{gf.Name}[i].Parse({groupView}[i]);");
             }
 
             Enqueue(new CompilerType(Definitions, CompilerOptions, gf.Definition, extended));

@@ -1,0 +1,10 @@
+namespace PureFix.Types.FIX43.QuickFix.Types
+{
+	public static class CrossTypeValues
+	{
+		public const int CrossTradeWhichIsExecutedCompletelyOrNotBothSidesAreTreatedInTheSameMannerThisIsEquivalentToAnAllOrNone = 1;
+		public const int CrossTradeWhichIsExecutedPartiallyAndTheRestIsCancelledOneSideIsFullyExecutedTheOtherSideIsPartiallyExecutedWithTheRemainderBeingCancelledThisIsEquivalentToAnImmediateOrCancelOnTheOtherSide = 2;
+		public const int CrossTradeWhichIsPartiallyExecutedWithTheUnfilledPortionsRemainingActiveOneSideOfTheCrossIsFullyExecuted = 3;
+		public const int CrossTradeIsExecutedWithExistingOrdersWithTheSamePrice = 4;
+	}
+}

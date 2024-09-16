@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PureFix.Types.FIX43.QuickFix.Types;
+using PureFix.Buffer.Ascii;
+
+namespace PureFix.Types.FIX43.QuickFix
+{
+	[MessageType("N", FixVersion.FIX43)]
+	public static class ListStatusExt
+	{
+		public static void Parse(this ListStatus instance, MsgView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is MsgView groupViewStandardHeader)
+			{
+				instance.StandardHeader = new StandardHeader();
+				instance.StandardHeader!.Parse(groupViewStandardHeader);
+			}
+			instance.ListID = view.GetString(66);
+			instance.ListStatusType = view.GetInt32(429);
+			instance.NoRpts = view.GetInt32(82);
+			instance.ListOrderStatus = view.GetInt32(431);
+			instance.RptSeq = view.GetInt32(83);
+			instance.ListStatusText = view.GetString(444);
+			instance.EncodedListStatusTextLen = view.GetInt32(445);
+			instance.EncodedListStatusText = view.GetByteArray(446);
+			instance.TransactTime = view.GetDateTime(60);
+			instance.TotNoOrders = view.GetInt32(68);
+			var groupViewNoOrders = view.GetView("NoOrders");
+			if (groupViewNoOrders is null) return;
+			
+			var countNoOrders = groupViewNoOrders.GroupCount();
+			instance.NoOrders = new ListStatusNoOrders[countNoOrders];
+			for (var i = 0; i < countNoOrders; ++i)
+			{
+				instance.NoOrders[i] = new();
+				instance.NoOrders[i].Parse(groupViewNoOrders[i]);
+			}
+			if (view.GetView("StandardTrailer") is MsgView groupViewStandardTrailer)
+			{
+				instance.StandardTrailer = new StandardTrailer();
+				instance.StandardTrailer!.Parse(groupViewStandardTrailer);
+			}
+		}
+	}
+}
