@@ -18,5 +18,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 2, Required = false)]
 		public LegStipulations? LegStipulations { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (InstrumentLeg is not null) ((IFixEncoder)InstrumentLeg).Encode(writer);
+			if (LegIOIQty is not null) writer.WriteString(682, LegIOIQty);
+			if (LegStipulations is not null) ((IFixEncoder)LegStipulations).Encode(writer);
+		}
 	}
 }

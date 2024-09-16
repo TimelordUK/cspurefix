@@ -33,5 +33,25 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 361, Type = TagType.RawData, Offset = 7, Required = false, LinksToTag = 360)]
 		public byte[]? EncodedAllocText { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (AllocAccount is not null) writer.WriteString(79, AllocAccount);
+			if (AllocAcctIDSource is not null) writer.WriteWholeNumber(661, AllocAcctIDSource.Value);
+			if (AllocPrice is not null) writer.WriteNumber(366, AllocPrice.Value);
+			if (IndividualAllocID is not null) writer.WriteString(467, IndividualAllocID);
+			if (IndividualAllocRejCode is not null) writer.WriteWholeNumber(776, IndividualAllocRejCode.Value);
+			if (AllocText is not null) writer.WriteString(161, AllocText);
+			if (EncodedAllocText is not null)
+			{
+				writer.WriteWholeNumber(360, EncodedAllocText.Length);
+				writer.WriteBuffer(361, EncodedAllocText);
+			}
+		}
 	}
 }

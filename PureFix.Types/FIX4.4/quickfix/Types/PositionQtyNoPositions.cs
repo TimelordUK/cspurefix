@@ -24,5 +24,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 4, Required = false)]
 		public NestedParties? NestedParties { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (PosType is not null) writer.WriteString(703, PosType);
+			if (LongQty is not null) writer.WriteNumber(704, LongQty.Value);
+			if (ShortQty is not null) writer.WriteNumber(705, ShortQty.Value);
+			if (PosQtyStatus is not null) writer.WriteWholeNumber(706, PosQtyStatus.Value);
+			if (NestedParties is not null) ((IFixEncoder)NestedParties).Encode(writer);
+		}
 	}
 }

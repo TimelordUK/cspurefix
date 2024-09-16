@@ -67,6 +67,41 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 18, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& TradingSessionID is not null
+				&& TradSesStatus is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (TradSesReqID is not null) writer.WriteString(335, TradSesReqID);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (TradSesMethod is not null) writer.WriteWholeNumber(338, TradSesMethod.Value);
+			if (TradSesMode is not null) writer.WriteWholeNumber(339, TradSesMode.Value);
+			if (UnsolicitedIndicator is not null) writer.WriteBoolean(325, UnsolicitedIndicator.Value);
+			if (TradSesStatus is not null) writer.WriteWholeNumber(340, TradSesStatus.Value);
+			if (TradSesStatusRejReason is not null) writer.WriteWholeNumber(567, TradSesStatusRejReason.Value);
+			if (TradSesStartTime is not null) writer.WriteUtcTimeStamp(341, TradSesStartTime.Value);
+			if (TradSesOpenTime is not null) writer.WriteUtcTimeStamp(342, TradSesOpenTime.Value);
+			if (TradSesPreCloseTime is not null) writer.WriteUtcTimeStamp(343, TradSesPreCloseTime.Value);
+			if (TradSesCloseTime is not null) writer.WriteUtcTimeStamp(344, TradSesCloseTime.Value);
+			if (TradSesEndTime is not null) writer.WriteUtcTimeStamp(345, TradSesEndTime.Value);
+			if (TotalVolumeTraded is not null) writer.WriteNumber(387, TotalVolumeTraded.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

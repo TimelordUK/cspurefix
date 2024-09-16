@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 73, Offset = 0, Required = false)]
 		public OrdAllocGrpNoOrders[]? NoOrders { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoOrders is not null && NoOrders.Length != 0)
+			{
+				writer.WriteWholeNumber(73, NoOrders.Length);
+				for (int i = 0; i < NoOrders.Length; i++)
+				{
+					((IFixEncoder)NoOrders[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

@@ -33,5 +33,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 761, Type = TagType.String, Offset = 7, Required = false)]
 		public string? BenchmarkSecurityIDSource { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Spread is not null) writer.WriteNumber(218, Spread.Value);
+			if (BenchmarkCurveCurrency is not null) writer.WriteString(220, BenchmarkCurveCurrency);
+			if (BenchmarkCurveName is not null) writer.WriteString(221, BenchmarkCurveName);
+			if (BenchmarkCurvePoint is not null) writer.WriteString(222, BenchmarkCurvePoint);
+			if (BenchmarkPrice is not null) writer.WriteNumber(662, BenchmarkPrice.Value);
+			if (BenchmarkPriceType is not null) writer.WriteWholeNumber(663, BenchmarkPriceType.Value);
+			if (BenchmarkSecurityID is not null) writer.WriteString(699, BenchmarkSecurityID);
+			if (BenchmarkSecurityIDSource is not null) writer.WriteString(761, BenchmarkSecurityIDSource);
+		}
 	}
 }

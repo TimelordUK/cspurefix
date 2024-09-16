@@ -52,6 +52,34 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 13, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& ClOrdID is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& Side is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ClOrdLinkID is not null) writer.WriteString(583, ClOrdLinkID);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (OrdStatusReqID is not null) writer.WriteString(790, OrdStatusReqID);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

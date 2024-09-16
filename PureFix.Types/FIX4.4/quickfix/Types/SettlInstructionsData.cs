@@ -24,5 +24,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 4, Required = false)]
 		public DlvyInstGrp? DlvyInstGrp { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (SettlDeliveryType is not null) writer.WriteWholeNumber(172, SettlDeliveryType.Value);
+			if (StandInstDbType is not null) writer.WriteWholeNumber(169, StandInstDbType.Value);
+			if (StandInstDbName is not null) writer.WriteString(170, StandInstDbName);
+			if (StandInstDbID is not null) writer.WriteString(171, StandInstDbID);
+			if (DlvyInstGrp is not null) ((IFixEncoder)DlvyInstGrp).Encode(writer);
+		}
 	}
 }

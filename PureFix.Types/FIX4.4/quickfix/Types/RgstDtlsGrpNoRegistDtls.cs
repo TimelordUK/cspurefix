@@ -33,5 +33,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 475, Type = TagType.String, Offset = 7, Required = false)]
 		public string? InvestorCountryOfResidence { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (RegistDtls is not null) writer.WriteString(509, RegistDtls);
+			if (RegistEmail is not null) writer.WriteString(511, RegistEmail);
+			if (MailingDtls is not null) writer.WriteString(474, MailingDtls);
+			if (MailingInst is not null) writer.WriteString(482, MailingInst);
+			if (NestedParties is not null) ((IFixEncoder)NestedParties).Encode(writer);
+			if (OwnerType is not null) writer.WriteWholeNumber(522, OwnerType.Value);
+			if (DateOfBirth is not null) writer.WriteLocalDateOnly(486, DateOfBirth.Value);
+			if (InvestorCountryOfResidence is not null) writer.WriteString(475, InvestorCountryOfResidence);
+		}
 	}
 }

@@ -108,5 +108,53 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 659, Type = TagType.String, Offset = 32, Required = false)]
 		public string? SideComplianceID { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				Side is not null
+				&& ClOrdID is not null
+				&& OrderQtyData is not null && ((IFixValidator)OrderQtyData).IsValid(in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Side is not null) writer.WriteString(54, Side);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ClOrdLinkID is not null) writer.WriteString(583, ClOrdLinkID);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (TradeOriginationDate is not null) writer.WriteLocalDateOnly(229, TradeOriginationDate.Value);
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (DayBookingInst is not null) writer.WriteString(589, DayBookingInst);
+			if (BookingUnit is not null) writer.WriteString(590, BookingUnit);
+			if (PreallocMethod is not null) writer.WriteString(591, PreallocMethod);
+			if (AllocID is not null) writer.WriteString(70, AllocID);
+			if (PreAllocGrp is not null) ((IFixEncoder)PreAllocGrp).Encode(writer);
+			if (QtyType is not null) writer.WriteWholeNumber(854, QtyType.Value);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (CommissionData is not null) ((IFixEncoder)CommissionData).Encode(writer);
+			if (OrderCapacity is not null) writer.WriteString(528, OrderCapacity);
+			if (OrderRestrictions is not null) writer.WriteString(529, OrderRestrictions);
+			if (CustOrderCapacity is not null) writer.WriteWholeNumber(582, CustOrderCapacity.Value);
+			if (ForexReq is not null) writer.WriteBoolean(121, ForexReq.Value);
+			if (SettlCurrency is not null) writer.WriteString(120, SettlCurrency);
+			if (BookingType is not null) writer.WriteWholeNumber(775, BookingType.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (PositionEffect is not null) writer.WriteString(77, PositionEffect);
+			if (CoveredOrUncovered is not null) writer.WriteWholeNumber(203, CoveredOrUncovered.Value);
+			if (CashMargin is not null) writer.WriteString(544, CashMargin);
+			if (ClearingFeeIndicator is not null) writer.WriteString(635, ClearingFeeIndicator);
+			if (SolicitedFlag is not null) writer.WriteBoolean(377, SolicitedFlag.Value);
+			if (SideComplianceID is not null) writer.WriteString(659, SideComplianceID);
+		}
 	}
 }

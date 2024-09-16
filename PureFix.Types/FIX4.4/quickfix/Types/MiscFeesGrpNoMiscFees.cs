@@ -21,5 +21,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 891, Type = TagType.Int, Offset = 3, Required = false)]
 		public int? MiscFeeBasis { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (MiscFeeAmt is not null) writer.WriteNumber(137, MiscFeeAmt.Value);
+			if (MiscFeeCurr is not null) writer.WriteString(138, MiscFeeCurr);
+			if (MiscFeeType is not null) writer.WriteString(139, MiscFeeType);
+			if (MiscFeeBasis is not null) writer.WriteWholeNumber(891, MiscFeeBasis.Value);
+		}
 	}
 }

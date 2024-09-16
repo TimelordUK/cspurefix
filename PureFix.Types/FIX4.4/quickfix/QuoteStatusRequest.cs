@@ -55,6 +55,33 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 14, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (QuoteStatusReqID is not null) writer.WriteString(649, QuoteStatusReqID);
+			if (QuoteID is not null) writer.WriteString(117, QuoteID);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (SubscriptionRequestType is not null) writer.WriteString(263, SubscriptionRequestType);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

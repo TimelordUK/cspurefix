@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 702, Offset = 0, Required = false)]
 		public PositionQtyNoPositions[]? NoPositions { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoPositions is not null && NoPositions.Length != 0)
+			{
+				writer.WriteWholeNumber(702, NoPositions.Length);
+				for (int i = 0; i < NoPositions.Length; i++)
+				{
+					((IFixEncoder)NoPositions[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

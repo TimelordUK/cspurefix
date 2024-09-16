@@ -79,6 +79,49 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 22, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& OrigClOrdID is not null
+				&& ClOrdID is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& Side is not null
+				&& TransactTime is not null
+				&& OrderQtyData is not null && ((IFixValidator)OrderQtyData).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (OrigClOrdID is not null) writer.WriteString(41, OrigClOrdID);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ClOrdLinkID is not null) writer.WriteString(583, ClOrdLinkID);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (OrigOrdModTime is not null) writer.WriteUtcTimeStamp(586, OrigOrdModTime.Value);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (ComplianceID is not null) writer.WriteString(376, ComplianceID);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

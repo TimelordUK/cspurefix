@@ -36,7 +36,9 @@ namespace PureFix.Buffer.Ascii
             }
 
             var storage = Pool.Rent();
-            message.Encode(storage.Buffer, storage.Locations, LogDelimiter);
+
+            var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+            message.Encode(writer);
             return storage;
         }
     }

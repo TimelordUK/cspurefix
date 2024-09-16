@@ -21,5 +21,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 497, Type = TagType.String, Offset = 3, Required = false)]
 		public string? FundRenewWaiv { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Commission is not null) writer.WriteNumber(12, Commission.Value);
+			if (CommType is not null) writer.WriteString(13, CommType);
+			if (CommCurrency is not null) writer.WriteString(479, CommCurrency);
+			if (FundRenewWaiv is not null) writer.WriteString(497, FundRenewWaiv);
+		}
 	}
 }

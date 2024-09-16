@@ -7,7 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public sealed partial class StandardHeader : IStandardHeader, IFixEncoder
+	public sealed partial class StandardHeader : IStandardHeader, IFixValidator, IFixEncoder
 	{
 		[TagDetails(Tag = 8, Type = TagType.String, Offset = 0, Required = true)]
 		public string? BeginString { get; set; }
@@ -90,5 +90,54 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 26, Required = false)]
 		public Hop? Hop { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				BeginString is not null
+				&& BodyLength is not null
+				&& MsgType is not null
+				&& SenderCompID is not null
+				&& TargetCompID is not null
+				&& MsgSeqNum is not null
+				&& SendingTime is not null;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (BeginString is not null) writer.WriteString(8, BeginString);
+			if (BodyLength is not null) writer.WriteWholeNumber(9, BodyLength.Value);
+			if (MsgType is not null) writer.WriteString(35, MsgType);
+			if (SenderCompID is not null) writer.WriteString(49, SenderCompID);
+			if (TargetCompID is not null) writer.WriteString(56, TargetCompID);
+			if (OnBehalfOfCompID is not null) writer.WriteString(115, OnBehalfOfCompID);
+			if (DeliverToCompID is not null) writer.WriteString(128, DeliverToCompID);
+			if (SecureData is not null)
+			{
+				writer.WriteWholeNumber(90, SecureData.Length);
+				writer.WriteBuffer(91, SecureData);
+			}
+			if (MsgSeqNum is not null) writer.WriteWholeNumber(34, MsgSeqNum.Value);
+			if (SenderSubID is not null) writer.WriteString(50, SenderSubID);
+			if (SenderLocationID is not null) writer.WriteString(142, SenderLocationID);
+			if (TargetSubID is not null) writer.WriteString(57, TargetSubID);
+			if (TargetLocationID is not null) writer.WriteString(143, TargetLocationID);
+			if (OnBehalfOfSubID is not null) writer.WriteString(116, OnBehalfOfSubID);
+			if (OnBehalfOfLocationID is not null) writer.WriteString(144, OnBehalfOfLocationID);
+			if (DeliverToSubID is not null) writer.WriteString(129, DeliverToSubID);
+			if (DeliverToLocationID is not null) writer.WriteString(145, DeliverToLocationID);
+			if (PossDupFlag is not null) writer.WriteBoolean(43, PossDupFlag.Value);
+			if (PossResend is not null) writer.WriteBoolean(97, PossResend.Value);
+			if (SendingTime is not null) writer.WriteUtcTimeStamp(52, SendingTime.Value);
+			if (OrigSendingTime is not null) writer.WriteUtcTimeStamp(122, OrigSendingTime.Value);
+			if (XmlData is not null)
+			{
+				writer.WriteWholeNumber(212, XmlData.Length);
+				writer.WriteBuffer(213, XmlData);
+			}
+			if (MessageEncoding is not null) writer.WriteString(347, MessageEncoding);
+			if (LastMsgSeqNumProcessed is not null) writer.WriteWholeNumber(369, LastMsgSeqNumProcessed.Value);
+			if (Hop is not null) ((IFixEncoder)Hop).Encode(writer);
+		}
 	}
 }

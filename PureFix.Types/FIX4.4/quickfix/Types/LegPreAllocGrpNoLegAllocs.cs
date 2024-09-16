@@ -27,5 +27,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 675, Type = TagType.String, Offset = 5, Required = false)]
 		public string? LegSettlCurrency { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (LegAllocAccount is not null) writer.WriteString(671, LegAllocAccount);
+			if (LegIndividualAllocID is not null) writer.WriteString(672, LegIndividualAllocID);
+			if (NestedParties2 is not null) ((IFixEncoder)NestedParties2).Encode(writer);
+			if (LegAllocQty is not null) writer.WriteNumber(673, LegAllocQty.Value);
+			if (LegAllocAcctIDSource is not null) writer.WriteString(674, LegAllocAcctIDSource);
+			if (LegSettlCurrency is not null) writer.WriteString(675, LegSettlCurrency);
+		}
 	}
 }

@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 708, Type = TagType.Float, Offset = 1, Required = false)]
 		public double? PosAmt { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (PosAmtType is not null) writer.WriteString(707, PosAmtType);
+			if (PosAmt is not null) writer.WriteNumber(708, PosAmt.Value);
+		}
 	}
 }

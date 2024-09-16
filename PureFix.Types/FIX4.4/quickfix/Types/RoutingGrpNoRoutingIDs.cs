@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 217, Type = TagType.String, Offset = 1, Required = false)]
 		public string? RoutingID { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (RoutingType is not null) writer.WriteWholeNumber(216, RoutingType.Value);
+			if (RoutingID is not null) writer.WriteString(217, RoutingID);
+		}
 	}
 }

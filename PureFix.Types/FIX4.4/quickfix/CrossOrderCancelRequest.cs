@@ -46,6 +46,36 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 11, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& CrossID is not null
+				&& OrigCrossID is not null
+				&& CrossType is not null
+				&& CrossPrioritization is not null
+				&& SideCrossOrdCxlGrp is not null && ((IFixValidator)SideCrossOrdCxlGrp).IsValid(in config)
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& TransactTime is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (CrossID is not null) writer.WriteString(548, CrossID);
+			if (OrigCrossID is not null) writer.WriteString(551, OrigCrossID);
+			if (CrossType is not null) writer.WriteWholeNumber(549, CrossType.Value);
+			if (CrossPrioritization is not null) writer.WriteWholeNumber(550, CrossPrioritization.Value);
+			if (SideCrossOrdCxlGrp is not null) ((IFixEncoder)SideCrossOrdCxlGrp).Encode(writer);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

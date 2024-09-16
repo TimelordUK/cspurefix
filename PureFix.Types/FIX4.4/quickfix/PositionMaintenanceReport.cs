@@ -97,6 +97,61 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 28, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& PosMaintRptID is not null
+				&& PosTransType is not null
+				&& PosMaintAction is not null
+				&& OrigPosReqRefID is not null
+				&& PosMaintStatus is not null
+				&& ClearingBusinessDate is not null
+				&& Account is not null
+				&& AccountType is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& TransactTime is not null
+				&& PositionQty is not null && ((IFixValidator)PositionQty).IsValid(in config)
+				&& PositionAmountData is not null && ((IFixValidator)PositionAmountData).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (PosMaintRptID is not null) writer.WriteString(721, PosMaintRptID);
+			if (PosTransType is not null) writer.WriteWholeNumber(709, PosTransType.Value);
+			if (PosReqID is not null) writer.WriteString(710, PosReqID);
+			if (PosMaintAction is not null) writer.WriteWholeNumber(712, PosMaintAction.Value);
+			if (OrigPosReqRefID is not null) writer.WriteString(713, OrigPosReqRefID);
+			if (PosMaintStatus is not null) writer.WriteWholeNumber(722, PosMaintStatus.Value);
+			if (PosMaintResult is not null) writer.WriteWholeNumber(723, PosMaintResult.Value);
+			if (ClearingBusinessDate is not null) writer.WriteLocalDateOnly(715, ClearingBusinessDate.Value);
+			if (SettlSessID is not null) writer.WriteString(716, SettlSessID);
+			if (SettlSessSubID is not null) writer.WriteString(717, SettlSessSubID);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (TrdgSesGrp is not null) ((IFixEncoder)TrdgSesGrp).Encode(writer);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (PositionQty is not null) ((IFixEncoder)PositionQty).Encode(writer);
+			if (PositionAmountData is not null) ((IFixEncoder)PositionAmountData).Encode(writer);
+			if (AdjustmentType is not null) writer.WriteWholeNumber(718, AdjustmentType.Value);
+			if (ThresholdAmount is not null) writer.WriteNumber(834, ThresholdAmount.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

@@ -183,5 +183,77 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 57, Required = false)]
 		public TrdAllocGrp? TrdAllocGrp { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				Side is not null
+				&& OrderID is not null;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Side is not null) writer.WriteString(54, Side);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (SecondaryOrderID is not null) writer.WriteString(198, SecondaryOrderID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (ProcessCode is not null) writer.WriteString(81, ProcessCode);
+			if (OddLot is not null) writer.WriteBoolean(575, OddLot.Value);
+			if (ClrInstGrp is not null) ((IFixEncoder)ClrInstGrp).Encode(writer);
+			if (TradeInputSource is not null) writer.WriteString(578, TradeInputSource);
+			if (TradeInputDevice is not null) writer.WriteString(579, TradeInputDevice);
+			if (OrderInputDevice is not null) writer.WriteString(821, OrderInputDevice);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (ComplianceID is not null) writer.WriteString(376, ComplianceID);
+			if (SolicitedFlag is not null) writer.WriteBoolean(377, SolicitedFlag.Value);
+			if (OrderCapacity is not null) writer.WriteString(528, OrderCapacity);
+			if (OrderRestrictions is not null) writer.WriteString(529, OrderRestrictions);
+			if (CustOrderCapacity is not null) writer.WriteWholeNumber(582, CustOrderCapacity.Value);
+			if (OrdType is not null) writer.WriteString(40, OrdType);
+			if (ExecInst is not null) writer.WriteString(18, ExecInst);
+			if (TransBkdTime is not null) writer.WriteUtcTimeStamp(483, TransBkdTime.Value);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (TimeBracket is not null) writer.WriteString(943, TimeBracket);
+			if (CommissionData is not null) ((IFixEncoder)CommissionData).Encode(writer);
+			if (GrossTradeAmt is not null) writer.WriteNumber(381, GrossTradeAmt.Value);
+			if (NumDaysInterest is not null) writer.WriteWholeNumber(157, NumDaysInterest.Value);
+			if (ExDate is not null) writer.WriteLocalDateOnly(230, ExDate.Value);
+			if (AccruedInterestRate is not null) writer.WriteNumber(158, AccruedInterestRate.Value);
+			if (AccruedInterestAmt is not null) writer.WriteNumber(159, AccruedInterestAmt.Value);
+			if (InterestAtMaturity is not null) writer.WriteNumber(738, InterestAtMaturity.Value);
+			if (EndAccruedInterestAmt is not null) writer.WriteNumber(920, EndAccruedInterestAmt.Value);
+			if (StartCash is not null) writer.WriteNumber(921, StartCash.Value);
+			if (EndCash is not null) writer.WriteNumber(922, EndCash.Value);
+			if (Concession is not null) writer.WriteNumber(238, Concession.Value);
+			if (TotalTakedown is not null) writer.WriteNumber(237, TotalTakedown.Value);
+			if (NetMoney is not null) writer.WriteNumber(118, NetMoney.Value);
+			if (SettlCurrAmt is not null) writer.WriteNumber(119, SettlCurrAmt.Value);
+			if (SettlCurrency is not null) writer.WriteString(120, SettlCurrency);
+			if (SettlCurrFxRate is not null) writer.WriteNumber(155, SettlCurrFxRate.Value);
+			if (SettlCurrFxRateCalc is not null) writer.WriteString(156, SettlCurrFxRateCalc);
+			if (PositionEffect is not null) writer.WriteString(77, PositionEffect);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (SideMultiLegReportingType is not null) writer.WriteWholeNumber(752, SideMultiLegReportingType.Value);
+			if (ContAmtGrp is not null) ((IFixEncoder)ContAmtGrp).Encode(writer);
+			if (Stipulations is not null) ((IFixEncoder)Stipulations).Encode(writer);
+			if (MiscFeesGrp is not null) ((IFixEncoder)MiscFeesGrp).Encode(writer);
+			if (ExchangeRule is not null) writer.WriteString(825, ExchangeRule);
+			if (TradeAllocIndicator is not null) writer.WriteWholeNumber(826, TradeAllocIndicator.Value);
+			if (PreallocMethod is not null) writer.WriteString(591, PreallocMethod);
+			if (AllocID is not null) writer.WriteString(70, AllocID);
+			if (TrdAllocGrp is not null) ((IFixEncoder)TrdAllocGrp).Encode(writer);
+		}
 	}
 }

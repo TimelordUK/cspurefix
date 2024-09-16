@@ -199,6 +199,85 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 62, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& QuoteID is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (QuoteStatusReqID is not null) writer.WriteString(649, QuoteStatusReqID);
+			if (QuoteReqID is not null) writer.WriteString(131, QuoteReqID);
+			if (QuoteID is not null) writer.WriteString(117, QuoteID);
+			if (QuoteRespID is not null) writer.WriteString(693, QuoteRespID);
+			if (QuoteType is not null) writer.WriteWholeNumber(537, QuoteType.Value);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (SettlType is not null) writer.WriteString(63, SettlType);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (SettlDate2 is not null) writer.WriteLocalDateOnly(193, SettlDate2.Value);
+			if (OrderQty2 is not null) writer.WriteNumber(192, OrderQty2.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (Stipulations is not null) ((IFixEncoder)Stipulations).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (LegQuotStatGrp is not null) ((IFixEncoder)LegQuotStatGrp).Encode(writer);
+			if (QuotQualGrp is not null) ((IFixEncoder)QuotQualGrp).Encode(writer);
+			if (ExpireTime is not null) writer.WriteUtcTimeStamp(126, ExpireTime.Value);
+			if (Price is not null) writer.WriteNumber(44, Price.Value);
+			if (PriceType is not null) writer.WriteWholeNumber(423, PriceType.Value);
+			if (SpreadOrBenchmarkCurveData is not null) ((IFixEncoder)SpreadOrBenchmarkCurveData).Encode(writer);
+			if (YieldData is not null) ((IFixEncoder)YieldData).Encode(writer);
+			if (BidPx is not null) writer.WriteNumber(132, BidPx.Value);
+			if (OfferPx is not null) writer.WriteNumber(133, OfferPx.Value);
+			if (MktBidPx is not null) writer.WriteNumber(645, MktBidPx.Value);
+			if (MktOfferPx is not null) writer.WriteNumber(646, MktOfferPx.Value);
+			if (MinBidSize is not null) writer.WriteNumber(647, MinBidSize.Value);
+			if (BidSize is not null) writer.WriteNumber(134, BidSize.Value);
+			if (MinOfferSize is not null) writer.WriteNumber(648, MinOfferSize.Value);
+			if (OfferSize is not null) writer.WriteNumber(135, OfferSize.Value);
+			if (ValidUntilTime is not null) writer.WriteUtcTimeStamp(62, ValidUntilTime.Value);
+			if (BidSpotRate is not null) writer.WriteNumber(188, BidSpotRate.Value);
+			if (OfferSpotRate is not null) writer.WriteNumber(190, OfferSpotRate.Value);
+			if (BidForwardPoints is not null) writer.WriteNumber(189, BidForwardPoints.Value);
+			if (OfferForwardPoints is not null) writer.WriteNumber(191, OfferForwardPoints.Value);
+			if (MidPx is not null) writer.WriteNumber(631, MidPx.Value);
+			if (BidYield is not null) writer.WriteNumber(632, BidYield.Value);
+			if (MidYield is not null) writer.WriteNumber(633, MidYield.Value);
+			if (OfferYield is not null) writer.WriteNumber(634, OfferYield.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (OrdType is not null) writer.WriteString(40, OrdType);
+			if (BidForwardPoints2 is not null) writer.WriteNumber(642, BidForwardPoints2.Value);
+			if (OfferForwardPoints2 is not null) writer.WriteNumber(643, OfferForwardPoints2.Value);
+			if (SettlCurrBidFxRate is not null) writer.WriteNumber(656, SettlCurrBidFxRate.Value);
+			if (SettlCurrOfferFxRate is not null) writer.WriteNumber(657, SettlCurrOfferFxRate.Value);
+			if (SettlCurrFxRateCalc is not null) writer.WriteString(156, SettlCurrFxRateCalc);
+			if (CommType is not null) writer.WriteString(13, CommType);
+			if (Commission is not null) writer.WriteNumber(12, Commission.Value);
+			if (CustOrderCapacity is not null) writer.WriteWholeNumber(582, CustOrderCapacity.Value);
+			if (ExDestination is not null) writer.WriteString(100, ExDestination);
+			if (QuoteStatus is not null) writer.WriteWholeNumber(297, QuoteStatus.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

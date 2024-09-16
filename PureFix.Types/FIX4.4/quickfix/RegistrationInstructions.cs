@@ -52,6 +52,34 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 13, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& RegistID is not null
+				&& RegistTransType is not null
+				&& RegistRefID is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (RegistID is not null) writer.WriteString(513, RegistID);
+			if (RegistTransType is not null) writer.WriteString(514, RegistTransType);
+			if (RegistRefID is not null) writer.WriteString(508, RegistRefID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (RegistAcctType is not null) writer.WriteString(493, RegistAcctType);
+			if (TaxAdvantageType is not null) writer.WriteWholeNumber(495, TaxAdvantageType.Value);
+			if (OwnershipType is not null) writer.WriteString(517, OwnershipType);
+			if (RgstDtlsGrp is not null) ((IFixEncoder)RgstDtlsGrp).Encode(writer);
+			if (RgstDistInstGrp is not null) ((IFixEncoder)RgstDistInstGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

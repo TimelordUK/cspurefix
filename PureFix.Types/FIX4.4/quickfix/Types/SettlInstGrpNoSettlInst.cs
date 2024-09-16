@@ -72,5 +72,35 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 505, Type = TagType.String, Offset = 20, Required = false)]
 		public string? PaymentRemitterID { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (SettlInstID is not null) writer.WriteString(162, SettlInstID);
+			if (SettlInstTransType is not null) writer.WriteString(163, SettlInstTransType);
+			if (SettlInstRefID is not null) writer.WriteString(214, SettlInstRefID);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (Product is not null) writer.WriteWholeNumber(460, Product.Value);
+			if (SecurityType is not null) writer.WriteString(167, SecurityType);
+			if (CFICode is not null) writer.WriteString(461, CFICode);
+			if (EffectiveTime is not null) writer.WriteUtcTimeStamp(168, EffectiveTime.Value);
+			if (ExpireTime is not null) writer.WriteUtcTimeStamp(126, ExpireTime.Value);
+			if (LastUpdateTime is not null) writer.WriteUtcTimeStamp(779, LastUpdateTime.Value);
+			if (SettlInstructionsData is not null) ((IFixEncoder)SettlInstructionsData).Encode(writer);
+			if (PaymentMethod is not null) writer.WriteWholeNumber(492, PaymentMethod.Value);
+			if (PaymentRef is not null) writer.WriteString(476, PaymentRef);
+			if (CardHolderName is not null) writer.WriteString(488, CardHolderName);
+			if (CardNumber is not null) writer.WriteString(489, CardNumber);
+			if (CardStartDate is not null) writer.WriteLocalDateOnly(503, CardStartDate.Value);
+			if (CardExpDate is not null) writer.WriteLocalDateOnly(490, CardExpDate.Value);
+			if (CardIssNum is not null) writer.WriteString(491, CardIssNum);
+			if (PaymentDate is not null) writer.WriteLocalDateOnly(504, PaymentDate.Value);
+			if (PaymentRemitterID is not null) writer.WriteString(505, PaymentRemitterID);
+		}
 	}
 }

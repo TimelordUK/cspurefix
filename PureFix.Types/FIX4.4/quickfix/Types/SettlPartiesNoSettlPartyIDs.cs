@@ -21,5 +21,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 3, Required = false)]
 		public SettlPtysSubGrp? SettlPtysSubGrp { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (SettlPartyID is not null) writer.WriteString(782, SettlPartyID);
+			if (SettlPartyIDSource is not null) writer.WriteString(783, SettlPartyIDSource);
+			if (SettlPartyRole is not null) writer.WriteWholeNumber(784, SettlPartyRole.Value);
+			if (SettlPtysSubGrp is not null) ((IFixEncoder)SettlPtysSubGrp).Encode(writer);
+		}
 	}
 }

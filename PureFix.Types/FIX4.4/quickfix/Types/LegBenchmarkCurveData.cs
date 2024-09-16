@@ -24,5 +24,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 680, Type = TagType.Int, Offset = 4, Required = false)]
 		public int? LegBenchmarkPriceType { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (LegBenchmarkCurveCurrency is not null) writer.WriteString(676, LegBenchmarkCurveCurrency);
+			if (LegBenchmarkCurveName is not null) writer.WriteString(677, LegBenchmarkCurveName);
+			if (LegBenchmarkCurvePoint is not null) writer.WriteString(678, LegBenchmarkCurvePoint);
+			if (LegBenchmarkPrice is not null) writer.WriteNumber(679, LegBenchmarkPrice.Value);
+			if (LegBenchmarkPriceType is not null) writer.WriteWholeNumber(680, LegBenchmarkPriceType.Value);
+		}
 	}
 }

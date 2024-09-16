@@ -150,5 +150,67 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 46, Required = false)]
 		public UnderlyingStipulations? UnderlyingStipulations { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (UnderlyingSymbol is not null) writer.WriteString(311, UnderlyingSymbol);
+			if (UnderlyingSymbolSfx is not null) writer.WriteString(312, UnderlyingSymbolSfx);
+			if (UnderlyingSecurityID is not null) writer.WriteString(309, UnderlyingSecurityID);
+			if (UnderlyingSecurityIDSource is not null) writer.WriteString(305, UnderlyingSecurityIDSource);
+			if (UndSecAltIDGrp is not null) ((IFixEncoder)UndSecAltIDGrp).Encode(writer);
+			if (UnderlyingProduct is not null) writer.WriteWholeNumber(462, UnderlyingProduct.Value);
+			if (UnderlyingCFICode is not null) writer.WriteString(463, UnderlyingCFICode);
+			if (UnderlyingSecurityType is not null) writer.WriteString(310, UnderlyingSecurityType);
+			if (UnderlyingSecuritySubType is not null) writer.WriteString(763, UnderlyingSecuritySubType);
+			if (UnderlyingMaturityMonthYear is not null) writer.WriteMonthYear(313, UnderlyingMaturityMonthYear.Value);
+			if (UnderlyingMaturityDate is not null) writer.WriteLocalDateOnly(542, UnderlyingMaturityDate.Value);
+			if (UnderlyingPutOrCall is not null) writer.WriteWholeNumber(315, UnderlyingPutOrCall.Value);
+			if (UnderlyingCouponPaymentDate is not null) writer.WriteLocalDateOnly(241, UnderlyingCouponPaymentDate.Value);
+			if (UnderlyingIssueDate is not null) writer.WriteLocalDateOnly(242, UnderlyingIssueDate.Value);
+			if (UnderlyingRepoCollateralSecurityType is not null) writer.WriteString(243, UnderlyingRepoCollateralSecurityType);
+			if (UnderlyingRepurchaseTerm is not null) writer.WriteWholeNumber(244, UnderlyingRepurchaseTerm.Value);
+			if (UnderlyingRepurchaseRate is not null) writer.WriteNumber(245, UnderlyingRepurchaseRate.Value);
+			if (UnderlyingFactor is not null) writer.WriteNumber(246, UnderlyingFactor.Value);
+			if (UnderlyingCreditRating is not null) writer.WriteString(256, UnderlyingCreditRating);
+			if (UnderlyingInstrRegistry is not null) writer.WriteString(595, UnderlyingInstrRegistry);
+			if (UnderlyingCountryOfIssue is not null) writer.WriteString(592, UnderlyingCountryOfIssue);
+			if (UnderlyingStateOrProvinceOfIssue is not null) writer.WriteString(593, UnderlyingStateOrProvinceOfIssue);
+			if (UnderlyingLocaleOfIssue is not null) writer.WriteString(594, UnderlyingLocaleOfIssue);
+			if (UnderlyingRedemptionDate is not null) writer.WriteLocalDateOnly(247, UnderlyingRedemptionDate.Value);
+			if (UnderlyingStrikePrice is not null) writer.WriteNumber(316, UnderlyingStrikePrice.Value);
+			if (UnderlyingStrikeCurrency is not null) writer.WriteString(941, UnderlyingStrikeCurrency);
+			if (UnderlyingOptAttribute is not null) writer.WriteString(317, UnderlyingOptAttribute);
+			if (UnderlyingContractMultiplier is not null) writer.WriteNumber(436, UnderlyingContractMultiplier.Value);
+			if (UnderlyingCouponRate is not null) writer.WriteNumber(435, UnderlyingCouponRate.Value);
+			if (UnderlyingSecurityExchange is not null) writer.WriteString(308, UnderlyingSecurityExchange);
+			if (UnderlyingIssuer is not null) writer.WriteString(306, UnderlyingIssuer);
+			if (EncodedUnderlyingIssuer is not null)
+			{
+				writer.WriteWholeNumber(362, EncodedUnderlyingIssuer.Length);
+				writer.WriteBuffer(363, EncodedUnderlyingIssuer);
+			}
+			if (UnderlyingSecurityDesc is not null) writer.WriteString(307, UnderlyingSecurityDesc);
+			if (EncodedUnderlyingSecurityDesc is not null)
+			{
+				writer.WriteWholeNumber(364, EncodedUnderlyingSecurityDesc.Length);
+				writer.WriteBuffer(365, EncodedUnderlyingSecurityDesc);
+			}
+			if (UnderlyingCPProgram is not null) writer.WriteString(877, UnderlyingCPProgram);
+			if (UnderlyingCPRegType is not null) writer.WriteString(878, UnderlyingCPRegType);
+			if (UnderlyingCurrency is not null) writer.WriteString(318, UnderlyingCurrency);
+			if (UnderlyingQty is not null) writer.WriteNumber(879, UnderlyingQty.Value);
+			if (UnderlyingPx is not null) writer.WriteNumber(810, UnderlyingPx.Value);
+			if (UnderlyingDirtyPrice is not null) writer.WriteNumber(882, UnderlyingDirtyPrice.Value);
+			if (UnderlyingEndPrice is not null) writer.WriteNumber(883, UnderlyingEndPrice.Value);
+			if (UnderlyingStartValue is not null) writer.WriteNumber(884, UnderlyingStartValue.Value);
+			if (UnderlyingCurrentValue is not null) writer.WriteNumber(885, UnderlyingCurrentValue.Value);
+			if (UnderlyingEndValue is not null) writer.WriteNumber(886, UnderlyingEndValue.Value);
+			if (UnderlyingStipulations is not null) ((IFixEncoder)UnderlyingStipulations).Encode(writer);
+		}
 	}
 }

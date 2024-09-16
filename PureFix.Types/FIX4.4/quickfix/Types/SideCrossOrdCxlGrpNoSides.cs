@@ -51,5 +51,35 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 13, Required = false, LinksToTag = 354)]
 		public byte[]? EncodedText { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				Side is not null
+				&& OrigClOrdID is not null
+				&& ClOrdID is not null
+				&& OrderQtyData is not null && ((IFixValidator)OrderQtyData).IsValid(in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Side is not null) writer.WriteString(54, Side);
+			if (OrigClOrdID is not null) writer.WriteString(41, OrigClOrdID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ClOrdLinkID is not null) writer.WriteString(583, ClOrdLinkID);
+			if (OrigOrdModTime is not null) writer.WriteUtcTimeStamp(586, OrigOrdModTime.Value);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (TradeOriginationDate is not null) writer.WriteLocalDateOnly(229, TradeOriginationDate.Value);
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (ComplianceID is not null) writer.WriteString(376, ComplianceID);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+		}
 	}
 }

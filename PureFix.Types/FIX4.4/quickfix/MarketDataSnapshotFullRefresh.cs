@@ -46,6 +46,31 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 11, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& MDFullGrp is not null && ((IFixValidator)MDFullGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (MDReqID is not null) writer.WriteString(262, MDReqID);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (FinancialStatus is not null) writer.WriteString(291, FinancialStatus);
+			if (CorporateAction is not null) writer.WriteString(292, CorporateAction);
+			if (NetChgPrevDay is not null) writer.WriteNumber(451, NetChgPrevDay.Value);
+			if (MDFullGrp is not null) ((IFixEncoder)MDFullGrp).Encode(writer);
+			if (ApplQueueDepth is not null) writer.WriteWholeNumber(813, ApplQueueDepth.Value);
+			if (ApplQueueResolution is not null) writer.WriteWholeNumber(814, ApplQueueResolution.Value);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

@@ -49,6 +49,32 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 12, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& QuoteID is not null
+				&& QuotSetGrp is not null && ((IFixValidator)QuotSetGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (QuoteReqID is not null) writer.WriteString(131, QuoteReqID);
+			if (QuoteID is not null) writer.WriteString(117, QuoteID);
+			if (QuoteType is not null) writer.WriteWholeNumber(537, QuoteType.Value);
+			if (QuoteResponseLevel is not null) writer.WriteWholeNumber(301, QuoteResponseLevel.Value);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (DefBidSize is not null) writer.WriteNumber(293, DefBidSize.Value);
+			if (DefOfferSize is not null) writer.WriteNumber(294, DefOfferSize.Value);
+			if (QuotSetGrp is not null) ((IFixEncoder)QuotSetGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

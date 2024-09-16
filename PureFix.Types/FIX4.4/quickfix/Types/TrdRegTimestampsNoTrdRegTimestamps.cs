@@ -18,5 +18,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 771, Type = TagType.String, Offset = 2, Required = false)]
 		public string? TrdRegTimestampOrigin { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (TrdRegTimestamp is not null) writer.WriteUtcTimeStamp(769, TrdRegTimestamp.Value);
+			if (TrdRegTimestampType is not null) writer.WriteWholeNumber(770, TrdRegTimestampType.Value);
+			if (TrdRegTimestampOrigin is not null) writer.WriteString(771, TrdRegTimestampOrigin);
+		}
 	}
 }

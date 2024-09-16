@@ -90,5 +90,41 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 368, Type = TagType.Int, Offset = 26, Required = false)]
 		public int? QuoteEntryRejectReason { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (QuoteEntryID is not null) writer.WriteString(299, QuoteEntryID);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (BidPx is not null) writer.WriteNumber(132, BidPx.Value);
+			if (OfferPx is not null) writer.WriteNumber(133, OfferPx.Value);
+			if (BidSize is not null) writer.WriteNumber(134, BidSize.Value);
+			if (OfferSize is not null) writer.WriteNumber(135, OfferSize.Value);
+			if (ValidUntilTime is not null) writer.WriteUtcTimeStamp(62, ValidUntilTime.Value);
+			if (BidSpotRate is not null) writer.WriteNumber(188, BidSpotRate.Value);
+			if (OfferSpotRate is not null) writer.WriteNumber(190, OfferSpotRate.Value);
+			if (BidForwardPoints is not null) writer.WriteNumber(189, BidForwardPoints.Value);
+			if (OfferForwardPoints is not null) writer.WriteNumber(191, OfferForwardPoints.Value);
+			if (MidPx is not null) writer.WriteNumber(631, MidPx.Value);
+			if (BidYield is not null) writer.WriteNumber(632, BidYield.Value);
+			if (MidYield is not null) writer.WriteNumber(633, MidYield.Value);
+			if (OfferYield is not null) writer.WriteNumber(634, OfferYield.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (OrdType is not null) writer.WriteString(40, OrdType);
+			if (SettlDate2 is not null) writer.WriteLocalDateOnly(193, SettlDate2.Value);
+			if (OrderQty2 is not null) writer.WriteNumber(192, OrderQty2.Value);
+			if (BidForwardPoints2 is not null) writer.WriteNumber(642, BidForwardPoints2.Value);
+			if (OfferForwardPoints2 is not null) writer.WriteNumber(643, OfferForwardPoints2.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (QuoteEntryRejectReason is not null) writer.WriteWholeNumber(368, QuoteEntryRejectReason.Value);
+		}
 	}
 }

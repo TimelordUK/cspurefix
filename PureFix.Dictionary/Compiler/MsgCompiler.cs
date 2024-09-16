@@ -101,8 +101,8 @@ namespace PureFix.Dictionary.Compiler
 
             return compilerType.QualifiedName switch
             {
-                "StandardHeader"    => " : IStandardHeader, IFixEncoder",
-                "StandardTrailer"   => " : IStandardTrailer, IFixEncoder",
+                "StandardHeader"    => " : IStandardHeader, IFixValidator, IFixEncoder",
+                "StandardTrailer"   => " : IStandardTrailer, IFixValidator, IFixEncoder",
                 _                   => " : IFixValidator, IFixEncoder"
             };
         }
@@ -188,10 +188,86 @@ namespace PureFix.Dictionary.Compiler
 
         public void PostIterate(IContainedSet containedSet)
         {
-            return; // For now
+            GenerateIsValid(containedSet);
+            GenerateEncode(containedSet);
+        }
 
+        public void GenerateEncode(IContainedSet containedSet)
+        {
             _builder.WriteLine();
-            using (_builder.BeginBlock("bool IFixValidator.IsValid()"))
+
+            using (_builder.BeginBlock("void IFixEncoder.Encode(IFixWriter writer)"))
+            {
+                for(var i = 0; i < containedSet.Fields.Count; i++)
+                {
+                    switch (containedSet.Fields[i])
+                    {
+                        case ContainedSimpleField sf:
+                        {
+                            var name = sf.Name;
+                            var metaData = TagManager.GetTagMetaData(sf.Definition.TagType);
+
+                            if (metaData.TagType == TagType.Length && containedSet.Fields[i + 1] is ContainedSimpleField rawField && rawField.Definition.TagType == TagType.RawData)
+                            {
+                                // It's (length, raw-data) pair
+                                var rawFieldName = rawField.Name;
+                                using(_builder.BeginBlock($"if ({rawFieldName} is not null)"))
+                                {
+                                    _builder.WriteLine($"writer.WriteWholeNumber({sf.Definition.Tag}, {rawFieldName}.Length);");
+
+                                    var rawMetaData = TagManager.GetTagMetaData(rawField.Definition.TagType);
+                                    _builder.WriteLine($"writer.{rawMetaData.Writer}({rawField.Definition.Tag}, {rawFieldName});");
+                                }
+
+                                // We want to skip the actual raw field processing as we've just done it
+                                i++;
+                            }
+                            else
+                            {
+                                var valueTypeExtract = "";
+
+                                if (metaData.Type.IsValueType)
+                                {
+                                    valueTypeExtract = ".Value";
+                                }
+                                
+                                _builder.WriteLine($"if ({name} is not null) writer.{metaData.Writer}({sf.Definition.Tag}, {name}{valueTypeExtract});");
+                            }
+                        }
+                        break;
+
+                        case ContainedGroupField gf:
+                        {
+                            //var metaData = TagManager.GetTagMetaData(gf.Definition.TagType);
+                            var countField = gf.Definition!.NoOfField!.Tag;
+                            var name = _currentCompilerType?.GetFieldGroupName(gf) ?? gf.Name;
+                            
+                            using(_builder.BeginBlock($"if ({name} is not null && {name}.Length != 0)"))
+                            {
+                                _builder.WriteLine($"writer.WriteWholeNumber({countField}, {name}.Length);");
+                                using(_builder.BeginBlock($"for (int i = 0; i < {name}.Length; i++)"))
+                                {
+                                    _builder.WriteLine($"((IFixEncoder){name}[i]).Encode(writer);");
+                                }
+                            }
+                        }
+                        break;
+
+                        case ContainedComponentField cf:
+                        {
+                            var name = cf.Definition!.Name;
+                            _builder.WriteLine($"if ({name} is not null) ((IFixEncoder){name}).Encode(writer);");
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void GenerateIsValid(IContainedSet containedSet)
+        {
+            _builder.WriteLine();
+            using (_builder.BeginBlock("bool IFixValidator.IsValid(in FixValidatorConfig config)"))
             {
                 List<string> checks = new();
 
@@ -200,15 +276,29 @@ namespace PureFix.Dictionary.Compiler
                     if (field.Required)
                     {
                         var name = field.Name;
-                        checks.Add($"{name} is not null");
 
-                        if (field.Type == ContainedFieldType.Component)
+                        if (name == "StandardHeader")
                         {
-                            checks.Add($"((IFixValidator){name}).IsValid()");
+                            checks.Add($"(!config.CheckStandardHeader || ({name} is not null && ((IFixValidator){name}).IsValid(in config)))");
                         }
-                        else if (field.Type == ContainedFieldType.Group)
+                        else if (name == "StandardTrailer")
                         {
-                            checks.Add($"{name}.All(item => ((IFixValidator)item).IsValid())");
+                            checks.Add($"(!config.CheckStandardTrailer || ({name} is not null && ((IFixValidator){name}).IsValid(in config)))");
+                        }
+                        else
+                        {
+                            if (field.Type == ContainedFieldType.Component)
+                            {
+                                checks.Add($"{name} is not null && ((IFixValidator){name}).IsValid(in config)");
+                            }
+                            else if (field.Type == ContainedFieldType.Group)
+                            {
+                                checks.Add($"{name} is not null && FixValidator.IsValid({name}, in config)");
+                            }
+                            else
+                            {
+                                checks.Add($"{name} is not null");
+                            }
                         }
                     }
                 }

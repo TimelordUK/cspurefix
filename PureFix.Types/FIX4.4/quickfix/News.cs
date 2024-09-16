@@ -55,6 +55,40 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 14, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& Headline is not null
+				&& LinesOfTextGrp is not null && ((IFixValidator)LinesOfTextGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (OrigTime is not null) writer.WriteUtcTimeStamp(42, OrigTime.Value);
+			if (Urgency is not null) writer.WriteString(61, Urgency);
+			if (Headline is not null) writer.WriteString(148, Headline);
+			if (EncodedHeadline is not null)
+			{
+				writer.WriteWholeNumber(358, EncodedHeadline.Length);
+				writer.WriteBuffer(359, EncodedHeadline);
+			}
+			if (RoutingGrp is not null) ((IFixEncoder)RoutingGrp).Encode(writer);
+			if (InstrmtGrp is not null) ((IFixEncoder)InstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (LinesOfTextGrp is not null) ((IFixEncoder)LinesOfTextGrp).Encode(writer);
+			if (URLLink is not null) writer.WriteString(149, URLLink);
+			if (RawData is not null)
+			{
+				writer.WriteWholeNumber(95, RawData.Length);
+				writer.WriteBuffer(96, RawData);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

@@ -52,6 +52,41 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 13, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& ListID is not null
+				&& ListStatusType is not null
+				&& NoRpts is not null
+				&& ListOrderStatus is not null
+				&& RptSeq is not null
+				&& TotNoOrders is not null
+				&& OrdListStatGrp is not null && ((IFixValidator)OrdListStatGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (ListStatusType is not null) writer.WriteWholeNumber(429, ListStatusType.Value);
+			if (NoRpts is not null) writer.WriteWholeNumber(82, NoRpts.Value);
+			if (ListOrderStatus is not null) writer.WriteWholeNumber(431, ListOrderStatus.Value);
+			if (RptSeq is not null) writer.WriteWholeNumber(83, RptSeq.Value);
+			if (ListStatusText is not null) writer.WriteString(444, ListStatusText);
+			if (EncodedListStatusText is not null)
+			{
+				writer.WriteWholeNumber(445, EncodedListStatusText.Length);
+				writer.WriteBuffer(446, EncodedListStatusText);
+			}
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (TotNoOrders is not null) writer.WriteWholeNumber(68, TotNoOrders.Value);
+			if (LastFragment is not null) writer.WriteBoolean(893, LastFragment.Value);
+			if (OrdListStatGrp is not null) ((IFixEncoder)OrdListStatGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

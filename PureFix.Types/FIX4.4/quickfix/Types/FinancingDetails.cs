@@ -36,5 +36,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 898, Type = TagType.Float, Offset = 8, Required = false)]
 		public double? MarginRatio { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (AgreementDesc is not null) writer.WriteString(913, AgreementDesc);
+			if (AgreementID is not null) writer.WriteString(914, AgreementID);
+			if (AgreementDate is not null) writer.WriteLocalDateOnly(915, AgreementDate.Value);
+			if (AgreementCurrency is not null) writer.WriteString(918, AgreementCurrency);
+			if (TerminationType is not null) writer.WriteWholeNumber(788, TerminationType.Value);
+			if (StartDate is not null) writer.WriteLocalDateOnly(916, StartDate.Value);
+			if (EndDate is not null) writer.WriteLocalDateOnly(917, EndDate.Value);
+			if (DeliveryType is not null) writer.WriteWholeNumber(919, DeliveryType.Value);
+			if (MarginRatio is not null) writer.WriteNumber(898, MarginRatio.Value);
+		}
 	}
 }

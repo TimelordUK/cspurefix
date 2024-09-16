@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 778, Offset = 0, Required = false)]
 		public SettlInstGrpNoSettlInst[]? NoSettlInst { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoSettlInst is not null && NoSettlInst.Length != 0)
+			{
+				writer.WriteWholeNumber(778, NoSettlInst.Length);
+				for (int i = 0; i < NoSettlInst.Length; i++)
+				{
+					((IFixEncoder)NoSettlInst[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

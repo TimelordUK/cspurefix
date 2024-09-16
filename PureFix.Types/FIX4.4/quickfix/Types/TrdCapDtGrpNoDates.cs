@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 1, Required = false)]
 		public DateTime? TransactTime { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+		}
 	}
 }

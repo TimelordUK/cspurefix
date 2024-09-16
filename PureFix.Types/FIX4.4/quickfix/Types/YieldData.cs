@@ -27,5 +27,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 698, Type = TagType.Int, Offset = 5, Required = false)]
 		public int? YieldRedemptionPriceType { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (YieldType is not null) writer.WriteString(235, YieldType);
+			if (Yield is not null) writer.WriteNumber(236, Yield.Value);
+			if (YieldCalcDate is not null) writer.WriteLocalDateOnly(701, YieldCalcDate.Value);
+			if (YieldRedemptionDate is not null) writer.WriteLocalDateOnly(696, YieldRedemptionDate.Value);
+			if (YieldRedemptionPrice is not null) writer.WriteNumber(697, YieldRedemptionPrice.Value);
+			if (YieldRedemptionPriceType is not null) writer.WriteWholeNumber(698, YieldRedemptionPriceType.Value);
+		}
 	}
 }

@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 456, Type = TagType.String, Offset = 1, Required = false)]
 		public string? SecurityAltIDSource { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (SecurityAltID is not null) writer.WriteString(455, SecurityAltID);
+			if (SecurityAltIDSource is not null) writer.WriteString(456, SecurityAltIDSource);
+		}
 	}
 }

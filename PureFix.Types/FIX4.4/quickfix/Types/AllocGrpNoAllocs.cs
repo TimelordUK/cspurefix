@@ -93,5 +93,45 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 27, Required = false)]
 		public SettlInstructionsData? SettlInstructionsData { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (AllocAccount is not null) writer.WriteString(79, AllocAccount);
+			if (AllocAcctIDSource is not null) writer.WriteWholeNumber(661, AllocAcctIDSource.Value);
+			if (MatchStatus is not null) writer.WriteString(573, MatchStatus);
+			if (AllocPrice is not null) writer.WriteNumber(366, AllocPrice.Value);
+			if (AllocQty is not null) writer.WriteNumber(80, AllocQty.Value);
+			if (IndividualAllocID is not null) writer.WriteString(467, IndividualAllocID);
+			if (ProcessCode is not null) writer.WriteString(81, ProcessCode);
+			if (NestedParties is not null) ((IFixEncoder)NestedParties).Encode(writer);
+			if (NotifyBrokerOfCredit is not null) writer.WriteBoolean(208, NotifyBrokerOfCredit.Value);
+			if (AllocHandlInst is not null) writer.WriteWholeNumber(209, AllocHandlInst.Value);
+			if (AllocText is not null) writer.WriteString(161, AllocText);
+			if (EncodedAllocText is not null)
+			{
+				writer.WriteWholeNumber(360, EncodedAllocText.Length);
+				writer.WriteBuffer(361, EncodedAllocText);
+			}
+			if (CommissionData is not null) ((IFixEncoder)CommissionData).Encode(writer);
+			if (AllocAvgPx is not null) writer.WriteNumber(153, AllocAvgPx.Value);
+			if (AllocNetMoney is not null) writer.WriteNumber(154, AllocNetMoney.Value);
+			if (SettlCurrAmt is not null) writer.WriteNumber(119, SettlCurrAmt.Value);
+			if (AllocSettlCurrAmt is not null) writer.WriteNumber(737, AllocSettlCurrAmt.Value);
+			if (SettlCurrency is not null) writer.WriteString(120, SettlCurrency);
+			if (AllocSettlCurrency is not null) writer.WriteString(736, AllocSettlCurrency);
+			if (SettlCurrFxRate is not null) writer.WriteNumber(155, SettlCurrFxRate.Value);
+			if (SettlCurrFxRateCalc is not null) writer.WriteString(156, SettlCurrFxRateCalc);
+			if (AllocAccruedInterestAmt is not null) writer.WriteNumber(742, AllocAccruedInterestAmt.Value);
+			if (AllocInterestAtMaturity is not null) writer.WriteNumber(741, AllocInterestAtMaturity.Value);
+			if (MiscFeesGrp is not null) ((IFixEncoder)MiscFeesGrp).Encode(writer);
+			if (ClrInstGrp is not null) ((IFixEncoder)ClrInstGrp).Encode(writer);
+			if (AllocSettlInstType is not null) writer.WriteWholeNumber(780, AllocSettlInstType.Value);
+			if (SettlInstructionsData is not null) ((IFixEncoder)SettlInstructionsData).Encode(writer);
+		}
 	}
 }

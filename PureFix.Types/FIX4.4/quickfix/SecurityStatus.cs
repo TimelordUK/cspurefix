@@ -91,6 +91,48 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 26, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (SecurityStatusReqID is not null) writer.WriteString(324, SecurityStatusReqID);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (InstrumentExtension is not null) ((IFixEncoder)InstrumentExtension).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (UnsolicitedIndicator is not null) writer.WriteBoolean(325, UnsolicitedIndicator.Value);
+			if (SecurityTradingStatus is not null) writer.WriteWholeNumber(326, SecurityTradingStatus.Value);
+			if (FinancialStatus is not null) writer.WriteString(291, FinancialStatus);
+			if (CorporateAction is not null) writer.WriteString(292, CorporateAction);
+			if (HaltReasonChar is not null) writer.WriteString(327, HaltReasonChar);
+			if (InViewOfCommon is not null) writer.WriteBoolean(328, InViewOfCommon.Value);
+			if (DueToRelated is not null) writer.WriteBoolean(329, DueToRelated.Value);
+			if (BuyVolume is not null) writer.WriteNumber(330, BuyVolume.Value);
+			if (SellVolume is not null) writer.WriteNumber(331, SellVolume.Value);
+			if (HighPx is not null) writer.WriteNumber(332, HighPx.Value);
+			if (LowPx is not null) writer.WriteNumber(333, LowPx.Value);
+			if (LastPx is not null) writer.WriteNumber(31, LastPx.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (Adjustment is not null) writer.WriteWholeNumber(334, Adjustment.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

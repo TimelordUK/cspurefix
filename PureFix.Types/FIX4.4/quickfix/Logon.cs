@@ -49,6 +49,42 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 12, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& EncryptMethod is not null
+				&& HeartBtInt is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (EncryptMethod is not null) writer.WriteWholeNumber(98, EncryptMethod.Value);
+			if (HeartBtInt is not null) writer.WriteWholeNumber(108, HeartBtInt.Value);
+			if (RawData is not null)
+			{
+				writer.WriteWholeNumber(95, RawData.Length);
+				writer.WriteBuffer(96, RawData);
+			}
+			if (ResetSeqNumFlag is not null) writer.WriteBoolean(141, ResetSeqNumFlag.Value);
+			if (NextExpectedMsgSeqNum is not null) writer.WriteWholeNumber(789, NextExpectedMsgSeqNum.Value);
+			if (MaxMessageSize is not null) writer.WriteWholeNumber(383, MaxMessageSize.Value);
+			if (NoMsgTypes is not null && NoMsgTypes.Length != 0)
+			{
+				writer.WriteWholeNumber(384, NoMsgTypes.Length);
+				for (int i = 0; i < NoMsgTypes.Length; i++)
+				{
+					((IFixEncoder)NoMsgTypes[i]).Encode(writer);
+				}
+			}
+			if (TestMessageIndicator is not null) writer.WriteBoolean(464, TestMessageIndicator.Value);
+			if (Username is not null) writer.WriteString(553, Username);
+			if (Password is not null) writer.WriteString(554, Password);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

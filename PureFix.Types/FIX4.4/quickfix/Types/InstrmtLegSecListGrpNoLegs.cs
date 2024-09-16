@@ -24,5 +24,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 4, Required = false)]
 		public LegBenchmarkCurveData? LegBenchmarkCurveData { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (InstrumentLeg is not null) ((IFixEncoder)InstrumentLeg).Encode(writer);
+			if (LegSwapType is not null) writer.WriteWholeNumber(690, LegSwapType.Value);
+			if (LegSettlType is not null) writer.WriteString(587, LegSettlType);
+			if (LegStipulations is not null) ((IFixEncoder)LegStipulations).Encode(writer);
+			if (LegBenchmarkCurveData is not null) ((IFixEncoder)LegBenchmarkCurveData).Encode(writer);
+		}
 	}
 }

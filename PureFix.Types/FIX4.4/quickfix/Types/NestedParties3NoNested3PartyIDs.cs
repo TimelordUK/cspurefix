@@ -21,5 +21,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 3, Required = false)]
 		public NstdPtys3SubGrp? NstdPtys3SubGrp { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Nested3PartyID is not null) writer.WriteString(949, Nested3PartyID);
+			if (Nested3PartyIDSource is not null) writer.WriteString(950, Nested3PartyIDSource);
+			if (Nested3PartyRole is not null) writer.WriteWholeNumber(951, Nested3PartyRole.Value);
+			if (NstdPtys3SubGrp is not null) ((IFixEncoder)NstdPtys3SubGrp).Encode(writer);
+		}
 	}
 }

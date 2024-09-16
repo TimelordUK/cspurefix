@@ -45,5 +45,26 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 588, Type = TagType.LocalDate, Offset = 11, Required = false)]
 		public DateOnly? LegSettlDate { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (InstrumentLeg is not null) ((IFixEncoder)InstrumentLeg).Encode(writer);
+			if (LegQty is not null) writer.WriteNumber(687, LegQty.Value);
+			if (LegSwapType is not null) writer.WriteWholeNumber(690, LegSwapType.Value);
+			if (LegStipulations is not null) ((IFixEncoder)LegStipulations).Encode(writer);
+			if (LegPreAllocGrp is not null) ((IFixEncoder)LegPreAllocGrp).Encode(writer);
+			if (LegPositionEffect is not null) writer.WriteString(564, LegPositionEffect);
+			if (LegCoveredOrUncovered is not null) writer.WriteWholeNumber(565, LegCoveredOrUncovered.Value);
+			if (NestedParties is not null) ((IFixEncoder)NestedParties).Encode(writer);
+			if (LegRefID is not null) writer.WriteString(654, LegRefID);
+			if (LegPrice is not null) writer.WriteNumber(566, LegPrice.Value);
+			if (LegSettlType is not null) writer.WriteString(587, LegSettlType);
+			if (LegSettlDate is not null) writer.WriteLocalDateOnly(588, LegSettlDate.Value);
+		}
 	}
 }

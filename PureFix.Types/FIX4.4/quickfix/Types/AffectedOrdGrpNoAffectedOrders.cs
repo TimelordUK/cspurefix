@@ -18,5 +18,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 536, Type = TagType.String, Offset = 2, Required = false)]
 		public string? AffectedSecondaryOrderID { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (OrigClOrdID is not null) writer.WriteString(41, OrigClOrdID);
+			if (AffectedOrderID is not null) writer.WriteString(535, AffectedOrderID);
+			if (AffectedSecondaryOrderID is not null) writer.WriteString(536, AffectedSecondaryOrderID);
+		}
 	}
 }

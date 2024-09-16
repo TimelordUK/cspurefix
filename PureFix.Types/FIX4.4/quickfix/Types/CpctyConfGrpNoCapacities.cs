@@ -18,5 +18,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 863, Type = TagType.Float, Offset = 2, Required = true)]
 		public double? OrderCapacityQty { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				OrderCapacity is not null
+				&& OrderCapacityQty is not null;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (OrderCapacity is not null) writer.WriteString(528, OrderCapacity);
+			if (OrderRestrictions is not null) writer.WriteString(529, OrderRestrictions);
+			if (OrderCapacityQty is not null) writer.WriteNumber(863, OrderCapacityQty.Value);
+		}
 	}
 }

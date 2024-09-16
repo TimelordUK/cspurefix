@@ -61,6 +61,42 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 16, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& TradeRequestID is not null
+				&& TradeRequestType is not null
+				&& TradeRequestResult is not null
+				&& TradeRequestStatus is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (TradeRequestID is not null) writer.WriteString(568, TradeRequestID);
+			if (TradeRequestType is not null) writer.WriteWholeNumber(569, TradeRequestType.Value);
+			if (SubscriptionRequestType is not null) writer.WriteString(263, SubscriptionRequestType);
+			if (TotNumTradeReports is not null) writer.WriteWholeNumber(748, TotNumTradeReports.Value);
+			if (TradeRequestResult is not null) writer.WriteWholeNumber(749, TradeRequestResult.Value);
+			if (TradeRequestStatus is not null) writer.WriteWholeNumber(750, TradeRequestStatus.Value);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (MultiLegReportingType is not null) writer.WriteString(442, MultiLegReportingType);
+			if (ResponseTransportType is not null) writer.WriteWholeNumber(725, ResponseTransportType.Value);
+			if (ResponseDestination is not null) writer.WriteString(726, ResponseDestination);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

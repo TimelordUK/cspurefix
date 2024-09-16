@@ -21,5 +21,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 461, Type = TagType.String, Offset = 3, Required = false)]
 		public string? CFICode { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (SecurityType is not null) writer.WriteString(167, SecurityType);
+			if (SecuritySubType is not null) writer.WriteString(762, SecuritySubType);
+			if (Product is not null) writer.WriteWholeNumber(460, Product.Value);
+			if (CFICode is not null) writer.WriteString(461, CFICode);
+		}
 	}
 }

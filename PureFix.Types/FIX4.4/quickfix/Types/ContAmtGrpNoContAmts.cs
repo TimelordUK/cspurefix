@@ -18,5 +18,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 521, Type = TagType.String, Offset = 2, Required = false)]
 		public string? ContAmtCurr { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (ContAmtType is not null) writer.WriteWholeNumber(519, ContAmtType.Value);
+			if (ContAmtValue is not null) writer.WriteNumber(520, ContAmtValue.Value);
+			if (ContAmtCurr is not null) writer.WriteString(521, ContAmtCurr);
+		}
 	}
 }

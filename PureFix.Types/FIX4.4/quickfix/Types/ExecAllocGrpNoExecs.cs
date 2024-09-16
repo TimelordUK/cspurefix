@@ -27,5 +27,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 29, Type = TagType.String, Offset = 5, Required = false)]
 		public string? LastCapacity { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (LastQty is not null) writer.WriteNumber(32, LastQty.Value);
+			if (ExecID is not null) writer.WriteString(17, ExecID);
+			if (SecondaryExecID is not null) writer.WriteString(527, SecondaryExecID);
+			if (LastPx is not null) writer.WriteNumber(31, LastPx.Value);
+			if (LastParPx is not null) writer.WriteNumber(669, LastParPx.Value);
+			if (LastCapacity is not null) writer.WriteString(29, LastCapacity);
+		}
 	}
 }

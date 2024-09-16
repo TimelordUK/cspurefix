@@ -24,5 +24,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 655, Type = TagType.String, Offset = 4, Required = false)]
 		public string? ContraLegRefID { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (ContraBroker is not null) writer.WriteString(375, ContraBroker);
+			if (ContraTrader is not null) writer.WriteString(337, ContraTrader);
+			if (ContraTradeQty is not null) writer.WriteNumber(437, ContraTradeQty.Value);
+			if (ContraTradeTime is not null) writer.WriteUtcTimeStamp(438, ContraTradeTime.Value);
+			if (ContraLegRefID is not null) writer.WriteString(655, ContraLegRefID);
+		}
 	}
 }

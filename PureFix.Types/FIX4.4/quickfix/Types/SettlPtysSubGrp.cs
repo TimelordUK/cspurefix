@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 801, Offset = 0, Required = false)]
 		public SettlPtysSubGrpNoSettlPartySubIDs[]? NoSettlPartySubIDs { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoSettlPartySubIDs is not null && NoSettlPartySubIDs.Length != 0)
+			{
+				writer.WriteWholeNumber(801, NoSettlPartySubIDs.Length);
+				for (int i = 0; i < NoSettlPartySubIDs.Length; i++)
+				{
+					((IFixEncoder)NoSettlPartySubIDs[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

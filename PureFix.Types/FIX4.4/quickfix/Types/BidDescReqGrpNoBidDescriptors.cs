@@ -42,5 +42,25 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 408, Type = TagType.Float, Offset = 10, Required = false)]
 		public double? ValueOfFutures { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (BidDescriptorType is not null) writer.WriteWholeNumber(399, BidDescriptorType.Value);
+			if (BidDescriptor is not null) writer.WriteString(400, BidDescriptor);
+			if (SideValueInd is not null) writer.WriteWholeNumber(401, SideValueInd.Value);
+			if (LiquidityValue is not null) writer.WriteNumber(404, LiquidityValue.Value);
+			if (LiquidityNumSecurities is not null) writer.WriteWholeNumber(441, LiquidityNumSecurities.Value);
+			if (LiquidityPctLow is not null) writer.WriteNumber(402, LiquidityPctLow.Value);
+			if (LiquidityPctHigh is not null) writer.WriteNumber(403, LiquidityPctHigh.Value);
+			if (EFPTrackingError is not null) writer.WriteNumber(405, EFPTrackingError.Value);
+			if (FairValue is not null) writer.WriteNumber(406, FairValue.Value);
+			if (OutsideIndexPct is not null) writer.WriteNumber(407, OutsideIndexPct.Value);
+			if (ValueOfFutures is not null) writer.WriteNumber(408, ValueOfFutures.Value);
+		}
 	}
 }

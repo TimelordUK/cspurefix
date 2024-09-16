@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 805, Type = TagType.Int, Offset = 1, Required = false)]
 		public int? NestedPartySubIDType { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NestedPartySubID is not null) writer.WriteString(545, NestedPartySubID);
+			if (NestedPartySubIDType is not null) writer.WriteWholeNumber(805, NestedPartySubIDType.Value);
+		}
 	}
 }

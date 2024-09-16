@@ -18,5 +18,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 2, Required = false)]
 		public SettlParties? SettlParties { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (SettlInstSource is not null) writer.WriteString(165, SettlInstSource);
+			if (DlvyInstType is not null) writer.WriteString(787, DlvyInstType);
+			if (SettlParties is not null) ((IFixEncoder)SettlParties).Encode(writer);
+		}
 	}
 }

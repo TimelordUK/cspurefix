@@ -9,7 +9,7 @@ namespace PureFix.Types
     /// <summary>
     /// Defines a generic fix message which is common across all versions
     /// </summary>
-    public interface IFixMessage : IFixEncoder
+    public interface IFixMessage : IFixEncoder, IFixValidator
     {
         /// <summary>
         /// Returns the generic standard header

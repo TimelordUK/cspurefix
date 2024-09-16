@@ -31,6 +31,27 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 6, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& NetworkStatusResponseType is not null
+				&& NetworkResponseID is not null
+				&& CompIDStatGrp is not null && ((IFixValidator)CompIDStatGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (NetworkStatusResponseType is not null) writer.WriteWholeNumber(937, NetworkStatusResponseType.Value);
+			if (NetworkRequestID is not null) writer.WriteString(933, NetworkRequestID);
+			if (NetworkResponseID is not null) writer.WriteString(932, NetworkResponseID);
+			if (LastNetworkResponseID is not null) writer.WriteString(934, LastNetworkResponseID);
+			if (CompIDStatGrp is not null) ((IFixEncoder)CompIDStatGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

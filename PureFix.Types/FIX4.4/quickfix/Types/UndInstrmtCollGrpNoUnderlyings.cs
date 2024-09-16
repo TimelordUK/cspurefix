@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 944, Type = TagType.Int, Offset = 1, Required = false)]
 		public int? CollAction { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (UnderlyingInstrument is not null) ((IFixEncoder)UnderlyingInstrument).Encode(writer);
+			if (CollAction is not null) writer.WriteWholeNumber(944, CollAction.Value);
+		}
 	}
 }

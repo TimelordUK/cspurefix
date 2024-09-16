@@ -12,5 +12,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 267, Offset = 0, Required = true)]
 		public MDReqGrpNoMDEntryTypes[]? NoMDEntryTypes { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				NoMDEntryTypes is not null && FixValidator.IsValid(NoMDEntryTypes, in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoMDEntryTypes is not null && NoMDEntryTypes.Length != 0)
+			{
+				writer.WriteWholeNumber(267, NoMDEntryTypes.Length);
+				for (int i = 0; i < NoMDEntryTypes.Length; i++)
+				{
+					((IFixEncoder)NoMDEntryTypes[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

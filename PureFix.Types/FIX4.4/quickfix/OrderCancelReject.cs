@@ -79,6 +79,48 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 22, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& OrderID is not null
+				&& ClOrdID is not null
+				&& OrigClOrdID is not null
+				&& OrdStatus is not null
+				&& CxlRejResponseTo is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (SecondaryOrderID is not null) writer.WriteString(198, SecondaryOrderID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (ClOrdLinkID is not null) writer.WriteString(583, ClOrdLinkID);
+			if (OrigClOrdID is not null) writer.WriteString(41, OrigClOrdID);
+			if (OrdStatus is not null) writer.WriteString(39, OrdStatus);
+			if (WorkingIndicator is not null) writer.WriteBoolean(636, WorkingIndicator.Value);
+			if (OrigOrdModTime is not null) writer.WriteUtcTimeStamp(586, OrigOrdModTime.Value);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (TradeOriginationDate is not null) writer.WriteLocalDateOnly(229, TradeOriginationDate.Value);
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (CxlRejResponseTo is not null) writer.WriteString(434, CxlRejResponseTo);
+			if (CxlRejReason is not null) writer.WriteWholeNumber(102, CxlRejReason.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

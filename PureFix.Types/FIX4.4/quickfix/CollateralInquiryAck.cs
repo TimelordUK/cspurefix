@@ -112,6 +112,56 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 33, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& CollInquiryID is not null
+				&& CollInquiryStatus is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (CollInquiryID is not null) writer.WriteString(909, CollInquiryID);
+			if (CollInquiryStatus is not null) writer.WriteWholeNumber(945, CollInquiryStatus.Value);
+			if (CollInquiryResult is not null) writer.WriteWholeNumber(946, CollInquiryResult.Value);
+			if (CollInqQualGrp is not null) ((IFixEncoder)CollInqQualGrp).Encode(writer);
+			if (TotNumReports is not null) writer.WriteWholeNumber(911, TotNumReports.Value);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (SecondaryOrderID is not null) writer.WriteString(198, SecondaryOrderID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ExecCollGrp is not null) ((IFixEncoder)ExecCollGrp).Encode(writer);
+			if (TrdCollGrp is not null) ((IFixEncoder)TrdCollGrp).Encode(writer);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (Quantity is not null) writer.WriteNumber(53, Quantity.Value);
+			if (QtyType is not null) writer.WriteWholeNumber(854, QtyType.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (SettlSessID is not null) writer.WriteString(716, SettlSessID);
+			if (SettlSessSubID is not null) writer.WriteString(717, SettlSessSubID);
+			if (ClearingBusinessDate is not null) writer.WriteLocalDateOnly(715, ClearingBusinessDate.Value);
+			if (ResponseTransportType is not null) writer.WriteWholeNumber(725, ResponseTransportType.Value);
+			if (ResponseDestination is not null) writer.WriteString(726, ResponseDestination);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

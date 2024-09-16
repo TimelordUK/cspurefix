@@ -430,6 +430,169 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 139, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& OrderID is not null
+				&& ExecID is not null
+				&& ExecType is not null
+				&& OrdStatus is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& Side is not null
+				&& LeavesQty is not null
+				&& CumQty is not null
+				&& AvgPx is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (SecondaryOrderID is not null) writer.WriteString(198, SecondaryOrderID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (SecondaryExecID is not null) writer.WriteString(527, SecondaryExecID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (OrigClOrdID is not null) writer.WriteString(41, OrigClOrdID);
+			if (ClOrdLinkID is not null) writer.WriteString(583, ClOrdLinkID);
+			if (QuoteRespID is not null) writer.WriteString(693, QuoteRespID);
+			if (OrdStatusReqID is not null) writer.WriteString(790, OrdStatusReqID);
+			if (MassStatusReqID is not null) writer.WriteString(584, MassStatusReqID);
+			if (TotNumReports is not null) writer.WriteWholeNumber(911, TotNumReports.Value);
+			if (LastRptRequested is not null) writer.WriteBoolean(912, LastRptRequested.Value);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (TradeOriginationDate is not null) writer.WriteLocalDateOnly(229, TradeOriginationDate.Value);
+			if (ContraGrp is not null) ((IFixEncoder)ContraGrp).Encode(writer);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (CrossID is not null) writer.WriteString(548, CrossID);
+			if (OrigCrossID is not null) writer.WriteString(551, OrigCrossID);
+			if (CrossType is not null) writer.WriteWholeNumber(549, CrossType.Value);
+			if (ExecID is not null) writer.WriteString(17, ExecID);
+			if (ExecRefID is not null) writer.WriteString(19, ExecRefID);
+			if (ExecType is not null) writer.WriteString(150, ExecType);
+			if (OrdStatus is not null) writer.WriteString(39, OrdStatus);
+			if (WorkingIndicator is not null) writer.WriteBoolean(636, WorkingIndicator.Value);
+			if (OrdRejReason is not null) writer.WriteWholeNumber(103, OrdRejReason.Value);
+			if (ExecRestatementReason is not null) writer.WriteWholeNumber(378, ExecRestatementReason.Value);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (DayBookingInst is not null) writer.WriteString(589, DayBookingInst);
+			if (BookingUnit is not null) writer.WriteString(590, BookingUnit);
+			if (PreallocMethod is not null) writer.WriteString(591, PreallocMethod);
+			if (SettlType is not null) writer.WriteString(63, SettlType);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (CashMargin is not null) writer.WriteString(544, CashMargin);
+			if (ClearingFeeIndicator is not null) writer.WriteString(635, ClearingFeeIndicator);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (Stipulations is not null) ((IFixEncoder)Stipulations).Encode(writer);
+			if (QtyType is not null) writer.WriteWholeNumber(854, QtyType.Value);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (OrdType is not null) writer.WriteString(40, OrdType);
+			if (PriceType is not null) writer.WriteWholeNumber(423, PriceType.Value);
+			if (Price is not null) writer.WriteNumber(44, Price.Value);
+			if (StopPx is not null) writer.WriteNumber(99, StopPx.Value);
+			if (PegInstructions is not null) ((IFixEncoder)PegInstructions).Encode(writer);
+			if (DiscretionInstructions is not null) ((IFixEncoder)DiscretionInstructions).Encode(writer);
+			if (PeggedPrice is not null) writer.WriteNumber(839, PeggedPrice.Value);
+			if (DiscretionPrice is not null) writer.WriteNumber(845, DiscretionPrice.Value);
+			if (TargetStrategy is not null) writer.WriteWholeNumber(847, TargetStrategy.Value);
+			if (TargetStrategyParameters is not null) writer.WriteString(848, TargetStrategyParameters);
+			if (ParticipationRate is not null) writer.WriteNumber(849, ParticipationRate.Value);
+			if (TargetStrategyPerformance is not null) writer.WriteNumber(850, TargetStrategyPerformance.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (ComplianceID is not null) writer.WriteString(376, ComplianceID);
+			if (SolicitedFlag is not null) writer.WriteBoolean(377, SolicitedFlag.Value);
+			if (TimeInForce is not null) writer.WriteString(59, TimeInForce);
+			if (EffectiveTime is not null) writer.WriteUtcTimeStamp(168, EffectiveTime.Value);
+			if (ExpireDate is not null) writer.WriteLocalDateOnly(432, ExpireDate.Value);
+			if (ExpireTime is not null) writer.WriteUtcTimeStamp(126, ExpireTime.Value);
+			if (ExecInst is not null) writer.WriteString(18, ExecInst);
+			if (OrderCapacity is not null) writer.WriteString(528, OrderCapacity);
+			if (OrderRestrictions is not null) writer.WriteString(529, OrderRestrictions);
+			if (CustOrderCapacity is not null) writer.WriteWholeNumber(582, CustOrderCapacity.Value);
+			if (LastQty is not null) writer.WriteNumber(32, LastQty.Value);
+			if (UnderlyingLastQty is not null) writer.WriteNumber(652, UnderlyingLastQty.Value);
+			if (LastPx is not null) writer.WriteNumber(31, LastPx.Value);
+			if (UnderlyingLastPx is not null) writer.WriteNumber(651, UnderlyingLastPx.Value);
+			if (LastParPx is not null) writer.WriteNumber(669, LastParPx.Value);
+			if (LastSpotRate is not null) writer.WriteNumber(194, LastSpotRate.Value);
+			if (LastForwardPoints is not null) writer.WriteNumber(195, LastForwardPoints.Value);
+			if (LastMkt is not null) writer.WriteString(30, LastMkt);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (TimeBracket is not null) writer.WriteString(943, TimeBracket);
+			if (LastCapacity is not null) writer.WriteString(29, LastCapacity);
+			if (LeavesQty is not null) writer.WriteNumber(151, LeavesQty.Value);
+			if (CumQty is not null) writer.WriteNumber(14, CumQty.Value);
+			if (AvgPx is not null) writer.WriteNumber(6, AvgPx.Value);
+			if (DayOrderQty is not null) writer.WriteNumber(424, DayOrderQty.Value);
+			if (DayCumQty is not null) writer.WriteNumber(425, DayCumQty.Value);
+			if (DayAvgPx is not null) writer.WriteNumber(426, DayAvgPx.Value);
+			if (GTBookingInst is not null) writer.WriteWholeNumber(427, GTBookingInst.Value);
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (ReportToExch is not null) writer.WriteBoolean(113, ReportToExch.Value);
+			if (CommissionData is not null) ((IFixEncoder)CommissionData).Encode(writer);
+			if (SpreadOrBenchmarkCurveData is not null) ((IFixEncoder)SpreadOrBenchmarkCurveData).Encode(writer);
+			if (YieldData is not null) ((IFixEncoder)YieldData).Encode(writer);
+			if (GrossTradeAmt is not null) writer.WriteNumber(381, GrossTradeAmt.Value);
+			if (NumDaysInterest is not null) writer.WriteWholeNumber(157, NumDaysInterest.Value);
+			if (ExDate is not null) writer.WriteLocalDateOnly(230, ExDate.Value);
+			if (AccruedInterestRate is not null) writer.WriteNumber(158, AccruedInterestRate.Value);
+			if (AccruedInterestAmt is not null) writer.WriteNumber(159, AccruedInterestAmt.Value);
+			if (InterestAtMaturity is not null) writer.WriteNumber(738, InterestAtMaturity.Value);
+			if (EndAccruedInterestAmt is not null) writer.WriteNumber(920, EndAccruedInterestAmt.Value);
+			if (StartCash is not null) writer.WriteNumber(921, StartCash.Value);
+			if (EndCash is not null) writer.WriteNumber(922, EndCash.Value);
+			if (TradedFlatSwitch is not null) writer.WriteBoolean(258, TradedFlatSwitch.Value);
+			if (BasisFeatureDate is not null) writer.WriteLocalDateOnly(259, BasisFeatureDate.Value);
+			if (BasisFeaturePrice is not null) writer.WriteNumber(260, BasisFeaturePrice.Value);
+			if (Concession is not null) writer.WriteNumber(238, Concession.Value);
+			if (TotalTakedown is not null) writer.WriteNumber(237, TotalTakedown.Value);
+			if (NetMoney is not null) writer.WriteNumber(118, NetMoney.Value);
+			if (SettlCurrAmt is not null) writer.WriteNumber(119, SettlCurrAmt.Value);
+			if (SettlCurrency is not null) writer.WriteString(120, SettlCurrency);
+			if (SettlCurrFxRate is not null) writer.WriteNumber(155, SettlCurrFxRate.Value);
+			if (SettlCurrFxRateCalc is not null) writer.WriteString(156, SettlCurrFxRateCalc);
+			if (HandlInst is not null) writer.WriteString(21, HandlInst);
+			if (MinQty is not null) writer.WriteNumber(110, MinQty.Value);
+			if (MaxFloor is not null) writer.WriteNumber(111, MaxFloor.Value);
+			if (PositionEffect is not null) writer.WriteString(77, PositionEffect);
+			if (MaxShow is not null) writer.WriteNumber(210, MaxShow.Value);
+			if (BookingType is not null) writer.WriteWholeNumber(775, BookingType.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (SettlDate2 is not null) writer.WriteLocalDateOnly(193, SettlDate2.Value);
+			if (OrderQty2 is not null) writer.WriteNumber(192, OrderQty2.Value);
+			if (LastForwardPoints2 is not null) writer.WriteNumber(641, LastForwardPoints2.Value);
+			if (MultiLegReportingType is not null) writer.WriteString(442, MultiLegReportingType);
+			if (CancellationRights is not null) writer.WriteString(480, CancellationRights);
+			if (MoneyLaunderingStatus is not null) writer.WriteString(481, MoneyLaunderingStatus);
+			if (RegistID is not null) writer.WriteString(513, RegistID);
+			if (Designation is not null) writer.WriteString(494, Designation);
+			if (TransBkdTime is not null) writer.WriteUtcTimeStamp(483, TransBkdTime.Value);
+			if (ExecValuationPoint is not null) writer.WriteUtcTimeStamp(515, ExecValuationPoint.Value);
+			if (ExecPriceType is not null) writer.WriteString(484, ExecPriceType);
+			if (ExecPriceAdjustment is not null) writer.WriteNumber(485, ExecPriceAdjustment.Value);
+			if (PriorityIndicator is not null) writer.WriteWholeNumber(638, PriorityIndicator.Value);
+			if (PriceImprovement is not null) writer.WriteNumber(639, PriceImprovement.Value);
+			if (LastLiquidityInd is not null) writer.WriteWholeNumber(851, LastLiquidityInd.Value);
+			if (ContAmtGrp is not null) ((IFixEncoder)ContAmtGrp).Encode(writer);
+			if (InstrmtLegExecGrp is not null) ((IFixEncoder)InstrmtLegExecGrp).Encode(writer);
+			if (CopyMsgIndicator is not null) writer.WriteBoolean(797, CopyMsgIndicator.Value);
+			if (MiscFeesGrp is not null) ((IFixEncoder)MiscFeesGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

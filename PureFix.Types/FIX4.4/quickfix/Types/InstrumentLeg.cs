@@ -135,5 +135,62 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 956, Type = TagType.LocalDate, Offset = 41, Required = false)]
 		public DateOnly? LegInterestAccrualDate { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (LegSymbol is not null) writer.WriteString(600, LegSymbol);
+			if (LegSymbolSfx is not null) writer.WriteString(601, LegSymbolSfx);
+			if (LegSecurityID is not null) writer.WriteString(602, LegSecurityID);
+			if (LegSecurityIDSource is not null) writer.WriteString(603, LegSecurityIDSource);
+			if (LegSecAltIDGrp is not null) ((IFixEncoder)LegSecAltIDGrp).Encode(writer);
+			if (LegProduct is not null) writer.WriteWholeNumber(607, LegProduct.Value);
+			if (LegCFICode is not null) writer.WriteString(608, LegCFICode);
+			if (LegSecurityType is not null) writer.WriteString(609, LegSecurityType);
+			if (LegSecuritySubType is not null) writer.WriteString(764, LegSecuritySubType);
+			if (LegMaturityMonthYear is not null) writer.WriteMonthYear(610, LegMaturityMonthYear.Value);
+			if (LegMaturityDate is not null) writer.WriteLocalDateOnly(611, LegMaturityDate.Value);
+			if (LegCouponPaymentDate is not null) writer.WriteLocalDateOnly(248, LegCouponPaymentDate.Value);
+			if (LegIssueDate is not null) writer.WriteLocalDateOnly(249, LegIssueDate.Value);
+			if (LegRepoCollateralSecurityType is not null) writer.WriteString(250, LegRepoCollateralSecurityType);
+			if (LegRepurchaseTerm is not null) writer.WriteWholeNumber(251, LegRepurchaseTerm.Value);
+			if (LegRepurchaseRate is not null) writer.WriteNumber(252, LegRepurchaseRate.Value);
+			if (LegFactor is not null) writer.WriteNumber(253, LegFactor.Value);
+			if (LegCreditRating is not null) writer.WriteString(257, LegCreditRating);
+			if (LegInstrRegistry is not null) writer.WriteString(599, LegInstrRegistry);
+			if (LegCountryOfIssue is not null) writer.WriteString(596, LegCountryOfIssue);
+			if (LegStateOrProvinceOfIssue is not null) writer.WriteString(597, LegStateOrProvinceOfIssue);
+			if (LegLocaleOfIssue is not null) writer.WriteString(598, LegLocaleOfIssue);
+			if (LegRedemptionDate is not null) writer.WriteLocalDateOnly(254, LegRedemptionDate.Value);
+			if (LegStrikePrice is not null) writer.WriteNumber(612, LegStrikePrice.Value);
+			if (LegStrikeCurrency is not null) writer.WriteString(942, LegStrikeCurrency);
+			if (LegOptAttribute is not null) writer.WriteString(613, LegOptAttribute);
+			if (LegContractMultiplier is not null) writer.WriteNumber(614, LegContractMultiplier.Value);
+			if (LegCouponRate is not null) writer.WriteNumber(615, LegCouponRate.Value);
+			if (LegSecurityExchange is not null) writer.WriteString(616, LegSecurityExchange);
+			if (LegIssuer is not null) writer.WriteString(617, LegIssuer);
+			if (EncodedLegIssuer is not null)
+			{
+				writer.WriteWholeNumber(618, EncodedLegIssuer.Length);
+				writer.WriteBuffer(619, EncodedLegIssuer);
+			}
+			if (LegSecurityDesc is not null) writer.WriteString(620, LegSecurityDesc);
+			if (EncodedLegSecurityDesc is not null)
+			{
+				writer.WriteWholeNumber(621, EncodedLegSecurityDesc.Length);
+				writer.WriteBuffer(622, EncodedLegSecurityDesc);
+			}
+			if (LegRatioQty is not null) writer.WriteNumber(623, LegRatioQty.Value);
+			if (LegSide is not null) writer.WriteString(624, LegSide);
+			if (LegCurrency is not null) writer.WriteString(556, LegCurrency);
+			if (LegPool is not null) writer.WriteString(740, LegPool);
+			if (LegDatedDate is not null) writer.WriteLocalDateOnly(739, LegDatedDate.Value);
+			if (LegContractSettlMonth is not null) writer.WriteMonthYear(955, LegContractSettlMonth.Value);
+			if (LegInterestAccrualDate is not null) writer.WriteLocalDateOnly(956, LegInterestAccrualDate.Value);
+		}
 	}
 }

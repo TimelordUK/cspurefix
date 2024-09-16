@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 199, Offset = 0, Required = false)]
 		public IOIQualGrpNoIOIQualifiers[]? NoIOIQualifiers { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoIOIQualifiers is not null && NoIOIQualifiers.Length != 0)
+			{
+				writer.WriteWholeNumber(199, NoIOIQualifiers.Length);
+				for (int i = 0; i < NoIOIQualifiers.Length; i++)
+				{
+					((IFixEncoder)NoIOIQualifiers[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

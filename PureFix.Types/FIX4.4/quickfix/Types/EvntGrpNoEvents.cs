@@ -21,5 +21,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 868, Type = TagType.String, Offset = 3, Required = false)]
 		public string? EventText { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (EventType is not null) writer.WriteWholeNumber(865, EventType.Value);
+			if (EventDate is not null) writer.WriteLocalDateOnly(866, EventDate.Value);
+			if (EventPx is not null) writer.WriteNumber(867, EventPx.Value);
+			if (EventText is not null) writer.WriteString(868, EventText);
+		}
 	}
 }

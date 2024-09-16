@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 558, Offset = 0, Required = false)]
 		public SecTypesGrpNoSecurityTypes[]? NoSecurityTypes { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoSecurityTypes is not null && NoSecurityTypes.Length != 0)
+			{
+				writer.WriteWholeNumber(558, NoSecurityTypes.Length);
+				for (int i = 0; i < NoSecurityTypes.Length; i++)
+				{
+					((IFixEncoder)NoSecurityTypes[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

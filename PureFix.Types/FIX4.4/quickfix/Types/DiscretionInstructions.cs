@@ -30,5 +30,21 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 846, Type = TagType.Int, Offset = 6, Required = false)]
 		public int? DiscretionScope { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (DiscretionInst is not null) writer.WriteString(388, DiscretionInst);
+			if (DiscretionOffsetValue is not null) writer.WriteNumber(389, DiscretionOffsetValue.Value);
+			if (DiscretionMoveType is not null) writer.WriteWholeNumber(841, DiscretionMoveType.Value);
+			if (DiscretionOffsetType is not null) writer.WriteWholeNumber(842, DiscretionOffsetType.Value);
+			if (DiscretionLimitType is not null) writer.WriteWholeNumber(843, DiscretionLimitType.Value);
+			if (DiscretionRoundDirection is not null) writer.WriteWholeNumber(844, DiscretionRoundDirection.Value);
+			if (DiscretionScope is not null) writer.WriteWholeNumber(846, DiscretionScope.Value);
+		}
 	}
 }

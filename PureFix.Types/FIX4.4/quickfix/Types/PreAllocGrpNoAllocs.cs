@@ -27,5 +27,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 80, Type = TagType.Float, Offset = 5, Required = false)]
 		public double? AllocQty { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (AllocAccount is not null) writer.WriteString(79, AllocAccount);
+			if (AllocAcctIDSource is not null) writer.WriteWholeNumber(661, AllocAcctIDSource.Value);
+			if (AllocSettlCurrency is not null) writer.WriteString(736, AllocSettlCurrency);
+			if (IndividualAllocID is not null) writer.WriteString(467, IndividualAllocID);
+			if (NestedParties is not null) ((IFixEncoder)NestedParties).Encode(writer);
+			if (AllocQty is not null) writer.WriteNumber(80, AllocQty.Value);
+		}
 	}
 }

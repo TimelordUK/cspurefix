@@ -18,5 +18,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 733, Type = TagType.Int, Offset = 2, Required = true)]
 		public int? UnderlyingSettlPriceType { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				UnderlyingSettlPrice is not null
+				&& UnderlyingSettlPriceType is not null;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (UnderlyingInstrument is not null) ((IFixEncoder)UnderlyingInstrument).Encode(writer);
+			if (UnderlyingSettlPrice is not null) writer.WriteNumber(732, UnderlyingSettlPrice.Value);
+			if (UnderlyingSettlPriceType is not null) writer.WriteWholeNumber(733, UnderlyingSettlPriceType.Value);
+		}
 	}
 }

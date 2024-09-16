@@ -103,6 +103,57 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 30, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& ClientBidID is not null
+				&& BidRequestTransType is not null
+				&& TotNoRelatedSym is not null
+				&& BidType is not null
+				&& BidTradeType is not null
+				&& BasisPxType is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (BidID is not null) writer.WriteString(390, BidID);
+			if (ClientBidID is not null) writer.WriteString(391, ClientBidID);
+			if (BidRequestTransType is not null) writer.WriteString(374, BidRequestTransType);
+			if (ListName is not null) writer.WriteString(392, ListName);
+			if (TotNoRelatedSym is not null) writer.WriteWholeNumber(393, TotNoRelatedSym.Value);
+			if (BidType is not null) writer.WriteWholeNumber(394, BidType.Value);
+			if (NumTickets is not null) writer.WriteWholeNumber(395, NumTickets.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (SideValue1 is not null) writer.WriteNumber(396, SideValue1.Value);
+			if (SideValue2 is not null) writer.WriteNumber(397, SideValue2.Value);
+			if (BidDescReqGrp is not null) ((IFixEncoder)BidDescReqGrp).Encode(writer);
+			if (BidCompReqGrp is not null) ((IFixEncoder)BidCompReqGrp).Encode(writer);
+			if (LiquidityIndType is not null) writer.WriteWholeNumber(409, LiquidityIndType.Value);
+			if (WtAverageLiquidity is not null) writer.WriteNumber(410, WtAverageLiquidity.Value);
+			if (ExchangeForPhysical is not null) writer.WriteBoolean(411, ExchangeForPhysical.Value);
+			if (OutMainCntryUIndex is not null) writer.WriteNumber(412, OutMainCntryUIndex.Value);
+			if (CrossPercent is not null) writer.WriteNumber(413, CrossPercent.Value);
+			if (ProgRptReqs is not null) writer.WriteWholeNumber(414, ProgRptReqs.Value);
+			if (ProgPeriodInterval is not null) writer.WriteWholeNumber(415, ProgPeriodInterval.Value);
+			if (IncTaxInd is not null) writer.WriteWholeNumber(416, IncTaxInd.Value);
+			if (ForexReq is not null) writer.WriteBoolean(121, ForexReq.Value);
+			if (NumBidders is not null) writer.WriteWholeNumber(417, NumBidders.Value);
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (BidTradeType is not null) writer.WriteString(418, BidTradeType);
+			if (BasisPxType is not null) writer.WriteString(419, BasisPxType);
+			if (StrikeTime is not null) writer.WriteUtcTimeStamp(443, StrikeTime.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

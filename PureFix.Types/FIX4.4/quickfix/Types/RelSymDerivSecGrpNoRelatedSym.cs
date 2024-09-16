@@ -39,5 +39,27 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 9, Required = false, LinksToTag = 354)]
 		public byte[]? EncodedText { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (ExpirationCycle is not null) writer.WriteWholeNumber(827, ExpirationCycle.Value);
+			if (InstrumentExtension is not null) ((IFixEncoder)InstrumentExtension).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+		}
 	}
 }

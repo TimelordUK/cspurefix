@@ -18,5 +18,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 2, Required = false)]
 		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				Instrument is not null && ((IFixValidator)Instrument).IsValid(in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+		}
 	}
 }

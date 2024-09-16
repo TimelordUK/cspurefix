@@ -27,5 +27,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 929, Type = TagType.String, Offset = 5, Required = false)]
 		public string? StatusText { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (RefCompID is not null) writer.WriteString(930, RefCompID);
+			if (RefSubID is not null) writer.WriteString(931, RefSubID);
+			if (LocationID is not null) writer.WriteString(283, LocationID);
+			if (DeskID is not null) writer.WriteString(284, DeskID);
+			if (StatusValue is not null) writer.WriteWholeNumber(928, StatusValue.Value);
+			if (StatusText is not null) writer.WriteString(929, StatusText);
+		}
 	}
 }

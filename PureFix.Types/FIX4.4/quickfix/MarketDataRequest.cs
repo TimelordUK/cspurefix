@@ -55,6 +55,37 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 14, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& MDReqID is not null
+				&& SubscriptionRequestType is not null
+				&& MarketDepth is not null
+				&& MDReqGrp is not null && ((IFixValidator)MDReqGrp).IsValid(in config)
+				&& InstrmtMDReqGrp is not null && ((IFixValidator)InstrmtMDReqGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (MDReqID is not null) writer.WriteString(262, MDReqID);
+			if (SubscriptionRequestType is not null) writer.WriteString(263, SubscriptionRequestType);
+			if (MarketDepth is not null) writer.WriteWholeNumber(264, MarketDepth.Value);
+			if (MDUpdateType is not null) writer.WriteWholeNumber(265, MDUpdateType.Value);
+			if (AggregatedBook is not null) writer.WriteBoolean(266, AggregatedBook.Value);
+			if (OpenCloseSettlFlag is not null) writer.WriteString(286, OpenCloseSettlFlag);
+			if (Scope is not null) writer.WriteString(546, Scope);
+			if (MDImplicitDelete is not null) writer.WriteBoolean(547, MDImplicitDelete.Value);
+			if (MDReqGrp is not null) ((IFixEncoder)MDReqGrp).Encode(writer);
+			if (InstrmtMDReqGrp is not null) ((IFixEncoder)InstrmtMDReqGrp).Encode(writer);
+			if (TrdgSesGrp is not null) ((IFixEncoder)TrdgSesGrp).Encode(writer);
+			if (ApplQueueAction is not null) writer.WriteWholeNumber(815, ApplQueueAction.Value);
+			if (ApplQueueMax is not null) writer.WriteWholeNumber(812, ApplQueueMax.Value);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

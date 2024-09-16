@@ -76,6 +76,47 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 21, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& AdvId is not null
+				&& AdvTransType is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& AdvSide is not null
+				&& Quantity is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (AdvId is not null) writer.WriteString(2, AdvId);
+			if (AdvTransType is not null) writer.WriteString(5, AdvTransType);
+			if (AdvRefID is not null) writer.WriteString(3, AdvRefID);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (AdvSide is not null) writer.WriteString(4, AdvSide);
+			if (Quantity is not null) writer.WriteNumber(53, Quantity.Value);
+			if (QtyType is not null) writer.WriteWholeNumber(854, QtyType.Value);
+			if (Price is not null) writer.WriteNumber(44, Price.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (URLLink is not null) writer.WriteString(149, URLLink);
+			if (LastMkt is not null) writer.WriteString(30, LastMkt);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

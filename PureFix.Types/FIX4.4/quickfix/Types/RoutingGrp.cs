@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 215, Offset = 0, Required = false)]
 		public RoutingGrpNoRoutingIDs[]? NoRoutingIDs { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoRoutingIDs is not null && NoRoutingIDs.Length != 0)
+			{
+				writer.WriteWholeNumber(215, NoRoutingIDs.Length);
+				for (int i = 0; i < NoRoutingIDs.Length; i++)
+				{
+					((IFixEncoder)NoRoutingIDs[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

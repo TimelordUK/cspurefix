@@ -64,6 +64,41 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 17, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& AllocID is not null
+				&& TransactTime is not null
+				&& AllocStatus is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (AllocID is not null) writer.WriteString(70, AllocID);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+			if (SecondaryAllocID is not null) writer.WriteString(793, SecondaryAllocID);
+			if (TradeDate is not null) writer.WriteLocalDateOnly(75, TradeDate.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (AllocStatus is not null) writer.WriteWholeNumber(87, AllocStatus.Value);
+			if (AllocRejCode is not null) writer.WriteWholeNumber(88, AllocRejCode.Value);
+			if (AllocType is not null) writer.WriteWholeNumber(626, AllocType.Value);
+			if (AllocIntermedReqType is not null) writer.WriteWholeNumber(808, AllocIntermedReqType.Value);
+			if (MatchStatus is not null) writer.WriteString(573, MatchStatus);
+			if (Product is not null) writer.WriteWholeNumber(460, Product.Value);
+			if (SecurityType is not null) writer.WriteString(167, SecurityType);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (AllocAckGrp is not null) ((IFixEncoder)AllocAckGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

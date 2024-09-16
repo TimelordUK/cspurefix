@@ -108,5 +108,51 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 32, Required = false, LinksToTag = 354)]
 		public byte[]? EncodedText { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				MDEntryType is not null;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (MDEntryType is not null) writer.WriteString(269, MDEntryType);
+			if (MDEntryPx is not null) writer.WriteNumber(270, MDEntryPx.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (MDEntrySize is not null) writer.WriteNumber(271, MDEntrySize.Value);
+			if (MDEntryDate is not null) writer.WriteUtcDateOnly(272, MDEntryDate.Value);
+			if (MDEntryTime is not null) writer.WriteTimeOnly(273, MDEntryTime.Value);
+			if (TickDirection is not null) writer.WriteString(274, TickDirection);
+			if (MDMkt is not null) writer.WriteString(275, MDMkt);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (QuoteCondition is not null) writer.WriteString(276, QuoteCondition);
+			if (TradeCondition is not null) writer.WriteString(277, TradeCondition);
+			if (MDEntryOriginator is not null) writer.WriteString(282, MDEntryOriginator);
+			if (LocationID is not null) writer.WriteString(283, LocationID);
+			if (DeskID is not null) writer.WriteString(284, DeskID);
+			if (OpenCloseSettlFlag is not null) writer.WriteString(286, OpenCloseSettlFlag);
+			if (TimeInForce is not null) writer.WriteString(59, TimeInForce);
+			if (ExpireDate is not null) writer.WriteLocalDateOnly(432, ExpireDate.Value);
+			if (ExpireTime is not null) writer.WriteUtcTimeStamp(126, ExpireTime.Value);
+			if (MinQty is not null) writer.WriteNumber(110, MinQty.Value);
+			if (ExecInst is not null) writer.WriteString(18, ExecInst);
+			if (SellerDays is not null) writer.WriteWholeNumber(287, SellerDays.Value);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (QuoteEntryID is not null) writer.WriteString(299, QuoteEntryID);
+			if (MDEntryBuyer is not null) writer.WriteString(288, MDEntryBuyer);
+			if (MDEntrySeller is not null) writer.WriteString(289, MDEntrySeller);
+			if (NumberOfOrders is not null) writer.WriteWholeNumber(346, NumberOfOrders.Value);
+			if (MDEntryPositionNo is not null) writer.WriteWholeNumber(290, MDEntryPositionNo.Value);
+			if (Scope is not null) writer.WriteString(546, Scope);
+			if (PriceDelta is not null) writer.WriteNumber(811, PriceDelta.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+		}
 	}
 }

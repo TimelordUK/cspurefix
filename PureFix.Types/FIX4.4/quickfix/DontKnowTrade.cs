@@ -58,6 +58,42 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 15, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& OrderID is not null
+				&& ExecID is not null
+				&& DKReason is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& Side is not null
+				&& OrderQtyData is not null && ((IFixValidator)OrderQtyData).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (SecondaryOrderID is not null) writer.WriteString(198, SecondaryOrderID);
+			if (ExecID is not null) writer.WriteString(17, ExecID);
+			if (DKReason is not null) writer.WriteString(127, DKReason);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (LastQty is not null) writer.WriteNumber(32, LastQty.Value);
+			if (LastPx is not null) writer.WriteNumber(31, LastPx.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

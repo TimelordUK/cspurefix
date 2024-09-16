@@ -12,5 +12,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 577, Type = TagType.Int, Offset = 0, Required = false)]
 		public int? ClearingInstruction { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (ClearingInstruction is not null) writer.WriteWholeNumber(577, ClearingInstruction.Value);
+		}
 	}
 }

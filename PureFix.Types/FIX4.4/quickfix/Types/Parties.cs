@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 453, Offset = 0, Required = false)]
 		public PartiesNoPartyIDs[]? NoPartyIDs { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoPartyIDs is not null && NoPartyIDs.Length != 0)
+			{
+				writer.WriteWholeNumber(453, NoPartyIDs.Length);
+				for (int i = 0; i < NoPartyIDs.Length; i++)
+				{
+					((IFixEncoder)NoPartyIDs[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

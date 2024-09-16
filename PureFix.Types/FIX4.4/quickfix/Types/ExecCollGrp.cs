@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 124, Offset = 0, Required = false)]
 		public ExecCollGrpNoExecs[]? NoExecs { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoExecs is not null && NoExecs.Length != 0)
+			{
+				writer.WriteWholeNumber(124, NoExecs.Length);
+				for (int i = 0; i < NoExecs.Length; i++)
+				{
+					((IFixEncoder)NoExecs[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

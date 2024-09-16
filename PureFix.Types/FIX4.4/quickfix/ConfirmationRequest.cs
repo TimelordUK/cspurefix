@@ -55,6 +55,38 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 14, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& ConfirmReqID is not null
+				&& ConfirmType is not null
+				&& TransactTime is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (ConfirmReqID is not null) writer.WriteString(859, ConfirmReqID);
+			if (ConfirmType is not null) writer.WriteWholeNumber(773, ConfirmType.Value);
+			if (OrdAllocGrp is not null) ((IFixEncoder)OrdAllocGrp).Encode(writer);
+			if (AllocID is not null) writer.WriteString(70, AllocID);
+			if (SecondaryAllocID is not null) writer.WriteString(793, SecondaryAllocID);
+			if (IndividualAllocID is not null) writer.WriteString(467, IndividualAllocID);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (AllocAccount is not null) writer.WriteString(79, AllocAccount);
+			if (AllocAcctIDSource is not null) writer.WriteWholeNumber(661, AllocAcctIDSource.Value);
+			if (AllocAccountType is not null) writer.WriteWholeNumber(798, AllocAccountType.Value);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

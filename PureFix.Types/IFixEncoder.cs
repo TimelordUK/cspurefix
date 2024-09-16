@@ -2,6 +2,8 @@
 {
     public interface IFixEncoder
     {
-        public void Encode(ElasticBuffer storage, Tags tags, byte delimiter) { }
+        public void Encode(IFixWriter writer)
+        {
+        }
     }
 }

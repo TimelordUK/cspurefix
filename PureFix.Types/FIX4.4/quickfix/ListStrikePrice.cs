@@ -31,6 +31,27 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 6, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& ListID is not null
+				&& TotNoStrikes is not null
+				&& InstrmtStrkPxGrp is not null && ((IFixValidator)InstrmtStrkPxGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (TotNoStrikes is not null) writer.WriteWholeNumber(422, TotNoStrikes.Value);
+			if (LastFragment is not null) writer.WriteBoolean(893, LastFragment.Value);
+			if (InstrmtStrkPxGrp is not null) ((IFixEncoder)InstrmtStrkPxGrp).Encode(writer);
+			if (UndInstrmtStrkPxGrp is not null) ((IFixEncoder)UndInstrmtStrkPxGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

@@ -12,5 +12,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 0, Required = false)]
 		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (UnderlyingInstrument is not null) ((IFixEncoder)UnderlyingInstrument).Encode(writer);
+		}
 	}
 }

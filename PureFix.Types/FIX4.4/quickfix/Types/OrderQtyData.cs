@@ -24,5 +24,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 469, Type = TagType.Float, Offset = 4, Required = false)]
 		public double? RoundingModulus { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (OrderQty is not null) writer.WriteNumber(38, OrderQty.Value);
+			if (CashOrderQty is not null) writer.WriteNumber(152, CashOrderQty.Value);
+			if (OrderPercent is not null) writer.WriteNumber(516, OrderPercent.Value);
+			if (RoundingDirection is not null) writer.WriteString(468, RoundingDirection);
+			if (RoundingModulus is not null) writer.WriteNumber(469, RoundingModulus.Value);
+		}
 	}
 }

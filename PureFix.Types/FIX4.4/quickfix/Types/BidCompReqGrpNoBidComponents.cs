@@ -36,5 +36,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 8, Required = false)]
 		public int? AcctIDSource { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (NetGrossInd is not null) writer.WriteWholeNumber(430, NetGrossInd.Value);
+			if (SettlType is not null) writer.WriteString(63, SettlType);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+		}
 	}
 }

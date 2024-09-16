@@ -73,6 +73,45 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 20, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& ListID is not null
+				&& BidType is not null
+				&& TotNoOrders is not null
+				&& ListOrdGrp is not null && ((IFixValidator)ListOrdGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (BidID is not null) writer.WriteString(390, BidID);
+			if (ClientBidID is not null) writer.WriteString(391, ClientBidID);
+			if (ProgRptReqs is not null) writer.WriteWholeNumber(414, ProgRptReqs.Value);
+			if (BidType is not null) writer.WriteWholeNumber(394, BidType.Value);
+			if (ProgPeriodInterval is not null) writer.WriteWholeNumber(415, ProgPeriodInterval.Value);
+			if (CancellationRights is not null) writer.WriteString(480, CancellationRights);
+			if (MoneyLaunderingStatus is not null) writer.WriteString(481, MoneyLaunderingStatus);
+			if (RegistID is not null) writer.WriteString(513, RegistID);
+			if (ListExecInstType is not null) writer.WriteString(433, ListExecInstType);
+			if (ListExecInst is not null) writer.WriteString(69, ListExecInst);
+			if (EncodedListExecInst is not null)
+			{
+				writer.WriteWholeNumber(352, EncodedListExecInst.Length);
+				writer.WriteBuffer(353, EncodedListExecInst);
+			}
+			if (AllowableOneSidednessPct is not null) writer.WriteNumber(765, AllowableOneSidednessPct.Value);
+			if (AllowableOneSidednessValue is not null) writer.WriteNumber(766, AllowableOneSidednessValue.Value);
+			if (AllowableOneSidednessCurr is not null) writer.WriteString(767, AllowableOneSidednessCurr);
+			if (TotNoOrders is not null) writer.WriteWholeNumber(68, TotNoOrders.Value);
+			if (LastFragment is not null) writer.WriteBoolean(893, LastFragment.Value);
+			if (ListOrdGrp is not null) ((IFixEncoder)ListOrdGrp).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

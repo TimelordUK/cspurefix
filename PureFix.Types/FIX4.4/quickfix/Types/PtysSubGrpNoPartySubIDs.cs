@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 803, Type = TagType.Int, Offset = 1, Required = false)]
 		public int? PartySubIDType { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (PartySubID is not null) writer.WriteString(523, PartySubID);
+			if (PartySubIDType is not null) writer.WriteWholeNumber(803, PartySubIDType.Value);
+		}
 	}
 }

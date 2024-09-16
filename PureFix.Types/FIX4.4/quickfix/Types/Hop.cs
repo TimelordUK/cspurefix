@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 627, Offset = 0, Required = false)]
 		public HopNoHops[]? NoHops { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoHops is not null && NoHops.Length != 0)
+			{
+				writer.WriteWholeNumber(627, NoHops.Length);
+				for (int i = 0; i < NoHops.Length; i++)
+				{
+					((IFixEncoder)NoHops[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

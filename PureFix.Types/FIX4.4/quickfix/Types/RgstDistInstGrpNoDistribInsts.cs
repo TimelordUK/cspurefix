@@ -33,5 +33,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 502, Type = TagType.String, Offset = 7, Required = false)]
 		public string? CashDistribAgentAcctName { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (DistribPaymentMethod is not null) writer.WriteWholeNumber(477, DistribPaymentMethod.Value);
+			if (DistribPercentage is not null) writer.WriteNumber(512, DistribPercentage.Value);
+			if (CashDistribCurr is not null) writer.WriteString(478, CashDistribCurr);
+			if (CashDistribAgentName is not null) writer.WriteString(498, CashDistribAgentName);
+			if (CashDistribAgentCode is not null) writer.WriteString(499, CashDistribAgentCode);
+			if (CashDistribAgentAcctNumber is not null) writer.WriteString(500, CashDistribAgentAcctNumber);
+			if (CashDistribPayRef is not null) writer.WriteString(501, CashDistribPayRef);
+			if (CashDistribAgentAcctName is not null) writer.WriteString(502, CashDistribAgentAcctName);
+		}
 	}
 }

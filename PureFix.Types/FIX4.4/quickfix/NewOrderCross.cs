@@ -151,6 +151,71 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 46, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& CrossID is not null
+				&& CrossType is not null
+				&& CrossPrioritization is not null
+				&& SideCrossOrdModGrp is not null && ((IFixValidator)SideCrossOrdModGrp).IsValid(in config)
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& TransactTime is not null
+				&& OrdType is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (CrossID is not null) writer.WriteString(548, CrossID);
+			if (CrossType is not null) writer.WriteWholeNumber(549, CrossType.Value);
+			if (CrossPrioritization is not null) writer.WriteWholeNumber(550, CrossPrioritization.Value);
+			if (SideCrossOrdModGrp is not null) ((IFixEncoder)SideCrossOrdModGrp).Encode(writer);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (SettlType is not null) writer.WriteString(63, SettlType);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (HandlInst is not null) writer.WriteString(21, HandlInst);
+			if (ExecInst is not null) writer.WriteString(18, ExecInst);
+			if (MinQty is not null) writer.WriteNumber(110, MinQty.Value);
+			if (MaxFloor is not null) writer.WriteNumber(111, MaxFloor.Value);
+			if (ExDestination is not null) writer.WriteString(100, ExDestination);
+			if (TrdgSesGrp is not null) ((IFixEncoder)TrdgSesGrp).Encode(writer);
+			if (ProcessCode is not null) writer.WriteString(81, ProcessCode);
+			if (PrevClosePx is not null) writer.WriteNumber(140, PrevClosePx.Value);
+			if (LocateReqd is not null) writer.WriteBoolean(114, LocateReqd.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (Stipulations is not null) ((IFixEncoder)Stipulations).Encode(writer);
+			if (OrdType is not null) writer.WriteString(40, OrdType);
+			if (PriceType is not null) writer.WriteWholeNumber(423, PriceType.Value);
+			if (Price is not null) writer.WriteNumber(44, Price.Value);
+			if (StopPx is not null) writer.WriteNumber(99, StopPx.Value);
+			if (SpreadOrBenchmarkCurveData is not null) ((IFixEncoder)SpreadOrBenchmarkCurveData).Encode(writer);
+			if (YieldData is not null) ((IFixEncoder)YieldData).Encode(writer);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (ComplianceID is not null) writer.WriteString(376, ComplianceID);
+			if (IOIID is not null) writer.WriteString(23, IOIID);
+			if (QuoteID is not null) writer.WriteString(117, QuoteID);
+			if (TimeInForce is not null) writer.WriteString(59, TimeInForce);
+			if (EffectiveTime is not null) writer.WriteUtcTimeStamp(168, EffectiveTime.Value);
+			if (ExpireDate is not null) writer.WriteLocalDateOnly(432, ExpireDate.Value);
+			if (ExpireTime is not null) writer.WriteUtcTimeStamp(126, ExpireTime.Value);
+			if (GTBookingInst is not null) writer.WriteWholeNumber(427, GTBookingInst.Value);
+			if (MaxShow is not null) writer.WriteNumber(210, MaxShow.Value);
+			if (PegInstructions is not null) ((IFixEncoder)PegInstructions).Encode(writer);
+			if (DiscretionInstructions is not null) ((IFixEncoder)DiscretionInstructions).Encode(writer);
+			if (TargetStrategy is not null) writer.WriteWholeNumber(847, TargetStrategy.Value);
+			if (TargetStrategyParameters is not null) writer.WriteString(848, TargetStrategyParameters);
+			if (ParticipationRate is not null) writer.WriteNumber(849, ParticipationRate.Value);
+			if (CancellationRights is not null) writer.WriteString(480, CancellationRights);
+			if (MoneyLaunderingStatus is not null) writer.WriteString(481, MoneyLaunderingStatus);
+			if (RegistID is not null) writer.WriteString(513, RegistID);
+			if (Designation is not null) writer.WriteString(494, Designation);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

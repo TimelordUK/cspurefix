@@ -12,5 +12,22 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Group(NoOfTag = 78, Offset = 0, Required = false)]
 		public AllocAckGrpNoAllocs[]? NoAllocs { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoAllocs is not null && NoAllocs.Length != 0)
+			{
+				writer.WriteWholeNumber(78, NoAllocs.Length);
+				for (int i = 0; i < NoAllocs.Length; i++)
+				{
+					((IFixEncoder)NoAllocs[i]).Encode(writer);
+				}
+			}
+		}
 	}
 }

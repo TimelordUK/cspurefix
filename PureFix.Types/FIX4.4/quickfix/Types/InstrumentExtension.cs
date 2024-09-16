@@ -18,5 +18,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 2, Required = false)]
 		public AttrbGrp? AttrbGrp { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (DeliveryForm is not null) writer.WriteWholeNumber(668, DeliveryForm.Value);
+			if (PctAtRisk is not null) writer.WriteNumber(869, PctAtRisk.Value);
+			if (AttrbGrp is not null) ((IFixEncoder)AttrbGrp).Encode(writer);
+		}
 	}
 }

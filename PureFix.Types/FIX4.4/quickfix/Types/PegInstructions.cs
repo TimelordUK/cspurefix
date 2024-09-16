@@ -27,5 +27,20 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 840, Type = TagType.Int, Offset = 5, Required = false)]
 		public int? PegScope { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (PegOffsetValue is not null) writer.WriteNumber(211, PegOffsetValue.Value);
+			if (PegMoveType is not null) writer.WriteWholeNumber(835, PegMoveType.Value);
+			if (PegOffsetType is not null) writer.WriteWholeNumber(836, PegOffsetType.Value);
+			if (PegLimitType is not null) writer.WriteWholeNumber(837, PegLimitType.Value);
+			if (PegRoundDirection is not null) writer.WriteWholeNumber(838, PegRoundDirection.Value);
+			if (PegScope is not null) writer.WriteWholeNumber(840, PegScope.Value);
+		}
 	}
 }

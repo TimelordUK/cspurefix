@@ -54,5 +54,33 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 14, Required = false, LinksToTag = 354)]
 		public byte[]? EncodedText { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				CommissionData is not null && ((IFixValidator)CommissionData).IsValid(in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (CommissionData is not null) ((IFixEncoder)CommissionData).Encode(writer);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (Country is not null) writer.WriteString(421, Country);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (Price is not null) writer.WriteNumber(44, Price.Value);
+			if (PriceType is not null) writer.WriteWholeNumber(423, PriceType.Value);
+			if (FairValue is not null) writer.WriteNumber(406, FairValue.Value);
+			if (NetGrossInd is not null) writer.WriteWholeNumber(430, NetGrossInd.Value);
+			if (SettlType is not null) writer.WriteString(63, SettlType);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+		}
 	}
 }

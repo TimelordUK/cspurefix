@@ -97,6 +97,54 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 28, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& IOIID is not null
+				&& IOITransType is not null
+				&& Instrument is not null && ((IFixValidator)Instrument).IsValid(in config)
+				&& Side is not null
+				&& IOIQty is not null
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (IOIID is not null) writer.WriteString(23, IOIID);
+			if (IOITransType is not null) writer.WriteString(28, IOITransType);
+			if (IOIRefID is not null) writer.WriteString(26, IOIRefID);
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (QtyType is not null) writer.WriteWholeNumber(854, QtyType.Value);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (IOIQty is not null) writer.WriteString(27, IOIQty);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (Stipulations is not null) ((IFixEncoder)Stipulations).Encode(writer);
+			if (InstrmtLegIOIGrp is not null) ((IFixEncoder)InstrmtLegIOIGrp).Encode(writer);
+			if (PriceType is not null) writer.WriteWholeNumber(423, PriceType.Value);
+			if (Price is not null) writer.WriteNumber(44, Price.Value);
+			if (ValidUntilTime is not null) writer.WriteUtcTimeStamp(62, ValidUntilTime.Value);
+			if (IOIQltyInd is not null) writer.WriteString(25, IOIQltyInd);
+			if (IOINaturalFlag is not null) writer.WriteBoolean(130, IOINaturalFlag.Value);
+			if (IOIQualGrp is not null) ((IFixEncoder)IOIQualGrp).Encode(writer);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (URLLink is not null) writer.WriteString(149, URLLink);
+			if (RoutingGrp is not null) ((IFixEncoder)RoutingGrp).Encode(writer);
+			if (SpreadOrBenchmarkCurveData is not null) ((IFixEncoder)SpreadOrBenchmarkCurveData).Encode(writer);
+			if (YieldData is not null) ((IFixEncoder)YieldData).Encode(writer);
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

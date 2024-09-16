@@ -108,5 +108,48 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 32, Required = false)]
 		public Parties? Parties { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				Instrument is not null && ((IFixValidator)Instrument).IsValid(in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (FinancingDetails is not null) ((IFixEncoder)FinancingDetails).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (PrevClosePx is not null) writer.WriteNumber(140, PrevClosePx.Value);
+			if (QuoteRequestType is not null) writer.WriteWholeNumber(303, QuoteRequestType.Value);
+			if (QuoteType is not null) writer.WriteWholeNumber(537, QuoteType.Value);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+			if (TradeOriginationDate is not null) writer.WriteLocalDateOnly(229, TradeOriginationDate.Value);
+			if (Side is not null) writer.WriteString(54, Side);
+			if (QtyType is not null) writer.WriteWholeNumber(854, QtyType.Value);
+			if (OrderQtyData is not null) ((IFixEncoder)OrderQtyData).Encode(writer);
+			if (SettlType is not null) writer.WriteString(63, SettlType);
+			if (SettlDate is not null) writer.WriteLocalDateOnly(64, SettlDate.Value);
+			if (SettlDate2 is not null) writer.WriteLocalDateOnly(193, SettlDate2.Value);
+			if (OrderQty2 is not null) writer.WriteNumber(192, OrderQty2.Value);
+			if (Currency is not null) writer.WriteString(15, Currency);
+			if (Stipulations is not null) ((IFixEncoder)Stipulations).Encode(writer);
+			if (Account is not null) writer.WriteString(1, Account);
+			if (AcctIDSource is not null) writer.WriteWholeNumber(660, AcctIDSource.Value);
+			if (AccountType is not null) writer.WriteWholeNumber(581, AccountType.Value);
+			if (QuotReqLegsGrp is not null) ((IFixEncoder)QuotReqLegsGrp).Encode(writer);
+			if (QuotQualGrp is not null) ((IFixEncoder)QuotQualGrp).Encode(writer);
+			if (QuotePriceType is not null) writer.WriteWholeNumber(692, QuotePriceType.Value);
+			if (OrdType is not null) writer.WriteString(40, OrdType);
+			if (ExpireTime is not null) writer.WriteUtcTimeStamp(126, ExpireTime.Value);
+			if (TransactTime is not null) writer.WriteUtcTimeStamp(60, TransactTime.Value);
+			if (SpreadOrBenchmarkCurveData is not null) ((IFixEncoder)SpreadOrBenchmarkCurveData).Encode(writer);
+			if (PriceType is not null) writer.WriteWholeNumber(423, PriceType.Value);
+			if (Price is not null) writer.WriteNumber(44, Price.Value);
+			if (Price2 is not null) writer.WriteNumber(640, Price2.Value);
+			if (YieldData is not null) ((IFixEncoder)YieldData).Encode(writer);
+			if (Parties is not null) ((IFixEncoder)Parties).Encode(writer);
+		}
 	}
 }

@@ -138,5 +138,63 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 874, Type = TagType.LocalDate, Offset = 42, Required = false)]
 		public DateOnly? InterestAccrualDate { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Symbol is not null) writer.WriteString(55, Symbol);
+			if (SymbolSfx is not null) writer.WriteString(65, SymbolSfx);
+			if (SecurityID is not null) writer.WriteString(48, SecurityID);
+			if (SecurityIDSource is not null) writer.WriteString(22, SecurityIDSource);
+			if (SecAltIDGrp is not null) ((IFixEncoder)SecAltIDGrp).Encode(writer);
+			if (Product is not null) writer.WriteWholeNumber(460, Product.Value);
+			if (CFICode is not null) writer.WriteString(461, CFICode);
+			if (SecurityType is not null) writer.WriteString(167, SecurityType);
+			if (SecuritySubType is not null) writer.WriteString(762, SecuritySubType);
+			if (MaturityMonthYear is not null) writer.WriteMonthYear(200, MaturityMonthYear.Value);
+			if (MaturityDate is not null) writer.WriteLocalDateOnly(541, MaturityDate.Value);
+			if (PutOrCall is not null) writer.WriteWholeNumber(201, PutOrCall.Value);
+			if (CouponPaymentDate is not null) writer.WriteLocalDateOnly(224, CouponPaymentDate.Value);
+			if (IssueDate is not null) writer.WriteLocalDateOnly(225, IssueDate.Value);
+			if (RepoCollateralSecurityType is not null) writer.WriteString(239, RepoCollateralSecurityType);
+			if (RepurchaseTerm is not null) writer.WriteWholeNumber(226, RepurchaseTerm.Value);
+			if (RepurchaseRate is not null) writer.WriteNumber(227, RepurchaseRate.Value);
+			if (Factor is not null) writer.WriteNumber(228, Factor.Value);
+			if (CreditRating is not null) writer.WriteString(255, CreditRating);
+			if (InstrRegistry is not null) writer.WriteString(543, InstrRegistry);
+			if (CountryOfIssue is not null) writer.WriteString(470, CountryOfIssue);
+			if (StateOrProvinceOfIssue is not null) writer.WriteString(471, StateOrProvinceOfIssue);
+			if (LocaleOfIssue is not null) writer.WriteString(472, LocaleOfIssue);
+			if (RedemptionDate is not null) writer.WriteLocalDateOnly(240, RedemptionDate.Value);
+			if (StrikePrice is not null) writer.WriteNumber(202, StrikePrice.Value);
+			if (StrikeCurrency is not null) writer.WriteString(947, StrikeCurrency);
+			if (OptAttribute is not null) writer.WriteString(206, OptAttribute);
+			if (ContractMultiplier is not null) writer.WriteNumber(231, ContractMultiplier.Value);
+			if (CouponRate is not null) writer.WriteNumber(223, CouponRate.Value);
+			if (SecurityExchange is not null) writer.WriteString(207, SecurityExchange);
+			if (Issuer is not null) writer.WriteString(106, Issuer);
+			if (EncodedIssuer is not null)
+			{
+				writer.WriteWholeNumber(348, EncodedIssuer.Length);
+				writer.WriteBuffer(349, EncodedIssuer);
+			}
+			if (SecurityDesc is not null) writer.WriteString(107, SecurityDesc);
+			if (EncodedSecurityDesc is not null)
+			{
+				writer.WriteWholeNumber(350, EncodedSecurityDesc.Length);
+				writer.WriteBuffer(351, EncodedSecurityDesc);
+			}
+			if (Pool is not null) writer.WriteString(691, Pool);
+			if (ContractSettlMonth is not null) writer.WriteMonthYear(667, ContractSettlMonth.Value);
+			if (CPProgram is not null) writer.WriteWholeNumber(875, CPProgram.Value);
+			if (CPRegType is not null) writer.WriteString(876, CPRegType);
+			if (EvntGrp is not null) ((IFixEncoder)EvntGrp).Encode(writer);
+			if (DatedDate is not null) writer.WriteLocalDateOnly(873, DatedDate.Value);
+			if (InterestAccrualDate is not null) writer.WriteLocalDateOnly(874, InterestAccrualDate.Value);
+		}
 	}
 }

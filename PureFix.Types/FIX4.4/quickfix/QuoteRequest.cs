@@ -40,6 +40,32 @@ namespace PureFix.Types.FIX44.QuickFix
 		[Component(Offset = 9, Required = true)]
 		public StandardTrailer? StandardTrailer { get; set; }
 		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				(!config.CheckStandardHeader || (StandardHeader is not null && ((IFixValidator)StandardHeader).IsValid(in config)))
+				&& QuoteReqID is not null
+				&& QuotReqGrp is not null && ((IFixValidator)QuotReqGrp).IsValid(in config)
+				&& (!config.CheckStandardTrailer || (StandardTrailer is not null && ((IFixValidator)StandardTrailer).IsValid(in config)));
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (StandardHeader is not null) ((IFixEncoder)StandardHeader).Encode(writer);
+			if (QuoteReqID is not null) writer.WriteString(131, QuoteReqID);
+			if (RFQReqID is not null) writer.WriteString(644, RFQReqID);
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (OrderCapacity is not null) writer.WriteString(528, OrderCapacity);
+			if (QuotReqGrp is not null) ((IFixEncoder)QuotReqGrp).Encode(writer);
+			if (Text is not null) writer.WriteString(58, Text);
+			if (EncodedText is not null)
+			{
+				writer.WriteWholeNumber(354, EncodedText.Length);
+				writer.WriteBuffer(355, EncodedText);
+			}
+			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
+		}
+		
 		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
 		
 		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;

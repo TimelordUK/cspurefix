@@ -33,5 +33,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 7, Required = false)]
 		public string? TradingSessionSubID { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				Instrument is not null && ((IFixValidator)Instrument).IsValid(in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Instrument is not null) ((IFixEncoder)Instrument).Encode(writer);
+			if (UndInstrmtGrp is not null) ((IFixEncoder)UndInstrmtGrp).Encode(writer);
+			if (InstrmtLegGrp is not null) ((IFixEncoder)InstrmtLegGrp).Encode(writer);
+			if (PrevClosePx is not null) writer.WriteNumber(140, PrevClosePx.Value);
+			if (QuoteRequestType is not null) writer.WriteWholeNumber(303, QuoteRequestType.Value);
+			if (QuoteType is not null) writer.WriteWholeNumber(537, QuoteType.Value);
+			if (TradingSessionID is not null) writer.WriteString(336, TradingSessionID);
+			if (TradingSessionSubID is not null) writer.WriteString(625, TradingSessionSubID);
+		}
 	}
 }

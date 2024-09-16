@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 818, Type = TagType.String, Offset = 1, Required = false)]
 		public string? SecondaryTradeReportID { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (TradeReportID is not null) writer.WriteString(571, TradeReportID);
+			if (SecondaryTradeReportID is not null) writer.WriteString(818, SecondaryTradeReportID);
+		}
 	}
 }

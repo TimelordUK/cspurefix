@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 889, Type = TagType.String, Offset = 1, Required = false)]
 		public string? UnderlyingStipValue { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (UnderlyingStipType is not null) writer.WriteString(888, UnderlyingStipType);
+			if (UnderlyingStipValue is not null) writer.WriteString(889, UnderlyingStipValue);
+		}
 	}
 }

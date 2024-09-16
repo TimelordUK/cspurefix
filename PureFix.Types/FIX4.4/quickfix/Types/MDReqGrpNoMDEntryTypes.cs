@@ -12,5 +12,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 269, Type = TagType.String, Offset = 0, Required = true)]
 		public string? MDEntryType { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				MDEntryType is not null;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (MDEntryType is not null) writer.WriteString(269, MDEntryType);
+		}
 	}
 }

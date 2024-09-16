@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 872, Type = TagType.String, Offset = 1, Required = false)]
 		public string? InstrAttribValue { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (InstrAttribType is not null) writer.WriteWholeNumber(871, InstrAttribType.Value);
+			if (InstrAttribValue is not null) writer.WriteString(872, InstrAttribValue);
+		}
 	}
 }

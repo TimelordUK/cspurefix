@@ -15,5 +15,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 385, Type = TagType.String, Offset = 1, Required = false)]
 		public string? MsgDirection { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (RefMsgType is not null) writer.WriteString(372, RefMsgType);
+			if (MsgDirection is not null) writer.WriteString(385, MsgDirection);
+		}
 	}
 }

@@ -36,5 +36,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 800, Type = TagType.Float, Offset = 8, Required = false)]
 		public double? OrderBookingQty { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (ClOrdID is not null) writer.WriteString(11, ClOrdID);
+			if (OrderID is not null) writer.WriteString(37, OrderID);
+			if (SecondaryOrderID is not null) writer.WriteString(198, SecondaryOrderID);
+			if (SecondaryClOrdID is not null) writer.WriteString(526, SecondaryClOrdID);
+			if (ListID is not null) writer.WriteString(66, ListID);
+			if (NestedParties2 is not null) ((IFixEncoder)NestedParties2).Encode(writer);
+			if (OrderQty is not null) writer.WriteNumber(38, OrderQty.Value);
+			if (OrderAvgPx is not null) writer.WriteNumber(799, OrderAvgPx.Value);
+			if (OrderBookingQty is not null) writer.WriteNumber(800, OrderBookingQty.Value);
+		}
 	}
 }

@@ -12,5 +12,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 0, Required = false)]
 		public InstrumentLeg? InstrumentLeg { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (InstrumentLeg is not null) ((IFixEncoder)InstrumentLeg).Encode(writer);
+		}
 	}
 }

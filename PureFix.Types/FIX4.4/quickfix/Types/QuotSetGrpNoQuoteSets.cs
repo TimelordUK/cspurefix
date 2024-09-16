@@ -27,5 +27,23 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[Component(Offset = 5, Required = true)]
 		public QuotEntryGrp? QuotEntryGrp { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return
+				QuoteSetID is not null
+				&& TotNoQuoteEntries is not null
+				&& QuotEntryGrp is not null && ((IFixValidator)QuotEntryGrp).IsValid(in config);
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (QuoteSetID is not null) writer.WriteString(302, QuoteSetID);
+			if (UnderlyingInstrument is not null) ((IFixEncoder)UnderlyingInstrument).Encode(writer);
+			if (QuoteSetValidUntilTime is not null) writer.WriteUtcTimeStamp(367, QuoteSetValidUntilTime.Value);
+			if (TotNoQuoteEntries is not null) writer.WriteWholeNumber(304, TotNoQuoteEntries.Value);
+			if (LastFragment is not null) writer.WriteBoolean(893, LastFragment.Value);
+			if (QuotEntryGrp is not null) ((IFixEncoder)QuotEntryGrp).Encode(writer);
+		}
 	}
 }

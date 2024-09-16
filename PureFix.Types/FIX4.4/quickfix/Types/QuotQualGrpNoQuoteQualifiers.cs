@@ -12,5 +12,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 695, Type = TagType.String, Offset = 0, Required = false)]
 		public string? QuoteQualifier { get; set; }
 		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (QuoteQualifier is not null) writer.WriteString(695, QuoteQualifier);
+		}
 	}
 }
