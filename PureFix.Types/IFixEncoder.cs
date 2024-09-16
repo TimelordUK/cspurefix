@@ -2,8 +2,6 @@
 {
     public interface IFixEncoder
     {
-        public void Encode(IFixWriter writer)
-        {
-        }
+        public void Encode(IFixWriter writer);
     }
 }

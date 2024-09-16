@@ -13,10 +13,7 @@ namespace PureFix.Types
         /// Checks if the message is valid
         /// </summary>
         /// <returns></returns>
-        public bool IsValid(in FixValidatorConfig config)
-        {
-            return true;
-        }
+        public bool IsValid(in FixValidatorConfig config);
     }
 
     public static class FixValidator
