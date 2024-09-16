@@ -7,6 +7,9 @@ using Microsoft.VisualBasic;
 
 namespace PureFix.Types
 {
+    /// <summary>
+    /// Checks to see if the structure and content of a FIX message is correct
+    /// </summary>
     public interface IFixValidator
     {
         /// <summary>
@@ -18,6 +21,12 @@ namespace PureFix.Types
 
     public static class FixValidator
     {
+        /// <summary>
+        /// Checks if all items in a group are valid
+        /// </summary>
+        /// <param name="group"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
         public static bool IsValid(IFixValidator[] group, in FixValidatorConfig config)
         {
             for(int i = 0, length = group.Length; i < length; i++)

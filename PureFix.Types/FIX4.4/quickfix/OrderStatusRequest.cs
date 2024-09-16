@@ -11,46 +11,50 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class OrderStatusRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1, Required = false)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 2, Required = true)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[TagDetails(Tag = 526, Type = TagType.String, Offset = 3, Required = false)]
-		public string? SecondaryClOrdID { get; set; }
+		public string? SecondaryClOrdID {get; set;}
 		
 		[TagDetails(Tag = 583, Type = TagType.String, Offset = 4, Required = false)]
-		public string? ClOrdLinkID { get; set; }
+		public string? ClOrdLinkID {get; set;}
 		
 		[Component(Offset = 5, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 790, Type = TagType.String, Offset = 6, Required = false)]
-		public string? OrdStatusReqID { get; set; }
+		public string? OrdStatusReqID {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 7, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 8, Required = false)]
-		public int? AcctIDSource { get; set; }
+		public int? AcctIDSource {get; set;}
 		
 		[Component(Offset = 9, Required = true)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[Component(Offset = 10, Required = false)]
-		public FinancingDetails? FinancingDetails { get; set; }
+		public FinancingDetailsComponent? FinancingDetails {get; set;}
 		
 		[Component(Offset = 11, Required = false)]
-		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		public UndInstrmtGrpComponent? UndInstrmtGrp {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 12, Required = true)]
-		public string? Side { get; set; }
+		public string? Side {get; set;}
 		
 		[Component(Offset = 13, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -80,8 +84,100 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			OrderID = view.GetString(37);
+			ClOrdID = view.GetString(11);
+			SecondaryClOrdID = view.GetString(526);
+			ClOrdLinkID = view.GetString(583);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			OrdStatusReqID = view.GetString(790);
+			Account = view.GetString(1);
+			AcctIDSource = view.GetInt32(660);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			if (view.GetView("FinancingDetails") is IMessageView viewFinancingDetails)
+			{
+				FinancingDetails = new();
+				((IFixParser)FinancingDetails).Parse(viewFinancingDetails);
+			}
+			if (view.GetView("UndInstrmtGrp") is IMessageView viewUndInstrmtGrp)
+			{
+				UndInstrmtGrp = new();
+				((IFixParser)UndInstrmtGrp).Parse(viewUndInstrmtGrp);
+			}
+			Side = view.GetString(54);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "SecondaryClOrdID":
+					value = SecondaryClOrdID;
+					break;
+				case "ClOrdLinkID":
+					value = ClOrdLinkID;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "OrdStatusReqID":
+					value = OrdStatusReqID;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AcctIDSource":
+					value = AcctIDSource;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "FinancingDetails":
+					value = FinancingDetails;
+					break;
+				case "UndInstrmtGrp":
+					value = UndInstrmtGrp;
+					break;
+				case "Side":
+					value = Side;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

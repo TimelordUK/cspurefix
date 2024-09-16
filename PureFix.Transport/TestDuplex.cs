@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 
 namespace PureFix.Transport
 {
@@ -12,8 +13,9 @@ namespace PureFix.Transport
             return ValueTask.CompletedTask;
         }
 
-        public async override IAsyncEnumerable<T> ReadAllAsync(CancellationToken cancellationToken = default)
+        public async override IAsyncEnumerable<T> ReadAllAsync([EnumeratorCancellation]CancellationToken cancellationToken = default)
         {
+            await Task.Yield();
             foreach (var i in _q)
             {
                 yield return i;

@@ -1,0 +1,54 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PureFix.Types.FIX50SP2.QuickFix.Types;
+
+namespace PureFix.Types.FIX50SP2.QuickFix.Types
+{
+	public sealed partial class NoPaymentStreamFixingDates : IFixGroup
+	{
+		[TagDetails(Tag = 42661, Type = TagType.LocalDate, Offset = 0, Required = false)]
+		public DateOnly? PaymentStreamFixingDate {get; set;}
+		
+		[TagDetails(Tag = 42662, Type = TagType.Int, Offset = 1, Required = false)]
+		public int? PaymentStreamFixingDateType {get; set;}
+		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (PaymentStreamFixingDate is not null) writer.WriteLocalDateOnly(42661, PaymentStreamFixingDate.Value);
+			if (PaymentStreamFixingDateType is not null) writer.WriteWholeNumber(42662, PaymentStreamFixingDateType.Value);
+		}
+		
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			PaymentStreamFixingDate = view.GetDateOnly(42661);
+			PaymentStreamFixingDateType = view.GetInt32(42662);
+		}
+		
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "PaymentStreamFixingDate":
+					value = PaymentStreamFixingDate;
+					break;
+				case "PaymentStreamFixingDateType":
+					value = PaymentStreamFixingDateType;
+					break;
+				default: return false;
+			}
+			return true;
+		}
+	}
+}

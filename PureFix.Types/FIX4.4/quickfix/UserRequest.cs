@@ -11,31 +11,35 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class UserRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 923, Type = TagType.String, Offset = 1, Required = true)]
-		public string? UserRequestID { get; set; }
+		public string? UserRequestID {get; set;}
 		
 		[TagDetails(Tag = 924, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? UserRequestType { get; set; }
+		public int? UserRequestType {get; set;}
 		
 		[TagDetails(Tag = 553, Type = TagType.String, Offset = 3, Required = true)]
-		public string? Username { get; set; }
+		public string? Username {get; set;}
 		
 		[TagDetails(Tag = 554, Type = TagType.String, Offset = 4, Required = false)]
-		public string? Password { get; set; }
+		public string? Password {get; set;}
 		
 		[TagDetails(Tag = 925, Type = TagType.String, Offset = 5, Required = false)]
-		public string? NewPassword { get; set; }
+		public string? NewPassword {get; set;}
 		
 		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 6, Required = false, LinksToTag = 96)]
-		public int? RawDataLength { get; set; }
+		public int? RawDataLength {get; set;}
 		
 		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 7, Required = false, LinksToTag = 95)]
-		public byte[]? RawData { get; set; }
+		public byte[]? RawData {get; set;}
 		
 		[Component(Offset = 8, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -63,8 +67,64 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			UserRequestID = view.GetString(923);
+			UserRequestType = view.GetInt32(924);
+			Username = view.GetString(553);
+			Password = view.GetString(554);
+			NewPassword = view.GetString(925);
+			RawDataLength = view.GetInt32(95);
+			RawData = view.GetByteArray(96);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "UserRequestID":
+					value = UserRequestID;
+					break;
+				case "UserRequestType":
+					value = UserRequestType;
+					break;
+				case "Username":
+					value = Username;
+					break;
+				case "Password":
+					value = Password;
+					break;
+				case "NewPassword":
+					value = NewPassword;
+					break;
+				case "RawDataLength":
+					value = RawDataLength;
+					break;
+				case "RawData":
+					value = RawData;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

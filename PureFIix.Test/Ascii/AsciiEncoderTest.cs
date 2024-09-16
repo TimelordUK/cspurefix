@@ -30,7 +30,7 @@ namespace PureFIix.Test.Ascii
         {
             var msg = new NewOrderSingle
             {
-                StandardHeader = new StandardHeader
+                StandardHeader = new()
                 {
                     MsgType = MsgTypeValues.OrderSingle
                 },
@@ -38,12 +38,12 @@ namespace PureFIix.Test.Ascii
                 Account = "ABC123ZYX",
                 HandlInst = "1",
                 MaxFloor = 0,
-                Instrument = new Instrument
+                Instrument = new()
                 {
                     Symbol = "IOC"
                 },
                 Side = SideValues.Buy,
-                OrderQtyData = new OrderQtyData
+                OrderQtyData = new()
                 {
                     OrderQty = 1000
                 },

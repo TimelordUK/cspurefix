@@ -11,55 +11,59 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class SettlementInstructionRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 791, Type = TagType.String, Offset = 1, Required = true)]
-		public string? SettlInstReqID { get; set; }
+		public string? SettlInstReqID {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 2, Required = true)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[Component(Offset = 3, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 79, Type = TagType.String, Offset = 4, Required = false)]
-		public string? AllocAccount { get; set; }
+		public string? AllocAccount {get; set;}
 		
 		[TagDetails(Tag = 661, Type = TagType.Int, Offset = 5, Required = false)]
-		public int? AllocAcctIDSource { get; set; }
+		public int? AllocAcctIDSource {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 6, Required = false)]
-		public string? Side { get; set; }
+		public string? Side {get; set;}
 		
 		[TagDetails(Tag = 460, Type = TagType.Int, Offset = 7, Required = false)]
-		public int? Product { get; set; }
+		public int? Product {get; set;}
 		
 		[TagDetails(Tag = 167, Type = TagType.String, Offset = 8, Required = false)]
-		public string? SecurityType { get; set; }
+		public string? SecurityType {get; set;}
 		
 		[TagDetails(Tag = 461, Type = TagType.String, Offset = 9, Required = false)]
-		public string? CFICode { get; set; }
+		public string? CFICode {get; set;}
 		
 		[TagDetails(Tag = 168, Type = TagType.UtcTimestamp, Offset = 10, Required = false)]
-		public DateTime? EffectiveTime { get; set; }
+		public DateTime? EffectiveTime {get; set;}
 		
 		[TagDetails(Tag = 126, Type = TagType.UtcTimestamp, Offset = 11, Required = false)]
-		public DateTime? ExpireTime { get; set; }
+		public DateTime? ExpireTime {get; set;}
 		
 		[TagDetails(Tag = 779, Type = TagType.UtcTimestamp, Offset = 12, Required = false)]
-		public DateTime? LastUpdateTime { get; set; }
+		public DateTime? LastUpdateTime {get; set;}
 		
 		[TagDetails(Tag = 169, Type = TagType.Int, Offset = 13, Required = false)]
-		public int? StandInstDbType { get; set; }
+		public int? StandInstDbType {get; set;}
 		
 		[TagDetails(Tag = 170, Type = TagType.String, Offset = 14, Required = false)]
-		public string? StandInstDbName { get; set; }
+		public string? StandInstDbName {get; set;}
 		
 		[TagDetails(Tag = 171, Type = TagType.String, Offset = 15, Required = false)]
-		public string? StandInstDbID { get; set; }
+		public string? StandInstDbID {get; set;}
 		
 		[Component(Offset = 16, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -91,8 +95,100 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			SettlInstReqID = view.GetString(791);
+			TransactTime = view.GetDateTime(60);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			AllocAccount = view.GetString(79);
+			AllocAcctIDSource = view.GetInt32(661);
+			Side = view.GetString(54);
+			Product = view.GetInt32(460);
+			SecurityType = view.GetString(167);
+			CFICode = view.GetString(461);
+			EffectiveTime = view.GetDateTime(168);
+			ExpireTime = view.GetDateTime(126);
+			LastUpdateTime = view.GetDateTime(779);
+			StandInstDbType = view.GetInt32(169);
+			StandInstDbName = view.GetString(170);
+			StandInstDbID = view.GetString(171);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "SettlInstReqID":
+					value = SettlInstReqID;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "AllocAccount":
+					value = AllocAccount;
+					break;
+				case "AllocAcctIDSource":
+					value = AllocAcctIDSource;
+					break;
+				case "Side":
+					value = Side;
+					break;
+				case "Product":
+					value = Product;
+					break;
+				case "SecurityType":
+					value = SecurityType;
+					break;
+				case "CFICode":
+					value = CFICode;
+					break;
+				case "EffectiveTime":
+					value = EffectiveTime;
+					break;
+				case "ExpireTime":
+					value = ExpireTime;
+					break;
+				case "LastUpdateTime":
+					value = LastUpdateTime;
+					break;
+				case "StandInstDbType":
+					value = StandInstDbType;
+					break;
+				case "StandInstDbName":
+					value = StandInstDbName;
+					break;
+				case "StandInstDbID":
+					value = StandInstDbID;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

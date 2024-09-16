@@ -11,22 +11,26 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class UserResponse : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 923, Type = TagType.String, Offset = 1, Required = true)]
-		public string? UserRequestID { get; set; }
+		public string? UserRequestID {get; set;}
 		
 		[TagDetails(Tag = 553, Type = TagType.String, Offset = 2, Required = true)]
-		public string? Username { get; set; }
+		public string? Username {get; set;}
 		
 		[TagDetails(Tag = 926, Type = TagType.Int, Offset = 3, Required = false)]
-		public int? UserStatus { get; set; }
+		public int? UserStatus {get; set;}
 		
 		[TagDetails(Tag = 927, Type = TagType.String, Offset = 4, Required = false)]
-		public string? UserStatusText { get; set; }
+		public string? UserStatusText {get; set;}
 		
 		[Component(Offset = 5, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -47,8 +51,52 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			UserRequestID = view.GetString(923);
+			Username = view.GetString(553);
+			UserStatus = view.GetInt32(926);
+			UserStatusText = view.GetString(927);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "UserRequestID":
+					value = UserRequestID;
+					break;
+				case "Username":
+					value = Username;
+					break;
+				case "UserStatus":
+					value = UserStatus;
+					break;
+				case "UserStatusText":
+					value = UserStatusText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

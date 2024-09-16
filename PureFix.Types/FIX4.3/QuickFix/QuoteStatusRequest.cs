@@ -11,37 +11,41 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class QuoteStatusRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 649, Type = TagType.String, Offset = 1, Required = false)]
-		public string? QuoteStatusReqID { get; set; }
+		public string? QuoteStatusReqID {get; set;}
 		
 		[TagDetails(Tag = 117, Type = TagType.String, Offset = 2, Required = false)]
-		public string? QuoteID { get; set; }
+		public string? QuoteID {get; set;}
 		
 		[Component(Offset = 3, Required = true)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[Component(Offset = 4, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 5, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 6, Required = false)]
-		public int? AccountType { get; set; }
+		public int? AccountType {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 7, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 8, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[TagDetails(Tag = 263, Type = TagType.String, Offset = 9, Required = false)]
-		public string? SubscriptionRequestType { get; set; }
+		public string? SubscriptionRequestType {get; set;}
 		
 		[Component(Offset = 10, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -66,8 +70,80 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			QuoteStatusReqID = view.GetString(649);
+			QuoteID = view.GetString(117);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			Account = view.GetString(1);
+			AccountType = view.GetInt32(581);
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			SubscriptionRequestType = view.GetString(263);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "QuoteStatusReqID":
+					value = QuoteStatusReqID;
+					break;
+				case "QuoteID":
+					value = QuoteID;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AccountType":
+					value = AccountType;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "SubscriptionRequestType":
+					value = SubscriptionRequestType;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

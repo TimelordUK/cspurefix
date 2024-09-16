@@ -11,73 +11,77 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class OrderCancelReject : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1, Required = true)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 198, Type = TagType.String, Offset = 2, Required = false)]
-		public string? SecondaryOrderID { get; set; }
+		public string? SecondaryOrderID {get; set;}
 		
 		[TagDetails(Tag = 526, Type = TagType.String, Offset = 3, Required = false)]
-		public string? SecondaryClOrdID { get; set; }
+		public string? SecondaryClOrdID {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 4, Required = true)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[TagDetails(Tag = 583, Type = TagType.String, Offset = 5, Required = false)]
-		public string? ClOrdLinkID { get; set; }
+		public string? ClOrdLinkID {get; set;}
 		
 		[TagDetails(Tag = 41, Type = TagType.String, Offset = 6, Required = true)]
-		public string? OrigClOrdID { get; set; }
+		public string? OrigClOrdID {get; set;}
 		
 		[TagDetails(Tag = 39, Type = TagType.String, Offset = 7, Required = true)]
-		public string? OrdStatus { get; set; }
+		public string? OrdStatus {get; set;}
 		
 		[TagDetails(Tag = 636, Type = TagType.Boolean, Offset = 8, Required = false)]
-		public bool? WorkingIndicator { get; set; }
+		public bool? WorkingIndicator {get; set;}
 		
 		[TagDetails(Tag = 586, Type = TagType.UtcTimestamp, Offset = 9, Required = false)]
-		public DateTime? OrigOrdModTime { get; set; }
+		public DateTime? OrigOrdModTime {get; set;}
 		
 		[TagDetails(Tag = 66, Type = TagType.String, Offset = 10, Required = false)]
-		public string? ListID { get; set; }
+		public string? ListID {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 11, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 12, Required = false)]
-		public int? AcctIDSource { get; set; }
+		public int? AcctIDSource {get; set;}
 		
 		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 13, Required = false)]
-		public int? AccountType { get; set; }
+		public int? AccountType {get; set;}
 		
 		[TagDetails(Tag = 229, Type = TagType.LocalDate, Offset = 14, Required = false)]
-		public DateOnly? TradeOriginationDate { get; set; }
+		public DateOnly? TradeOriginationDate {get; set;}
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 15, Required = false)]
-		public DateOnly? TradeDate { get; set; }
+		public DateOnly? TradeDate {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 16, Required = false)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[TagDetails(Tag = 434, Type = TagType.String, Offset = 17, Required = true)]
-		public string? CxlRejResponseTo { get; set; }
+		public string? CxlRejResponseTo {get; set;}
 		
 		[TagDetails(Tag = 102, Type = TagType.Int, Offset = 18, Required = false)]
-		public int? CxlRejReason { get; set; }
+		public int? CxlRejReason {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 19, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 20, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 21, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 22, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -121,8 +125,120 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			OrderID = view.GetString(37);
+			SecondaryOrderID = view.GetString(198);
+			SecondaryClOrdID = view.GetString(526);
+			ClOrdID = view.GetString(11);
+			ClOrdLinkID = view.GetString(583);
+			OrigClOrdID = view.GetString(41);
+			OrdStatus = view.GetString(39);
+			WorkingIndicator = view.GetBool(636);
+			OrigOrdModTime = view.GetDateTime(586);
+			ListID = view.GetString(66);
+			Account = view.GetString(1);
+			AcctIDSource = view.GetInt32(660);
+			AccountType = view.GetInt32(581);
+			TradeOriginationDate = view.GetDateOnly(229);
+			TradeDate = view.GetDateOnly(75);
+			TransactTime = view.GetDateTime(60);
+			CxlRejResponseTo = view.GetString(434);
+			CxlRejReason = view.GetInt32(102);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "SecondaryOrderID":
+					value = SecondaryOrderID;
+					break;
+				case "SecondaryClOrdID":
+					value = SecondaryClOrdID;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "ClOrdLinkID":
+					value = ClOrdLinkID;
+					break;
+				case "OrigClOrdID":
+					value = OrigClOrdID;
+					break;
+				case "OrdStatus":
+					value = OrdStatus;
+					break;
+				case "WorkingIndicator":
+					value = WorkingIndicator;
+					break;
+				case "OrigOrdModTime":
+					value = OrigOrdModTime;
+					break;
+				case "ListID":
+					value = ListID;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AcctIDSource":
+					value = AcctIDSource;
+					break;
+				case "AccountType":
+					value = AccountType;
+					break;
+				case "TradeOriginationDate":
+					value = TradeOriginationDate;
+					break;
+				case "TradeDate":
+					value = TradeDate;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "CxlRejResponseTo":
+					value = CxlRejResponseTo;
+					break;
+				case "CxlRejReason":
+					value = CxlRejReason;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

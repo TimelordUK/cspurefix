@@ -11,37 +11,41 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class MarketDataSnapshotFullRefresh : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 262, Type = TagType.String, Offset = 1, Required = false)]
-		public string? MDReqID { get; set; }
+		public string? MDReqID {get; set;}
 		
 		[Component(Offset = 2, Required = true)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[TagDetails(Tag = 291, Type = TagType.String, Offset = 3, Required = false)]
-		public string? FinancialStatus { get; set; }
+		public string? FinancialStatus {get; set;}
 		
 		[TagDetails(Tag = 292, Type = TagType.String, Offset = 4, Required = false)]
-		public string? CorporateAction { get; set; }
+		public string? CorporateAction {get; set;}
 		
 		[TagDetails(Tag = 387, Type = TagType.Float, Offset = 5, Required = false)]
-		public double? TotalVolumeTraded { get; set; }
+		public double? TotalVolumeTraded {get; set;}
 		
 		[TagDetails(Tag = 449, Type = TagType.String, Offset = 6, Required = false)]
-		public string? TotalVolumeTradedDate { get; set; }
+		public string? TotalVolumeTradedDate {get; set;}
 		
 		[TagDetails(Tag = 450, Type = TagType.UtcTimeOnly, Offset = 7, Required = false)]
-		public TimeOnly? TotalVolumeTradedTime { get; set; }
+		public TimeOnly? TotalVolumeTradedTime {get; set;}
 		
 		[TagDetails(Tag = 451, Type = TagType.Float, Offset = 8, Required = false)]
-		public double? NetChgPrevDay { get; set; }
+		public double? NetChgPrevDay {get; set;}
 		
 		[Group(NoOfTag = 268, Offset = 9, Required = true)]
-		public MarketDataSnapshotFullRefreshNoMDEntries[]? NoMDEntries { get; set; }
+		public NoMDEntries[]? NoMDEntries {get; set;}
 		
 		[Component(Offset = 10, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -74,8 +78,85 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			MDReqID = view.GetString(262);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			FinancialStatus = view.GetString(291);
+			CorporateAction = view.GetString(292);
+			TotalVolumeTraded = view.GetDouble(387);
+			TotalVolumeTradedDate = view.GetString(449);
+			TotalVolumeTradedTime = view.GetTimeOnly(450);
+			NetChgPrevDay = view.GetDouble(451);
+			if (view.GetView("NoMDEntries") is IMessageView viewNoMDEntries)
+			{
+				var count = viewNoMDEntries.GroupCount();
+				NoMDEntries = new NoMDEntries[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoMDEntries[i] = new();
+					((IFixParser)NoMDEntries[i]).Parse(viewNoMDEntries.GetGroupInstance(i));
+				}
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "MDReqID":
+					value = MDReqID;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "FinancialStatus":
+					value = FinancialStatus;
+					break;
+				case "CorporateAction":
+					value = CorporateAction;
+					break;
+				case "TotalVolumeTraded":
+					value = TotalVolumeTraded;
+					break;
+				case "TotalVolumeTradedDate":
+					value = TotalVolumeTradedDate;
+					break;
+				case "TotalVolumeTradedTime":
+					value = TotalVolumeTradedTime;
+					break;
+				case "NetChgPrevDay":
+					value = NetChgPrevDay;
+					break;
+				case "NoMDEntries":
+					value = NoMDEntries;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

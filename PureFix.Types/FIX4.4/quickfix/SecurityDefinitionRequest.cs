@@ -11,52 +11,56 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class SecurityDefinitionRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 320, Type = TagType.String, Offset = 1, Required = true)]
-		public string? SecurityReqID { get; set; }
+		public string? SecurityReqID {get; set;}
 		
 		[TagDetails(Tag = 321, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? SecurityRequestType { get; set; }
+		public int? SecurityRequestType {get; set;}
 		
 		[Component(Offset = 3, Required = false)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[Component(Offset = 4, Required = false)]
-		public InstrumentExtension? InstrumentExtension { get; set; }
+		public InstrumentExtensionComponent? InstrumentExtension {get; set;}
 		
 		[Component(Offset = 5, Required = false)]
-		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		public UndInstrmtGrpComponent? UndInstrmtGrp {get; set;}
 		
 		[TagDetails(Tag = 15, Type = TagType.String, Offset = 6, Required = false)]
-		public string? Currency { get; set; }
+		public string? Currency {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 7, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 8, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 9, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 10, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 11, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[Component(Offset = 12, Required = false)]
-		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		public InstrmtLegGrpComponent? InstrmtLegGrp {get; set;}
 		
 		[TagDetails(Tag = 827, Type = TagType.Int, Offset = 13, Required = false)]
-		public int? ExpirationCycle { get; set; }
+		public int? ExpirationCycle {get; set;}
 		
 		[TagDetails(Tag = 263, Type = TagType.String, Offset = 14, Required = false)]
-		public string? SubscriptionRequestType { get; set; }
+		public string? SubscriptionRequestType {get; set;}
 		
 		[Component(Offset = 15, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -90,8 +94,108 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			SecurityReqID = view.GetString(320);
+			SecurityRequestType = view.GetInt32(321);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			if (view.GetView("InstrumentExtension") is IMessageView viewInstrumentExtension)
+			{
+				InstrumentExtension = new();
+				((IFixParser)InstrumentExtension).Parse(viewInstrumentExtension);
+			}
+			if (view.GetView("UndInstrmtGrp") is IMessageView viewUndInstrmtGrp)
+			{
+				UndInstrmtGrp = new();
+				((IFixParser)UndInstrmtGrp).Parse(viewUndInstrmtGrp);
+			}
+			Currency = view.GetString(15);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			if (view.GetView("InstrmtLegGrp") is IMessageView viewInstrmtLegGrp)
+			{
+				InstrmtLegGrp = new();
+				((IFixParser)InstrmtLegGrp).Parse(viewInstrmtLegGrp);
+			}
+			ExpirationCycle = view.GetInt32(827);
+			SubscriptionRequestType = view.GetString(263);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "SecurityReqID":
+					value = SecurityReqID;
+					break;
+				case "SecurityRequestType":
+					value = SecurityRequestType;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "InstrumentExtension":
+					value = InstrumentExtension;
+					break;
+				case "UndInstrmtGrp":
+					value = UndInstrmtGrp;
+					break;
+				case "Currency":
+					value = Currency;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "InstrmtLegGrp":
+					value = InstrmtLegGrp;
+					break;
+				case "ExpirationCycle":
+					value = ExpirationCycle;
+					break;
+				case "SubscriptionRequestType":
+					value = SubscriptionRequestType;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

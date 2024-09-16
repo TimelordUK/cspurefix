@@ -11,67 +11,71 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class RequestForPositionsAck : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 721, Type = TagType.String, Offset = 1, Required = true)]
-		public string? PosMaintRptID { get; set; }
+		public string? PosMaintRptID {get; set;}
 		
 		[TagDetails(Tag = 710, Type = TagType.String, Offset = 2, Required = false)]
-		public string? PosReqID { get; set; }
+		public string? PosReqID {get; set;}
 		
 		[TagDetails(Tag = 727, Type = TagType.Int, Offset = 3, Required = false)]
-		public int? TotalNumPosReports { get; set; }
+		public int? TotalNumPosReports {get; set;}
 		
 		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 4, Required = false)]
-		public bool? UnsolicitedIndicator { get; set; }
+		public bool? UnsolicitedIndicator {get; set;}
 		
 		[TagDetails(Tag = 728, Type = TagType.Int, Offset = 5, Required = true)]
-		public int? PosReqResult { get; set; }
+		public int? PosReqResult {get; set;}
 		
 		[TagDetails(Tag = 729, Type = TagType.Int, Offset = 6, Required = true)]
-		public int? PosReqStatus { get; set; }
+		public int? PosReqStatus {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 8, Required = true)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 9, Required = false)]
-		public int? AcctIDSource { get; set; }
+		public int? AcctIDSource {get; set;}
 		
 		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 10, Required = true)]
-		public int? AccountType { get; set; }
+		public int? AccountType {get; set;}
 		
 		[Component(Offset = 11, Required = false)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[TagDetails(Tag = 15, Type = TagType.String, Offset = 12, Required = false)]
-		public string? Currency { get; set; }
+		public string? Currency {get; set;}
 		
 		[Component(Offset = 13, Required = false)]
-		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		public InstrmtLegGrpComponent? InstrmtLegGrp {get; set;}
 		
 		[Component(Offset = 14, Required = false)]
-		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		public UndInstrmtGrpComponent? UndInstrmtGrp {get; set;}
 		
 		[TagDetails(Tag = 725, Type = TagType.Int, Offset = 15, Required = false)]
-		public int? ResponseTransportType { get; set; }
+		public int? ResponseTransportType {get; set;}
 		
 		[TagDetails(Tag = 726, Type = TagType.String, Offset = 16, Required = false)]
-		public string? ResponseDestination { get; set; }
+		public string? ResponseDestination {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 17, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 18, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 19, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 20, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -114,8 +118,128 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			PosMaintRptID = view.GetString(721);
+			PosReqID = view.GetString(710);
+			TotalNumPosReports = view.GetInt32(727);
+			UnsolicitedIndicator = view.GetBool(325);
+			PosReqResult = view.GetInt32(728);
+			PosReqStatus = view.GetInt32(729);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			Account = view.GetString(1);
+			AcctIDSource = view.GetInt32(660);
+			AccountType = view.GetInt32(581);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			Currency = view.GetString(15);
+			if (view.GetView("InstrmtLegGrp") is IMessageView viewInstrmtLegGrp)
+			{
+				InstrmtLegGrp = new();
+				((IFixParser)InstrmtLegGrp).Parse(viewInstrmtLegGrp);
+			}
+			if (view.GetView("UndInstrmtGrp") is IMessageView viewUndInstrmtGrp)
+			{
+				UndInstrmtGrp = new();
+				((IFixParser)UndInstrmtGrp).Parse(viewUndInstrmtGrp);
+			}
+			ResponseTransportType = view.GetInt32(725);
+			ResponseDestination = view.GetString(726);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "PosMaintRptID":
+					value = PosMaintRptID;
+					break;
+				case "PosReqID":
+					value = PosReqID;
+					break;
+				case "TotalNumPosReports":
+					value = TotalNumPosReports;
+					break;
+				case "UnsolicitedIndicator":
+					value = UnsolicitedIndicator;
+					break;
+				case "PosReqResult":
+					value = PosReqResult;
+					break;
+				case "PosReqStatus":
+					value = PosReqStatus;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AcctIDSource":
+					value = AcctIDSource;
+					break;
+				case "AccountType":
+					value = AccountType;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "Currency":
+					value = Currency;
+					break;
+				case "InstrmtLegGrp":
+					value = InstrmtLegGrp;
+					break;
+				case "UndInstrmtGrp":
+					value = UndInstrmtGrp;
+					break;
+				case "ResponseTransportType":
+					value = ResponseTransportType;
+					break;
+				case "ResponseDestination":
+					value = ResponseDestination;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

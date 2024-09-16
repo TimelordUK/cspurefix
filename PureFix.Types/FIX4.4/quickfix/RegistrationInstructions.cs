@@ -11,46 +11,50 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class RegistrationInstructions : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 513, Type = TagType.String, Offset = 1, Required = true)]
-		public string? RegistID { get; set; }
+		public string? RegistID {get; set;}
 		
 		[TagDetails(Tag = 514, Type = TagType.String, Offset = 2, Required = true)]
-		public string? RegistTransType { get; set; }
+		public string? RegistTransType {get; set;}
 		
 		[TagDetails(Tag = 508, Type = TagType.String, Offset = 3, Required = true)]
-		public string? RegistRefID { get; set; }
+		public string? RegistRefID {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 4, Required = false)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[Component(Offset = 5, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 6, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 7, Required = false)]
-		public int? AcctIDSource { get; set; }
+		public int? AcctIDSource {get; set;}
 		
 		[TagDetails(Tag = 493, Type = TagType.String, Offset = 8, Required = false)]
-		public string? RegistAcctType { get; set; }
+		public string? RegistAcctType {get; set;}
 		
 		[TagDetails(Tag = 495, Type = TagType.Int, Offset = 9, Required = false)]
-		public int? TaxAdvantageType { get; set; }
+		public int? TaxAdvantageType {get; set;}
 		
 		[TagDetails(Tag = 517, Type = TagType.String, Offset = 10, Required = false)]
-		public string? OwnershipType { get; set; }
+		public string? OwnershipType {get; set;}
 		
 		[Component(Offset = 11, Required = false)]
-		public RgstDtlsGrp? RgstDtlsGrp { get; set; }
+		public RgstDtlsGrpComponent? RgstDtlsGrp {get; set;}
 		
 		[Component(Offset = 12, Required = false)]
-		public RgstDistInstGrp? RgstDistInstGrp { get; set; }
+		public RgstDistInstGrpComponent? RgstDistInstGrp {get; set;}
 		
 		[Component(Offset = 13, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -80,8 +84,96 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			RegistID = view.GetString(513);
+			RegistTransType = view.GetString(514);
+			RegistRefID = view.GetString(508);
+			ClOrdID = view.GetString(11);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			Account = view.GetString(1);
+			AcctIDSource = view.GetInt32(660);
+			RegistAcctType = view.GetString(493);
+			TaxAdvantageType = view.GetInt32(495);
+			OwnershipType = view.GetString(517);
+			if (view.GetView("RgstDtlsGrp") is IMessageView viewRgstDtlsGrp)
+			{
+				RgstDtlsGrp = new();
+				((IFixParser)RgstDtlsGrp).Parse(viewRgstDtlsGrp);
+			}
+			if (view.GetView("RgstDistInstGrp") is IMessageView viewRgstDistInstGrp)
+			{
+				RgstDistInstGrp = new();
+				((IFixParser)RgstDistInstGrp).Parse(viewRgstDistInstGrp);
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "RegistID":
+					value = RegistID;
+					break;
+				case "RegistTransType":
+					value = RegistTransType;
+					break;
+				case "RegistRefID":
+					value = RegistRefID;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AcctIDSource":
+					value = AcctIDSource;
+					break;
+				case "RegistAcctType":
+					value = RegistAcctType;
+					break;
+				case "TaxAdvantageType":
+					value = TaxAdvantageType;
+					break;
+				case "OwnershipType":
+					value = OwnershipType;
+					break;
+				case "RgstDtlsGrp":
+					value = RgstDtlsGrp;
+					break;
+				case "RgstDistInstGrp":
+					value = RgstDistInstGrp;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

@@ -11,55 +11,59 @@ namespace PureFix.Types.FIX42.QuickFix
 	public sealed partial class TradingSessionStatus : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 335, Type = TagType.String, Offset = 1, Required = false)]
-		public string? TradSesReqID { get; set; }
+		public string? TradSesReqID {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 2, Required = true)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 338, Type = TagType.Int, Offset = 3, Required = false)]
-		public int? TradSesMethod { get; set; }
+		public int? TradSesMethod {get; set;}
 		
 		[TagDetails(Tag = 339, Type = TagType.Int, Offset = 4, Required = false)]
-		public int? TradSesMode { get; set; }
+		public int? TradSesMode {get; set;}
 		
 		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 5, Required = false)]
-		public bool? UnsolicitedIndicator { get; set; }
+		public bool? UnsolicitedIndicator {get; set;}
 		
 		[TagDetails(Tag = 340, Type = TagType.Int, Offset = 6, Required = true)]
-		public int? TradSesStatus { get; set; }
+		public int? TradSesStatus {get; set;}
 		
 		[TagDetails(Tag = 341, Type = TagType.UtcTimestamp, Offset = 7, Required = false)]
-		public DateTime? TradSesStartTime { get; set; }
+		public DateTime? TradSesStartTime {get; set;}
 		
 		[TagDetails(Tag = 342, Type = TagType.UtcTimestamp, Offset = 8, Required = false)]
-		public DateTime? TradSesOpenTime { get; set; }
+		public DateTime? TradSesOpenTime {get; set;}
 		
 		[TagDetails(Tag = 343, Type = TagType.UtcTimestamp, Offset = 9, Required = false)]
-		public DateTime? TradSesPreCloseTime { get; set; }
+		public DateTime? TradSesPreCloseTime {get; set;}
 		
 		[TagDetails(Tag = 344, Type = TagType.UtcTimestamp, Offset = 10, Required = false)]
-		public DateTime? TradSesCloseTime { get; set; }
+		public DateTime? TradSesCloseTime {get; set;}
 		
 		[TagDetails(Tag = 345, Type = TagType.UtcTimestamp, Offset = 11, Required = false)]
-		public DateTime? TradSesEndTime { get; set; }
+		public DateTime? TradSesEndTime {get; set;}
 		
 		[TagDetails(Tag = 387, Type = TagType.Float, Offset = 12, Required = false)]
-		public double? TotalVolumeTraded { get; set; }
+		public double? TotalVolumeTraded {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 13, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 14, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 15, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 16, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -94,8 +98,96 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			TradSesReqID = view.GetString(335);
+			TradingSessionID = view.GetString(336);
+			TradSesMethod = view.GetInt32(338);
+			TradSesMode = view.GetInt32(339);
+			UnsolicitedIndicator = view.GetBool(325);
+			TradSesStatus = view.GetInt32(340);
+			TradSesStartTime = view.GetDateTime(341);
+			TradSesOpenTime = view.GetDateTime(342);
+			TradSesPreCloseTime = view.GetDateTime(343);
+			TradSesCloseTime = view.GetDateTime(344);
+			TradSesEndTime = view.GetDateTime(345);
+			TotalVolumeTraded = view.GetDouble(387);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "TradSesReqID":
+					value = TradSesReqID;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradSesMethod":
+					value = TradSesMethod;
+					break;
+				case "TradSesMode":
+					value = TradSesMode;
+					break;
+				case "UnsolicitedIndicator":
+					value = UnsolicitedIndicator;
+					break;
+				case "TradSesStatus":
+					value = TradSesStatus;
+					break;
+				case "TradSesStartTime":
+					value = TradSesStartTime;
+					break;
+				case "TradSesOpenTime":
+					value = TradSesOpenTime;
+					break;
+				case "TradSesPreCloseTime":
+					value = TradSesPreCloseTime;
+					break;
+				case "TradSesCloseTime":
+					value = TradSesCloseTime;
+					break;
+				case "TradSesEndTime":
+					value = TradSesEndTime;
+					break;
+				case "TotalVolumeTraded":
+					value = TotalVolumeTraded;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

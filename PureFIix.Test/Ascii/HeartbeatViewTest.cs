@@ -1,5 +1,6 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
+using PureFix.Types;
 using PureFix.Types.FIX44.QuickFix;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(mv, Is.Not.Null);
         }
 
+
         [Test]
         public void Parse_Header_View_Test()
         {
@@ -46,7 +48,12 @@ namespace PureFIix.Test.Ascii
             var mv = _views[0];
             Assert.That(mv, Is.Not.Null);
             var hb = new Heartbeat();
-            hb.Parse(mv);
+            ((IFixParser)hb).Parse(mv);
+
+            Assert.That(QuickLookup.Lookup(hb, "StandardHeader").Lookup("BeginString").ValueAs<string>(), Is.EqualTo("FIX.4.4"));
+            Assert.That(QuickLookup.Lookup(hb, "StandardHeader").Lookup("MsgType").ValueAs<string>(), Is.EqualTo("0"));
+            Assert.That(QuickLookup.Lookup(hb, "StandardHeader").Lookup("TargetCompID").ValueAs<string>(), Is.EqualTo("accept-comp"));
+            Assert.That(QuickLookup.Lookup(hb, "TestReqID").ValueAs<string>(), Is.EqualTo("Sun, 01 Jan 2023 14:14:20 GMT"));
         }
 
         [Test]

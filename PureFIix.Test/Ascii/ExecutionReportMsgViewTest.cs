@@ -9,6 +9,7 @@ using PureFix.Types.FIX44.QuickFix;
 using PureFix.Buffer.Segment;
 using PureFix.Types.FIX44.QuickFix.Types;
 using DIs = NUnit.DeepObjectCompare.Is;
+using PureFix.Types;
 namespace PureFIix.Test.Ascii
 {
     internal class ExecutionReportMsgViewTest
@@ -57,7 +58,7 @@ namespace PureFIix.Test.Ascii
             var mv = _views[0];
             Assert.That(mv, Is.Not.Null);
             var message = new ExecutionReport();
-            message.Parse(mv);
+            ((IFixParser)message).Parse(mv);
         }
 
         [Test]
@@ -949,7 +950,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(_views, Has.Count.EqualTo(1));
             var mv = _views[0];
             var er = new ExecutionReport();
-            er.Parse(mv);
+            ((IFixParser)er).Parse(mv);
             Assert.That(er.StandardHeader, Is.Not.Null);
             Assert.That(er.StandardHeader.BeginString, Is.EqualTo("FIX4.4"));
             string json = JsonHelper.ToJson(er);
@@ -995,10 +996,10 @@ namespace PureFIix.Test.Ascii
             Assert.That(erView, Is.Not.Null);
             var partyView = erView.GetView("Parties");
             Assert.That(partyView, Is.Not.Null);
-            var parties = new Parties();
-            parties.Parse(partyView);
-            Assert.That(parties.NoPartyIDs, Is.Not.Null);
-            var json = JsonHelper.ToJson(parties.NoPartyIDs[0]);
+            var parties = new NoPartyIDs();
+            ((IFixParser)parties).Parse(partyView);
+            Assert.That(parties, Is.Not.Null);
+            var json = JsonHelper.ToJson(parties);
             const string expected = """
                                     {
                                       "partyID": "magna.",
@@ -1020,14 +1021,14 @@ namespace PureFIix.Test.Ascii
                                     """;
 
 
-            var instance = JsonHelper.FromJson<PartiesNoPartyIDs>(expected);
-            Assert.That(parties.NoPartyIDs[0], DIs.DeepEqualTo(instance));
+            var instance = JsonHelper.FromJson<NoPartyIDs>(expected);
+            Assert.That(parties, DIs.DeepEqualTo(instance));
 
             var noParties = partyView?.GetView("NoPartyIDs");
             var np0View = noParties?.GetGroupInstance(0);
             var np0ViewPtysSubGrp = np0View?.GetView("PtysSubGrp");
-            var psg = new PtysSubGrp();
-            psg.Parse(np0ViewPtysSubGrp);
+            var psg = new PtysSubGrpComponent();
+            ((IFixParser)psg).Parse(np0ViewPtysSubGrp);
 
             Assert.Multiple(() =>
             {
@@ -1053,15 +1054,15 @@ namespace PureFIix.Test.Ascii
             Assert.That(instrumentView, Is.Not.Null);
             Assert.That(instrumentView.GetString("Symbol"), Is.EqualTo("ac,"));
             var secAltIDGrpAsObject = instrumentView?.GetView("SecAltIDGrp");
-            var sag = new SecAltIDGrp();
-            sag.Parse(secAltIDGrpAsObject);
+            var sag = new SecAltIDGrpComponent();
+            ((IFixParser)sag).Parse(secAltIDGrpAsObject);
             Assert.Multiple(() =>
             {
                 Assert.That(sag.NoSecurityAltID, Is.Not.Null);
                 Assert.That(sag.NoSecurityAltID.Length, Is.EqualTo(2));
             });
             var er = new ExecutionReport();
-            er.Parse(erView);
+            ((IFixParser)er).Parse(erView);
             var json = JsonHelper.ToJson(er);
             const string expected = """
                                     {
@@ -1131,7 +1132,7 @@ namespace PureFIix.Test.Ascii
                                       }
                                     """;
 
-            var er2 = JsonHelper.FromJson<Instrument>(expected);
+            var er2 = JsonHelper.FromJson<InstrumentComponent>(expected);
             Assert.That(er2.SecurityID, Is.EqualTo(er.Instrument.SecurityID));
         }
 
@@ -1145,8 +1146,8 @@ namespace PureFIix.Test.Ascii
             Assert.That(erView, Is.Not.Null);
             var undInstrmtGrpView = erView.GetView("UndInstrmtGrp");
             Assert.That(undInstrmtGrpView, Is.Not.Null);
-            var uig = new UndInstrmtGrp();
-            uig.Parse(undInstrmtGrpView);
+            var uig = new UndInstrmtCollGrpComponent();
+            ((IFixParser)uig).Parse(undInstrmtGrpView);
             var u0 = uig?.NoUnderlyings?[0];
             var underlying0 = u0?.UnderlyingInstrument;
 
@@ -1192,7 +1193,7 @@ namespace PureFIix.Test.Ascii
             ]
           },
              */
-            var expectedInst = JsonHelper.FromJson<UndSecAltIDGrp>(expected0);
+            var expectedInst = JsonHelper.FromJson<UndSecAltIDGrpComponent>(expected0);
             Assert.Multiple(() =>
             {
                 Assert.That(expectedInst, Is.Not.Null);

@@ -11,16 +11,20 @@ namespace PureFix.Types.FIX42.QuickFix
 	public sealed partial class MarketDataIncrementalRefresh : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 262, Type = TagType.String, Offset = 1, Required = false)]
-		public string? MDReqID { get; set; }
+		public string? MDReqID {get; set;}
 		
 		[Group(NoOfTag = 268, Offset = 2, Required = true)]
-		public MarketDataIncrementalRefreshNoMDEntries[]? NoMDEntries { get; set; }
+		public NoMDEntries[]? NoMDEntries {get; set;}
 		
 		[Component(Offset = 3, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -45,8 +49,53 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			MDReqID = view.GetString(262);
+			if (view.GetView("NoMDEntries") is IMessageView viewNoMDEntries)
+			{
+				var count = viewNoMDEntries.GroupCount();
+				NoMDEntries = new NoMDEntries[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoMDEntries[i] = new();
+					((IFixParser)NoMDEntries[i]).Parse(viewNoMDEntries.GetGroupInstance(i));
+				}
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "MDReqID":
+					value = MDReqID;
+					break;
+				case "NoMDEntries":
+					value = NoMDEntries;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

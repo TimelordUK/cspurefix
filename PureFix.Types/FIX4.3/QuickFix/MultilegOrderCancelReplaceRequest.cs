@@ -11,211 +11,215 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class MultilegOrderCancelReplaceRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1, Required = false)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 41, Type = TagType.String, Offset = 2, Required = true)]
-		public string? OrigClOrdID { get; set; }
+		public string? OrigClOrdID {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 3, Required = true)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[TagDetails(Tag = 526, Type = TagType.String, Offset = 4, Required = false)]
-		public string? SecondaryClOrdID { get; set; }
+		public string? SecondaryClOrdID {get; set;}
 		
 		[TagDetails(Tag = 583, Type = TagType.String, Offset = 5, Required = false)]
-		public string? ClOrdLinkID { get; set; }
+		public string? ClOrdLinkID {get; set;}
 		
 		[TagDetails(Tag = 586, Type = TagType.UtcTimestamp, Offset = 6, Required = false)]
-		public DateTime? OrigOrdModTime { get; set; }
+		public DateTime? OrigOrdModTime {get; set;}
 		
 		[Component(Offset = 7, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 8, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 9, Required = false)]
-		public int? AccountType { get; set; }
+		public int? AccountType {get; set;}
 		
 		[TagDetails(Tag = 589, Type = TagType.String, Offset = 10, Required = false)]
-		public string? DayBookingInst { get; set; }
+		public string? DayBookingInst {get; set;}
 		
 		[TagDetails(Tag = 590, Type = TagType.String, Offset = 11, Required = false)]
-		public string? BookingUnit { get; set; }
+		public string? BookingUnit {get; set;}
 		
 		[TagDetails(Tag = 591, Type = TagType.String, Offset = 12, Required = false)]
-		public string? PreallocMethod { get; set; }
+		public string? PreallocMethod {get; set;}
 		
 		[Group(NoOfTag = 78, Offset = 13, Required = false)]
-		public MultilegOrderCancelReplaceRequestNoAllocs[]? NoAllocs { get; set; }
+		public NoAllocs[]? NoAllocs {get; set;}
 		
 		[TagDetails(Tag = 63, Type = TagType.String, Offset = 14, Required = false)]
-		public string? SettlmntTyp { get; set; }
+		public string? SettlmntTyp {get; set;}
 		
 		[TagDetails(Tag = 64, Type = TagType.LocalDate, Offset = 15, Required = false)]
-		public DateOnly? FutSettDate { get; set; }
+		public DateOnly? FutSettDate {get; set;}
 		
 		[TagDetails(Tag = 544, Type = TagType.String, Offset = 16, Required = false)]
-		public string? CashMargin { get; set; }
+		public string? CashMargin {get; set;}
 		
 		[TagDetails(Tag = 635, Type = TagType.String, Offset = 17, Required = false)]
-		public string? ClearingFeeIndicator { get; set; }
+		public string? ClearingFeeIndicator {get; set;}
 		
 		[TagDetails(Tag = 21, Type = TagType.String, Offset = 18, Required = true)]
-		public string? HandlInst { get; set; }
+		public string? HandlInst {get; set;}
 		
 		[TagDetails(Tag = 18, Type = TagType.String, Offset = 19, Required = false)]
-		public string? ExecInst { get; set; }
+		public string? ExecInst {get; set;}
 		
 		[TagDetails(Tag = 110, Type = TagType.Float, Offset = 20, Required = false)]
-		public double? MinQty { get; set; }
+		public double? MinQty {get; set;}
 		
 		[TagDetails(Tag = 111, Type = TagType.Float, Offset = 21, Required = false)]
-		public double? MaxFloor { get; set; }
+		public double? MaxFloor {get; set;}
 		
 		[TagDetails(Tag = 100, Type = TagType.String, Offset = 22, Required = false)]
-		public string? ExDestination { get; set; }
+		public string? ExDestination {get; set;}
 		
 		[Group(NoOfTag = 386, Offset = 23, Required = false)]
-		public MultilegOrderCancelReplaceRequestNoTradingSessions[]? NoTradingSessions { get; set; }
+		public NoTradingSessions[]? NoTradingSessions {get; set;}
 		
 		[TagDetails(Tag = 81, Type = TagType.String, Offset = 24, Required = false)]
-		public string? ProcessCode { get; set; }
+		public string? ProcessCode {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 25, Required = true)]
-		public string? Side { get; set; }
+		public string? Side {get; set;}
 		
 		[Component(Offset = 26, Required = true)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[TagDetails(Tag = 140, Type = TagType.Float, Offset = 27, Required = false)]
-		public double? PrevClosePx { get; set; }
+		public double? PrevClosePx {get; set;}
 		
 		[Group(NoOfTag = 555, Offset = 28, Required = true)]
-		public MultilegOrderCancelReplaceRequestNoLegs[]? NoLegs { get; set; }
+		public NoLegs[]? NoLegs {get; set;}
 		
 		[TagDetails(Tag = 114, Type = TagType.Boolean, Offset = 29, Required = false)]
-		public bool? LocateReqd { get; set; }
+		public bool? LocateReqd {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 30, Required = true)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[TagDetails(Tag = 465, Type = TagType.Int, Offset = 31, Required = false)]
-		public int? QuantityType { get; set; }
+		public int? QuantityType {get; set;}
 		
 		[Component(Offset = 32, Required = true)]
-		public OrderQtyData? OrderQtyData { get; set; }
+		public OrderQtyDataComponent? OrderQtyData {get; set;}
 		
 		[TagDetails(Tag = 40, Type = TagType.String, Offset = 33, Required = true)]
-		public string? OrdType { get; set; }
+		public string? OrdType {get; set;}
 		
 		[TagDetails(Tag = 423, Type = TagType.Int, Offset = 34, Required = false)]
-		public int? PriceType { get; set; }
+		public int? PriceType {get; set;}
 		
 		[TagDetails(Tag = 44, Type = TagType.Float, Offset = 35, Required = false)]
-		public double? Price { get; set; }
+		public double? Price {get; set;}
 		
 		[TagDetails(Tag = 99, Type = TagType.Float, Offset = 36, Required = false)]
-		public double? StopPx { get; set; }
+		public double? StopPx {get; set;}
 		
 		[TagDetails(Tag = 15, Type = TagType.String, Offset = 37, Required = false)]
-		public string? Currency { get; set; }
+		public string? Currency {get; set;}
 		
 		[TagDetails(Tag = 376, Type = TagType.String, Offset = 38, Required = false)]
-		public string? ComplianceID { get; set; }
+		public string? ComplianceID {get; set;}
 		
 		[TagDetails(Tag = 377, Type = TagType.Boolean, Offset = 39, Required = false)]
-		public bool? SolicitedFlag { get; set; }
+		public bool? SolicitedFlag {get; set;}
 		
 		[TagDetails(Tag = 23, Type = TagType.String, Offset = 40, Required = false)]
-		public string? IOIid { get; set; }
+		public string? IOIid {get; set;}
 		
 		[TagDetails(Tag = 117, Type = TagType.String, Offset = 41, Required = false)]
-		public string? QuoteID { get; set; }
+		public string? QuoteID {get; set;}
 		
 		[TagDetails(Tag = 59, Type = TagType.String, Offset = 42, Required = false)]
-		public string? TimeInForce { get; set; }
+		public string? TimeInForce {get; set;}
 		
 		[TagDetails(Tag = 168, Type = TagType.UtcTimestamp, Offset = 43, Required = false)]
-		public DateTime? EffectiveTime { get; set; }
+		public DateTime? EffectiveTime {get; set;}
 		
 		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 44, Required = false)]
-		public DateOnly? ExpireDate { get; set; }
+		public DateOnly? ExpireDate {get; set;}
 		
 		[TagDetails(Tag = 126, Type = TagType.UtcTimestamp, Offset = 45, Required = false)]
-		public DateTime? ExpireTime { get; set; }
+		public DateTime? ExpireTime {get; set;}
 		
 		[TagDetails(Tag = 427, Type = TagType.Int, Offset = 46, Required = false)]
-		public int? GTBookingInst { get; set; }
+		public int? GTBookingInst {get; set;}
 		
 		[Component(Offset = 47, Required = false)]
-		public CommissionData? CommissionData { get; set; }
+		public CommissionDataComponent? CommissionData {get; set;}
 		
 		[TagDetails(Tag = 528, Type = TagType.String, Offset = 48, Required = false)]
-		public string? OrderCapacity { get; set; }
+		public string? OrderCapacity {get; set;}
 		
 		[TagDetails(Tag = 529, Type = TagType.String, Offset = 49, Required = false)]
-		public string? OrderRestrictions { get; set; }
+		public string? OrderRestrictions {get; set;}
 		
 		[TagDetails(Tag = 582, Type = TagType.Int, Offset = 50, Required = false)]
-		public int? CustOrderCapacity { get; set; }
+		public int? CustOrderCapacity {get; set;}
 		
 		[TagDetails(Tag = 121, Type = TagType.Boolean, Offset = 51, Required = false)]
-		public bool? ForexReq { get; set; }
+		public bool? ForexReq {get; set;}
 		
 		[TagDetails(Tag = 120, Type = TagType.String, Offset = 52, Required = false)]
-		public string? SettlCurrency { get; set; }
+		public string? SettlCurrency {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 53, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 54, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 55, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[TagDetails(Tag = 77, Type = TagType.String, Offset = 56, Required = false)]
-		public string? PositionEffect { get; set; }
+		public string? PositionEffect {get; set;}
 		
 		[TagDetails(Tag = 203, Type = TagType.Int, Offset = 57, Required = false)]
-		public int? CoveredOrUncovered { get; set; }
+		public int? CoveredOrUncovered {get; set;}
 		
 		[TagDetails(Tag = 210, Type = TagType.Float, Offset = 58, Required = false)]
-		public double? MaxShow { get; set; }
+		public double? MaxShow {get; set;}
 		
 		[TagDetails(Tag = 211, Type = TagType.Float, Offset = 59, Required = false)]
-		public double? PegDifference { get; set; }
+		public double? PegDifference {get; set;}
 		
 		[TagDetails(Tag = 388, Type = TagType.String, Offset = 60, Required = false)]
-		public string? DiscretionInst { get; set; }
+		public string? DiscretionInst {get; set;}
 		
 		[TagDetails(Tag = 389, Type = TagType.Float, Offset = 61, Required = false)]
-		public double? DiscretionOffset { get; set; }
+		public double? DiscretionOffset {get; set;}
 		
 		[TagDetails(Tag = 480, Type = TagType.String, Offset = 62, Required = false)]
-		public string? CancellationRights { get; set; }
+		public string? CancellationRights {get; set;}
 		
 		[TagDetails(Tag = 481, Type = TagType.String, Offset = 63, Required = false)]
-		public string? MoneyLaunderingStatus { get; set; }
+		public string? MoneyLaunderingStatus {get; set;}
 		
 		[TagDetails(Tag = 513, Type = TagType.String, Offset = 64, Required = false)]
-		public string? RegistID { get; set; }
+		public string? RegistID {get; set;}
 		
 		[TagDetails(Tag = 494, Type = TagType.String, Offset = 65, Required = false)]
-		public string? Designation { get; set; }
+		public string? Designation {get; set;}
 		
 		[TagDetails(Tag = 563, Type = TagType.Int, Offset = 66, Required = false)]
-		public int? MultiLegRptTypeReq { get; set; }
+		public int? MultiLegRptTypeReq {get; set;}
 		
 		[TagDetails(Tag = 118, Type = TagType.Float, Offset = 67, Required = false)]
-		public double? NetMoney { get; set; }
+		public double? NetMoney {get; set;}
 		
 		[Component(Offset = 68, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -330,8 +334,347 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			OrderID = view.GetString(37);
+			OrigClOrdID = view.GetString(41);
+			ClOrdID = view.GetString(11);
+			SecondaryClOrdID = view.GetString(526);
+			ClOrdLinkID = view.GetString(583);
+			OrigOrdModTime = view.GetDateTime(586);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			Account = view.GetString(1);
+			AccountType = view.GetInt32(581);
+			DayBookingInst = view.GetString(589);
+			BookingUnit = view.GetString(590);
+			PreallocMethod = view.GetString(591);
+			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
+			{
+				var count = viewNoAllocs.GroupCount();
+				NoAllocs = new NoAllocs[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoAllocs[i] = new();
+					((IFixParser)NoAllocs[i]).Parse(viewNoAllocs.GetGroupInstance(i));
+				}
+			}
+			SettlmntTyp = view.GetString(63);
+			FutSettDate = view.GetDateOnly(64);
+			CashMargin = view.GetString(544);
+			ClearingFeeIndicator = view.GetString(635);
+			HandlInst = view.GetString(21);
+			ExecInst = view.GetString(18);
+			MinQty = view.GetDouble(110);
+			MaxFloor = view.GetDouble(111);
+			ExDestination = view.GetString(100);
+			if (view.GetView("NoTradingSessions") is IMessageView viewNoTradingSessions)
+			{
+				var count = viewNoTradingSessions.GroupCount();
+				NoTradingSessions = new NoTradingSessions[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoTradingSessions[i] = new();
+					((IFixParser)NoTradingSessions[i]).Parse(viewNoTradingSessions.GetGroupInstance(i));
+				}
+			}
+			ProcessCode = view.GetString(81);
+			Side = view.GetString(54);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			PrevClosePx = view.GetDouble(140);
+			if (view.GetView("NoLegs") is IMessageView viewNoLegs)
+			{
+				var count = viewNoLegs.GroupCount();
+				NoLegs = new NoLegs[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoLegs[i] = new();
+					((IFixParser)NoLegs[i]).Parse(viewNoLegs.GetGroupInstance(i));
+				}
+			}
+			LocateReqd = view.GetBool(114);
+			TransactTime = view.GetDateTime(60);
+			QuantityType = view.GetInt32(465);
+			if (view.GetView("OrderQtyData") is IMessageView viewOrderQtyData)
+			{
+				OrderQtyData = new();
+				((IFixParser)OrderQtyData).Parse(viewOrderQtyData);
+			}
+			OrdType = view.GetString(40);
+			PriceType = view.GetInt32(423);
+			Price = view.GetDouble(44);
+			StopPx = view.GetDouble(99);
+			Currency = view.GetString(15);
+			ComplianceID = view.GetString(376);
+			SolicitedFlag = view.GetBool(377);
+			IOIid = view.GetString(23);
+			QuoteID = view.GetString(117);
+			TimeInForce = view.GetString(59);
+			EffectiveTime = view.GetDateTime(168);
+			ExpireDate = view.GetDateOnly(432);
+			ExpireTime = view.GetDateTime(126);
+			GTBookingInst = view.GetInt32(427);
+			if (view.GetView("CommissionData") is IMessageView viewCommissionData)
+			{
+				CommissionData = new();
+				((IFixParser)CommissionData).Parse(viewCommissionData);
+			}
+			OrderCapacity = view.GetString(528);
+			OrderRestrictions = view.GetString(529);
+			CustOrderCapacity = view.GetInt32(582);
+			ForexReq = view.GetBool(121);
+			SettlCurrency = view.GetString(120);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			PositionEffect = view.GetString(77);
+			CoveredOrUncovered = view.GetInt32(203);
+			MaxShow = view.GetDouble(210);
+			PegDifference = view.GetDouble(211);
+			DiscretionInst = view.GetString(388);
+			DiscretionOffset = view.GetDouble(389);
+			CancellationRights = view.GetString(480);
+			MoneyLaunderingStatus = view.GetString(481);
+			RegistID = view.GetString(513);
+			Designation = view.GetString(494);
+			MultiLegRptTypeReq = view.GetInt32(563);
+			NetMoney = view.GetDouble(118);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "OrigClOrdID":
+					value = OrigClOrdID;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "SecondaryClOrdID":
+					value = SecondaryClOrdID;
+					break;
+				case "ClOrdLinkID":
+					value = ClOrdLinkID;
+					break;
+				case "OrigOrdModTime":
+					value = OrigOrdModTime;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AccountType":
+					value = AccountType;
+					break;
+				case "DayBookingInst":
+					value = DayBookingInst;
+					break;
+				case "BookingUnit":
+					value = BookingUnit;
+					break;
+				case "PreallocMethod":
+					value = PreallocMethod;
+					break;
+				case "NoAllocs":
+					value = NoAllocs;
+					break;
+				case "SettlmntTyp":
+					value = SettlmntTyp;
+					break;
+				case "FutSettDate":
+					value = FutSettDate;
+					break;
+				case "CashMargin":
+					value = CashMargin;
+					break;
+				case "ClearingFeeIndicator":
+					value = ClearingFeeIndicator;
+					break;
+				case "HandlInst":
+					value = HandlInst;
+					break;
+				case "ExecInst":
+					value = ExecInst;
+					break;
+				case "MinQty":
+					value = MinQty;
+					break;
+				case "MaxFloor":
+					value = MaxFloor;
+					break;
+				case "ExDestination":
+					value = ExDestination;
+					break;
+				case "NoTradingSessions":
+					value = NoTradingSessions;
+					break;
+				case "ProcessCode":
+					value = ProcessCode;
+					break;
+				case "Side":
+					value = Side;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "PrevClosePx":
+					value = PrevClosePx;
+					break;
+				case "NoLegs":
+					value = NoLegs;
+					break;
+				case "LocateReqd":
+					value = LocateReqd;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "QuantityType":
+					value = QuantityType;
+					break;
+				case "OrderQtyData":
+					value = OrderQtyData;
+					break;
+				case "OrdType":
+					value = OrdType;
+					break;
+				case "PriceType":
+					value = PriceType;
+					break;
+				case "Price":
+					value = Price;
+					break;
+				case "StopPx":
+					value = StopPx;
+					break;
+				case "Currency":
+					value = Currency;
+					break;
+				case "ComplianceID":
+					value = ComplianceID;
+					break;
+				case "SolicitedFlag":
+					value = SolicitedFlag;
+					break;
+				case "IOIid":
+					value = IOIid;
+					break;
+				case "QuoteID":
+					value = QuoteID;
+					break;
+				case "TimeInForce":
+					value = TimeInForce;
+					break;
+				case "EffectiveTime":
+					value = EffectiveTime;
+					break;
+				case "ExpireDate":
+					value = ExpireDate;
+					break;
+				case "ExpireTime":
+					value = ExpireTime;
+					break;
+				case "GTBookingInst":
+					value = GTBookingInst;
+					break;
+				case "CommissionData":
+					value = CommissionData;
+					break;
+				case "OrderCapacity":
+					value = OrderCapacity;
+					break;
+				case "OrderRestrictions":
+					value = OrderRestrictions;
+					break;
+				case "CustOrderCapacity":
+					value = CustOrderCapacity;
+					break;
+				case "ForexReq":
+					value = ForexReq;
+					break;
+				case "SettlCurrency":
+					value = SettlCurrency;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "PositionEffect":
+					value = PositionEffect;
+					break;
+				case "CoveredOrUncovered":
+					value = CoveredOrUncovered;
+					break;
+				case "MaxShow":
+					value = MaxShow;
+					break;
+				case "PegDifference":
+					value = PegDifference;
+					break;
+				case "DiscretionInst":
+					value = DiscretionInst;
+					break;
+				case "DiscretionOffset":
+					value = DiscretionOffset;
+					break;
+				case "CancellationRights":
+					value = CancellationRights;
+					break;
+				case "MoneyLaunderingStatus":
+					value = MoneyLaunderingStatus;
+					break;
+				case "RegistID":
+					value = RegistID;
+					break;
+				case "Designation":
+					value = Designation;
+					break;
+				case "MultiLegRptTypeReq":
+					value = MultiLegRptTypeReq;
+					break;
+				case "NetMoney":
+					value = NetMoney;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

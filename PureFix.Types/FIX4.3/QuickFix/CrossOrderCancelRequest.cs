@@ -11,34 +11,38 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class CrossOrderCancelRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 1, Required = false)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 548, Type = TagType.String, Offset = 2, Required = true)]
-		public string? CrossID { get; set; }
+		public string? CrossID {get; set;}
 		
 		[TagDetails(Tag = 551, Type = TagType.String, Offset = 3, Required = true)]
-		public string? OrigCrossID { get; set; }
+		public string? OrigCrossID {get; set;}
 		
 		[TagDetails(Tag = 549, Type = TagType.Int, Offset = 4, Required = true)]
-		public int? CrossType { get; set; }
+		public int? CrossType {get; set;}
 		
 		[TagDetails(Tag = 550, Type = TagType.Int, Offset = 5, Required = true)]
-		public int? CrossPrioritization { get; set; }
+		public int? CrossPrioritization {get; set;}
 		
 		[Group(NoOfTag = 552, Offset = 6, Required = true)]
-		public CrossOrderCancelRequestNoSides[]? NoSides { get; set; }
+		public NoSides[]? NoSides {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 8, Required = true)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[Component(Offset = 9, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -75,8 +79,81 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			OrderID = view.GetString(37);
+			CrossID = view.GetString(548);
+			OrigCrossID = view.GetString(551);
+			CrossType = view.GetInt32(549);
+			CrossPrioritization = view.GetInt32(550);
+			if (view.GetView("NoSides") is IMessageView viewNoSides)
+			{
+				var count = viewNoSides.GroupCount();
+				NoSides = new NoSides[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoSides[i] = new();
+					((IFixParser)NoSides[i]).Parse(viewNoSides.GetGroupInstance(i));
+				}
+			}
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			TransactTime = view.GetDateTime(60);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "CrossID":
+					value = CrossID;
+					break;
+				case "OrigCrossID":
+					value = OrigCrossID;
+					break;
+				case "CrossType":
+					value = CrossType;
+					break;
+				case "CrossPrioritization":
+					value = CrossPrioritization;
+					break;
+				case "NoSides":
+					value = NoSides;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

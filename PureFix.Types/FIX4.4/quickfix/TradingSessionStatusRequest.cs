@@ -11,28 +11,32 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class TradingSessionStatusRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 335, Type = TagType.String, Offset = 1, Required = true)]
-		public string? TradSesReqID { get; set; }
+		public string? TradSesReqID {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 2, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 3, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[TagDetails(Tag = 338, Type = TagType.Int, Offset = 4, Required = false)]
-		public int? TradSesMethod { get; set; }
+		public int? TradSesMethod {get; set;}
 		
 		[TagDetails(Tag = 339, Type = TagType.Int, Offset = 5, Required = false)]
-		public int? TradSesMode { get; set; }
+		public int? TradSesMode {get; set;}
 		
 		[TagDetails(Tag = 263, Type = TagType.String, Offset = 6, Required = true)]
-		public string? SubscriptionRequestType { get; set; }
+		public string? SubscriptionRequestType {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -55,8 +59,60 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			TradSesReqID = view.GetString(335);
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			TradSesMethod = view.GetInt32(338);
+			TradSesMode = view.GetInt32(339);
+			SubscriptionRequestType = view.GetString(263);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "TradSesReqID":
+					value = TradSesReqID;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "TradSesMethod":
+					value = TradSesMethod;
+					break;
+				case "TradSesMode":
+					value = TradSesMode;
+					break;
+				case "SubscriptionRequestType":
+					value = SubscriptionRequestType;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

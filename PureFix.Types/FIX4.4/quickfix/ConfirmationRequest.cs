@@ -11,49 +11,53 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class ConfirmationRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 859, Type = TagType.String, Offset = 1, Required = true)]
-		public string? ConfirmReqID { get; set; }
+		public string? ConfirmReqID {get; set;}
 		
 		[TagDetails(Tag = 773, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? ConfirmType { get; set; }
+		public int? ConfirmType {get; set;}
 		
 		[Component(Offset = 3, Required = false)]
-		public OrdAllocGrp? OrdAllocGrp { get; set; }
+		public OrdAllocGrpComponent? OrdAllocGrp {get; set;}
 		
 		[TagDetails(Tag = 70, Type = TagType.String, Offset = 4, Required = false)]
-		public string? AllocID { get; set; }
+		public string? AllocID {get; set;}
 		
 		[TagDetails(Tag = 793, Type = TagType.String, Offset = 5, Required = false)]
-		public string? SecondaryAllocID { get; set; }
+		public string? SecondaryAllocID {get; set;}
 		
 		[TagDetails(Tag = 467, Type = TagType.String, Offset = 6, Required = false)]
-		public string? IndividualAllocID { get; set; }
+		public string? IndividualAllocID {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 7, Required = true)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[TagDetails(Tag = 79, Type = TagType.String, Offset = 8, Required = false)]
-		public string? AllocAccount { get; set; }
+		public string? AllocAccount {get; set;}
 		
 		[TagDetails(Tag = 661, Type = TagType.Int, Offset = 9, Required = false)]
-		public int? AllocAcctIDSource { get; set; }
+		public int? AllocAcctIDSource {get; set;}
 		
 		[TagDetails(Tag = 798, Type = TagType.Int, Offset = 10, Required = false)]
-		public int? AllocAccountType { get; set; }
+		public int? AllocAccountType {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 11, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 12, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 13, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 14, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -87,8 +91,92 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			ConfirmReqID = view.GetString(859);
+			ConfirmType = view.GetInt32(773);
+			if (view.GetView("OrdAllocGrp") is IMessageView viewOrdAllocGrp)
+			{
+				OrdAllocGrp = new();
+				((IFixParser)OrdAllocGrp).Parse(viewOrdAllocGrp);
+			}
+			AllocID = view.GetString(70);
+			SecondaryAllocID = view.GetString(793);
+			IndividualAllocID = view.GetString(467);
+			TransactTime = view.GetDateTime(60);
+			AllocAccount = view.GetString(79);
+			AllocAcctIDSource = view.GetInt32(661);
+			AllocAccountType = view.GetInt32(798);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "ConfirmReqID":
+					value = ConfirmReqID;
+					break;
+				case "ConfirmType":
+					value = ConfirmType;
+					break;
+				case "OrdAllocGrp":
+					value = OrdAllocGrp;
+					break;
+				case "AllocID":
+					value = AllocID;
+					break;
+				case "SecondaryAllocID":
+					value = SecondaryAllocID;
+					break;
+				case "IndividualAllocID":
+					value = IndividualAllocID;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "AllocAccount":
+					value = AllocAccount;
+					break;
+				case "AllocAcctIDSource":
+					value = AllocAcctIDSource;
+					break;
+				case "AllocAccountType":
+					value = AllocAccountType;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

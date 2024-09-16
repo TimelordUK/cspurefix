@@ -11,25 +11,29 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class NetworkCounterpartySystemStatusResponse : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 937, Type = TagType.Int, Offset = 1, Required = true)]
-		public int? NetworkStatusResponseType { get; set; }
+		public int? NetworkStatusResponseType {get; set;}
 		
 		[TagDetails(Tag = 933, Type = TagType.String, Offset = 2, Required = false)]
-		public string? NetworkRequestID { get; set; }
+		public string? NetworkRequestID {get; set;}
 		
 		[TagDetails(Tag = 932, Type = TagType.String, Offset = 3, Required = true)]
-		public string? NetworkResponseID { get; set; }
+		public string? NetworkResponseID {get; set;}
 		
 		[TagDetails(Tag = 934, Type = TagType.String, Offset = 4, Required = false)]
-		public string? LastNetworkResponseID { get; set; }
+		public string? LastNetworkResponseID {get; set;}
 		
 		[Component(Offset = 5, Required = true)]
-		public CompIDStatGrp? CompIDStatGrp { get; set; }
+		public CompIDStatGrpComponent? CompIDStatGrp {get; set;}
 		
 		[Component(Offset = 6, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -52,8 +56,60 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			NetworkStatusResponseType = view.GetInt32(937);
+			NetworkRequestID = view.GetString(933);
+			NetworkResponseID = view.GetString(932);
+			LastNetworkResponseID = view.GetString(934);
+			if (view.GetView("CompIDStatGrp") is IMessageView viewCompIDStatGrp)
+			{
+				CompIDStatGrp = new();
+				((IFixParser)CompIDStatGrp).Parse(viewCompIDStatGrp);
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "NetworkStatusResponseType":
+					value = NetworkStatusResponseType;
+					break;
+				case "NetworkRequestID":
+					value = NetworkRequestID;
+					break;
+				case "NetworkResponseID":
+					value = NetworkResponseID;
+					break;
+				case "LastNetworkResponseID":
+					value = LastNetworkResponseID;
+					break;
+				case "CompIDStatGrp":
+					value = CompIDStatGrp;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

@@ -11,31 +11,35 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class DerivativeSecurityList : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 320, Type = TagType.String, Offset = 1, Required = true)]
-		public string? SecurityReqID { get; set; }
+		public string? SecurityReqID {get; set;}
 		
 		[TagDetails(Tag = 322, Type = TagType.String, Offset = 2, Required = true)]
-		public string? SecurityResponseID { get; set; }
+		public string? SecurityResponseID {get; set;}
 		
 		[TagDetails(Tag = 560, Type = TagType.Int, Offset = 3, Required = true)]
-		public int? SecurityRequestResult { get; set; }
+		public int? SecurityRequestResult {get; set;}
 		
 		[Component(Offset = 4, Required = false)]
-		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
+		public UnderlyingInstrumentComponent? UnderlyingInstrument {get; set;}
 		
 		[TagDetails(Tag = 393, Type = TagType.Int, Offset = 5, Required = false)]
-		public int? TotNoRelatedSym { get; set; }
+		public int? TotNoRelatedSym {get; set;}
 		
 		[TagDetails(Tag = 893, Type = TagType.Boolean, Offset = 6, Required = false)]
-		public bool? LastFragment { get; set; }
+		public bool? LastFragment {get; set;}
 		
 		[Component(Offset = 7, Required = false)]
-		public RelSymDerivSecGrp? RelSymDerivSecGrp { get; set; }
+		public RelSymDerivSecGrpComponent? RelSymDerivSecGrp {get; set;}
 		
 		[Component(Offset = 8, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -60,8 +64,72 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			SecurityReqID = view.GetString(320);
+			SecurityResponseID = view.GetString(322);
+			SecurityRequestResult = view.GetInt32(560);
+			if (view.GetView("UnderlyingInstrument") is IMessageView viewUnderlyingInstrument)
+			{
+				UnderlyingInstrument = new();
+				((IFixParser)UnderlyingInstrument).Parse(viewUnderlyingInstrument);
+			}
+			TotNoRelatedSym = view.GetInt32(393);
+			LastFragment = view.GetBool(893);
+			if (view.GetView("RelSymDerivSecGrp") is IMessageView viewRelSymDerivSecGrp)
+			{
+				RelSymDerivSecGrp = new();
+				((IFixParser)RelSymDerivSecGrp).Parse(viewRelSymDerivSecGrp);
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "SecurityReqID":
+					value = SecurityReqID;
+					break;
+				case "SecurityResponseID":
+					value = SecurityResponseID;
+					break;
+				case "SecurityRequestResult":
+					value = SecurityRequestResult;
+					break;
+				case "UnderlyingInstrument":
+					value = UnderlyingInstrument;
+					break;
+				case "TotNoRelatedSym":
+					value = TotNoRelatedSym;
+					break;
+				case "LastFragment":
+					value = LastFragment;
+					break;
+				case "RelSymDerivSecGrp":
+					value = RelSymDerivSecGrp;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

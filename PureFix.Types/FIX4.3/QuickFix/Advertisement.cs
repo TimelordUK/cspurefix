@@ -11,61 +11,65 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class Advertisement : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 2, Type = TagType.String, Offset = 1, Required = true)]
-		public string? AdvId { get; set; }
+		public string? AdvId {get; set;}
 		
 		[TagDetails(Tag = 5, Type = TagType.String, Offset = 2, Required = true)]
-		public string? AdvTransType { get; set; }
+		public string? AdvTransType {get; set;}
 		
 		[TagDetails(Tag = 3, Type = TagType.String, Offset = 3, Required = false)]
-		public string? AdvRefID { get; set; }
+		public string? AdvRefID {get; set;}
 		
 		[Component(Offset = 4, Required = true)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[TagDetails(Tag = 4, Type = TagType.String, Offset = 5, Required = true)]
-		public string? AdvSide { get; set; }
+		public string? AdvSide {get; set;}
 		
 		[TagDetails(Tag = 53, Type = TagType.Float, Offset = 6, Required = true)]
-		public double? Quantity { get; set; }
+		public double? Quantity {get; set;}
 		
 		[TagDetails(Tag = 44, Type = TagType.Float, Offset = 7, Required = false)]
-		public double? Price { get; set; }
+		public double? Price {get; set;}
 		
 		[TagDetails(Tag = 15, Type = TagType.String, Offset = 8, Required = false)]
-		public string? Currency { get; set; }
+		public string? Currency {get; set;}
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 9, Required = false)]
-		public DateOnly? TradeDate { get; set; }
+		public DateOnly? TradeDate {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 10, Required = false)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 11, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 12, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 13, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[TagDetails(Tag = 149, Type = TagType.String, Offset = 14, Required = false)]
-		public string? URLLink { get; set; }
+		public string? URLLink {get; set;}
 		
 		[TagDetails(Tag = 30, Type = TagType.String, Offset = 15, Required = false)]
-		public string? LastMkt { get; set; }
+		public string? LastMkt {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 16, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 17, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[Component(Offset = 18, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -105,8 +109,108 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			AdvId = view.GetString(2);
+			AdvTransType = view.GetString(5);
+			AdvRefID = view.GetString(3);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			AdvSide = view.GetString(4);
+			Quantity = view.GetDouble(53);
+			Price = view.GetDouble(44);
+			Currency = view.GetString(15);
+			TradeDate = view.GetDateOnly(75);
+			TransactTime = view.GetDateTime(60);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			URLLink = view.GetString(149);
+			LastMkt = view.GetString(30);
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "AdvId":
+					value = AdvId;
+					break;
+				case "AdvTransType":
+					value = AdvTransType;
+					break;
+				case "AdvRefID":
+					value = AdvRefID;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "AdvSide":
+					value = AdvSide;
+					break;
+				case "Quantity":
+					value = Quantity;
+					break;
+				case "Price":
+					value = Price;
+					break;
+				case "Currency":
+					value = Currency;
+					break;
+				case "TradeDate":
+					value = TradeDate;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "URLLink":
+					value = URLLink;
+					break;
+				case "LastMkt":
+					value = LastMkt;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

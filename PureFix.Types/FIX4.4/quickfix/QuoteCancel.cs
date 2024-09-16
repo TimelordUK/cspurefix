@@ -11,43 +11,47 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class QuoteCancel : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 131, Type = TagType.String, Offset = 1, Required = false)]
-		public string? QuoteReqID { get; set; }
+		public string? QuoteReqID {get; set;}
 		
 		[TagDetails(Tag = 117, Type = TagType.String, Offset = 2, Required = true)]
-		public string? QuoteID { get; set; }
+		public string? QuoteID {get; set;}
 		
 		[TagDetails(Tag = 298, Type = TagType.Int, Offset = 3, Required = true)]
-		public int? QuoteCancelType { get; set; }
+		public int? QuoteCancelType {get; set;}
 		
 		[TagDetails(Tag = 301, Type = TagType.Int, Offset = 4, Required = false)]
-		public int? QuoteResponseLevel { get; set; }
+		public int? QuoteResponseLevel {get; set;}
 		
 		[Component(Offset = 5, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 6, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 7, Required = false)]
-		public int? AcctIDSource { get; set; }
+		public int? AcctIDSource {get; set;}
 		
 		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 8, Required = false)]
-		public int? AccountType { get; set; }
+		public int? AccountType {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 9, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 10, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[Component(Offset = 11, Required = false)]
-		public QuotCxlEntriesGrp? QuotCxlEntriesGrp { get; set; }
+		public QuotCxlEntriesGrpComponent? QuotCxlEntriesGrp {get; set;}
 		
 		[Component(Offset = 12, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -75,8 +79,88 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			QuoteReqID = view.GetString(131);
+			QuoteID = view.GetString(117);
+			QuoteCancelType = view.GetInt32(298);
+			QuoteResponseLevel = view.GetInt32(301);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			Account = view.GetString(1);
+			AcctIDSource = view.GetInt32(660);
+			AccountType = view.GetInt32(581);
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			if (view.GetView("QuotCxlEntriesGrp") is IMessageView viewQuotCxlEntriesGrp)
+			{
+				QuotCxlEntriesGrp = new();
+				((IFixParser)QuotCxlEntriesGrp).Parse(viewQuotCxlEntriesGrp);
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "QuoteReqID":
+					value = QuoteReqID;
+					break;
+				case "QuoteID":
+					value = QuoteID;
+					break;
+				case "QuoteCancelType":
+					value = QuoteCancelType;
+					break;
+				case "QuoteResponseLevel":
+					value = QuoteResponseLevel;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AcctIDSource":
+					value = AcctIDSource;
+					break;
+				case "AccountType":
+					value = AccountType;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "QuotCxlEntriesGrp":
+					value = QuotCxlEntriesGrp;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

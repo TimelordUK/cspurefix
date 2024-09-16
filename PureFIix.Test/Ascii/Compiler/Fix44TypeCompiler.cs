@@ -26,17 +26,10 @@ namespace PureFIix.Test.Ascii.Compiler
         }
 
         [Test]
-        public void GenerateTypes()
+        public void MessageGenerator()
         {
-            var compiler = new MsgCompiler(_testEntity.Definitions);
-            compiler.Generate();
-        }
-
-        [Test]
-        public void GenerateParseFormatTypes()
-        {
-            var compiler = new ViewParserCompiler(_testEntity.Definitions);
-            compiler.Generate();
+            var generator = new MessageGenerator(null, _testEntity.Definitions,Options.FromVersion(_testEntity.Definitions));
+            generator.Process();
         }
     }
 }

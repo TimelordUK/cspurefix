@@ -11,76 +11,80 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class SecurityStatus : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 324, Type = TagType.String, Offset = 1, Required = false)]
-		public string? SecurityStatusReqID { get; set; }
+		public string? SecurityStatusReqID {get; set;}
 		
 		[Component(Offset = 2, Required = true)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[TagDetails(Tag = 15, Type = TagType.String, Offset = 3, Required = false)]
-		public string? Currency { get; set; }
+		public string? Currency {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 4, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 5, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[TagDetails(Tag = 325, Type = TagType.Boolean, Offset = 6, Required = false)]
-		public bool? UnsolicitedIndicator { get; set; }
+		public bool? UnsolicitedIndicator {get; set;}
 		
 		[TagDetails(Tag = 326, Type = TagType.Int, Offset = 7, Required = false)]
-		public int? SecurityTradingStatus { get; set; }
+		public int? SecurityTradingStatus {get; set;}
 		
 		[TagDetails(Tag = 291, Type = TagType.String, Offset = 8, Required = false)]
-		public string? FinancialStatus { get; set; }
+		public string? FinancialStatus {get; set;}
 		
 		[TagDetails(Tag = 292, Type = TagType.String, Offset = 9, Required = false)]
-		public string? CorporateAction { get; set; }
+		public string? CorporateAction {get; set;}
 		
 		[TagDetails(Tag = 327, Type = TagType.String, Offset = 10, Required = false)]
-		public string? HaltReasonChar { get; set; }
+		public string? HaltReasonChar {get; set;}
 		
 		[TagDetails(Tag = 328, Type = TagType.Boolean, Offset = 11, Required = false)]
-		public bool? InViewOfCommon { get; set; }
+		public bool? InViewOfCommon {get; set;}
 		
 		[TagDetails(Tag = 329, Type = TagType.Boolean, Offset = 12, Required = false)]
-		public bool? DueToRelated { get; set; }
+		public bool? DueToRelated {get; set;}
 		
 		[TagDetails(Tag = 330, Type = TagType.Float, Offset = 13, Required = false)]
-		public double? BuyVolume { get; set; }
+		public double? BuyVolume {get; set;}
 		
 		[TagDetails(Tag = 331, Type = TagType.Float, Offset = 14, Required = false)]
-		public double? SellVolume { get; set; }
+		public double? SellVolume {get; set;}
 		
 		[TagDetails(Tag = 332, Type = TagType.Float, Offset = 15, Required = false)]
-		public double? HighPx { get; set; }
+		public double? HighPx {get; set;}
 		
 		[TagDetails(Tag = 333, Type = TagType.Float, Offset = 16, Required = false)]
-		public double? LowPx { get; set; }
+		public double? LowPx {get; set;}
 		
 		[TagDetails(Tag = 31, Type = TagType.Float, Offset = 17, Required = false)]
-		public double? LastPx { get; set; }
+		public double? LastPx {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 18, Required = false)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[TagDetails(Tag = 334, Type = TagType.Int, Offset = 19, Required = false)]
-		public int? Adjustment { get; set; }
+		public int? Adjustment {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 20, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 21, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 22, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 23, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -121,8 +125,128 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			SecurityStatusReqID = view.GetString(324);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			Currency = view.GetString(15);
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			UnsolicitedIndicator = view.GetBool(325);
+			SecurityTradingStatus = view.GetInt32(326);
+			FinancialStatus = view.GetString(291);
+			CorporateAction = view.GetString(292);
+			HaltReasonChar = view.GetString(327);
+			InViewOfCommon = view.GetBool(328);
+			DueToRelated = view.GetBool(329);
+			BuyVolume = view.GetDouble(330);
+			SellVolume = view.GetDouble(331);
+			HighPx = view.GetDouble(332);
+			LowPx = view.GetDouble(333);
+			LastPx = view.GetDouble(31);
+			TransactTime = view.GetDateTime(60);
+			Adjustment = view.GetInt32(334);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "SecurityStatusReqID":
+					value = SecurityStatusReqID;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "Currency":
+					value = Currency;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "UnsolicitedIndicator":
+					value = UnsolicitedIndicator;
+					break;
+				case "SecurityTradingStatus":
+					value = SecurityTradingStatus;
+					break;
+				case "FinancialStatus":
+					value = FinancialStatus;
+					break;
+				case "CorporateAction":
+					value = CorporateAction;
+					break;
+				case "HaltReasonChar":
+					value = HaltReasonChar;
+					break;
+				case "InViewOfCommon":
+					value = InViewOfCommon;
+					break;
+				case "DueToRelated":
+					value = DueToRelated;
+					break;
+				case "BuyVolume":
+					value = BuyVolume;
+					break;
+				case "SellVolume":
+					value = SellVolume;
+					break;
+				case "HighPx":
+					value = HighPx;
+					break;
+				case "LowPx":
+					value = LowPx;
+					break;
+				case "LastPx":
+					value = LastPx;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "Adjustment":
+					value = Adjustment;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

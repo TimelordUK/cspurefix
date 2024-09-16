@@ -11,16 +11,20 @@ namespace PureFix.Types.FIX42.QuickFix
 	public sealed partial class SequenceReset : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 123, Type = TagType.Boolean, Offset = 1, Required = false)]
-		public bool? GapFillFlag { get; set; }
+		public bool? GapFillFlag {get; set;}
 		
 		[TagDetails(Tag = 36, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? NewSeqNo { get; set; }
+		public int? NewSeqNo {get; set;}
 		
 		[Component(Offset = 3, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -38,8 +42,44 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			GapFillFlag = view.GetBool(123);
+			NewSeqNo = view.GetInt32(36);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "GapFillFlag":
+					value = GapFillFlag;
+					break;
+				case "NewSeqNo":
+					value = NewSeqNo;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

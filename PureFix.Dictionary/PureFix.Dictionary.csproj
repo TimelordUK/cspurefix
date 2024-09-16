@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Compiler\BaseCompiler.cs" />
+    <Compile Remove="Compiler\MsgCompiler.CompilerType.cs" />
+    <Compile Remove="Compiler\MsgCompiler.cs" />
+    <Compile Remove="Compiler\MsgCompiler.Options.cs" />
+    <Compile Remove="Compiler\TypeFormatCompiler.cs" />
+    <Compile Remove="Compiler\ViewParserCompiler.cs" />
+    <Compile Remove="Compiler\ViewParserGenerator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
   </ItemGroup>
 

@@ -11,64 +11,68 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class OrderMassCancelReport : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 1, Required = false)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[TagDetails(Tag = 526, Type = TagType.String, Offset = 2, Required = false)]
-		public string? SecondaryClOrdID { get; set; }
+		public string? SecondaryClOrdID {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 3, Required = true)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 198, Type = TagType.String, Offset = 4, Required = false)]
-		public string? SecondaryOrderID { get; set; }
+		public string? SecondaryOrderID {get; set;}
 		
 		[TagDetails(Tag = 530, Type = TagType.String, Offset = 5, Required = true)]
-		public string? MassCancelRequestType { get; set; }
+		public string? MassCancelRequestType {get; set;}
 		
 		[TagDetails(Tag = 531, Type = TagType.String, Offset = 6, Required = true)]
-		public string? MassCancelResponse { get; set; }
+		public string? MassCancelResponse {get; set;}
 		
 		[TagDetails(Tag = 532, Type = TagType.String, Offset = 7, Required = false)]
-		public string? MassCancelRejectReason { get; set; }
+		public string? MassCancelRejectReason {get; set;}
 		
 		[TagDetails(Tag = 533, Type = TagType.Int, Offset = 8, Required = false)]
-		public int? TotalAffectedOrders { get; set; }
+		public int? TotalAffectedOrders {get; set;}
 		
 		[Group(NoOfTag = 534, Offset = 9, Required = false)]
-		public OrderMassCancelReportNoAffectedOrders[]? NoAffectedOrders { get; set; }
+		public NoAffectedOrders[]? NoAffectedOrders {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 10, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 11, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[Component(Offset = 12, Required = false)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[Component(Offset = 13, Required = false)]
-		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
+		public UnderlyingInstrumentComponent? UnderlyingInstrument {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 14, Required = false)]
-		public string? Side { get; set; }
+		public string? Side {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 15, Required = false)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 16, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 17, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 18, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 19, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -114,8 +118,125 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			ClOrdID = view.GetString(11);
+			SecondaryClOrdID = view.GetString(526);
+			OrderID = view.GetString(37);
+			SecondaryOrderID = view.GetString(198);
+			MassCancelRequestType = view.GetString(530);
+			MassCancelResponse = view.GetString(531);
+			MassCancelRejectReason = view.GetString(532);
+			TotalAffectedOrders = view.GetInt32(533);
+			if (view.GetView("NoAffectedOrders") is IMessageView viewNoAffectedOrders)
+			{
+				var count = viewNoAffectedOrders.GroupCount();
+				NoAffectedOrders = new NoAffectedOrders[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoAffectedOrders[i] = new();
+					((IFixParser)NoAffectedOrders[i]).Parse(viewNoAffectedOrders.GetGroupInstance(i));
+				}
+			}
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			if (view.GetView("UnderlyingInstrument") is IMessageView viewUnderlyingInstrument)
+			{
+				UnderlyingInstrument = new();
+				((IFixParser)UnderlyingInstrument).Parse(viewUnderlyingInstrument);
+			}
+			Side = view.GetString(54);
+			TransactTime = view.GetDateTime(60);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "SecondaryClOrdID":
+					value = SecondaryClOrdID;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "SecondaryOrderID":
+					value = SecondaryOrderID;
+					break;
+				case "MassCancelRequestType":
+					value = MassCancelRequestType;
+					break;
+				case "MassCancelResponse":
+					value = MassCancelResponse;
+					break;
+				case "MassCancelRejectReason":
+					value = MassCancelRejectReason;
+					break;
+				case "TotalAffectedOrders":
+					value = TotalAffectedOrders;
+					break;
+				case "NoAffectedOrders":
+					value = NoAffectedOrders;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "UnderlyingInstrument":
+					value = UnderlyingInstrument;
+					break;
+				case "Side":
+					value = Side;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

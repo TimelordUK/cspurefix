@@ -11,28 +11,32 @@ namespace PureFix.Types.FIX42.QuickFix
 	public sealed partial class MassQuote : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 131, Type = TagType.String, Offset = 1, Required = false)]
-		public string? QuoteReqID { get; set; }
+		public string? QuoteReqID {get; set;}
 		
 		[TagDetails(Tag = 117, Type = TagType.String, Offset = 2, Required = true)]
-		public string? QuoteID { get; set; }
+		public string? QuoteID {get; set;}
 		
 		[TagDetails(Tag = 301, Type = TagType.Int, Offset = 3, Required = false)]
-		public int? QuoteResponseLevel { get; set; }
+		public int? QuoteResponseLevel {get; set;}
 		
 		[TagDetails(Tag = 293, Type = TagType.Float, Offset = 4, Required = false)]
-		public double? DefBidSize { get; set; }
+		public double? DefBidSize {get; set;}
 		
 		[TagDetails(Tag = 294, Type = TagType.Float, Offset = 5, Required = false)]
-		public double? DefOfferSize { get; set; }
+		public double? DefOfferSize {get; set;}
 		
 		[Group(NoOfTag = 296, Offset = 6, Required = true)]
-		public MassQuoteNoQuoteSets[]? NoQuoteSets { get; set; }
+		public NoQuoteSets[]? NoQuoteSets {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -62,8 +66,69 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			QuoteReqID = view.GetString(131);
+			QuoteID = view.GetString(117);
+			QuoteResponseLevel = view.GetInt32(301);
+			DefBidSize = view.GetDouble(293);
+			DefOfferSize = view.GetDouble(294);
+			if (view.GetView("NoQuoteSets") is IMessageView viewNoQuoteSets)
+			{
+				var count = viewNoQuoteSets.GroupCount();
+				NoQuoteSets = new NoQuoteSets[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoQuoteSets[i] = new();
+					((IFixParser)NoQuoteSets[i]).Parse(viewNoQuoteSets.GetGroupInstance(i));
+				}
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "QuoteReqID":
+					value = QuoteReqID;
+					break;
+				case "QuoteID":
+					value = QuoteID;
+					break;
+				case "QuoteResponseLevel":
+					value = QuoteResponseLevel;
+					break;
+				case "DefBidSize":
+					value = DefBidSize;
+					break;
+				case "DefOfferSize":
+					value = DefOfferSize;
+					break;
+				case "NoQuoteSets":
+					value = NoQuoteSets;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

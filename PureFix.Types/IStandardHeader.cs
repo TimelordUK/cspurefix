@@ -10,9 +10,9 @@ namespace PureFix.Types
     {
         public string? MsgType{get;}
         public int? BodyLength{get; }
-        public string SenderCompID { get; }
-        public string TargetCompID { get; }
-        public string TargetSubID { get; }
-        public string BeginString { get; }
+        public string? SenderCompID { get; }
+        public string? TargetCompID { get; }
+        public string? TargetSubID { get; }
+        public string? BeginString { get; }
     }
 }

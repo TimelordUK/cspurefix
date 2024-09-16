@@ -11,97 +11,101 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class BidRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 390, Type = TagType.String, Offset = 1, Required = false)]
-		public string? BidID { get; set; }
+		public string? BidID {get; set;}
 		
 		[TagDetails(Tag = 391, Type = TagType.String, Offset = 2, Required = true)]
-		public string? ClientBidID { get; set; }
+		public string? ClientBidID {get; set;}
 		
 		[TagDetails(Tag = 374, Type = TagType.String, Offset = 3, Required = true)]
-		public string? BidRequestTransType { get; set; }
+		public string? BidRequestTransType {get; set;}
 		
 		[TagDetails(Tag = 392, Type = TagType.String, Offset = 4, Required = false)]
-		public string? ListName { get; set; }
+		public string? ListName {get; set;}
 		
 		[TagDetails(Tag = 393, Type = TagType.Int, Offset = 5, Required = true)]
-		public int? TotalNumSecurities { get; set; }
+		public int? TotalNumSecurities {get; set;}
 		
 		[TagDetails(Tag = 394, Type = TagType.Int, Offset = 6, Required = true)]
-		public int? BidType { get; set; }
+		public int? BidType {get; set;}
 		
 		[TagDetails(Tag = 395, Type = TagType.Int, Offset = 7, Required = false)]
-		public int? NumTickets { get; set; }
+		public int? NumTickets {get; set;}
 		
 		[TagDetails(Tag = 15, Type = TagType.String, Offset = 8, Required = false)]
-		public string? Currency { get; set; }
+		public string? Currency {get; set;}
 		
 		[TagDetails(Tag = 396, Type = TagType.Float, Offset = 9, Required = false)]
-		public double? SideValue1 { get; set; }
+		public double? SideValue1 {get; set;}
 		
 		[TagDetails(Tag = 397, Type = TagType.Float, Offset = 10, Required = false)]
-		public double? SideValue2 { get; set; }
+		public double? SideValue2 {get; set;}
 		
 		[Group(NoOfTag = 398, Offset = 11, Required = false)]
-		public BidRequestNoBidDescriptors[]? NoBidDescriptors { get; set; }
+		public NoBidDescriptors[]? NoBidDescriptors {get; set;}
 		
 		[Group(NoOfTag = 420, Offset = 12, Required = false)]
-		public BidRequestNoBidComponents[]? NoBidComponents { get; set; }
+		public NoBidComponents[]? NoBidComponents {get; set;}
 		
 		[TagDetails(Tag = 409, Type = TagType.Int, Offset = 13, Required = false)]
-		public int? LiquidityIndType { get; set; }
+		public int? LiquidityIndType {get; set;}
 		
 		[TagDetails(Tag = 410, Type = TagType.Float, Offset = 14, Required = false)]
-		public double? WtAverageLiquidity { get; set; }
+		public double? WtAverageLiquidity {get; set;}
 		
 		[TagDetails(Tag = 411, Type = TagType.Boolean, Offset = 15, Required = false)]
-		public bool? ExchangeForPhysical { get; set; }
+		public bool? ExchangeForPhysical {get; set;}
 		
 		[TagDetails(Tag = 412, Type = TagType.Float, Offset = 16, Required = false)]
-		public double? OutMainCntryUIndex { get; set; }
+		public double? OutMainCntryUIndex {get; set;}
 		
 		[TagDetails(Tag = 413, Type = TagType.Float, Offset = 17, Required = false)]
-		public double? CrossPercent { get; set; }
+		public double? CrossPercent {get; set;}
 		
 		[TagDetails(Tag = 414, Type = TagType.Int, Offset = 18, Required = false)]
-		public int? ProgRptReqs { get; set; }
+		public int? ProgRptReqs {get; set;}
 		
 		[TagDetails(Tag = 415, Type = TagType.Int, Offset = 19, Required = false)]
-		public int? ProgPeriodInterval { get; set; }
+		public int? ProgPeriodInterval {get; set;}
 		
 		[TagDetails(Tag = 416, Type = TagType.Int, Offset = 20, Required = false)]
-		public int? IncTaxInd { get; set; }
+		public int? IncTaxInd {get; set;}
 		
 		[TagDetails(Tag = 121, Type = TagType.Boolean, Offset = 21, Required = false)]
-		public bool? ForexReq { get; set; }
+		public bool? ForexReq {get; set;}
 		
 		[TagDetails(Tag = 417, Type = TagType.Int, Offset = 22, Required = false)]
-		public int? NumBidders { get; set; }
+		public int? NumBidders {get; set;}
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 23, Required = false)]
-		public DateOnly? TradeDate { get; set; }
+		public DateOnly? TradeDate {get; set;}
 		
 		[TagDetails(Tag = 418, Type = TagType.String, Offset = 24, Required = true)]
-		public string? TradeType { get; set; }
+		public string? TradeType {get; set;}
 		
 		[TagDetails(Tag = 419, Type = TagType.String, Offset = 25, Required = true)]
-		public string? BasisPxType { get; set; }
+		public string? BasisPxType {get; set;}
 		
 		[TagDetails(Tag = 443, Type = TagType.UtcTimestamp, Offset = 26, Required = false)]
-		public DateTime? StrikeTime { get; set; }
+		public DateTime? StrikeTime {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 27, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 28, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 29, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 30, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -168,8 +172,170 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			BidID = view.GetString(390);
+			ClientBidID = view.GetString(391);
+			BidRequestTransType = view.GetString(374);
+			ListName = view.GetString(392);
+			TotalNumSecurities = view.GetInt32(393);
+			BidType = view.GetInt32(394);
+			NumTickets = view.GetInt32(395);
+			Currency = view.GetString(15);
+			SideValue1 = view.GetDouble(396);
+			SideValue2 = view.GetDouble(397);
+			if (view.GetView("NoBidDescriptors") is IMessageView viewNoBidDescriptors)
+			{
+				var count = viewNoBidDescriptors.GroupCount();
+				NoBidDescriptors = new NoBidDescriptors[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoBidDescriptors[i] = new();
+					((IFixParser)NoBidDescriptors[i]).Parse(viewNoBidDescriptors.GetGroupInstance(i));
+				}
+			}
+			if (view.GetView("NoBidComponents") is IMessageView viewNoBidComponents)
+			{
+				var count = viewNoBidComponents.GroupCount();
+				NoBidComponents = new NoBidComponents[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoBidComponents[i] = new();
+					((IFixParser)NoBidComponents[i]).Parse(viewNoBidComponents.GetGroupInstance(i));
+				}
+			}
+			LiquidityIndType = view.GetInt32(409);
+			WtAverageLiquidity = view.GetDouble(410);
+			ExchangeForPhysical = view.GetBool(411);
+			OutMainCntryUIndex = view.GetDouble(412);
+			CrossPercent = view.GetDouble(413);
+			ProgRptReqs = view.GetInt32(414);
+			ProgPeriodInterval = view.GetInt32(415);
+			IncTaxInd = view.GetInt32(416);
+			ForexReq = view.GetBool(121);
+			NumBidders = view.GetInt32(417);
+			TradeDate = view.GetDateOnly(75);
+			TradeType = view.GetString(418);
+			BasisPxType = view.GetString(419);
+			StrikeTime = view.GetDateTime(443);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "BidID":
+					value = BidID;
+					break;
+				case "ClientBidID":
+					value = ClientBidID;
+					break;
+				case "BidRequestTransType":
+					value = BidRequestTransType;
+					break;
+				case "ListName":
+					value = ListName;
+					break;
+				case "TotalNumSecurities":
+					value = TotalNumSecurities;
+					break;
+				case "BidType":
+					value = BidType;
+					break;
+				case "NumTickets":
+					value = NumTickets;
+					break;
+				case "Currency":
+					value = Currency;
+					break;
+				case "SideValue1":
+					value = SideValue1;
+					break;
+				case "SideValue2":
+					value = SideValue2;
+					break;
+				case "NoBidDescriptors":
+					value = NoBidDescriptors;
+					break;
+				case "NoBidComponents":
+					value = NoBidComponents;
+					break;
+				case "LiquidityIndType":
+					value = LiquidityIndType;
+					break;
+				case "WtAverageLiquidity":
+					value = WtAverageLiquidity;
+					break;
+				case "ExchangeForPhysical":
+					value = ExchangeForPhysical;
+					break;
+				case "OutMainCntryUIndex":
+					value = OutMainCntryUIndex;
+					break;
+				case "CrossPercent":
+					value = CrossPercent;
+					break;
+				case "ProgRptReqs":
+					value = ProgRptReqs;
+					break;
+				case "ProgPeriodInterval":
+					value = ProgPeriodInterval;
+					break;
+				case "IncTaxInd":
+					value = IncTaxInd;
+					break;
+				case "ForexReq":
+					value = ForexReq;
+					break;
+				case "NumBidders":
+					value = NumBidders;
+					break;
+				case "TradeDate":
+					value = TradeDate;
+					break;
+				case "TradeType":
+					value = TradeType;
+					break;
+				case "BasisPxType":
+					value = BasisPxType;
+					break;
+				case "StrikeTime":
+					value = StrikeTime;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

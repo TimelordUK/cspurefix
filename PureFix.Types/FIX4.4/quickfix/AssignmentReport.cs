@@ -11,91 +11,95 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class AssignmentReport : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 833, Type = TagType.String, Offset = 1, Required = true)]
-		public string? AsgnRptID { get; set; }
+		public string? AsgnRptID {get; set;}
 		
 		[TagDetails(Tag = 832, Type = TagType.Int, Offset = 2, Required = false)]
-		public int? TotNumAssignmentReports { get; set; }
+		public int? TotNumAssignmentReports {get; set;}
 		
 		[TagDetails(Tag = 912, Type = TagType.Boolean, Offset = 3, Required = false)]
-		public bool? LastRptRequested { get; set; }
+		public bool? LastRptRequested {get; set;}
 		
 		[Component(Offset = 4, Required = true)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 5, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 581, Type = TagType.Int, Offset = 6, Required = true)]
-		public int? AccountType { get; set; }
+		public int? AccountType {get; set;}
 		
 		[Component(Offset = 7, Required = false)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[TagDetails(Tag = 15, Type = TagType.String, Offset = 8, Required = false)]
-		public string? Currency { get; set; }
+		public string? Currency {get; set;}
 		
 		[Component(Offset = 9, Required = false)]
-		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		public InstrmtLegGrpComponent? InstrmtLegGrp {get; set;}
 		
 		[Component(Offset = 10, Required = false)]
-		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		public UndInstrmtGrpComponent? UndInstrmtGrp {get; set;}
 		
 		[Component(Offset = 11, Required = true)]
-		public PositionQty? PositionQty { get; set; }
+		public PositionQtyComponent? PositionQty {get; set;}
 		
 		[Component(Offset = 12, Required = true)]
-		public PositionAmountData? PositionAmountData { get; set; }
+		public PositionAmountDataComponent? PositionAmountData {get; set;}
 		
 		[TagDetails(Tag = 834, Type = TagType.Float, Offset = 13, Required = false)]
-		public double? ThresholdAmount { get; set; }
+		public double? ThresholdAmount {get; set;}
 		
 		[TagDetails(Tag = 730, Type = TagType.Float, Offset = 14, Required = true)]
-		public double? SettlPrice { get; set; }
+		public double? SettlPrice {get; set;}
 		
 		[TagDetails(Tag = 731, Type = TagType.Int, Offset = 15, Required = true)]
-		public int? SettlPriceType { get; set; }
+		public int? SettlPriceType {get; set;}
 		
 		[TagDetails(Tag = 732, Type = TagType.Float, Offset = 16, Required = true)]
-		public double? UnderlyingSettlPrice { get; set; }
+		public double? UnderlyingSettlPrice {get; set;}
 		
 		[TagDetails(Tag = 432, Type = TagType.LocalDate, Offset = 17, Required = false)]
-		public DateOnly? ExpireDate { get; set; }
+		public DateOnly? ExpireDate {get; set;}
 		
 		[TagDetails(Tag = 744, Type = TagType.String, Offset = 18, Required = true)]
-		public string? AssignmentMethod { get; set; }
+		public string? AssignmentMethod {get; set;}
 		
 		[TagDetails(Tag = 745, Type = TagType.Float, Offset = 19, Required = false)]
-		public double? AssignmentUnit { get; set; }
+		public double? AssignmentUnit {get; set;}
 		
 		[TagDetails(Tag = 746, Type = TagType.Float, Offset = 20, Required = true)]
-		public double? OpenInterest { get; set; }
+		public double? OpenInterest {get; set;}
 		
 		[TagDetails(Tag = 747, Type = TagType.String, Offset = 21, Required = true)]
-		public string? ExerciseMethod { get; set; }
+		public string? ExerciseMethod {get; set;}
 		
 		[TagDetails(Tag = 716, Type = TagType.String, Offset = 22, Required = true)]
-		public string? SettlSessID { get; set; }
+		public string? SettlSessID {get; set;}
 		
 		[TagDetails(Tag = 717, Type = TagType.String, Offset = 23, Required = true)]
-		public string? SettlSessSubID { get; set; }
+		public string? SettlSessSubID {get; set;}
 		
 		[TagDetails(Tag = 715, Type = TagType.LocalDate, Offset = 24, Required = true)]
-		public DateOnly? ClearingBusinessDate { get; set; }
+		public DateOnly? ClearingBusinessDate {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 25, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 26, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 27, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 28, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -154,8 +158,168 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			AsgnRptID = view.GetString(833);
+			TotNumAssignmentReports = view.GetInt32(832);
+			LastRptRequested = view.GetBool(912);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			Account = view.GetString(1);
+			AccountType = view.GetInt32(581);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			Currency = view.GetString(15);
+			if (view.GetView("InstrmtLegGrp") is IMessageView viewInstrmtLegGrp)
+			{
+				InstrmtLegGrp = new();
+				((IFixParser)InstrmtLegGrp).Parse(viewInstrmtLegGrp);
+			}
+			if (view.GetView("UndInstrmtGrp") is IMessageView viewUndInstrmtGrp)
+			{
+				UndInstrmtGrp = new();
+				((IFixParser)UndInstrmtGrp).Parse(viewUndInstrmtGrp);
+			}
+			if (view.GetView("PositionQty") is IMessageView viewPositionQty)
+			{
+				PositionQty = new();
+				((IFixParser)PositionQty).Parse(viewPositionQty);
+			}
+			if (view.GetView("PositionAmountData") is IMessageView viewPositionAmountData)
+			{
+				PositionAmountData = new();
+				((IFixParser)PositionAmountData).Parse(viewPositionAmountData);
+			}
+			ThresholdAmount = view.GetDouble(834);
+			SettlPrice = view.GetDouble(730);
+			SettlPriceType = view.GetInt32(731);
+			UnderlyingSettlPrice = view.GetDouble(732);
+			ExpireDate = view.GetDateOnly(432);
+			AssignmentMethod = view.GetString(744);
+			AssignmentUnit = view.GetDouble(745);
+			OpenInterest = view.GetDouble(746);
+			ExerciseMethod = view.GetString(747);
+			SettlSessID = view.GetString(716);
+			SettlSessSubID = view.GetString(717);
+			ClearingBusinessDate = view.GetDateOnly(715);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "AsgnRptID":
+					value = AsgnRptID;
+					break;
+				case "TotNumAssignmentReports":
+					value = TotNumAssignmentReports;
+					break;
+				case "LastRptRequested":
+					value = LastRptRequested;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AccountType":
+					value = AccountType;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "Currency":
+					value = Currency;
+					break;
+				case "InstrmtLegGrp":
+					value = InstrmtLegGrp;
+					break;
+				case "UndInstrmtGrp":
+					value = UndInstrmtGrp;
+					break;
+				case "PositionQty":
+					value = PositionQty;
+					break;
+				case "PositionAmountData":
+					value = PositionAmountData;
+					break;
+				case "ThresholdAmount":
+					value = ThresholdAmount;
+					break;
+				case "SettlPrice":
+					value = SettlPrice;
+					break;
+				case "SettlPriceType":
+					value = SettlPriceType;
+					break;
+				case "UnderlyingSettlPrice":
+					value = UnderlyingSettlPrice;
+					break;
+				case "ExpireDate":
+					value = ExpireDate;
+					break;
+				case "AssignmentMethod":
+					value = AssignmentMethod;
+					break;
+				case "AssignmentUnit":
+					value = AssignmentUnit;
+					break;
+				case "OpenInterest":
+					value = OpenInterest;
+					break;
+				case "ExerciseMethod":
+					value = ExerciseMethod;
+					break;
+				case "SettlSessID":
+					value = SettlSessID;
+					break;
+				case "SettlSessSubID":
+					value = SettlSessSubID;
+					break;
+				case "ClearingBusinessDate":
+					value = ClearingBusinessDate;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

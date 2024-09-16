@@ -11,58 +11,62 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class TradeCaptureReportRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 568, Type = TagType.String, Offset = 1, Required = true)]
-		public string? TradeRequestID { get; set; }
+		public string? TradeRequestID {get; set;}
 		
 		[TagDetails(Tag = 569, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? TradeRequestType { get; set; }
+		public int? TradeRequestType {get; set;}
 		
 		[TagDetails(Tag = 263, Type = TagType.String, Offset = 3, Required = false)]
-		public string? SubscriptionRequestType { get; set; }
+		public string? SubscriptionRequestType {get; set;}
 		
 		[TagDetails(Tag = 17, Type = TagType.String, Offset = 4, Required = false)]
-		public string? ExecID { get; set; }
+		public string? ExecID {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 5, Required = false)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 6, Required = false)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[TagDetails(Tag = 573, Type = TagType.String, Offset = 7, Required = false)]
-		public string? MatchStatus { get; set; }
+		public string? MatchStatus {get; set;}
 		
 		[Component(Offset = 8, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[Component(Offset = 9, Required = false)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[Group(NoOfTag = 580, Offset = 10, Required = false)]
-		public TradeCaptureReportRequestNoDates[]? NoDates { get; set; }
+		public NoDates[]? NoDates {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 11, Required = false)]
-		public string? Side { get; set; }
+		public string? Side {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 12, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 13, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 14, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[TagDetails(Tag = 578, Type = TagType.String, Offset = 15, Required = false)]
-		public string? TradeInputSource { get; set; }
+		public string? TradeInputSource {get; set;}
 		
 		[TagDetails(Tag = 579, Type = TagType.String, Offset = 16, Required = false)]
-		public string? TradeInputDevice { get; set; }
+		public string? TradeInputDevice {get; set;}
 		
 		[Component(Offset = 17, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -105,8 +109,117 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			TradeRequestID = view.GetString(568);
+			TradeRequestType = view.GetInt32(569);
+			SubscriptionRequestType = view.GetString(263);
+			ExecID = view.GetString(17);
+			OrderID = view.GetString(37);
+			ClOrdID = view.GetString(11);
+			MatchStatus = view.GetString(573);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			if (view.GetView("NoDates") is IMessageView viewNoDates)
+			{
+				var count = viewNoDates.GroupCount();
+				NoDates = new NoDates[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoDates[i] = new();
+					((IFixParser)NoDates[i]).Parse(viewNoDates.GetGroupInstance(i));
+				}
+			}
+			Side = view.GetString(54);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			TradeInputSource = view.GetString(578);
+			TradeInputDevice = view.GetString(579);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "TradeRequestID":
+					value = TradeRequestID;
+					break;
+				case "TradeRequestType":
+					value = TradeRequestType;
+					break;
+				case "SubscriptionRequestType":
+					value = SubscriptionRequestType;
+					break;
+				case "ExecID":
+					value = ExecID;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "MatchStatus":
+					value = MatchStatus;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "NoDates":
+					value = NoDates;
+					break;
+				case "Side":
+					value = Side;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "TradeInputSource":
+					value = TradeInputSource;
+					break;
+				case "TradeInputDevice":
+					value = TradeInputDevice;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

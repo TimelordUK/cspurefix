@@ -11,55 +11,59 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class Email : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 164, Type = TagType.String, Offset = 1, Required = true)]
-		public string? EmailThreadID { get; set; }
+		public string? EmailThreadID {get; set;}
 		
 		[TagDetails(Tag = 94, Type = TagType.String, Offset = 2, Required = true)]
-		public string? EmailType { get; set; }
+		public string? EmailType {get; set;}
 		
 		[TagDetails(Tag = 42, Type = TagType.UtcTimestamp, Offset = 3, Required = false)]
-		public DateTime? OrigTime { get; set; }
+		public DateTime? OrigTime {get; set;}
 		
 		[TagDetails(Tag = 147, Type = TagType.String, Offset = 4, Required = true)]
-		public string? Subject { get; set; }
+		public string? Subject {get; set;}
 		
 		[TagDetails(Tag = 356, Type = TagType.Length, Offset = 5, Required = false, LinksToTag = 357)]
-		public int? EncodedSubjectLen { get; set; }
+		public int? EncodedSubjectLen {get; set;}
 		
 		[TagDetails(Tag = 357, Type = TagType.RawData, Offset = 6, Required = false, LinksToTag = 356)]
-		public byte[]? EncodedSubject { get; set; }
+		public byte[]? EncodedSubject {get; set;}
 		
 		[Component(Offset = 7, Required = false)]
-		public RoutingGrp? RoutingGrp { get; set; }
+		public RoutingGrpComponent? RoutingGrp {get; set;}
 		
 		[Component(Offset = 8, Required = false)]
-		public InstrmtGrp? InstrmtGrp { get; set; }
+		public InstrmtGrpComponent? InstrmtGrp {get; set;}
 		
 		[Component(Offset = 9, Required = false)]
-		public UndInstrmtGrp? UndInstrmtGrp { get; set; }
+		public UndInstrmtGrpComponent? UndInstrmtGrp {get; set;}
 		
 		[Component(Offset = 10, Required = false)]
-		public InstrmtLegGrp? InstrmtLegGrp { get; set; }
+		public InstrmtLegGrpComponent? InstrmtLegGrp {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 11, Required = false)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 12, Required = false)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[Component(Offset = 13, Required = true)]
-		public LinesOfTextGrp? LinesOfTextGrp { get; set; }
+		public LinesOfTextGrpComponent? LinesOfTextGrp {get; set;}
 		
 		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 14, Required = false, LinksToTag = 96)]
-		public int? RawDataLength { get; set; }
+		public int? RawDataLength {get; set;}
 		
 		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 15, Required = false, LinksToTag = 95)]
-		public byte[]? RawData { get; set; }
+		public byte[]? RawData {get; set;}
 		
 		[Component(Offset = 16, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -99,8 +103,116 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			EmailThreadID = view.GetString(164);
+			EmailType = view.GetString(94);
+			OrigTime = view.GetDateTime(42);
+			Subject = view.GetString(147);
+			EncodedSubjectLen = view.GetInt32(356);
+			EncodedSubject = view.GetByteArray(357);
+			if (view.GetView("RoutingGrp") is IMessageView viewRoutingGrp)
+			{
+				RoutingGrp = new();
+				((IFixParser)RoutingGrp).Parse(viewRoutingGrp);
+			}
+			if (view.GetView("InstrmtGrp") is IMessageView viewInstrmtGrp)
+			{
+				InstrmtGrp = new();
+				((IFixParser)InstrmtGrp).Parse(viewInstrmtGrp);
+			}
+			if (view.GetView("UndInstrmtGrp") is IMessageView viewUndInstrmtGrp)
+			{
+				UndInstrmtGrp = new();
+				((IFixParser)UndInstrmtGrp).Parse(viewUndInstrmtGrp);
+			}
+			if (view.GetView("InstrmtLegGrp") is IMessageView viewInstrmtLegGrp)
+			{
+				InstrmtLegGrp = new();
+				((IFixParser)InstrmtLegGrp).Parse(viewInstrmtLegGrp);
+			}
+			OrderID = view.GetString(37);
+			ClOrdID = view.GetString(11);
+			if (view.GetView("LinesOfTextGrp") is IMessageView viewLinesOfTextGrp)
+			{
+				LinesOfTextGrp = new();
+				((IFixParser)LinesOfTextGrp).Parse(viewLinesOfTextGrp);
+			}
+			RawDataLength = view.GetInt32(95);
+			RawData = view.GetByteArray(96);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "EmailThreadID":
+					value = EmailThreadID;
+					break;
+				case "EmailType":
+					value = EmailType;
+					break;
+				case "OrigTime":
+					value = OrigTime;
+					break;
+				case "Subject":
+					value = Subject;
+					break;
+				case "EncodedSubjectLen":
+					value = EncodedSubjectLen;
+					break;
+				case "EncodedSubject":
+					value = EncodedSubject;
+					break;
+				case "RoutingGrp":
+					value = RoutingGrp;
+					break;
+				case "InstrmtGrp":
+					value = InstrmtGrp;
+					break;
+				case "UndInstrmtGrp":
+					value = UndInstrmtGrp;
+					break;
+				case "InstrmtLegGrp":
+					value = InstrmtLegGrp;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "LinesOfTextGrp":
+					value = LinesOfTextGrp;
+					break;
+				case "RawDataLength":
+					value = RawDataLength;
+					break;
+				case "RawData":
+					value = RawData;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

@@ -11,37 +11,41 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class ConfirmationAck : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 664, Type = TagType.String, Offset = 1, Required = true)]
-		public string? ConfirmID { get; set; }
+		public string? ConfirmID {get; set;}
 		
 		[TagDetails(Tag = 75, Type = TagType.LocalDate, Offset = 2, Required = true)]
-		public DateOnly? TradeDate { get; set; }
+		public DateOnly? TradeDate {get; set;}
 		
 		[TagDetails(Tag = 60, Type = TagType.UtcTimestamp, Offset = 3, Required = true)]
-		public DateTime? TransactTime { get; set; }
+		public DateTime? TransactTime {get; set;}
 		
 		[TagDetails(Tag = 940, Type = TagType.Int, Offset = 4, Required = true)]
-		public int? AffirmStatus { get; set; }
+		public int? AffirmStatus {get; set;}
 		
 		[TagDetails(Tag = 774, Type = TagType.Int, Offset = 5, Required = false)]
-		public int? ConfirmRejReason { get; set; }
+		public int? ConfirmRejReason {get; set;}
 		
 		[TagDetails(Tag = 573, Type = TagType.String, Offset = 6, Required = false)]
-		public string? MatchStatus { get; set; }
+		public string? MatchStatus {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 7, Required = false)]
-		public string? Text { get; set; }
+		public string? Text {get; set;}
 		
 		[TagDetails(Tag = 354, Type = TagType.Length, Offset = 8, Required = false, LinksToTag = 355)]
-		public int? EncodedTextLen { get; set; }
+		public int? EncodedTextLen {get; set;}
 		
 		[TagDetails(Tag = 355, Type = TagType.RawData, Offset = 9, Required = false, LinksToTag = 354)]
-		public byte[]? EncodedText { get; set; }
+		public byte[]? EncodedText {get; set;}
 		
 		[Component(Offset = 10, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -72,8 +76,72 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			ConfirmID = view.GetString(664);
+			TradeDate = view.GetDateOnly(75);
+			TransactTime = view.GetDateTime(60);
+			AffirmStatus = view.GetInt32(940);
+			ConfirmRejReason = view.GetInt32(774);
+			MatchStatus = view.GetString(573);
+			Text = view.GetString(58);
+			EncodedTextLen = view.GetInt32(354);
+			EncodedText = view.GetByteArray(355);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "ConfirmID":
+					value = ConfirmID;
+					break;
+				case "TradeDate":
+					value = TradeDate;
+					break;
+				case "TransactTime":
+					value = TransactTime;
+					break;
+				case "AffirmStatus":
+					value = AffirmStatus;
+					break;
+				case "ConfirmRejReason":
+					value = ConfirmRejReason;
+					break;
+				case "MatchStatus":
+					value = MatchStatus;
+					break;
+				case "Text":
+					value = Text;
+					break;
+				case "EncodedTextLen":
+					value = EncodedTextLen;
+					break;
+				case "EncodedText":
+					value = EncodedText;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

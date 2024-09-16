@@ -11,40 +11,44 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class OrderMassStatusRequest : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 584, Type = TagType.String, Offset = 1, Required = true)]
-		public string? MassStatusReqID { get; set; }
+		public string? MassStatusReqID {get; set;}
 		
 		[TagDetails(Tag = 585, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? MassStatusReqType { get; set; }
+		public int? MassStatusReqType {get; set;}
 		
 		[Component(Offset = 3, Required = false)]
-		public Parties? Parties { get; set; }
+		public PartiesComponent? Parties {get; set;}
 		
 		[TagDetails(Tag = 1, Type = TagType.String, Offset = 4, Required = false)]
-		public string? Account { get; set; }
+		public string? Account {get; set;}
 		
 		[TagDetails(Tag = 660, Type = TagType.Int, Offset = 5, Required = false)]
-		public int? AcctIDSource { get; set; }
+		public int? AcctIDSource {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 6, Required = false)]
-		public string? TradingSessionID { get; set; }
+		public string? TradingSessionID {get; set;}
 		
 		[TagDetails(Tag = 625, Type = TagType.String, Offset = 7, Required = false)]
-		public string? TradingSessionSubID { get; set; }
+		public string? TradingSessionSubID {get; set;}
 		
 		[Component(Offset = 8, Required = false)]
-		public Instrument? Instrument { get; set; }
+		public InstrumentComponent? Instrument {get; set;}
 		
 		[Component(Offset = 9, Required = false)]
-		public UnderlyingInstrument? UnderlyingInstrument { get; set; }
+		public UnderlyingInstrumentComponent? UnderlyingInstrument {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 10, Required = false)]
-		public string? Side { get; set; }
+		public string? Side {get; set;}
 		
 		[Component(Offset = 11, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -71,8 +75,88 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			MassStatusReqID = view.GetString(584);
+			MassStatusReqType = view.GetInt32(585);
+			if (view.GetView("Parties") is IMessageView viewParties)
+			{
+				Parties = new();
+				((IFixParser)Parties).Parse(viewParties);
+			}
+			Account = view.GetString(1);
+			AcctIDSource = view.GetInt32(660);
+			TradingSessionID = view.GetString(336);
+			TradingSessionSubID = view.GetString(625);
+			if (view.GetView("Instrument") is IMessageView viewInstrument)
+			{
+				Instrument = new();
+				((IFixParser)Instrument).Parse(viewInstrument);
+			}
+			if (view.GetView("UnderlyingInstrument") is IMessageView viewUnderlyingInstrument)
+			{
+				UnderlyingInstrument = new();
+				((IFixParser)UnderlyingInstrument).Parse(viewUnderlyingInstrument);
+			}
+			Side = view.GetString(54);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "MassStatusReqID":
+					value = MassStatusReqID;
+					break;
+				case "MassStatusReqType":
+					value = MassStatusReqType;
+					break;
+				case "Parties":
+					value = Parties;
+					break;
+				case "Account":
+					value = Account;
+					break;
+				case "AcctIDSource":
+					value = AcctIDSource;
+					break;
+				case "TradingSessionID":
+					value = TradingSessionID;
+					break;
+				case "TradingSessionSubID":
+					value = TradingSessionSubID;
+					break;
+				case "Instrument":
+					value = Instrument;
+					break;
+				case "UnderlyingInstrument":
+					value = UnderlyingInstrument;
+					break;
+				case "Side":
+					value = Side;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

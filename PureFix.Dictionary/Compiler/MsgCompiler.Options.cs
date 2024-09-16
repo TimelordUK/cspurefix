@@ -61,10 +61,10 @@ namespace PureFix.Dictionary.Compiler
                         return new Options
                         {
                             MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
-                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.Types", "FIX.50SP2", "QuickFix"),
-                            ParserFormatterOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.ParserFormat", "FIX.50SP2", "QuickFix"),
-                            BackingTypeNamespace = "PureFix.Types.FIX450SP2.QuickFix",
-                            ParserFormatterNamespace = "PureFix.ParserFormat.FIX450SP2.QuickFix"
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.Types", "FIX5.0.SP2", "QuickFix"),
+                            ParserFormatterOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.ParserFormat", "FIX5.0.SP2", "QuickFix"),
+                            BackingTypeNamespace = "PureFix.Types.FIX50SP2.QuickFix",
+                            ParserFormatterNamespace = "PureFix.ParserFormat.FIX50SP2.QuickFix"
                         };
 
                     default:

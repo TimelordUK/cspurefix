@@ -11,49 +11,53 @@ namespace PureFix.Types.FIX43.QuickFix
 	public sealed partial class Email : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 164, Type = TagType.String, Offset = 1, Required = true)]
-		public string? EmailThreadID { get; set; }
+		public string? EmailThreadID {get; set;}
 		
 		[TagDetails(Tag = 94, Type = TagType.String, Offset = 2, Required = true)]
-		public string? EmailType { get; set; }
+		public string? EmailType {get; set;}
 		
 		[TagDetails(Tag = 42, Type = TagType.UtcTimestamp, Offset = 3, Required = false)]
-		public DateTime? OrigTime { get; set; }
+		public DateTime? OrigTime {get; set;}
 		
 		[TagDetails(Tag = 147, Type = TagType.String, Offset = 4, Required = true)]
-		public string? Subject { get; set; }
+		public string? Subject {get; set;}
 		
 		[TagDetails(Tag = 356, Type = TagType.Length, Offset = 5, Required = false, LinksToTag = 357)]
-		public int? EncodedSubjectLen { get; set; }
+		public int? EncodedSubjectLen {get; set;}
 		
 		[TagDetails(Tag = 357, Type = TagType.RawData, Offset = 6, Required = false, LinksToTag = 356)]
-		public byte[]? EncodedSubject { get; set; }
+		public byte[]? EncodedSubject {get; set;}
 		
 		[Group(NoOfTag = 215, Offset = 7, Required = false)]
-		public EmailNoRoutingIDs[]? NoRoutingIDs { get; set; }
+		public NoRoutingIDs[]? NoRoutingIDs {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 8, Required = false)]
-		public EmailNoRelatedSym[]? NoRelatedSym { get; set; }
+		public NoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 9, Required = false)]
-		public string? OrderID { get; set; }
+		public string? OrderID {get; set;}
 		
 		[TagDetails(Tag = 11, Type = TagType.String, Offset = 10, Required = false)]
-		public string? ClOrdID { get; set; }
+		public string? ClOrdID {get; set;}
 		
 		[Group(NoOfTag = 33, Offset = 11, Required = true)]
-		public EmailLinesOfText[]? LinesOfText { get; set; }
+		public LinesOfText[]? LinesOfText {get; set;}
 		
 		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 12, Required = false, LinksToTag = 96)]
-		public int? RawDataLength { get; set; }
+		public int? RawDataLength {get; set;}
 		
 		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 13, Required = false, LinksToTag = 95)]
-		public byte[]? RawData { get; set; }
+		public byte[]? RawData {get; set;}
 		
 		[Component(Offset = 14, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -112,8 +116,115 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			EmailThreadID = view.GetString(164);
+			EmailType = view.GetString(94);
+			OrigTime = view.GetDateTime(42);
+			Subject = view.GetString(147);
+			EncodedSubjectLen = view.GetInt32(356);
+			EncodedSubject = view.GetByteArray(357);
+			if (view.GetView("NoRoutingIDs") is IMessageView viewNoRoutingIDs)
+			{
+				var count = viewNoRoutingIDs.GroupCount();
+				NoRoutingIDs = new NoRoutingIDs[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoRoutingIDs[i] = new();
+					((IFixParser)NoRoutingIDs[i]).Parse(viewNoRoutingIDs.GetGroupInstance(i));
+				}
+			}
+			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
+			{
+				var count = viewNoRelatedSym.GroupCount();
+				NoRelatedSym = new NoRelatedSym[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoRelatedSym[i] = new();
+					((IFixParser)NoRelatedSym[i]).Parse(viewNoRelatedSym.GetGroupInstance(i));
+				}
+			}
+			OrderID = view.GetString(37);
+			ClOrdID = view.GetString(11);
+			if (view.GetView("LinesOfText") is IMessageView viewLinesOfText)
+			{
+				var count = viewLinesOfText.GroupCount();
+				LinesOfText = new LinesOfText[count];
+				for (int i = 0; i < count; i++)
+				{
+					LinesOfText[i] = new();
+					((IFixParser)LinesOfText[i]).Parse(viewLinesOfText.GetGroupInstance(i));
+				}
+			}
+			RawDataLength = view.GetInt32(95);
+			RawData = view.GetByteArray(96);
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "EmailThreadID":
+					value = EmailThreadID;
+					break;
+				case "EmailType":
+					value = EmailType;
+					break;
+				case "OrigTime":
+					value = OrigTime;
+					break;
+				case "Subject":
+					value = Subject;
+					break;
+				case "EncodedSubjectLen":
+					value = EncodedSubjectLen;
+					break;
+				case "EncodedSubject":
+					value = EncodedSubject;
+					break;
+				case "NoRoutingIDs":
+					value = NoRoutingIDs;
+					break;
+				case "NoRelatedSym":
+					value = NoRelatedSym;
+					break;
+				case "OrderID":
+					value = OrderID;
+					break;
+				case "ClOrdID":
+					value = ClOrdID;
+					break;
+				case "LinesOfText":
+					value = LinesOfText;
+					break;
+				case "RawDataLength":
+					value = RawDataLength;
+					break;
+				case "RawData":
+					value = RawData;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

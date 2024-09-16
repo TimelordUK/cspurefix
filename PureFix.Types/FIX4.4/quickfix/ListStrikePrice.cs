@@ -11,25 +11,29 @@ namespace PureFix.Types.FIX44.QuickFix
 	public sealed partial class ListStrikePrice : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 66, Type = TagType.String, Offset = 1, Required = true)]
-		public string? ListID { get; set; }
+		public string? ListID {get; set;}
 		
 		[TagDetails(Tag = 422, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? TotNoStrikes { get; set; }
+		public int? TotNoStrikes {get; set;}
 		
 		[TagDetails(Tag = 893, Type = TagType.Boolean, Offset = 3, Required = false)]
-		public bool? LastFragment { get; set; }
+		public bool? LastFragment {get; set;}
 		
 		[Component(Offset = 4, Required = true)]
-		public InstrmtStrkPxGrp? InstrmtStrkPxGrp { get; set; }
+		public InstrmtStrkPxGrpComponent? InstrmtStrkPxGrp {get; set;}
 		
 		[Component(Offset = 5, Required = false)]
-		public UndInstrmtStrkPxGrp? UndInstrmtStrkPxGrp { get; set; }
+		public UndInstrmtStrkPxGrpComponent? UndInstrmtStrkPxGrp {get; set;}
 		
 		[Component(Offset = 6, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -52,8 +56,64 @@ namespace PureFix.Types.FIX44.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			ListID = view.GetString(66);
+			TotNoStrikes = view.GetInt32(422);
+			LastFragment = view.GetBool(893);
+			if (view.GetView("InstrmtStrkPxGrp") is IMessageView viewInstrmtStrkPxGrp)
+			{
+				InstrmtStrkPxGrp = new();
+				((IFixParser)InstrmtStrkPxGrp).Parse(viewInstrmtStrkPxGrp);
+			}
+			if (view.GetView("UndInstrmtStrkPxGrp") is IMessageView viewUndInstrmtStrkPxGrp)
+			{
+				UndInstrmtStrkPxGrp = new();
+				((IFixParser)UndInstrmtStrkPxGrp).Parse(viewUndInstrmtStrkPxGrp);
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "ListID":
+					value = ListID;
+					break;
+				case "TotNoStrikes":
+					value = TotNoStrikes;
+					break;
+				case "LastFragment":
+					value = LastFragment;
+					break;
+				case "InstrmtStrkPxGrp":
+					value = InstrmtStrkPxGrp;
+					break;
+				case "UndInstrmtStrkPxGrp":
+					value = UndInstrmtStrkPxGrp;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }

@@ -9,6 +9,7 @@ using BenchmarkDotNet.Attributes;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Types;
 using PureFix.Types.FIX44.QuickFix;
 
 namespace PureFix.Benchmarks
@@ -57,35 +58,35 @@ namespace PureFix.Benchmarks
         public void HeartbeatView()
         {
             var message = new Heartbeat();
-            message.Parse(_HeartbeatView);
+            ((IFixParser)message).Parse(_HeartbeatView);
         }
 
         [Benchmark]
         public void LogonView()
         {
             var message = new Logon();
-            message.Parse(_LogonView);
+            ((IFixParser)message).Parse(_LogonView);
         }
 
         [Benchmark]
         public void ExecutionReportView()
         {
             var message = new ExecutionReport();
-            message.Parse(_ExecutionReportView);
+            ((IFixParser)message).Parse(_ExecutionReportView);
         }
 
         [Benchmark]
         public void OrderCancelRejectView()
         {
             var message = new OrderCancelReject();
-            message.Parse(_OrderCancelRejectView);
+            ((IFixParser)message).Parse(_OrderCancelRejectView);
         }
 
         [Benchmark]
         public void QuoteRequestView()
         {
             var message = new QuoteRequest();
-            message.Parse(_QuoteRequestView);
+            ((IFixParser)message).Parse(_QuoteRequestView);
         }
     }
 }

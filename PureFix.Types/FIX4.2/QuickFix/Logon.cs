@@ -11,31 +11,35 @@ namespace PureFix.Types.FIX42.QuickFix
 	public sealed partial class Logon : IFixMessage
 	{
 		[Component(Offset = 0, Required = true)]
-		public StandardHeader? StandardHeader { get; set; }
+		public StandardHeaderComponent? StandardHeader {get; set;}
 		
 		[TagDetails(Tag = 98, Type = TagType.Int, Offset = 1, Required = true)]
-		public int? EncryptMethod { get; set; }
+		public int? EncryptMethod {get; set;}
 		
 		[TagDetails(Tag = 108, Type = TagType.Int, Offset = 2, Required = true)]
-		public int? HeartBtInt { get; set; }
+		public int? HeartBtInt {get; set;}
 		
 		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 3, Required = false, LinksToTag = 96)]
-		public int? RawDataLength { get; set; }
+		public int? RawDataLength {get; set;}
 		
 		[TagDetails(Tag = 96, Type = TagType.RawData, Offset = 4, Required = false, LinksToTag = 95)]
-		public byte[]? RawData { get; set; }
+		public byte[]? RawData {get; set;}
 		
 		[TagDetails(Tag = 141, Type = TagType.Boolean, Offset = 5, Required = false)]
-		public bool? ResetSeqNumFlag { get; set; }
+		public bool? ResetSeqNumFlag {get; set;}
 		
 		[TagDetails(Tag = 383, Type = TagType.Int, Offset = 6, Required = false)]
-		public int? MaxMessageSize { get; set; }
+		public int? MaxMessageSize {get; set;}
 		
 		[Group(NoOfTag = 384, Offset = 7, Required = false)]
-		public LogonNoMsgTypes[]? NoMsgTypes { get; set; }
+		public NoMsgTypes[]? NoMsgTypes {get; set;}
 		
 		[Component(Offset = 8, Required = true)]
-		public StandardTrailer? StandardTrailer { get; set; }
+		public StandardTrailerComponent? StandardTrailer {get; set;}
+		
+		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		
+		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
 		{
@@ -69,8 +73,73 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (StandardTrailer is not null) ((IFixEncoder)StandardTrailer).Encode(writer);
 		}
 		
-		IStandardHeader? IFixMessage.StandardHeader => StandardHeader;
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
+			{
+				StandardHeader = new();
+				((IFixParser)StandardHeader).Parse(viewStandardHeader);
+			}
+			EncryptMethod = view.GetInt32(98);
+			HeartBtInt = view.GetInt32(108);
+			RawDataLength = view.GetInt32(95);
+			RawData = view.GetByteArray(96);
+			ResetSeqNumFlag = view.GetBool(141);
+			MaxMessageSize = view.GetInt32(383);
+			if (view.GetView("NoMsgTypes") is IMessageView viewNoMsgTypes)
+			{
+				var count = viewNoMsgTypes.GroupCount();
+				NoMsgTypes = new NoMsgTypes[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoMsgTypes[i] = new();
+					((IFixParser)NoMsgTypes[i]).Parse(viewNoMsgTypes.GetGroupInstance(i));
+				}
+			}
+			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
+			{
+				StandardTrailer = new();
+				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
+			}
+		}
 		
-		IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "StandardHeader":
+					value = StandardHeader;
+					break;
+				case "EncryptMethod":
+					value = EncryptMethod;
+					break;
+				case "HeartBtInt":
+					value = HeartBtInt;
+					break;
+				case "RawDataLength":
+					value = RawDataLength;
+					break;
+				case "RawData":
+					value = RawData;
+					break;
+				case "ResetSeqNumFlag":
+					value = ResetSeqNumFlag;
+					break;
+				case "MaxMessageSize":
+					value = MaxMessageSize;
+					break;
+				case "NoMsgTypes":
+					value = NoMsgTypes;
+					break;
+				case "StandardTrailer":
+					value = StandardTrailer;
+					break;
+				default: return false;
+			}
+			return true;
+		}
 	}
 }
