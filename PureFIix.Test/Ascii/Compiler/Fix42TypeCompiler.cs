@@ -9,14 +9,14 @@ using PureFix.Dictionary.Compiler;
 
 namespace PureFIix.Test.Ascii.Compiler
 {
-    public class BackingTypeCompilerTests
+    public class Fix42TypeCompiler
     {
         private TestEntity _testEntity;
 
         [OneTimeSetUp]
         public void OnceSetup()
         {
-            _testEntity = new TestEntity();
+            _testEntity = new TestEntity("FIX42.xml");
         }
 
         [SetUp]
