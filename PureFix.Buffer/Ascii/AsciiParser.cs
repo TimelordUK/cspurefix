@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
-using PureFix.Tag;
+using PureFix.Types;
 using Microsoft.Extensions.ObjectPool;
 
 namespace PureFix.Buffer.Ascii

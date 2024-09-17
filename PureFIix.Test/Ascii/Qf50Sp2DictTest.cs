@@ -2,6 +2,7 @@
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -207,7 +208,7 @@ namespace PureFIix.Test.Ascii
             _setHelper.IsComponent(tc, index++, "AttachmentGrp", false);
             _setHelper.IsSimple(tc, index++, "RiskLimitCheckStatus", false);
             _setHelper.IsComponent(tc, index++, "StandardTrailer", true);
-            Assert.That(tc.Fields.Count, Is.EqualTo(index));
+            Assert.That(tc.Fields, Has.Count.EqualTo(index));
         }
 
         [Test]

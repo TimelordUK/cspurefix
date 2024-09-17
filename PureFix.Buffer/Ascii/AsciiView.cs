@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureFix.Tag;
+using PureFix.Types;
 using Microsoft.Extensions.ObjectPool;
+using System.Xml.Linq;
 
 namespace PureFix.Buffer.Ascii
 {
@@ -93,18 +94,19 @@ namespace PureFix.Buffer.Ascii
             return tag == null ? null : Buffer.GetBoolean(tag.Value.Start);
         }
 
-        protected DateTime? UtcDateOnlyAtPosition(int position)
+        protected DateOnly? UtcDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetUtcDateOnly(tag.Value.Start, tag.Value.End);
         }
-        protected DateTime? UtcTimeOnlyAtPosition(int position)
+
+        protected TimeOnly? UtcTimeOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetUtcTimeOnly(tag.Value.Start, tag.Value.End);
+            return tag == null ? null : Buffer.GetTimeOnly(tag.Value.Start, tag.Value.End);
         }
 
-        protected DateTime? LocalDateOnlyAtPosition(int position)
+        protected DateOnly? LocalDateOnlyAtPosition(int position)
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetLocalDateOnly(tag.Value.Start, tag.Value.End);
@@ -114,6 +116,11 @@ namespace PureFix.Buffer.Ascii
         {
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetUtcTimeStamp(tag.Value.Start, tag.Value.End);
+        }
+
+        public override int? GetInt32(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetInt32(typed.Tag) : null;
         }
 
         public override int? GetInt32(int tag)
@@ -128,6 +135,11 @@ namespace PureFix.Buffer.Ascii
             return value is null ? null : (int)value.Value;
         }
 
+        public override double? GetDouble(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetDouble(typed.Tag) : null;
+        }
+
         public override double? GetDouble(int tag)
         {
             return GetPosition(tag) switch
@@ -135,6 +147,11 @@ namespace PureFix.Buffer.Ascii
                 var position when position < 0 => default,
                 var position => FloatAtPosition(position)
             };
+        }
+
+        public override bool? GetBool(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetBool(typed.Tag) : null;
         }
 
         public override bool? GetBool(int tag)
@@ -146,6 +163,11 @@ namespace PureFix.Buffer.Ascii
             };
         }
 
+        public override decimal? GetDecimal(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetDecimal(typed.Tag) : null;
+        }
+
         public override decimal? GetDecimal(int tag)
         {
             return GetPosition(tag) switch
@@ -153,6 +175,11 @@ namespace PureFix.Buffer.Ascii
                 var position when position < 0 => default,
                 var position => DecimalAtPosition(position)
             };
+        }
+
+        public override byte[]? GetByteArray(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetByteArray(typed.Tag) : null;
         }
 
         public override byte[]? GetByteArray(int tag)
@@ -181,6 +208,28 @@ namespace PureFix.Buffer.Ascii
                 return default;
             }
 
+            return UtcTimestampAtPosition(position);
+        } 
+
+        public override TimeOnly? GetTimeOnly(int tag)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                return default;
+            }
+
+            return UtcTimeOnlyAtPosition(position);
+        }
+
+        public override DateOnly? GetDateOnly(int tag)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                return default;
+            }
+
             var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
             if (sf == null) return default;
 
@@ -189,18 +238,18 @@ namespace PureFix.Buffer.Ascii
                 case TagType.UtcDateOnly:
                     return UtcDateOnlyAtPosition(position);
 
-                case TagType.UtcTimeOnly:
-                    return UtcTimeOnlyAtPosition(position);
-
-                case TagType.UtcTimestamp:
-                    return UtcTimestampAtPosition(position);
-
                 case TagType.LocalDate:
                     return LocalDateOnlyAtPosition(position);
 
                 default:
                     return default;
             }
-        }     
+        }
+
+        public override MonthYear? GetMonthYear(int position)
+        {
+            var tag = GetTag(position);
+            return tag == null ? null : Buffer.GetMonthYear(tag.Value.Start, tag.Value.End);
+        }
     }
 }

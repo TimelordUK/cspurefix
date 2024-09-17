@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
-using PureFix.Tag;
+using PureFix.Types;
 
 
 namespace PureFix.Buffer.Ascii
@@ -36,13 +36,12 @@ namespace PureFix.Buffer.Ascii
          * tags for repeated groups will have more than one instance.
          */
 
-        private void EnumeratSpan()
+        private void EnumerateSpan()
         {
             if (TagSpans != null) return;
             if (Tags == null) return;
             if (Structure == null) return;
             if (Segment == null) return;
-            if (Structure.Value.Tags == null) return;
 
             var end = Segment.EndPosition + 1;
             var start = Segment.StartPosition;
@@ -71,12 +70,20 @@ namespace PureFix.Buffer.Ascii
 
         // "BeginString" or 8
         public abstract DateTime? GetDateTime(int tag);
+        public abstract TimeOnly? GetTimeOnly(int tag);
+        public abstract DateOnly? GetDateOnly(int tag);
+        public abstract int? GetInt32(string name);
         public abstract int? GetInt32(int tag);
         public abstract double? GetDouble(int tag);
+        public abstract double? GetDouble(string name);
+        public abstract bool? GetBool(string name);
         public abstract bool? GetBool(int tag);
+        public abstract decimal? GetDecimal(string name);
         public abstract decimal? GetDecimal(int tag);
+        public abstract byte[]? GetByteArray(string name);
         public abstract byte[]? GetByteArray(int tag);
         public abstract Memory<byte>? GetMemory(int tag);
+        public abstract MonthYear? GetMonthYear(int tag);
 
         public int GroupCount()
         {
@@ -86,11 +93,7 @@ namespace PureFix.Buffer.Ascii
 
         public string? GetString(string name)
         {
-            if (Definitions.Simple.TryGetValue(name, out var typed))
-            {
-                return GetString(typed.Tag);
-            }
-            return null;
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetString(typed.Tag) : null;
         }
 
         public string? GetString(int tag)
@@ -102,6 +105,11 @@ namespace PureFix.Buffer.Ascii
         public string?[]? GetStrings()
         {
             return AllStrings();
+        }
+
+        public string?[]? GetStrings(string name)
+        {
+            return Definitions.Simple.TryGetValue(name, out var typed) ? GetStrings(typed.Tag) : null;
         }
 
         public string?[]? GetStrings(int tag)
@@ -130,8 +138,16 @@ namespace PureFix.Buffer.Ascii
 
         public MsgView? GetView(string name)
         {
+            // As this is the most common case we'll optimize for it
+            if (name.IndexOf('.') == -1)
+            {
+                return Process(this, name);
+            }
+
             var parts = name.Split('.');
-            return parts.Aggregate(this, static (a, current) =>
+            return parts.Aggregate(this, static (a, current) => Process(a, current)!);
+            
+            static MsgView? Process(MsgView a, string current)
             {
                 var subStructure = a.Structure;
                 if (a.Segment == null)
@@ -154,12 +170,12 @@ namespace PureFix.Buffer.Ascii
                     }
                 }
                 return null;
-            });
+            }
         }
 
         protected int GetPosition(int tag)
         {
-            if (TagSpans == null) EnumeratSpan();
+            if (TagSpans == null) EnumerateSpan();
             if (TagSpans == null) return -1;
             if (SortedTagPosForwards == null) return -1;
             if (TagSpans.TryGetValue(tag, out var r))
@@ -183,7 +199,7 @@ namespace PureFix.Buffer.Ascii
 
         protected Range? GetPositions(int tag)
         {
-            EnumeratSpan();
+            EnumerateSpan();
             if (TagSpans == null) return null;
             if (!TagSpans.TryGetValue(tag, out var r))
             {
@@ -195,7 +211,7 @@ namespace PureFix.Buffer.Ascii
 
         protected static string AsToken(SimpleFieldDefinition? field, string val, int i, int count, TagPos tagpos)
         {
-            var perLine = 2;
+            const int perLine = 2;
             var newLine = Environment.NewLine;
             // [280] 814 (ApplQueueResolution) = 2[OverlayLast][281] 10 (CheckSum) = 80
             string desc;

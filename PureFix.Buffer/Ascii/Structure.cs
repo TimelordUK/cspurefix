@@ -5,16 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Segment;
-using PureFix.Tag;
+using PureFix.Types;
 
 namespace PureFix.Buffer.Ascii
 {
-    public record struct Structure 
+    public readonly record struct Structure 
     {
-        private Dictionary<string, SegmentDescription>? _components;
-        // do not create unless needed
-        private Dictionary<string, List<SegmentDescription>>? _groups;
-        public IReadOnlyList<SegmentDescription> Segments { get; }
+        private readonly Dictionary<string, SegmentDescription>? _singletons;
+        private readonly Dictionary<string, List<SegmentDescription>>? _arrays;
+        public readonly IReadOnlyList<SegmentDescription> Segments { get; }
 
         public Tags Tags { get; }
 
@@ -22,27 +21,37 @@ namespace PureFix.Buffer.Ascii
         {
             Tags = tags;
             Segments = segments;
-            BoundLayout();
+            (_singletons, _arrays) = BoundLayout(Segments);
         }
 
-        public readonly SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
-
-        public readonly SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
+        public IReadOnlyList<SegmentDescription>? GetInstances(string name)
         {
-            if (_components == null)
+            return _arrays?.GetValueOrDefault(name);
+        }
+
+        public SegmentDescription? GetInstance(string name)
+        {
+            return _singletons?.GetValueOrDefault(name);
+        }
+
+        public SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;
+
+        public SegmentDescription? FirstContainedWithin(string name, SegmentDescription segment)
+        {
+            if (_singletons == null)
             {
-                if (_groups != null && _groups.TryGetValue(name, out var instances))
+                if (_arrays != null && _arrays.TryGetValue(name, out var instances))
                 {
-                    return instances.FirstOrDefault(segment.Contains);
+                    return GetSegmentDescription(instances, segment);
                 }
                 return null;
             }
 
-            if (!_components.TryGetValue(name, out var component))
+            if (!_singletons.TryGetValue(name, out var component))
             {
-                if (_groups != null && _groups.TryGetValue(name, out var instances))
+                if (_arrays != null && _arrays.TryGetValue(name, out var instances))
                 {
-                    return instances.FirstOrDefault(segment.Contains);
+                    return GetSegmentDescription(instances, segment);
                 }
             }
             else
@@ -51,38 +60,75 @@ namespace PureFix.Buffer.Ascii
             }
 
             return null;
+
+            static SegmentDescription? GetSegmentDescription(IReadOnlyList<SegmentDescription> descriptions, SegmentDescription segment)
+            {
+                for (int i = 0, length = descriptions.Count; i < length; i++)
+                {
+                    var item = descriptions[i];
+                    if (segment.Contains(item))
+                    {
+                        return item;
+                    }
+                }
+
+                return null;
+            }
         }
 
-        private void BoundLayout(SegmentDescription? segment = null)
+        private static Dictionary<string, List<SegmentDescription>>? AddToGroup(Dictionary<string, List<SegmentDescription>>? arrays, SegmentDescription current)
         {
-            for (var i = 0; i < Segments.Count; i++)
+            if (current.Name == null) return arrays;
+            
+            arrays ??= [];
+            
+            if (!arrays.TryGetValue(current.Name, out var instances))
             {
-                var current = Segments[i];
+                arrays[current.Name] = instances = [];
+            }
+
+            instances.Add(current);
+
+            return arrays;
+        }
+
+        private static (Dictionary<string, SegmentDescription>? Singletons, Dictionary<string, List<SegmentDescription>>? Arrays) BoundLayout(IReadOnlyList<SegmentDescription> segments, SegmentDescription? segment = null)
+        {
+            Dictionary<string, SegmentDescription>? singletons = null;
+            Dictionary<string, List<SegmentDescription>>? arrays = null;
+
+            for (var i = 0; i < segments.Count; i++)
+            {
+                var current = segments[i];
 
                 if (current.Name == null) continue;
                 if (segment != null && !segment.Contains(current)) continue;
                 switch (current.Type)
                 {
                     case SegmentType.Group:
-                    {
-                        _groups ??= [];
-                        if (!_groups.TryGetValue(current.Name, out var instances))
-                        {
-                            _groups[current.Name] = instances = [];
-                        }
-
-                        instances.Add(current);
-                        break;
-                    }
-
                     case SegmentType.Component:
                     case SegmentType.Msg:
                     case SegmentType.Batch:
-                        _components ??= [];
-                        _components[current.Name] = current;
+                        singletons ??= [];
+                        if (arrays != null && arrays.ContainsKey(current.Name) )
+                        {
+                            // this is a component but repeated within a group and we need to store all instances
+                            arrays = AddToGroup(arrays, current);
+                        } 
+                        // an instance previously held as an instance added along with new enty to a list
+                        else if (singletons.Remove(current.Name, out var single)) {
+                            arrays = AddToGroup(arrays, single);
+                            arrays = AddToGroup(arrays, current);
+                        }
+                        else
+                        {
+                            singletons[current.Name] = current;
+                        }
                         break;
                 }
             }
+
+            return (singletons, arrays);
         }
     }
 }

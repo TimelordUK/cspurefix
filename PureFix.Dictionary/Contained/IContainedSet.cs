@@ -99,5 +99,6 @@ namespace PureFix.Dictionary.Contained
         IContainedSet? GetSet(string path);
 
         IReadOnlyList<int> Keys();
+        void Index();
     }
 }

@@ -7,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Parser;
-using PureFix.Tag;
+using PureFix.Types;
 
 
 namespace PureFix.Dictionary.Definition
@@ -44,7 +44,7 @@ namespace PureFix.Dictionary.Definition
             Name = name;
             Type = type;
             Tag = tag;
-            TagType = TagTypeUtil.ToType(type);
+            TagType = TagManager.ToType(type);
             
             if (enums != null && enums.Count > 0)
             {

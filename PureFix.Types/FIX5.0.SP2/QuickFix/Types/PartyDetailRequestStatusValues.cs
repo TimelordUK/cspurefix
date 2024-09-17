@@ -1,0 +1,10 @@
+namespace PureFix.Types.FIX50SP2.QuickFix.Types
+{
+	public static class PartyDetailRequestStatusValues
+	{
+		public const int Accepted = 0;
+		public const int AcceptedWithChanges = 1;
+		public const int Rejected = 2;
+		public const int AcceptancePending = 3;
+	}
+}

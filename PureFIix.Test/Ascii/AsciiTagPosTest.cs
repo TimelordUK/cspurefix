@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
 using System.Globalization;
-using PureFix.Tag;
+using PureFix.Types;
 
 namespace PureFIix.Test.Ascii
 {

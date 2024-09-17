@@ -1,0 +1,200 @@
+﻿using System;
+using System.Buffers.Text;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PureFix.Types
+{
+    /*
+     * case "utctimestamp":
+       {
+           return TagType.UtcTimestamp;
+       }
+
+       case "localmktdate":
+       {
+           return TagType.LocalDate;
+       }
+
+       case "utcdateonly":
+       {
+           return TagType.UtcDateOnly;
+       }
+
+       case "utctimeonly":
+       {
+           return TagType.UtcTimeOnly;
+       }
+     */
+    public partial class ElasticBuffer
+    {
+        public static class TimeFormats
+        {
+            public static readonly string Timestamp = "yyyyMMdd-HH:mm:ss.fff";
+            public static readonly string Date = "yyyyMMdd";
+            public static readonly string TimeMs = "HH:mm:ss.fff";
+            public static readonly string Time = "HH:mm:ss";
+        }
+        
+        // 10:39:01.621
+        public DateTime? GetLocalDateTime(int st, int vend)
+        {
+            var v = GetDateTime(st, vend, DateTimeStyles.AssumeLocal);
+            if (v == null) return v;
+            return v.Value.ToLocalTime();
+        }
+
+        // case "utctimeonly":
+        public TimeOnly? GetTimeOnly(int st, int vend)
+        {
+            return GetTimeOnly(st, vend, DateTimeStyles.None);
+        }
+
+        public int WriteTimeOnly(TimeOnly timeOnly)
+        {
+            return WriteFormat(timeOnly, TimeFormats.TimeMs);
+        }
+
+        public int WriteUtcTimeOnly(DateTime dateTime)
+        {
+            return WriteLocalTimeOnly(dateTime.ToUniversalTime());
+        }
+
+        public int WriteLocalTimeOnly(DateTime dateTime)
+        {
+            var format = TimeFormats.TimeMs;
+            CheckGrowBuffer(format.Length);
+            var span = _buffer.AsSpan()[Pos..format.Length];
+            dateTime.TryFormat(span, out var written, format);
+            Pos += written;
+            return Pos;
+        }
+
+        // 20180610-10:39:01.621
+        public int WriteUtcTimeStamp(DateTime dateTime)
+        {
+            return WriteFormat(dateTime.ToUniversalTime(), TimeFormats.Timestamp);
+        }
+
+        public int WriteUtcDateOnly(DateOnly dateTime)
+        {
+            return WriteFormat(dateTime, TimeFormats.Date);
+        }
+
+        public int WriteLocalDateOnly(DateOnly dateTime)
+        {
+            return WriteFormat(dateTime, TimeFormats.Date);
+        }
+
+        public DateOnly? GetUtcDateOnly(int st, int vend)
+        {
+            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeUniversal);
+        }
+
+        public DateOnly? GetLocalDateOnly(int st, int vend)
+        {
+            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeLocal);
+        }
+
+        private int WriteFormat(DateTime dateTime, string format)
+        {
+            CheckGrowBuffer(format.Length);
+            var span = _buffer.AsSpan()[Pos..format.Length];
+            dateTime.TryFormat(span, out var written, format);
+            Pos += written;
+            return Pos;
+        }
+
+        private int WriteFormat(DateOnly dateTime, string format)
+        {
+            CheckGrowBuffer(format.Length);
+            var span = _buffer.AsSpan()[Pos..format.Length];
+            dateTime.TryFormat(span, out var written, format);
+            Pos += written;
+            return Pos;
+        }
+
+        private int WriteFormat(TimeOnly timeOnly, string format)
+        {
+            CheckGrowBuffer(format.Length);
+            var span = _buffer.AsSpan()[Pos..format.Length];
+            timeOnly.TryFormat(span, out var written, format);
+            Pos += written;
+            return Pos;
+        }
+
+
+        public DateTime? GetUtcTimeStamp(int st, int vend)
+        {
+            return GetDateTimeWithFormat(st, vend, TimeFormats.Timestamp, DateTimeStyles.AssumeUniversal);
+        }
+
+        private DateTime? GetDateTimeWithFormat(int st, int vend, string format, DateTimeStyles style)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            Span<char> chars = stackalloc char[span.Length];
+            span.CopyByteSpanToCharSpan(chars);
+
+            if (DateTime.TryParseExact(chars, format, null, style, out var d))
+            {
+                return d;
+            }
+            return null;
+        }
+
+        private DateOnly? GetDateOnlyWithFormat(int st, int vend, string format, DateTimeStyles style)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            Span<char> chars = stackalloc char[span.Length];
+            span.CopyByteSpanToCharSpan(chars);
+
+            if (DateOnly.TryParseExact(chars, format, null, style, out var d))
+            {
+                return d;
+            }
+            return null;
+        }
+
+        private DateTime? GetDateTime(int st, int vend, DateTimeStyles style)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            Span<char> chars = stackalloc char[span.Length];
+            span.CopyByteSpanToCharSpan(chars);
+
+            
+            if (DateTime.TryParseExact(chars, TimeFormats.TimeMs, null, style, out var d))
+            {
+                return d;
+            }
+            if (DateTime.TryParseExact(chars, TimeFormats.Time, null, style, out var d1))
+            {
+                return d1;
+            }
+            return null;
+        }
+
+        private TimeOnly? GetTimeOnly(int st, int vend, DateTimeStyles style)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, st, vend - st + 1);
+            Span<char> chars = stackalloc char[span.Length];
+            span.CopyByteSpanToCharSpan(chars);
+
+            
+            if (TimeOnly.TryParseExact(chars, TimeFormats.TimeMs, null, style, out var d))
+            {
+                return d;
+            }
+            if (TimeOnly.TryParseExact(chars, TimeFormats.Time, null, style, out var d1))
+            {
+                return d1;
+            }
+            return null;
+        }
+    }
+}

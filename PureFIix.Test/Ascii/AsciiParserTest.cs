@@ -9,7 +9,7 @@ using NUnit.Framework.Constraints;
 using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
-using PureFix.Tag;
+using PureFix.Types;
 
 namespace PureFIix.Test.Ascii
 {
