@@ -64,6 +64,20 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Create_Session_Trailer_Test()
+        {
+            var session = GetDescription();
+            var factory = new Fix44SessionMessageFactory(session);
+            var trailer = factory.Trailer(1);
+            Assert.That(trailer, Is.Not.Null);
+            Assert.That(trailer.CheckSum, Is.EqualTo("001"));
+
+            var trailer2 = factory.Trailer(12);
+            Assert.That(trailer2, Is.Not.Null);
+            Assert.That(trailer2.CheckSum, Is.EqualTo("012"));
+        }
+
+        [Test]
         public void Encode_Instument_Test()
         {
             var session = GetDescription();
