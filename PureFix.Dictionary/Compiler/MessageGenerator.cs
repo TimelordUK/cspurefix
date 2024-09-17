@@ -169,25 +169,32 @@ namespace PureFix.Dictionary.Compiler
             {
                 generator.WriteLine("value = null;");
 
-                using(generator.BeginBlock($"switch (name)"))
+                if (containedSet.Fields.Count == 0)
                 {
-                    for(var i = 0; i < containedSet.Fields.Count; i++)
+                    generator.WriteLine("return false;");
+                }
+                else
+                {
+                    using(generator.BeginBlock($"switch (name)"))
                     {
-                        var field = containedSet.Fields[i];
-                        var name = field.Name;
-
-                        generator.WriteLine($"case \"{name}\":");
-                        using(generator.BeginIndent())
+                        for(var i = 0; i < containedSet.Fields.Count; i++)
                         {
-                            generator.WriteLine($"value = {name};");
-                            generator.WriteLine("break;");
+                            var field = containedSet.Fields[i];
+                            var name = field.Name;
+
+                            generator.WriteLine($"case \"{name}\":");
+                            using(generator.BeginIndent())
+                            {
+                                generator.WriteLine($"value = {name};");
+                                generator.WriteLine("break;");
+                            }
                         }
+
+                        generator.WriteLine("default: return false;");
                     }
 
-                    generator.WriteLine("default: return false;");
+                    generator.WriteLine("return true;");
                 }
-
-                generator.WriteLine("return true;");
             }
         }
         

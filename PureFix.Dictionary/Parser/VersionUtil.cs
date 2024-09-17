@@ -20,6 +20,7 @@ namespace PureFix.Dictionary.Parser
             if (description == "FIX.5.0SP1") return FixVersion.FIX50SP1;
             if (description == "FIX.5.0SP2") return FixVersion.FIX50SP2;
             if (description == "FIXML.5.0SP2") return FixVersion.FIXML50SP2;
+            if (description == "FIX.1.1") return FixVersion.FIXT11;
             return FixVersion.Unknown;
         }
     }

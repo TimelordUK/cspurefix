@@ -17,6 +17,7 @@ namespace PureFix.Types
         FIX50 = 6,
         FIX50SP1 = 7,
         FIX50SP2 = 8,
-        FIXML50SP2 = 9
+        FIXML50SP2 = 9,
+        FIXT11 = 10,
     }
 }

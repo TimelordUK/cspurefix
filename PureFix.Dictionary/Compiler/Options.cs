@@ -75,6 +75,17 @@ namespace PureFix.Dictionary.Compiler
                             ParserFormatterNamespace = "PureFix.ParserFormat.FIX50SP2.QuickFix"
                         };
 
+                    case FixVersion.FIXT11:
+                        return new Options
+                        {
+                            MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),
+                            BackingTypeOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.Types", "FIT11", "QuickFix"),
+                            ParserFormatterOutputPath = Path.Join(DefaultRootOutputPath, "PureFix.ParserFormat", "FIXT11", "QuickFix"),
+                            BackingTypeNamespace = "PureFix.Types.FIXT11.QuickFix",
+                            ParserFormatterNamespace = "PureFix.ParserFormat.FIXT11.QuickFix"
+                        };
+
+
                     default:
                         return new Options
                         {
