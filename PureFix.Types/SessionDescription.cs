@@ -21,5 +21,6 @@ namespace PureFix.Types
         public int? LastSentSeqNum { get; set; }
         public int? LastReceivedSeqNum { get; set; }
         public int? BodyLengthChars { get; set; }
+        public int? HeartBtInt { get; set; }
     }
 }
