@@ -17,31 +17,31 @@ namespace PureFix.Types
             m_SessionDescription = sessionDescription;
         }
 
-        public IFixMessage? TestRequest(string testReqId)
+        public virtual IFixMessage? TestRequest(string testReqId)
         {
             return new TestRequest { TestReqID = testReqId };
         }
 
-        public IFixMessage? Heartbeat(string testReqId)
+        public virtual IFixMessage? Heartbeat(string testReqId)
         {
             return new Heartbeat { TestReqID = testReqId };
         }
 
-        public IFixMessage? ResendRequest(int beginSeqNo, int endSeqNo)
+        public virtual IFixMessage? ResendRequest(int beginSeqNo, int endSeqNo)
         {
             return new ResendRequest { BeginSeqNo = beginSeqNo, EndSeqNo = endSeqNo };
         }
-        public IFixMessage? SequenceReset(int newSeqNo, bool? gapFill = null)
+        public virtual IFixMessage? SequenceReset(int newSeqNo, bool? gapFill = null)
         {
             return new SequenceReset { GapFillFlag = gapFill, NewSeqNo = newSeqNo };
         }
 
-        public IStandardTrailer? Trailer(int checksum)
+        public virtual IStandardTrailer? Trailer(int checksum)
         {
             return new StandardTrailerComponent() { CheckSum = checksum.ToString("D3") };
         }
 
-        public IFixMessage? Logon(string userRequestId, bool isResponse)
+        public virtual IFixMessage? Logon(string userRequestId, bool isResponse)
         {
             return new Logon
             {
@@ -53,7 +53,7 @@ namespace PureFix.Types
             };
         }
 
-        public IFixMessage? Reject(string msgType, int seqNo, string msg, int reason)
+        public virtual IFixMessage? Reject(string msgType, int seqNo, string msg, int reason)
         {
             return new Reject
             {
@@ -64,7 +64,7 @@ namespace PureFix.Types
             };
         }
 
-        public IFixMessage? Logout(string text)
+        public virtual IFixMessage? Logout(string text)
         {
             return new Logout
             {
@@ -74,7 +74,20 @@ namespace PureFix.Types
 
         public IStandardHeader? Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides = null)
         {
-            return null;
+            var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);
+            var placeholder = Math.Max(4, bodyLength - 1) + 1;
+            return new StandardHeaderComponent
+            {
+                BeginString = m_SessionDescription.BeginString,
+                BodyLength = placeholder,
+                MsgType = msgType,
+                SenderCompID = m_SessionDescription.SenderCompID,
+                MsgSeqNum = seqNum,
+                SendingTime = time,
+                TargetCompID = m_SessionDescription.TargetCompID,
+                TargetSubID = m_SessionDescription.TargetSubID,
+                SenderSubID = m_SessionDescription.SenderSubID
+            };
         }
     }
 }
