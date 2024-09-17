@@ -84,13 +84,14 @@ namespace PureFIix.Test.Ascii
         {
             var session = GetDescription();
             var factory = new Fix44SessionMessageFactory(session);
-            var header = factory.Header(MsgTypeValues.OrderSingle,1, DateTime.Now);
+            var header = factory.Header(MsgTypeValues.OrderSingle,1, new DateTime(2024, 1, 1));
             Assert.That(header, Is.Not.Null);
             var pool = new Pool();
             var storage = pool.Rent();
             var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
             header.Encode(writer);
-            var s = storage.AsString((byte)'|');
+            var s = storage.AsString(AsciiChars.Pipe);
+            Assert.That(s, Is.EqualTo("8=FIX.4.4|9=100001|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|"));
         }
 
         [Test]

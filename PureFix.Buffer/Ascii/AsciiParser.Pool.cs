@@ -23,6 +23,7 @@ namespace PureFix.Buffer.Ascii
                     Locations.Reset();
                 }
 
+                // used for fix log to return string with a write delimiter 
                 public string AsString(byte delim)
                 {
                     var b = Buffer.Clone();
