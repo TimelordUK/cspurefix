@@ -52,7 +52,7 @@ namespace PureFix.Types
         /// </summary>
         /// <param name="data"></param>
         /// <exception cref="ArgumentException"></exception>
-        public MonthYear(scoped ReadOnlySpan<byte> data)
+        public MonthYear(ReadOnlySpan<byte> data)
         {
             if(IsValidEncoding(data))
             {
@@ -230,7 +230,7 @@ namespace PureFix.Types
         /// </summary>
         /// <param name="destination"></param>
         /// <returns>The number of bytes written</returns>
-        public int CopyTo(scoped Span<byte> destination)
+        public int CopyTo(Span<byte> destination)
         {
             ReadOnlySpan<byte> data = m_Data[0..this.Length];
             data.CopyTo(destination);
@@ -290,7 +290,7 @@ namespace PureFix.Types
         /// <param name="buffer"></param>
         /// <param name="monthYear"></param>
         /// <returns>trie if successfully parsed, otherwise false</returns>
-        public static bool TryParse(scoped ReadOnlySpan<byte> buffer, out MonthYear monthYear)
+        public static bool TryParse(ReadOnlySpan<byte> buffer, out MonthYear monthYear)
         {
             if(IsValidEncoding(buffer))
             {
@@ -335,7 +335,7 @@ namespace PureFix.Types
             throw new FormatException("value not in the correct format");
         }
 
-        private static bool IsValidEncoding(scoped ReadOnlySpan<byte> buffer)
+        private static bool IsValidEncoding(ReadOnlySpan<byte> buffer)
         {
             if(buffer.Length == 6 || buffer.Length == 8)
             {

@@ -50,10 +50,10 @@ namespace PureFIix.Test.Ascii
             var hb = new Heartbeat();
             ((IFixParser)hb).Parse(mv);
 
-            Assert.That(QuickLookup.Lookup(hb, "StandardHeader").Lookup("BeginString").ValueAs<string>(), Is.EqualTo("FIX.4.4"));
-            Assert.That(QuickLookup.Lookup(hb, "StandardHeader").Lookup("MsgType").ValueAs<string>(), Is.EqualTo("0"));
-            Assert.That(QuickLookup.Lookup(hb, "StandardHeader").Lookup("TargetCompID").ValueAs<string>(), Is.EqualTo("accept-comp"));
-            Assert.That(QuickLookup.Lookup(hb, "TestReqID").ValueAs<string>(), Is.EqualTo("Sun, 01 Jan 2023 14:14:20 GMT"));
+            Assert.That(QuickLookup.On(hb)["StandardHeader"]["BeginString"].As<string>(), Is.EqualTo("FIX.4.4"));
+            Assert.That(QuickLookup.On(hb)["StandardHeader"]["MsgType"].As<string>(), Is.EqualTo("0"));
+            Assert.That(QuickLookup.On(hb)["StandardHeader"]["TargetCompID"].As<string>(), Is.EqualTo("accept-comp"));
+            Assert.That(QuickLookup.On(hb)["TestReqID"].As<string>(), Is.EqualTo("Sun, 01 Jan 2023 14:14:20 GMT"));
         }
 
         [Test]

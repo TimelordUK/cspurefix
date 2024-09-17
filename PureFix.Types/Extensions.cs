@@ -13,7 +13,7 @@ namespace PureFix.Types
         /// </summary>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        public static void CopyByteSpanToCharSpan(this scoped ReadOnlySpan<byte> source, scoped Span<char> destination)
+        public static void CopyByteSpanToCharSpan(this ReadOnlySpan<byte> source, Span<char> destination)
         {
             var length = source.Length;
 

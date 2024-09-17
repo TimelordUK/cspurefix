@@ -68,8 +68,8 @@ namespace PureFIix.Test.Ascii
             var message = new ExecutionReport();
             ((IFixParser)message).Parse(view);
 
-            Assert.That(QuickLookup.Lookup(message, "OrderID").ValueAs<string>(), Is.EqualTo("ipsum"));
-            var parties = QuickLookup.Lookup(message, "Parties").Lookup("NoPartyIDs").ValueAs<NoPartyIDs[]>();
+            Assert.That(QuickLookup.On(message)["OrderID"].As<string>(), Is.EqualTo("ipsum"));
+            var parties = QuickLookup.On(message)["Parties"]["NoPartyIDs"].As<NoPartyIDs[]>();
             Assert.That(parties, Is.Not.Null & Has.Length.EqualTo(3));
             Assert.That(parties[0], Is.Not.Null);
             Assert.That(parties[1], Is.Not.Null);
