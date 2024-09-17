@@ -62,6 +62,21 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void CheckData()
+        {
+            var view = _views[0];
+            var message = new ExecutionReport();
+            ((IFixParser)message).Parse(view);
+
+            Assert.That(QuickLookup.Lookup(message, "OrderID").ValueAs<string>(), Is.EqualTo("ipsum"));
+            var parties = QuickLookup.Lookup(message, "Parties").Lookup("NoPartyIDs").ValueAs<NoPartyIDs[]>();
+            Assert.That(parties, Is.Not.Null & Has.Length.EqualTo(3));
+            Assert.That(parties[0], Is.Not.Null);
+            Assert.That(parties[1], Is.Not.Null);
+            Assert.That(parties[2], Is.Not.Null);
+        }
+
+        [Test]
         public void Get_InstrmtLegExecGrp_Test()
         {
             Assert.That(_views, Is.Not.Null);
