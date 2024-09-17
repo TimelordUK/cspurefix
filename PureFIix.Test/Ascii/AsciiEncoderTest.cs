@@ -78,6 +78,15 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public void Create_Session_Header_Test()
+        {
+            var session = GetDescription();
+            var factory = new Fix44SessionMessageFactory(session);
+            var header = factory.Header(MsgTypeValues.OrderSingle,1, DateTime.Now);
+            Assert.That(header, Is.Not.Null);
+        }
+
+        [Test]
         public void Encode_Instument_Test()
         {
             var session = GetDescription();

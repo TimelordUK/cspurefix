@@ -75,7 +75,7 @@ namespace PureFix.Types
         public IStandardHeader? Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides = null)
         {
             var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);
-            var placeholder = Math.Max(4, bodyLength - 1) + 1;
+            var placeholder = (int)Math.Pow(10, bodyLength - 1) + 1;
             return new StandardHeaderComponent
             {
                 BeginString = m_SessionDescription.BeginString,
