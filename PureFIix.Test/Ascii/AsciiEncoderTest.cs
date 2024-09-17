@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
+using PureFix.Types;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Types.FIX44.QuickFix.Types;
 
@@ -54,9 +55,19 @@ namespace PureFIix.Test.Ascii
             return msg;
         }
 
+        private static SessionDescription GetDescription()
+        {
+            using var streamReader = File.OpenText(Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator-tls.json"));
+            var all = streamReader.ReadToEnd();
+            var session = JsonHelper.FromJson<SessionDescription>(all);
+            return session;
+        }
+
         [Test]
         public void Encode_Instument_Test()
         {
+            var session = GetDescription();
+            Assert.That(session, Is.Not.Null);
             var def = _testEntity.Definitions.Message.GetValueOrDefault("NewOrderSingle");
             Assert.That(def, Is.Not.Null);
             var msg = MakeOrder();
