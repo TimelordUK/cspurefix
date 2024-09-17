@@ -22,6 +22,22 @@ namespace PureFix.Buffer.Ascii
                     Buffer.Reset();
                     Locations.Reset();
                 }
+
+                public string AsString(byte delim)
+                {
+                    var b = Buffer.Clone();
+                    var p = b.Pos;
+                    for (var i = 0; i < Locations.Count; i++)
+                    {
+                        var l = Locations[i];
+                        b.SetPos(l.End + 1);
+                        b.SwitchChar(delim);
+                    }
+
+                    b.SetPos(p);
+                    return b.ToString();
+                }
+
                 public override string ToString()
                 {
                     return $"[{Buffer.Pos}, {Locations.NextTagPos}]";

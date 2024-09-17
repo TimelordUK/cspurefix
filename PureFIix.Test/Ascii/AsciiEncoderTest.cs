@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
 using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Types;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Types.FIX44.QuickFix.Types;
+using static PureFix.Buffer.Ascii.AsciiParser;
 
 namespace PureFIix.Test.Ascii
 {
@@ -84,6 +86,11 @@ namespace PureFIix.Test.Ascii
             var factory = new Fix44SessionMessageFactory(session);
             var header = factory.Header(MsgTypeValues.OrderSingle,1, DateTime.Now);
             Assert.That(header, Is.Not.Null);
+            var pool = new Pool();
+            var storage = pool.Rent();
+            var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+            header.Encode(writer);
+            var s = storage.AsString((byte)'|');
         }
 
         [Test]

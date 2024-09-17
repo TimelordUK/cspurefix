@@ -36,7 +36,7 @@ namespace PureFix.Types
         {
             var length = rhs.Pos;
             _buffer = _pool.Rent(length);
-            rhs._buffer[..rhs.Pos].CopyTo(_buffer, length);
+            rhs._buffer[..rhs.Pos].CopyTo(_buffer, 0);
             _returnTo = _buffer.Length;
             Pos = rhs.Pos;
         }

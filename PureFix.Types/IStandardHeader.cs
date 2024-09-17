@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.Types
 {
-    public interface IStandardHeader
+    public interface IStandardHeader : IFixParser, IFixEncoder
     {
         public string? BeginString { get; }
         public int? BodyLength { get; }
