@@ -18,5 +18,8 @@ namespace PureFix.Types
         public string? BeginString { get; set; }
         public string? Username { get; set; }
         public string? Password { get; set; }
+        public int? LastSentSeqNum { get; set; }
+        public int? LastReceivedSeqNum { get; set; }
+        public int? BodyLengthChars { get; set; }
     }
 }

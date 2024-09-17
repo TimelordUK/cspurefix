@@ -12,15 +12,20 @@ namespace PureFix.Buffer.Ascii
 {
     public class AsciiEncoder
     {
-        public FixDefinitions Definitions { get; set; }
+        public IFixDefinitions Definitions { get; set; }
         private AsciiParser.Pool Pool { get; set; }
         public byte LogDelimiter { get; set; } = AsciiChars.Pipe;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
+        public SessionDescription SessionDescription { get; }
+        public int MsgSeqNum { get; set; }
+        public ISessionMessageFactory SessionMessageFactory { get; }
 
-        public AsciiEncoder(FixDefinitions definitions)
+        public AsciiEncoder(IFixDefinitions definitions, SessionDescription sessionDescription, ISessionMessageFactory messageFactory)
         {
             Definitions = definitions;
             Pool = new AsciiParser.Pool();
+            SessionDescription = sessionDescription;
+            SessionMessageFactory = messageFactory;
         }
 
         // take an application created object e.g. Logon, and encode to fix wire format such that it
@@ -36,7 +41,10 @@ namespace PureFix.Buffer.Ascii
             }
 
             var storage = Pool.Rent();
+            if (message.StandardHeader != null)
+            {
 
+            }
             var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
             message.Encode(writer);
             return storage;

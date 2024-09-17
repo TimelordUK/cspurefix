@@ -8,11 +8,15 @@ namespace PureFix.Types
 {
     public interface IStandardHeader
     {
+        public string? BeginString { get; }
+        public int? BodyLength { get; }
         public string? MsgType{get;}
-        public int? BodyLength{get; }
         public string? SenderCompID { get; }
+        public int? MsgSeqNum { get; }
+        public DateTime? SendingTime { get; }
         public string? TargetCompID { get; }
         public string? TargetSubID { get; }
-        public string? BeginString { get; }
+        public string? SenderSubID { get; }
+        public DateTime? OrigSendingTime { get; }
     }
 }

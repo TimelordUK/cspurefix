@@ -71,7 +71,7 @@ namespace PureFIix.Test.Ascii
             var def = _testEntity.Definitions.Message.GetValueOrDefault("NewOrderSingle");
             Assert.That(def, Is.Not.Null);
             var msg = MakeOrder();
-            var formatter = new AsciiEncoder(_testEntity.Definitions);
+            var formatter = new AsciiEncoder(_testEntity.Definitions, session);
             var res = formatter.Encode(msg);
         }
     }
