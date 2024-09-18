@@ -37,7 +37,7 @@ namespace PureFix.Buffer.Ascii
         public Storage? Encode(string msgType, IFixMessage message)
         {
             if (message.MsgType == null) return null;
-            if (!Definitions.Message.TryGetValue(message.MsgType, out var msgDefinition))
+            if (!Definitions.Message.TryGetValue(message.MsgType, out _))
             {
                 return null; 
             }

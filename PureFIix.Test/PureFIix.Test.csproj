@@ -31,7 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
     <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
-    <ProjectReference Include="..\PureFix.MessageStore\PureFix.MessageStore.csproj" />
+    <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
   </ItemGroup>
 
   <ItemGroup>
