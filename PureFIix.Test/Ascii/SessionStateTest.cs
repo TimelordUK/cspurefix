@@ -82,5 +82,25 @@ namespace PureFIix.Test.Ascii
                 Assert.That(action, Is.EqualTo(TickAction.TerminateOnError));
             });
         }
+
+        [Test]
+        public void TimeToDie_No_Logout_Response_Test()
+        {
+            Assert.That(m_state.Now, Is.Not.Null);
+            var next = m_state.Now.Value.Add(TimeSpan.FromSeconds(20));
+            m_state.State = SessionState.WaitingLogoutConfirm;
+            m_state.LastSentAt = m_now;
+            m_state.LastTestRequestAt = m_now;
+            m_state.LogoutSentAt = m_now;
+            var action = m_state.CalcAction(next);
+            Assert.Multiple(() =>
+            {
+                Assert.That(m_state.TimeToDie, Is.True);
+                Assert.That(m_state.TimeToHeartbeat, Is.False);
+                Assert.That(m_state.TimeToTerminate, Is.False);
+                Assert.That(m_state.TimeToTestRequest, Is.False);
+                Assert.That(action, Is.EqualTo(TickAction.Stop));
+            });
+        }
     }
 }

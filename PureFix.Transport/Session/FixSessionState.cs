@@ -28,6 +28,11 @@ namespace PureFix.Transport.Session
 
         private DateTime? m_logoutSentAt;
         private DateTime? m_now;
+        public DateTime? LogoutSentAt
+        {
+            get => m_logoutSentAt;
+            set => m_logoutSentAt = value;
+        }
         public DateTime? Now
         {
             get => m_now;
@@ -40,7 +45,8 @@ namespace PureFix.Transport.Session
         public int? LastPeerMsgSeqNum { get; set; }
 
         private readonly int? m_heartBeat;
-        private SessionState m_state;
+        public SessionState? State { get; set; }
+
         private readonly int? m_waitLogoutConfirmSeconds;
         private readonly int? m_stopSeconds;
         private int? m_secondsSinceLogoutSent = -1;
@@ -58,10 +64,13 @@ namespace PureFix.Transport.Session
         public FixSessionState(FixSessionStateArgs args)
         {
             m_heartBeat = args.HeartBeat;
-            m_state = args.State ?? SessionState.Idle;
+            State = args.State ?? SessionState.Idle;
             m_waitLogoutConfirmSeconds = args.WaitLogoutConfirmSeconds;
             m_stopSeconds = args.StopSeconds;
             LastPeerMsgSeqNum = args.LastPeerMsgSeqNum;
+            m_waitLogoutConfirmSeconds = 5;
+            m_stopSeconds = 2;
+            LastPeerMsgSeqNum = 0;
         }
 
         public void Reset(int lastPeerMsgSeqNum)
@@ -85,7 +94,7 @@ namespace PureFix.Transport.Session
 
             buffer.AppendFormat($"compId = {m_compID}, ");
             buffer.AppendFormat($"heartBeat = {m_heartBeat}, ");
-            buffer.AppendFormat($"state = {m_state}, ");
+            buffer.AppendFormat($"state = {State}, ");
             buffer.AppendFormat($"nextTickAction = {m_nextTickAction}, ");
             buffer.AppendFormat($"now = ${DateAsString(m_now)}, ");
             buffer.AppendFormat($"timeToDie = ${TimeToDie}, ");
@@ -118,7 +127,7 @@ namespace PureFix.Transport.Session
             m_now = now;
             CalcState();
 
-            switch (m_state) {
+            switch (State) {
                 case SessionState.PeerLogonRejected:
                 {
                     if (m_secondsSinceSent >= m_stopSeconds)
