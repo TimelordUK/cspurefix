@@ -29,7 +29,7 @@ namespace PureFIix.Test.Ascii
             _testEntity.Prepare();
         }
 
-        private NewOrderSingle MakeOrder()
+        private static NewOrderSingle MakeOrder()
         {
             var msg = new NewOrderSingle
             {

@@ -55,14 +55,14 @@ namespace PureFix.Types
             return Math.Max(digits, 1);
         }
 
-        public int Checksum(int? p)
+        public int Checksum(int? p = null)
         {
             var ptr = p ?? Pos;
             var cks = Sum(ptr);
             return cks % 256;
         }
 
-        public int Sum(int? p)
+        public int Sum(int? p = null)
         {
             var total = 0;
             var ptr = p ?? Pos;
@@ -336,6 +336,17 @@ namespace PureFix.Types
             }
 
             return null;
+        }
+
+        public Memory<byte> GetBuffer()
+        {
+            return GetBytes();
+        }
+
+        public byte[] GetBytes()
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, 0, Pos);
+            return span.ToArray();
         }
 
         public Memory<byte> GetBuffer(int st, int vend)

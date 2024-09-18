@@ -42,19 +42,39 @@ namespace PureFix.Buffer.Ascii
                 return null; 
             }
 
-            // may have to fold pemitted user specified header override fields onto the destination message.
-            if (message.StandardHeader != null)
-            {
-            }
-
             var hdr = SessionMessageFactory.Header(msgType, MsgSeqNum, Clock.Current);
             if (hdr == null)
             {
                 return null;
             }
+
+            // may have to fold permitted user specified header override fields onto the destination message.
+            // if this is a replay, then ensure the header is set appropriately. The typescript version supports
+            // any other field than BeginString, BodyLength, MsgType, SenderCompID, SendingTime, TargetCompID, TargetSubID
+            // to be overriden in header based on supplied fields, this is not supported here.
+
+            if (message.StandardHeader != null)
+            {
+                hdr.OrigSendingTime = message.StandardHeader.SendingTime;
+                hdr.MsgSeqNum = message.StandardHeader.MsgSeqNum;
+                hdr.PossDupFlag = message.StandardHeader.PossDupFlag;
+            } 
+
             var storage = Pool.Rent();
             var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+            hdr.Encode(writer);
             message.Encode(writer);
+
+            // checksum can only be caluculated after the body length is correctly set which we now will know
+            // having serialised the header and message contents.
+
+            var checksum = storage.Buffer.Checksum();
+            var trailer = SessionMessageFactory.Trailer(checksum);
+            if (trailer == null)
+            {
+                return null;
+            }
+            trailer.Encode(writer);
             return storage;
         }
     }

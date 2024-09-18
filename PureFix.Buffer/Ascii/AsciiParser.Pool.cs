@@ -39,6 +39,16 @@ namespace PureFix.Buffer.Ascii
                     return b.ToString();
                 }
 
+                public int Checksum()
+                {
+                    return Buffer.Checksum();
+                }
+
+                public byte[] AsBytes()
+                {
+                    return Buffer.Clone().GetBytes();
+                }
+
                 public override string ToString()
                 {
                     return $"[{Buffer.Pos}, {Locations.NextTagPos}]";

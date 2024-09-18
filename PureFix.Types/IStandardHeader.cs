@@ -12,11 +12,12 @@ namespace PureFix.Types
         public int? BodyLength { get; }
         public string? MsgType{get;}
         public string? SenderCompID { get; }
-        public int? MsgSeqNum { get; }
+        public int? MsgSeqNum { get; set; }
         public DateTime? SendingTime { get; }
         public string? TargetCompID { get; }
         public string? TargetSubID { get; }
         public string? SenderSubID { get; }
-        public DateTime? OrigSendingTime { get; }
+        public DateTime? OrigSendingTime { get; set; }
+        public bool? PossDupFlag { get; set; }
     }
 }
