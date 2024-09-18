@@ -18,6 +18,10 @@ namespace PureFix.Buffer.Ascii
                 public ElasticBuffer Buffer { get; } = new();
                 public Tags Locations { get; } = new();
 
+                public TagPos? BeginStringLoc => Locations?[0];
+                public TagPos? BodyLengthLoc => Locations?[1];
+                public TagPos? MsgTypeLoc => Locations?[2];
+
                 public void Reset()
                 {
                     Buffer.Reset();
@@ -47,12 +51,13 @@ namespace PureFix.Buffer.Ascii
 
                 public void PatchBodyLength(int width)
                 {
-                    var bodyLenPos = Locations[1];
+                    var bodyLenPos = BodyLengthLoc;
+                    if (bodyLenPos == null) return;
                     var pos = Buffer.Pos;
-                    var writePtr = bodyLenPos.Start;
+                    var writePtr = bodyLenPos.Value.Start;
                     // measure from start of the msgtag field - which is 
                     // the end of previous field (bodylen) plus the delim
-                    var bodyLen = pos - (bodyLenPos.End + 1);
+                    var bodyLen = pos - (bodyLenPos.Value.End + 1);
                     Buffer.SetPos(writePtr);
                     Buffer.WriteLeadingZeroes(bodyLen, width);
                     Buffer.SetPos(pos);

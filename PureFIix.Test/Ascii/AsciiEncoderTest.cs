@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -100,8 +101,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(s, Is.EqualTo("8=FIX.4.4|9=100001|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|"));
         }
 
-        [Test]
-        public void Patch_BodyLen_Header_Test()
+        private Pool.Storage Make_Encode_Header()
         {
             var session = GetDescription();
             var factory = new Fix44SessionMessageFactory(session);
@@ -110,6 +110,13 @@ namespace PureFIix.Test.Ascii
             var (writer, storage) = GetWriter();
             header.Encode(writer);
             storage.PatchBodyLength(session.BodyLengthChars ?? 7);
+            return storage;
+        }
+
+        [Test]
+        public void Patch_BodyLen_Header_Test()
+        {
+            var storage = Make_Encode_Header();
             var s = storage.AsString(AsciiChars.Pipe);
             var expected = storage.Buffer.Pos - "8=FIX.4.4|9=100001|".Length;
             const string begin = "8=FIX.4.4|9=000078|";
@@ -131,15 +138,20 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Encode_Header_With_BodyLen_Test()
         {
-            var session = GetDescription();
-            var factory = new Fix44SessionMessageFactory(session);
-            var header = factory.Header(MsgTypeValues.OrderSingle, 1, new DateTime(2024, 1, 1));
-            Assert.That(header, Is.Not.Null);
-            var (writer, storage) = GetWriter();
-            header.Encode(writer);
-            storage.PatchBodyLength(session.BodyLengthChars ?? 7);
+            var storage = Make_Encode_Header();
             var s = storage.AsString(AsciiChars.Pipe);
             Assert.That(s, Is.EqualTo("8=FIX.4.4|9=000078|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|"));
+        }
+
+        private static readonly TagPos BeginString = new() { Position = 0, Tag = 8, Start = 2, Len = 8 };
+
+        [Test]
+        public void Encode_Header_Locations_Test()
+        {
+            var storage = Make_Encode_Header();
+            var beginString = storage.BeginStringLoc;
+            Assert.That(beginString, Is.Not.Null);
+            Assert.That(beginString, Is.EqualTo(BeginString));
         }
     }
 }
