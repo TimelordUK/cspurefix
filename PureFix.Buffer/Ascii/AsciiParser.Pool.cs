@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PureFix.Buffer.Ascii.AsciiParser.Pool;
 
 namespace PureFix.Buffer.Ascii
 {
@@ -44,6 +45,18 @@ namespace PureFix.Buffer.Ascii
                     return Buffer.Checksum();
                 }
 
+                public void PatchBodyLength(int width)
+                {
+                    var msgTypePos = Locations[2].Start;
+                    var bodyLenPos = Locations[1];
+                    var pos = Buffer.Pos;
+                    var writePtr = bodyLenPos.Start;
+                    var bodyLen = pos - msgTypePos;
+                    Buffer.SetPos(writePtr);
+                    Buffer.WriteLeadingZeroes(bodyLen, width);
+                    Buffer.SetPos(pos);
+                }
+                
                 public byte[] AsBytes()
                 {
                     return Buffer.Clone().GetBytes();
