@@ -112,12 +112,12 @@ namespace PureFIix.Test.Ascii
             storage.PatchBodyLength(session.BodyLengthChars ?? 7);
             var s = storage.AsString(AsciiChars.Pipe);
             var expected = storage.Buffer.Pos - "8=FIX.4.4|9=100001|".Length;
-            var begin = "8=FIX.4.4|9=000078|";
+            const string begin = "8=FIX.4.4|9=000078|";
             Assert.That(s, Does.StartWith(begin));
         }
 
         [Test]
-        public void Encode_Instument_Test()
+        public void Encode_NewOrderSingle_Test()
         {
             var session = GetDescription();
             Assert.That(session, Is.Not.Null);
@@ -126,6 +126,20 @@ namespace PureFIix.Test.Ascii
             var msg = MakeOrder();
             var formatter = new AsciiEncoder(_testEntity.Definitions, session, new Fix44SessionMessageFactory(session), new RealtimeClock());
             var res = formatter.Encode(MsgTypeValues.OrderSingle,  msg);
+        }
+
+        [Test]
+        public void Encode_Header_With_BodyLen_Test()
+        {
+            var session = GetDescription();
+            var factory = new Fix44SessionMessageFactory(session);
+            var header = factory.Header(MsgTypeValues.OrderSingle, 1, new DateTime(2024, 1, 1));
+            Assert.That(header, Is.Not.Null);
+            var (writer, storage) = GetWriter();
+            header.Encode(writer);
+            storage.PatchBodyLength(session.BodyLengthChars ?? 7);
+            var s = storage.AsString(AsciiChars.Pipe);
+            Assert.That(s, Is.EqualTo("8=FIX.4.4|9=000078|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|"));
         }
     }
 }
