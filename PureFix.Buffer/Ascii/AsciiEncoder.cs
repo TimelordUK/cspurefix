@@ -67,6 +67,17 @@ namespace PureFix.Buffer.Ascii
 
             // checksum can only be caluculated after the body length is correctly set which we now will know
             // having serialised the header and message contents.
+            // "8=FIX.4.4|9=100001|35=D"
+
+            var msgTypePos = storage.Locations[2].Start;
+            var bodyLenPos = storage.Locations[1];
+            var pos = storage.Buffer.Pos;
+            var writePtr = bodyLenPos.Start;
+            var bodyLen = pos - msgTypePos;
+            storage.Buffer.SetPos(writePtr);
+            var width = Math.Max(4, SessionDescription.BodyLengthChars ?? 7);
+            storage.Buffer.WriteLeadingZeroes(bodyLen, width);
+            storage.Buffer.SetPos(pos);
 
             var checksum = storage.Buffer.Checksum();
             var trailer = SessionMessageFactory.Trailer(checksum);

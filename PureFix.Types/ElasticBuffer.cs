@@ -194,6 +194,22 @@ namespace PureFix.Types
             return reducing;
         }
 
+        // body length is written as 8=FIX.4.4|9=0000097|35=BF|
+        // we will assume the position has been set correctly and 
+        // overwrite the existing placeholder.
+
+        public int WriteLeadingZeroes(int number, int width)
+        {
+            CheckGrowBuffer(width);
+            var digits = HowManyDigits(number);
+            for (var i = 0; i < width - digits; ++i)
+            {
+                WriteChar(AsciiZero);
+            }
+            WriteWholeNumber(number);
+            return Pos;
+        }
+
         public long GetWholeNumber(int st, int vend)
         {
             // Fix numbers don't have any fancy formatting other than a sign prefix
