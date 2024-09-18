@@ -18,6 +18,7 @@ namespace PureFIix.Test.Ascii
     public class AsciiEncoderTest
     {
         private TestEntity _testEntity;
+        private IFixClock _clock = new TestClock() { Current = new DateTime(2024, 1, 1) };
 
         [OneTimeSetUp]
         public void OnceSetup()
@@ -132,8 +133,10 @@ namespace PureFIix.Test.Ascii
             var def = _testEntity.Definitions.Message.GetValueOrDefault("NewOrderSingle");
             Assert.That(def, Is.Not.Null);
             var msg = MakeOrder();
-            var formatter = new AsciiEncoder(_testEntity.Definitions, session, new Fix44SessionMessageFactory(session), new RealtimeClock());
+            var formatter = new AsciiEncoder(_testEntity.Definitions, session, new Fix44SessionMessageFactory(session), _clock);
             var res = formatter.Encode(MsgTypeValues.OrderSingle,  msg);
+            var s = res.AsString(AsciiChars.Pipe);
+            Assert.That(s, Is.EqualTo("8=FIX.4.4|9=000160|35=D|49=init-tls-comp|56=accept-tls-comp|57=fix|52=20240101-00:00:00.000|35=D|11=NF 0040/03022010|1=ABC123ZYX|21=1|111=0|55=IOC|54=1|38=1000|40=2|44=49.38|59=0|10=251|"));
         }
 
         [Test]
