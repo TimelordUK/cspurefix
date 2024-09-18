@@ -11,42 +11,19 @@ namespace PureFix.Transport.Session
     public class FixSessionState
     {
         private TickAction? m_nextTickAction;
-        private DateTime? m_lastReceivedAt;
-        public DateTime? LastReceivedAt
-        {
-            get => m_lastReceivedAt;
-            set => m_lastReceivedAt = value;
-        }
-        private DateTime? m_lastSentAt;
-        public DateTime? LastSentAt
-        {
-            get => m_lastSentAt;
-            set => m_lastSentAt = value;
-        }
 
+        public DateTime? LastReceivedAt { get; set; }
+        public DateTime? LastSentAt { get; set; }
+        public DateTime? LogoutSentAt { get; set; }
         public DateTime? LastTestRequestAt { get; set; }
+        public SessionState? State { get; set; }
+        public int? PeerHeartBeatSecs { get; set; }
+        public int? LastPeerMsgSeqNum { get; set; }
+        public DateTime? Now { get; set; }
 
-        private DateTime? m_logoutSentAt;
-        private DateTime? m_now;
-        public DateTime? LogoutSentAt
-        {
-            get => m_logoutSentAt;
-            set => m_logoutSentAt = value;
-        }
-        public DateTime? Now
-        {
-            get => m_now;
-            set => m_now = value;
-        }
         private string? m_compID;
         private string? m_peerCompID;
-        public int? PeerHeartBeatSecs { get; set; }
-
-        public int? LastPeerMsgSeqNum { get; set; }
-
         private readonly int? m_heartBeat;
-        public SessionState? State { get; set; }
-
         private readonly int? m_waitLogoutConfirmSeconds;
         private readonly int? m_stopSeconds;
         private int? m_secondsSinceLogoutSent = -1;
@@ -75,14 +52,14 @@ namespace PureFix.Transport.Session
 
         public void Reset(int lastPeerMsgSeqNum)
         {
-            m_lastReceivedAt = null;
-            m_lastSentAt = null;
+            LastReceivedAt = null;
+            LastSentAt = null;
             LastTestRequestAt = null;
             m_secondsSinceLogoutSent = -1;
             m_secondsSinceSent = -1;
             m_secondsSinceReceive = -1;
             PeerHeartBeatSecs = 0;
-            m_logoutSentAt = null;
+            LogoutSentAt = null;
             m_nextTickAction = TickAction.Nothing;
             LastPeerMsgSeqNum = lastPeerMsgSeqNum;
             m_lastHeader = null;
@@ -96,15 +73,15 @@ namespace PureFix.Transport.Session
             buffer.AppendFormat($"heartBeat = {m_heartBeat}, ");
             buffer.AppendFormat($"state = {State}, ");
             buffer.AppendFormat($"nextTickAction = {m_nextTickAction}, ");
-            buffer.AppendFormat($"now = ${DateAsString(m_now)}, ");
+            buffer.AppendFormat($"now = ${DateAsString(Now)}, ");
             buffer.AppendFormat($"timeToDie = ${TimeToDie}, ");
             buffer.AppendFormat($"timeToHeartbeat = ${TimeToHeartbeat}, ");
             buffer.AppendFormat($"timeToTerminate = ${TimeToTerminate}, ");
             buffer.AppendFormat($"timeToTestRequest = ${TimeToTestRequest}, ");
-            buffer.AppendFormat($"lastReceivedAt = ${DateAsString(m_lastReceivedAt)}, ");
-            buffer.AppendFormat($"LastSentAt = ${DateAsString(m_lastSentAt)}, ");
+            buffer.AppendFormat($"lastReceivedAt = ${DateAsString(LastReceivedAt)}, ");
+            buffer.AppendFormat($"LastSentAt = ${DateAsString(LastSentAt)}, ");
             buffer.AppendFormat($"lastTestRequestAt = ${DateAsString(LastTestRequestAt)}, ");
-            buffer.AppendFormat($"logoutSentAt = ${DateAsString(m_logoutSentAt)}, ");
+            buffer.AppendFormat($"logoutSentAt = ${DateAsString(LogoutSentAt)}, ");
             buffer.AppendFormat($"peerHeartBeatSecs = ${PeerHeartBeatSecs}, ");
             buffer.AppendFormat($"peerCompId = ${m_peerCompID}, ");
             buffer.AppendFormat($"lastPeerMsgSeqNum = ${LastPeerMsgSeqNum}, ");
@@ -115,8 +92,7 @@ namespace PureFix.Transport.Session
 
             return buffer.ToString();
         }
-
-        
+       
         public static string DateAsString(DateTime? date)
         {
             return date == null ? "na" : date.Value.ToString("HH:mm:ss.fff");
@@ -124,7 +100,7 @@ namespace PureFix.Transport.Session
 
         public TickAction? CalcAction(DateTime now)
         {
-            m_now = now;
+            Now = now;
             CalcState();
 
             switch (State) {
@@ -182,19 +158,19 @@ namespace PureFix.Transport.Session
 
         private void CalcState()
         {
-            if (m_now == null) return;
-            var time = m_now.Value.TimeOfDay;
+            if (Now == null) return;
+            var time = Now.Value.TimeOfDay;
             m_nextTickAction = TickAction.Nothing;
-            m_secondsSinceLogoutSent = m_logoutSentAt != null
-                ? (int)time.TotalSeconds - (int)m_logoutSentAt.Value.TimeOfDay.TotalSeconds
+            m_secondsSinceLogoutSent = LogoutSentAt != null
+                ? (int)time.TotalSeconds - (int)LogoutSentAt.Value.TimeOfDay.TotalSeconds
                 : -1;
 
-            m_secondsSinceSent = m_lastSentAt != null
-                ? (int)time.TotalSeconds - (int)m_lastSentAt.Value.TimeOfDay.TotalSeconds
+            m_secondsSinceSent = LastSentAt != null
+                ? (int)time.TotalSeconds - (int)LastSentAt.Value.TimeOfDay.TotalSeconds
                 : 0;
 
-            m_secondsSinceReceive = m_lastReceivedAt != null
-                ? (int)time.TotalSeconds - (int)m_lastReceivedAt.Value.TimeOfDay.TotalSeconds
+            m_secondsSinceReceive = LastReceivedAt != null
+                ? (int)time.TotalSeconds - (int)LastReceivedAt.Value.TimeOfDay.TotalSeconds
                 : 0;
         }
     }
