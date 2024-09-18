@@ -5,9 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Transport.Session;
-using PureFix.Types.FIX50SP2.QuickFix.Types;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFIix.Test.Ascii
 {
@@ -48,6 +45,41 @@ namespace PureFIix.Test.Ascii
                 Assert.That(m_state.TimeToTerminate, Is.False);
                 Assert.That(m_state.TimeToTestRequest, Is.False);
                 Assert.That(action, Is.EqualTo(TickAction.Heartbeat));
+            });
+        }
+
+        [Test]
+        public void TestRequest_Test()
+        {
+            Assert.That(m_state.Now, Is.Not.Null);
+            var next = m_state.Now.Value.Add(TimeSpan.FromSeconds(51));
+            m_state.LastSentAt = next;
+            var action = m_state.CalcAction(next);
+            Assert.Multiple(() =>
+            {
+                Assert.That(m_state.TimeToDie, Is.False);
+                Assert.That(m_state.TimeToHeartbeat, Is.False);
+                Assert.That(m_state.TimeToTerminate, Is.False);
+                Assert.That(m_state.TimeToTestRequest, Is.True);
+                Assert.That(action, Is.EqualTo(TickAction.TestRequest));
+            });
+        }
+
+        [Test]
+        public void TestRequest_No_Response_Test()
+        {
+            Assert.That(m_state.Now, Is.Not.Null);
+            var next = m_state.Now.Value.Add(TimeSpan.FromSeconds(55 * 2));
+            m_state.LastSentAt = next;
+            m_state.LastTestRequestAt = m_now;
+            var action = m_state.CalcAction(next);
+            Assert.Multiple(() =>
+            {
+                Assert.That(m_state.TimeToDie, Is.False);
+                Assert.That(m_state.TimeToHeartbeat, Is.False);
+                Assert.That(m_state.TimeToTerminate, Is.True);
+                Assert.That(m_state.TimeToTestRequest, Is.True);
+                Assert.That(action, Is.EqualTo(TickAction.TerminateOnError));
             });
         }
     }

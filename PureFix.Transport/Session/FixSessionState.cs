@@ -23,7 +23,9 @@ namespace PureFix.Transport.Session
             get => m_lastSentAt;
             set => m_lastSentAt = value;
         }
-        private DateTime? m_lastTestRequestAt;
+
+        public DateTime? LastTestRequestAt { get; set; }
+
         private DateTime? m_logoutSentAt;
         private DateTime? m_now;
         public DateTime? Now
@@ -66,7 +68,7 @@ namespace PureFix.Transport.Session
         {
             m_lastReceivedAt = null;
             m_lastSentAt = null;
-            m_lastTestRequestAt = null;
+            LastTestRequestAt = null;
             m_secondsSinceLogoutSent = -1;
             m_secondsSinceSent = -1;
             m_secondsSinceReceive = -1;
@@ -92,7 +94,7 @@ namespace PureFix.Transport.Session
             buffer.AppendFormat($"timeToTestRequest = ${TimeToTestRequest}, ");
             buffer.AppendFormat($"lastReceivedAt = ${DateAsString(m_lastReceivedAt)}, ");
             buffer.AppendFormat($"LastSentAt = ${DateAsString(m_lastSentAt)}, ");
-            buffer.AppendFormat($"lastTestRequestAt = ${DateAsString(m_lastTestRequestAt)}, ");
+            buffer.AppendFormat($"lastTestRequestAt = ${DateAsString(LastTestRequestAt)}, ");
             buffer.AppendFormat($"logoutSentAt = ${DateAsString(m_logoutSentAt)}, ");
             buffer.AppendFormat($"peerHeartBeatSecs = ${PeerHeartBeatSecs}, ");
             buffer.AppendFormat($"peerCompId = ${m_peerCompID}, ");
@@ -155,11 +157,11 @@ namespace PureFix.Transport.Session
                         }
                         else if (TimeToTestRequest)
                         {
-                            if (m_lastTestRequestAt == null)
+                            if (LastTestRequestAt == null)
                             {
                                 // not received anything from peer
                                 m_nextTickAction = TickAction.TestRequest;
-                                m_lastTestRequestAt = now;
+                                LastTestRequestAt = now;
                             }
                         }
                     }
