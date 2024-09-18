@@ -28,6 +28,13 @@ namespace PureFix.Buffer.Ascii
                     Locations.Reset();
                 }
 
+                public string? GetStringAt(int pos)
+                {
+                    if (pos < 0 || pos >= Locations.Count) return null;
+                    var l = Locations[pos];
+                    return Buffer.GetString(l.Start, l.End);
+                }
+
                 // used for fix log to return string with a write delimiter 
                 public string AsString(byte delim)
                 {

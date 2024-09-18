@@ -146,9 +146,12 @@ namespace PureFIix.Test.Ascii
         private static readonly TagPos BeginString = new() { Position = 0, Tag = 8, Start = 2, Len = 8 };
         private static readonly TagPos BodyLength = new() { Position = 1, Tag = 9, Start = 12, Len = 7 };
         private static readonly TagPos MsgType = new() { Position = 2, Tag = 35, Start = 22, Len = 2 };
+        private static readonly TagPos SenderCompID = new() { Position = 3, Tag = 49, Start = 27, Len = 14 };
         
-        // 012345678901234567899123
-        // 8=FIX.4.4|9=000078|35=D|
+// SenderCompID
+
+// 012345678901234567890123
+// 8=FIX.4.4|9=000078|35=D|
 
         [Test]
         public void Encode_Header_BeginString_Test()
@@ -157,6 +160,8 @@ namespace PureFIix.Test.Ascii
             var beginString = storage.BeginStringLoc;
             Assert.That(beginString, Is.Not.Null);
             Assert.That(beginString, Is.EqualTo(BeginString));
+            var v = storage.GetStringAt(0);
+            Assert.That(v, Is.EqualTo("FIX.4.4"));
         }
 
         [Test]
@@ -166,6 +171,8 @@ namespace PureFIix.Test.Ascii
             var bodyLength = storage.BodyLengthLoc;
             Assert.That(bodyLength, Is.Not.Null);
             Assert.That(bodyLength, Is.EqualTo(BodyLength));
+            var v = storage.GetStringAt(1);
+            Assert.That(v, Is.EqualTo("000078"));
         }
 
         [Test]
@@ -175,6 +182,18 @@ namespace PureFIix.Test.Ascii
             var msgType = storage.MsgTypeLoc;
             Assert.That(msgType, Is.Not.Null);
             Assert.That(msgType, Is.EqualTo(MsgType));
+            var v = storage.GetStringAt(2);
+            Assert.That(v, Is.EqualTo("D"));
+        }
+
+        [Test]
+        public void Encode_Header_SenderCompID_Test()
+        {
+            var storage = Make_Encode_Header();
+            var senderCompID = storage.Locations[3];
+            Assert.That(senderCompID, Is.EqualTo(SenderCompID));
+            var v = storage.GetStringAt(3);
+            Assert.That(v, Is.EqualTo("init-tls-comp"));
         }
 
     }
