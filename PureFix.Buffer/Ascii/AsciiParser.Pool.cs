@@ -32,7 +32,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (pos < 0 || pos >= Locations.Count) return null;
                     var l = Locations[pos];
-                    return Buffer.GetString(l.Start, l.End);
+                    return Buffer.GetString(l.Start, l.End + 1);
                 }
 
                 // used for fix log to return string with a write delimiter 
@@ -44,7 +44,7 @@ namespace PureFix.Buffer.Ascii
                     {
                         var l = Locations[i];
                         b.SetPos(l.End + 1);
-                        b.SwitchChar(delim);
+                        b.WriteChar(delim);
                     }
 
                     b.SetPos(p);
@@ -64,7 +64,8 @@ namespace PureFix.Buffer.Ascii
                     var writePtr = bodyLenPos.Value.Start;
                     // measure from start of the msgtag field - which is 
                     // the end of previous field (bodylen) plus the delim
-                    var bodyLen = pos - (bodyLenPos.Value.End + 1);
+                    // end is last value position need to go forwards the delim
+                    var bodyLen = pos - (bodyLenPos.Value.End + 2);
                     Buffer.SetPos(writePtr);
                     Buffer.WriteLeadingZeroes(bodyLen, width);
                     Buffer.SetPos(pos);

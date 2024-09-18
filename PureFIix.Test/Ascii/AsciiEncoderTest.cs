@@ -143,12 +143,13 @@ namespace PureFIix.Test.Ascii
             Assert.That(s, Is.EqualTo("8=FIX.4.4|9=000078|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|"));
         }
 
-        private static readonly TagPos BeginString = new() { Position = 0, Tag = 8, Start = 2, Len = 8 };
-        private static readonly TagPos BodyLength = new() { Position = 1, Tag = 9, Start = 12, Len = 7 };
-        private static readonly TagPos MsgType = new() { Position = 2, Tag = 35, Start = 22, Len = 2 };
-        private static readonly TagPos SenderCompID = new() { Position = 3, Tag = 49, Start = 27, Len = 14 };
-        private static readonly TagPos TargetCompID = new() { Position = 4, Tag = 56, Start = 44, Len = 16 };
-
+        private static readonly TagPos BeginString = new() { Position = 0, Tag = 8, Start = 2, Len = 7 };
+        private static readonly TagPos BodyLength = new() { Position = 1, Tag = 9, Start = 12, Len = 6 };
+        private static readonly TagPos MsgType = new() { Position = 2, Tag = 35, Start = 22, Len = 1 };
+        private static readonly TagPos SenderCompID = new() { Position = 3, Tag = 49, Start = 27, Len = 13 };
+        private static readonly TagPos TargetCompID = new() { Position = 4, Tag = 56, Start = 44, Len = 15 };
+        private static readonly TagPos MsgSeqNum = new() { Position = 5, Tag = 34, Start = 63, Len = 1 };
+        
         // 012345678901234567890123
         // 8=FIX.4.4|9=000078|35=D|
 
@@ -203,6 +204,16 @@ namespace PureFIix.Test.Ascii
             Assert.That(senderCompID, Is.EqualTo(TargetCompID));
             var v = storage.GetStringAt(4);
             Assert.That(v, Is.EqualTo("accept-tls-comp"));
+        }
+
+        [Test]
+        public void Encode_Header_MsgSeqNum_Test()
+        {
+            var storage = Make_Encode_Header();
+            var msgSeqNum = storage.Locations[5];
+            Assert.That(msgSeqNum, Is.EqualTo(MsgSeqNum));
+            var v = storage.GetStringAt(5);
+            Assert.That(v, Is.EqualTo("1"));
         }
 
     }
