@@ -147,11 +147,10 @@ namespace PureFIix.Test.Ascii
         private static readonly TagPos BodyLength = new() { Position = 1, Tag = 9, Start = 12, Len = 7 };
         private static readonly TagPos MsgType = new() { Position = 2, Tag = 35, Start = 22, Len = 2 };
         private static readonly TagPos SenderCompID = new() { Position = 3, Tag = 49, Start = 27, Len = 14 };
-        
-// SenderCompID
+        private static readonly TagPos TargetCompID = new() { Position = 4, Tag = 56, Start = 44, Len = 16 };
 
-// 012345678901234567890123
-// 8=FIX.4.4|9=000078|35=D|
+        // 012345678901234567890123
+        // 8=FIX.4.4|9=000078|35=D|
 
         [Test]
         public void Encode_Header_BeginString_Test()
@@ -194,6 +193,16 @@ namespace PureFIix.Test.Ascii
             Assert.That(senderCompID, Is.EqualTo(SenderCompID));
             var v = storage.GetStringAt(3);
             Assert.That(v, Is.EqualTo("init-tls-comp"));
+        }
+
+        [Test]
+        public void Encode_Header_TargetCompID_Test()
+        {
+            var storage = Make_Encode_Header();
+            var senderCompID = storage.Locations[4];
+            Assert.That(senderCompID, Is.EqualTo(TargetCompID));
+            var v = storage.GetStringAt(4);
+            Assert.That(v, Is.EqualTo("accept-tls-comp"));
         }
 
     }
