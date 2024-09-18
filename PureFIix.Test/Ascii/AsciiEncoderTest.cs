@@ -144,14 +144,38 @@ namespace PureFIix.Test.Ascii
         }
 
         private static readonly TagPos BeginString = new() { Position = 0, Tag = 8, Start = 2, Len = 8 };
+        private static readonly TagPos BodyLength = new() { Position = 1, Tag = 9, Start = 12, Len = 7 };
+        private static readonly TagPos MsgType = new() { Position = 2, Tag = 35, Start = 22, Len = 2 };
+        
+        // 012345678901234567899123
+        // 8=FIX.4.4|9=000078|35=D|
 
         [Test]
-        public void Encode_Header_Locations_Test()
+        public void Encode_Header_BeginString_Test()
         {
             var storage = Make_Encode_Header();
             var beginString = storage.BeginStringLoc;
             Assert.That(beginString, Is.Not.Null);
             Assert.That(beginString, Is.EqualTo(BeginString));
         }
+
+        [Test]
+        public void Encode_Header_BodyLength_Test()
+        {
+            var storage = Make_Encode_Header();
+            var bodyLength = storage.BodyLengthLoc;
+            Assert.That(bodyLength, Is.Not.Null);
+            Assert.That(bodyLength, Is.EqualTo(BodyLength));
+        }
+
+        [Test]
+        public void Encode_Header_MsgType_Test()
+        {
+            var storage = Make_Encode_Header();
+            var msgType = storage.MsgTypeLoc;
+            Assert.That(msgType, Is.Not.Null);
+            Assert.That(msgType, Is.EqualTo(MsgType));
+        }
+
     }
 }
