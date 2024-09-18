@@ -47,11 +47,12 @@ namespace PureFix.Buffer.Ascii
 
                 public void PatchBodyLength(int width)
                 {
-                    var msgTypePos = Locations[2].Start;
                     var bodyLenPos = Locations[1];
                     var pos = Buffer.Pos;
                     var writePtr = bodyLenPos.Start;
-                    var bodyLen = pos - msgTypePos;
+                    // measure from start of the msgtag field - which is 
+                    // the end of previous field (bodylen) plus the delim
+                    var bodyLen = pos - (bodyLenPos.End + 1);
                     Buffer.SetPos(writePtr);
                     Buffer.WriteLeadingZeroes(bodyLen, width);
                     Buffer.SetPos(pos);

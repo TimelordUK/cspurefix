@@ -79,6 +79,14 @@ namespace PureFIix.Test.Ascii
             Assert.That(trailer2.CheckSum, Is.EqualTo("012"));
         }
 
+        (IFixWriter writer, Pool.Storage storage) GetWriter()
+        {
+            var pool = new Pool();
+            var storage = pool.Rent();
+            var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+            return (writer, storage);
+        }
+
         [Test]
         public void Create_Session_Header_Test()
         {
@@ -86,12 +94,26 @@ namespace PureFIix.Test.Ascii
             var factory = new Fix44SessionMessageFactory(session);
             var header = factory.Header(MsgTypeValues.OrderSingle,1, new DateTime(2024, 1, 1));
             Assert.That(header, Is.Not.Null);
-            var pool = new Pool();
-            var storage = pool.Rent();
-            var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+            var (writer, storage) = GetWriter();
             header.Encode(writer);
             var s = storage.AsString(AsciiChars.Pipe);
             Assert.That(s, Is.EqualTo("8=FIX.4.4|9=100001|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|"));
+        }
+
+        [Test]
+        public void Patch_BodyLen_Header_Test()
+        {
+            var session = GetDescription();
+            var factory = new Fix44SessionMessageFactory(session);
+            var header = factory.Header(MsgTypeValues.OrderSingle, 1, new DateTime(2024, 1, 1));
+            Assert.That(header, Is.Not.Null);
+            var (writer, storage) = GetWriter();
+            header.Encode(writer);
+            storage.PatchBodyLength(session.BodyLengthChars ?? 7);
+            var s = storage.AsString(AsciiChars.Pipe);
+            var expected = storage.Buffer.Pos - "8=FIX.4.4|9=100001|".Length;
+            var begin = "8=FIX.4.4|9=000078|";
+            Assert.That(s, Does.StartWith(begin));
         }
 
         [Test]
