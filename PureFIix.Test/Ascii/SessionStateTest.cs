@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Transport.Session;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFIix.Test.Ascii
 {
@@ -30,6 +32,23 @@ namespace PureFIix.Test.Ascii
         {
             var action = m_state.CalcAction(m_now);
             Assert.That(action, Is.EqualTo(TickAction.Nothing));
+        }
+
+        [Test]
+        public void Heartbeat_Test()
+        {
+            Assert.That(m_state.Now, Is.Not.Null);
+            var next = m_state.Now.Value.Add(TimeSpan.FromSeconds(31));
+            m_state.LastReceivedAt = next;
+            var action = m_state.CalcAction(next);
+            Assert.Multiple(() =>
+            {
+                Assert.That(m_state.TimeToDie, Is.False);
+                Assert.That(m_state.TimeToHeartbeat, Is.True);
+                Assert.That(m_state.TimeToTerminate, Is.False);
+                Assert.That(m_state.TimeToTestRequest, Is.False);
+                Assert.That(action, Is.EqualTo(TickAction.Heartbeat));
+            });
         }
     }
 }

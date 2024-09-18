@@ -33,18 +33,10 @@ namespace PureFix.Transport.Session
         }
         private string? m_compID;
         private string? m_peerCompID;
-        private int? m_peerHeartBeatSecs;
-        public int? PeerHeartBeatSecs
-        {
-            get => m_peerHeartBeatSecs;
-            set => m_peerHeartBeatSecs = value;
-        }
-        private int? m_lastPeerMsgSeqNum;
-        public int? LastPeerMsgSeqNum
-        {
-            get => m_lastPeerMsgSeqNum;
-            set => m_lastPeerMsgSeqNum = value;
-        }
+        public int? PeerHeartBeatSecs { get; set; }
+
+        public int? LastPeerMsgSeqNum { get; set; }
+
         private readonly int? m_heartBeat;
         private SessionState m_state;
         private readonly int? m_waitLogoutConfirmSeconds;
@@ -54,13 +46,20 @@ namespace PureFix.Transport.Session
         private int? m_secondsSinceReceive = -1;
         private IStandardHeader? m_lastHeader;
 
+        public int LastSentSeqNum => m_lastHeader?.MsgSeqNum ?? 0;
+        public bool TimeToHeartbeat => m_secondsSinceSent >= m_heartBeat;
+        public bool TimeToTerminate => m_secondsSinceReceive >= 2.5 * PeerHeartBeatSecs;
+        public bool TimeToDie => m_secondsSinceLogoutSent > m_waitLogoutConfirmSeconds ||
+                                 m_secondsSinceLogoutSent > m_stopSeconds;
+        public bool TimeToTestRequest => m_secondsSinceReceive >= 1.5 * PeerHeartBeatSecs;
+
         public FixSessionState(FixSessionStateArgs args)
         {
             m_heartBeat = args.HeartBeat;
-            m_state = SessionState.Idle;
+            m_state = args.State ?? SessionState.Idle;
             m_waitLogoutConfirmSeconds = args.WaitLogoutConfirmSeconds;
             m_stopSeconds = args.StopSeconds;
-            m_lastPeerMsgSeqNum = args.LastPeerMsgSeqNum;
+            LastPeerMsgSeqNum = args.LastPeerMsgSeqNum;
         }
 
         public void Reset(int lastPeerMsgSeqNum)
@@ -71,10 +70,10 @@ namespace PureFix.Transport.Session
             m_secondsSinceLogoutSent = -1;
             m_secondsSinceSent = -1;
             m_secondsSinceReceive = -1;
-            m_peerHeartBeatSecs = 0;
+            PeerHeartBeatSecs = 0;
             m_logoutSentAt = null;
             m_nextTickAction = TickAction.Nothing;
-            m_lastPeerMsgSeqNum = lastPeerMsgSeqNum;
+            LastPeerMsgSeqNum = lastPeerMsgSeqNum;
             m_lastHeader = null;
         }
 
@@ -87,18 +86,18 @@ namespace PureFix.Transport.Session
             buffer.AppendFormat($"state = {m_state}, ");
             buffer.AppendFormat($"nextTickAction = {m_nextTickAction}, ");
             buffer.AppendFormat($"now = ${DateAsString(m_now)}, ");
-            buffer.AppendFormat($"timeToDie = ${TimeToDie()}, ");
-            buffer.AppendFormat($"timeToHeartbeat = ${TimeToHeartbeat()}, ");
-            buffer.AppendFormat($"timeToTerminate = ${TimeToTerminate()}, ");
-            buffer.AppendFormat($"timeToTestRequest = ${TimeToTestRequest()}, ");
+            buffer.AppendFormat($"timeToDie = ${TimeToDie}, ");
+            buffer.AppendFormat($"timeToHeartbeat = ${TimeToHeartbeat}, ");
+            buffer.AppendFormat($"timeToTerminate = ${TimeToTerminate}, ");
+            buffer.AppendFormat($"timeToTestRequest = ${TimeToTestRequest}, ");
             buffer.AppendFormat($"lastReceivedAt = ${DateAsString(m_lastReceivedAt)}, ");
             buffer.AppendFormat($"LastSentAt = ${DateAsString(m_lastSentAt)}, ");
             buffer.AppendFormat($"lastTestRequestAt = ${DateAsString(m_lastTestRequestAt)}, ");
             buffer.AppendFormat($"logoutSentAt = ${DateAsString(m_logoutSentAt)}, ");
-            buffer.AppendFormat($"peerHeartBeatSecs = ${m_peerHeartBeatSecs}, ");
+            buffer.AppendFormat($"peerHeartBeatSecs = ${PeerHeartBeatSecs}, ");
             buffer.AppendFormat($"peerCompId = ${m_peerCompID}, ");
-            buffer.AppendFormat($"lastPeerMsgSeqNum = ${m_lastPeerMsgSeqNum}, ");
-            buffer.AppendFormat($"LastSentSeqNum = ${LastSentSeqNum()}, ");
+            buffer.AppendFormat($"lastPeerMsgSeqNum = ${LastPeerMsgSeqNum}, ");
+            buffer.AppendFormat($"LastSentSeqNum = ${LastSentSeqNum}, ");
             buffer.AppendFormat($"secondsSinceLogoutSent = ${m_secondsSinceLogoutSent}, ");
             buffer.AppendFormat($"secondsSinceSent = ${m_secondsSinceSent}, ");
             buffer.AppendFormat($"secondsSinceReceive = ${m_secondsSinceReceive}");
@@ -106,32 +105,7 @@ namespace PureFix.Transport.Session
             return buffer.ToString();
         }
 
-        public int LastSentSeqNum()
-        {
-            return m_lastHeader?.MsgSeqNum ?? 0;
-        }
-
-        private bool TimeToHeartbeat()
-        {
-            return m_secondsSinceSent >= m_heartBeat;
-        }
-
-        private bool TimeToTerminate()
-        {
-            return m_secondsSinceReceive >= 2.5 * m_peerHeartBeatSecs;
-        }
-
-        private bool TimeToDie()
-        {
-            return m_secondsSinceLogoutSent > m_waitLogoutConfirmSeconds ||
-                   m_secondsSinceLogoutSent > m_stopSeconds;
-        }
-
-        private bool TimeToTestRequest()
-        {
-            return m_secondsSinceReceive >= 1.5 * m_peerHeartBeatSecs;
-        }
-
+        
         public static string DateAsString(DateTime? date)
         {
             return date == null ? "na" : date.Value.ToString("HH:mm:ss.fff");
@@ -155,7 +129,7 @@ namespace PureFix.Transport.Session
                 case SessionState.WaitingLogoutConfirm:
                 case SessionState.ConfirmingLogout:
                 {
-                    if (TimeToDie())
+                    if (TimeToDie)
                     {
                         m_nextTickAction = TickAction.Stop;
                     }
@@ -167,7 +141,7 @@ namespace PureFix.Transport.Session
                 case SessionState.InitiationLogonReceived:
                 case SessionState.InitiationLogonResponse:
                 {
-                    if (TimeToHeartbeat())
+                    if (TimeToHeartbeat)
                     {
                             // have not sent anything for heartbeat period so let other side know still alive.
                             m_nextTickAction = TickAction.Heartbeat;
@@ -175,11 +149,11 @@ namespace PureFix.Transport.Session
                     else
                     {
                         // console.log(`${application.name}: secondsSinceSent = ${secondsSinceSent} secondsSinceReceive = ${secondsSinceReceive}`)
-                        if (TimeToTerminate())
+                        if (TimeToTerminate)
                         {
                             m_nextTickAction = TickAction.TerminateOnError;
                         }
-                        else if (TimeToTestRequest())
+                        else if (TimeToTestRequest)
                         {
                             if (m_lastTestRequestAt == null)
                             {
@@ -205,11 +179,11 @@ namespace PureFix.Transport.Session
                 : -1;
 
             m_secondsSinceSent = m_lastSentAt != null
-                ? (int)time.TotalSeconds - (int)m_lastSentAt.Value.TimeOfDay.TotalMilliseconds
+                ? (int)time.TotalSeconds - (int)m_lastSentAt.Value.TimeOfDay.TotalSeconds
                 : 0;
 
             m_secondsSinceReceive = m_lastReceivedAt != null
-                ? (int)time.TotalSeconds - (int)m_lastReceivedAt.Value.TimeOfDay.TotalMilliseconds
+                ? (int)time.TotalSeconds - (int)m_lastReceivedAt.Value.TimeOfDay.TotalSeconds
                 : 0;
         }
     }
