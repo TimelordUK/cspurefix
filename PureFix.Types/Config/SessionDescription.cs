@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace PureFix.Types.Config
 {
-    public class SessionDescription
+
+
+    public class SessionDescription : ISessionDescription
     {
         public MsgApplication? Application { get; set; }
         public string? Name { get; set; }

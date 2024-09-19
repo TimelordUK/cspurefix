@@ -11,6 +11,6 @@ namespace PureFix.Buffer
 {
     public interface IMessageParser
     {
-        void ParseFrom(ReadOnlySpan<byte> readFrom, Action<int, MsgView>? onView, Action<ElasticBuffer>? onDecode = null);
+        void ParseFrom(ReadOnlySpan<byte> readFrom, Action<int, MsgView>? onView, Action<StoragePool.Storage>? onDecode = null);
     }
 }

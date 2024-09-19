@@ -31,21 +31,24 @@ namespace PureFix.Transport.Session
         protected bool m_manageSession;
         protected bool m_logReceivedMessages;
         protected IFixTransport m_transport;
+        protected IFixConfig m_config;
 
-        protected FixSession(IFixDefinitions definitions, SessionDescription sessionDescription, IFixTransport transport, IMessageParser parser, IMessageEncoder encoder, ISessionMessageFactory messageFactory, IFixClock clock, ILogFactory logFactory)
+        protected FixSession(IFixConfig config, IFixTransport transport, IMessageParser parser, IMessageEncoder encoder, ISessionMessageFactory messageFactory, IFixClock clock)
         {
+            m_config = config;
             m_transport = transport;
             m_logReceivedMessages = true;
             m_manageSession = true;
             m_clock = clock;
-            Definitions = definitions;
+            Definitions = config.Definitions;
             m_factory = messageFactory;
             m_parser = parser;
             m_encoder = encoder;
+            var sessionDescription = config.Description;
             if (sessionDescription.Application == null)
                 throw new InvalidDataException("no application provided in session config");
             m_me = sessionDescription.Application.Name ?? "me";
-            m_logger = logFactory.MakeLogger($"{m_me}:FixSession");
+            m_logger = config.LogFactory.MakeLogger($"{m_me}:FixSession");
             m_initiator = sessionDescription.Application.Type == "initiator";
             m_acceptor = !m_initiator;
             m_checkMsgIntegrity = m_acceptor;
@@ -129,24 +132,116 @@ namespace PureFix.Transport.Session
             m_parser.ParseFrom(buffer, RxOnMsg, OnFixLog);
         }
 
-        protected abstract void OnFixLog(ElasticBuffer storage);
+        protected void OnFixLog(StoragePool.Storage storage)
+        {
+            var decoded = storage.AsString(AsciiChars.Pipe);
+            var msgType = storage.GetStringAt(3);
+            if (msgType == null) return;
+            OnDecoded(msgType, decoded);
+        }
         
         private void RxOnMsg(int i, MsgView view)
         {
-            var asciiView = (AsciiView)view;
             if (view.Structure == null) return;
 
             var msgType = view.Segment?.Set?.Name;
             if (msgType == null) return;
             if (m_logReceivedMessages)
             {
-                m_logger?.Info($"{msgType}: {asciiView}");
+                m_logger?.Info($"{msgType}: {view}");
             }
+
+            if (m_manageSession)
+            {
+                OnMsg(msgType, view);
+            }
+            else
+            {
+                CheckForwardMessage(msgType, view);
+            }
+        }
+
+        private void CheckForwardMessage(string msgType, MsgView view)
+        {
+            m_logger?.Info($"forwarding msgType = '{msgType}' to application");
+            SetState(SessionState.ActiveNormalSession);
+            OnApplicationMsg(msgType, view);
         }
 
         public void Done()
         {
         }
+
+        /**
+           * dispatches a message into the subclass that inherits from FixSession. The view contains
+           * the parsed message which has utility methods such as toObject(). The Ascii session provides
+           * an implementation to handle admin level messages such as logon, hearbeat and resest request.
+           * Any application messges are dispatched via onApplicationMsg where the application can action
+           * the message.
+           * @param msgType the string based msg type the view represents
+           * @param view container for all parsed fields representing the received message.
+           * @protected
+           */
+        protected abstract void OnMsg(string msgType, MsgView view);
+
+        /**
+         * the parsed txt recieved from the peer application.  Given the applicaton is
+         * responible for maintaining the fix log, this can be used to persist all received
+         * messages.
+         * @param msgType the string based msg type the view represents
+         * @param txt the received message where for Ascii, the wire SOH delimeter is replaced
+         * with that specified in the config e.g. '|'
+         * @protected
+         */
+        protected abstract void OnDecoded(string msgType, string txt);
+
+        /**
+         * the formatted txt sent to the peer application as an outbound message.  Given the applicaton is
+         * responible for maintaining the fix log, this can be used to persist all transmitted
+         * messages. use msgType for example to persist only trade capture messages to database
+         * @param msgType the msg type representing the message.
+         * @param txt the sent message where for Ascii, the wire SOH delimeter is replaced
+         * with that specified in the config e.g. '|'
+         * @protected
+         */
+        protected abstract void OnEncoded(string msgType, string txt);
+
+        /**
+         * typically all session level messages are handled by AsciiSession and these are
+         * application level such as MarketDataRefresh. This will represent the applications main
+         * work functiono where responses can be sent back to the peer. If manageSession has been set false
+         * (not recommended) all messages are sent to this function
+         * @param msgType the msg type representing the message.
+         * @param view a wrapper containing the parsed message received.
+         * @protected
+         */
+        protected abstract void OnApplicationMsg(string msgType, MsgView view);
+
+        /**
+         * at this point the application is ready to send messages - peer login has been achieved
+         * and the session can be considered ready to use. In the case of an initiator the application
+         * may at this point send for security definitions or send market data subscriptions
+         * @param view the login message causing session to be ready
+         * @protected
+         */
+        protected abstract void OnReady(MsgView view);
+
+        /**
+         * Inform application this session has now ended - either from logout or connection dropped
+         * @param error if session has been terminated via an error it is provided
+         * @protected
+         */
+        protected abstract void OnStopped(Exception error);
+
+        /**
+         * Placeholder infomring the application of a peer login attempt.
+         * @param view the login message
+         * @param user extracted user from message
+         * @param password extracted password from the message.
+         * @protected
+         */
+
+        protected abstract bool OnLogon(MsgView view, string user, string password);
 
         public void End()
         {

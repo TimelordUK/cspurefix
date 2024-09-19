@@ -42,9 +42,9 @@ namespace PureFix.Buffer.Ascii
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
 
-        private void Msg(int ptr, Action<int, AsciiView>? onMsg, Action<ElasticBuffer>? onDecode)
+        private void Msg(int ptr, Action<int, AsciiView>? onMsg, Action<StoragePool.Storage>? onDecode)
         {
-            if (_state.Storage != null) onDecode?.Invoke(_state.Storage.Buffer);
+            if (_state.Storage != null) onDecode?.Invoke(_state.Storage);
             var startTicks = Stopwatch.GetTimestamp();
             var view = GetView(ptr);
             var elapsed = Stopwatch.GetElapsedTime(startTicks);
@@ -83,7 +83,7 @@ namespace PureFix.Buffer.Ascii
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.
-        public void ParseFrom(ReadOnlySpan<byte> readFrom, Action<int, MsgView>? onView, Action<ElasticBuffer>? onDecode = null)
+        public void ParseFrom(ReadOnlySpan<byte> readFrom, Action<int, MsgView>? onView, Action<StoragePool.Storage>? onDecode = null)
         {
             const byte eq = AsciiChars.Eq;
             const byte zero = AsciiChars.Zero;
