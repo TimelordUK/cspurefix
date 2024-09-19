@@ -7,54 +7,41 @@ using System.Threading.Tasks;
 
 namespace PureFIix.Test.Env
 {
-    public class TestLogger : ILogFactory
+    public class TestLogger : ILogger
     {
-        private readonly IFixClock _clock;
-        public TestLogger(IFixClock? clock = null)
+        public IReadOnlyList<string> Entries => _log;
+        private string Me { get; }
+        private IFixClock Clock { get; }
+        public TestLogger(string name, IFixClock clock)
         {
-            _clock = clock ?? new RealtimeClock();
+            Me = name;
+            Clock = clock;
         }
 
-        private class Logger : ILogger
+        private List<string> _log = [];
+        public void Info(string messageTemplate)
         {
-            private string Me { get; }
-            private IFixClock Clock { get; }
-            public Logger(string name, IFixClock clock)
-            {
-                Me = name;
-                Clock = clock;
-            }
-
-            private List<string> _log = [];
-            public void Info(string messageTemplate)
-            {
-                AddEntry("I", messageTemplate);
-            }
-
-            public void Warn(string messageTemplate)
-            {
-                AddEntry("W", messageTemplate);
-            }
-
-            public void Debug(string messageTemplate)
-            {
-                AddEntry("D", messageTemplate);
-            }
-
-            public void Error(Exception ex)
-            {
-                AddEntry("E", ex.ToString());
-            }
-
-            private void AddEntry(string level, string msg)
-            {
-                _log.Add($"{level}:[{Me}] {Clock.Current.ToLongTimeString()} {Environment.CurrentManagedThreadId} {msg}");
-            }
+            AddEntry("I", messageTemplate);
         }
 
-        public ILogger MakeLogger(string name)
+        public void Warn(string messageTemplate)
         {
-            return new Logger(name, _clock);
+            AddEntry("W", messageTemplate);
+        }
+
+        public void Debug(string messageTemplate)
+        {
+            AddEntry("D", messageTemplate);
+        }
+
+        public void Error(Exception ex)
+        {
+            AddEntry("E", ex.ToString());
+        }
+
+        private void AddEntry(string level, string msg)
+        {
+            _log.Add($"{level}:[{Me}] {Clock.Current.ToLongTimeString()} {Environment.CurrentManagedThreadId} {msg}");
         }
     }
 }
