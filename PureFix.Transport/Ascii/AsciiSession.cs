@@ -13,7 +13,7 @@ namespace PureFix.Transport.Ascii
 {
     public abstract class AsciiSession : FixSession
     {
-        protected AsciiSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, ISessionMessageFactory messageFactory, IFixClock clock) : base(config, transport, parser, encoder, messageFactory, clock)
+        protected AsciiSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, IFixClock clock) : base(config, transport, parser, encoder, clock)
         {
         }
 

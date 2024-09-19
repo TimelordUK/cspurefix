@@ -50,12 +50,16 @@ namespace PureFIix.Test.Ascii
             var clock = new TestClock();
             var factory = new TestLoggerFactory(clock);
             var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator.json"));
-            Assert.That(config, Is.Not.Null);
-            Assert.That(config.Description, Is.Not.Null);
-            Assert.That(config.Description.Application, Is.Not.Null);
-            Assert.That(config.Definitions, Is.Not.Null);
-            Assert.That(config.Definitions.Message.ContainsKey("0"));
-            Assert.That(config.Definitions.Simple.ContainsKey("BeginString"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(config, Is.Not.Null);
+                Assert.That(config.Description, Is.Not.Null);
+                Assert.That(config.Description.Application, Is.Not.Null);
+                Assert.That(config.Definitions, Is.Not.Null);
+                Assert.That(config.Definitions.Message.ContainsKey("0"));
+                Assert.That(config.Definitions.Simple.ContainsKey("BeginString"));
+                Assert.That(config.MessageFactory, Is.Not.Null);
+            });
         }
     }
 }

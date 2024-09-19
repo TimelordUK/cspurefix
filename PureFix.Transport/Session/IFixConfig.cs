@@ -11,5 +11,6 @@ namespace PureFix.Transport.Session
         ILogFactory LogFactory { get; }
         IFixDefinitions Definitions { get; }
         ISessionDescription Description { get; }
+        ISessionMessageFactory MessageFactory { get; }
     }
 }

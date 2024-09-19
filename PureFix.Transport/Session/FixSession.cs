@@ -105,7 +105,7 @@ namespace PureFix.Transport.Session
             }
         }
 
-        protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, ISessionMessageFactory messageFactory, IFixClock clock)
+        protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
         {
             m_config = config;
             m_transport = transport;
@@ -113,7 +113,7 @@ namespace PureFix.Transport.Session
             m_manageSession = true;
             m_clock = clock;
             Definitions = config.Definitions;
-            m_factory = messageFactory;
+            m_factory = config.MessageFactory;
             m_parser = parser;
             m_encoder = encoder;
             var sessionDescription = config.Description;
