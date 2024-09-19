@@ -42,7 +42,7 @@ namespace PureFix.Types
             return new StandardTrailerComponent() { CheckSum = checksum.ToString("D3") };
         }
 
-        public virtual IFixMessage? Logon(string userRequestId, bool isResponse)
+        public virtual IFixMessage? Logon(string? userRequestId, bool? isResponse)
         {
             return new Logon
             {

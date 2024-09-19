@@ -27,7 +27,7 @@ namespace PureFix.Benchmarks
         private readonly FixDefinitions _FixDefinitions;
         private readonly AsciiParser _Parser;
 
-        private readonly Action<int, AsciiView> NoAction = (index, view) => {};
+        private readonly Action<int, MsgView> NoAction = (index, view) => {};
 
         public MessageParsingBenchmarks()
         {

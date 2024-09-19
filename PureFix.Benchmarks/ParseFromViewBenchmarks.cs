@@ -43,7 +43,7 @@ namespace PureFix.Benchmarks
             AsciiView? view = null;
 
             var parser = new AsciiParser(_FixDefinitions);
-            parser.ParseFrom(message, (_, v) => view = v);
+            parser.ParseFrom(message, (_, v) => view = (AsciiView)v);
 
             return view!;
         }

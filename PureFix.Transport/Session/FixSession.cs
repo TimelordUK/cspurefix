@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
@@ -25,10 +26,14 @@ namespace PureFix.Transport.Session
         protected ISessionMessageFactory m_factory;
         protected IFixDefinitions Definitions { get; set; }
         protected IFixClock m_clock;
-        protected AsciiParser m_parser;
+        protected IMessageParser m_parser;
+        protected bool m_manageSession;
+        protected bool m_logReceivedMessages;
 
-        protected FixSession(IFixDefinitions definitions, SessionDescription sessionDescription, AsciiParser parser, ISessionMessageFactory messageFactory, IFixClock clock, ILogFactory logFactory)
+        protected FixSession(IFixDefinitions definitions, SessionDescription sessionDescription, IMessageParser parser, ISessionMessageFactory messageFactory, IFixClock clock, ILogFactory logFactory)
         {
+            m_logReceivedMessages = true;
+            m_manageSession = true;
             m_clock = clock;
             Definitions = definitions;
             m_factory = messageFactory;
@@ -109,12 +114,24 @@ namespace PureFix.Transport.Session
 
         public void OnRx(ReadOnlySpan<byte> buffer)
         {
-            m_parser.ParseFrom(buffer, OnMsg, OnFixLog);
+            m_parser.ParseFrom(buffer, RxOnMsg, OnFixLog);
         }
-        protected abstract void OnFixLog(AsciiParser.Pool.Storage storage);
+
+        protected abstract void OnFixLog(ElasticBuffer storage);
         
-        private void OnMsg(int i, AsciiView view)
+        private void RxOnMsg(int i, MsgView view)
         {
+            var asciiView = (AsciiView)view;
+            if (view.Structure == null) return;
+            if (view.Segment == null) return;
+            if (view.Segment.Set == null) return;
+
+            var msgType = view.Segment?.Set.Name;
+            if (msgType == null) return;
+            if (m_logReceivedMessages)
+            {
+                m_logger?.Info($"{msgType}: {asciiView}");
+            }
         }
 
         public void Done()

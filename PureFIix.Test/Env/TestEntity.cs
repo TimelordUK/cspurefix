@@ -36,7 +36,7 @@ namespace PureFIix.Test.Env
         {
             var views = new List<AsciiView>(10000);
             var b = Encoding.UTF8.GetBytes(s);
-            Parser.ParseFrom(b, (i, view) => views.Add(view));
+            Parser.ParseFrom(b, (i, view) => views.Add((AsciiView)view));
             return views;
         }
 
@@ -49,7 +49,7 @@ namespace PureFIix.Test.Env
             while (span.Length > 0)
             {
                 var want = Math.Min(span.Length, (iteration % 10) + 1);
-                Parser.ParseFrom(span[..want], (i, view) => views.Add(view));
+                Parser.ParseFrom(span[..want], (i, view) => views.Add((AsciiView)view));
                 span = span[want..];
                 ++iteration;
             }
@@ -114,11 +114,11 @@ namespace PureFIix.Test.Env
 
             // Move the creating of the action outside the stopwatch code
             // to avoid recording the time to allocate the memory for it
-            Action<int, AsciiView> action = (i, view) => msgs.Add(view);
+            void Action(int i, MsgView view) => msgs.Add((AsciiView)view);
             //_testEntity.Parser.ParseFrom(b, action);
 
             sw.Start();
-            Parser.ParseFrom(b, action);
+            Parser.ParseFrom(b, Action);
             //_testEntity.Parser.ParseFrom(b, null);
             sw.Stop();
             Assert.That(msgs, Has.Count.EqualTo(count));
