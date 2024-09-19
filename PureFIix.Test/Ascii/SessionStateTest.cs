@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Transport.Session;
@@ -12,10 +13,12 @@ namespace PureFIix.Test.Ascii
     {
         private FixSessionState m_state;
         private DateTime m_now;
+
         [SetUp]
         public void Setup()
         {
-            m_state = new FixSessionState(new FixSessionStateArgs { HeartBeat = 30, State = SessionState.InitiationLogonResponse});
+            m_state = new FixSessionState(new FixSessionStateArgs
+                { HeartBeat = 30, State = SessionState.InitiationLogonResponse });
             m_now = new DateTime(2018, 1, 1, 20, 0, 0);
             m_state.Now = m_now;
             m_state.LastSentAt = m_now;
@@ -101,6 +104,29 @@ namespace PureFIix.Test.Ascii
                 Assert.That(m_state.TimeToTestRequest, Is.False);
                 Assert.That(action, Is.EqualTo(TickAction.Stop));
             });
+        }
+
+        public class Receiver : ISessionEventReciever
+        {
+            public void OnTimer()
+            {
+                Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnTimer {DateTime.Now:HH:mm:ss.fff}");
+            }
+
+            public void OnRx(ReadOnlySpan<byte> buffer)
+            {
+                Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnRx {DateTime.Now:HH:mm:ss.fff} {buffer.Length}");
+            }
+        }
+
+        [Test]
+        public async Task FixSession_Timer_Test()
+        {
+            var rx = new Receiver();
+            var cts = new CancellationTokenSource();
+            var dispatcher = new FixSession.TimerDispatcher();
+            await dispatcher.Dispatch(rx, TimeSpan.FromMilliseconds(50), cts.Token);
+            await Task.Delay(TimeSpan.FromMilliseconds(200), cts.Token);
         }
     }
 }

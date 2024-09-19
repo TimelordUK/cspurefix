@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
+using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
 using PureFix.Types.Config;
@@ -22,7 +25,7 @@ namespace PureFix.Transport.Session
         protected string? m_respondLogoutType;
         protected string m_requestLogonType;
         protected bool m_checkMsgIntegrity;
-        protected ILogger? m_logger;
+        protected ILogger? m_sessionLogger;
         protected ISessionMessageFactory m_factory;
         protected IFixDefinitions Definitions { get; set; }
         protected IFixClock m_clock;
@@ -30,10 +33,79 @@ namespace PureFix.Transport.Session
         protected IMessageEncoder m_encoder;
         protected bool m_manageSession;
         protected bool m_logReceivedMessages;
-        protected IFixTransport m_transport;
+        protected IMessageTransport? m_transport;
         protected IFixConfig m_config;
+        private CancellationToken? m_token;
 
-        protected FixSession(IFixConfig config, IFixTransport transport, IMessageParser parser, IMessageEncoder encoder, ISessionMessageFactory messageFactory, IFixClock clock)
+
+        public class TimerDispatcher
+        {
+            public Task Dispatch(ISessionEventReciever reciever, TimeSpan interval, CancellationToken token)
+            {
+                var timer = new PeriodicTimer(interval);
+                Task task = Task.Factory.StartNew(async () =>
+                    {
+                        while (!token.IsCancellationRequested)
+                        {
+                            await timer.WaitForNextTickAsync(token);
+                            reciever.OnTimer();
+                        }
+                    },
+                    TaskCreationOptions.LongRunning);
+                return task;
+            }
+        }
+
+        public class TransportDispatcher
+        {
+            private readonly IMessageTransport m_transport;
+
+            public TransportDispatcher(IMessageTransport transport)
+            {
+                m_transport = transport;
+            }
+
+            public Task Dispatch(ISessionEventReciever reciever, CancellationToken token)
+            {
+                // use a pool here
+                var buffer = new byte[50 * 1024];
+                Task task = Task.Factory.StartNew(async () =>
+                    {
+                        while (!token.IsCancellationRequested)
+                        {
+                            var received = await m_transport.ReceiveAsync(buffer, token);
+                            var trimmed = buffer[..received];
+                            reciever.OnRx(trimmed);
+                        }
+                    },
+                    TaskCreationOptions.LongRunning);
+                return task;
+            }
+        }
+
+
+        public class EventDispatcher
+        {
+            private readonly TimerDispatcher _timerDispatcher;
+            private readonly TransportDispatcher _transportDispatcher;
+
+            public EventDispatcher(IMessageTransport transport)
+            {
+                _timerDispatcher = new TimerDispatcher();
+                _transportDispatcher = new TransportDispatcher(transport);
+            }
+
+            public Task Dispatch(ISessionEventReciever receiver, CancellationToken token)
+            {
+                var tasks = new [] { 
+                    _timerDispatcher.Dispatch(receiver, TimeSpan.FromMilliseconds(1), token), 
+                    _transportDispatcher.Dispatch(receiver, token)
+                };
+                return Task.WhenAny(tasks);
+            }
+        }
+
+        protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, ISessionMessageFactory messageFactory, IFixClock clock)
         {
             m_config = config;
             m_transport = transport;
@@ -48,7 +120,7 @@ namespace PureFix.Transport.Session
             if (sessionDescription.Application == null)
                 throw new InvalidDataException("no application provided in session config");
             m_me = sessionDescription.Application.Name ?? "me";
-            m_logger = config.LogFactory.MakeLogger($"{m_me}:FixSession");
+            m_sessionLogger = config.LogFactory.MakeLogger($"{m_me}:FixSession");
             m_initiator = sessionDescription.Application.Type == "initiator";
             m_acceptor = !m_initiator;
             m_checkMsgIntegrity = m_acceptor;
@@ -68,12 +140,13 @@ namespace PureFix.Transport.Session
             m_requestLogonType = logonDefinition.MsgType;
             m_requestLogoutType = logoutDefinition.MsgType;
             m_respondLogoutType = logoutDefinition.MsgType;
+
         }
 
         private void AssignState(SessionState state)
         {
             var currentState = m_sessionState.State;
-            m_logger?.Info($"current state {currentState} ({currentState} moves to {state}");
+            m_sessionLogger?.Info($"current state {currentState} ({currentState} moves to {state}");
             m_sessionState.State = state;
         }
 
@@ -87,7 +160,7 @@ namespace PureFix.Transport.Session
                 case SessionState.Stopped:
                     if (currentState != SessionState.NetworkConnectionEstablished)
                     {
-                        m_logger?.Info($"ignoring request to change stat e as now already in {currentState}");
+                        m_sessionLogger?.Info($"ignoring request to change stat e as now already in {currentState}");
                     }
                     else
                     {
@@ -101,26 +174,126 @@ namespace PureFix.Transport.Session
             }
         }
 
-        public void SendLogon()
+        public async Task SendLogon()
         {
             if (m_requestLogonType == null)
                 throw new InvalidDataException("app session needs to assign m_requestLogonType");
             var lo = m_factory.Logon();
             if (lo != null)
             {
-                Send(m_requestLogonType, lo);
+                await Send(m_requestLogonType, lo);
             }
+        }
+
+        protected async Task SendLogout(string msg)
+        {
+            if (m_requestLogoutType == null)
+                throw new InvalidDataException("session needs m_requestLogoutType assigned");
+            m_sessionLogger?.Info($"sending logout with {msg}");
+            var lo = m_factory?.Logout(m_requestLogoutType, msg);
+            if (lo != null)
+            {
+                await Send(m_requestLogoutType, lo);
+            }
+        }
+        
+        protected async Task PeerLogout(MsgView view) {
+            var msg = view.GetString((int)MsgTag.Text);
+            var state = m_sessionState.State;
+            switch (state) {
+                case SessionState.WaitingLogoutConfirm:
+                {
+                    m_sessionLogger?.Info($"peer confirms logout Text = '{msg}'");
+                    Stop();
+                    break;
+                }
+
+                case SessionState.InitiationLogonResponse:
+                case SessionState.ActiveNormalSession:
+                case SessionState.InitiationLogonReceived:
+                {
+                    SetState(SessionState.ConfirmingLogout);
+                    m_sessionLogger?.Info($"peer initiates logout Text = '{msg}'");
+                    await SessionLogout();
+                    break;
+                }
+            }
+        }
+
+        protected async Task SessionLogout() {
+            if (m_sessionState.LogoutSentAt != null)
+            {
+                return;
+            }
+
+            switch (m_sessionState.State) {
+                case SessionState.ActiveNormalSession:
+                case SessionState.InitiationLogonResponse:
+                case SessionState.InitiationLogonReceived: {
+                    // this instance initiates logout
+                    SetState(SessionState.WaitingLogoutConfirm);
+                    m_sessionState.LogoutSentAt = m_clock.Current;
+                    var msg = $"{m_me} initiate logout";
+                    m_sessionLogger?.Info(msg);
+                    await SendLogout(msg);
+                    break;
+                }
+
+                case SessionState.ConfirmingLogout: {
+                    // this instance responds to log out
+                    SetState(SessionState.ConfirmingLogout);
+                    m_sessionState.LogoutSentAt = m_clock.Current;
+                    var msg = $"{m_me} confirming logout";
+                    m_sessionLogger?.Info(msg);
+                    await SendLogout(msg);
+                    break;
+                }
+
+                default:
+                {
+                    m_sessionLogger?.Info($"sessionLogout ignored as in state {m_sessionState.State}");
+                    break;
+                }
+            }
+        }
+
+        protected void Stop(Exception? error = null) {
+            if (m_sessionState.State == SessionState.Stopped)
+            {
+                return;
+            }
+            // this.stopTimer();
+            m_sessionLogger?.Info("stop: kill transport");
+            if (error != null)
+            {
+                m_sessionLogger?.Info($"stop: emit error ${error}");
+            }
+            
+            SetState(SessionState.Stopped);
+            OnStopped(error);
+            m_transport = null;
         }
 
         protected Task Send(string msgType, IFixMessage message)
         {
-            var storage = m_encoder.Encode(msgType, message);
-            if (storage == null) return Task.CompletedTask;
-            var t = m_transport.SendAsync(storage.AsBytes()).ContinueWith(_ =>
+            if (m_transport == null) return Task.CompletedTask;
+            switch (m_sessionState.State)
             {
-                m_encoder.Return(storage);
-            });
-            return t;
+                case SessionState.Stopped:
+                    m_sessionLogger?.Info($"can't send {msgType}, state is now {m_sessionState.State}");
+                    break;
+
+                default:
+                {
+                    if (m_token == null) return Task.CompletedTask;
+                    if (m_transport == null) return Task.CompletedTask;
+                        var storage = m_encoder.Encode(msgType, message);
+                    if (storage == null) return Task.CompletedTask;
+                    var t = m_transport.SendAsync(storage.AsBytes(), m_token.Value).ContinueWith(_ => { m_encoder.Return(storage); });
+                    return t;
+                }
+            }
+            return Task.CompletedTask;
         }
 
         public void OnTimer()
@@ -129,6 +302,7 @@ namespace PureFix.Transport.Session
 
         public void OnRx(ReadOnlySpan<byte> buffer)
         {
+            m_sessionLogger?.Debug($"OnRx {buffer.Length}");
             m_parser.ParseFrom(buffer, RxOnMsg, OnFixLog);
         }
 
@@ -148,7 +322,7 @@ namespace PureFix.Transport.Session
             if (msgType == null) return;
             if (m_logReceivedMessages)
             {
-                m_logger?.Info($"{msgType}: {view}");
+                m_sessionLogger?.Info($"{msgType}: {view}");
             }
 
             if (m_manageSession)
@@ -161,15 +335,52 @@ namespace PureFix.Transport.Session
             }
         }
 
+        public async Task Run(IMessageTransport transport, CancellationToken token)
+        {
+            if (m_transport != null)
+            {
+                m_sessionLogger?.Info("reset from previous transport");
+            }
+
+            m_token = token;
+            var dispatcher = new EventDispatcher(transport);
+            while (!token.IsCancellationRequested)
+            {
+                await dispatcher.Dispatch(this, token);
+            }
+        }
+
         private void CheckForwardMessage(string msgType, MsgView view)
         {
-            m_logger?.Info($"forwarding msgType = '{msgType}' to application");
+            m_sessionLogger?.Info($"forwarding msgType = '{msgType}' to application");
             SetState(SessionState.ActiveNormalSession);
             OnApplicationMsg(msgType, view);
         }
 
-        public void Done()
+        public async Task Done()
         {
+            switch (m_sessionState.State)
+            {
+                case SessionState.InitiationLogonResponse:
+                case SessionState.ActiveNormalSession:
+                case SessionState.InitiationLogonReceived:
+                {
+                    await SessionLogout();
+                    break;
+                }
+
+                case SessionState.Stopped:
+                    m_sessionLogger?.Info("done. session is now stopped");
+                    break;
+           
+                default:
+                {
+                    Stop();
+                    break;
+                }
+            }
+
+            m_sessionLogger?.Info($"done.check logout sequence state ${ m_sessionState.State}");
         }
 
         /**
@@ -231,7 +442,7 @@ namespace PureFix.Transport.Session
          * @param error if session has been terminated via an error it is provided
          * @protected
          */
-        protected abstract void OnStopped(Exception error);
+        protected abstract void OnStopped(Exception? error);
 
         /**
          * Placeholder infomring the application of a peer login attempt.

@@ -18,8 +18,5 @@ namespace PureFix.Transport.Session
         void OnRx(ReadOnlySpan<byte> buffer);
         // a message has been scanned and a set of tagpos produced - the structure and view 
         // have not yet beem computed, the applicaton should use this event to log the message.
-        void Done();
-        // a forced end i.e. the transport is disconnected if active, and the session is terminated.
-        void End();
     }
 }
