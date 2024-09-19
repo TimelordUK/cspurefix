@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
-using Microsoft.Extensions.ObjectPool;
+
 
 namespace PureFix.Buffer.Ascii
 {
@@ -42,8 +42,9 @@ namespace PureFix.Buffer.Ascii
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
 
-        private void Msg(int ptr, Action<int, AsciiView>? onMsg)
+        private void Msg(int ptr, Action<int, AsciiView>? onMsg, Action<Pool.Storage>? onDecode)
         {
+            if (_state.Storage != null) onDecode?.Invoke(_state.Storage);
             var startTicks = Stopwatch.GetTimestamp();
             var view = GetView(ptr);
             var elapsed = Stopwatch.GetElapsedTime(startTicks);
@@ -82,7 +83,7 @@ namespace PureFix.Buffer.Ascii
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.
-        public void ParseFrom(Span<byte> readFrom, Action<int, AsciiView>? onView)
+        public void ParseFrom(ReadOnlySpan<byte> readFrom, Action<int, AsciiView>? onView, Action<Pool.Storage>? onDecode = null)
         {
             const byte eq = AsciiChars.Eq;
             const byte zero = AsciiChars.Zero;
@@ -108,7 +109,7 @@ namespace PureFix.Buffer.Ascii
                     {
                         case ParseState.MsgComplete:
                         {
-                            Msg(writePtr, onView);
+                            Msg(writePtr, onView, onDecode);
                             continue;
                         }
 
@@ -182,7 +183,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     case ParseState.MsgComplete:
                     {
-                        Msg(_state.Buffer.GetPos(), onView);
+                        Msg(_state.Buffer.GetPos(), onView, onDecode);
                         break;
                     }
                 }

@@ -17,12 +17,13 @@ namespace PureFix.Transport
         public IFixDefinitions Definitions { get; }
         public SessionDescription Session { get; }
         public ISessionMessageFactory MessageFactory { get; }
-        public EngineRuntimeConfig(IFixDefinitions definitions, SessionDescription session,
-            ISessionMessageFactory messageFactory)
+        public IFixClock Clock { get; }
+        public EngineRuntimeConfig(IFixDefinitions definitions, SessionDescription session, ISessionMessageFactory messageFactory, IFixClock clock)
         {
             Definitions = definitions;
             Session = session;
             MessageFactory = messageFactory;
+            Clock = clock;
         }
     }
 }

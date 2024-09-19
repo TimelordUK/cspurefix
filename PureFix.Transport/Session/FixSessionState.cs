@@ -20,8 +20,7 @@ namespace PureFix.Transport.Session
         public int? PeerHeartBeatSecs { get; set; }
         public int? LastPeerMsgSeqNum { get; set; }
         public DateTime? Now { get; set; }
-
-        private string? m_compID;
+        public string? CompID { get; set; }
         private string? m_peerCompID;
         private readonly int? m_heartBeat;
         private readonly int? m_waitLogoutConfirmSeconds;
@@ -69,7 +68,7 @@ namespace PureFix.Transport.Session
         {
             var buffer = new StringBuilder();
 
-            buffer.AppendFormat($"compId = {m_compID}, ");
+            buffer.AppendFormat($"compId = {CompID}, ");
             buffer.AppendFormat($"heartBeat = {m_heartBeat}, ");
             buffer.AppendFormat($"state = {State}, ");
             buffer.AppendFormat($"nextTickAction = {m_nextTickAction}, ");
