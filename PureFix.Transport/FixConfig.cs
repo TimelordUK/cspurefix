@@ -14,16 +14,20 @@ namespace PureFix.Transport
 {
     public class FixConfig : IFixConfig
     {
-        public static IFixConfig MakeConfigFromPaths(ILogFactory logFactory, string definitionsPath, string sessionDescriptionPath)
+        public static IFixConfig MakeConfigFromPaths(ILogFactory logFactory, string dictionaryRootPath, string sessionDescriptionPath)
         {
             var definitions = new FixDefinitions();
             var qfParser = new QuickFixXmlFileParser(definitions);
+            using var streamReader = File.OpenText(sessionDescriptionPath);
+            var all = streamReader.ReadToEnd();
+            var sessionDescription = JsonHelper.FromJson<SessionDescription>(all);
+            var definitionsPath = Path.Join(dictionaryRootPath, sessionDescription.Application?.Dictionary ?? "FIX.xml");
             qfParser.Parse(definitionsPath);
             var config = new FixConfig
             {
                 LogFactory = logFactory,
                 Definitions = definitions,
-                Description = JsonHelper.FromJson<SessionDescription>(sessionDescriptionPath)
+                Description = sessionDescription
             };
 
             return config;

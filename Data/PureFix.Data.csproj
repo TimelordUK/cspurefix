@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Session\Ascii\**" />
+    <EmbeddedResource Remove="Session\Ascii\**" />
+    <None Remove="Session\Ascii\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="FIX42.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -31,10 +37,6 @@
     <None Update="Session\test-qf44-initiator.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Session\Ascii\" />
   </ItemGroup>
 
 </Project>

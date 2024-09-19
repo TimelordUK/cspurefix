@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFIix.Test.Env;
+using PureFix.Transport;
 
 namespace PureFIix.Test.Ascii
 {
@@ -41,6 +42,20 @@ namespace PureFIix.Test.Ascii
             var logger = (TestLogger)myLog;
             var entries = logger.Entries;
             Assert.That(entries, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void Get_Config_test()
+        {
+            var clock = new TestClock();
+            var factory = new TestLoggerFactory(clock);
+            var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator.json"));
+            Assert.That(config, Is.Not.Null);
+            Assert.That(config.Description, Is.Not.Null);
+            Assert.That(config.Description.Application, Is.Not.Null);
+            Assert.That(config.Definitions, Is.Not.Null);
+            Assert.That(config.Definitions.Message.ContainsKey("0"));
+            Assert.That(config.Definitions.Simple.ContainsKey("BeginString"));
         }
     }
 }
