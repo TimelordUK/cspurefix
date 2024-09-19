@@ -10,16 +10,23 @@ namespace PureFIix.Test.Env
 {
     internal class TestMessageTransport : IMessageTransport
     {
-        private readonly BlockingCollection<byte[]> _data = new ();
+        private readonly BlockingCollection<byte[]> _rx_data = new ();
+        private BlockingCollection<byte[]>? _tx_data;
+
+        public void ConnectTo(TestMessageTransport sendingTo)
+        {
+            _tx_data = sendingTo._rx_data;
+        }
+
         public Task SendAsync(ReadOnlySpan<byte> messageBytes, CancellationToken token)
         {
-           _data.Add(messageBytes.ToArray(), token);
+            _tx_data?.Add(messageBytes.ToArray(), token);
            return Task.CompletedTask;
         }
 
         public Task<int> ReceiveAsync(Span<byte> buffer, CancellationToken token)
         {
-            var b = _data.Take(token);
+            var b = _rx_data.Take(token);
             b.CopyTo(buffer);
             return Task.FromResult(b.Length);
         }
