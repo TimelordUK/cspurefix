@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Types
 {
-    internal static class JsonHelper
+    public static class JsonHelper
     {
         public static T FromJson<T>(string s)
         {

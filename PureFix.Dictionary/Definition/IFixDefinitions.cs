@@ -11,6 +11,7 @@ namespace PureFix.Dictionary.Definition
     public interface IFixDefinitions
     {
         IReadOnlyDictionary<string, MessageDefinition> Message { get; }
+        void SetVersion(FixVersion version, FixDefinitionSource source = FixDefinitionSource.QuickFix);
         FixVersion Version { get; }
         void AddSimple(SimpleFieldDefinition simpleField);
         void AddMessage(MessageDefinition msg);
