@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Types.Config;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Types.FIX44.QuickFix.Types;
 
@@ -10,7 +11,7 @@ namespace PureFix.Types
 {
     public class Fix44SessionMessageFactory : ISessionMessageFactory
     {
-        private SessionDescription m_SessionDescription;
+        private readonly SessionDescription m_SessionDescription;
 
         public Fix44SessionMessageFactory(SessionDescription sessionDescription)
         {

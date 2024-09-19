@@ -8,6 +8,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
+using PureFix.Types.Config;
 
 namespace PureFix.Transport
 {

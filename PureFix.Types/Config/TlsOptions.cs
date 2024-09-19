@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFix.Types
+namespace PureFix.Types.Config
 {
     public class TlsOptions
     {

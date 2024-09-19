@@ -8,6 +8,7 @@ using NUnit.Framework.Constraints;
 using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Types;
+using PureFix.Types.Config;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Types.FIX44.QuickFix.Types;
 using static PureFix.Buffer.Ascii.AsciiParser;
@@ -215,6 +216,5 @@ namespace PureFIix.Test.Ascii
             var v = storage.GetStringAt(5);
             Assert.That(v, Is.EqualTo("1"));
         }
-
     }
 }
