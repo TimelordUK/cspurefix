@@ -9,7 +9,7 @@ using PureFix.Types;
 
 namespace PureFix.Buffer.Ascii
 {
-    internal class AsciiParseState(FixDefinitions definitions, AsciiParser.Pool pool)
+    internal class AsciiParseState(FixDefinitions definitions, StoragePool pool)
     {
         private MessageDefinition? _message;
         public ParseState ParseState { get; private set; }
@@ -23,7 +23,7 @@ namespace PureFix.Buffer.Ascii
         private int _currentTag;
         private int _rawDataLen;
         private int _rawDataRead;
-        public AsciiParser.Pool.Storage? Storage { get; private set; }
+        public StoragePool.Storage? Storage { get; private set; }
 
         public Tags? Locations => Storage?.Locations;
         public ElasticBuffer? Buffer => Storage?.Buffer;

@@ -7,14 +7,14 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
 using PureFix.Types.Config;
-using static PureFix.Buffer.Ascii.AsciiParser.Pool;
+
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiEncoder
+    public class AsciiEncoder : IMessageEncoder
     {
         public IFixDefinitions Definitions { get; set; }
-        private AsciiParser.Pool Pool { get; set; }
+        private StoragePool Pool { get; set; }
         public byte LogDelimiter { get; set; } = AsciiChars.Pipe;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public SessionDescription SessionDescription { get; }
@@ -25,17 +25,23 @@ namespace PureFix.Buffer.Ascii
         public AsciiEncoder(IFixDefinitions definitions, SessionDescription sessionDescription, ISessionMessageFactory messageFactory, IFixClock clock)
         {
             Definitions = definitions;
-            Pool = new AsciiParser.Pool();
+            Pool = new StoragePool();
             SessionDescription = sessionDescription;
             SessionMessageFactory = messageFactory;
             Clock = clock;
+        }
+
+        public void Return(StoragePool.Storage storage)
+        {
+            Pool.Deliver(storage);
+            Pool.Reclaim();
         }
 
         // take an application created object e.g. Logon, and encode to fix wire format such that it
         // can be transmitted to the socket. We expect the storage to be returned to the pool once
         // message has been sent.
 
-        public Storage? Encode(string msgType, IFixMessage message)
+        public StoragePool.Storage? Encode(string msgType, IFixMessage message)
         {
             if (message.MsgType == null) return null;
             if (!Definitions.Message.TryGetValue(message.MsgType, out _))
@@ -62,6 +68,7 @@ namespace PureFix.Buffer.Ascii
             } 
 
             var storage = Pool.Rent();
+            
             var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
             hdr.Encode(writer);
             message.Encode(writer);

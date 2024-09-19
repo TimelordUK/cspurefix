@@ -25,7 +25,7 @@ namespace PureFix.Buffer.Ascii
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;
         public Tags? Locations => _state.Locations;
-        private readonly Pool _pool = new();
+        private readonly StoragePool _pool = new();
         private long _receivedBytes;
         private long _parsedMessages;
         private double _totalElapsedSegmentParseMicros;

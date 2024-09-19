@@ -27,17 +27,21 @@ namespace PureFix.Transport.Session
         protected IFixDefinitions Definitions { get; set; }
         protected IFixClock m_clock;
         protected IMessageParser m_parser;
+        protected IMessageEncoder m_encoder;
         protected bool m_manageSession;
         protected bool m_logReceivedMessages;
+        protected IFixTransport m_transport;
 
-        protected FixSession(IFixDefinitions definitions, SessionDescription sessionDescription, IMessageParser parser, ISessionMessageFactory messageFactory, IFixClock clock, ILogFactory logFactory)
+        protected FixSession(IFixDefinitions definitions, SessionDescription sessionDescription, IFixTransport transport, IMessageParser parser, IMessageEncoder encoder, ISessionMessageFactory messageFactory, IFixClock clock, ILogFactory logFactory)
         {
+            m_transport = transport;
             m_logReceivedMessages = true;
             m_manageSession = true;
             m_clock = clock;
             Definitions = definitions;
             m_factory = messageFactory;
             m_parser = parser;
+            m_encoder = encoder;
             if (sessionDescription.Application == null)
                 throw new InvalidDataException("no application provided in session config");
             m_me = sessionDescription.Application.Name ?? "me";
@@ -105,7 +109,15 @@ namespace PureFix.Transport.Session
             }
         }
 
-        protected void Send(string msgType, IFixMessage message)  {
+        protected Task Send(string msgType, IFixMessage message)
+        {
+            var storage = m_encoder.Encode(msgType, message);
+            if (storage == null) return Task.CompletedTask;
+            var t = m_transport.SendAsync(storage.AsBytes()).ContinueWith(_ =>
+            {
+                m_encoder.Return(storage);
+            });
+            return t;
         }
 
         public void OnTimer()
@@ -123,10 +135,8 @@ namespace PureFix.Transport.Session
         {
             var asciiView = (AsciiView)view;
             if (view.Structure == null) return;
-            if (view.Segment == null) return;
-            if (view.Segment.Set == null) return;
 
-            var msgType = view.Segment?.Set.Name;
+            var msgType = view.Segment?.Set?.Name;
             if (msgType == null) return;
             if (m_logReceivedMessages)
             {

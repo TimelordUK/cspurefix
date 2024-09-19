@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 using PureFIix.Test.Env;
+using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Types;
 using PureFix.Types.Config;
@@ -82,9 +83,9 @@ namespace PureFIix.Test.Ascii
             Assert.That(trailer2.CheckSum, Is.EqualTo("012"));
         }
 
-        (IFixWriter writer, Pool.Storage storage) GetWriter()
+        (IFixWriter writer, StoragePool.Storage storage) GetWriter()
         {
-            var pool = new Pool();
+            var pool = new StoragePool();
             var storage = pool.Rent();
             var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
             return (writer, storage);
@@ -103,7 +104,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(s, Is.EqualTo("8=FIX.4.4|9=100001|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|"));
         }
 
-        private Pool.Storage Make_Encode_Header()
+        private StoragePool.Storage Make_Encode_Header()
         {
             var session = GetDescription();
             var factory = new Fix44SessionMessageFactory(session);
