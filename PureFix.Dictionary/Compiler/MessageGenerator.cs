@@ -168,26 +168,33 @@ namespace PureFix.Dictionary.Compiler
         private void WriteFixMessageFactory()
         {
             var generator = new CodeGenerator();
+            generator.WriteLine("using System.Diagnostics.CodeAnalysis;");
+            generator.WriteLine();
+
             using(generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
             {
                 using(generator.BeginBlock("public class FixMessageFactory : IFixMessageFactory"))
                 {
                     using(generator.BeginBlock("public bool TryParse(IMessageView view, [NotNullWhen(true)] out IFixMessage? message)"))
                     {
+                        generator.WriteLine("IFixMessageFactory self = this;");
+
                         generator.WriteLine("var messageType = view.GetString((int)MsgTag.MsgType);");
 
-                        using(generator.BeginBlock("message = messageType switch"))
+                        using(generator.BeginBlockWithOpenClose("message = messageType switch", "{", "};"))
                         {
                             foreach(var name in FixDefinitions.Message.Select(kv => kv.Value.Name).Distinct())
                             {
                                 var messageDefinition = FixDefinitions.Message[name];
                                 if(messageDefinition == null) continue;
                                
-                                generator.WriteLine($"\"{messageDefinition.MsgType}\" => MakeAndParse<${messageDefinition.Name}>(view),");
+                                generator.WriteLine($"\"{messageDefinition.MsgType}\" => self.MakeAndParse<{messageDefinition.Name}>(view),");
                             }
 
                             generator.WriteLine("_ => null");
                         }
+
+                        generator.WriteLine("return message is not null;");
                     }
                 }
             }

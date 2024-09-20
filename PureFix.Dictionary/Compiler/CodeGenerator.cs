@@ -13,7 +13,7 @@ namespace PureFix.Dictionary.Compiler
 
         public BlockIndent BeginBlock()
         {
-            return new(this);
+            return new(this, "{", "}");
         }
 
         public BlockIndent BeginBlock(string line)
@@ -21,7 +21,15 @@ namespace PureFix.Dictionary.Compiler
             var indent = MakeIndent();
             _Builder.Append(indent).AppendLine(line);
 
-            return new(this);
+            return new(this, "{", "}");
+        }
+
+        public BlockIndent BeginBlockWithOpenClose(string line, string open, string close)
+        {
+            var indent = MakeIndent();
+            _Builder.Append(indent).AppendLine(line);
+
+            return new(this, open, close);
         }
 
         public Indenter BeginIndent()
@@ -65,18 +73,20 @@ namespace PureFix.Dictionary.Compiler
         public ref struct BlockIndent
         {
             private readonly CodeGenerator _CodeGenerator;
+            private readonly string m_Close;
 
-            public BlockIndent(CodeGenerator codeGenerator)
+            public BlockIndent(CodeGenerator codeGenerator, string open, string close)
             {
+                m_Close = close;
                 _CodeGenerator = codeGenerator;
-                _CodeGenerator.WriteLine("{");
+                _CodeGenerator.WriteLine(open);
                 _CodeGenerator._TabCount++;
             }
 
             public void Dispose()
             {
                 _CodeGenerator._TabCount--;
-                _CodeGenerator.WriteLine("}");
+                _CodeGenerator.WriteLine(m_Close);
             }
         }
 
