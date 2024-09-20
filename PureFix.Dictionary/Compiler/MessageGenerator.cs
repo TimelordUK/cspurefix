@@ -62,18 +62,21 @@ namespace PureFix.Dictionary.Compiler
                     using (generator.BeginBlock($"public static IFixMessage? ToFixMessage(this IMessageView view)"))
                     {
                         generator.WriteLine("var msgType = view.GetString((int)MsgTag.MsgType);");
-                        using (generator.BeginBlock("switch (msgType"))
+                        using (generator.BeginBlock("switch (msgType)"))
                         {
                             foreach (var name in FixDefinitions.Message.Select(kv => kv.Value.Name).Distinct())
                             {
                                 var m = FixDefinitions.Message[name];
                                 if (m == null) continue;
-                                generator.BeginBlock($"MsgTypeValues.{m.Name}:");
-                                generator.WriteLine("var o = new Heartbeat();");
-                                generator.WriteLine("((IFixParser)o).Parse(view);");
-                                generator.WriteLine("return o;");
+                                using (generator.BeginBlock($"case \"{m.MsgType}\":"))
+                                {
+                                    generator.WriteLine($"var o = new {m.Name}();");
+                                    generator.WriteLine("((IFixParser)o).Parse(view);");
+                                    generator.WriteLine("return o;");
+                                }
                             }
                         }
+                        generator.WriteLine("return null;");
                     }
                 }
             }
