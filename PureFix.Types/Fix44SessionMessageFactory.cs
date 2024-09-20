@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Transport;
 using PureFix.Types.Config;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Types.FIX44.QuickFix.Types;
@@ -12,6 +13,7 @@ namespace PureFix.Types
     public class Fix44SessionMessageFactory : ISessionMessageFactory
     {
         private readonly SessionDescription m_SessionDescription;
+        
 
         public Fix44SessionMessageFactory(SessionDescription sessionDescription)
         {
@@ -89,6 +91,16 @@ namespace PureFix.Types
                 TargetSubID = m_SessionDescription.TargetSubID,
                 SenderSubID = m_SessionDescription.SenderSubID
             };
+        }
+
+        public virtual IFixMessage? MakeFrom(IMessageView view)
+        {
+            var msgType = view.MsgType();
+            if (msgType == null)
+            {
+                return null;
+            }
+            return view.ToFixMessage();
         }
     }
 }
