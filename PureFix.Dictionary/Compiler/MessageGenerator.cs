@@ -21,7 +21,68 @@ namespace PureFix.Dictionary.Compiler
         public MessageGenerator(string? root, FixDefinitions fixDefinitions, Options options) : base(SelectRoot(root, options.BackingTypeOutputPath!), fixDefinitions, options)
         {
         }
-        
+
+
+        /*
+         *  public static class FixMessageFactoryExt
+    {
+        public static IFixMessage? ToFixMessage(this IMessageView view)
+        {
+            var msgType = view.GetString((int)MsgTag.MsgType);
+            switch (msgType)
+            {
+                case MsgTypeValues.Heartbeat:
+                    {
+                        var o = new Heartbeat();
+                        ((IFixParser)o).Parse(view);
+                        return o;
+                    }
+
+                case MsgTypeValues.Logon:
+                    {
+                        var o = new Heartbeat();
+                        ((IFixParser)o).Parse(view);
+                        return o;
+                    }
+            }
+
+            return null;
+        }
+    }*/
+
+        public override void PostProcess()
+        {
+            var generator = new CodeGenerator();
+            WriteMessageUsings(generator);
+            generator.WriteLine();
+            using (generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
+            {
+                using (generator.BeginBlock("public static class FixMessageFactoryExt"))
+                {
+                    using (generator.BeginBlock($"public static IFixMessage? ToFixMessage(this IMessageView view)"))
+                    {
+                        generator.WriteLine("var msgType = view.GetString((int)MsgTag.MsgType);");
+                        using (generator.BeginBlock("switch (msgType"))
+                        {
+                            foreach (var name in FixDefinitions.Message.Select(kv => kv.Value.Name).Distinct())
+                            {
+                                var m = FixDefinitions.Message[name];
+                                if (m == null) continue;
+                                generator.BeginBlock($"MsgTypeValues.{m.Name}:");
+                                generator.WriteLine("var o = new Heartbeat();");
+                                generator.WriteLine("((IFixParser)o).Parse(view);");
+                                generator.WriteLine("return o;");
+                            }
+                        }
+                    }
+                }
+            }
+            var contents = generator.ToString();
+            var path = Path.Join(Options.BackingTypeOutputPath, "FixMessageFactory.cs");
+            WriteFile(path, contents);
+        }
+
+
         protected override string GenerateType(MessageDefinition message)
         {
             var generator = new CodeGenerator();

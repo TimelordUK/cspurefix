@@ -21,7 +21,7 @@ namespace PureFix.Transport.Session
         public int? LastPeerMsgSeqNum { get; set; }
         public DateTime? Now { get; set; }
         public string? CompID { get; set; }
-        private string? m_peerCompID;
+        public string? PeerCompID { get; set; }
         private readonly int? m_heartBeat;
         private readonly int? m_waitLogoutConfirmSeconds;
         private readonly int? m_stopSeconds;
@@ -82,7 +82,7 @@ namespace PureFix.Transport.Session
             buffer.AppendFormat($"lastTestRequestAt = ${DateAsString(LastTestRequestAt)}, ");
             buffer.AppendFormat($"logoutSentAt = ${DateAsString(LogoutSentAt)}, ");
             buffer.AppendFormat($"peerHeartBeatSecs = ${PeerHeartBeatSecs}, ");
-            buffer.AppendFormat($"peerCompId = ${m_peerCompID}, ");
+            buffer.AppendFormat($"peerCompId = ${PeerCompID}, ");
             buffer.AppendFormat($"lastPeerMsgSeqNum = ${LastPeerMsgSeqNum}, ");
             buffer.AppendFormat($"LastSentSeqNum = ${LastSentSeqNum}, ");
             buffer.AppendFormat($"secondsSinceLogoutSent = ${m_secondsSinceLogoutSent}, ");

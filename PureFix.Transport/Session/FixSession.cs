@@ -452,7 +452,7 @@ namespace PureFix.Transport.Session
          * @protected
          */
 
-        protected abstract bool OnLogon(MsgView view, string user, string password);
+        protected abstract bool OnLogon(MsgView view, string? user, string? password);
 
         public void End()
         {

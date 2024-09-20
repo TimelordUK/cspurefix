@@ -8,9 +8,9 @@ namespace PureFix.Transport.Session
     {
         byte? LogDelimiter { get; }
         byte? Delimiter { get; }
-        ILogFactory LogFactory { get; }
-        IFixDefinitions Definitions { get; }
-        ISessionDescription Description { get; }
-        ISessionMessageFactory MessageFactory { get; }
+        ILogFactory? LogFactory { get; }
+        IFixDefinitions? Definitions { get; }
+        ISessionDescription? Description { get; }
+        ISessionMessageFactory? MessageFactory { get; }
     }
 }

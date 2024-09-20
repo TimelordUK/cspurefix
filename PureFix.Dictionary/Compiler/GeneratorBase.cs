@@ -39,7 +39,10 @@ namespace PureFix.Dictionary.Compiler
                     WriteFile(filename, content);
                 }
             }
+            PostProcess();
         }
+
+        public virtual void PostProcess() { }
 
         private void Process(ContainedGroupField field)
         {

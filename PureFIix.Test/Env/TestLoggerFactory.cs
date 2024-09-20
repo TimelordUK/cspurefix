@@ -10,7 +10,7 @@ namespace PureFIix.Test.Env
     public class TestLoggerFactory : ILogFactory
     {
         private readonly IFixClock _clock;
-        public TestLoggerFactory(IFixClock? clock = null)
+        public TestLoggerFactory(IFixClock clock = null)
         {
             _clock = clock ?? new RealtimeClock();
         }
