@@ -161,6 +161,40 @@ namespace PureFix.Dictionary.Compiler
             WriteParse(generator, set);
             generator.WriteLine();
             WriteTryGetByTag(generator, set);
+
+            WriteFixMessageFactory();
+        }
+
+        private void WriteFixMessageFactory()
+        {
+            var generator = new CodeGenerator();
+            using(generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
+            {
+                using(generator.BeginBlock("public class FixMessageFactory : IFixMessageFactory"))
+                {
+                    using(generator.BeginBlock("public bool TryParse(IMessageView view, [NotNullWhen(true)] out IFixMessage? message)"))
+                    {
+                        generator.WriteLine("var messageType = view.GetString((int)MsgTag.MsgType);");
+
+                        using(generator.BeginBlock("message = messageType switch"))
+                        {
+                            foreach(var name in FixDefinitions.Message.Select(kv => kv.Value.Name).Distinct())
+                            {
+                                var messageDefinition = FixDefinitions.Message[name];
+                                if(messageDefinition == null) continue;
+                               
+                                generator.WriteLine($"\"{messageDefinition.MsgType}\" => MakeAndParse<${messageDefinition.Name}>(view),");
+                            }
+
+                            generator.WriteLine("_ => null");
+                        }
+                    }
+                }
+            }
+
+            var contents = generator.ToString();
+            var path = Path.Join(Options.BackingTypeOutputPath, "FixMessageFactory.cs");
+            WriteFile(path, contents);
         }
 
         private void WriteTryGetByTag(CodeGenerator generator, IContainedSet containedSet)
