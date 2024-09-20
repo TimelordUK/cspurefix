@@ -8,11 +8,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int Clearstream = 4;
 		public const int Cheque = 5;
 		public const int TelegraphicTransfer = 6;
-		public const int Fedwire = 7;
+		public const int FedWire = 7;
 		public const int DirectCredit = 8;
 		public const int AchCredit = 9;
 		public const int Bpay = 10;
-		public const int HighValueClearingSystem = 11;
+		public const int HighValueClearingSystemHvacs = 11;
 		public const int ReinvestInFund = 12;
 	}
 }

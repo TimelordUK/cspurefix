@@ -7,11 +7,11 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string GoAlong = "3";
 		public const string OverTheDay = "4";
 		public const string Held = "5";
-		public const string ParticipateDontInitiate = "6";
+		public const string ParticipateDoNotInitiate = "6";
 		public const string StrictScale = "7";
 		public const string TryToScale = "8";
-		public const string StayOnBidside = "9";
-		public const string StayOnOfferside = "0";
+		public const string StayOnBidSide = "9";
+		public const string StayOnOfferSide = "0";
 		public const string NoCross = "A";
 		public const string OkToCross = "B";
 		public const string CallFirst = "C";

@@ -7,7 +7,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string PartialFill = "1";
 		public const string Fill = "2";
 		public const string Canceled = "4";
-		public const string Replace = "5";
+		public const string Replaced = "5";
 		public const string Rejected = "8";
 		public const string Suspended = "9";
 		public const string PendingNew = "A";

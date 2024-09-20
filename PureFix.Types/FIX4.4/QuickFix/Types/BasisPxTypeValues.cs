@@ -9,9 +9,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string VwapThroughADay = "6";
 		public const string VwapThroughAMorningSession = "7";
 		public const string VwapThroughAnAfternoonSession = "8";
-		public const string VwapThroughADayExceptYori = "9";
-		public const string VwapThroughAMorningSessionExceptYori = "A";
-		public const string VwapThroughAnAfternoonSessionExceptYori = "B";
+		public const string VwapThroughADayExcept = "9";
+		public const string VwapThroughAMorningSessionExcept = "A";
+		public const string VwapThroughAnAfternoonSessionExcept = "B";
 		public const string Strike = "C";
 		public const string Open = "D";
 		public const string Others = "Z";

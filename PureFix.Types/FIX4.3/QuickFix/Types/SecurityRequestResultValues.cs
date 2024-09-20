@@ -7,6 +7,6 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const int InvalidOrUnsupportedRequest = 1;
 		public const int RequestForInstrumentDataNotSupported = 5;
 		public const int NotAuthorizedToRetrieveInstrumentData = 3;
-		public const int NoInstrumentsFoundThatMatchSelectionCriteria = 2;
+		public const int NoInstrumentsFound = 2;
 	}
 }

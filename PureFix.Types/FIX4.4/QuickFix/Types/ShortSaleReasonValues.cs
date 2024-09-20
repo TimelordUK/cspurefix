@@ -6,7 +6,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int DealerSoldShortExempt = 1;
 		public const int SellingCustomerSoldShort = 2;
 		public const int SellingCustomerSoldShortExempt = 3;
-		public const int QualifedServiceRepresentative = 4;
+		public const int QualifiedServiceRepresentative = 4;
 		public const int QsrOrAguContraSideSoldShortExempt = 5;
 	}
 }

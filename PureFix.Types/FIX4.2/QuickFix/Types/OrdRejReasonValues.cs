@@ -2,7 +2,7 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 {
 	public static class OrdRejReasonValues
 	{
-		public const int BrokerOption = 0;
+		public const int BrokerCredit = 0;
 		public const int UnknownSymbol = 1;
 		public const int ExchangeClosed = 2;
 		public const int OrderExceedsLimit = 3;

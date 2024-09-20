@@ -13,17 +13,17 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string OnBasis = "9";
 		public const string OnClose = "A";
 		public const string Market = "1";
-		public const string ForexC = "C";
-		public const string ForexF = "F";
+		public const string ForexMarket = "C";
+		public const string ForexLimit = "F";
 		public const string PreviouslyIndicated = "E";
-		public const string ForexG = "G";
+		public const string ForexSwap = "G";
 		public const string Funari = "I";
 		public const string MarketIfTouched = "J";
-		public const string MarketWithLeftoverAsLimit = "K";
+		public const string MarketWithLeftOverAsLimit = "K";
 		public const string PreviousFundValuationPoint = "L";
 		public const string NextFundValuationPoint = "M";
 		public const string Pegged = "P";
 		public const string LimitOnClose = "B";
-		public const string ForexH = "H";
+		public const string ForexPreviouslyQuoted = "H";
 	}
 }

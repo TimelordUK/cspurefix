@@ -5,6 +5,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string Accepted = "A";
 		public const string Rejected = "R";
 		public const string Held = "H";
-		public const string ReminderIeRegistrationInstructionsAreStillOutstanding = "N";
+		public const string Reminder = "N";
 	}
 }

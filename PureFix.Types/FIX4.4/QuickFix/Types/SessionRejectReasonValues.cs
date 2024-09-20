@@ -11,15 +11,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int IncorrectDataFormatForValue = 6;
 		public const int DecryptionProblem = 7;
 		public const int SignatureProblem = 8;
-		public const int CompidProblem = 9;
-		public const int SendingtimeAccuracyProblem = 10;
-		public const int InvalidMsgtype = 11;
+		public const int CompIdProblem = 9;
+		public const int SendingTimeAccuracyProblem = 10;
+		public const int InvalidMsgType = 11;
 		public const int XmlValidationError = 12;
 		public const int TagAppearsMoreThanOnce = 13;
 		public const int TagSpecifiedOutOfRequiredOrder = 14;
 		public const int RepeatingGroupFieldsOutOfOrder = 15;
-		public const int IncorrectNumingroupCountForRepeatingGroup = 16;
-		public const int NonDataValueIncludesFieldDelimiter = 17;
+		public const int IncorrectNumInGroupCountForRepeatingGroup = 16;
+		public const int Non = 17;
 		public const int Other = 99;
 	}
 }

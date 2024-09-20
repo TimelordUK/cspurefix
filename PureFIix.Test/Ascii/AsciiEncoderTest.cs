@@ -32,7 +32,7 @@ namespace PureFIix.Test.Ascii
             {
                 StandardHeader = new()
                 {
-                    MsgType = MsgTypeValues.OrderSingle
+                    MsgType = MsgTypeValues.NewOrderSingle
                 },
                 ClOrdID = "NF 0040/03022010",
                 Account = "ABC123ZYX",

@@ -3,7 +3,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 	public static class SettlmntTypValues
 	{
 		public const string TPlus4 = "5";
-		public const string TPlus1 = "A";
+		public const string T1 = "A";
 		public const string Future = "6";
 		public const string TPlus2 = "3";
 		public const string NextDay = "2";

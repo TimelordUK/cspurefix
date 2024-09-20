@@ -87,8 +87,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		[TagDetails(Tag = 369, Type = TagType.Int, Offset = 25, Required = false)]
 		public int? LastMsgSeqNumProcessed {get; set;}
 		
-		[Component(Offset = 26, Required = false)]
-		public HopComponent? Hop {get; set;}
+		[Group(NoOfTag = 627, Offset = 26, Required = false)]
+		public NoHops[]? NoHops {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -137,7 +137,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			if (MessageEncoding is not null) writer.WriteString(347, MessageEncoding);
 			if (LastMsgSeqNumProcessed is not null) writer.WriteWholeNumber(369, LastMsgSeqNumProcessed.Value);
-			if (Hop is not null) ((IFixEncoder)Hop).Encode(writer);
+			if (NoHops is not null && NoHops.Length != 0)
+			{
+				writer.WriteWholeNumber(627, NoHops.Length);
+				for (int i = 0; i < NoHops.Length; i++)
+				{
+					((IFixEncoder)NoHops[i]).Encode(writer);
+				}
+			}
 		}
 		
 		void IFixParser.Parse(IMessageView? view)
@@ -170,10 +177,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			XmlData = view.GetByteArray(213);
 			MessageEncoding = view.GetString(347);
 			LastMsgSeqNumProcessed = view.GetInt32(369);
-			if (view.GetView("Hop") is IMessageView viewHop)
+			if (view.GetView("NoHops") is IMessageView viewNoHops)
 			{
-				Hop = new();
-				((IFixParser)Hop).Parse(viewHop);
+				var count = viewNoHops.GroupCount();
+				NoHops = new NoHops[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoHops[i] = new();
+					((IFixParser)NoHops[i]).Parse(viewNoHops.GetGroupInstance(i));
+				}
 			}
 		}
 		
@@ -260,8 +272,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 				case "LastMsgSeqNumProcessed":
 					value = LastMsgSeqNumProcessed;
 					break;
-				case "Hop":
-					value = Hop;
+				case "NoHops":
+					value = NoHops;
 					break;
 				default: return false;
 			}

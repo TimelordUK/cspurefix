@@ -6,7 +6,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const int GtCorporateAction = 0;
 		public const int Market = 8;
 		public const int CancelOnTradingHalt = 6;
-		public const int PartialDeclineOfOrderqty = 5;
+		public const int PartialDeclineOfOrderQty = 5;
 		public const int BrokerOption = 4;
 		public const int RepricingOfOrder = 3;
 		public const int GtRenewal = 1;

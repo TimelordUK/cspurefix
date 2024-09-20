@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int InvestorId = 5;
 		public const int IntroducingFirm = 6;
 		public const int EnteringFirm = 7;
-		public const int LocateLendingFirm = 8;
+		public const int Locate = 8;
 		public const int FundManagerClientId = 9;
 		public const int SettlementLocation = 10;
 		public const int OrderOriginationTrader = 11;
@@ -27,7 +27,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int CustomerAccount = 24;
 		public const int CorrespondentClearingOrganization = 25;
 		public const int CorrespondentBroker = 26;
-		public const int BuyerSeller = 27;
+		public const int Buyer = 27;
 		public const int Custodian = 28;
 		public const int Intermediary = 29;
 		public const int Agent = 30;

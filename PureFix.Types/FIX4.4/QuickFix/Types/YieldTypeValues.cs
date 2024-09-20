@@ -13,7 +13,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string CompoundYield = "COMPOUND";
 		public const string CurrentYield = "CURRENT";
 		public const string TrueGrossYield = "GROSS";
-		public const string GovernmentEquivalentYield = "GOVTEQUIV";
+		public const string GvntEquivalentYield = "GOVTEQUIV";
 		public const string YieldWithInflationAssumption = "INFLATION";
 		public const string InverseFloaterBondYield = "INVERSEFLOATER";
 		public const string MostRecentClosingYield = "LASTCLOSE";

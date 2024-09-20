@@ -4,7 +4,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 	{
 		public const string Utf8 = "UTF-8";
 		public const string Iso2022Jp = "ISO-2022-JP";
-		public const string EucJp = "EUC-JP";
-		public const string ShiftJis = "SHIFT_JIS";
+		public const string Eucjp = "EUC-JP";
+		public const string ShiftJis = "Shift_JIS";
 	}
 }

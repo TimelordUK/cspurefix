@@ -3,7 +3,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public static class QuoteStatusValues
 	{
 		public const int Accepted = 0;
-		public const int CanceledForSymbol = 1;
+		public const int CancelForSymbol = 1;
 		public const int CanceledForSecurityType = 2;
 		public const int CanceledForUnderlying = 3;
 		public const int CanceledAll = 4;

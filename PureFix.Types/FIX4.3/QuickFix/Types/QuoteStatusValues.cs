@@ -3,7 +3,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 	public static class QuoteStatusValues
 	{
 		public const int RemovedFromMarket = 6;
-		public const int CanceledForSymbol = 1;
+		public const int CancelForSymbol = 1;
 		public const int Pending = 10;
 		public const int QuoteNotFound = 9;
 		public const int Query = 8;

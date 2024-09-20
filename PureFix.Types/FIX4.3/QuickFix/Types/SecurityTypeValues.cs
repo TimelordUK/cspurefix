@@ -9,7 +9,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string Overnight = "ONITE";
 		public const string MediumTermNotes = "MTN";
 		public const string TaxExemptCommercialPaper = "TECP";
-		public const string AmendedRestated = "AMENDED";
+		public const string Amended = "AMENDED";
 		public const string BridgeLoan = "BRIDGE";
 		public const string LetterOfCredit = "LOFC";
 		public const string SwingLineFacility = "SWING";
@@ -27,12 +27,12 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string CallLoans = "CL";
 		public const string Replaced = "REPLACD";
 		public const string MandatoryTender = "MT";
-		public const string RevolverTermLoan = "RVLVTRM";
+		public const string Revolver = "RVLVTRM";
 		public const string MortgagePrivatePlacement = "MPP";
 		public const string ShortTermLoanNote = "STN";
 		public const string MiscellaneousPassThrough = "MPT";
 		public const string ToBeAnnounced = "TBA";
-		public const string OtherAnticipationNotesBanGanEtc = "AN";
+		public const string OtherAnticipationNotes = "AN";
 		public const string MortgageInterestOnly = "MIO";
 		public const string CertificateOfParticipation = "COFP";
 		public const string MortgageBackedSecurities = "MBS";
@@ -45,10 +45,10 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string CertificateOfObligation = "COFO";
 		public const string TimeDeposit = "TD";
 		public const string GeneralObligationBonds = "GO";
-		public const string WildcardEntry = "?";
+		public const string Wildcard = "?";
 		public const string Warrant = "WAR";
 		public const string MutualFund = "MF";
-		public const string MultiLegInstrument = "MLEG";
+		public const string MultilegInstrument = "MLEG";
 		public const string TaxRevenueAnticipationNote = "TRAN";
 		public const string MortgagePrincipalOnly = "MPO";
 		public const string RepurchaseAgreement = "RP";
@@ -56,7 +56,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string ExtendedCommNote = "XCN";
 		public const string AgencyPools = "POOL";
 		public const string AssetBackedSecurities = "ABS";
-		public const string CorpMortgageBackedSecurities = "CMBS";
+		public const string Corp = "CMBS";
 		public const string CollateralizedMortgageObligation = "CMO";
 		public const string IoetteMortgage = "IET";
 		public const string ReverseRepurchaseAgreement = "RVRP";
@@ -80,8 +80,8 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string TreasuryInflationProtectedSecurities = "TIPS";
 		public const string PrincipalStripOfACallableBondOrNote = "TCAL";
 		public const string PrincipalStripFromANonCallableBondOrNote = "TPRN";
-		public const string UsTreasuryNoteBond = "UST";
-		public const string UsTreasuryBill = "USTB";
+		public const string UsTreasuryNoteOld = "UST";
+		public const string UsTreasuryBillOld = "USTB";
 		public const string TermLoan = "TERM";
 		public const string StructuredNotes = "STRUCT";
 	}

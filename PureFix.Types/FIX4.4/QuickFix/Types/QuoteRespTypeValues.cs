@@ -2,7 +2,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public static class QuoteRespTypeValues
 	{
-		public const int HitLift = 1;
+		public const int Hit = 1;
 		public const int Counter = 2;
 		public const int Expired = 3;
 		public const int Cover = 4;

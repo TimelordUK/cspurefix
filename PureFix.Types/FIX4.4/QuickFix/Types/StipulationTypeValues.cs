@@ -2,18 +2,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public static class StipulationTypeValues
 	{
-		public const string Amt = "AMT";
-		public const string AutoReinvestmentAtRateOrBetter = "AUTOREINV";
+		public const string AlternativeMinimumTax = "AMT";
+		public const string AutoReinvestment = "AUTOREINV";
 		public const string BankQualified = "BANKQUAL";
-		public const string BargainConditionsSee = "BGNCON";
+		public const string BargainConditions = "BGNCON";
 		public const string CouponRange = "COUPON";
 		public const string IsoCurrencyCode = "CURRENCY";
-		public const string CustomStartEndDate = "CUSTOMDATE";
-		public const string GeographicsAndRange = "GEOG";
+		public const string CustomStart = "CUSTOMDATE";
+		public const string Geographics = "GEOG";
 		public const string ValuationDiscount = "HAIRCUT";
 		public const string Insured = "INSURED";
-		public const string YearOrYearMonthOfIssue = "ISSUE";
-		public const string IssuersTicker = "ISSUER";
+		public const string IssueDate = "ISSUE";
+		public const string Issuer = "ISSUER";
 		public const string IssueSizeRange = "ISSUESIZE";
 		public const string LookbackDays = "LOOKBACK";
 		public const string ExplicitLotIdentifier = "LOT";
@@ -24,7 +24,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string MinimumQuantity = "MINQTY";
 		public const string MinimumIncrement = "MININCR";
 		public const string MinimumDenomination = "MINDNOM";
-		public const string PaymentFrequencyCalendar = "PAYFREQ";
+		public const string PaymentFrequency = "PAYFREQ";
 		public const string NumberOfPieces = "PIECES";
 		public const string PoolsMaximum = "PMAX";
 		public const string PoolsPerMillion = "PPM";
@@ -37,19 +37,19 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string Purpose = "PURPOSE";
 		public const string BenchmarkPriceSource = "PXSOURCE";
 		public const string RatingSourceAndRange = "RATING";
-		public const string TypeOfRedemptionValuesAreNoncallableCallablePrefundedEscrowedtomaturityPutableConvertible = "REDEMPTION";
+		public const string TypeOfRedemption = "REDEMPTION";
 		public const string Restricted = "RESTRICTED";
 		public const string MarketSector = "SECTOR";
-		public const string SecuritytypeIncludedOrExcluded = "SECTYPE";
+		public const string SecurityTypeIncludedOrExcluded = "SECTYPE";
 		public const string Structure = "STRUCT";
 		public const string SubstitutionsFrequency = "SUBSFREQ";
 		public const string SubstitutionsLeft = "SUBSLEFT";
 		public const string FreeformText = "TEXT";
 		public const string TradeVariance = "TRDVAR";
-		public const string WeightedAverageCouponvalueInPercent = "WAC";
-		public const string WeightedAverageLifeCouponValueInPercent = "WAL";
-		public const string WeightedAverageLoanAgeValueInMonths = "WALA";
-		public const string WeightedAverageMaturityValueInMonths = "WAM";
+		public const string WeightedAverageCoupon = "WAC";
+		public const string WeightedAverageLifeCoupon = "WAL";
+		public const string WeightedAverageLoanAge = "WALA";
+		public const string WeightedAverageMaturity = "WAM";
 		public const string WholePool = "WHOLE";
 		public const string YieldRange = "YIELD";
 	}

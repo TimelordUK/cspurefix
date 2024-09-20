@@ -4,6 +4,6 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 	{
 		public const string DailyOpen = "0";
 		public const string SessionOpen = "1";
-		public const string DeliverySettlementPrice = "2";
+		public const string DeliverySettlementEntry = "2";
 	}
 }

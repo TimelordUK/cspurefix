@@ -11,7 +11,7 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 		public const string TakingAPosition = "P";
 		public const string AtTheMarket = "Q";
 		public const string ReadyToTrade = "R";
-		public const string PortfolioShowN = "S";
+		public const string PortfolioShown = "S";
 		public const string ThroughTheDay = "T";
 		public const string Versus = "V";
 		public const string Indication = "W";

@@ -4,7 +4,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 	{
 		public const int CancelAllQuotes = 4;
 		public const int CancelForSecurityType = 2;
-		public const int CancelForSymbol = 1;
-		public const int CancelForUnderlyingSymbol = 3;
+		public const int CancelForOneOrMoreSecurities = 1;
+		public const int CancelForUnderlyingSecurity = 3;
 	}
 }

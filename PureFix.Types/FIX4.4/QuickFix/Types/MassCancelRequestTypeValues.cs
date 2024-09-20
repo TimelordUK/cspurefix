@@ -5,8 +5,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string CancelOrdersForASecurity = "1";
 		public const string CancelOrdersForAnUnderlyingSecurity = "2";
 		public const string CancelOrdersForAProduct = "3";
-		public const string CancelOrdersForACficode = "4";
-		public const string CancelOrdersForASecuritytype = "5";
+		public const string CancelOrdersForAcfiCode = "4";
+		public const string CancelOrdersForASecurityType = "5";
 		public const string CancelOrdersForATradingSession = "6";
 		public const string CancelAllOrders = "7";
 	}

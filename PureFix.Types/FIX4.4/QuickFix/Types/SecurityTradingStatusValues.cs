@@ -5,7 +5,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int OpeningDelay = 1;
 		public const int TradingHalt = 2;
 		public const int Resume = 3;
-		public const int NoOpenNoResume = 4;
+		public const int NoOpen = 4;
 		public const int PriceIndication = 5;
 		public const int TradingRangeIndication = 6;
 		public const int MarketImbalanceBuy = 7;

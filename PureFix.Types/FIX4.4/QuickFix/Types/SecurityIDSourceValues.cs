@@ -19,7 +19,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string Belgian = "F";
 		public const string Common = "G";
 		public const string ClearingHouse = "H";
-		public const string IsdaFpmlProductSpecification = "I";
-		public const string OptionsPriceReportingAuthority = "J";
+		public const string IsdaFpMlSpecification = "I";
+		public const string OptionPriceReportingAuthority = "J";
 	}
 }

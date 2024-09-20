@@ -7,7 +7,7 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 		public const string Fill = "2";
 		public const string DoneForDay = "3";
 		public const string Canceled = "4";
-		public const string Replace = "5";
+		public const string Replaced = "5";
 		public const string PendingCancel = "6";
 		public const string Stopped = "7";
 		public const string Rejected = "8";

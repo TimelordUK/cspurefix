@@ -3,7 +3,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public static class TradeReportRejectReasonValues
 	{
 		public const int Successful = 0;
-		public const int InvalidPartyInformation = 1;
+		public const int InvalidPartyOnformation = 1;
 		public const int UnknownInstrument = 2;
 		public const int UnauthorizedToReportTrades = 3;
 		public const int InvalidTradeType = 4;

@@ -7,8 +7,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int Accept = 2;
 		public const int Decline = 3;
 		public const int Addendum = 4;
-		public const int NoWas = 5;
+		public const int No = 5;
 		public const int TradeReportCancel = 6;
-		public const int LockedInTradeBreak = 7;
+		public const int LockedIn = 7;
 	}
 }

@@ -15,7 +15,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const int InvestorId = 5;
 		public const int IntroducingFirm = 6;
 		public const int GiveupClearingFirm = 14;
-		public const int LocateLendingFirm = 8;
+		public const int Locate = 8;
 		public const int FundManagerClientId = 9;
 		public const int SettlementLocation = 10;
 		public const int OrderOriginationTrader = 11;

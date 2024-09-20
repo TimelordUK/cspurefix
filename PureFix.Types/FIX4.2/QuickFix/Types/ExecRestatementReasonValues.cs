@@ -7,6 +7,6 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 		public const int VerbalChange = 2;
 		public const int RepricingOfOrder = 3;
 		public const int BrokerOption = 4;
-		public const int PartialDeclineOfOrderqty = 5;
+		public const int PartialDeclineOfOrderQty = 5;
 	}
 }

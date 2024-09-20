@@ -2,8 +2,6 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 {
 	public static class SecurityTypeValues
 	{
-		public const string Future = "FUT";
-		public const string Option = "OPT";
 		public const string EuroSupranationalCoupons = "EUSUPRA";
 		public const string FederalAgencyCoupon = "FAC";
 		public const string FederalAgencyDiscountNote = "FADN";
@@ -27,10 +25,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string TreasuryInflationProtectedSecurities = "TIPS";
 		public const string PrincipalStripOfACallableBondOrNote = "TCAL";
 		public const string PrincipalStripFromANonCallableBondOrNote = "TPRN";
-		public const string UsTreasuryNoteUst = "UST";
-		public const string UsTreasuryBillUstb = "USTB";
-		public const string UsTreasuryNoteTnote = "TNOTE";
-		public const string UsTreasuryBillTbill = "TBILL";
+		public const string UsTreasuryNoteOld = "UST";
+		public const string UsTreasuryBillOld = "USTB";
+		public const string UsTreasuryNote = "TNOTE";
+		public const string UsTreasuryBill = "TBILL";
 		public const string Repurchase = "REPO";
 		public const string Forward = "FORWARD";
 		public const string BuySellback = "BUYSELL";
@@ -38,7 +36,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string SecuritiesPledge = "SECPLEDGE";
 		public const string TermLoan = "TERM";
 		public const string RevolverLoan = "RVLV";
-		public const string RevolverTermLoan = "RVLVTRM";
+		public const string Revolver = "RVLVTRM";
 		public const string BridgeLoan = "BRIDGE";
 		public const string LetterOfCredit = "LOFC";
 		public const string SwingLineFacility = "SWING";
@@ -47,7 +45,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string Withdrawn = "WITHDRN";
 		public const string Replaced = "REPLACD";
 		public const string Matured = "MATURED";
-		public const string AmendedRestated = "AMENDED";
+		public const string Amended = "AMENDED";
 		public const string Retired = "RETIRED";
 		public const string BankersAcceptance = "BA";
 		public const string BankNotes = "BN";
@@ -68,7 +66,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string ExtendedCommNote = "XCN";
 		public const string YankeeCertificateOfDeposit = "YCD";
 		public const string AssetBackedSecurities = "ABS";
-		public const string CorpMortgageBackedSecurities = "CMBS";
+		public const string Corp = "CMBS";
 		public const string CollateralizedMortgageObligation = "CMO";
 		public const string IoetteMortgage = "IET";
 		public const string MortgageBackedSecurities = "MBS";
@@ -78,7 +76,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string MiscellaneousPassThrough = "MPT";
 		public const string Pfandbriefe = "PFAND";
 		public const string ToBeAnnounced = "TBA";
-		public const string OtherAnticipationNotesBanGanEtc = "AN";
+		public const string OtherAnticipationNotes = "AN";
 		public const string CertificateOfObligation = "COFO";
 		public const string CertificateOfParticipation = "COFP";
 		public const string GeneralObligationBonds = "GO";
@@ -95,7 +93,9 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const string VariableRateDemandNote = "VRDN";
 		public const string Warrant = "WAR";
 		public const string MutualFund = "MF";
-		public const string MultiLegInstrument = "MLEG";
+		public const string MultilegInstrument = "MLEG";
 		public const string NoSecurityType = "NONE";
+		public const string Future = "FUT";
+		public const string Option = "OPT";
 	}
 }

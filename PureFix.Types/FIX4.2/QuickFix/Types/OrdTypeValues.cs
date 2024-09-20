@@ -13,12 +13,12 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 		public const string OnBasis = "9";
 		public const string OnClose = "A";
 		public const string LimitOnClose = "B";
-		public const string ForexC = "C";
+		public const string ForexMarket = "C";
 		public const string PreviouslyQuoted = "D";
 		public const string PreviouslyIndicated = "E";
-		public const string ForexF = "F";
-		public const string ForexG = "G";
-		public const string ForexH = "H";
+		public const string ForexLimit = "F";
+		public const string ForexSwap = "G";
+		public const string ForexPreviouslyQuoted = "H";
 		public const string Funari = "I";
 		public const string Pegged = "P";
 	}

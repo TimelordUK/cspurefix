@@ -13,7 +13,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const int DuplicateOrder = 6;
 		public const int UnsupportedOrderCharacteristic = 11;
 		public const int SurveillenceOption = 12;
-		public const int Broker = 0;
+		public const int BrokerCredit = 0;
 		public const int StaleOrder = 8;
 	}
 }

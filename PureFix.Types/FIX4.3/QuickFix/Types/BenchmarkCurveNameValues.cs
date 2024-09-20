@@ -8,8 +8,8 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const string Treasury = "Treasury";
 		public const string Euribor = "Euribor";
 		public const string Pfandbriefe = "Pfandbriefe";
-		public const string Futureswap = "FutureSWAP";
-		public const string Muniaaa = "MuniAAA";
+		public const string FutureSwap = "FutureSWAP";
+		public const string MuniAaa = "MuniAAA";
 		public const string Libor = "LIBOR";
 	}
 }
