@@ -9,7 +9,7 @@ using PureFix.Types;
 
 namespace PureFix.Buffer.Ascii
 {
-    internal class AsciiParseState(FixDefinitions definitions, StoragePool pool)
+    internal class AsciiParseState(IFixDefinitions definitions, StoragePool pool)
     {
         private MessageDefinition? _message;
         public ParseState ParseState { get; private set; }

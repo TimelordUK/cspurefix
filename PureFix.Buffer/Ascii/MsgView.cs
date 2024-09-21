@@ -14,7 +14,7 @@ namespace PureFix.Buffer.Ascii
 {
     public abstract partial class MsgView
     {
-        public FixDefinitions Definitions { get; }
+        public IFixDefinitions Definitions { get; }
         public SegmentDescription? Segment { get; }
         public Structure? Structure { get; }
         public Tags? Tags => Structure?.Tags;
@@ -23,7 +23,7 @@ namespace PureFix.Buffer.Ascii
         protected TagPos[]? SortedTagPosForwards;
         protected Dictionary<int, Range>? TagSpans;
 
-        protected MsgView(FixDefinitions definitions, SegmentDescription segment, Structure? structure)
+        protected MsgView(IFixDefinitions definitions, SegmentDescription segment, Structure? structure)
         {
             Definitions = definitions;
             Segment = segment;

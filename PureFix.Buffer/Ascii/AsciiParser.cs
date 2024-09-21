@@ -19,7 +19,7 @@ namespace PureFix.Buffer.Ascii
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
-        public FixDefinitions Definitons { get; }
+        public IFixDefinitions Definitons { get; }
         public int ID { get; } = Interlocked.Increment(ref _nextId);
 
         private readonly AsciiParseState _state;
@@ -32,7 +32,7 @@ namespace PureFix.Buffer.Ascii
         private double _totalElapsedParseMicros;
         public Stats ParserStats => new(_receivedBytes, _parsedMessages, _pool.Rents, _pool.Returns, _totalElapsedSegmentParseMicros, _totalElapsedParseMicros);
 
-        public AsciiParser(FixDefinitions definitions)
+        public AsciiParser(IFixDefinitions definitions)
         {
             Definitons = definitions;
             _state = new AsciiParseState(definitions, _pool);

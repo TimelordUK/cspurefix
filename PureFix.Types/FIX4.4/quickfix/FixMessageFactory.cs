@@ -7,9 +7,10 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-	public static class FixMessageFactoryExt
+
+    public class FixMessageFactory : IFixMessageFactory
 	{
-		public static IFixMessage? ToFixMessage(this IMessageView view)
+		public IFixMessage? ToFixMessage(IMessageView view)
 		{
 			var msgType = view.GetString((int)MsgTag.MsgType);
 			switch (msgType)

@@ -142,9 +142,9 @@ namespace PureFix.Transport.Ascii
                             // to avoid triggering an endless loop of both sides sending resend requests in response to resend requests.
                             if (msgType == MsgType.ResendRequest)
                             {
-                                // OnResendRequest(view);
+                               // await OnResendRequest(view);
                             }
-                            //  SendResendRequest(lastSeq, seqNo);
+                           // SendResendRequest(lastSeq, seqNo);
                         }
                         else
                         {
@@ -160,6 +160,7 @@ namespace PureFix.Transport.Ascii
    * Override to resend stored messages following a sequence reset.
    * @protected
    */
+     
         /*
         protected void OnResendRequest(MsgView view) {
             // if no records are in store then send a gap fill for entire sequence
@@ -195,7 +196,6 @@ namespace PureFix.Transport.Ascii
                 Terminate(new Exception($"msgType ${msgType} received in state {m_sessionState.State}"));
             }
         }
-
     }*/
     }
 }

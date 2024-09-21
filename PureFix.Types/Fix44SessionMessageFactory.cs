@@ -22,21 +22,21 @@ namespace PureFix.Types
 
         public virtual IFixMessage? TestRequest(string testReqId)
         {
-            return new TestRequest { TestReqID = testReqId };
+            return new TestRequest { StandardHeader = new StandardHeaderComponent(), TestReqID = testReqId };
         }
 
         public virtual IFixMessage? Heartbeat(string testReqId)
         {
-            return new Heartbeat { TestReqID = testReqId };
+            return new Heartbeat { StandardHeader = new StandardHeaderComponent(), TestReqID = testReqId };
         }
 
         public virtual IFixMessage? ResendRequest(int beginSeqNo, int endSeqNo)
         {
-            return new ResendRequest { BeginSeqNo = beginSeqNo, EndSeqNo = endSeqNo };
+            return new ResendRequest { StandardHeader = new StandardHeaderComponent(), BeginSeqNo = beginSeqNo, EndSeqNo = endSeqNo };
         }
         public virtual IFixMessage? SequenceReset(int newSeqNo, bool? gapFill = null)
         {
-            return new SequenceReset { GapFillFlag = gapFill, NewSeqNo = newSeqNo };
+            return new SequenceReset { StandardHeader = new StandardHeaderComponent(), GapFillFlag = gapFill, NewSeqNo = newSeqNo };
         }
 
         public virtual IStandardTrailer? Trailer(int checksum)
@@ -91,16 +91,6 @@ namespace PureFix.Types
                 TargetSubID = m_SessionDescription.TargetSubID,
                 SenderSubID = m_SessionDescription.SenderSubID
             };
-        }
-
-        public virtual IFixMessage? MakeFrom(IMessageView view)
-        {
-            var msgType = view.MsgType();
-            if (msgType == null)
-            {
-                return null;
-            }
-            return view.ToFixMessage();
         }
     }
 }

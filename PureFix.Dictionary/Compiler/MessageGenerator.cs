@@ -22,34 +22,6 @@ namespace PureFix.Dictionary.Compiler
         {
         }
 
-
-        /*
-         *  public static class FixMessageFactoryExt
-    {
-        public static IFixMessage? ToFixMessage(this IMessageView view)
-        {
-            var msgType = view.GetString((int)MsgTag.MsgType);
-            switch (msgType)
-            {
-                case MsgTypeValues.Heartbeat:
-                    {
-                        var o = new Heartbeat();
-                        ((IFixParser)o).Parse(view);
-                        return o;
-                    }
-
-                case MsgTypeValues.Logon:
-                    {
-                        var o = new Heartbeat();
-                        ((IFixParser)o).Parse(view);
-                        return o;
-                    }
-            }
-
-            return null;
-        }
-    }*/
-
         public override void PostProcess()
         {
             var generator = new CodeGenerator();
@@ -57,9 +29,9 @@ namespace PureFix.Dictionary.Compiler
             generator.WriteLine();
             using (generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
             {
-                using (generator.BeginBlock("public static class FixMessageFactoryExt"))
+                using (generator.BeginBlock("public class FixMessageFactory : IFixMessageFactory"))
                 {
-                    using (generator.BeginBlock($"public static IFixMessage? ToFixMessage(this IMessageView view)"))
+                    using (generator.BeginBlock($"public IFixMessage? ToFixMessage(IMessageView view)"))
                     {
                         generator.WriteLine("var msgType = view.GetString((int)MsgTag.MsgType);");
                         using (generator.BeginBlock("switch (msgType)"))

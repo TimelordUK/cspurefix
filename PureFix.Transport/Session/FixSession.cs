@@ -107,6 +107,18 @@ namespace PureFix.Transport.Session
 
         protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
         {
+            if (config.Definitions == null)
+            {
+                throw new ArgumentException("config had been supplied with no definitions");
+            }
+            if (config.MessageFactory == null)
+            {
+                throw new ArgumentException("config had been supplied with no message factory");
+            }
+            if (config.LogFactory == null)
+            {
+                throw new ArgumentException("config had been supplied with no log factory");
+            }
             m_config = config;
             m_transport = transport;
             m_logReceivedMessages = true;
@@ -117,7 +129,7 @@ namespace PureFix.Transport.Session
             m_parser = parser;
             m_encoder = encoder;
             var sessionDescription = config.Description;
-            if (sessionDescription.Application == null)
+            if (sessionDescription?.Application == null)
                 throw new InvalidDataException("no application provided in session config");
             m_me = sessionDescription.Application.Name ?? "me";
             m_sessionLogger = config.LogFactory.MakeLogger($"{m_me}:FixSession");

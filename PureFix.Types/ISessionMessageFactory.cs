@@ -52,10 +52,5 @@ namespace PureFix.Types
         {
             return null;
         }
-
-        public IFixMessage? MakeFrom(IMessageView view)
-        {
-            return null;
-        }
     }
 }

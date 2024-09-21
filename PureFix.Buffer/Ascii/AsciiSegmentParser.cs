@@ -13,9 +13,9 @@ using PureFix.Types;
 
 namespace PureFix.Buffer.Ascii
 {
-    public partial class AsciiSegmentParser(FixDefinitions definitions)
+    public partial class AsciiSegmentParser(IFixDefinitions definitions)
     {
-        public FixDefinitions Definitions { get; } = definitions;
+        public IFixDefinitions Definitions { get; } = definitions;
 
         public Structure? Parse(string msgType, Tags tags, int last)
         {

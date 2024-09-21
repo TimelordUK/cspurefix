@@ -20,7 +20,7 @@ namespace PureFix.Buffer.Ascii
 
 
         public AsciiView (
-            FixDefinitions definitions,
+            IFixDefinitions definitions,
             SegmentDescription segment,
             ElasticBuffer buffer,
             Structure? structure,
