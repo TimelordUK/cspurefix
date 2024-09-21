@@ -13,24 +13,6 @@ using System.Transactions;
 
 namespace PureFix.Transport.Store
 {
-    public static class Extensions
-    {
-        public static void CopyFrom(this IStandardHeader lhs, IStandardHeader rhs)
-        {
-            lhs.BeginString = rhs.BeginString;
-            lhs.BodyLength = rhs.BodyLength;
-            lhs.TargetSubID = rhs.TargetSubID;
-            lhs.TargetCompID = rhs.TargetCompID;
-            lhs.SenderSubID = rhs.SenderSubID;
-            lhs.SenderCompID = rhs.SenderCompID;
-            lhs.OrigSendingTime = rhs.OrigSendingTime;
-            lhs.MsgSeqNum = rhs.MsgSeqNum;
-            lhs.PossDupFlag = rhs.PossDupFlag;
-            lhs.SendingTime = rhs.SendingTime;
-            lhs.MsgType = rhs.MsgType;
-        }
-    }
-
     public class FixMsgAsciiStoreResend : IFixMsgResender
     {
         private readonly IMessageParser m_Parser;
@@ -93,6 +75,7 @@ namespace PureFix.Transport.Store
             {
                 var v = input[i];
                 if (v == null) continue;
+                // inflate the record back from encoded form to an object and set standard header params.
                 var record = PrepareRecordForRetransmission(v);
                 if (record == null) continue;
                 var seqNum = record.SeqNum;
