@@ -18,6 +18,7 @@ namespace PureFIix.Test.Ascii
         private TestEntity _testEntity;
         private List<AsciiView> _views;
         IFixConfig _config;
+        private string SenderCompID => _config?.Description?.SenderCompID;
 
         [OneTimeSetUp]
         public async Task OnceSetup()
@@ -43,7 +44,7 @@ namespace PureFIix.Test.Ascii
         public async Task Check_Messages_Loaded_Store_Test()
         {
             Assert.That(_config, Is.Not.Null);
-            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(9));
             Assert.That(state.LastSeq, Is.EqualTo(10));
@@ -52,7 +53,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Fetch_Sequence_Number_From_Store_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
             Assert.That(store, Is.Not.Null);
             var res1 = await store.Exists(1);
             Assert.That(res1, Is.False);
@@ -68,18 +69,21 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Fetch_From_SeqNum_To_Inferred_End_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
             Assert.That(store, Is.Not.Null);
             var range1 = await store.GetSeqNumRange(5);
-            Assert.That(range1, Has.Length.EqualTo(6));
-            Assert.That(range1[0].SeqNum, Is.EqualTo(5));
-            Assert.That(range1[range1.Length-1].SeqNum, Is.EqualTo(10));
+            Assert.Multiple(() =>
+            {
+                Assert.That(range1, Has.Length.EqualTo(6));
+                Assert.That(range1[0].SeqNum, Is.EqualTo(5));
+                Assert.That(range1[^1].SeqNum, Is.EqualTo(10));
+            });            
         }
 
         [Test]
         public async Task Fetch_From_SeqNum_To_Equals_Start_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
             Assert.That(store, Is.Not.Null);
             var range1 = await store.GetSeqNumRange(5, 5);
             Assert.That(range1, Has.Length.EqualTo(1));
@@ -90,11 +94,11 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Fetch_From_SeqNum_Not_In_Store_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
             Assert.That(store, Is.Not.Null);
             var range1 = await store.GetSeqNumRange(1);
             Assert.That(range1, Has.Length.EqualTo(9));
-            Assert.That(range1[range1.Length - 1].SeqNum, Is.EqualTo(10));
+            Assert.That(range1[^1].SeqNum, Is.EqualTo(10));
         }
     }
 }
