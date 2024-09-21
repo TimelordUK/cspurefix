@@ -163,5 +163,24 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PostTradePaymentType = null;
+			PostTradePaymentAmount = null;
+			PostTradePaymentCurrency = null;
+			PostTradePaymentCurrencyCodeSource = null;
+			PostTradePaymentCalculationDate = null;
+			PostTradePaymentValueDate = null;
+			PostTradePaymentFinalValueDate = null;
+			PostTradePaymentDebitOrCredit = null;
+			PostTradePaymentAccount = null;
+			PostTradePaymentID = null;
+			PostTradePaymentDesc = null;
+			EncodedPostTradePaymentDescLen = null;
+			EncodedPostTradePaymentDesc = null;
+			PostTradePaymentLinkID = null;
+			PostTradePaymentStatus = null;
+		}
 	}
 }

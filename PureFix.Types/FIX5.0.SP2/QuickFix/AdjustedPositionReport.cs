@@ -160,5 +160,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			PosMaintRptID = null;
+			PosReqType = null;
+			ClearingBusinessDate = null;
+			SettlSessID = null;
+			PosMaintRptRefID = null;
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)PositionQty)?.Reset();
+			((IFixReset?)InstrmtGrp)?.Reset();
+			SettlPrice = null;
+			PriorSettlPrice = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

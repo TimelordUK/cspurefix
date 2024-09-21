@@ -235,5 +235,31 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			SecurityReportID = null;
+			ClearingBusinessDate = null;
+			SecurityListID = null;
+			SecurityListRefID = null;
+			SecurityListDesc = null;
+			EncodedSecurityListDescLen = null;
+			EncodedSecurityListDesc = null;
+			SecurityListType = null;
+			SecurityListTypeSource = null;
+			SecurityReqID = null;
+			SecurityResponseID = null;
+			SecurityRequestResult = null;
+			SecurityRejectReason = null;
+			TransactTime = null;
+			TotNoRelatedSym = null;
+			MarketID = null;
+			MarketSegmentID = null;
+			LastFragment = null;
+			((IFixReset?)SecListGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

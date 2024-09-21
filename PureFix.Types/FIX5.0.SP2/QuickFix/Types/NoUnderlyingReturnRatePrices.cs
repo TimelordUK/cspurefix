@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingReturnRatePriceBasis = null;
+			UnderlyingReturnRatePrice = null;
+			UnderlyingReturnRatePriceCurrency = null;
+			UnderlyingReturnRatePriceType = null;
+		}
 	}
 }

@@ -82,5 +82,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			StartPriceRange = null;
+			EndPriceRange = null;
+			PriceRangeValue = null;
+			PriceRangePercentage = null;
+			PriceRangeRuleID = null;
+			PriceRangeProductComplex = null;
+		}
 	}
 }

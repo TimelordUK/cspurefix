@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingProvisionOptionRelevantUnderlyingDateUnadjusted = null;
+			UnderlyingProvisionOptionRelevantUnderlyingDateBizDayConvention = null;
+			((IFixReset?)UnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenterGrp)?.Reset();
+			UnderlyingProvisionOptionRelevantUnderlyingDateRelativeTo = null;
+			UnderlyingProvisionOptionRelevantUnderlyingDateOffsetPeriod = null;
+			UnderlyingProvisionOptionRelevantUnderlyingDateOffsetUnit = null;
+			UnderlyingProvisionOptionRelevantUnderlyingDateOffsetDayType = null;
+			UnderlyingProvisionOptionRelevantUnderlyingDateAdjusted = null;
+		}
 	}
 }

@@ -207,5 +207,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TransferInstructionID = null;
+			TransferID = null;
+			TransferTransType = null;
+			TransferType = null;
+			TransferStatus = null;
+			TransferRejectReason = null;
+			TransferScope = null;
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)TargetParties)?.Reset();
+			TransactTime = null;
+			RejectText = null;
+			EncodedRejectTextLen = null;
+			EncodedRejectText = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

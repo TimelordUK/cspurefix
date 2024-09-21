@@ -226,5 +226,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			EmailThreadID = null;
+			EmailType = null;
+			OrigTime = null;
+			Subject = null;
+			EncodedSubjectLen = null;
+			EncodedSubject = null;
+			((IFixReset?)RoutingGrp)?.Reset();
+			((IFixReset?)InstrmtGrp)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			OrderID = null;
+			ClOrdID = null;
+			((IFixReset?)LinesOfTextGrp)?.Reset();
+			RawDataLength = null;
+			RawData = null;
+			((IFixReset?)AttachmentGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

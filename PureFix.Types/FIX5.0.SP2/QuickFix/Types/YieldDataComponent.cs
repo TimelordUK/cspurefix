@@ -82,5 +82,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			YieldType = null;
+			Yield = null;
+			YieldCalcDate = null;
+			YieldRedemptionDate = null;
+			YieldRedemptionPrice = null;
+			YieldRedemptionPriceType = null;
+		}
 	}
 }

@@ -257,5 +257,35 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			AgreementDesc = null;
+			AgreementID = null;
+			AgreementVersion = null;
+			AgreementDate = null;
+			AgreementCurrency = null;
+			AgreementCurrencyCodeSource = null;
+			MasterConfirmationDesc = null;
+			MasterConfirmationDate = null;
+			MasterConfirmationAnnexDesc = null;
+			MasterConfirmationAnnexDate = null;
+			BrokerConfirmationDesc = null;
+			((IFixReset?)FinancingContractualDefinitionGrp)?.Reset();
+			((IFixReset?)FinancingTermSupplementGrp)?.Reset();
+			((IFixReset?)FinancingContractualMatrixGrp)?.Reset();
+			CreditSupportAgreementDesc = null;
+			CreditSupportAgreementDate = null;
+			CreditSupportAgreementID = null;
+			GoverningLaw = null;
+			DocumentationText = null;
+			EncodedDocumentationTextLen = null;
+			EncodedDocumentationText = null;
+			TerminationType = null;
+			StartDate = null;
+			EndDate = null;
+			DeliveryType = null;
+			MarginRatio = null;
+		}
 	}
 }

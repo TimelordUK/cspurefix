@@ -114,5 +114,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DisplayQty = null;
+			SecondaryDisplayQty = null;
+			InitialDisplayQty = null;
+			CurrentDisplayPrice = null;
+			DisplayWhen = null;
+			DisplayMethod = null;
+			DisplayLowQty = null;
+			DisplayHighQty = null;
+			DisplayMinIncr = null;
+			RefreshQty = null;
+		}
 	}
 }

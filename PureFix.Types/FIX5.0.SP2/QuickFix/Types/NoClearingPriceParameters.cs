@@ -162,5 +162,25 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			BusinessDayType = null;
+			ClearingPriceOffset = null;
+			VegaMultiplier = null;
+			AnnualTradingBusinessDays = null;
+			TotalTradingBusinessDays = null;
+			TradingBusinessDays = null;
+			StandardVariance = null;
+			RealizedVariance = null;
+			RelatedClosePrice = null;
+			RiskFreeRate = null;
+			OvernightInterestRate = null;
+			AccumulatedReturnModifiedVariationMargin = null;
+			DiscountFactor = null;
+			Volatility = null;
+			ClearingSettlPrice = null;
+			CalculationMethod = null;
+		}
 	}
 }

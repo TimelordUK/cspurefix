@@ -242,5 +242,33 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingDividendReinvestmentIndicator = null;
+			UnderlyingDividendEntitlementEvent = null;
+			UnderlyingDividendAmountType = null;
+			UnderlyingDividendUnderlierRefID = null;
+			((IFixReset?)UnderlyingDividendPeriodGrp)?.Reset();
+			UnderlyingExtraordinaryDividendPartySide = null;
+			UnderlyingExtraordinaryDividendAmountType = null;
+			UnderlyingExtraordinaryDividendCurrency = null;
+			UnderlyingExtraordinaryDividendDeterminationMethod = null;
+			((IFixReset?)UnderlyingDividendFXTriggerDate)?.Reset();
+			((IFixReset?)UnderlyingDividendAccrualFloatingRate)?.Reset();
+			UnderlyingDividendAccrualFixedRate = null;
+			((IFixReset?)UnderlyingDividendAccrualPaymentDate)?.Reset();
+			UnderlyingDividendCompoundingMethod = null;
+			UnderlyingDividendNumOfIndexUnits = null;
+			UnderlyingDividendCashPercentage = null;
+			UnderlyingDividendCashEquivalentPercentage = null;
+			UnderlyingNonCashDividendTreatment = null;
+			UnderlyingDividendComposition = null;
+			UnderlyingSpecialDividendsIndicator = null;
+			UnderlyingMaterialDividendsIndicator = null;
+			UnderlyingOptionsExchangeDividendsIndicator = null;
+			UnderlyingAdditionalDividendsIndicator = null;
+			UnderlyingAllDividendsIndicator = null;
+		}
 	}
 }

@@ -233,5 +233,33 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			InstrumentScopeSymbol = null;
+			InstrumentScopeSymbolSfx = null;
+			InstrumentScopeSecurityID = null;
+			InstrumentScopeSecurityIDSource = null;
+			((IFixReset?)InstrumentScopeSecurityAltIDGrp)?.Reset();
+			InstrumentScopeProduct = null;
+			InstrumentScopeProductComplex = null;
+			InstrumentScopeSecurityGroup = null;
+			InstrumentScopeCFICode = null;
+			InstrumentScopeUPICode = null;
+			InstrumentScopeSecurityType = null;
+			InstrumentScopeSecuritySubType = null;
+			InstrumentScopeMaturityMonthYear = null;
+			InstrumentScopeMaturityTime = null;
+			InstrumentScopeRestructuringType = null;
+			InstrumentScopeSeniority = null;
+			InstrumentScopePutOrCall = null;
+			InstrumentScopeFlexibleIndicator = null;
+			InstrumentScopeCouponRate = null;
+			InstrumentScopeSecurityExchange = null;
+			InstrumentScopeSecurityDesc = null;
+			InstrumentScopeEncodedSecurityDescLen = null;
+			InstrumentScopeEncodedSecurityDesc = null;
+			InstrumentScopeSettlType = null;
+		}
 	}
 }

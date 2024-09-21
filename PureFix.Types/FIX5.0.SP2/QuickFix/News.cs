@@ -260,5 +260,31 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			NewsID = null;
+			((IFixReset?)NewsRefGrp)?.Reset();
+			NewsCategory = null;
+			LanguageCode = null;
+			OrigTime = null;
+			Urgency = null;
+			Headline = null;
+			EncodedHeadlineLen = null;
+			EncodedHeadline = null;
+			((IFixReset?)RoutingGrp)?.Reset();
+			MarketID = null;
+			MarketSegmentID = null;
+			((IFixReset?)InstrmtGrp)?.Reset();
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			((IFixReset?)LinesOfTextGrp)?.Reset();
+			URLLink = null;
+			RawDataLength = null;
+			RawData = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

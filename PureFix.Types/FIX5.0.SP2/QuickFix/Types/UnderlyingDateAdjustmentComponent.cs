@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingBusinessDayConvention = null;
+			((IFixReset?)UnderlyingBusinessCenterGrp)?.Reset();
+			UnderlyingDateRollConvention = null;
+		}
 	}
 }

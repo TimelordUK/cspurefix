@@ -226,5 +226,32 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingReturnRateDateMode = null;
+			((IFixReset?)UnderlyingReturnRateValuationDateGrp)?.Reset();
+			UnderlyingReturnRateValuationDateRelativeTo = null;
+			UnderlyingReturnRateValuationDateOffsetPeriod = null;
+			UnderlyingReturnRateValuationDateOffsetUnit = null;
+			UnderlyingReturnRateValuationDateOffsetDayType = null;
+			UnderlyingReturnRateValuationStartDateUnadjusted = null;
+			UnderlyingReturnRateValuationStartDateRelativeTo = null;
+			UnderlyingReturnRateValuationStartDateOffsetPeriod = null;
+			UnderlyingReturnRateValuationStartDateOffsetUnit = null;
+			UnderlyingReturnRateValuationStartDateOffsetDayType = null;
+			UnderlyingReturnRateValuationStartDateAdjusted = null;
+			UnderlyingReturnRateValuationEndDateUnadjusted = null;
+			UnderlyingReturnRateValuationEndDateRelativeTo = null;
+			UnderlyingReturnRateValuationEndDateOffsetPeriod = null;
+			UnderlyingReturnRateValuationEndDateOffsetUnit = null;
+			UnderlyingReturnRateValuationEndDateOffsetDayType = null;
+			UnderlyingReturnRateValuationEndDateAdjusted = null;
+			UnderlyingReturnRateValuationFrequencyPeriod = null;
+			UnderlyingReturnRateValuationFrequencyUnit = null;
+			UnderlyingReturnRateValuationFrequencyRollConvention = null;
+			UnderlyingReturnRateValuationDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingReturnRateValuationDateBusinessCenterGrp)?.Reset();
+		}
 	}
 }

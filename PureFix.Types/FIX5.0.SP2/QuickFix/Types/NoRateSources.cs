@@ -74,5 +74,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RateSource = null;
+			RateSourceType = null;
+			ReferencePage = null;
+			RateSourceReferemcePageHeading = null;
+			FXBenchmarkRateFix = null;
+		}
 	}
 }

@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegSecondaryAssetClass = null;
+			LegSecondaryAssetSubClass = null;
+			LegSecondaryAssetType = null;
+			LegSecondaryAssetSubType = null;
+		}
 	}
 }

@@ -82,5 +82,13 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)DerivativeInstrument)?.Reset();
+			((IFixReset?)DerivativeInstrumentAttribute)?.Reset();
+			((IFixReset?)MarketSegmentGrp)?.Reset();
+			((IFixReset?)SecurityClassificationGrp)?.Reset();
+		}
 	}
 }

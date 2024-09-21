@@ -472,5 +472,61 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			Side = null;
+			SideExecID = null;
+			SideExecRefID = null;
+			SideTradeID = null;
+			SideTradeReportID = null;
+			OrderDelay = null;
+			OrderDelayUnit = null;
+			SideLastQty = null;
+			SideClearingTradePrice = null;
+			SidePriceDifferential = null;
+			SideClearingTradePriceType = null;
+			SideFillStationCd = null;
+			SideReasonCd = null;
+			SideTrdSubType = null;
+			NetGrossInd = null;
+			SideCurrency = null;
+			SideCurrencyCodeSource = null;
+			SideSettlCurrency = null;
+			SideSettlCurrencyCodeSource = null;
+			((IFixReset?)Parties)?.Reset();
+			TradeInputSource = null;
+			TradeInputDevice = null;
+			ComplianceID = null;
+			ComplianceText = null;
+			EncodedComplianceTextLen = null;
+			EncodedComplianceText = null;
+			SolicitedFlag = null;
+			CustOrderCapacity = null;
+			TimeBracket = null;
+			PositionEffect = null;
+			ExchangeRule = null;
+			TradeAllocIndicator = null;
+			PreallocMethod = null;
+			AllocID = null;
+			((IFixReset?)TrdAllocGrp)?.Reset();
+			SideGrossTradeAmt = null;
+			AggressorIndicator = null;
+			ExchangeSpecialInstructions = null;
+			SideShortSaleExemptionReason = null;
+			OrderCategory = null;
+			AvgPxIndicator = null;
+			AvgPxGroupID = null;
+			SideMarketSegmentID = null;
+			SideVenueType = null;
+			ClearingFeeIndicator = null;
+			((IFixReset?)TradeReportOrderDetail)?.Reset();
+			((IFixReset?)TrdInstrmtLegExecGrp)?.Reset();
+			CustOrderHandlingInst = null;
+			OrderHandlingInstSource = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+		}
 	}
 }

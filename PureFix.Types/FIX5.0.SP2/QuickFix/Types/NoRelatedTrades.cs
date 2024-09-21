@@ -82,5 +82,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RelatedTradeID = null;
+			RelatedTradeIDSource = null;
+			RelatedRegulatoryTradeIDSource = null;
+			RelatedTradeDate = null;
+			RelatedTradeMarketID = null;
+			RelatedTradeQuantity = null;
+		}
 	}
 }

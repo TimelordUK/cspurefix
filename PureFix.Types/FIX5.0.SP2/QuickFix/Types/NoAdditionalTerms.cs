@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			AdditionalTermConditionPrecedentBondIndicator = null;
+			AdditionalTermDiscrepancyClauseIndicator = null;
+			((IFixReset?)AdditionalTermBondRefGrp)?.Reset();
+		}
 	}
 }

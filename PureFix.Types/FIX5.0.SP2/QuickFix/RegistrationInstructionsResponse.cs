@@ -152,5 +152,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			RegistID = null;
+			RegistTransType = null;
+			RegistRefID = null;
+			ClOrdID = null;
+			((IFixReset?)Parties)?.Reset();
+			Account = null;
+			AcctIDSource = null;
+			RegistStatus = null;
+			RegistRejReasonCode = null;
+			RegistRejReasonText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

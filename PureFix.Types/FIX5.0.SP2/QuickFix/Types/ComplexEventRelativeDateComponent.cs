@@ -118,5 +118,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ComplexEventDateUnadjusted = null;
+			ComplexEventDateRelativeTo = null;
+			ComplexEventDateOffsetPeriod = null;
+			ComplexEventDateOffsetUnit = null;
+			ComplexEventDateOffsetDayType = null;
+			ComplexEventDateBusinessDayConvention = null;
+			((IFixReset?)ComplexEventDateBusinessCenterGrp)?.Reset();
+			ComplexEventDateAdjusted = null;
+			ComplexEventFixingTime = null;
+			ComplexEventFixingTimeBusinessCenter = null;
+		}
 	}
 }

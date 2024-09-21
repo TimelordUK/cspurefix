@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			CashSettlDateUnadjusted = null;
+			CashSettlDateBusinessDayConvention = null;
+			((IFixReset?)CashSettlDateBusinessCenterGrp)?.Reset();
+			CashSettlDateRelativeTo = null;
+			CashSettlDateOffsetPeriod = null;
+			CashSettlDateOffsetUnit = null;
+			CashSettlDateOffsetDayType = null;
+			CashSettlDateAdjusted = null;
+		}
 	}
 }

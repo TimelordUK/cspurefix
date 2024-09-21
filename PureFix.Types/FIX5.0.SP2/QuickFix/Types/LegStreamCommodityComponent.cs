@@ -313,5 +313,41 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegStreamCommodityBase = null;
+			LegStreamCommodityType = null;
+			LegStreamCommoditySecurityID = null;
+			LegStreamCommoditySecurityIDSource = null;
+			((IFixReset?)LegStreamCommodityAltIDGrp)?.Reset();
+			LegStreamCommodityDesc = null;
+			EncodedLegStreamCommodityDescLen = null;
+			EncodedLegStreamCommodityDesc = null;
+			LegStreamCommodityDeliveryPricingRegion = null;
+			((IFixReset?)LegStreamAssetAttributeGrp)?.Reset();
+			LegStreamCommodityUnitOfMeasure = null;
+			LegStreamCommodityCurrency = null;
+			LegStreamCommodityExchange = null;
+			LegStreamCommodityRateSource = null;
+			LegStreamCommodityRateReferencePage = null;
+			LegStreamCommodityRateReferencePageHeading = null;
+			LegStreamDataProvider = null;
+			((IFixReset?)LegStreamCommodityDataSourceGrp)?.Reset();
+			LegStreamCommodityPricingType = null;
+			LegStreamCommodityNearbySettlDayPeriod = null;
+			LegStreamCommodityNearbySettlDayUnit = null;
+			LegStreamCommoditySettlDateUnadjusted = null;
+			LegStreamCommoditySettlDateBusinessDayConvention = null;
+			((IFixReset?)LegStreamCommoditySettlBusinessCenterGrp)?.Reset();
+			LegStreamCommoditySettlDateAdjusted = null;
+			LegStreamCommoditySettlMonth = null;
+			LegStreamCommoditySettlDateRollPeriod = null;
+			LegStreamCommoditySettlDateRollUnit = null;
+			LegStreamCommoditySettlDayType = null;
+			((IFixReset?)LegStreamCommoditySettlPeriodGrp)?.Reset();
+			LegStreamCommodityXID = null;
+			LegStreamCommodityXIDRef = null;
+		}
 	}
 }

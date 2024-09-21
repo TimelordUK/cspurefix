@@ -74,5 +74,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegComplexEventScheduleStartDate = null;
+			LegComplexEventScheduleEndDate = null;
+			LegComplexEventScheduleFrequencyPeriod = null;
+			LegComplexEventScheduleFrequencyUnit = null;
+			LegComplexEventScheduleRollConvention = null;
+		}
 	}
 }

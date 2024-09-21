@@ -410,5 +410,53 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ComplexEventType = null;
+			ComplexOptPayoutPaySide = null;
+			ComplexOptPayoutReceiveSide = null;
+			ComplexOptPayoutUnderlier = null;
+			ComplexOptPayoutAmount = null;
+			ComplexOptPayoutPercentage = null;
+			ComplexOptPayoutTime = null;
+			ComplexOptPayoutCurrency = null;
+			ComplexOptPayoutCurrencyCodeSource = null;
+			ComplexEventPrice = null;
+			ComplexEventPricePercentage = null;
+			ComplexEventPriceBoundaryMethod = null;
+			ComplexEventPriceBoundaryPrecision = null;
+			ComplexEventPriceTimeType = null;
+			ComplexEventCondition = null;
+			((IFixReset?)ComplexEventDates)?.Reset();
+			ComplexEventCurrencyOne = null;
+			ComplexEventCurrencyOneCodeSource = null;
+			ComplexEventCurrencyTwo = null;
+			ComplexEventCurrencyTwoCodeSource = null;
+			ComplexEventQuoteBasis = null;
+			ComplexEventFixedFXRate = null;
+			ComplexEventSpotRate = null;
+			ComplexEventForwardPoints = null;
+			ComplexEventDeterminationMethod = null;
+			ComplexEventCalculationAgent = null;
+			ComplexEventStrikePrice = null;
+			ComplexEventStrikeFactor = null;
+			ComplexEventStrikeNumberOfOptions = null;
+			((IFixReset?)ComplexEventRateSourceGrp)?.Reset();
+			((IFixReset?)ComplexEventRelativeDate)?.Reset();
+			((IFixReset?)ComplexEventPeriodGrp)?.Reset();
+			ComplexEventCreditEventsXIDRef = null;
+			ComplexEventCreditEventNotifyingParty = null;
+			ComplexEventCreditEventBusinessCenter = null;
+			ComplexEventCreditEventStandardSources = null;
+			ComplexEventCreditEventMinimumSources = null;
+			((IFixReset?)ComplexEventCreditEventSourceGrp)?.Reset();
+			((IFixReset?)ComplexEventCreditEventGrp)?.Reset();
+			ComplexEventFuturesPriceValuation = null;
+			ComplexEventOptionsPriceValuation = null;
+			ComplexEventPVFinalPriceElectionFallback = null;
+			ComplexEventXID = null;
+			ComplexEventXIDRef = null;
+		}
 	}
 }

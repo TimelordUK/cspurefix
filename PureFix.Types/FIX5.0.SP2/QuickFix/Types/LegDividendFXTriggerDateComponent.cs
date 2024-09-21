@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegDividendFXTriggerDateRelativeTo = null;
+			LegDividendFXTriggerDateOffsetPeriod = null;
+			LegDividendFXTriggerDateOffsetUnit = null;
+			LegDividendFXTriggerDateOffsetDayType = null;
+			LegDividendFXTriggerDateUnadjusted = null;
+			LegDividendFXTriggerDateBusinessDayConvention = null;
+			((IFixReset?)LegDividendFXTriggerDateBusinessCenterGrp)?.Reset();
+			LegDividendFXTriggerDateAdjusted = null;
+		}
 	}
 }

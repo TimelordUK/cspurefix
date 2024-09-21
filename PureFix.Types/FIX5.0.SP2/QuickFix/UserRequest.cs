@@ -172,5 +172,23 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			UserRequestID = null;
+			UserRequestType = null;
+			Username = null;
+			Password = null;
+			NewPassword = null;
+			EncryptedPasswordMethod = null;
+			EncryptedPasswordLen = null;
+			EncryptedPassword = null;
+			EncryptedNewPasswordLen = null;
+			EncryptedNewPassword = null;
+			RawDataLength = null;
+			RawData = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -178,5 +178,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DividendFloatingRateIndex = null;
+			DividendFloatingRateIndexCurvePeriod = null;
+			DividendFloatingRateIndexCurveUnit = null;
+			DividendFloatingRateMultiplier = null;
+			DividendFloatingRateSpread = null;
+			DividendFloatingRateSpreadPositionType = null;
+			DividendFloatingRateTreatment = null;
+			DividendCapRate = null;
+			DividendCapRateBuySide = null;
+			DividendCapRateSellSide = null;
+			DividendFloorRate = null;
+			DividendFloorRateBuySide = null;
+			DividendFloorRateSellSide = null;
+			DividendInitialRate = null;
+			DividendFinalRateRoundingDirection = null;
+			DividendFinalRatePrecision = null;
+			DividendAveragingMethod = null;
+			DividendNegativeRateTreatment = null;
+		}
 	}
 }

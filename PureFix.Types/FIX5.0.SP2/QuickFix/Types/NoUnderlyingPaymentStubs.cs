@@ -290,5 +290,40 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPaymentStubType = null;
+			UnderlyingPaymentStubLength = null;
+			((IFixReset?)UnderlyingPaymentStubStartDate)?.Reset();
+			((IFixReset?)UnderlyingPaymentStubEndDate)?.Reset();
+			UnderlyingPaymentStubRate = null;
+			UnderlyingPaymentStubFixedAmount = null;
+			UnderlyingPaymentStubFixedCurrency = null;
+			UnderlyingPaymentStubIndex = null;
+			UnderlyingPaymentStubIndexSource = null;
+			UnderlyingPaymentStubIndexCurvePeriod = null;
+			UnderlyingPaymentStubIndexCurveUnit = null;
+			UnderlyingPaymentStubIndexRateMultiplier = null;
+			UnderlyingPaymentStubIndexRateSpread = null;
+			UnderlyingPaymentStubIndexRateSpreadPositionType = null;
+			UnderlyingPaymentStubIndexRateTreatment = null;
+			UnderlyingPaymentStubIndexCapRate = null;
+			UnderlyingPaymentStubIndexCapRateBuySide = null;
+			UnderlyingPaymentStubIndexCapRateSellSide = null;
+			UnderlyingPaymentStubIndexFloorRate = null;
+			UnderlyingPaymentStubIndexFloorRateBuySide = null;
+			UnderlyingPaymentStubIndexFloorRateSellSide = null;
+			UnderlyingPaymentStubIndex2 = null;
+			UnderlyingPaymentStubIndex2Source = null;
+			UnderlyingPaymentStubIndex2CurvePeriod = null;
+			UnderlyingPaymentStubIndex2CurveUnit = null;
+			UnderlyingPaymentStubIndex2RateMultiplier = null;
+			UnderlyingPaymentStubIndex2RateSpread = null;
+			UnderlyingPaymentStubIndex2RateSpreadPositionType = null;
+			UnderlyingPaymentStubIndex2RateTreatment = null;
+			UnderlyingPaymentStubIndex2CapRate = null;
+			UnderlyingPaymentStubIndex2FloorRate = null;
+		}
 	}
 }

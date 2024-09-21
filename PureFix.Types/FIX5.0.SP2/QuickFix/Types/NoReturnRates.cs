@@ -282,5 +282,38 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ReturnRatePriceSequence = null;
+			ReturnRateCommissionBasis = null;
+			ReturnRateCommissionAmount = null;
+			ReturnRateCommissionCurrency = null;
+			ReturnRateTotalCommissionPerTrade = null;
+			ReturnRateDeterminationMethod = null;
+			((IFixReset?)ReturnRatePriceGrp)?.Reset();
+			((IFixReset?)ReturnRateFXConversionGrp)?.Reset();
+			ReturnRateAmountRelativeTo = null;
+			ReturnRateQuoteMeasureType = null;
+			ReturnRateQuoteUnits = null;
+			ReturnRateQuoteMethod = null;
+			ReturnRateQuoteCurrency = null;
+			ReturnRateQuoteCurrencyType = null;
+			ReturnRateQuoteTimeType = null;
+			ReturnRateQuoteTime = null;
+			ReturnRateQuoteDate = null;
+			ReturnRateQuoteExpirationTime = null;
+			ReturnRateQuoteBusinessCenter = null;
+			ReturnRateQuoteExchange = null;
+			((IFixReset?)ReturnRateInformationSourceGrp)?.Reset();
+			ReturnRateQuotePricingModel = null;
+			ReturnRateCashFlowType = null;
+			((IFixReset?)ReturnRateDateGrp)?.Reset();
+			ReturnRateValuationTimeType = null;
+			ReturnRateValuationTime = null;
+			ReturnRateValuationTimeBusinessCenter = null;
+			ReturnRateValuationPriceOption = null;
+			ReturnRateFinalPriceFallback = null;
+		}
 	}
 }

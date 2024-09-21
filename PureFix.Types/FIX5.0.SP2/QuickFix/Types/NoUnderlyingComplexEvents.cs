@@ -410,5 +410,53 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingComplexEventType = null;
+			UnderlyingComplexOptPayoutPaySide = null;
+			UnderlyingComplexOptPayoutReceiveSide = null;
+			UnderlyingComplexOptPayoutUnderlier = null;
+			UnderlyingComplexOptPayoutAmount = null;
+			UnderlyingComplexOptPayoutPercentage = null;
+			UnderlyingComplexOptPayoutTime = null;
+			UnderlyingComplexOptPayoutCurrency = null;
+			UnderlyingComplexOptPayoutCurrencyCodeSource = null;
+			UnderlyingComplexEventPrice = null;
+			UnderlyingComplexEventPricePercentage = null;
+			UnderlyingComplexEventPriceBoundaryMethod = null;
+			UnderlyingComplexEventPriceBoundaryPrecision = null;
+			UnderlyingComplexEventPriceTimeType = null;
+			UnderlyingComplexEventCondition = null;
+			((IFixReset?)UnderlyingComplexEventDates)?.Reset();
+			UnderlyingComplexEventCurrencyOne = null;
+			UnderlyingComplexEventCurrencyOneCodeSource = null;
+			UnderlyingComplexEventCurrencyTwo = null;
+			UnderlyingComplexEventCurrencyTwoCodeSource = null;
+			UnderlyingComplexEventQuoteBasis = null;
+			UnderlyingComplexEventFixedFXRate = null;
+			UnderlyingComplexEventSpotRate = null;
+			UnderlyingComplexEventForwardPoints = null;
+			UnderlyingComplexEventDeterminationMethod = null;
+			UnderlyingComplexEventCalculationAgent = null;
+			UnderlyingComplexEventStrikePrice = null;
+			UnderlyingComplexEventStrikeFactor = null;
+			UnderlyingComplexEventStrikeNumberOfOptions = null;
+			((IFixReset?)UnderlyingComplexEventRateSourceGrp)?.Reset();
+			((IFixReset?)UnderlyingComplexEventRelativeDate)?.Reset();
+			((IFixReset?)UnderlyingComplexEventPeriodGrp)?.Reset();
+			UnderlyingComplexEventCreditEventsXIDRef = null;
+			UnderlyingComplexEventCreditEventNotifyingParty = null;
+			UnderlyingComplexEventCreditEventBusinessCenter = null;
+			UnderlyingComplexEventCreditEventStandardSources = null;
+			UnderlyingComplexEventCreditEventMinimumSources = null;
+			((IFixReset?)UnderlyingComplexEventCreditEventSourceGrp)?.Reset();
+			((IFixReset?)UnderlyingComplexEventCreditEventGrp)?.Reset();
+			UnderlyingComplexEventFuturesPriceValuation = null;
+			UnderlyingComplexEventOptionsPriceValuation = null;
+			UnderlyingComplexEventPVFinalPriceElectionFallback = null;
+			UnderlyingComplexEventXID = null;
+			UnderlyingComplexEventXIDRef = null;
+		}
 	}
 }

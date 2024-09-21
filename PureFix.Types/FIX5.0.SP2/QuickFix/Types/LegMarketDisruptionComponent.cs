@@ -110,5 +110,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegMarketDisruptionProvision = null;
+			((IFixReset?)LegMarketDisruptionEventGrp)?.Reset();
+			LegMarketDisruptionFallbackProvision = null;
+			((IFixReset?)LegMarketDisruptionFallbackGrp)?.Reset();
+			((IFixReset?)LegMarketDisruptionFallbackReferencePriceGrp)?.Reset();
+			LegMarketDisruptionMaximumDays = null;
+			LegMarketDisruptionMaterialityPercentage = null;
+			LegMarketDisruptionMinimumFuturesContracts = null;
+		}
 	}
 }

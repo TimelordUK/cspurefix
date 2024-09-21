@@ -98,5 +98,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LimitAmtType = null;
+			LastLimitAmt = null;
+			LimitAmtRemaining = null;
+			LimitUtilizationAmt = null;
+			LimitAmt = null;
+			LimitAmtCurrency = null;
+			LimitAmtCurrencyCodeSource = null;
+			LimitRole = null;
+		}
 	}
 }

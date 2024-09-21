@@ -452,5 +452,55 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			SecurityStatusReqID = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)InstrumentExtension)?.Reset();
+			((IFixReset?)FinancingDetails)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			((IFixReset?)RelatedInstrumentGrp)?.Reset();
+			Currency = null;
+			CurrencyCodeSource = null;
+			MarketID = null;
+			MarketSegmentID = null;
+			TradeDate = null;
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			UnsolicitedIndicator = null;
+			SecurityTradingStatus = null;
+			MarketMakerActivity = null;
+			FastMarketIndicator = null;
+			SecurityTradingEvent = null;
+			NextAuctionTime = null;
+			FinancialStatus = null;
+			CorporateAction = null;
+			HaltReasonInt = null;
+			InViewOfCommon = null;
+			DueToRelated = null;
+			MDBookType = null;
+			MarketDepth = null;
+			BuyVolume = null;
+			SellVolume = null;
+			HighPx = null;
+			LowPx = null;
+			LastPx = null;
+			((IFixReset?)ClearingPriceParametersGrp)?.Reset();
+			SettlPrice = null;
+			SettlPriceType = null;
+			SettlPriceDeterminationMethod = null;
+			TransactTime = null;
+			Adjustment = null;
+			FirstPx = null;
+			LinkageHandlingIndicator = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

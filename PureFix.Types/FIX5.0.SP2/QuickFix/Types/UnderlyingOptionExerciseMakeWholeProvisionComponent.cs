@@ -90,5 +90,16 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingMakeWholeDate = null;
+			UnderlyingMakeWholeAmount = null;
+			UnderlyingMakeWholeBenchmarkCurveName = null;
+			UnderlyingMakeWholeBenchmarkCurvePoint = null;
+			UnderlyingMakeWholeRecallSpread = null;
+			UnderlyingMakeWholeBenchmarkQuote = null;
+			UnderlyingMakeWholeInterpolationMethod = null;
+		}
 	}
 }

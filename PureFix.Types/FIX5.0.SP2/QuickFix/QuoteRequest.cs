@@ -224,5 +224,29 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			QuoteReqID = null;
+			RFQReqID = null;
+			ClOrdID = null;
+			BookingType = null;
+			OrderCapacity = null;
+			OrderRestrictions = null;
+			PrivateQuote = null;
+			RespondentType = null;
+			PreTradeAnonymity = null;
+			((IFixReset?)RootParties)?.Reset();
+			((IFixReset?)QuotReqGrp)?.Reset();
+			ComplianceID = null;
+			ComplianceText = null;
+			EncodedComplianceTextLen = null;
+			EncodedComplianceText = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

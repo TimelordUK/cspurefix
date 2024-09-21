@@ -54,5 +54,11 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MDStatisticID = null;
+			((IFixReset?)MDStatisticParameters)?.Reset();
+		}
 	}
 }

@@ -86,5 +86,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegComplexEventPeriodType = null;
+			LegComplexEventBusinessCenter = null;
+			((IFixReset?)LegComplexEventScheduleGrp)?.Reset();
+			((IFixReset?)LegComplexEventPeriodDateGrp)?.Reset();
+			((IFixReset?)LegComplexEventAveragingObservationGrp)?.Reset();
+		}
 	}
 }

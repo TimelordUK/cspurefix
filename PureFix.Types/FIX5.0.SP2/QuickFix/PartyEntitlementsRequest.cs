@@ -195,5 +195,24 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			EntitlementRequestID = null;
+			SubscriptionRequestType = null;
+			((IFixReset?)RequestingPartyGrp)?.Reset();
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)RequestedPartyRoleGrp)?.Reset();
+			EntitlementStatus = null;
+			((IFixReset?)EntitlementTypeGrp)?.Reset();
+			EntitlementPlatform = null;
+			((IFixReset?)InstrumentScopeGrp)?.Reset();
+			((IFixReset?)MarketSegmentScopeGrp)?.Reset();
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -114,5 +114,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPaymentStreamRate = null;
+			LegPaymentStreamFixedAmount = null;
+			LegPaymentStreamRateOrAmountCurrency = null;
+			LegPaymentStreamFixedAmountUnitOfMeasure = null;
+			LegPaymentStreamTotalFixedAmount = null;
+			LegPaymentStreamFutureValueNotional = null;
+			LegPaymentStreamFutureValueDateAdjusted = null;
+			LegPaymentStreamWorldScaleRate = null;
+			LegPaymentStreamContractPrice = null;
+			LegPaymentStreamContractPriceCurrency = null;
+		}
 	}
 }

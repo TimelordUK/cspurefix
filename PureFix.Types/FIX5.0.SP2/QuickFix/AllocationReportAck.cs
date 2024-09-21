@@ -327,5 +327,41 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			AllocReportID = null;
+			AllocID = null;
+			AllocRequestID = null;
+			ClearingBusinessDate = null;
+			AvgPxIndicator = null;
+			Quantity = null;
+			AllocTransType = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)Parties)?.Reset();
+			SecondaryAllocID = null;
+			AllocGroupID = null;
+			FirmGroupID = null;
+			AvgPxGroupID = null;
+			TradeDate = null;
+			TransactTime = null;
+			AllocStatus = null;
+			AllocRejCode = null;
+			AllocReportType = null;
+			AllocIntermedReqType = null;
+			MatchStatus = null;
+			CustOrderHandlingInst = null;
+			OrderHandlingInstSource = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			RejectText = null;
+			EncodedRejectTextLen = null;
+			EncodedRejectText = null;
+			((IFixReset?)RegulatoryTradeIDGrp)?.Reset();
+			((IFixReset?)AllocAckGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentSettlAmount = null;
+			PaymentSettlCurrency = null;
+			((IFixReset?)PaymentSettlParties)?.Reset();
+		}
 	}
 }

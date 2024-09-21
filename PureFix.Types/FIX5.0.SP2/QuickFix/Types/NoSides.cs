@@ -440,5 +440,56 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			Side = null;
+			ShortMarkingExemptIndicator = null;
+			OrigClOrdID = null;
+			ClOrdID = null;
+			SecondaryClOrdID = null;
+			ClOrdLinkID = null;
+			OrigOrdModTime = null;
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)SideCrossLegGrp)?.Reset();
+			SideShortSaleExemptionReason = null;
+			TradeOriginationDate = null;
+			TradeDate = null;
+			Account = null;
+			AcctIDSource = null;
+			AccountType = null;
+			DayBookingInst = null;
+			BookingUnit = null;
+			PreallocMethod = null;
+			AllocID = null;
+			((IFixReset?)PreAllocGrp)?.Reset();
+			QtyType = null;
+			((IFixReset?)OrderQtyData)?.Reset();
+			((IFixReset?)CommissionData)?.Reset();
+			((IFixReset?)CommissionDataGrp)?.Reset();
+			OrderCapacity = null;
+			OrderRestrictions = null;
+			OrderOrigination = null;
+			OriginatingDeptID = null;
+			ReceivingDeptID = null;
+			RoutingArrangmentIndicator = null;
+			PreTradeAnonymity = null;
+			CustOrderCapacity = null;
+			ForexReq = null;
+			SettlCurrency = null;
+			SettlCurrencyCodeSource = null;
+			BookingType = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			ClearingAccountType = null;
+			PositionEffect = null;
+			CoveredOrUncovered = null;
+			CashMargin = null;
+			ClearingFeeIndicator = null;
+			SolicitedFlag = null;
+			SideComplianceID = null;
+			SideTimeInForce = null;
+		}
 	}
 }

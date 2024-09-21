@@ -142,5 +142,22 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			AllocAccount = null;
+			AllocAcctIDSource = null;
+			AllocSettlCurrency = null;
+			AllocSettlCurrencyCodeSource = null;
+			IndividualAllocID = null;
+			AllocLegRefID = null;
+			((IFixReset?)NestedParties)?.Reset();
+			AllocHandlInst = null;
+			AllocQty = null;
+			CustodialLotID = null;
+			VersusPurchaseDate = null;
+			VersusPurchasePrice = null;
+			CurrentCostBasis = null;
+		}
 	}
 }

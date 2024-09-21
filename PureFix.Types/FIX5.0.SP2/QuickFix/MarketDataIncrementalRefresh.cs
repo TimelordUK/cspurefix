@@ -173,5 +173,23 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			MDBookType = null;
+			MDFeedType = null;
+			MDSubFeedType = null;
+			TradeDate = null;
+			MDReqID = null;
+			MarketID = null;
+			MarketSegmentID = null;
+			((IFixReset?)MDIncGrp)?.Reset();
+			ApplQueueDepth = null;
+			ApplQueueResolution = null;
+			((IFixReset?)RoutingGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

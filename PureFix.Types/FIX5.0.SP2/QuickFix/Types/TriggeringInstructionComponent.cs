@@ -162,5 +162,25 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			TriggerType = null;
+			TriggerAction = null;
+			TriggerScope = null;
+			TriggerPrice = null;
+			TriggerSymbol = null;
+			TriggerSecurityID = null;
+			TriggerSecurityIDSource = null;
+			TriggerSecurityDesc = null;
+			TriggerPriceType = null;
+			TriggerPriceTypeScope = null;
+			TriggerPriceDirection = null;
+			TriggerNewPrice = null;
+			TriggerOrderType = null;
+			TriggerNewQty = null;
+			TriggerTradingSessionID = null;
+			TriggerTradingSessionSubID = null;
+		}
 	}
 }

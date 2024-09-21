@@ -106,5 +106,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PayCollectType = null;
+			PayCollectCurrency = null;
+			PayCollectCurrencyCodeSource = null;
+			PayCollectFXRate = null;
+			PayCollectFXRateCalc = null;
+			PayAmount = null;
+			CollectAmount = null;
+			PayCollectMarketSegmentID = null;
+			PayCollectMarketID = null;
+		}
 	}
 }

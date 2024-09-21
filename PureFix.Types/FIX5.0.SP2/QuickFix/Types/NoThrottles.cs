@@ -86,5 +86,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ThrottleAction = null;
+			ThrottleType = null;
+			ThrottleNoMsgs = null;
+			ThrottleTimeInterval = null;
+			ThrottleTimeUnit = null;
+			((IFixReset?)ThrottleMsgTypeGrp)?.Reset();
+		}
 	}
 }

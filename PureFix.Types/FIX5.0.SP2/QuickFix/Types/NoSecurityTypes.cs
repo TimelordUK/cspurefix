@@ -82,5 +82,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			SecurityType = null;
+			SecuritySubType = null;
+			Product = null;
+			CFICode = null;
+			UPICode = null;
+			TransactTime = null;
+		}
 	}
 }

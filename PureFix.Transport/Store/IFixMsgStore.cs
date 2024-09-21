@@ -9,11 +9,11 @@ namespace PureFix.Transport.Store
 {
     public interface IFixMsgStore
     {
-        public Task<IFixMsgStoreState> Clear();
-        public Task<IFixMsgStoreState> GetState();
-        public Task<IFixMsgStoreState> Put(IFixMsgStoreRecord record);
-        public Task<IFixMsgStoreRecord> Get(int seq);
+        public Task<FixMsgStoreState> Clear();
+        public Task<FixMsgStoreState> GetState();
+        public Task<FixMsgStoreState> Put(IFixMsgStoreRecord record);
+        public Task<IFixMsgStoreRecord?> Get(int seq);
         public Task<bool> Exists(int seq);
-        public Task<FixMsgStoreRecord[]> GetSeqNumRange(int from, int?to = null);
+        public Task<IFixMsgStoreRecord?[]> GetSeqNumRange(int from, int?to = null);
     }
 }

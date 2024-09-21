@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingDividendPaymentDate = null;
+			UnderlyingDividendPaymentAmount = null;
+			UnderlyingDividendPaymentCurrency = null;
+			UnderlyingDividendAccruedInterest = null;
+		}
 	}
 }

@@ -282,5 +282,38 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingReturnRatePriceSequence = null;
+			UnderlyingReturnRateCommissionBasis = null;
+			UnderlyingReturnRateCommissionAmount = null;
+			UnderlyingReturnRateCommissionCurrency = null;
+			UnderlyingReturnRateTotalCommissionPerTrade = null;
+			UnderlyingReturnRateDeterminationMethod = null;
+			((IFixReset?)UnderlyingReturnRatePriceGrp)?.Reset();
+			((IFixReset?)UnderlyingReturnRateFXConversionGrp)?.Reset();
+			UnderlyingReturnRateAmountRelativeTo = null;
+			UnderlyingReturnRateQuoteMeasureType = null;
+			UnderlyingReturnRateQuoteUnits = null;
+			UnderlyingReturnRateQuoteMethod = null;
+			UnderlyingReturnRateQuoteCurrency = null;
+			UnderlyingReturnRateQuoteCurrencyType = null;
+			UnderlyingReturnRateQuoteTimeType = null;
+			UnderlyingReturnRateQuoteTime = null;
+			UnderlyingReturnRateQuoteDate = null;
+			UnderlyingReturnRateQuoteExpirationTime = null;
+			UnderlyingReturnRateQuoteBusinessCenter = null;
+			UnderlyingReturnRateQuoteExchange = null;
+			((IFixReset?)UnderlyingReturnRateInformationSourceGrp)?.Reset();
+			UnderlyingReturnRateQuotePricingModel = null;
+			UnderlyingReturnRateCashFlowType = null;
+			((IFixReset?)UnderlyingReturnRateDateGrp)?.Reset();
+			UnderlyingReturnRateValuationTimeType = null;
+			UnderlyingReturnRateValuationTime = null;
+			UnderlyingReturnRateValuationTimeBusinessCenter = null;
+			UnderlyingReturnRateValuationPriceOption = null;
+			UnderlyingReturnRateFinalPriceFallback = null;
+		}
 	}
 }

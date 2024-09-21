@@ -290,5 +290,40 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPaymentStubType = null;
+			LegPaymentStubLength = null;
+			((IFixReset?)LegPaymentStubStartDate)?.Reset();
+			((IFixReset?)LegPaymentStubEndDate)?.Reset();
+			LegPaymentStubRate = null;
+			LegPaymentStubFixedAmount = null;
+			LegPaymentStubFixedCurrency = null;
+			LegPaymentStubIndex = null;
+			LegPaymentStubIndexSource = null;
+			LegPaymentStubIndexCurvePeriod = null;
+			LegPaymentStubIndexCurveUnit = null;
+			LegPaymentStubIndexRateMultiplier = null;
+			LegPaymentStubIndexRateSpread = null;
+			LegPaymentStubIndexRateSpreadPositionType = null;
+			LegPaymentStubIndexRateTreatment = null;
+			LegPaymentStubIndexCapRate = null;
+			LegPaymentStubIndexCapRateBuySide = null;
+			LegPaymentStubIndexCapRateSellSide = null;
+			LegPaymentStubIndexFloorRate = null;
+			LegPaymentStubIndexFloorRateBuySide = null;
+			LegPaymentStubIndexFloorRateSellSide = null;
+			LegPaymentStubIndex2 = null;
+			LegPaymentStubIndex2Source = null;
+			LegPaymentStubIndex2CurvePeriod = null;
+			LegPaymentStubIndex2CurveUnit = null;
+			LegPaymentStubIndex2RateMultiplier = null;
+			LegPaymentStubIndex2RateSpread = null;
+			LegPaymentStubIndex2RateSpreadPositionType = null;
+			LegPaymentStubIndex2RateTreatment = null;
+			LegPaymentStubIndex2CapRate = null;
+			LegPaymentStubIndex2FloorRate = null;
+		}
 	}
 }

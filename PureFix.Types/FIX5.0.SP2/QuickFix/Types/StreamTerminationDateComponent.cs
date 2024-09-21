@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			StreamTerminationDateUnadjusted = null;
+			StreamTerminationDateBusinessDayConvention = null;
+			((IFixReset?)StreamTerminationDateBusinessCenterGrp)?.Reset();
+			StreamTerminationDateRelativeTo = null;
+			StreamTerminationDateOffsetPeriod = null;
+			StreamTerminationDateOffsetUnit = null;
+			StreamTerminationDateOffsetDayType = null;
+			StreamTerminationDateAdjusted = null;
+		}
 	}
 }

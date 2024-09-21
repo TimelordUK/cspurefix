@@ -410,5 +410,53 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegComplexEventType = null;
+			LegComplexOptPayoutPaySide = null;
+			LegComplexOptPayoutReceiveSide = null;
+			LegComplexOptPayoutUnderlier = null;
+			LegComplexOptPayoutAmount = null;
+			LegComplexOptPayoutPercentage = null;
+			LegComplexOptPayoutTime = null;
+			LegComplexOptPayoutCurrency = null;
+			LegComplexOptPayoutCurrencyCodeSource = null;
+			LegComplexEventPrice = null;
+			LegComplexEventPricePercentage = null;
+			LegComplexEventPriceBoundaryMethod = null;
+			LegComplexEventPriceBoundaryPrecision = null;
+			LegComplexEventPriceTimeType = null;
+			LegComplexEventCondition = null;
+			((IFixReset?)LegComplexEventDates)?.Reset();
+			LegComplexEventCurrencyOne = null;
+			LegComplexEventCurrencyOneCodeSource = null;
+			LegComplexEventCurrencyTwo = null;
+			LegComplexEventCurrencyTwoCodeSource = null;
+			LegComplexEventQuoteBasis = null;
+			LegComplexEventFixedFXRate = null;
+			LegComplexEventSpotRate = null;
+			LegComplexEventForwardPoints = null;
+			LegComplexEventDeterminationMethod = null;
+			LegComplexEventCalculationAgent = null;
+			LegComplexEventStrikePrice = null;
+			LegComplexEventStrikeFactor = null;
+			LegComplexEventStrikeNumberOfOptions = null;
+			((IFixReset?)LegComplexEventRateSourceGrp)?.Reset();
+			((IFixReset?)LegComplexEventRelativeDate)?.Reset();
+			((IFixReset?)LegComplexEventPeriodGrp)?.Reset();
+			LegComplexEventCreditEventsXIDRef = null;
+			LegComplexEventCreditEventNotifyingParty = null;
+			LegComplexEventCreditEventBusinessCenter = null;
+			LegComplexEventCreditEventStandardSources = null;
+			LegComplexEventCreditEventMinimumSources = null;
+			((IFixReset?)LegComplexEventCreditEventSourceGrp)?.Reset();
+			((IFixReset?)LegComplexEventCreditEventGrp)?.Reset();
+			LegComplexEventFuturesPriceValuation = null;
+			LegComplexEventOptionsPriceValuation = null;
+			LegComplexEventPVFinalPriceElectionFallback = null;
+			LegComplexEventXID = null;
+			LegComplexEventXIDRef = null;
+		}
 	}
 }

@@ -117,5 +117,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			EventType = null;
+			EventDate = null;
+			EventTime = null;
+			EventTimeUnit = null;
+			EventTimePeriod = null;
+			EventMonthYear = null;
+			EventPx = null;
+			EventText = null;
+			EncodedEventTextLen = null;
+			EncodedEventText = null;
+		}
 	}
 }

@@ -166,5 +166,25 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			CurrentCollateralAmount = null;
+			CollateralCurrency = null;
+			CollateralCurrencyCodeSource = null;
+			CollateralAmountType = null;
+			CollateralFXRate = null;
+			CollateralFXRateCalc = null;
+			CollateralType = null;
+			CollateralAmountMarketSegmentID = null;
+			CollateralAmountMarketID = null;
+			HaircutIndicator = null;
+			CollateralPortfolioID = null;
+			CollateralPercentOverage = null;
+			CollateralMarketPrice = null;
+			CollateralReinvestmentRate = null;
+			((IFixReset?)CollateralReinvestmentGrp)?.Reset();
+			UnderlyingRefID = null;
+		}
 	}
 }

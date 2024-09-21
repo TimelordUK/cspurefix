@@ -101,5 +101,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			StreamAsgnRptID = null;
+			StreamAsgnReqType = null;
+			StreamAsgnReqID = null;
+			((IFixReset?)StrmAsgnRptGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

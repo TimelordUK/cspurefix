@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegProtectionTermEventType = null;
+			LegProtectionTermEventValue = null;
+			LegProtectionTermEventCurrency = null;
+			LegProtectionTermEventPeriod = null;
+			LegProtectionTermEventUnit = null;
+			LegProtectionTermEventDayType = null;
+			LegProtectionTermEventRateSource = null;
+			((IFixReset?)LegProtectionTermEventQualifierGrp)?.Reset();
+		}
 	}
 }

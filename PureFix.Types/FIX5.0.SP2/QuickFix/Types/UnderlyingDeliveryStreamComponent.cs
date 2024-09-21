@@ -274,5 +274,38 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingDeliveryStreamType = null;
+			((IFixReset?)UnderlyingDeliveryStreamCommoditySourceGrp)?.Reset();
+			UnderlyingDeliveryStreamPipeline = null;
+			UnderlyingDeliveryStreamEntryPoint = null;
+			UnderlyingDeliveryStreamWithdrawalPoint = null;
+			UnderlyingDeliveryStreamDeliveryPoint = null;
+			UnderlyingDeliveryStreamDeliveryPointSource = null;
+			UnderlyingDeliveryStreamDeliveryPointDesc = null;
+			UnderlyingDeliveryStreamDeliveryRestriction = null;
+			UnderlyingDeliveryStreamDeliveryContingency = null;
+			UnderlyingDeliveryStreamDeliveryContingentPartySide = null;
+			UnderlyingDeliveryStreamDeliverAtSourceIndicator = null;
+			UnderlyingDeliveryStreamRiskApportionment = null;
+			UnderlyingDeliveryStreamRiskApportionmentSource = null;
+			((IFixReset?)UnderlyingDeliveryStreamCycleGrp)?.Reset();
+			UnderlyingDeliveryStreamTitleTransferLocation = null;
+			UnderlyingDeliveryStreamTitleTransferCondition = null;
+			UnderlyingDeliveryStreamImporterOfRecord = null;
+			UnderlyingDeliveryStreamNegativeTolerance = null;
+			UnderlyingDeliveryStreamPositiveTolerance = null;
+			UnderlyingDeliveryStreamToleranceUnitOfMeasure = null;
+			UnderlyingDeliveryStreamToleranceType = null;
+			UnderlyingDeliveryStreamToleranceOptionSide = null;
+			UnderlyingDeliveryStreamTotalPositiveTolerance = null;
+			UnderlyingDeliveryStreamTotalNegativeTolerance = null;
+			UnderlyingDeliveryStreamNotionalConversionFactor = null;
+			UnderlyingDeliveryStreamTransportEquipment = null;
+			UnderlyingDeliveryStreamElectingPartySide = null;
+			UnderlyingDeliveryStreamRouteOrCharter = null;
+		}
 	}
 }

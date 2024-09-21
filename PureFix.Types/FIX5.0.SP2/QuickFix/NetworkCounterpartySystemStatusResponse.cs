@@ -111,5 +111,16 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			NetworkStatusResponseType = null;
+			NetworkRequestID = null;
+			NetworkResponseID = null;
+			LastNetworkResponseID = null;
+			((IFixReset?)CompIDStatGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

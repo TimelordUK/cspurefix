@@ -130,5 +130,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			TrdRegTimestamp = null;
+			TrdRegTimestampType = null;
+			TrdRegTimestampOrigin = null;
+			TrdRegTimestampManualIndicator = null;
+			DeskType = null;
+			DeskTypeSource = null;
+			DeskOrderHandlingInst = null;
+			InformationBarrierID = null;
+			NBBOEntryType = null;
+			NBBOPrice = null;
+			NBBOQty = null;
+			NBBOSource = null;
+		}
 	}
 }

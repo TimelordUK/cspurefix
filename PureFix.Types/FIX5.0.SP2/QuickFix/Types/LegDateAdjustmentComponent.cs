@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegBusinessDayConvention = null;
+			((IFixReset?)LegBusinessCenterGrp)?.Reset();
+			LegDateRollConvention = null;
+		}
 	}
 }

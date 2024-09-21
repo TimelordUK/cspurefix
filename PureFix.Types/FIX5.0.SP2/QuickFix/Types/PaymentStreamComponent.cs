@@ -334,5 +334,43 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentStreamType = null;
+			PaymentStreamMarketRate = null;
+			PaymentStreamDelayIndicator = null;
+			PaymentStreamCashSettlIndicator = null;
+			PaymentStreamSettlCurrency = null;
+			PaymentStreamDayCount = null;
+			PaymentStreamOtherDayCount = null;
+			PaymentStreamAccrualDays = null;
+			PaymentStreamDiscountType = null;
+			PaymentStreamDiscountRate = null;
+			PaymentStreamDiscountRateDayCount = null;
+			PaymentStreamCompoundingMethod = null;
+			PaymentStreamCompoundingXIDRef = null;
+			PaymentStreamCompoundingSpread = null;
+			PaymentStreamInterpolationMethod = null;
+			PaymentStreamInterpolationPeriod = null;
+			PaymentStreamInitialPrincipalExchangeIndicator = null;
+			PaymentStreamInterimPrincipalExchangeIndicator = null;
+			PaymentStreamFinalPrincipalExchangeIndicator = null;
+			PaymentStreamFlatRateIndicator = null;
+			PaymentStreamFlatRateAmount = null;
+			PaymentStreamFlatRateCurrency = null;
+			PaymentStreamMaximumPaymentAmount = null;
+			PaymentStreamMaximumPaymentCurrency = null;
+			PaymentStreamMaximumTransactionAmount = null;
+			PaymentStreamMaximumTransactionCurrency = null;
+			((IFixReset?)PaymentStreamPaymentDates)?.Reset();
+			((IFixReset?)PaymentStreamResetDates)?.Reset();
+			((IFixReset?)PaymentStreamFixedRate)?.Reset();
+			((IFixReset?)PaymentStreamFloatingRate)?.Reset();
+			PaymentStreamCompoundingFixedRate = null;
+			((IFixReset?)PaymentStreamCompoundingFloatingRate)?.Reset();
+			((IFixReset?)PaymentStreamCompoundingDates)?.Reset();
+			((IFixReset?)PaymentStreamNonDeliverableSettlTerms)?.Reset();
+		}
 	}
 }

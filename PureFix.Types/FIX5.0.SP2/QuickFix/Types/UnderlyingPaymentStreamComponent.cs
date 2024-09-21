@@ -334,5 +334,43 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPaymentStreamType = null;
+			UnderlyingPaymentStreamMarketRate = null;
+			UnderlyingPaymentStreamDelayIndicator = null;
+			UnderlyingPaymentStreamCashSettlIndicator = null;
+			UnderlyingPaymentStreamSettlCurrency = null;
+			UnderlyingPaymentStreamDayCount = null;
+			UnderlyingPaymentStreamOtherDayCount = null;
+			UnderlyingPaymentStreamAccrualDays = null;
+			UnderlyingPaymentStreamDiscountType = null;
+			UnderlyingPaymentStreamDiscountRate = null;
+			UnderlyingPaymentStreamDiscountRateDayCount = null;
+			UnderlyingPaymentStreamCompoundingMethod = null;
+			UnderlyingPaymentStreamCompoundingXIDRef = null;
+			UnderlyingPaymentStreamCompoundingSpread = null;
+			UnderlyingPaymentStreamInterpolationMethod = null;
+			UnderlyingPaymentStreamInterpolationPeriod = null;
+			UnderlyingPaymentStreamInitialPrincipalExchangeIndicator = null;
+			UnderlyingPaymentStreamInterimPrincipalExchangeIndicator = null;
+			UnderlyingPaymentStreamFinalPrincipalExchangeIndicator = null;
+			UnderlyingPaymentStreamFlatRateIndicator = null;
+			UnderlyingPaymentStreamFlatRateAmount = null;
+			UnderlyingPaymentStreamFlatRateCurrency = null;
+			UnderlyingPaymentStreamMaximumPaymentAmount = null;
+			UnderlyingPaymentStreamMaximumPaymentCurrency = null;
+			UnderlyingPaymentStreamMaximumTransactionAmount = null;
+			UnderlyingPaymentStreamMaximumTransactionCurrency = null;
+			((IFixReset?)UnderlyingPaymentStreamPaymentDates)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamResetDates)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamFixedRate)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamFloatingRate)?.Reset();
+			UnderlyingPaymentStreamCompoundingFixedRate = null;
+			((IFixReset?)UnderlyingPaymentStreamCompoundingFloatingRate)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamCompoundingDates)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamNonDeliverableSettlTerms)?.Reset();
+		}
 	}
 }

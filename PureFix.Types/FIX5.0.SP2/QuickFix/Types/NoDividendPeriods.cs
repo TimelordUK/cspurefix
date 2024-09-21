@@ -198,5 +198,29 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DividendPeriodSequence = null;
+			DividendPeriodStartDateUnadjusted = null;
+			DividendPeriodEndDateUnadjusted = null;
+			DividendPeriodUnderlierRefID = null;
+			DividendPeriodStrikePrice = null;
+			DividendPeriodBusinessDayConvention = null;
+			((IFixReset?)DividendPeriodBusinessCenterGrp)?.Reset();
+			DividendPeriodValuationDateUnadjusted = null;
+			DividendPeriodValuationDateRelativeTo = null;
+			DividendPeriodValuationDateOffsetPeriod = null;
+			DividendPeriodValuationDateOffsetUnit = null;
+			DividendPeriodValuationDateOffsetDayType = null;
+			DividendPeriodValuationDateAdjusted = null;
+			DividendPeriodPaymentDateUnadjusted = null;
+			DividendPeriodPaymentDateRelativeTo = null;
+			DividendPeriodPaymentDateOffsetPeriod = null;
+			DividendPeriodPaymentDateOffsetUnit = null;
+			DividendPeriodPaymentDateOffsetDayType = null;
+			DividendPeriodPaymentDateAdjusted = null;
+			DividendPeriodXID = null;
+		}
 	}
 }

@@ -166,5 +166,25 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegRefID = null;
+			LegExecID = null;
+			LegExecRefID = null;
+			LegTradeID = null;
+			LegTradeReportID = null;
+			LegOrderQty = null;
+			LegPositionEffect = null;
+			LegCoveredOrUncovered = null;
+			((IFixReset?)NestedParties3)?.Reset();
+			LegLastPx = null;
+			LegPriceType = null;
+			LegSettlCurrency = null;
+			LegSettlCurrencyCodeSource = null;
+			LegShortSaleExemptionReason = null;
+			LegLastQty = null;
+			LegQtyType = null;
+		}
 	}
 }

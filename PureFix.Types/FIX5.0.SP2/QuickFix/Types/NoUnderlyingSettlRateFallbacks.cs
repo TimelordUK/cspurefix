@@ -70,5 +70,13 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingSettlRatePostponementMaximumDays = null;
+			((IFixReset?)UnderlyingSettlRateFallbackRateSource)?.Reset();
+			UnderlyingSettlRatePostponementSurvey = null;
+			UnderlyingSettlRatePostponementCalculationAgent = null;
+		}
 	}
 }

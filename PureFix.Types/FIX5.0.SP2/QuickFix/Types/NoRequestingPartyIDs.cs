@@ -78,5 +78,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RequestingPartyID = null;
+			RequestingPartyIDSource = null;
+			RequestingPartyRole = null;
+			RequestingPartyRoleQualifier = null;
+			((IFixReset?)RequestingPartySubGrp)?.Reset();
+		}
 	}
 }

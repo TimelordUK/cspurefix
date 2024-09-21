@@ -58,5 +58,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			SecurityAltID = null;
+			SecurityAltIDSource = null;
+			SymbolPositionNumber = null;
+		}
 	}
 }

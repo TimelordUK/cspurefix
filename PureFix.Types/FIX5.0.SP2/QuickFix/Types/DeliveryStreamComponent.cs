@@ -274,5 +274,38 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DeliveryStreamType = null;
+			((IFixReset?)DeliveryStreamCommoditySourceGrp)?.Reset();
+			DeliveryStreamPipeline = null;
+			DeliveryStreamEntryPoint = null;
+			DeliveryStreamWithdrawalPoint = null;
+			DeliveryStreamDeliveryPoint = null;
+			DeliveryStreamDeliveryPointSource = null;
+			DeliveryStreamDeliveryPointDesc = null;
+			DeliveryStreamDeliveryRestriction = null;
+			DeliveryStreamDeliveryContingency = null;
+			DeliveryStreamDeliveryContingentPartySide = null;
+			DeliveryStreamDeliverAtSourceIndicator = null;
+			DeliveryStreamRiskApportionment = null;
+			DeliveryStreamRiskApportionmentSource = null;
+			((IFixReset?)DeliveryStreamCycleGrp)?.Reset();
+			DeliveryStreamTitleTransferLocation = null;
+			DeliveryStreamTitleTransferCondition = null;
+			DeliveryStreamImporterOfRecord = null;
+			DeliveryStreamNegativeTolerance = null;
+			DeliveryStreamPositiveTolerance = null;
+			DeliveryStreamToleranceUnitOfMeasure = null;
+			DeliveryStreamToleranceType = null;
+			DeliveryStreamToleranceOptionSide = null;
+			DeliveryStreamTotalPositiveTolerance = null;
+			DeliveryStreamTotalNegativeTolerance = null;
+			DeliveryStreamNotionalConversionFactor = null;
+			DeliveryStreamTransportEquipment = null;
+			DeliveryStreamElectingPartySide = null;
+			DeliveryStreamRouteOrCharter = null;
+		}
 	}
 }

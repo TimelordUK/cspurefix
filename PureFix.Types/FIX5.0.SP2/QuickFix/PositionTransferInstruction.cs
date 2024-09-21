@@ -262,5 +262,32 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TransferInstructionID = null;
+			TransferID = null;
+			TransferTransType = null;
+			TransferType = null;
+			TransferScope = null;
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)TargetParties)?.Reset();
+			ClearingBusinessDate = null;
+			TradeDate = null;
+			TransactTime = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			((IFixReset?)PositionQty)?.Reset();
+			ClearingTradePrice = null;
+			Currency = null;
+			CurrencyCodeSource = null;
+			PriceType = null;
+			((IFixReset?)PositionAmountData)?.Reset();
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

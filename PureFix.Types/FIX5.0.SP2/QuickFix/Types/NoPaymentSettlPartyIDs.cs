@@ -78,5 +78,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentSettlPartyID = null;
+			PaymentSettlPartyIDSource = null;
+			PaymentSettlPartyRole = null;
+			PaymentSettlPartyRoleQualifier = null;
+			((IFixReset?)PaymentSettlPtysSubGrp)?.Reset();
+		}
 	}
 }

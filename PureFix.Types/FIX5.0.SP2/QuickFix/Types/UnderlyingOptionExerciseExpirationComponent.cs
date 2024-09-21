@@ -138,5 +138,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingOptionExerciseExpirationDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingOptionExerciseExpirationDateBusinessCenterGrp)?.Reset();
+			((IFixReset?)UnderlyingOptionExerciseExpirationDateGrp)?.Reset();
+			UnderlyingOptionExerciseExpirationDateRelativeTo = null;
+			UnderlyingOptionExerciseExpirationDateOffsetPeriod = null;
+			UnderlyingOptionExerciseExpirationDateOffsetUnit = null;
+			UnderlyingOptionExerciseExpirationFrequencyPeriod = null;
+			UnderlyingOptionExerciseExpirationFrequencyUnit = null;
+			UnderlyingOptionExerciseExpirationRollConvention = null;
+			UnderlyingOptionExerciseExpirationDateOffsetDayType = null;
+			UnderlyingOptionExerciseExpirationTime = null;
+			UnderlyingOptionExerciseExpirationTimeBusinessCenter = null;
+		}
 	}
 }

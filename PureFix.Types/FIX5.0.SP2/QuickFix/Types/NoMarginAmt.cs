@@ -98,5 +98,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MarginAmt = null;
+			MarginAmtType = null;
+			MarginAmtCcy = null;
+			MarginAmtFXRate = null;
+			MarginAmtFXRateCalc = null;
+			MarginAmountMarketSegmentID = null;
+			MarginAmountMarketID = null;
+			MarginDirection = null;
+		}
 	}
 }

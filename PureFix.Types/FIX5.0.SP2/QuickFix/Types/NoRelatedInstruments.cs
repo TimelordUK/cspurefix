@@ -114,5 +114,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RelatedInstrumentType = null;
+			RelatedSymbol = null;
+			RelatedSecurityID = null;
+			RelatedSecurityIDSource = null;
+			RelatedSecurityType = null;
+			RelatedMaturityMonthYear = null;
+			RelatedToSecurityID = null;
+			RelatedToSecurityIDSource = null;
+			RelatedToStreamXIDRef = null;
+			RelatedToDividendPeriodXIDRef = null;
+		}
 	}
 }

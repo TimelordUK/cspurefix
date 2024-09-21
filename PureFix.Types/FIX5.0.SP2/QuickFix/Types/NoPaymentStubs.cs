@@ -290,5 +290,40 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentStubType = null;
+			PaymentStubLength = null;
+			((IFixReset?)PaymentStubStartDate)?.Reset();
+			((IFixReset?)PaymentStubEndDate)?.Reset();
+			PaymentStubRate = null;
+			PaymentStubFixedAmount = null;
+			PaymentStubFixedCurrency = null;
+			PaymentStubIndex = null;
+			PaymentStubIndexSource = null;
+			PaymentStubIndexCurvePeriod = null;
+			PaymentStubIndexCurveUnit = null;
+			PaymentStubIndexRateMultiplier = null;
+			PaymentStubIndexRateSpread = null;
+			PaymentStubIndexRateSpreadPositionType = null;
+			PaymentStubIndexRateTreatment = null;
+			PaymentStubIndexCapRate = null;
+			PaymentStubIndexCapRateBuySide = null;
+			PaymentStubIndexCapRateSellSide = null;
+			PaymentStubIndexFloorRate = null;
+			PaymentStubIndexFloorRateBuySide = null;
+			PaymentStubIndexFloorRateSellSide = null;
+			PaymentStubIndex2 = null;
+			PaymentStubIndex2Source = null;
+			PaymentStubIndex2CurvePeriod = null;
+			PaymentStubIndex2CurveUnit = null;
+			PaymentStubIndex2RateMultiplier = null;
+			PaymentStubIndex2RateSpread = null;
+			PaymentStubIndex2RateSpreadPositionType = null;
+			PaymentStubIndex2RateTreatment = null;
+			PaymentStubIndex2CapRate = null;
+			PaymentStubIndex2FloorRate = null;
+		}
 	}
 }

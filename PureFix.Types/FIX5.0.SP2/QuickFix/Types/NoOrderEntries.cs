@@ -130,5 +130,20 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			OrderEntryAction = null;
+			OrderEntryID = null;
+			ClOrdID = null;
+			OrigClOrdID = null;
+			OrderID = null;
+			OrdType = null;
+			Price = null;
+			Side = null;
+			TimeInForce = null;
+			((IFixReset?)OrderQtyData)?.Reset();
+			((IFixReset?)Instrument)?.Reset();
+		}
 	}
 }

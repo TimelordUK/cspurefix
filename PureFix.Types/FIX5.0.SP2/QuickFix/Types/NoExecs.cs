@@ -146,5 +146,22 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LastQty = null;
+			ExecID = null;
+			SecondaryExecID = null;
+			LastPx = null;
+			LastParPx = null;
+			LastCapacity = null;
+			TradeID = null;
+			FirmTradeID = null;
+			TrdMatchID = null;
+			ExecutionTimestamp = null;
+			TradeReportingIndicator = null;
+			((IFixReset?)TrdRegPublicationGrp)?.Reset();
+			((IFixReset?)TradePriceConditionGrp)?.Reset();
+		}
 	}
 }

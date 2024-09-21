@@ -114,5 +114,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			QuoteSetID = null;
+			((IFixReset?)UnderlyingInstrument)?.Reset();
+			QuoteSetValidUntilTime = null;
+			TotNoQuoteEntries = null;
+			TotNoCxldQuotes = null;
+			TotNoAccQuotes = null;
+			TotNoRejQuotes = null;
+			LastFragment = null;
+			((IFixReset?)QuotEntryAckGrp)?.Reset();
+		}
 	}
 }

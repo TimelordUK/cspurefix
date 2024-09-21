@@ -118,5 +118,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ProvisionOptionExpirationDateUnadjusted = null;
+			ProvisionOptionExpirationDateBusinessDayConvention = null;
+			((IFixReset?)ProvisionOptionExpirationDateBusinessCenterGrp)?.Reset();
+			ProvisionOptionExpirationDateRelativeTo = null;
+			ProvisionOptionExpirationDateOffsetPeriod = null;
+			ProvisionOptionExpirationDateOffsetUnit = null;
+			ProvisionOptionExpirationDateOffsetDayType = null;
+			ProvisionOptionExpirationDateAdjusted = null;
+			ProvisionOptionExpirationTime = null;
+			ProvisionOptionExpirationTimeBusinessCenter = null;
+		}
 	}
 }

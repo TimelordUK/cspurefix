@@ -313,5 +313,41 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingStreamCommodityBase = null;
+			UnderlyingStreamCommodityType = null;
+			UnderlyingStreamCommoditySecurityID = null;
+			UnderlyingStreamCommoditySecurityIDSource = null;
+			((IFixReset?)UnderlyingStreamCommodityAltIDGrp)?.Reset();
+			UnderlyingStreamCommodityDesc = null;
+			EncodedUnderlyingStreamCommodityDescLen = null;
+			EncodedUnderlyingStreamCommodityDesc = null;
+			UnderlyingStreamCommodityDeliveryPricingRegion = null;
+			((IFixReset?)UnderlyingStreamAssetAttributeGrp)?.Reset();
+			UnderlyingStreamCommodityUnitOfMeasure = null;
+			UnderlyingStreamCommodityCurrency = null;
+			UnderlyingStreamCommodityExchange = null;
+			UnderlyingStreamCommodityRateSource = null;
+			UnderlyingStreamCommodityRateReferencePage = null;
+			UnderlyingStreamCommodityRateReferencePageHeading = null;
+			UnderlyingStreamDataProvider = null;
+			((IFixReset?)UnderlyingStreamCommodityDataSourceGrp)?.Reset();
+			UnderlyingStreamCommodityPricingType = null;
+			UnderlyingStreamCommodityNearbySettlDayPeriod = null;
+			UnderlyingStreamCommodityNearbySettlDayUnit = null;
+			UnderlyingStreamCommoditySettlDateUnadjusted = null;
+			UnderlyingStreamCommoditySettlDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingStreamCommoditySettlBusinessCenterGrp)?.Reset();
+			UnderlyingStreamCommoditySettlDateAdjusted = null;
+			UnderlyingStreamCommoditySettlMonth = null;
+			UnderlyingStreamCommoditySettlDateRollPeriod = null;
+			UnderlyingStreamCommoditySettlDateRollUnit = null;
+			UnderlyingStreamCommoditySettlDayType = null;
+			((IFixReset?)UnderlyingStreamCommoditySettlPeriodGrp)?.Reset();
+			UnderlyingStreamCommodityXID = null;
+			UnderlyingStreamCommodityXIDRef = null;
+		}
 	}
 }

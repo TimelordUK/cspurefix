@@ -134,5 +134,20 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegProtectionTermNotional = null;
+			LegProtectionTermCurrency = null;
+			LegProtectionTermSellerNotifies = null;
+			LegProtectionTermBuyerNotifies = null;
+			LegProtectionTermEventBusinessCenter = null;
+			LegProtectionTermStandardSources = null;
+			LegProtectionTermEventMinimumSources = null;
+			((IFixReset?)LegProtectionTermEventNewsSourceGrp)?.Reset();
+			((IFixReset?)LegProtectionTermEventGrp)?.Reset();
+			((IFixReset?)LegProtectionTermObligationGrp)?.Reset();
+			LegProtectionTermXID = null;
+		}
 	}
 }

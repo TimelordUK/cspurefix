@@ -287,5 +287,35 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ClOrdID = null;
+			SecondaryClOrdID = null;
+			OrderID = null;
+			MassActionReportID = null;
+			SecondaryOrderID = null;
+			MassCancelRequestType = null;
+			MassCancelResponse = null;
+			MassCancelRejectReason = null;
+			TotalAffectedOrders = null;
+			((IFixReset?)AffectedOrdGrp)?.Reset();
+			((IFixReset?)NotAffectedOrdGrp)?.Reset();
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)TargetParties)?.Reset();
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)UnderlyingInstrument)?.Reset();
+			MarketID = null;
+			MarketSegmentID = null;
+			Side = null;
+			TransactTime = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }
