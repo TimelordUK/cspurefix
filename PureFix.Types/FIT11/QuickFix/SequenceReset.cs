@@ -81,5 +81,13 @@ namespace PureFix.Types.FIXT11.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			GapFillFlag = null;
+			NewSeqNo = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

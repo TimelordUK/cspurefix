@@ -287,5 +287,37 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			BeginString = null;
+			BodyLength = null;
+			MsgType = null;
+			SenderCompID = null;
+			TargetCompID = null;
+			OnBehalfOfCompID = null;
+			DeliverToCompID = null;
+			SecureDataLen = null;
+			SecureData = null;
+			MsgSeqNum = null;
+			SenderSubID = null;
+			SenderLocationID = null;
+			TargetSubID = null;
+			TargetLocationID = null;
+			OnBehalfOfSubID = null;
+			OnBehalfOfLocationID = null;
+			DeliverToSubID = null;
+			DeliverToLocationID = null;
+			PossDupFlag = null;
+			PossResend = null;
+			SendingTime = null;
+			OrigSendingTime = null;
+			XmlDataLen = null;
+			XmlData = null;
+			MessageEncoding = null;
+			LastMsgSeqNumProcessed = null;
+			OnBehalfOfSendingTime = null;
+			NoHops = null;
+		}
 	}
 }

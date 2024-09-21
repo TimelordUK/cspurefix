@@ -141,5 +141,18 @@ namespace PureFix.Types.FIX42.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			EncryptMethod = null;
+			HeartBtInt = null;
+			RawDataLength = null;
+			RawData = null;
+			ResetSeqNumFlag = null;
+			MaxMessageSize = null;
+			NoMsgTypes = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -50,5 +50,11 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RefMsgType = null;
+			MsgDirection = null;
+		}
 	}
 }

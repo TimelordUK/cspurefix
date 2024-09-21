@@ -74,5 +74,14 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LastQty = null;
+			ExecID = null;
+			SecondaryExecID = null;
+			LastPx = null;
+			LastCapacity = null;
+		}
 	}
 }

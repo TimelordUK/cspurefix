@@ -148,5 +148,21 @@ namespace PureFix.Types.FIXT11.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			RefSeqNum = null;
+			RefTagID = null;
+			RefMsgType = null;
+			RefApplVerID = null;
+			RefApplExtID = null;
+			RefCstmApplVerID = null;
+			SessionRejectReason = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

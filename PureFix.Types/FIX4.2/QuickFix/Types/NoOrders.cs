@@ -671,5 +671,83 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ClOrdID = null;
+			ListSeqNo = null;
+			SettlInstMode = null;
+			ClientID = null;
+			ExecBroker = null;
+			Account = null;
+			NoAllocs = null;
+			SettlmntTyp = null;
+			FutSettDate = null;
+			HandlInst = null;
+			ExecInst = null;
+			MinQty = null;
+			MaxFloor = null;
+			ExDestination = null;
+			NoTradingSessions = null;
+			ProcessCode = null;
+			Symbol = null;
+			SymbolSfx = null;
+			SecurityID = null;
+			IDSource = null;
+			SecurityType = null;
+			MaturityMonthYear = null;
+			MaturityDay = null;
+			PutOrCall = null;
+			StrikePrice = null;
+			OptAttribute = null;
+			ContractMultiplier = null;
+			CouponRate = null;
+			SecurityExchange = null;
+			Issuer = null;
+			EncodedIssuerLen = null;
+			EncodedIssuer = null;
+			SecurityDesc = null;
+			EncodedSecurityDescLen = null;
+			EncodedSecurityDesc = null;
+			PrevClosePx = null;
+			Side = null;
+			SideValueInd = null;
+			LocateReqd = null;
+			TransactTime = null;
+			OrderQty = null;
+			CashOrderQty = null;
+			OrdType = null;
+			Price = null;
+			StopPx = null;
+			Currency = null;
+			ComplianceID = null;
+			SolicitedFlag = null;
+			IOIid = null;
+			QuoteID = null;
+			TimeInForce = null;
+			EffectiveTime = null;
+			ExpireDate = null;
+			ExpireTime = null;
+			GTBookingInst = null;
+			Commission = null;
+			CommType = null;
+			Rule80A = null;
+			ForexReq = null;
+			SettlCurrency = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			FutSettDate2 = null;
+			OrderQty2 = null;
+			OpenClose = null;
+			CoveredOrUncovered = null;
+			CustomerOrFirm = null;
+			MaxShow = null;
+			PegDifference = null;
+			DiscretionInst = null;
+			DiscretionOffset = null;
+			ClearingFirm = null;
+			ClearingAccount = null;
+		}
 	}
 }

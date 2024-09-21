@@ -337,5 +337,40 @@ namespace PureFix.Types.FIX43.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			BidID = null;
+			ClientBidID = null;
+			BidRequestTransType = null;
+			ListName = null;
+			TotalNumSecurities = null;
+			BidType = null;
+			NumTickets = null;
+			Currency = null;
+			SideValue1 = null;
+			SideValue2 = null;
+			NoBidDescriptors = null;
+			NoBidComponents = null;
+			LiquidityIndType = null;
+			WtAverageLiquidity = null;
+			ExchangeForPhysical = null;
+			OutMainCntryUIndex = null;
+			CrossPercent = null;
+			ProgRptReqs = null;
+			ProgPeriodInterval = null;
+			IncTaxInd = null;
+			ForexReq = null;
+			NumBidders = null;
+			TradeDate = null;
+			TradeType = null;
+			BasisPxType = null;
+			StrikeTime = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

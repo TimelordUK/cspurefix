@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			Commission = null;
+			CommType = null;
+			CommCurrency = null;
+			FundRenewWaiv = null;
+		}
 	}
 }

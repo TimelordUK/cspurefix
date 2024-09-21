@@ -336,5 +336,44 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegSymbol = null;
+			LegSymbolSfx = null;
+			LegSecurityID = null;
+			LegSecurityIDSource = null;
+			NoLegSecurityAltID = null;
+			LegProduct = null;
+			LegCFICode = null;
+			LegSecurityType = null;
+			LegMaturityMonthYear = null;
+			LegMaturityDate = null;
+			LegCouponPaymentDate = null;
+			LegIssueDate = null;
+			LegRepoCollateralSecurityType = null;
+			LegRepurchaseTerm = null;
+			LegRepurchaseRate = null;
+			LegFactor = null;
+			LegCreditRating = null;
+			LegInstrRegistry = null;
+			LegCountryOfIssue = null;
+			LegStateOrProvinceOfIssue = null;
+			LegLocaleOfIssue = null;
+			LegRedemptionDate = null;
+			LegStrikePrice = null;
+			LegOptAttribute = null;
+			LegContractMultiplier = null;
+			LegCouponRate = null;
+			LegSecurityExchange = null;
+			LegIssuer = null;
+			EncodedLegIssuerLen = null;
+			EncodedLegIssuer = null;
+			LegSecurityDesc = null;
+			EncodedLegSecurityDescLen = null;
+			EncodedLegSecurityDesc = null;
+			LegRatioQty = null;
+			LegSide = null;
+		}
 	}
 }

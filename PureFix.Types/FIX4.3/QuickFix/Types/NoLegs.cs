@@ -114,5 +114,18 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)InstrumentLeg)?.Reset();
+			LegPositionEffect = null;
+			LegCoveredOrUncovered = null;
+			((IFixReset?)NestedParties)?.Reset();
+			LegRefID = null;
+			LegPrice = null;
+			LegSettlmntTyp = null;
+			LegFutSettDate = null;
+			LegLastPx = null;
+		}
 	}
 }

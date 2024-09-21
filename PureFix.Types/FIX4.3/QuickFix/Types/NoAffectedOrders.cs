@@ -58,5 +58,12 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			OrigClOrdID = null;
+			AffectedOrderID = null;
+			AffectedSecondaryOrderID = null;
+		}
 	}
 }

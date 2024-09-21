@@ -122,5 +122,20 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			BidDescriptorType = null;
+			BidDescriptor = null;
+			SideValueInd = null;
+			LiquidityValue = null;
+			LiquidityNumSecurities = null;
+			LiquidityPctLow = null;
+			LiquidityPctHigh = null;
+			EFPTrackingError = null;
+			FairValue = null;
+			OutsideIndexPct = null;
+			ValueOfFutures = null;
+		}
 	}
 }

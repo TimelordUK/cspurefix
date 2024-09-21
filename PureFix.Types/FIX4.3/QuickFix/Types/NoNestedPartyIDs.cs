@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			NestedPartyID = null;
+			NestedPartyIDSource = null;
+			NestedPartyRole = null;
+			NestedPartySubID = null;
+		}
 	}
 }

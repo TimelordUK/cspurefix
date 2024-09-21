@@ -145,5 +145,19 @@ namespace PureFix.Types.FIX42.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			QuoteReqID = null;
+			QuoteID = null;
+			QuoteAckStatus = null;
+			QuoteRejectReason = null;
+			QuoteResponseLevel = null;
+			TradingSessionID = null;
+			Text = null;
+			NoQuoteSets = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

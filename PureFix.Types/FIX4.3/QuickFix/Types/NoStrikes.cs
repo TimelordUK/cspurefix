@@ -123,5 +123,19 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)Instrument)?.Reset();
+			PrevClosePx = null;
+			ClOrdID = null;
+			SecondaryClOrdID = null;
+			Side = null;
+			Price = null;
+			Currency = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+		}
 	}
 }

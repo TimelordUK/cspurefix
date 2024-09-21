@@ -58,5 +58,12 @@ namespace PureFix.Types.FIXT11.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			HopCompID = null;
+			HopSendingTime = null;
+			HopRefID = null;
+		}
 	}
 }

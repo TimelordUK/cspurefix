@@ -158,5 +158,20 @@ namespace PureFix.Types.FIX43.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			MDReqID = null;
+			((IFixReset?)Instrument)?.Reset();
+			FinancialStatus = null;
+			CorporateAction = null;
+			TotalVolumeTraded = null;
+			TotalVolumeTradedDate = null;
+			TotalVolumeTradedTime = null;
+			NetChgPrevDay = null;
+			NoMDEntries = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }
