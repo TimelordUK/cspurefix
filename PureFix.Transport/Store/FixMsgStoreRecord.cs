@@ -26,7 +26,7 @@ namespace PureFix.Transport.Store
 
         public static IFixMsgStoreRecord ToMsgStoreRecord(IMessageView v)
         {
-            return new FixMsgStoreRecord(v.MsgType() ?? "", v.SendingTime() ?? DateTime.MinValue, v.MsgSeqNum() ?? -1);
+            return new FixMsgStoreRecord(v.MsgType() ?? "", v.SendingTime() ?? DateTime.MinValue, v.MsgSeqNum() ?? -1, v.BufferString());
         }
 
         public IFixMsgStoreRecord Clone()

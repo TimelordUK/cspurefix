@@ -18,6 +18,10 @@ namespace PureFix.Buffer.Ascii
         public int WriteDelimiter { get; } 
         public ElasticBuffer Buffer { get; }
 
+        public override string BufferString()
+        {
+            return Buffer.ToString();
+        }
 
         public AsciiView (
             IFixDefinitions definitions,

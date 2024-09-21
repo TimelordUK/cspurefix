@@ -17,13 +17,14 @@ namespace PureFIix.Test.Ascii
     {
         private TestEntity _testEntity;
         private List<AsciiView> _views;
-        
+        IFixConfig _config;
 
         [OneTimeSetUp]
         public async Task OnceSetup()
         {
             _testEntity = new TestEntity();
-            _views = await _testEntity.Replay(Fix44PathHelper.ReplayTestClientPath);   
+            _views = await _testEntity.Replay(Fix44PathHelper.ReplayTestClientPath);
+            _config = _testEntity.GetTestInitiatorConfig();
         }
 
         [SetUp]
@@ -41,13 +42,27 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Check_Messages_Loaded_Store_Test()
         {
-            var config = _testEntity.GetTestInitiatorConfig();            
-            Assert.That(config, Is.Not.Null);
+            Assert.That(_config, Is.Not.Null);
             var store = await _testEntity.MakeMsgStore(_views);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(9));
             Assert.That(state.LastSeq, Is.EqualTo(10));
+        }
 
+        [Test]
+        public async Task Fetch_Sequence_Number_From_Store_Test()
+        {
+            var store = await _testEntity.MakeMsgStore(_views);
+            Assert.That(_config, Is.Not.Null);
+            var res1 = await store.Exists(1);
+            Assert.That(res1, Is.False);
+            for (var seq = 2; seq <= 10; ++seq)
+            {
+                var res = await store.Exists(seq);
+                Assert.That(res, Is.True);
+                var get = await store.Get(seq);
+                Assert.That(get, Is.Not.Null);
+            }
         }
     }
 }
