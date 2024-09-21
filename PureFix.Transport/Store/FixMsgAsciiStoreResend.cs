@@ -6,11 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace PureFix.Transport.Store
@@ -60,19 +58,40 @@ namespace PureFix.Transport.Store
             for (int i = 0; i < input.Length; i++)
             {
                 var record = PrepareRecordForRetransmission(input[i]);
-
-
+                if (record == null) continue;
+                var seqNum = record.SeqNum;
+                var toGap = seqNum - expected;
+                if (toGap > 0)
+                {
+                    Gap(expected, seqNum, toResend);
+                }
+                expected = seqNum + 1;
+                toResend.Add(record);
+                if (endSeq - expected > 0)
+                {
+                    Gap(expected, endSeq + 1, toResend);
+                }
             }
             return toResend;
         }
 
-        /**
-           * A continuous sequence of messages not being retransmitted should be skipped over using a
-           * single SequenceReset(35=4) message with GapFillFlag(123) set to “Y” and MsgSeqNum(34) set
-           * to the sequence number of the first skipped message and NewSeqNo(36) must always be set
-           * to the value of the next sequence number to be expected by the peer immediately following
-           * the messages being skipped.
-           */
+        private void Gap(int beginGap, int newSeq, List<IFixMsgStoreRecord> arr) {
+            if (beginGap > 0) {
+                var reset = SequenceResetGap(beginGap, newSeq);
+                if (reset != null)
+                {
+                    arr.Add(reset);
+                }
+            }
+        }
+    
+    /**
+       * A continuous sequence of messages not being retransmitted should be skipped over using a
+       * single SequenceReset(35=4) message with GapFillFlag(123) set to “Y” and MsgSeqNum(34) set
+       * to the sequence number of the first skipped message and NewSeqNo(36) must always be set
+       * to the value of the next sequence number to be expected by the peer immediately following
+       * the messages being skipped.
+       */
         private IFixMsgStoreRecord? SequenceResetGap(int startGap, int newSeq)
         {
             var gapFill = m_sessionFactory?.SequenceReset(newSeq, true);
