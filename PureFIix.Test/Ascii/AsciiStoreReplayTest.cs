@@ -70,6 +70,29 @@ namespace PureFIix.Test.Ascii
             Assert.That(vec, Has.Count.EqualTo(10));
 
             CheckSeqReset(vec[0], 1, 2);
+
+            Assert.Multiple(() =>
+            {
+                var v1 = vec[1];
+                Assert.That(v1.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReportRequestAck));
+                Assert.That(v1.SeqNum, Is.EqualTo(2));
+                Assert.That(v1.InflatedMessage.StandardHeader, Is.Not.Null);
+                Assert.That(v1.InflatedMessage.StandardHeader.PossDupFlag, Is.True);
+                Assert.That(v1.InflatedMessage.StandardHeader.OrigSendingTime, Is.Not.Null);
+            });
+
+            for (var i = 2; i <= 6; ++i)
+            {
+                var v = vec[i];
+                Assert.Multiple(() =>
+                {
+                    Assert.That(v.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReport));
+                    Assert.That(v.SeqNum, Is.EqualTo(i + 1));
+                    Assert.That(v.InflatedMessage.StandardHeader, Is.Not.Null);
+                    Assert.That(v.InflatedMessage.StandardHeader.PossDupFlag, Is.True);
+                    Assert.That(v.InflatedMessage.StandardHeader.OrigSendingTime, Is.Not.Null);
+                });
+            }
         }
 
         private void CheckSeqReset(IFixMsgStoreRecord rec, int from, int to)

@@ -20,7 +20,7 @@ namespace PureFix.Transport.Store
 
         public override string ToString()
         {
-            return $"{SeqNum} {MsgType} {Timestamp} {Encoded}";
+            return $"SeqNum = {SeqNum}, MsgType = {MsgType}, Timestamp = {Timestamp}, Encoded = {Encoded}";
         }
 
 
