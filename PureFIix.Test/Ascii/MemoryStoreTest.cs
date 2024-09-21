@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PureFIix.Test.Ascii
 {
-    internal class AsciiStoreReplayTests
+    internal class MemoryStoreTest
     {
         private TestEntity _testEntity;
         private List<AsciiView> _views;
