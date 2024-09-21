@@ -18,6 +18,12 @@ namespace PureFix.Transport.Store
             Encoded = encoded;
         }
 
+        public override string ToString()
+        {
+            return $"{SeqNum} {MsgType} {Timestamp} {Encoded}";
+        }
+
+
         public string MsgType { get; }
         public DateTime Timestamp { get; }
         public int SeqNum { get; }

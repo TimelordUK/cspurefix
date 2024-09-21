@@ -121,6 +121,8 @@ namespace PureFIix.Test.Env
             var clock = new TestClock();
             var factory = new TestLoggerFactory(clock);
             var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
+            config.Delimiter = AsciiChars.Pipe;
+            config.LogDelimiter = AsciiChars.Pipe;
             return config;
         }
 

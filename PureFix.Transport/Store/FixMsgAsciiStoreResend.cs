@@ -12,7 +12,7 @@ using System.Transactions;
 
 namespace PureFix.Transport.Store
 {
-    internal class FixMsgAsciiStoreResend
+    public class FixMsgAsciiStoreResend : IFixMsgResender
     {
         private readonly IMessageParser m_Parser;
         private readonly IFixMsgStore m_store;
@@ -21,18 +21,25 @@ namespace PureFix.Transport.Store
         private readonly IFixMessageFactory m_factory;
         private readonly ISessionMessageFactory m_sessionFactory;
 
-        public FixMsgAsciiStoreResend(IFixMsgStore store, ISessionMessageFactory sessionFactory, IFixMessageFactory factory, IFixConfig config, IFixClock clock)
+        public FixMsgAsciiStoreResend(IFixMsgStore store, IFixMessageFactory factory, IFixConfig config, IFixClock clock)
         {
             if (config.Definitions == null)
             {
                 throw new ArgumentNullException("config must contain definitions");
             }
-            m_Parser = new AsciiParser(config.Definitions);
+            if (config.MessageFactory == null)
+            {
+                throw new ArgumentNullException("config must contain session message factory");
+            }
+            m_Parser = new AsciiParser(config.Definitions) { 
+                Delimiter = config.Delimiter ?? AsciiChars.Soh, 
+                WriteDelimiter = config.LogDelimiter ?? AsciiChars.Soh
+            };
             m_store = store;
             m_config = config;
             m_clock = clock;
             m_factory = factory;
-            m_sessionFactory = sessionFactory;
+            m_sessionFactory = config.MessageFactory;
         }
 
         public async Task<IReadOnlyList<IFixMsgStoreRecord>> GetResendRequest(int startReq, int endSeq)
@@ -41,11 +48,16 @@ namespace PureFix.Transport.Store
             // included as gaps to allow vector of messages to be sent by the session
             // on a request
             var records = await m_store.GetSeqNumRange(startReq, endSeq);
+            if (records == null)
+            {
+                List<IFixMsgStoreRecord> toResend = [];
+                return toResend;
+            }
             var inflated = InflateRange(startReq, endSeq, records);
             return inflated;
         }
 
-        private IReadOnlyList<IFixMsgStoreRecord> InflateRange(int startSeq, int endSeq, IFixMsgStoreRecord[] input)
+        private IReadOnlyList<IFixMsgStoreRecord> InflateRange(int startSeq, int endSeq, IFixMsgStoreRecord?[] input)
         {
             List<IFixMsgStoreRecord> toResend = [];
             if (input.Length == 0)
@@ -56,7 +68,9 @@ namespace PureFix.Transport.Store
             var expected = startSeq;
             for (int i = 0; i < input.Length; i++)
             {
-                var record = PrepareRecordForRetransmission(input[i]);
+                var v = input[i];
+                if (v == null) continue;
+                var record = PrepareRecordForRetransmission(v);
                 if (record == null) continue;
                 var seqNum = record.SeqNum;
                 var toGap = seqNum - expected;
@@ -65,11 +79,11 @@ namespace PureFix.Transport.Store
                     Gap(expected, seqNum, toResend);
                 }
                 expected = seqNum + 1;
-                toResend.Add(record);
-                if (endSeq - expected > 0)
-                {
-                    Gap(expected, endSeq + 1, toResend);
-                }
+                toResend.Add(record); 
+            }
+            if (endSeq - expected > 0)
+            {
+                Gap(expected, endSeq + 1, toResend);
             }
             return toResend;
         }

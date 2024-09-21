@@ -1,6 +1,8 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Transport.Session;
+using PureFix.Transport.Store;
+using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,13 +47,26 @@ namespace PureFIix.Test.Ascii
             Assert.That(state.Length, Is.EqualTo(9));
         }
 
-
         [Test]
         public async Task Check_Client_Store_State_Test()
         {
             var store = await _testEntity.MakeMsgStore(_views, _client_config.Description.SenderCompID);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task Server_Replay_Requesu_Seq_1_To_10_Test()
+        {
+            var store = await _testEntity.MakeMsgStore(_views, _server_config.Description.SenderCompID);
+            var msgFactory = new FixMessageFactory();
+            var clock = new TestClock() { Current = DateTime.Today.AddHours(8) };
+            IFixMsgResender replayer = new FixMsgAsciiStoreResend(store, msgFactory, _server_config, clock);
+            var state = await store.GetState();
+            Assert.That(state.Length, Is.EqualTo(9));
+            var vec = await replayer.GetResendRequest(1, 10);
+            Assert.That(vec, Is.Not.Null);
+            Assert.That(vec, Has.Count.EqualTo(10));
         }
     }
 }
