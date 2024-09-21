@@ -40,6 +40,12 @@ namespace PureFIix.Test.Ascii
             Assert.That(_views, Has.Count.EqualTo(15));
         }
 
+        private async Task<IFixMsgStore> GetStore()
+        {
+            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
+            return store;
+        }
+
         [Test]
         public async Task Check_Messages_Loaded_Store_Test()
         {
@@ -53,7 +59,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Fetch_Sequence_Number_From_Store_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
+            var store = await GetStore();
             Assert.That(store, Is.Not.Null);
             var res1 = await store.Exists(1);
             Assert.That(res1, Is.False);
@@ -69,7 +75,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Fetch_From_SeqNum_To_Inferred_End_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
+            var store = await GetStore();
             Assert.That(store, Is.Not.Null);
             var range1 = await store.GetSeqNumRange(5);
             Assert.Multiple(() =>
@@ -81,20 +87,33 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
+        public async Task Fetch_From_SeqNum_To_End_Past_Last_Test()
+        {
+            var store = await GetStore();
+            Assert.That(store, Is.Not.Null);
+            var range1 = await store.GetSeqNumRange(5, int.MaxValue);
+            Assert.Multiple(() =>
+            {
+                Assert.That(range1, Has.Length.EqualTo(6));
+                Assert.That(range1[0].SeqNum, Is.EqualTo(5));
+                Assert.That(range1[^1].SeqNum, Is.EqualTo(10));
+            });
+        }
+
+        [Test]
         public async Task Fetch_From_SeqNum_To_Equals_Start_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
+            var store = await GetStore();
             Assert.That(store, Is.Not.Null);
             var range1 = await store.GetSeqNumRange(5, 5);
             Assert.That(range1, Has.Length.EqualTo(1));
             Assert.That(range1[0].SeqNum, Is.EqualTo(5));
         }
 
-
         [Test]
         public async Task Fetch_From_SeqNum_Not_In_Store_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
+            var store = await GetStore();
             Assert.That(store, Is.Not.Null);
             var range1 = await store.GetSeqNumRange(1);
             Assert.That(range1, Has.Length.EqualTo(9));
