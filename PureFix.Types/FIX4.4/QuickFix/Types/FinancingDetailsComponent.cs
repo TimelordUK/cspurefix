@@ -106,5 +106,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			AgreementDesc = null;
+			AgreementID = null;
+			AgreementDate = null;
+			AgreementCurrency = null;
+			TerminationType = null;
+			StartDate = null;
+			EndDate = null;
+			DeliveryType = null;
+			MarginRatio = null;
+		}
 	}
 }

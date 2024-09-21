@@ -131,5 +131,18 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			SecurityReqID = null;
+			SecurityResponseID = null;
+			SecurityRequestResult = null;
+			((IFixReset?)UnderlyingInstrument)?.Reset();
+			TotNoRelatedSym = null;
+			LastFragment = null;
+			((IFixReset?)RelSymDerivSecGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

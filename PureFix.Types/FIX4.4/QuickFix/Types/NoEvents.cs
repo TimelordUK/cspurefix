@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			EventType = null;
+			EventDate = null;
+			EventPx = null;
+			EventText = null;
+		}
 	}
 }

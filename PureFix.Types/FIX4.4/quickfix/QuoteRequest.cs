@@ -137,5 +137,19 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			QuoteReqID = null;
+			RFQReqID = null;
+			ClOrdID = null;
+			OrderCapacity = null;
+			((IFixReset?)QuotReqGrp)?.Reset();
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -43,5 +43,10 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MDEntryType = null;
+		}
 	}
 }

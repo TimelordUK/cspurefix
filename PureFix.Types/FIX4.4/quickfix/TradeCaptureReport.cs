@@ -568,5 +568,68 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TradeReportID = null;
+			TradeReportTransType = null;
+			TradeReportType = null;
+			TradeRequestID = null;
+			TrdType = null;
+			TrdSubType = null;
+			SecondaryTrdType = null;
+			TransferReason = null;
+			ExecType = null;
+			TotNumTradeReports = null;
+			LastRptRequested = null;
+			UnsolicitedIndicator = null;
+			SubscriptionRequestType = null;
+			TradeReportRefID = null;
+			SecondaryTradeReportRefID = null;
+			SecondaryTradeReportID = null;
+			TradeLinkID = null;
+			TrdMatchID = null;
+			ExecID = null;
+			OrdStatus = null;
+			SecondaryExecID = null;
+			ExecRestatementReason = null;
+			PreviouslyReported = null;
+			PriceType = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)FinancingDetails)?.Reset();
+			((IFixReset?)OrderQtyData)?.Reset();
+			QtyType = null;
+			((IFixReset?)YieldData)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			UnderlyingTradingSessionID = null;
+			UnderlyingTradingSessionSubID = null;
+			LastQty = null;
+			LastPx = null;
+			LastParPx = null;
+			LastSpotRate = null;
+			LastForwardPoints = null;
+			LastMkt = null;
+			TradeDate = null;
+			ClearingBusinessDate = null;
+			AvgPx = null;
+			((IFixReset?)SpreadOrBenchmarkCurveData)?.Reset();
+			AvgPxIndicator = null;
+			((IFixReset?)PositionAmountData)?.Reset();
+			MultiLegReportingType = null;
+			TradeLegRefID = null;
+			((IFixReset?)TrdInstrmtLegGrp)?.Reset();
+			TransactTime = null;
+			((IFixReset?)TrdRegTimestamps)?.Reset();
+			SettlType = null;
+			SettlDate = null;
+			MatchStatus = null;
+			MatchType = null;
+			((IFixReset?)TrdCapRptSideGrp)?.Reset();
+			CopyMsgIndicator = null;
+			PublishTrdIndicator = null;
+			ShortSaleReason = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

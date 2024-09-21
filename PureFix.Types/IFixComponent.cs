@@ -9,7 +9,7 @@ namespace PureFix.Types
     /// <summary>
     /// Implemented by FIX components
     /// </summary>
-    public interface IFixComponent : IFixValidator, IFixEncoder, IFixParser, IFixLookup
+    public interface IFixComponent : IFixValidator, IFixEncoder, IFixParser, IFixLookup, IFixReset
     {
     }
 }

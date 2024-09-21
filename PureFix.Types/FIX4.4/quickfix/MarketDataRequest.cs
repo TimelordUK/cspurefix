@@ -185,5 +185,24 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			MDReqID = null;
+			SubscriptionRequestType = null;
+			MarketDepth = null;
+			MDUpdateType = null;
+			AggregatedBook = null;
+			OpenCloseSettlFlag = null;
+			Scope = null;
+			MDImplicitDelete = null;
+			((IFixReset?)MDReqGrp)?.Reset();
+			((IFixReset?)InstrmtMDReqGrp)?.Reset();
+			((IFixReset?)TrdgSesGrp)?.Reset();
+			ApplQueueAction = null;
+			ApplQueueMax = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

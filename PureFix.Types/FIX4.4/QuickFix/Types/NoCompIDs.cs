@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RefCompID = null;
+			RefSubID = null;
+			LocationID = null;
+			DeskID = null;
+		}
 	}
 }

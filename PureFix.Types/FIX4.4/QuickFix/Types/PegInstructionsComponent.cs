@@ -82,5 +82,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PegOffsetValue = null;
+			PegMoveType = null;
+			PegOffsetType = null;
+			PegLimitType = null;
+			PegRoundDirection = null;
+			PegScope = null;
+		}
 	}
 }

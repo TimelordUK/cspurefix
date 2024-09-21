@@ -7,8 +7,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Types.FIX44.QuickFix.Types
 {
-
-    public class FixMessageFactory : IFixMessageFactory
+	public class FixMessageFactory : IFixMessageFactory
 	{
 		public IFixMessage? ToFixMessage(IMessageView view)
 		{

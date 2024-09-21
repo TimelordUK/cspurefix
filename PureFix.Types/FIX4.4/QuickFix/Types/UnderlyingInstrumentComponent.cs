@@ -424,5 +424,56 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingSymbol = null;
+			UnderlyingSymbolSfx = null;
+			UnderlyingSecurityID = null;
+			UnderlyingSecurityIDSource = null;
+			((IFixReset?)UndSecAltIDGrp)?.Reset();
+			UnderlyingProduct = null;
+			UnderlyingCFICode = null;
+			UnderlyingSecurityType = null;
+			UnderlyingSecuritySubType = null;
+			UnderlyingMaturityMonthYear = null;
+			UnderlyingMaturityDate = null;
+			UnderlyingPutOrCall = null;
+			UnderlyingCouponPaymentDate = null;
+			UnderlyingIssueDate = null;
+			UnderlyingRepoCollateralSecurityType = null;
+			UnderlyingRepurchaseTerm = null;
+			UnderlyingRepurchaseRate = null;
+			UnderlyingFactor = null;
+			UnderlyingCreditRating = null;
+			UnderlyingInstrRegistry = null;
+			UnderlyingCountryOfIssue = null;
+			UnderlyingStateOrProvinceOfIssue = null;
+			UnderlyingLocaleOfIssue = null;
+			UnderlyingRedemptionDate = null;
+			UnderlyingStrikePrice = null;
+			UnderlyingStrikeCurrency = null;
+			UnderlyingOptAttribute = null;
+			UnderlyingContractMultiplier = null;
+			UnderlyingCouponRate = null;
+			UnderlyingSecurityExchange = null;
+			UnderlyingIssuer = null;
+			EncodedUnderlyingIssuerLen = null;
+			EncodedUnderlyingIssuer = null;
+			UnderlyingSecurityDesc = null;
+			EncodedUnderlyingSecurityDescLen = null;
+			EncodedUnderlyingSecurityDesc = null;
+			UnderlyingCPProgram = null;
+			UnderlyingCPRegType = null;
+			UnderlyingCurrency = null;
+			UnderlyingQty = null;
+			UnderlyingPx = null;
+			UnderlyingDirtyPrice = null;
+			UnderlyingEndPrice = null;
+			UnderlyingStartValue = null;
+			UnderlyingCurrentValue = null;
+			UnderlyingEndValue = null;
+			((IFixReset?)UnderlyingStipulations)?.Reset();
+		}
 	}
 }

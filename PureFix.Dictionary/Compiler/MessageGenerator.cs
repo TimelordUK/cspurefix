@@ -197,6 +197,38 @@ namespace PureFix.Dictionary.Compiler
             WriteParse(generator, set);
             generator.WriteLine();
             WriteTryGetByTag(generator, set);
+            generator.WriteLine();
+            WriteReset(generator, set);
+        }
+
+        private void WriteReset(CodeGenerator generator, IContainedSet containedSet)
+        {
+            using (generator.BeginBlock("void IFixReset.Reset()"))
+            {
+                for (var i = 0; i < containedSet.Fields.Count; i++)
+                {
+                    switch (containedSet.Fields[i])
+                    {
+                        case ContainedSimpleField sf:
+                            {
+                                generator.WriteLine($"{sf.Name} = null;");
+                            }
+                            break;
+
+                        case ContainedComponentField cf:
+                            {
+                                generator.WriteLine($"((IFixReset?){cf.Name})?.Reset();");
+                            }
+                            break;
+
+                        case ContainedGroupField gf:
+                            {
+                                generator.WriteLine($"{gf.Name} = null;");
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         private void WriteTryGetByTag(CodeGenerator generator, IContainedSet containedSet)
@@ -233,8 +265,7 @@ namespace PureFix.Dictionary.Compiler
                 }
             }
         }
-        
-        
+            
         private void WriteParse(CodeGenerator generator, IContainedSet containedSet)
         {
             using (generator.BeginBlock("void IFixParser.Parse(IMessageView? view)"))
@@ -271,7 +302,7 @@ namespace PureFix.Dictionary.Compiler
                         }
                         break;
 
-                        case ContainedField cf:
+                        case ContainedComponentField cf:
                         {
                             var name = cf.Name;
                             var tempName = $"view{name}";

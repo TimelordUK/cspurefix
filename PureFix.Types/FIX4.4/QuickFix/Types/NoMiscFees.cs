@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MiscFeeAmt = null;
+			MiscFeeCurr = null;
+			MiscFeeType = null;
+			MiscFeeBasis = null;
+		}
 	}
 }

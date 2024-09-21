@@ -210,5 +210,30 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			SettlInstID = null;
+			SettlInstTransType = null;
+			SettlInstRefID = null;
+			((IFixReset?)Parties)?.Reset();
+			Side = null;
+			Product = null;
+			SecurityType = null;
+			CFICode = null;
+			EffectiveTime = null;
+			ExpireTime = null;
+			LastUpdateTime = null;
+			((IFixReset?)SettlInstructionsData)?.Reset();
+			PaymentMethod = null;
+			PaymentRef = null;
+			CardHolderName = null;
+			CardNumber = null;
+			CardStartDate = null;
+			CardExpDate = null;
+			CardIssNum = null;
+			PaymentDate = null;
+			PaymentRemitterID = null;
+		}
 	}
 }

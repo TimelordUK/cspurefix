@@ -8,6 +8,6 @@ namespace PureFix.Types
 {
     public interface IFixReset
     {
-        void Reset() { }
+        public void Reset() { }
     }
 }

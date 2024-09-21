@@ -382,5 +382,48 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TradeReportID = null;
+			TradeReportTransType = null;
+			TradeReportType = null;
+			TrdType = null;
+			TrdSubType = null;
+			SecondaryTrdType = null;
+			TransferReason = null;
+			ExecType = null;
+			TradeReportRefID = null;
+			SecondaryTradeReportRefID = null;
+			TrdRptStatus = null;
+			TradeReportRejectReason = null;
+			SecondaryTradeReportID = null;
+			SubscriptionRequestType = null;
+			TradeLinkID = null;
+			TrdMatchID = null;
+			ExecID = null;
+			SecondaryExecID = null;
+			((IFixReset?)Instrument)?.Reset();
+			TransactTime = null;
+			((IFixReset?)TrdRegTimestamps)?.Reset();
+			ResponseTransportType = null;
+			ResponseDestination = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)TrdInstrmtLegGrp)?.Reset();
+			ClearingFeeIndicator = null;
+			OrderCapacity = null;
+			OrderRestrictions = null;
+			CustOrderCapacity = null;
+			Account = null;
+			AcctIDSource = null;
+			AccountType = null;
+			PositionEffect = null;
+			PreallocMethod = null;
+			((IFixReset?)TrdAllocGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

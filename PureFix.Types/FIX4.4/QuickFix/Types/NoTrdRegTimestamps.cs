@@ -58,5 +58,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			TrdRegTimestamp = null;
+			TrdRegTimestampType = null;
+			TrdRegTimestampOrigin = null;
+		}
 	}
 }
