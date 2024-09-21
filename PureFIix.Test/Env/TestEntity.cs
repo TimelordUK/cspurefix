@@ -108,6 +108,16 @@ namespace PureFIix.Test.Env
 
         public IFixConfig GetTestInitiatorConfig(string json = "test-qf44-initiator.json")
         {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestAcceptorConfig(string json = "test-qf44-acceptor.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetConfig(string json)
+        {
             var clock = new TestClock();
             var factory = new TestLoggerFactory(clock);
             var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
@@ -116,7 +126,7 @@ namespace PureFIix.Test.Env
 
         public async Task<IFixMsgStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string filter = "accept-comp")
         {
-            var store = new FixMsgMemoryStore();
+            var store = new FixMsgMemoryStore($"test-{filter}");
             foreach (var view in views)
             {
                 if (view.SenderCompID() == filter)

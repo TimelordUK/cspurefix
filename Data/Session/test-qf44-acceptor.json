@@ -7,7 +7,7 @@
       "port": 2344
     },
     "protocol": "ascii",
-    "dictionary": "data/FIX44-MD.xml"
+    "dictionary": "FIX44.xml"
   },
   "Username": "js-server",
   "Password": "pwd-server",

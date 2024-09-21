@@ -24,7 +24,7 @@ namespace PureFIix.Test.Ascii
         {
             _testEntity = new TestEntity();
             _views = await _testEntity.Replay(Fix44PathHelper.ReplayTestClientPath);
-            _config = _testEntity.GetTestInitiatorConfig();
+            _config = _testEntity.GetTestAcceptorConfig();
         }
 
         [SetUp]
@@ -43,7 +43,7 @@ namespace PureFIix.Test.Ascii
         public async Task Check_Messages_Loaded_Store_Test()
         {
             Assert.That(_config, Is.Not.Null);
-            var store = await _testEntity.MakeMsgStore(_views);
+            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(9));
             Assert.That(state.LastSeq, Is.EqualTo(10));
@@ -52,8 +52,8 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Fetch_Sequence_Number_From_Store_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views);
-            Assert.That(_config, Is.Not.Null);
+            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
+            Assert.That(store, Is.Not.Null);
             var res1 = await store.Exists(1);
             Assert.That(res1, Is.False);
             for (var seq = 2; seq <= 10; ++seq)
@@ -63,6 +63,17 @@ namespace PureFIix.Test.Ascii
                 var get = await store.Get(seq);
                 Assert.That(get, Is.Not.Null);
             }
+        }
+
+        [Test]
+        public async Task Fetch_From_SeqNum_To_Inferred_End()
+        {
+            var store = await _testEntity.MakeMsgStore(_views, _config.Description.SenderCompID);
+            Assert.That(store, Is.Not.Null);
+            var range1 = await store.GetSeqNumRange(5);
+            Assert.That(range1, Has.Length.EqualTo(6));
+            Assert.That(range1[0].SeqNum, Is.EqualTo(5));
+            Assert.That(range1[range1.Length-1].SeqNum, Is.EqualTo(10));
         }
     }
 }

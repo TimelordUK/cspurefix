@@ -19,9 +19,16 @@ namespace PureFix.Transport.Store
             MsgType.SequenceReset 
         ];
 
+        public FixMsgMemoryStore(string name)
+        {
+            Name = name;
+        }
+
         private static int _nextId;
         private int _id = Interlocked.Increment(ref _nextId);
-        
+        public string Name { get; private set; }
+
+
         public Task<FixMsgStoreState> Clear()
         {
             _sortedBySeqNum.Clear();
@@ -48,19 +55,45 @@ namespace PureFix.Transport.Store
             return null;
         }
 
+        IFixMsgStoreRecord? GetNearestRecord(int seq)
+        {
+            seq = Math.Max(seq, 0);
+            IFixMsgStoreRecord? startRecord = null;
+            if (_sortedBySeqNum.TryGetValue(seq, out var record))
+            {
+                startRecord = record;
+            }
+            else
+            {
+                var nearestKey = Math.Abs(_sortedBySeqNum.Keys.BinarySearchIndexOf(seq));
+                if (_sortedBySeqNum.TryGetValue(nearestKey, out var starting)) {
+                    startRecord = starting;
+                }
+            }
+            return startRecord;
+        }
+
         public Task<IFixMsgStoreRecord?[]> GetSeqNumRange(int from, int? to = null)
         {
-            var floor = _sortedBySeqNum.Keys.BinarySearchIndexOf(from);
-            to ??= _sortedBySeqNum.Keys.LastOrDefault();
-            if (to == 0 || to == null) return Task.FromResult(new IFixMsgStoreRecord?[] { });
-            to = Math.Abs(to.Value);
-            int ceiling = to.Value;
+            if (_sessionMessages.Count == 0)
+            {
+                return Task.FromResult(Array.Empty<IFixMsgStoreRecord?>());
+            }
+            var lastkv = _sortedBySeqNum.LastOrDefault();
+            IFixMsgStoreRecord lastRecord = lastkv.Value;
+            from = Math.Min(lastkv.Key, from);
+            var startRecord = GetNearestRecord(from);
             if (to != null)
             {
-                ceiling = _sortedBySeqNum.Keys.BinarySearchIndexOf(to.Value);
+                to = Math.Max(from, to.Value);
+                var stored = GetNearestRecord(to.Value);
+                if (stored != null)
+                {
+                    lastRecord = stored;
+                }
             }
-            ceiling = Math.Abs(ceiling);
-            var records = Enumerable.Range(floor, ceiling).Select(GetRecord).Where(r => r != null).ToArray();
+            startRecord ??= _sortedBySeqNum.FirstOrDefault().Value;
+            var records = Enumerable.Range(startRecord.SeqNum, lastRecord.SeqNum).Select(GetRecord).Where(r => r != null).ToArray();
             return Task.FromResult(records);
         }
 
@@ -82,7 +115,7 @@ namespace PureFix.Transport.Store
             if (keys.Count == 0) return new FixMsgStoreState();
             var low = keys.First();
             var last = keys.Last();
-            return new FixMsgStoreState(_sortedBySeqNum.Keys.Count, low, last, _id);
+            return new FixMsgStoreState(_sortedBySeqNum.Keys.Count, low, last, Name);
         }
     }
 }

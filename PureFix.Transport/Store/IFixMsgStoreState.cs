@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.Store
 {
-    public readonly record struct FixMsgStoreState(int Length, int FirstSeq, int LastSeq, int ID);
+    public readonly record struct FixMsgStoreState(int Length, int FirstSeq, int LastSeq, string ID);
 }
