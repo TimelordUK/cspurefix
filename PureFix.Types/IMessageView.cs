@@ -29,5 +29,6 @@ namespace PureFix.Types
         public IMessageView? GetGroupInstance(int i);
         public IMessageView? GetView(string name);
         public abstract string BufferString();
+        public abstract int Checksum();
     }
 }

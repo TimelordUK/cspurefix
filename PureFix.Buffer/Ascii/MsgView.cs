@@ -276,5 +276,7 @@ namespace PureFix.Buffer.Ascii
 
         protected abstract MsgView Create(SegmentDescription singleton);
         protected abstract string? StringAtPosition(int position);
+
+        public abstract int Checksum();
     }
 }

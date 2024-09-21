@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PureFix.Types;
 using Microsoft.Extensions.ObjectPool;
 using System.Xml.Linq;
+using System.Threading.Channels;
 
 namespace PureFix.Buffer.Ascii
 {
@@ -62,6 +63,24 @@ namespace PureFix.Buffer.Ascii
             return tag;
         }
 
+        public override int Checksum()
+        {
+            if (Structure == null) return -1;
+            var t = GetPosition((int)MsgTag.CheckSum);
+            var prev = Structure.Value.Tags[t - 1];
+            var tp = prev.Start + prev.Len + 1;
+            var cs = Buffer.Sum(tp);
+            var delimiter = Delimiter;
+            var writeDelimiter = WriteDelimiter;
+            if (writeDelimiter != delimiter)
+            {
+                var changes = Structure.Value.Tags.NextTagPos - 1;
+                cs -= changes * writeDelimiter;
+                cs += changes * delimiter;
+            }
+            return cs % 256;
+        }
+  
         protected override string? StringAtPosition(int position)
         {
             var tag = GetTag(position);

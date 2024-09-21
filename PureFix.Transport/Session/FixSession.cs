@@ -405,7 +405,7 @@ namespace PureFix.Transport.Session
            * @param view container for all parsed fields representing the received message.
            * @protected
            */
-        protected abstract void OnMsg(string msgType, MsgView view);
+        protected abstract Task OnMsg(string msgType, MsgView view);
 
         /**
          * the parsed txt recieved from the peer application.  Given the applicaton is
@@ -438,7 +438,7 @@ namespace PureFix.Transport.Session
          * @param view a wrapper containing the parsed message received.
          * @protected
          */
-        protected abstract void OnApplicationMsg(string msgType, MsgView view);
+        protected abstract Task OnApplicationMsg(string msgType, MsgView view);
 
         /**
          * at this point the application is ready to send messages - peer login has been achieved
