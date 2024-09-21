@@ -17,6 +17,7 @@ namespace PureFIix.Test.Env
         public static readonly string ExecutionReportReplayPath = Path.Join(ExampleRootPath, "quickfix", "execution-report", "fix.txt");
         public static readonly string HeartbeatReplayPath = Path.Join(ExampleRootPath, "quickfix", "heartbeat", "fix.txt");
         public static readonly string ReplayPath = Path.Join(ExampleRootPath, "fix.txt");
+        public static readonly string ReplayTestClientPath = Path.Join(ExampleRootPath, "fix.test_client.txt");
         public static readonly string JsonPath = Path.Join(ExampleRootPath, "fix.json");
     }
 }
