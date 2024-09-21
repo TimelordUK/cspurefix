@@ -1,5 +1,9 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
+using PureFix.Transport;
+using PureFix.Transport.Session;
+using PureFix.Transport.Store;
+using PureFix.Types.FIX50SP2.QuickFix;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,14 +17,13 @@ namespace PureFIix.Test.Ascii
     {
         private TestEntity _testEntity;
         private List<AsciiView> _views;
+        
 
         [OneTimeSetUp]
         public async Task OnceSetup()
         {
             _testEntity = new TestEntity();
-            var sw = new Stopwatch();
-            sw.Start();
-            _views = await _testEntity.Replay(Fix44PathHelper.ReplayTestClientPath);
+            _views = await _testEntity.Replay(Fix44PathHelper.ReplayTestClientPath);   
         }
 
         [SetUp]
@@ -35,6 +38,16 @@ namespace PureFIix.Test.Ascii
             Assert.That(_views, Has.Count.EqualTo(15));
         }
 
+        [Test]
+        public async Task Check_Messages_Loaded_Store_Test()
+        {
+            var config = _testEntity.GetTestInitiatorConfig();            
+            Assert.That(config, Is.Not.Null);
+            var store = await _testEntity.MakeMsgStore(_views);
+            var state = await store.GetState();
+            Assert.That(state.Length, Is.EqualTo(9));
+            Assert.That(state.LastSeq, Is.EqualTo(10));
 
+        }
     }
 }

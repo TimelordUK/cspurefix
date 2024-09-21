@@ -9,7 +9,7 @@ namespace PureFix.Transport.Store
 {
     public class FixMsgMemoryStore : IFixMsgStore
     {
-        private SortedList<int, IFixMsgStoreRecord> _sortedBySeqNum = [];
+        private readonly SortedList<int, IFixMsgStoreRecord> _sortedBySeqNum = [];
         private readonly HashSet<string> _sessionMessages = [
             MsgType.Logon, 
             MsgType.Logout, 
@@ -71,6 +71,7 @@ namespace PureFix.Transport.Store
 
         public Task<FixMsgStoreState> Put(IFixMsgStoreRecord record)
         {
+            if (_sessionMessages.Contains(record.MsgType)) return Task.FromResult(BuildState());
            _sortedBySeqNum.Add(record.SeqNum, record);
             return Task.FromResult(BuildState());
         }

@@ -24,7 +24,7 @@ namespace PureFix.Transport.Store
         public IFixMessage? InflatedMessage { get; set; }
         public string? Encoded { get; }
 
-        public static IFixMsgStoreRecord ToMsgStoreRecord(MsgView v)
+        public static IFixMsgStoreRecord ToMsgStoreRecord(IMessageView v)
         {
             return new FixMsgStoreRecord(v.MsgType() ?? "", v.SendingTime() ?? DateTime.MinValue, v.MsgSeqNum() ?? -1);
         }

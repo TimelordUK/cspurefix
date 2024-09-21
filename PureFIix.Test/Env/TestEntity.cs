@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Diagnostics;
+using PureFix.Transport;
+using PureFix.Transport.Session;
+using PureFix.Transport.Store;
 
 namespace PureFIix.Test.Env
 {
@@ -101,6 +104,27 @@ namespace PureFIix.Test.Env
             var all = await GetTextAsync(file);
             var msgs = ReplayText(all, repeats);
             return msgs;
+        }
+
+        public IFixConfig GetTestInitiatorConfig(string json = "test-qf44-initiator.json")
+        {
+            var clock = new TestClock();
+            var factory = new TestLoggerFactory(clock);
+            var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
+            return config;
+        }
+
+        public async Task<IFixMsgStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string filter = "accept-comp")
+        {
+            var store = new FixMsgMemoryStore();
+            foreach (var view in views)
+            {
+                if (view.SenderCompID() == filter)
+                {
+                    await store.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
+                }
+            }
+            return store;
         }
 
         public void TimeParsePath(string description, string path, int repeats, int batch = 1)
