@@ -2,6 +2,7 @@
 using PureFix.Buffer.Ascii;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
+using PureFix.Types.FIX44.QuickFix;
 using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,26 @@ namespace PureFIix.Test.Ascii
             var vec = await replayer.GetResendRequest(1, 10);
             Assert.That(vec, Is.Not.Null);
             Assert.That(vec, Has.Count.EqualTo(10));
+
+            CheckSeqReset(vec[0], 1, 2);
+        }
+
+        private void CheckSeqReset(IFixMsgStoreRecord rec, int from, int to)
+        {
+            SequenceReset reset = rec.InflatedMessage as SequenceReset;
+            Assert.That(reset, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(rec.MsgType, Is.EqualTo(MsgTypeValues.SequenceReset));
+                Assert.That(rec.InflatedMessage, Is.Not.Null);
+                Assert.That(rec.SeqNum, Is.EqualTo(from));
+                Assert.That(reset.NewSeqNo, Is.EqualTo(to));
+                Assert.That(reset.GapFillFlag, Is.True);
+                Assert.That(reset.StandardHeader, Is.Not.Null);
+                Assert.That(reset.StandardHeader.MsgType, Is.EqualTo(MsgTypeValues.SequenceReset));
+                Assert.That(reset.StandardHeader.PossDupFlag, Is.True);
+                Assert.That(reset.StandardHeader.MsgSeqNum, Is.EqualTo(from));
+            });
         }
     }
 }

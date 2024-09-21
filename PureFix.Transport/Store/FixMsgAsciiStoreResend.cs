@@ -5,6 +5,7 @@ using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -12,6 +13,24 @@ using System.Transactions;
 
 namespace PureFix.Transport.Store
 {
+    public static class Extensions
+    {
+        public static void CopyFrom(this IStandardHeader lhs, IStandardHeader rhs)
+        {
+            lhs.BeginString = rhs.BeginString;
+            lhs.BodyLength = rhs.BodyLength;
+            lhs.TargetSubID = rhs.TargetSubID;
+            lhs.TargetCompID = rhs.TargetCompID;
+            lhs.SenderSubID = rhs.SenderSubID;
+            lhs.SenderCompID = rhs.SenderCompID;
+            lhs.OrigSendingTime = rhs.OrigSendingTime;
+            lhs.MsgSeqNum = rhs.MsgSeqNum;
+            lhs.PossDupFlag = rhs.PossDupFlag;
+            lhs.SendingTime = rhs.SendingTime;
+            lhs.MsgType = rhs.MsgType;
+        }
+    }
+
     public class FixMsgAsciiStoreResend : IFixMsgResender
     {
         private readonly IMessageParser m_Parser;
@@ -29,7 +48,7 @@ namespace PureFix.Transport.Store
             }
             if (config.MessageFactory == null)
             {
-                throw new ArgumentNullException("config must contain session message factory");
+                throw new ArgumentNullException("config must contain message factory");
             }
             m_Parser = new AsciiParser(config.Definitions) { 
                 Delimiter = config.Delimiter ?? AsciiChars.Soh, 
@@ -40,6 +59,10 @@ namespace PureFix.Transport.Store
             m_clock = clock;
             m_factory = factory;
             m_sessionFactory = config.MessageFactory;
+            if (m_sessionFactory == null)
+            {
+                throw new ArgumentNullException("config must contain session message factory");
+            }
         }
 
         public async Task<IReadOnlyList<IFixMsgStoreRecord>> GetResendRequest(int startReq, int endSeq)
@@ -97,21 +120,29 @@ namespace PureFix.Transport.Store
                 }
             }
         }
-    
-    /**
-       * A continuous sequence of messages not being retransmitted should be skipped over using a
-       * single SequenceReset(35=4) message with GapFillFlag(123) set to “Y” and MsgSeqNum(34) set
-       * to the sequence number of the first skipped message and NewSeqNo(36) must always be set
-       * to the value of the next sequence number to be expected by the peer immediately following
-       * the messages being skipped.
-       */
+
+        /**
+           * A continuous sequence of messages not being retransmitted should be skipped over using a
+           * single SequenceReset(35=4) message with GapFillFlag(123) set to “Y” and MsgSeqNum(34) set
+           * to the sequence number of the first skipped message and NewSeqNo(36) must always be set
+           * to the value of the next sequence number to be expected by the peer immediately following
+           * the messages being skipped.
+           */
+
         private IFixMsgStoreRecord? SequenceResetGap(int startGap, int newSeq)
         {
-            var gapFill = m_sessionFactory?.SequenceReset(newSeq, true);
+            var gapFill = m_sessionFactory.SequenceReset(newSeq, true);
+            var hdr = m_sessionFactory.Header(MsgType.SequenceReset, startGap, m_clock.Current);
             if (gapFill?.StandardHeader == null) return null;
-            gapFill.StandardHeader.MsgSeqNum = startGap;
-            gapFill.StandardHeader.PossDupFlag = true;
-            gapFill.StandardHeader.SendingTime = m_clock.Current;
+            if (hdr == null) return null;
+            var header = gapFill.StandardHeader;
+            header.CopyFrom(hdr);
+
+            header.OrigSendingTime = hdr.SendingTime;
+            header.MsgSeqNum = startGap;
+            header.PossDupFlag = true;
+            header.SendingTime = m_clock.Current;
+            
             var record = new FixMsgStoreRecord(MsgType.SequenceReset, m_clock.Current, startGap, null)
             { InflatedMessage = gapFill };
             return record;
@@ -146,7 +177,7 @@ namespace PureFix.Transport.Store
       * @param originalRecord the FIX message to be retransmitted as possible duplicate
       * @returns the FIX message ready to be retransmitted
       */
-    private IFixMsgStoreRecord? PrepareRecordForRetransmission(IFixMsgStoreRecord originalRecord)
+        private IFixMsgStoreRecord? PrepareRecordForRetransmission(IFixMsgStoreRecord originalRecord)
         {
             var factory = m_config.MessageFactory;
             if (factory == null) { return null; }
