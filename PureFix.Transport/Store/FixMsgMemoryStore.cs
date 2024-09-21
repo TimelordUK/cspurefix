@@ -93,7 +93,7 @@ namespace PureFix.Transport.Store
                 }
             }
             startRecord ??= _sortedBySeqNum.FirstOrDefault().Value;
-            var records = Enumerable.Range(startRecord.SeqNum, lastRecord.SeqNum).Select(GetRecord).Where(r => r != null).ToArray();
+            var records = Enumerable.Range(startRecord.SeqNum, lastRecord.SeqNum- startRecord.SeqNum + 1).Select(GetRecord).Where(r => r != null).ToArray();
             return Task.FromResult(records);
         }
 
