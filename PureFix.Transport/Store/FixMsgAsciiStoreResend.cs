@@ -59,7 +59,8 @@ namespace PureFix.Transport.Store
             var expected = startSeq;
             for (int i = 0; i < input.Length; i++)
             {
-                var o = PrepareRecordForRetransmission(input[i]);
+                var record = PrepareRecordForRetransmission(input[i]);
+
 
             }
             return toResend;
@@ -75,11 +76,10 @@ namespace PureFix.Transport.Store
         private IFixMsgStoreRecord? SequenceResetGap(int startGap, int newSeq)
         {
             var gapFill = m_sessionFactory?.SequenceReset(newSeq, true);
-            if (gapFill == null) return null;
-            var header = m_sessionFactory?.Header(MsgType.SequenceReset, startGap, m_clock.Current);
-            if (header == null) return null;
-            //gapFill.StandardHeader = header;
-            //gapFill.StandardHeader.PossDupFlag = true;
+            if (gapFill?.StandardHeader == null) return null;
+            gapFill.StandardHeader.MsgSeqNum = startGap;
+            gapFill.StandardHeader.PossDupFlag = true;
+            gapFill.StandardHeader.SendingTime = m_clock.Current;
             var record = new FixMsgStoreRecord(MsgType.SequenceReset, m_clock.Current, startGap, null)
             { InflatedMessage = gapFill };
             return record;
@@ -87,6 +87,7 @@ namespace PureFix.Transport.Store
 
         private void Inflate(IFixMsgStoreRecord originalRecord)
         {
+            if (originalRecord.Encoded == null) return;
             var bytes = Encoding.UTF8.GetBytes(originalRecord.Encoded);
             MsgView? msgView = null;
             m_Parser.ParseFrom(bytes, (ptr, v) => msgView = v);
@@ -117,18 +118,16 @@ namespace PureFix.Transport.Store
         {
             var factory = m_config.MessageFactory;
             if (factory == null) { return null; }
+            if (originalRecord.Encoded == null) return null;
             var retransmitted = originalRecord.Clone(); // We don't want to accidently change any fields of the original record
-            var bytes = Encoding.UTF8.GetBytes(originalRecord.Encoded);
-            MsgView? msgView = null;
-            m_Parser.ParseFrom(bytes, (ptr, v) => msgView = v);
-            if (msgView == null) return null;
             // Rebuilds header with the updated fields
-            var o = m_factory.ToFixMessage(msgView);
+            Inflate(retransmitted);
+            var o = retransmitted.InflatedMessage;
             if (o?.StandardHeader == null) return null;
             o.StandardHeader.PossDupFlag = true;
             o.StandardHeader.OrigSendingTime = o.StandardHeader.SendingTime;
             o.StandardHeader.SendingTime = m_clock.Current;
-            retransmitted.InflatedMessage = o;
+            
             return retransmitted;
         }
     }
