@@ -337,10 +337,9 @@ namespace PureFix.Transport.Ascii
                             }
                             break;
                     }
+                    return;
                 }
-                return;
             }
-
 
             switch (msgType)
             {

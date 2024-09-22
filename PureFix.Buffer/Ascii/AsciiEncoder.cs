@@ -49,6 +49,8 @@ namespace PureFix.Buffer.Ascii
                 return null; 
             }
 
+            MsgSeqNum = Math.Max(1, MsgSeqNum);
+
             var hdr = SessionMessageFactory.Header(msgType, MsgSeqNum, Clock.Current);
             if (hdr == null)
             {

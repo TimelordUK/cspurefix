@@ -330,7 +330,7 @@ namespace PureFix.Transport.Session
         {
             if (view.Structure == null) return;
 
-            var msgType = view.Segment?.Set?.Name;
+            var msgType = view.GetString((int)MsgTag.MsgType);
             if (msgType == null) return;
             if (m_logReceivedMessages)
             {
