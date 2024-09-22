@@ -353,8 +353,18 @@ namespace PureFix.Transport.Session
             {
                 m_sessionLogger?.Info("reset from previous transport");
             }
-
             m_token = token;
+            if (m_initiator)
+            {
+                m_sessionLogger?.Debug($"initiator sending logon state = {m_sessionState.State}");
+                await SendLogon();
+                SetState(SessionState.InitiationLogonSent);
+            }
+            else
+            {
+                m_sessionLogger?.Debug($"acceptor waits for logon state = {m_sessionState.State}");
+                SetState(SessionState.WaitingForALogon);
+            }
             var dispatcher = new EventDispatcher(transport);
             while (!token.IsCancellationRequested)
             {

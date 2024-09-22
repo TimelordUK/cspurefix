@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Transport;
 using PureFix.Transport.Store;
 using PureFix.Types.FIX44.QuickFix.Types;
+using static PureFIix.Test.Ascii.SessionStateTest;
 
 namespace PureFIix.Test.Ascii
 {
@@ -94,12 +96,31 @@ namespace PureFIix.Test.Ascii
             var acceptorMessageFactory = new FixMessageFactory();
             var initiatorStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
             var acceptorStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
-            var initiatorParser = new AsciiParser(initiatorConfig.Definitions) {  Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+            var initiatorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
             var initiatorEncoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
             var acceptorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
             var acceptorEncoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
             var initiator = new TestAsciiSkeleton(initiatorConfig, initiatorTransport, initiatorMessageFactory, initiatorParser, initiatorEncoder, clock);
             var acceptor = new TestAsciiSkeleton(acceptorConfig, acceptorTransport, acceptorMessageFactory, acceptorParser, acceptorEncoder, clock);
+            var ctsInitiator = new CancellationTokenSource();
+            var ctsAcceptor = new CancellationTokenSource();
+            var t1 = Task.Factory.StartNew(async () =>
+            {
+                var token = ctsAcceptor.Token;
+                while (!token.IsCancellationRequested)
+                {
+                    await acceptor.Run(acceptorTransport, token);
+                }
+            }, TaskCreationOptions.LongRunning);
+            var t2 = Task.Factory.StartNew(async () =>
+            {
+                var token = ctsInitiator.Token;
+                while (!token.IsCancellationRequested)
+                {
+                    await initiator.Run(initiatorTransport, token);
+                }
+            }, TaskCreationOptions.LongRunning);
+            var res = Task.WaitAny(t1, t2);
         }
     }
 }
