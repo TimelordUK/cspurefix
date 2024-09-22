@@ -73,7 +73,7 @@ namespace PureFIix.Test.Ascii
         public void Create_Session_Trailer_Test()
         {
             var session = GetDescription();
-            var factory = new Fix44SessionMessageFactory(session);
+            ISessionMessageFactory factory = new Fix44SessionMessageFactory(session);
             var trailer = factory.Trailer(1);
             Assert.That(trailer, Is.Not.Null);
             Assert.That(trailer.CheckSum, Is.EqualTo("001"));
@@ -95,7 +95,7 @@ namespace PureFIix.Test.Ascii
         public void Create_Session_Header_Test()
         {
             var session = GetDescription();
-            var factory = new Fix44SessionMessageFactory(session);
+            ISessionMessageFactory factory = new Fix44SessionMessageFactory(session);
             var header = factory.Header(MsgTypeValues.NewOrderSingle,1, new DateTime(2024, 1, 1));
             Assert.That(header, Is.Not.Null);
             var (writer, storage) = GetWriter();
@@ -107,7 +107,7 @@ namespace PureFIix.Test.Ascii
         private StoragePool.Storage Make_Encode_Header()
         {
             var session = GetDescription();
-            var factory = new Fix44SessionMessageFactory(session);
+            ISessionMessageFactory factory = new Fix44SessionMessageFactory(session);
             var header = factory.Header(MsgTypeValues.NewOrderSingle, 1, new DateTime(2024, 1, 1));
             Assert.That(header, Is.Not.Null);
             var (writer, storage) = GetWriter();

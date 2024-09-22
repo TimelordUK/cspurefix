@@ -202,7 +202,7 @@ namespace PureFix.Transport.Session
             if (m_requestLogoutType == null)
                 throw new InvalidDataException("session needs m_requestLogoutType assigned");
             m_sessionLogger?.Info($"sending logout with {msg}");
-            var lo = m_factory?.Logout(m_requestLogoutType, msg);
+            var lo = m_factory?.Logout(msg);
             if (lo != null)
             {
                 await Send(m_requestLogoutType, lo);
@@ -299,7 +299,7 @@ namespace PureFix.Transport.Session
                 {
                     if (m_token == null) return Task.CompletedTask;
                     if (m_transport == null) return Task.CompletedTask;
-                        var storage = m_encoder.Encode(msgType, message);
+                    var storage = m_encoder.Encode(msgType, message);
                     if (storage == null) return Task.CompletedTask;
                     var t = m_transport.SendAsync(storage.AsBytes(), m_token.Value).ContinueWith(_ => { m_encoder.Return(storage); });
                     return t;

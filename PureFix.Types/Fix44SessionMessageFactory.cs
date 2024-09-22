@@ -20,31 +20,31 @@ namespace PureFix.Types
             m_SessionDescription = sessionDescription;
         }
 
-        public virtual IFixMessage? TestRequest(string testReqId)
+        IFixMessage? ISessionMessageFactory.TestRequest(string testReqId)
         {
             return new TestRequest { StandardHeader = new StandardHeaderComponent(), TestReqID = testReqId };
         }
 
-        public virtual IFixMessage? Heartbeat(string testReqId)
+        IFixMessage? ISessionMessageFactory.Heartbeat(string testReqId)
         {
             return new Heartbeat { StandardHeader = new StandardHeaderComponent(), TestReqID = testReqId };
         }
 
-        public virtual IFixMessage? ResendRequest(int beginSeqNo, int endSeqNo)
+        IFixMessage? ISessionMessageFactory.ResendRequest(int beginSeqNo, int endSeqNo)
         {
             return new ResendRequest { StandardHeader = new StandardHeaderComponent(), BeginSeqNo = beginSeqNo, EndSeqNo = endSeqNo };
         }
-        public virtual IFixMessage? SequenceReset(int newSeqNo, bool? gapFill = null)
+        IFixMessage? ISessionMessageFactory.SequenceReset(int newSeqNo, bool? gapFill)
         {
             return new SequenceReset { StandardHeader = new StandardHeaderComponent(), GapFillFlag = gapFill, NewSeqNo = newSeqNo };
         }
 
-        public virtual IStandardTrailer? Trailer(int checksum)
+        IStandardTrailer? ISessionMessageFactory.Trailer(int checksum)
         {
             return new StandardTrailerComponent() { CheckSum = checksum.ToString("D3") };
         }
 
-        public virtual IFixMessage? Logon(string? userRequestId, bool? isResponse)
+        IFixMessage? ISessionMessageFactory.Logon(string? userRequestId, bool? isResponse)
         {
             return new Logon
             {
@@ -56,7 +56,7 @@ namespace PureFix.Types
             };
         }
 
-        public virtual IFixMessage? Reject(string msgType, int seqNo, string msg, int reason)
+        IFixMessage? ISessionMessageFactory.Reject(string msgType, int seqNo, string msg, int reason)
         {
             return new Reject
             {
@@ -67,7 +67,7 @@ namespace PureFix.Types
             };
         }
 
-        public virtual IFixMessage? Logout(string text)
+        IFixMessage? ISessionMessageFactory.Logout(string text)
         {
             return new Logout
             {
@@ -75,7 +75,7 @@ namespace PureFix.Types
             };
         }
 
-        public IStandardHeader? Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides = null)
+        IStandardHeader? ISessionMessageFactory.Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides)
         {
             var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);
             var placeholder = (int)Math.Pow(10, bodyLength - 1) + 1;

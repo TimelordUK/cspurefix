@@ -82,7 +82,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Initiator_Acceptor_Login_Test()
+        public async Task Initiator_Acceptor_Login_Test()
         {
             var clock = new TestClock();
             var factory = new TestLoggerFactory(clock);
@@ -121,6 +121,7 @@ namespace PureFIix.Test.Ascii
                 }
             }, TaskCreationOptions.LongRunning);
             var res = Task.WaitAny(t1, t2);
+            await Task.Delay(5000);
         }
     }
 }

@@ -43,8 +43,8 @@ namespace PureFix.Buffer.Ascii
 
         public StoragePool.Storage? Encode(string msgType, IFixMessage message)
         {
-            if (message.MsgType == null) return null;
-            if (!Definitions.Message.TryGetValue(message.MsgType, out _))
+            if (msgType == null) return null;
+            if (!Definitions.Message.TryGetValue(msgType, out _))
             {
                 return null; 
             }

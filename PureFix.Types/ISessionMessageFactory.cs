@@ -32,7 +32,7 @@ namespace PureFix.Types
             return null;
         }
 
-        public IFixMessage? Logon(string? userRequestId = null, bool isResponse = false)
+        public IFixMessage? Logon(string? userRequestId = null, bool? isResponse = false)
         {
             return null;
         }
@@ -42,8 +42,7 @@ namespace PureFix.Types
             return null;
         }
 
-
-        public IFixMessage? Logout(string msgType, string text)
+        public IFixMessage? Logout(string text)
         {
             return null;
         }
