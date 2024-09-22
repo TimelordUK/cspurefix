@@ -83,45 +83,14 @@ namespace PureFIix.Test.Ascii
             });
         }
 
-        public class RuntimeContainer
-        {
-            public IMessageTransport Transport { get; private set; }
-            public IFixConfig Config { get; private set; }
-            public IFixMessageFactory FixMessageFactory { get; private set; } 
-            public IFixMsgStore MessageStore { get; private set; }
-            public IMessageParser Parser { get; private set; }
-            public IMessageEncoder Encoder { get; private set; }
-            public CancellationTokenSource TokenSource { get; private set; }
-            public TestAsciiSkeleton App { get; private set; }
-
-            public RuntimeContainer(IFixConfig initiatorConfig, IFixClock clock)
-            {
-                Config = initiatorConfig;
-                Transport = new TestMessageTransport();
-                FixMessageFactory = new FixMessageFactory();
-                MessageStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
-                Parser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-                Encoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
-                App = new TestAsciiSkeleton(initiatorConfig, Transport, FixMessageFactory, Parser, Encoder, clock);
-                TokenSource = new CancellationTokenSource();
-            }
-
-            public void ConnectTo(RuntimeContainer container)
-            {
-                ((TestMessageTransport)Transport).ConnectTo((TestMessageTransport)container.Transport);
-            }
-
-            public async Task Run()
-            {
-                await App.Run(Transport, TokenSource.Token);
-            }
-        }
+   
 
         [Test]
-        public Task Initiator_Acceptor_Login_Test()
+        public async Task Initiator_Acceptor_Login_Test()
         {
             var clock = new TestClock();
- 
+            var factory = new TestLoggerFactory(clock);
+
             var initiatorConfig = _testEntity.GetTestInitiatorConfig();
             var acceptorConfig = _testEntity.GetTestAcceptorConfig();
             var initiator = new RuntimeContainer(initiatorConfig, clock);
@@ -132,15 +101,9 @@ namespace PureFIix.Test.Ascii
 
             var t1 = initiator.Run();
             var t2 = acceptor.Run();
-            var t3 = Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(1000);
-                initiator.TokenSource.Cancel();
-            }, TaskCreationOptions.LongRunning);
+           
             var res = Task.WaitAny(t1, t2);
-            var (app, fix) = initiator.App.Logs;
-          
-            return Task.FromResult(res);
+            await Task.Delay(5000);
         }
     }
 }
