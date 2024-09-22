@@ -96,9 +96,9 @@ namespace PureFIix.Test.Ascii
             var acceptorMessageFactory = new FixMessageFactory();
             var initiatorStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
             var acceptorStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
-            var initiatorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+            var initiatorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
             var initiatorEncoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
-            var acceptorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+            var acceptorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
             var acceptorEncoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
             var initiator = new TestAsciiSkeleton(initiatorConfig, initiatorTransport, initiatorMessageFactory, initiatorParser, initiatorEncoder, clock);
             var acceptor = new TestAsciiSkeleton(acceptorConfig, acceptorTransport, acceptorMessageFactory, acceptorParser, acceptorEncoder, clock);

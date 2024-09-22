@@ -21,7 +21,7 @@ namespace PureFIix.Test.Env
         {
             m_logReceivedMessages = true;
             var me = config?.Description?.Application?.Name ?? "initiator";
-            m_logger = config.LogFactory.MakePlainLogger($"csfix.{me}.txt");
+            m_fixLog = config.LogFactory.MakePlainLogger($"csfix.{me}.txt");
             m_logger = config.LogFactory.MakeLogger($"csfix.{me}.app");
         }
 
