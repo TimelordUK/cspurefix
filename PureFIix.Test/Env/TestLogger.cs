@@ -59,5 +59,10 @@ namespace PureFIix.Test.Env
                     break;
             }
         }
+
+        public override string ToString()
+        {
+            return $"{Me} [{_log.Count}] {_log.LastOrDefault()}";
+        }
     }
 }
