@@ -83,18 +83,14 @@ namespace PureFIix.Test.Ascii
             });
         }
 
-   
-
         [Test]
         public async Task Initiator_Acceptor_Login_Test()
         {
             var clock = new TestClock();
             var factory = new TestLoggerFactory(clock);
 
-            var initiatorConfig = _testEntity.GetTestInitiatorConfig();
-            var acceptorConfig = _testEntity.GetTestAcceptorConfig();
-            var initiator = new RuntimeContainer(initiatorConfig, clock);
-            var acceptor = new RuntimeContainer(acceptorConfig, clock);
+            var initiator = new RuntimeContainer(_testEntity.GetTestInitiatorConfig(), clock);
+            var acceptor = new RuntimeContainer(_testEntity.GetTestAcceptorConfig(), clock);
 
             initiator.ConnectTo(acceptor);
             acceptor.ConnectTo(initiator);
@@ -103,7 +99,11 @@ namespace PureFIix.Test.Ascii
             var t2 = acceptor.Run();
            
             var res = Task.WaitAny(t1, t2);
-            await Task.Delay(5000);
+            await Task.Delay(1000);
+            var (initApp, initFix) = initiator.Logs;
+            var (acceptApp, acceptFix) = acceptor.Logs;
+            Assert.That(((TestLogger)initFix).Entries, Has.Count.EqualTo(1));
+            Assert.That(((TestLogger)acceptFix).Entries, Has.Count.EqualTo(1));
         }
     }
 }

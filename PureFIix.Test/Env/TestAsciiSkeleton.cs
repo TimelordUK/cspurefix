@@ -20,7 +20,7 @@ namespace PureFIix.Test.Env
         private ILogger m_fixLog;
         FixMessageFactory m_msg_factory = new();
         public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
-
+    
         public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, clock)
         {
             m_logReceivedMessages = true;
@@ -38,7 +38,6 @@ namespace PureFIix.Test.Env
         protected override void OnDecoded(string msgType, string txt)
         {
             m_fixLog.Info(txt);
-            
         }
 
         protected override void OnEncoded(string msgType, string txt)

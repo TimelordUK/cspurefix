@@ -22,6 +22,7 @@ namespace PureFIix.Test.Env
         public IMessageEncoder Encoder { get; private set; }
         public CancellationTokenSource TokenSource { get; private set; }
         public TestAsciiSkeleton App { get; private set; }
+        public (ILogger app, ILogger fix) Logs => App.Logs;
 
         public RuntimeContainer(IFixConfig initiatorConfig, IFixClock clock)
         {
