@@ -17,12 +17,12 @@ namespace PureFix.Buffer.Ascii
         private StoragePool Pool { get; set; }
         public byte LogDelimiter { get; set; } = AsciiChars.Pipe;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
-        public SessionDescription SessionDescription { get; }
+        public ISessionDescription SessionDescription { get; }
         public int MsgSeqNum { get; set; }
         public ISessionMessageFactory SessionMessageFactory { get; }
         public IFixClock Clock {get;}
 
-        public AsciiEncoder(IFixDefinitions definitions, SessionDescription sessionDescription, ISessionMessageFactory messageFactory, IFixClock clock)
+        public AsciiEncoder(IFixDefinitions definitions, ISessionDescription sessionDescription, ISessionMessageFactory messageFactory, IFixClock clock)
         {
             Definitions = definitions;
             Pool = new StoragePool();

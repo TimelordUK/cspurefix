@@ -4,12 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFIix.Test.Env;
+using PureFix.Buffer.Ascii;
 using PureFix.Transport;
+using PureFix.Transport.Store;
+using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFIix.Test.Ascii
 {
     internal class SessionTest
     {
+        private TestEntity _testEntity;
+
+        [OneTimeSetUp]
+        public void OnceSetup()
+        {
+            _testEntity = new TestEntity();
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            _testEntity.Prepare();
+        }
+
         [Test]
         public async Task Test_Transport_Test()
         {
@@ -45,7 +62,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public void Get_Config_test()
+        public void Get_Config_Test()
         {
             var clock = new TestClock();
             var factory = new TestLoggerFactory(clock);
@@ -60,6 +77,29 @@ namespace PureFIix.Test.Ascii
                 Assert.That(config.Definitions.Simple.ContainsKey("BeginString"));
                 Assert.That(config.MessageFactory, Is.Not.Null);
             });
+        }
+
+        [Test]
+        public void Initiator_Acceptor_Login_Test()
+        {
+            var clock = new TestClock();
+            var factory = new TestLoggerFactory(clock);
+            var initiatorConfig = _testEntity.GetTestInitiatorConfig();
+            var acceptorConfig = _testEntity.GetTestAcceptorConfig();
+            var initiatorTransport = new TestMessageTransport();
+            var acceptorTransport = new TestMessageTransport();
+            initiatorTransport.ConnectTo(acceptorTransport);
+            acceptorTransport.ConnectTo(initiatorTransport);
+            var initiatorMessageFactory = new FixMessageFactory();
+            var acceptorMessageFactory = new FixMessageFactory();
+            var initiatorStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
+            var acceptorStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
+            var initiatorParser = new AsciiParser(initiatorConfig.Definitions) {  Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+            var initiatorEncoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
+            var acceptorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+            var acceptorEncoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
+            var initiator = new TestAsciiSkeleton(initiatorConfig, initiatorTransport, initiatorMessageFactory, initiatorParser, initiatorEncoder, clock);
+            var acceptor = new TestAsciiSkeleton(acceptorConfig, acceptorTransport, acceptorMessageFactory, acceptorParser, acceptorEncoder, clock);
         }
     }
 }

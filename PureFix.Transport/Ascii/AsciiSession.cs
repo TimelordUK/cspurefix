@@ -16,8 +16,8 @@ namespace PureFix.Transport.Ascii
 {
     public abstract class AsciiSession : FixSession
     {
-        private readonly IFixMsgStore _msgStore;
-        private readonly IFixMsgResender _resender;
+        protected readonly IFixMsgStore m_msgStore;
+        private readonly IFixMsgResender m_resender;
         private readonly IFixMessageFactory m_fixMessageFactory;
         public bool Heartbeat { get; set; }
         protected AsciiSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
@@ -26,8 +26,8 @@ namespace PureFix.Transport.Ascii
             if (config == null) throw new ArgumentNullException("config must be provided");
             if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");
             m_fixMessageFactory = fixMessageFactory;
-            _msgStore = new FixMsgMemoryStore(config.Description.SenderCompID);
-            _resender = new FixMsgAsciiStoreResend(_msgStore, fixMessageFactory, config, clock);
+            m_msgStore = new FixMsgMemoryStore(config.Description.SenderCompID);
+            m_resender = new FixMsgAsciiStoreResend(m_msgStore, fixMessageFactory, config, clock);
         }
 
         private async Task SendTestRequest()
@@ -221,7 +221,7 @@ namespace PureFix.Transport.Ascii
             var endSeqNo = requestedEndSeqNo == 0 ? m_sessionState.LastSentSeqNum : requestedEndSeqNo.Value;
 
             m_sessionLogger?.Info($"onResendRequest getResendRequest beginSeqNo = {beginSeqNo}, endSeqNo = {endSeqNo}");
-            var records = await _resender.GetResendRequest(beginSeqNo.Value, endSeqNo);
+            var records = await m_resender.GetResendRequest(beginSeqNo.Value, endSeqNo);
             m_sessionLogger?.Info($"sending {records.Count}");
             foreach (var rec in records)
             {

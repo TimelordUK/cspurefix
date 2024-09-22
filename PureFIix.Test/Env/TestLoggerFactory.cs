@@ -17,7 +17,12 @@ namespace PureFIix.Test.Env
 
         public ILogger MakeLogger(string name)
         {
-            return new TestLogger(name, _clock);
+            return new TestLogger(name, TestLogger.LogFormatTypes.App, _clock);
+        }
+
+        public ILogger MakePlainLogger(string name)
+        {
+            return new TestLogger(name, TestLogger.LogFormatTypes.Plain, _clock);
         }
     }
 }

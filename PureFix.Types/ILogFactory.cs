@@ -9,5 +9,6 @@ namespace PureFix.Types
     public interface ILogFactory
     {
         public ILogger MakeLogger(string name);
+        public ILogger MakePlainLogger(string name);
     }
 }

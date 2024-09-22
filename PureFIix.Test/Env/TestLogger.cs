@@ -9,11 +9,18 @@ namespace PureFIix.Test.Env
 {
     public class TestLogger : ILogger
     {
+        public enum LogFormatTypes
+        {
+            App,
+            Plain
+        }
         public IReadOnlyList<string> Entries => _log;
         private string Me { get; }
         private IFixClock Clock { get; }
-        public TestLogger(string name, IFixClock clock)
+        private LogFormatTypes LogFormat { get; set; }
+        public TestLogger(string name, LogFormatTypes format, IFixClock clock)
         {
+            LogFormat = format;
             Me = name;
             Clock = clock;
         }
@@ -41,7 +48,16 @@ namespace PureFIix.Test.Env
 
         private void AddEntry(string level, string msg)
         {
-            _log.Add($"{level}:[{Me}] {Clock.Current.ToLongTimeString()} {Environment.CurrentManagedThreadId} {msg}");
+            switch (LogFormat)
+            {
+                case LogFormatTypes.App:
+                    _log.Add($"{level}:[{Me}] {Clock.Current.ToLongTimeString()} {Environment.CurrentManagedThreadId} {msg}");
+                    break;
+
+                default:
+                    _log.Add(msg);
+                    break;
+            }
         }
     }
 }
