@@ -108,9 +108,10 @@ namespace PureFIix.Test.Ascii
 
         public class Receiver : ISessionEventReciever
         {
-            public void OnTimer()
+            public Task OnTimer()
             {
                 Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnTimer {DateTime.Now:HH:mm:ss.fff}");
+                return Task.CompletedTask;  
             }
 
             public void OnRx(byte[] buffer)
