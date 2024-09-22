@@ -5,6 +5,7 @@ using PureFix.Transport.Ascii;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
+using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace PureFIix.Test.Env
     {
         private ILogger m_logger;
         private ILogger m_fixLog;
+        FixMessageFactory m_msg_factory = new();
+
         public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, clock)
         {
             m_logReceivedMessages = true;
@@ -44,6 +47,7 @@ namespace PureFIix.Test.Env
 
         protected override bool OnLogon(MsgView view, string user, string password)
         {
+            var msg = m_msg_factory.ToFixMessage(view);
             m_logger.Info($"peer logs in user {user}");
             return true;
         }

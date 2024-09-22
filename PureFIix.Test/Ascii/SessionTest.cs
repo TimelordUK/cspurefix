@@ -9,7 +9,6 @@ using PureFix.Buffer.Ascii;
 using PureFix.Transport;
 using PureFix.Transport.Store;
 using PureFix.Types.FIX44.QuickFix.Types;
-using static PureFIix.Test.Ascii.SessionStateTest;
 
 namespace PureFIix.Test.Ascii
 {
