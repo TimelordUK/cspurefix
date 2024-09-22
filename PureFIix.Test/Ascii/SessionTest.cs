@@ -105,6 +105,23 @@ namespace PureFIix.Test.Ascii
                 App = new TestAsciiSkeleton(initiatorConfig, Transport, FixMessageFactory, Parser, Encoder, clock);
                 TokenSource = new CancellationTokenSource();
             }
+
+            public void ConnectTo(RuntimeContainer container)
+            {
+                ((TestMessageTransport)Transport).ConnectTo((TestMessageTransport)container.Transport);
+            }
+
+            public Task Run()
+            {
+                return Task.Factory.StartNew(async () =>
+                {
+                    var token = TokenSource.Token;
+                    while (!token.IsCancellationRequested)
+                    {
+                        await App.Run(Transport, token);
+                    }
+                }, TaskCreationOptions.LongRunning);
+            }
         }
 
         [Test]
@@ -118,25 +135,12 @@ namespace PureFIix.Test.Ascii
             var initiator = new RuntimeContainer(initiatorConfig, clock);
             var acceptor = new RuntimeContainer(acceptorConfig, clock);
 
-            ((TestMessageTransport)initiator.Transport).ConnectTo((TestMessageTransport)acceptor.Transport);
-            ((TestMessageTransport)acceptor.Transport).ConnectTo((TestMessageTransport)initiator.Transport);
-             
-            var t1 = Task.Factory.StartNew(async () =>
-            {
-                var token = acceptor.TokenSource.Token;
-                while (!token.IsCancellationRequested)
-                {
-                    await acceptor.App.Run(acceptor.Transport, token);
-                }
-            }, TaskCreationOptions.LongRunning);
-            var t2 = Task.Factory.StartNew(async () =>
-            {
-                var token = initiator.TokenSource.Token;
-                while (!token.IsCancellationRequested)
-                {
-                    await initiator.App.Run(initiator.Transport, token);
-                }
-            }, TaskCreationOptions.LongRunning);
+            initiator.ConnectTo(acceptor);
+            acceptor.ConnectTo(initiator);
+
+            var t1 = initiator.Run();
+            var t2 = acceptor.Run();
+           
             var res = Task.WaitAny(t1, t2);
             await Task.Delay(5000);
         }
