@@ -5,9 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PureFIix.Test.Env;
+using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Transport;
+using PureFix.Transport.Session;
 using PureFix.Transport.Store;
+using PureFix.Types;
 using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFIix.Test.Ascii
@@ -80,43 +83,58 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+        public class RuntimeContainer
+        {
+            public IMessageTransport Transport { get; private set; }
+            public IFixConfig Config { get; private set; }
+            public IFixMessageFactory FixMessageFactory { get; private set; } 
+            public IFixMsgStore MessageStore { get; private set; }
+            public IMessageParser Parser { get; private set; }
+            public IMessageEncoder Encoder { get; private set; }
+            public CancellationTokenSource TokenSource { get; private set; }
+            public TestAsciiSkeleton App { get; private set; }
+
+            public RuntimeContainer(IFixConfig initiatorConfig, IFixClock clock)
+            {
+                Config = initiatorConfig;
+                Transport = new TestMessageTransport();
+                FixMessageFactory = new FixMessageFactory();
+                MessageStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
+                Parser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
+                Encoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
+                App = new TestAsciiSkeleton(initiatorConfig, Transport, FixMessageFactory, Parser, Encoder, clock);
+                TokenSource = new CancellationTokenSource();
+            }
+        }
+
         [Test]
         public async Task Initiator_Acceptor_Login_Test()
         {
             var clock = new TestClock();
             var factory = new TestLoggerFactory(clock);
+
             var initiatorConfig = _testEntity.GetTestInitiatorConfig();
             var acceptorConfig = _testEntity.GetTestAcceptorConfig();
-            var initiatorTransport = new TestMessageTransport();
-            var acceptorTransport = new TestMessageTransport();
-            initiatorTransport.ConnectTo(acceptorTransport);
-            acceptorTransport.ConnectTo(initiatorTransport);
-            var initiatorMessageFactory = new FixMessageFactory();
-            var acceptorMessageFactory = new FixMessageFactory();
-            var initiatorStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
-            var acceptorStore = new FixMsgMemoryStore(acceptorConfig.Description.SenderCompID);
-            var initiatorParser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-            var initiatorEncoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
-            var acceptorParser = new AsciiParser(acceptorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-            var acceptorEncoder = new AsciiEncoder(acceptorConfig.Definitions, acceptorConfig.Description, acceptorConfig.MessageFactory, clock);
-            var initiator = new TestAsciiSkeleton(initiatorConfig, initiatorTransport, initiatorMessageFactory, initiatorParser, initiatorEncoder, clock);
-            var acceptor = new TestAsciiSkeleton(acceptorConfig, acceptorTransport, acceptorMessageFactory, acceptorParser, acceptorEncoder, clock);
-            var ctsInitiator = new CancellationTokenSource();
-            var ctsAcceptor = new CancellationTokenSource();
+            var initiator = new RuntimeContainer(initiatorConfig, clock);
+            var acceptor = new RuntimeContainer(acceptorConfig, clock);
+
+            ((TestMessageTransport)initiator.Transport).ConnectTo((TestMessageTransport)acceptor.Transport);
+            ((TestMessageTransport)acceptor.Transport).ConnectTo((TestMessageTransport)initiator.Transport);
+             
             var t1 = Task.Factory.StartNew(async () =>
             {
-                var token = ctsAcceptor.Token;
+                var token = acceptor.TokenSource.Token;
                 while (!token.IsCancellationRequested)
                 {
-                    await acceptor.Run(acceptorTransport, token);
+                    await acceptor.App.Run(acceptor.Transport, token);
                 }
             }, TaskCreationOptions.LongRunning);
             var t2 = Task.Factory.StartNew(async () =>
             {
-                var token = ctsInitiator.Token;
+                var token = initiator.TokenSource.Token;
                 while (!token.IsCancellationRequested)
                 {
-                    await initiator.Run(initiatorTransport, token);
+                    await initiator.App.Run(initiator.Transport, token);
                 }
             }, TaskCreationOptions.LongRunning);
             var res = Task.WaitAny(t1, t2);
