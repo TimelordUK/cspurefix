@@ -5,13 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PureFIix.Test.Env;
-using PureFix.Buffer;
-using PureFix.Buffer.Ascii;
 using PureFix.Transport;
-using PureFix.Transport.Session;
-using PureFix.Transport.Store;
-using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix.Types;
+
 
 namespace PureFIix.Test.Ascii
 {
@@ -81,42 +76,6 @@ namespace PureFIix.Test.Ascii
                 Assert.That(config.Definitions.Simple.ContainsKey("BeginString"));
                 Assert.That(config.MessageFactory, Is.Not.Null);
             });
-        }
-
-        public class RuntimeContainer
-        {
-            public IMessageTransport Transport { get; private set; }
-            public IFixConfig Config { get; private set; }
-            public IFixMessageFactory FixMessageFactory { get; private set; } 
-            public IFixMsgStore MessageStore { get; private set; }
-            public IMessageParser Parser { get; private set; }
-            public IMessageEncoder Encoder { get; private set; }
-            public CancellationTokenSource TokenSource { get; private set; }
-            public TestAsciiSkeleton App { get; private set; }
-            public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries;
-            public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries;
-
-            public RuntimeContainer(IFixConfig initiatorConfig, IFixClock clock)
-            {
-                Config = initiatorConfig;
-                Transport = new TestMessageTransport();
-                FixMessageFactory = new FixMessageFactory();
-                MessageStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
-                Parser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-                Encoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
-                App = new TestAsciiSkeleton(initiatorConfig, Transport, FixMessageFactory, Parser, Encoder, clock);
-                TokenSource = new CancellationTokenSource();
-            }
-
-            public void ConnectTo(RuntimeContainer container)
-            {
-                ((TestMessageTransport)Transport).ConnectTo((TestMessageTransport)container.Transport);
-            }
-
-            public async Task Run()
-            {
-                await App.Run(Transport, TokenSource.Token);
-            }
         }
 
         [Test]

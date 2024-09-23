@@ -36,6 +36,7 @@ namespace PureFix.Transport.Session
         protected IMessageTransport? m_transport;
         protected IFixConfig m_config;
         private CancellationToken? m_token;
+        private readonly List<MsgView> _messages = new();
 
         protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
         {
@@ -236,6 +237,7 @@ namespace PureFix.Transport.Session
                         if (m_transport == null) return;
                         var storage = m_encoder.Encode(msgType, message);
                         if (storage == null) return;
+                        m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}");
                         await m_transport.SendAsync(storage.AsBytes(), m_token.Value);
                         m_encoder.Return(storage);
                         break;
@@ -248,12 +250,12 @@ namespace PureFix.Transport.Session
             await Tick();
         }
 
-        private readonly List<MsgView> _messages = new();
         public async Task OnRx(byte[] buffer)
         {
             _messages.Clear();
             m_sessionLogger?.Debug($"OnRx {buffer.Length}");
             m_parser.ParseFrom(buffer, (p, v) => _messages.Add(v), OnFixLog);
+            if (_messages.Count == 0) return;
             m_sessionLogger?.Info($"received {_messages.Count}");
             foreach (var msg in _messages)
             {
@@ -331,7 +333,7 @@ namespace PureFix.Transport.Session
             m_token = token;
             await InitiatorLogon();            
             var dispatcher = new EventDispatcher(transport);
-            // start sending events to the channel
+            // start sending events to the channel on which this session listens.
             await dispatcher.Dispatch(TimeSpan.FromMilliseconds(100), token);
             await ReveiveMessages(dispatcher, token);   
         }

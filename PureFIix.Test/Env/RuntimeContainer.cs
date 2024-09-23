@@ -22,7 +22,8 @@ namespace PureFIix.Test.Env
         public IMessageEncoder Encoder { get; private set; }
         public CancellationTokenSource TokenSource { get; private set; }
         public TestAsciiSkeleton App { get; private set; }
-        public (ILogger app, ILogger fix) Logs => App.Logs;
+        public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries;
+        public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries;
 
         public RuntimeContainer(IFixConfig initiatorConfig, IFixClock clock)
         {
@@ -31,7 +32,7 @@ namespace PureFIix.Test.Env
             FixMessageFactory = new FixMessageFactory();
             MessageStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
             Parser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-            Encoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig!.Description, initiatorConfig.MessageFactory, clock);
+            Encoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
             App = new TestAsciiSkeleton(initiatorConfig, Transport, FixMessageFactory, Parser, Encoder, clock);
             TokenSource = new CancellationTokenSource();
         }
@@ -41,16 +42,9 @@ namespace PureFIix.Test.Env
             ((TestMessageTransport)Transport).ConnectTo((TestMessageTransport)container.Transport);
         }
 
-        public Task Run()
+        public async Task Run()
         {
-            return Task.Factory.StartNew(async () =>
-            {
-                var token = TokenSource.Token;
-                while (!token.IsCancellationRequested)
-                {
-                    await App.Run(Transport, token);
-                }
-            }, TaskCreationOptions.LongRunning);
+            await App.Run(Transport, TokenSource.Token);
         }
     }
 }
