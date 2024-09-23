@@ -134,12 +134,12 @@ namespace PureFIix.Test.Ascii
             var t2 = acceptor.Run();
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(1000);
+                await Task.Delay(500);
                 initiator.TokenSource.Cancel();
             });
             var res = Task.WaitAny(t1, t2);
-            var (app, fix) = initiator.App.Logs;
-          
+            var (iapp, ifix) = initiator.App.Logs;
+            var (aapp, afix) = initiator.App.Logs;
             return Task.FromResult(res);
         }
     }
