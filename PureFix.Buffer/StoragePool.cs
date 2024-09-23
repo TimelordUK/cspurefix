@@ -78,6 +78,7 @@ namespace PureFix.Buffer
                 return $"[{Buffer.Pos}, {Locations.NextTagPos}]";
             }
         }
+        
         public Storage Rent()
         {
             var instance = _pool.Get();
@@ -85,25 +86,18 @@ namespace PureFix.Buffer
             ++Rents;
             return instance;
         }
-        public void Deliver(Storage storage)
+
+        public void Return(Storage storage)
         {
-            _delivered.Enqueue(storage);
+            Returns++;
+            _pool.Return(storage);
         }
-        public void Reclaim()
-        {
-            while (_delivered.Count > 0)
-            {
-                Returns++;
-                var instance = _delivered.Dequeue();
-                _pool.Return(instance);
-            }
-        }
+      
         public long Imbalance => Rents - Returns;
         public long Rents { get; private set; }
 
         public long Returns { get; private set; }
 
         private readonly ObjectPool<Storage> _pool = new DefaultObjectPool<Storage>(new DefaultPooledObjectPolicy<Storage>());
-        private readonly Queue<Storage> _delivered = [];
     }
 }

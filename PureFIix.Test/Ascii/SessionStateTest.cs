@@ -113,7 +113,7 @@ namespace PureFIix.Test.Ascii
                 Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnTimer {DateTime.Now:HH:mm:ss.fff}");
             }
 
-            public void OnRx(ReadOnlySpan<byte> buffer)
+            public void OnRx(byte[] buffer)
             {
                 Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnRx {DateTime.Now:HH:mm:ss.fff} {buffer.Length}");
             }

@@ -18,14 +18,15 @@ namespace PureFIix.Test.Env
         private string Me { get; }
         private IFixClock Clock { get; }
         private LogFormatTypes LogFormat { get; set; }
-        public TestLogger(string name, LogFormatTypes format, IFixClock clock)
+        public TestLogger(string name, List<string> file, LogFormatTypes format, IFixClock clock)
         {
             LogFormat = format;
             Me = name;
             Clock = clock;
+            _log = file;
         }
 
-        private List<string> _log = [];
+        private List<string> _log;
         public void Info(string messageTemplate)
         {
             AddEntry("I", messageTemplate);

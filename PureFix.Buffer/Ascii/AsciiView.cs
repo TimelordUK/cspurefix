@@ -17,7 +17,8 @@ namespace PureFix.Buffer.Ascii
         public int Ptr { get; }
         public int Delimiter { get; }
         public int WriteDelimiter { get; } 
-        public ElasticBuffer Buffer { get; }
+        public StoragePool.Storage Storage { get; }
+        public ElasticBuffer Buffer => Storage.Buffer;
 
         public override string BufferString()
         {
@@ -27,7 +28,7 @@ namespace PureFix.Buffer.Ascii
         public AsciiView (
             IFixDefinitions definitions,
             SegmentDescription segment,
-            ElasticBuffer buffer,
+            StoragePool.Storage storage,
             Structure? structure,
             int ptr,
             int delimiter,
@@ -36,7 +37,7 @@ namespace PureFix.Buffer.Ascii
             Ptr = ptr;
             Delimiter = delimiter;
             WriteDelimiter = writeDelimiter;
-            Buffer = buffer;
+            Storage = storage;
         }
 
     
@@ -44,7 +45,7 @@ namespace PureFix.Buffer.Ascii
         {
             return new AsciiView(Definitions,
                 singleton,
-                Buffer,
+                Storage,
                 Structure,
                 Ptr,
                 Delimiter,

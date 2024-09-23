@@ -69,7 +69,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        private async Task Tick()
+        protected override async Task Tick()
         {
             if (m_transport == null) return;
             var action = m_sessionState.CalcAction(m_clock.Current);

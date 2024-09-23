@@ -15,7 +15,7 @@ using PureFix.Types.Config;
 
 namespace PureFix.Transport.Session
 {
-    public abstract class FixSession : ISessionEventReciever
+    public abstract class FixSession 
     {
         protected string? m_me;
         protected bool m_initiator;
@@ -218,9 +218,9 @@ namespace PureFix.Transport.Session
             m_transport = null;
         }
 
-        protected Task Send(string msgType, IFixMessage message)
+        protected async Task Send(string msgType, IFixMessage message)
         {
-            if (m_transport == null) return Task.CompletedTask;
+            if (m_transport == null) return;
             switch (m_sessionState.State)
             {
                 case SessionState.Stopped:
@@ -228,26 +228,35 @@ namespace PureFix.Transport.Session
                     break;
 
                 default:
-                {
-                    if (m_token == null) return Task.CompletedTask;
-                    if (m_transport == null) return Task.CompletedTask;
-                    var storage = m_encoder.Encode(msgType, message);
-                    if (storage == null) return Task.CompletedTask;
-                    var t = m_transport.SendAsync(storage.AsBytes(), m_token.Value).ContinueWith(_ => { m_encoder.Return(storage); });
-                    return t;
-                }
+                    {
+                        if (m_token == null) return;
+                        if (m_transport == null) return;
+                        var storage = m_encoder.Encode(msgType, message);
+                        if (storage == null) return;
+                        await m_transport.SendAsync(storage.AsBytes(), m_token.Value);
+                        m_encoder.Return(storage);
+                        break;
+                    }
             }
-            return Task.CompletedTask;
         }
 
-        public void OnTimer()
+        public async Task OnTimer()
         {
+            await Tick();
         }
 
-        public void OnRx(ReadOnlySpan<byte> buffer)
+        private readonly List<MsgView> _messages = new();
+        public async Task OnRx(byte[] buffer)
         {
+            _messages.Clear();
             m_sessionLogger?.Debug($"OnRx {buffer.Length}");
-            m_parser.ParseFrom(buffer, RxOnMsg, OnFixLog);
+            m_parser.ParseFrom(buffer, (p, v) => _messages.Add(v), OnFixLog);
+            m_sessionLogger?.Info($"received {_messages.Count}");
+            foreach (var msg in _messages)
+            {
+                await RxOnMsg(msg);
+                m_parser.Return(((AsciiView)msg).Storage);
+            }
         }
 
         protected void OnFixLog(StoragePool.Storage storage)
@@ -258,7 +267,7 @@ namespace PureFix.Transport.Session
             OnDecoded(msgType, decoded);
         }
         
-        private void RxOnMsg(int i, MsgView view)
+        private async Task RxOnMsg(MsgView view)
         {
             if (view.Structure == null) return;
 
@@ -271,11 +280,11 @@ namespace PureFix.Transport.Session
 
             if (m_manageSession)
             {
-                OnMsg(msgType, view);
+                await OnMsg(msgType, view);
             }
             else
             {
-                CheckForwardMessage(msgType, view);
+                await CheckForwardMessage(msgType, view);
             }
         }
 
@@ -298,17 +307,30 @@ namespace PureFix.Transport.Session
                 SetState(SessionState.WaitingForALogon);
             }
             var dispatcher = new EventDispatcher(transport);
+            var t1 = Task.Factory.StartNew(async () =>
+            {
+                await dispatcher.Dispatch(token);    
+            }, TaskCreationOptions.LongRunning);
+
             while (!token.IsCancellationRequested)
             {
-                await dispatcher.Dispatch(this, token);
+                var msg = await dispatcher.WaitRead();
+                if (msg.Data == null)
+                {
+                    await OnTimer();
+                }
+                else
+                {
+                    await OnRx(msg.Data);
+                }
             }
         }
 
-        private void CheckForwardMessage(string msgType, MsgView view)
+        private async Task CheckForwardMessage(string msgType, MsgView view)
         {
             m_sessionLogger?.Info($"forwarding msgType = '{msgType}' to application");
             SetState(SessionState.ActiveNormalSession);
-            OnApplicationMsg(msgType, view);
+            await OnApplicationMsg(msgType, view);
         }
 
         public async Task Done()
@@ -408,7 +430,8 @@ namespace PureFix.Transport.Session
 
         protected abstract bool OnLogon(MsgView view, string? user, string? password);
 
-        public void End()
+        protected abstract Task Tick();
+       public void End()
         {
         }
     }

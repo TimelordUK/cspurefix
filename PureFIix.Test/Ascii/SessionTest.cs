@@ -111,25 +111,17 @@ namespace PureFIix.Test.Ascii
                 ((TestMessageTransport)Transport).ConnectTo((TestMessageTransport)container.Transport);
             }
 
-            public Task Run()
+            public async Task Run()
             {
-                return Task.Factory.StartNew(async () =>
-                {
-                    var token = TokenSource.Token;
-                    while (!token.IsCancellationRequested)
-                    {
-                        await App.Run(Transport, token);
-                    }
-                }, TaskCreationOptions.LongRunning);
+                await App.Run(Transport, TokenSource.Token);
             }
         }
 
         [Test]
-        public async Task Initiator_Acceptor_Login_Test()
+        public Task Initiator_Acceptor_Login_Test()
         {
             var clock = new TestClock();
-            var factory = new TestLoggerFactory(clock);
-
+ 
             var initiatorConfig = _testEntity.GetTestInitiatorConfig();
             var acceptorConfig = _testEntity.GetTestAcceptorConfig();
             var initiator = new RuntimeContainer(initiatorConfig, clock);
@@ -140,9 +132,15 @@ namespace PureFIix.Test.Ascii
 
             var t1 = initiator.Run();
             var t2 = acceptor.Run();
-           
+            var t3 = Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(1000);
+                initiator.TokenSource.Cancel();
+            }, TaskCreationOptions.LongRunning);
             var res = Task.WaitAny(t1, t2);
-            await Task.Delay(5000);
+            var (app, fix) = initiator.App.Logs;
+          
+            return Task.FromResult(res);
         }
     }
 }

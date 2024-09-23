@@ -33,8 +33,7 @@ namespace PureFix.Buffer.Ascii
 
         public void Return(StoragePool.Storage storage)
         {
-            Pool.Deliver(storage);
-            Pool.Reclaim();
+            Pool.Return(storage);
         }
 
         // take an application created object e.g. Logon, and encode to fix wire format such that it

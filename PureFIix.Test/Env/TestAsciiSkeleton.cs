@@ -19,6 +19,7 @@ namespace PureFIix.Test.Env
         private ILogger m_logger;
         private ILogger m_fixLog;
         FixMessageFactory m_msg_factory = new();
+        public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
 
         public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, clock)
         {

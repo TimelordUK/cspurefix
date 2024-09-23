@@ -53,10 +53,6 @@ namespace PureFix.Buffer.Ascii
             if (view == null) return;
             _parsedMessages++;
             onMsg?.Invoke(ptr, view);
-            
-            // storage for this message will be re-used on next invocation now its been handed to
-            // application
-            if (_state.Storage != null) _pool.Deliver(_state.Storage);
             _state.BeginMessage();
         }
 
@@ -68,9 +64,9 @@ namespace PureFix.Buffer.Ascii
             }
             var structure = _segmentParser.Parse(_state.MsgType, Locations, Locations.NextTagPos - 1);
             var msgSegment = structure?.Msg();
-            if (msgSegment != null)
+            if (msgSegment != null && _state.Storage != null)
             {
-                var view = new AsciiView(Definitons, msgSegment, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
+                var view = new AsciiView(Definitons, msgSegment, _state.Storage, structure, ptr, Delimiter, WriteDelimiter);
                 return view;
             }
 
@@ -79,7 +75,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     EndPosition = Locations.NextTagPos - 1
                 };
-            return new AsciiView(Definitons, segment, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
+            return new AsciiView(Definitons, segment, _state.Storage ?? new StoragePool.Storage(), structure, ptr, Delimiter, WriteDelimiter);
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.
@@ -191,17 +187,19 @@ namespace PureFix.Buffer.Ascii
             catch (Exception)
             {
                 // return buffer given this message has failed to deliver
-                if (_state.Storage != null) _pool.Deliver(_state.Storage);
+                if (_state.Storage != null) _pool.Return(_state.Storage);
                 throw;
             } 
             finally
             {
-                // any views dispatched on the callback from previous call are considered ready to be reclaimed, the expectation
-                // being the recipient must have extracted required data or parsed into a concrete type within the callbak itself.s
-                _pool.Reclaim();
                 var elapsedTime = Stopwatch.GetElapsedTime(startTicks);
                 _totalElapsedParseMicros += elapsedTime.TotalMicroseconds;
             }
+        }
+
+        public void Return(StoragePool.Storage sto)
+        {
+            _pool.Return(sto);
         }
     }
 }

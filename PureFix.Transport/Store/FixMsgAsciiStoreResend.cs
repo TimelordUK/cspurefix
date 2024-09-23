@@ -34,7 +34,7 @@ namespace PureFix.Transport.Store
             }
             m_Parser = new AsciiParser(config.Definitions) { 
                 Delimiter = config.Delimiter ?? AsciiChars.Soh, 
-                WriteDelimiter = config.LogDelimiter ?? AsciiChars.Soh
+                WriteDelimiter = config.LogDelimiter ?? AsciiChars.Pipe
             };
             m_store = store;
             m_config = config;
