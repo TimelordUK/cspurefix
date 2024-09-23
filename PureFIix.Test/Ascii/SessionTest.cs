@@ -93,6 +93,8 @@ namespace PureFIix.Test.Ascii
             public IMessageEncoder Encoder { get; private set; }
             public CancellationTokenSource TokenSource { get; private set; }
             public TestAsciiSkeleton App { get; private set; }
+            public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries;
+            public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries;
 
             public RuntimeContainer(IFixConfig initiatorConfig, IFixClock clock)
             {
@@ -134,8 +136,14 @@ namespace PureFIix.Test.Ascii
             var t2 = acceptor.Run();
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(500);
-                initiator.TokenSource.Cancel();
+                while (true)
+                {
+                    await Task.Delay(100);
+                    if (initiator.FixLog.Count == 1 && acceptor.FixLog.Count == 1)
+                    {
+                        initiator.TokenSource.Cancel();
+                    }
+                }
             });
             var res = Task.WaitAny(t1, t2);
             var (iapp, ifix) = initiator.App.Logs;
