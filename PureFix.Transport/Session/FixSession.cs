@@ -89,9 +89,12 @@ namespace PureFix.Transport.Session
 
         private void AssignState(SessionState state)
         {
-            var currentState = m_sessionState.State;
-            m_sessionLogger?.Info($"current state {currentState} ({currentState} moves to {state}");
-            m_sessionState.State = state;
+            if (state != m_sessionState.State)
+            {
+                var currentState = m_sessionState.State;
+                m_sessionLogger?.Info($"current state {currentState} ({currentState} moves to {state})");
+                m_sessionState.State = state;
+            }
         }
 
         public void SetState(SessionState state)

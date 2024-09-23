@@ -71,7 +71,6 @@ namespace PureFix.Transport.Ascii
 
         protected override async Task Tick()
         {
-            if (m_transport == null) return;
             var action = m_sessionState.CalcAction(m_clock.Current);
             switch (action)
             {
