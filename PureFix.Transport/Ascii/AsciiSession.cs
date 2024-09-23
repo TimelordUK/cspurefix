@@ -113,7 +113,7 @@ namespace PureFix.Transport.Ascii
             state.PeerCompID = peerCompId;
             var res = OnLogon(view, userName, password);
             // currently not using this.
-            logger?.Info("peerLogon onLogon returns {res}");
+            logger?.Info($"peerLogon onLogon returns {res}");
             if (m_acceptor)
             {
                 SetState(SessionState.InitiationLogonResponse);

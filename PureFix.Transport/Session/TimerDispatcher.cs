@@ -16,7 +16,7 @@ namespace PureFix.Transport.Session
                 while (!token.IsCancellationRequested)
                 {
                     await timer.WaitForNextTickAsync(token);
-                    reciever.OnTimer();
+                    await reciever.OnTimer();
                 }
             },
                 TaskCreationOptions.LongRunning);
