@@ -22,14 +22,17 @@ namespace PureFix.Transport.Session
             _transportDispatcher = new TransportDispatcher(transport);
         }       
 
-        public async Task Dispatch(CancellationToken token)
+        public async Task Dispatch(TimeSpan timer, CancellationToken token)
         {
-            _token = token;
-            var tasks = new[] {
-                    _timerDispatcher.Dispatch(this, TimeSpan.FromMilliseconds(5000), token),
+            await Task.Factory.StartNew(async () =>
+            {
+                _token = token;
+                var tasks = new[] {
+                    _timerDispatcher.Dispatch(this, timer, token),
                     _transportDispatcher.Dispatch(this, token)
                 };
-            await Task.WhenAny(tasks);
+                await Task.WhenAny(tasks);
+            }, TaskCreationOptions.LongRunning);
         }
 
         public void OnRx(byte[] buffer)

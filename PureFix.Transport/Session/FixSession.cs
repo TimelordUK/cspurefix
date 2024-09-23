@@ -288,30 +288,8 @@ namespace PureFix.Transport.Session
             }
         }
 
-        public async Task Run(IMessageTransport transport, CancellationToken token)
+        private async Task ReveiveMessages(EventDispatcher dispatcher, CancellationToken token)
         {
-            if (m_transport != null)
-            {
-                m_sessionLogger?.Info("reset from previous transport");
-            }
-            m_token = token;
-            if (m_initiator)
-            {
-                m_sessionLogger?.Debug($"initiator sending logon state = {m_sessionState.State}");
-                await SendLogon();
-                SetState(SessionState.InitiationLogonSent);
-            }
-            else
-            {
-                m_sessionLogger?.Debug($"acceptor waits for logon state = {m_sessionState.State}");
-                SetState(SessionState.WaitingForALogon);
-            }
-            var dispatcher = new EventDispatcher(transport);
-            await Task.Factory.StartNew(async () =>
-            {
-                await dispatcher.Dispatch(token);    
-            }, TaskCreationOptions.LongRunning);
-
             while (!token.IsCancellationRequested)
             {
                 var msg = await dispatcher.WaitRead();
@@ -324,6 +302,35 @@ namespace PureFix.Transport.Session
                     await OnRx(msg.Data);
                 }
             }
+        }
+
+        private async Task InitiatorLogon() {
+            if (m_transport != null)
+            {
+                m_sessionLogger?.Info("reset from previous transport");
+            }
+         
+            if (m_initiator)
+            {
+                m_sessionLogger?.Debug($"initiator sending logon state = {m_sessionState.State}");
+                await SendLogon();
+                SetState(SessionState.InitiationLogonSent);
+            }
+            else
+            {
+                m_sessionLogger?.Debug($"acceptor waits for logon state = {m_sessionState.State}");
+                SetState(SessionState.WaitingForALogon);
+            }
+        }
+
+        public async Task Run(IMessageTransport transport, CancellationToken token)
+        {
+            m_token = token;
+            await InitiatorLogon();            
+            var dispatcher = new EventDispatcher(transport);
+            // start sending events to the channel
+            await dispatcher.Dispatch(TimeSpan.FromMilliseconds(100), token);
+            await ReveiveMessages(dispatcher, token);   
         }
 
         private async Task CheckForwardMessage(string msgType, MsgView view)

@@ -147,7 +147,7 @@ namespace PureFIix.Test.Ascii
             });
             var res = Task.WaitAny(t1, t2);
             var (iapp, ifix) = initiator.App.Logs;
-            var (aapp, afix) = initiator.App.Logs;
+            var (aapp, afix) = acceptor.App.Logs;
             return Task.FromResult(res);
         }
     }
