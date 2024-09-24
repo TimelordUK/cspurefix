@@ -88,9 +88,9 @@ namespace PureFIix.Test.Ascii
             {
                 var initiatorLog = experiment.Initiator.FixLog;
                 var acceptorLog = experiment.Acceptor.FixLog;
-                return initiatorLog.Count == 1 && initiatorLog[0].Contains("35=A") && acceptorLog.Count == 1 && acceptorLog[0].Contains("35=A");
+                var expected = $"{(int)MsgTag.MsgType}={MsgType.Logon}";
+                return initiatorLog.Count == 1 && initiatorLog[0].Contains(expected) && acceptorLog.Count == 1 && acceptorLog[0].Contains(expected);
             });
-
                 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;
@@ -105,7 +105,8 @@ namespace PureFIix.Test.Ascii
                 experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
                 var initiatorLog = experiment.Initiator.FixLog;
                 var acceptorLog = experiment.Acceptor.FixLog;
-                return initiatorLog.Count > 1 && initiatorLog.LastOrDefault().Contains("35=0") && acceptorLog.Count > 1 && acceptorLog.LastOrDefault().Contains("35=0");
+                var expected = $"{(int)MsgTag.MsgType}={MsgType.Heartbeat}";
+                return initiatorLog.Count > 1 && initiatorLog[^1].Contains(expected) && acceptorLog.Count > 1 && acceptorLog[^1].Contains(expected);
             });
 
 
