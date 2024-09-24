@@ -16,6 +16,13 @@ namespace PureFIix.Test.Env
         public RuntimeContainer Acceptor { get; private set; }
         public IFixClock Clock { get; private set; }
 
+        public bool OnReady()
+        {
+            var initiatorLog = Initiator.AppLog;
+            var acceptorLog = Acceptor.AppLog;
+            return initiatorLog.Count > 0 && initiatorLog[^1].Contains("OnReady") && acceptorLog.Count > 1 && acceptorLog[^1].Contains("OnReady");
+        }
+
         public SessionExperiment(TestEntity testEntity)
         {
             Clock = new TestClock();
