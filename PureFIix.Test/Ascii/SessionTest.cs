@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PureFIix.Test.Env;
 using PureFix.Transport;
+using PureFix.Transport.Session;
+using PureFix.Types;
 
 
 namespace PureFIix.Test.Ascii
@@ -39,7 +41,7 @@ namespace PureFIix.Test.Ascii
             await lhs.SendAsync(bytes, cts.Token);
             var buffer = new byte[1024];
             var received = await rhs.ReceiveAsync(buffer, cts.Token);
-            var str = Encoding.Default.GetString(buffer,0,received);
+            var str = Encoding.Default.GetString(buffer, 0, received);
             Assert.That(str, Is.EqualTo(s));
 
             await rhs.SendAsync(bytes, cts.Token);
@@ -81,32 +83,17 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Initiator_Acceptor_Login_Test()
         {
-            var clock = new TestClock();
- 
-            var initiatorConfig = _testEntity.GetTestInitiatorConfig();
-            var acceptorConfig = _testEntity.GetTestAcceptorConfig();
-            var initiator = new RuntimeContainer(initiatorConfig, clock);
-            var acceptor = new RuntimeContainer(acceptorConfig, clock);
-
-            initiator.ConnectTo(acceptor);
-            acceptor.ConnectTo(initiator);
-
-            var t1 = initiator.Run();
-            var t2 = acceptor.Run();
-            await Task.Factory.StartNew(async () =>
+            var experiment = new SessionExperiment(_testEntity);
+            await experiment.Run(() =>
             {
-                while (!initiator.TokenSource.IsCancellationRequested)
-                {
-                    await Task.Delay(100);
-                    if (initiator.FixLog.Count == 1 && acceptor.FixLog.Count == 1)
-                    {
-                        initiator.TokenSource.Cancel();
-                    }
-                }
+                var initiatorLog = experiment.Initiator.FixLog;
+                var acceptorLog = experiment.Acceptor.FixLog;
+                return initiatorLog.Count == 1 && initiatorLog[0].Contains("35=A") && acceptorLog.Count == 1 && acceptorLog[0].Contains("35=A");
             });
-            var res = Task.WaitAny(t1, t2);
-            var (iapp, ifix) = initiator.App.Logs;
-            var (aapp, afix) = acceptor.App.Logs;
+
+                
+            var (iapp, ifix) = experiment.Initiator.App.Logs;
+            var (aapp, afix) = experiment.Acceptor.App.Logs;
         }
     }
 }
