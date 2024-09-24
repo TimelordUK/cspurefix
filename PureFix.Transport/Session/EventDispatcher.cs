@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PureFix.Types;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,9 +16,11 @@ namespace PureFix.Transport.Session
         private readonly TransportDispatcher _transportDispatcher;
         private readonly Channel<SessionEvent> _channel = Channel.CreateUnbounded<SessionEvent>();
         private CancellationToken _token;
+        private ILogger? _logger;
 
-        public EventDispatcher(IMessageTransport transport)
+        public EventDispatcher(ILogFactory? logger, IMessageTransport transport)
         {
+            _logger = logger?.MakeLogger(nameof(EventDispatcher));
             _timerDispatcher = new TimerDispatcher();
             _transportDispatcher = new TransportDispatcher(transport);
         }       
@@ -31,6 +34,7 @@ namespace PureFix.Transport.Session
                     _timerDispatcher.Dispatch(this, timer, token),
                     _transportDispatcher.Dispatch(this, token)
                 };
+                _logger?.Info("Writer is waiting on events.");
                 await Task.WhenAny(tasks);
             }, TaskCreationOptions.LongRunning);
         }

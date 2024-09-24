@@ -86,10 +86,9 @@ namespace PureFIix.Test.Ascii
             var experiment = new SessionExperiment(_testEntity);
             await experiment.Run(() =>
             {
-                var initiatorLog = experiment.Initiator.FixLog;
-                var acceptorLog = experiment.Acceptor.FixLog;
-                var expected = $"{(int)MsgTag.MsgType}={MsgType.Logon}";
-                return initiatorLog.Count > 1 && acceptorLog.Count > 1;
+                var initiatorLog = experiment.Initiator.AppLog;
+                var acceptorLog = experiment.Acceptor.AppLog;
+                return initiatorLog.Count > 0 && initiatorLog[^1].Contains("OnReady") && acceptorLog.Count > 1 && acceptorLog[^1].Contains("OnReady");
             }, () =>
             {
                 experiment.Initiator.TokenSource.Cancel();

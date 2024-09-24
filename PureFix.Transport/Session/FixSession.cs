@@ -211,8 +211,7 @@ namespace PureFix.Transport.Session
             {
                 return;
             }
-            // this.stopTimer();
-            m_sessionLogger?.Info("stop: kill transport");
+            m_sessionLogger?.Info($"stop: kill transport {m_sessionState.State}");
             if (error != null)
             {
                 m_sessionLogger?.Info($"stop: emit error ${error}");
@@ -222,6 +221,7 @@ namespace PureFix.Transport.Session
             OnStopped(error);
             if (m_MySource != null && !m_MySource.IsCancellationRequested)
             {
+                m_sessionLogger?.Info("stop: cancel token source.");
                 m_MySource?.Cancel();
             }
             m_transport = null;
@@ -301,6 +301,7 @@ namespace PureFix.Transport.Session
 
         private async Task Reader(EventDispatcher dispatcher, CancellationToken token)
         {
+            m_sessionLogger?.Info("Reader is waiting on events.");
             while (!token.IsCancellationRequested)
             {
                 var msg = await dispatcher.WaitRead();
@@ -313,6 +314,7 @@ namespace PureFix.Transport.Session
                     await OnRx(msg.Data);
                 }
             }
+            m_sessionLogger?.Info("Reader is exiting.");
         }
 
         private async Task InitiatorLogon() {
@@ -340,7 +342,7 @@ namespace PureFix.Transport.Session
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             
             await InitiatorLogon();            
-            var dispatcher = new EventDispatcher(transport);
+            var dispatcher = new EventDispatcher(m_config.LogFactory, transport);
             // start sending events to the channel on which this session listens.
             await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
             // read from the channel 
