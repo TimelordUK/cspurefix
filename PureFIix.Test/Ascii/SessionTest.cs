@@ -79,7 +79,7 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public Task Initiator_Acceptor_Login_Test()
+        public async Task Initiator_Acceptor_Login_Test()
         {
             var clock = new TestClock();
  
@@ -93,9 +93,9 @@ namespace PureFIix.Test.Ascii
 
             var t1 = initiator.Run();
             var t2 = acceptor.Run();
-            Task.Factory.StartNew(async () =>
+            await Task.Factory.StartNew(async () =>
             {
-                while (true)
+                while (!initiator.TokenSource.IsCancellationRequested)
                 {
                     await Task.Delay(100);
                     if (initiator.FixLog.Count == 1 && acceptor.FixLog.Count == 1)
@@ -107,7 +107,6 @@ namespace PureFIix.Test.Ascii
             var res = Task.WaitAny(t1, t2);
             var (iapp, ifix) = initiator.App.Logs;
             var (aapp, afix) = acceptor.App.Logs;
-            return Task.FromResult(res);
         }
     }
 }
