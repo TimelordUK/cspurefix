@@ -29,18 +29,21 @@ namespace PureFIix.Test.Env
             Acceptor.ConnectTo(Initiator);
         }
 
-        public async Task Run(Func<bool> StopCondition)
+        public async Task Run(Func<bool> stopCondition, Func<Task> stopAction)
         {
+          
             var t1 = Initiator.Run();
             var t2 = Acceptor.Run();
+            bool stopped = false;
             await Task.Factory.StartNew(async () =>
             {
                 while (!Initiator.TokenSource.IsCancellationRequested)
                 {
                     await Task.Delay(100);
-                    if (StopCondition())
+                    if (!stopped && stopCondition())
                     {
-                        Initiator.TokenSource.Cancel();
+                        await stopAction();
+                        stopped = true;
                     }
                 }
             });

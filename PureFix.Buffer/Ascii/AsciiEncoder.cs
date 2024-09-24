@@ -88,6 +88,7 @@ namespace PureFix.Buffer.Ascii
                 return null;
             }
             trailer.Encode(writer);
+            MsgSeqNum = MsgSeqNum + 1;
             return storage;
         }
     }

@@ -35,7 +35,8 @@ namespace PureFix.Transport.Session
         protected bool m_logReceivedMessages;
         protected IMessageTransport? m_transport;
         protected IFixConfig m_config;
-        private CancellationToken? m_token;
+        private CancellationToken? m_parentToken;
+        private CancellationTokenSource? m_MySource;
         private readonly List<MsgView> _messages = new();
 
         protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
@@ -219,6 +220,10 @@ namespace PureFix.Transport.Session
             
             SetState(SessionState.Stopped);
             OnStopped(error);
+            if (m_MySource != null && !m_MySource.IsCancellationRequested)
+            {
+                m_MySource?.Cancel();
+            }
             m_transport = null;
         }
 
@@ -233,12 +238,12 @@ namespace PureFix.Transport.Session
 
                 default:
                     {
-                        if (m_token == null) return;
+                        if (m_parentToken == null) return;
                         if (m_transport == null) return;
                         var storage = m_encoder.Encode(msgType, message);
                         if (storage == null) return;
                         m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}");
-                        await m_transport.SendAsync(storage.AsBytes(), m_token.Value);
+                        await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                         m_sessionState.LastSentAt = m_clock.Current;
                         m_encoder.Return(storage);
                         break;
@@ -268,7 +273,7 @@ namespace PureFix.Transport.Session
         protected void OnFixLog(StoragePool.Storage storage)
         {
             var decoded = storage.AsString(AsciiChars.Pipe);
-            var msgType = storage.GetStringAt(3);
+            var msgType = storage.GetStringAt(2);
             if (msgType == null) return;
             OnDecoded(msgType, decoded);
         }
@@ -331,13 +336,15 @@ namespace PureFix.Transport.Session
 
         public async Task Run(IMessageTransport transport, CancellationToken token)
         {
-            m_token = token;
+            m_parentToken = token;
+            m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
+            
             await InitiatorLogon();            
             var dispatcher = new EventDispatcher(transport);
             // start sending events to the channel on which this session listens.
-            await dispatcher.Writer(TimeSpan.FromMilliseconds(100), token);
+            await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
             // read from the channel 
-            await Reader(dispatcher, token);   
+            await Reader(dispatcher, m_MySource.Token);   
         }
 
         private async Task CheckForwardMessage(string msgType, MsgView view)
@@ -349,8 +356,10 @@ namespace PureFix.Transport.Session
 
         public async Task Done()
         {
+            m_sessionLogger?.Info($"Done state for logout confirm {m_sessionState.State}");
             switch (m_sessionState.State)
             {
+                case SessionState.InitiationLogonSent:
                 case SessionState.InitiationLogonResponse:
                 case SessionState.ActiveNormalSession:
                 case SessionState.InitiationLogonReceived:
@@ -362,12 +371,17 @@ namespace PureFix.Transport.Session
                 case SessionState.Stopped:
                     m_sessionLogger?.Info("done. session is now stopped");
                     break;
-           
-                default:
-                {
-                    Stop();
+
+                case SessionState.WaitingLogoutConfirm:
+                case SessionState.ConfirmingLogout:
+                    m_sessionLogger?.Info("logout transaction.");
                     break;
-                }
+
+                default:
+                    {
+                        Stop();
+                        break;
+                    }
             }
 
             m_sessionLogger?.Info($"done.check logout sequence state ${ m_sessionState.State}");

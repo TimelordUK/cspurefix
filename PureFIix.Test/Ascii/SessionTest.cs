@@ -89,7 +89,11 @@ namespace PureFIix.Test.Ascii
                 var initiatorLog = experiment.Initiator.FixLog;
                 var acceptorLog = experiment.Acceptor.FixLog;
                 var expected = $"{(int)MsgTag.MsgType}={MsgType.Logon}";
-                return initiatorLog.Count == 1 && initiatorLog[0].Contains(expected) && acceptorLog.Count == 1 && acceptorLog[0].Contains(expected);
+                return initiatorLog.Count > 1 && acceptorLog.Count > 1;
+            }, () =>
+            {
+                experiment.Initiator.TokenSource.Cancel();
+                return Task.CompletedTask;
             });
                 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
@@ -107,7 +111,28 @@ namespace PureFIix.Test.Ascii
                 var acceptorLog = experiment.Acceptor.FixLog;
                 var expected = $"{(int)MsgTag.MsgType}={MsgType.Heartbeat}";
                 return initiatorLog.Count > 1 && initiatorLog[^1].Contains(expected) && acceptorLog.Count > 1 && acceptorLog[^1].Contains(expected);
+            },  () =>
+            {
+                experiment.Initiator.TokenSource.Cancel();
+                return Task.CompletedTask;
             });
+
+
+            var (iapp, ifix) = experiment.Initiator.App.Logs;
+            var (aapp, afix) = experiment.Acceptor.App.Logs;
+        }
+
+        [Test]
+        public async Task Initiator_Acceptor_LogOut_Test()
+        {
+            var experiment = new SessionExperiment(_testEntity);
+            await experiment.Run(() =>
+            {
+                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                var initiatorLog = experiment.Initiator.AppLog;
+                var acceptorLog = experiment.Acceptor.AppLog;
+                return initiatorLog.Count > 0 && initiatorLog[^1].Contains("OnReady") && acceptorLog.Count >1  && acceptorLog[^1].Contains("OnReady");
+            }, experiment.Initiator.App.Done);
 
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;

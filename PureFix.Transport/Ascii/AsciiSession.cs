@@ -153,7 +153,7 @@ namespace PureFix.Transport.Ascii
                         if (seqDelta <= 0)
                         {
                             // serious problem ... drop immediately
-                            m_sessionLogger?.Warn($"terminate as seqDelta(${seqDelta}) < 0 lastSeq = ${lastSeq} seqNo = ${seqNo}");
+                            m_sessionLogger?.Warn($"terminate as seqDelta({seqDelta}) < 0 lastSeq = {lastSeq} seqNo = {seqNo}");
                             Stop();
                         }
                         else if (seqDelta > 1)
