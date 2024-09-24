@@ -22,18 +22,18 @@ namespace PureFIix.Test.Env
         public IMessageEncoder Encoder { get; private set; }
         public CancellationTokenSource TokenSource { get; private set; }
         public TestAsciiSkeleton App { get; private set; }
-        public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries;
-        public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries;
+        public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
+        public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
 
-        public RuntimeContainer(IFixConfig initiatorConfig, IFixClock clock)
+        public RuntimeContainer(IFixConfig config, IFixClock clock)
         {
-            Config = initiatorConfig;
+            Config = config;
             Transport = new TestMessageTransport();
             FixMessageFactory = new FixMessageFactory();
-            MessageStore = new FixMsgMemoryStore(initiatorConfig.Description.SenderCompID);
-            Parser = new AsciiParser(initiatorConfig.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-            Encoder = new AsciiEncoder(initiatorConfig.Definitions, initiatorConfig.Description, initiatorConfig.MessageFactory, clock);
-            App = new TestAsciiSkeleton(initiatorConfig, Transport, FixMessageFactory, Parser, Encoder, clock);
+            MessageStore = new FixMsgMemoryStore(config.Description.SenderCompID);
+            Parser = new AsciiParser(config.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
+            Encoder = new AsciiEncoder(config.Definitions, config.Description, config.MessageFactory, clock);
+            App = new TestAsciiSkeleton(config, Transport, FixMessageFactory, Parser, Encoder, clock);
             TokenSource = new CancellationTokenSource();
         }
 

@@ -7,26 +7,30 @@ using System.Threading.Tasks;
 
 namespace PureFIix.Test.Env
 {
-    public class TestLogger : ILogger
+    internal class TestLogger : ILogger
     {
         public enum LogFormatTypes
         {
             App,
             Plain
         }
-        public IReadOnlyList<string> Entries => _log;
+        public LogTrace Log { get; set; }
+        public IReadOnlyList<string> Entries()
+        {
+            return Log.GetEntries();
+        }
         private string Me { get; }
         private IFixClock Clock { get; }
         private LogFormatTypes LogFormat { get; set; }
-        public TestLogger(string name, List<string> file, LogFormatTypes format, IFixClock clock)
+        public TestLogger(string name, LogTrace file, LogFormatTypes format, IFixClock clock)
         {
             LogFormat = format;
             Me = name;
             Clock = clock;
-            _log = file;
+            Log = file;
         }
 
-        private List<string> _log;
+       
         public void Info(string messageTemplate)
         {
             AddEntry("I", messageTemplate);
@@ -52,18 +56,18 @@ namespace PureFIix.Test.Env
             switch (LogFormat)
             {
                 case LogFormatTypes.App:
-                    _log.Add($"{level}:[{Me}] {Clock.Current.ToLongTimeString()} {Environment.CurrentManagedThreadId} {msg}");
+                    Log.Add($"{level}:[{Me}] {Clock.Current.ToLongTimeString()} {Environment.CurrentManagedThreadId} {msg}");
                     break;
 
                 default:
-                    _log.Add(msg);
+                    Log.Add(msg);
                     break;
             }
         }
 
         public override string ToString()
         {
-            return $"{Me} [{_log.Count}] {_log.LastOrDefault()}";
+            return $"{Me} [{Log.Count}] {Log.LastOrDefault()}";
         }
     }
 }

@@ -293,7 +293,7 @@ namespace PureFix.Transport.Session
             }
         }
 
-        private async Task ReveiveMessages(EventDispatcher dispatcher, CancellationToken token)
+        private async Task Reader(EventDispatcher dispatcher, CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
@@ -334,8 +334,9 @@ namespace PureFix.Transport.Session
             await InitiatorLogon();            
             var dispatcher = new EventDispatcher(transport);
             // start sending events to the channel on which this session listens.
-            await dispatcher.Dispatch(TimeSpan.FromMilliseconds(100), token);
-            await ReveiveMessages(dispatcher, token);   
+            await dispatcher.Writer(TimeSpan.FromMilliseconds(100), token);
+            // read from the channel 
+            await Reader(dispatcher, token);   
         }
 
         private async Task CheckForwardMessage(string msgType, MsgView view)

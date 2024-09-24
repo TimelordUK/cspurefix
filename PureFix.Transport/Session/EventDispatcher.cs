@@ -22,7 +22,7 @@ namespace PureFix.Transport.Session
             _transportDispatcher = new TransportDispatcher(transport);
         }       
 
-        public async Task Dispatch(TimeSpan timer, CancellationToken token)
+        public async Task Writer(TimeSpan timer, CancellationToken token)
         {
             await Task.Factory.StartNew(async () =>
             {

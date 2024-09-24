@@ -56,7 +56,7 @@ namespace PureFIix.Test.Ascii
             var myLog = factory.MakeLogger("initiator");
             myLog.Info("initiating logon");
             var logger = (TestLogger)myLog;
-            var entries = logger.Entries;
+            var entries = logger.Entries();
             Assert.That(entries, Has.Count.EqualTo(1));
         }
 
