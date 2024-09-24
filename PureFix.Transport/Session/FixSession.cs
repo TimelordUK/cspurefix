@@ -195,6 +195,7 @@ namespace PureFix.Transport.Session
                     var msg = $"{m_me} confirming logout";
                     m_sessionLogger?.Info(msg);
                     await SendLogout(msg);
+                    Stop();
                     break;
                 }
 
