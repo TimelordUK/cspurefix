@@ -239,6 +239,7 @@ namespace PureFix.Transport.Session
                         if (storage == null) return;
                         m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}");
                         await m_transport.SendAsync(storage.AsBytes(), m_token.Value);
+                        m_sessionState.LastSentAt = m_clock.Current;
                         m_encoder.Return(storage);
                         break;
                     }
