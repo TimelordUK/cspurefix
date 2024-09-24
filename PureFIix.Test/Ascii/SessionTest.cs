@@ -116,10 +116,20 @@ namespace PureFIix.Test.Ascii
         }
 
         [Test]
-        public async Task Initiator_Acceptor_LogOut_Test()
+        public async Task Initiator_Acceptor_Login_Initiator_Logout_Test()
         {
             var experiment = new SessionExperiment(_testEntity);
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
+
+            var (iapp, ifix) = experiment.Initiator.App.Logs;
+            var (aapp, afix) = experiment.Acceptor.App.Logs;
+        }
+
+        [Test]
+        public async Task Initiator_Acceptor_Login_Acceptor_Logout_Test()
+        {
+            var experiment = new SessionExperiment(_testEntity);
+            await experiment.Run(experiment.OnReady, experiment.Acceptor.App.Done);
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;
