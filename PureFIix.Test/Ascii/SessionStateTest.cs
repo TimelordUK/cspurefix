@@ -125,7 +125,7 @@ namespace PureFIix.Test.Ascii
         {
             var rx = new Receiver();
             var cts = new CancellationTokenSource();
-            var dispatcher = new TimerDispatcher();
+            var dispatcher = new TimerDispatcher(null);
             await dispatcher.Dispatch(rx, TimeSpan.FromMilliseconds(50), cts.Token);
             await Task.Delay(TimeSpan.FromMilliseconds(200), cts.Token);
         }

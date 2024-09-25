@@ -341,6 +341,7 @@ namespace PureFix.Transport.Session
 
         public async Task Run(IMessageTransport transport, CancellationToken token)
         {
+            m_sessionLogger?.Info($"Run begins");
             m_parentToken = token;
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             
@@ -349,7 +350,8 @@ namespace PureFix.Transport.Session
             // start sending events to the channel on which this session listens.
             await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
             // read from the channel 
-            await Reader(dispatcher, m_MySource.Token);   
+            await Reader(dispatcher, m_MySource.Token);
+            m_sessionLogger?.Info($"Run ends");
         }
 
         private async Task CheckForwardMessage(string msgType, MsgView view)
@@ -361,7 +363,7 @@ namespace PureFix.Transport.Session
 
         public async Task Done()
         {
-            m_sessionLogger?.Info($"Done state for logout confirm {m_sessionState.State}");
+            m_sessionLogger?.Info($"Done state for logout confirm state = {m_sessionState.State}");
             switch (m_sessionState.State)
             {
                 case SessionState.InitiationLogonSent:
@@ -389,7 +391,7 @@ namespace PureFix.Transport.Session
                     }
             }
 
-            m_sessionLogger?.Info($"done.check logout sequence state ${ m_sessionState.State}");
+            m_sessionLogger?.Info($"done.check logout sequence state = {m_sessionState.State}");
         }
 
         /**

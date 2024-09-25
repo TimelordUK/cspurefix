@@ -21,7 +21,7 @@ namespace PureFix.Transport.Session
         public EventDispatcher(ILogFactory? logger, IMessageTransport transport)
         {
             _logger = logger?.MakeLogger(nameof(EventDispatcher));
-            _timerDispatcher = new TimerDispatcher();
+            _timerDispatcher = new TimerDispatcher(logger);
             _transportDispatcher = new TransportDispatcher(transport);
         }       
 
@@ -35,7 +35,7 @@ namespace PureFix.Transport.Session
                     _transportDispatcher.Dispatch(this, token)
                 };
                 _logger?.Info("Writer is waiting on events.");
-                await Task.WhenAny(tasks);
+                await Task.WhenAll(tasks);
             }, TaskCreationOptions.LongRunning);
         }
 
