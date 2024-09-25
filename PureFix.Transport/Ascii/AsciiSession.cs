@@ -6,6 +6,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
+using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Transport.Session;
@@ -20,8 +21,8 @@ namespace PureFix.Transport.Ascii
         private readonly IFixMsgResender m_resender;
         private readonly IFixMessageFactory m_fixMessageFactory;
         public bool Heartbeat { get; set; }
-        protected AsciiSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
-            : base(config, transport, parser, encoder, clock)
+        protected AsciiSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
+            : base(config, transport, parser, encoder, q, clock)
         {
             if (config == null) throw new ArgumentNullException("config must be provided");
             if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");

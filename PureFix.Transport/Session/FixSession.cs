@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Contained;
@@ -38,8 +39,9 @@ namespace PureFix.Transport.Session
         private CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
         private readonly List<MsgView> _messages = new();
+        private AsyncWorkQueue m_q;
 
-        protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
+        protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
         {
             if (config.Definitions == null)
             {
@@ -86,7 +88,7 @@ namespace PureFix.Transport.Session
             m_requestLogonType = logonDefinition.MsgType;
             m_requestLogoutType = logoutDefinition.MsgType;
             m_respondLogoutType = logoutDefinition.MsgType;
-
+            m_q = q;
         }
 
         private void AssignState(SessionState state)
@@ -302,17 +304,17 @@ namespace PureFix.Transport.Session
 
         private async Task Reader(EventDispatcher dispatcher, CancellationToken token)
         {
-            m_sessionLogger?.Info("Reader is waiting on events.");
+            m_sessionLogger?.Info("Reader is waiting on events.");          
             while (!token.IsCancellationRequested)
             {
                 var msg = await dispatcher.WaitRead();
                 if (msg.Data == null)
                 {
-                    await OnTimer();
+                    await m_q.EnqueueAsync(OnTimer);
                 }
                 else
                 {
-                    await OnRx(msg.Data);
+                    await m_q.EnqueueAsync(()=>OnRx(msg.Data));
                 }
             }
             m_sessionLogger?.Info("Reader is exiting.");

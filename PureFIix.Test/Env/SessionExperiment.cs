@@ -1,4 +1,5 @@
-﻿using PureFix.Transport.Session;
+﻿using Arrow.Threading.Tasks;
+using PureFix.Transport.Session;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace PureFIix.Test.Env
         public RuntimeContainer Initiator { get; private set; }
         public RuntimeContainer Acceptor { get; private set; }
         public IFixClock Clock { get; private set; }
+        public AsyncWorkQueue Queue { get; private set; }
 
         public bool OnReady()
         {
@@ -28,9 +30,10 @@ namespace PureFIix.Test.Env
             Clock = new TestClock();
             InitiatorConfig = testEntity.GetTestInitiatorConfig();
             AcceptorConfig = testEntity.GetTestInitiatorConfig();
+            Queue = new AsyncWorkQueue();   
 
-            Initiator = new RuntimeContainer(InitiatorConfig, Clock);
-            Acceptor = new RuntimeContainer(AcceptorConfig, Clock);
+            Initiator = new RuntimeContainer(InitiatorConfig, Queue, Clock);
+            Acceptor = new RuntimeContainer(AcceptorConfig, Queue,Clock);
 
             Initiator.ConnectTo(Acceptor);
             Acceptor.ConnectTo(Initiator);
@@ -55,6 +58,7 @@ namespace PureFIix.Test.Env
                 }
             });
             var res = Task.WaitAny(t1, t2);
+            Queue.Dispose();
         }
     }
 }

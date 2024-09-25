@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using Arrow.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Transport.Ascii;
@@ -20,8 +21,8 @@ namespace PureFIix.Test.Env
         private ILogger m_fixLog;
         FixMessageFactory m_msg_factory = new();
         public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
-    
-        public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, clock)
+
+        public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, q, clock)
         {
             m_logReceivedMessages = true;
             var me = config?.Description?.Application?.Name ?? "initiator";
@@ -38,6 +39,7 @@ namespace PureFIix.Test.Env
         protected override void OnDecoded(string msgType, string txt)
         {
             m_fixLog.Info(txt);
+            
         }
 
         protected override void OnEncoded(string msgType, string txt)

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types.FIX44.QuickFix.Types;
+using Arrow.Threading.Tasks;
 
 namespace PureFIix.Test.Env
 {
@@ -24,16 +25,18 @@ namespace PureFIix.Test.Env
         public TestAsciiSkeleton App { get; private set; }
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
+        public AsyncWorkQueue Queue { get; private set; }
 
-        public RuntimeContainer(IFixConfig config, IFixClock clock)
+        public RuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock)
         {
+            Queue = q;
             Config = config;
             Transport = new TestMessageTransport();
             FixMessageFactory = new FixMessageFactory();
             MessageStore = new FixMsgMemoryStore(config.Description.SenderCompID);
             Parser = new AsciiParser(config.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
             Encoder = new AsciiEncoder(config.Definitions, config.Description, config.MessageFactory, clock);
-            App = new TestAsciiSkeleton(config, Transport, FixMessageFactory, Parser, Encoder, clock);
+            App = new TestAsciiSkeleton(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
             TokenSource = new CancellationTokenSource();
         }
 
