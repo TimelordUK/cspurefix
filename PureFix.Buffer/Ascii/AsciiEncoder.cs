@@ -63,9 +63,9 @@ namespace PureFix.Buffer.Ascii
 
             if (message.StandardHeader != null)
             {
-                hdr.OrigSendingTime = message.StandardHeader.SendingTime;
-                hdr.MsgSeqNum = message.StandardHeader.MsgSeqNum;
-                hdr.PossDupFlag = message.StandardHeader.PossDupFlag;
+                if (message.StandardHeader.SendingTime != null) hdr.OrigSendingTime = message.StandardHeader.SendingTime;
+                if (message.StandardHeader.MsgSeqNum != null) hdr.MsgSeqNum = message.StandardHeader.MsgSeqNum;
+                if (message.StandardHeader.PossDupFlag != null) hdr.PossDupFlag = message.StandardHeader.PossDupFlag;
             } 
 
             var storage = Pool.Rent();
