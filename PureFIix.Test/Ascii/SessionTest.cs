@@ -144,5 +144,20 @@ namespace PureFIix.Test.Ascii
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;
         }
+
+        [Test]
+        public async Task Initiator_Acceptor_TestRequest_Test()
+        {
+            var experiment = new SessionExperiment(_testEntity);
+            await experiment.Run(() =>
+            {
+                experiment.Acceptor.App.Heartbeat = false;
+                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                return experiment.Initiator.HeartbeatCount() > 0 && experiment.Acceptor.TestRequestCount() > 0;
+            }, experiment.Initiator.App.Done);
+
+            var (iapp, ifix) = experiment.Initiator.App.Logs;
+            var (aapp, afix) = experiment.Acceptor.App.Logs;
+        }
     }
 }

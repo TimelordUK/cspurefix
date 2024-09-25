@@ -38,6 +38,7 @@ namespace PureFix.Transport.Session
         private CancellationTokenSource? m_MySource;
         private readonly List<MsgView> _messages = new();
         private AsyncWorkQueue m_q;
+      
 
         protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
         {
@@ -289,7 +290,7 @@ namespace PureFix.Transport.Session
             {
                 m_sessionLogger?.Info($"{msgType}: {view}");
             }
-
+            m_sessionState.LastReceivedAt = m_clock.Current;
             if (m_manageSession)
             {
                 await OnMsg(msgType, view);

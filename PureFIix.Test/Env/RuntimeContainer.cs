@@ -33,8 +33,18 @@ namespace PureFIix.Test.Env
 
         public int HeartbeatCount()
         {
+            return MessageCount(MsgType.Heartbeat);            
+        }
+
+        public int TestRequestCount()
+        {
+            return MessageCount(MsgType.TestRequest);
+        }
+
+        public int MessageCount(string msgType)
+        {
             var fixLog = FixLog;
-            var expected = $"{(int)MsgTag.MsgType}={MsgType.Heartbeat}";
+            var expected = $"{(int)MsgTag.MsgType}={msgType}";
             var res = fixLog.Where(l => l.Contains(expected)).ToList();
             return res.Count;
         }

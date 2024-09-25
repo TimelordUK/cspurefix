@@ -32,7 +32,7 @@ namespace PureFix.Transport.Session
 
         public int LastSentSeqNum => m_lastHeader?.MsgSeqNum ?? 0;
         public bool TimeToHeartbeat => m_secondsSinceSent >= m_heartBeat;
-        public bool TimeToTerminate => m_secondsSinceReceive >= 2.5 * PeerHeartBeatSecs;
+        public bool TimeToTerminate => LastTestRequestAt != null && m_secondsSinceReceive >= 2.5 * PeerHeartBeatSecs;
         public bool TimeToDie => m_secondsSinceLogoutSent > m_waitLogoutConfirmSeconds ||
                                  m_secondsSinceLogoutSent > m_stopSeconds;
         public bool TimeToTestRequest => m_secondsSinceReceive >= 1.5 * PeerHeartBeatSecs;
@@ -102,39 +102,32 @@ namespace PureFix.Transport.Session
             Now = now;
             CalcState();
 
-            switch (State) {
+            switch (State)
+            {
                 case SessionState.PeerLogonRejected:
-                {
-                    if (m_secondsSinceSent >= m_stopSeconds)
                     {
-                        m_nextTickAction = TickAction.Stop;
+                        if (m_secondsSinceSent >= m_stopSeconds)
+                        {
+                            m_nextTickAction = TickAction.Stop;
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 case SessionState.WaitingLogoutConfirm:
                 case SessionState.ConfirmingLogout:
-                {
-                    if (TimeToDie)
                     {
-                        m_nextTickAction = TickAction.Stop;
+                        if (TimeToDie)
+                        {
+                            m_nextTickAction = TickAction.Stop;
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 case SessionState.ActiveNormalSession:
                 case SessionState.AwaitingProcessingResponseToTestRequest:
                 case SessionState.InitiationLogonReceived:
                 case SessionState.InitiationLogonResponse:
-                {
-                    if (TimeToHeartbeat)
                     {
-                            // have not sent anything for heartbeat period so let other side know still alive.
-                            m_nextTickAction = TickAction.Heartbeat;
-                    }
-                    else
-                    {
-                        // console.log(`${application.name}: secondsSinceSent = ${secondsSinceSent} secondsSinceReceive = ${secondsSinceReceive}`)
                         if (TimeToTerminate)
                         {
                             m_nextTickAction = TickAction.TerminateOnError;
@@ -145,12 +138,16 @@ namespace PureFix.Transport.Session
                             {
                                 // not received anything from peer
                                 m_nextTickAction = TickAction.TestRequest;
-                                LastTestRequestAt = now;
+                              
                             }
                         }
+                        else if (TimeToHeartbeat)
+                        {
+                            // have not sent anything for heartbeat period so let other side know still alive.
+                            m_nextTickAction = TickAction.Heartbeat;
+                        }
+                        break;
                     }
-                    break;
-                }
             }
             return m_nextTickAction;
         }
