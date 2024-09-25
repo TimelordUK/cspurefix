@@ -13,6 +13,7 @@ using System.Diagnostics;
 using PureFix.Transport;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
+using PureFix.Types;
 
 namespace PureFIix.Test.Env
 {
@@ -20,9 +21,11 @@ namespace PureFIix.Test.Env
     {
         public FixDefinitions Definitions { get; }
         public AsciiParser Parser { get; private set; }
+        public IFixClock Clock { get; private set; } 
         
         public TestEntity(string dataDict = "FIX44.xml")
         {
+            Clock = new TestClock();
             Definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(Definitions);
             qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, dataDict));
@@ -118,8 +121,7 @@ namespace PureFIix.Test.Env
 
         public IFixConfig GetConfig(string json)
         {
-            var clock = new TestClock();
-            var factory = new TestLoggerFactory(clock);
+            var factory = new TestLoggerFactory(Clock);
             var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
             config.Delimiter = AsciiChars.Pipe;
             config.LogDelimiter = AsciiChars.Pipe;

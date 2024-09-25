@@ -25,7 +25,7 @@ namespace PureFIix.Test.Env
 
         public SessionExperiment(TestEntity testEntity)
         {
-            Clock = new TestClock();
+            Clock = testEntity.Clock;
             InitiatorConfig = testEntity.GetTestInitiatorConfig();
             AcceptorConfig = testEntity.GetTestInitiatorConfig();
             Queue = new AsyncWorkQueue();   
