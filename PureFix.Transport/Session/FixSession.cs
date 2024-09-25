@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
-using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
-using PureFix.Types.Config;
 
 namespace PureFix.Transport.Session
 {

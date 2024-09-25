@@ -101,15 +101,8 @@ namespace PureFIix.Test.Ascii
             await experiment.Run(() =>
             {
                 experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
-                var initiatorLog = experiment.Initiator.FixLog;
-                var acceptorLog = experiment.Acceptor.FixLog;
-                var expected = $"{(int)MsgTag.MsgType}={MsgType.Heartbeat}";
-                return initiatorLog.Count > 1 && initiatorLog[^1].Contains(expected) && acceptorLog.Count > 1 && acceptorLog[^1].Contains(expected);
-            },  () =>
-            {
-                experiment.Initiator.TokenSource.Cancel();
-                return Task.CompletedTask;
-            });
+                return experiment.Initiator.HeartbeatCount() == 1 && experiment.Acceptor.HeartbeatCount() == 1;
+            }, experiment.Initiator.App.Done);
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;

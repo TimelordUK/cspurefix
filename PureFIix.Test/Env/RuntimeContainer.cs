@@ -26,6 +26,18 @@ namespace PureFIix.Test.Env
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
+        public bool OnReady() {
+            var appLog = AppLog;
+            return AppLog.FirstOrDefault(l => l.Contains("OnReady")) != null;
+         }
+
+        public int HeartbeatCount()
+        {
+            var fixLog = FixLog;
+            var expected = $"{(int)MsgTag.MsgType}={MsgType.Heartbeat}";
+            var res = fixLog.Where(l => l.Contains(expected)).ToList();
+            return res.Count;
+        }
 
         public RuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock)
         {

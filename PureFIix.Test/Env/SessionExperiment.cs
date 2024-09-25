@@ -20,9 +20,7 @@ namespace PureFIix.Test.Env
 
         public bool OnReady()
         {
-            var initiatorLog = Initiator.AppLog;
-            var acceptorLog = Acceptor.AppLog;
-            return initiatorLog.Count > 0 && initiatorLog[^1].Contains("OnReady") && acceptorLog.Count > 1 && acceptorLog[^1].Contains("OnReady");
+            return Initiator.OnReady() && Acceptor.OnReady();
         }
 
         public SessionExperiment(TestEntity testEntity)
