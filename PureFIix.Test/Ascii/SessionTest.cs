@@ -127,5 +127,22 @@ namespace PureFIix.Test.Ascii
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;
         }
+
+        /*
+         * Show that when sat idle, the connections will send heartbeats.
+         */
+        [Test]
+        public async Task Initiator_Acceptor_Idle_Test()
+        {
+            var experiment = new SessionExperiment(_testEntity);
+            await experiment.Run(() =>
+            {
+                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                return experiment.Initiator.HeartbeatCount() >= 10 && experiment.Acceptor.HeartbeatCount() >= 10;
+            }, experiment.Initiator.App.Done);
+
+            var (iapp, ifix) = experiment.Initiator.App.Logs;
+            var (aapp, afix) = experiment.Acceptor.App.Logs;
+        }
     }
 }

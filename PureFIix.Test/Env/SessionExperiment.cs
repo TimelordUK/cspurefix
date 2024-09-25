@@ -47,7 +47,7 @@ namespace PureFIix.Test.Env
             {
                 while (!Initiator.TokenSource.IsCancellationRequested)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(20);
                     if (!stopped && stopCondition())
                     {
                         await stopAction();
