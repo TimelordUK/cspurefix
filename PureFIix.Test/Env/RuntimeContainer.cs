@@ -22,7 +22,7 @@ namespace PureFIix.Test.Env
         public IMessageParser Parser { get; private set; }
         public IMessageEncoder Encoder { get; private set; }
         public CancellationTokenSource TokenSource { get; private set; }
-        public TestAsciiSkeleton App { get; private set; }
+        public BaseApp App { get; set; }
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
@@ -39,6 +39,11 @@ namespace PureFIix.Test.Env
         public int TestRequestCount()
         {
             return MessageCount(MsgType.TestRequest);
+        }
+
+        public int TradeCaptureReportRequestAckCount()
+        {
+            return MessageCount(MsgType.TradeCaptureReportRequestAck);
         }
 
         public int MessageCount(string msgType)
@@ -70,6 +75,20 @@ namespace PureFIix.Test.Env
         public async Task Run()
         {
             await App.Run(Transport, TokenSource.Token);
+        }
+    }
+
+    internal class TradeCaptureRuntimeContainer : RuntimeContainer
+    {
+        public TradeCaptureRuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock) : base(config, q, clock)
+        {
+            if (config.Description.Application.Type == "initiator")
+            {
+                App = new TradeCaptureClient(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
+            } else
+            {
+                App = new TradeCaptureServer(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ namespace PureFix.Transport.Ascii
         private readonly IFixMsgResender m_resender;
         private readonly IFixMessageFactory m_fixMessageFactory;
         public bool Heartbeat { get; set; } = true;
+
         protected AsciiSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
             : base(config, transport, parser, encoder, q, clock)
         {
@@ -40,6 +41,7 @@ namespace PureFix.Transport.Ascii
             if (tr != null)
             {
                 await Send(MsgType.TestRequest, tr);
+                m_sessionState.LastTestRequestAt = m_clock.Current;
             }
         }
 
@@ -112,7 +114,7 @@ namespace PureFix.Transport.Ascii
             var password = view.Password();
             logger?.Info($"peerLogon Username = {userName}, heartBtInt = {heartBtInt}, peerCompId = {peerCompId}, userName = {userName}");
             var state = m_sessionState;
-            state.PeerHeartBeatSecs = view.MsgSeqNum();
+            state.PeerHeartBeatSecs = view.GetInt32((int)MsgTag.HeartBtInt);
             state.PeerCompID = peerCompId;
             var res = OnLogon(view, userName, password);
             // currently not using this.
@@ -128,8 +130,12 @@ namespace PureFix.Transport.Ascii
                 logger?.Info("initiator receives logon response");
                 SetState(SessionState.InitiationLogonReceived);
             }
-            logger?.Info($"system ready, inform app Heartbeat = {Heartbeat}");
-            OnReady(view);
+            if (Heartbeat)
+            {
+                //   this.startTimer();
+            }
+            logger?.Info("system ready, inform app");
+            await OnReady(view);
         }
 
         private async Task<bool> CheckSeqNo(string msgType, MsgView view)
@@ -272,6 +278,7 @@ namespace PureFix.Transport.Ascii
                         var req = view.GetString((int)MsgTag.TestReqID);
                         if (req != null)
                         {
+                            m_sessionLogger?.Info("responding to test request - send heartbeat");
                             await SendHeartbeat(req);
                         }
                         break;

@@ -159,5 +159,19 @@ namespace PureFIix.Test.Ascii
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;
         }
+
+        [Test]
+        public async Task TradeCapture_Test()
+        {
+            var experiment = new TradeCaptureSessionExperiment(_testEntity);
+            await experiment.Run(() =>
+            {
+                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                return experiment.Initiator.TradeCaptureReportRequestAckCount() == 2;
+            }, experiment.Initiator.App.Done);
+
+            var (iapp, ifix) = experiment.Initiator.App.Logs;
+            var (aapp, afix) = experiment.Acceptor.App.Logs;
+        }
     }
 }

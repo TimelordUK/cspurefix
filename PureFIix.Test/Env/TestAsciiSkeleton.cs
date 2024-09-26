@@ -14,36 +14,20 @@ using System.Threading.Tasks;
 
 namespace PureFIix.Test.Env
 {
-    internal class TestAsciiSkeleton : AsciiSession
-    {
-        private ILogger m_logger;
-        private ILogger m_fixLog;
+    internal class TestAsciiSkeleton : BaseApp
+    { 
         FixMessageFactory m_msg_factory = new();
-        public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
-
+       
         public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, q, clock)
         {
             m_logReceivedMessages = true;
             var me = config?.Description?.Application?.Name ?? "initiator";
-            m_fixLog = config.LogFactory.MakePlainLogger($"csfix.{me}.txt");
-            m_logger = config.LogFactory.MakeLogger($"csfix.{me}.app");
         }
 
         protected override async Task OnApplicationMsg(string msgType, MsgView view)
         {
             var res = await m_msgStore.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
             m_logger.Info($"store state {res}");
-        }
-
-        protected override void OnDecoded(string msgType, string txt)
-        {
-            m_fixLog.Info(txt);
-            
-        }
-
-        protected override void OnEncoded(string msgType, string txt)
-        {
-            m_fixLog.Info(txt);
         }
 
         protected override bool OnLogon(MsgView view, string user, string password)
@@ -53,9 +37,10 @@ namespace PureFIix.Test.Env
             return true;
         }
 
-        protected override void OnReady(MsgView view)
+        protected override Task OnReady(MsgView view)
         {
             m_logger.Info("OnReady");
+            return Task.CompletedTask;
         }
 
         protected override void OnStopped(Exception error)

@@ -114,7 +114,17 @@ namespace PureFIix.Test.Env
             return GetConfig(json);
         }
 
+        public IFixConfig GetTestInitiator52Config(string json = "test-qf52-initiator.json")
+        {
+            return GetConfig(json);
+        }
+
         public IFixConfig GetTestAcceptorConfig(string json = "test-qf44-acceptor.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestAcceptor52Config(string json = "test-qf52-acceptor.json")
         {
             return GetConfig(json);
         }

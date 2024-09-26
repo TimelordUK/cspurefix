@@ -446,7 +446,7 @@ namespace PureFix.Transport.Session
          * @param view the login message causing session to be ready
          * @protected
          */
-        protected abstract void OnReady(MsgView view);
+        protected abstract Task OnReady(MsgView view);
 
         /**
          * Inform application this session has now ended - either from logout or connection dropped
