@@ -72,22 +72,22 @@ namespace PureFix.Transport.Session
             buffer.AppendFormat($"heartBeat = {m_heartBeat}, ");
             buffer.AppendFormat($"state = {State}, ");
             buffer.AppendFormat($"nextTickAction = {m_nextTickAction}, ");
-            buffer.AppendFormat($"now = ${DateAsString(Now)}, ");
-            buffer.AppendFormat($"timeToDie = ${TimeToDie}, ");
-            buffer.AppendFormat($"timeToHeartbeat = ${TimeToHeartbeat}, ");
-            buffer.AppendFormat($"timeToTerminate = ${TimeToTerminate}, ");
-            buffer.AppendFormat($"timeToTestRequest = ${TimeToTestRequest}, ");
-            buffer.AppendFormat($"lastReceivedAt = ${DateAsString(LastReceivedAt)}, ");
-            buffer.AppendFormat($"LastSentAt = ${DateAsString(LastSentAt)}, ");
-            buffer.AppendFormat($"lastTestRequestAt = ${DateAsString(LastTestRequestAt)}, ");
-            buffer.AppendFormat($"logoutSentAt = ${DateAsString(LogoutSentAt)}, ");
-            buffer.AppendFormat($"peerHeartBeatSecs = ${PeerHeartBeatSecs}, ");
-            buffer.AppendFormat($"peerCompId = ${PeerCompID}, ");
-            buffer.AppendFormat($"lastPeerMsgSeqNum = ${LastPeerMsgSeqNum}, ");
-            buffer.AppendFormat($"LastSentSeqNum = ${LastSentSeqNum}, ");
-            buffer.AppendFormat($"secondsSinceLogoutSent = ${m_secondsSinceLogoutSent}, ");
-            buffer.AppendFormat($"secondsSinceSent = ${m_secondsSinceSent}, ");
-            buffer.AppendFormat($"secondsSinceReceive = ${m_secondsSinceReceive}");
+            buffer.AppendFormat($"now = {DateAsString(Now)}, ");
+            buffer.AppendFormat($"timeToDie = {TimeToDie}, ");
+            buffer.AppendFormat($"timeToHeartbeat = {TimeToHeartbeat}, ");
+            buffer.AppendFormat($"timeToTerminate = {TimeToTerminate}, ");
+            buffer.AppendFormat($"timeToTestRequest = {TimeToTestRequest}, ");
+            buffer.AppendFormat($"lastReceivedAt = {DateAsString(LastReceivedAt)}, ");
+            buffer.AppendFormat($"LastSentAt = {DateAsString(LastSentAt)}, ");
+            buffer.AppendFormat($"lastTestRequestAt = {DateAsString(LastTestRequestAt)}, ");
+            buffer.AppendFormat($"logoutSentAt = {DateAsString(LogoutSentAt)}, ");
+            buffer.AppendFormat($"peerHeartBeatSecs = {PeerHeartBeatSecs}, ");
+            buffer.AppendFormat($"peerCompId = {PeerCompID}, ");
+            buffer.AppendFormat($"lastPeerMsgSeqNum = {LastPeerMsgSeqNum}, ");
+            buffer.AppendFormat($"LastSentSeqNum = {LastSentSeqNum}, ");
+            buffer.AppendFormat($"secondsSinceLogoutSent = {m_secondsSinceLogoutSent}, ");
+            buffer.AppendFormat($"secondsSinceSent = {m_secondsSinceSent}, ");
+            buffer.AppendFormat($"secondsSinceReceive = {m_secondsSinceReceive}");
 
             return buffer.ToString();
         }

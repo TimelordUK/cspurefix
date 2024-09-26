@@ -37,9 +37,8 @@ namespace PureFix.Transport.Session
         private CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
         private readonly List<MsgView> _messages = new();
-        private AsyncWorkQueue m_q;
+        private readonly AsyncWorkQueue m_q;
       
-
         protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
         {
             if (config.Definitions == null)
@@ -231,26 +230,29 @@ namespace PureFix.Transport.Session
 
         protected async Task Send(string msgType, IFixMessage message)
         {
-            if (m_transport == null) return;
-            switch (m_sessionState.State)
+            await m_q.EnqueueAsync(async () =>
             {
-                case SessionState.Stopped:
-                    m_sessionLogger?.Info($"can't send {msgType}, state is now {m_sessionState.State}");
-                    break;
-
-                default:
-                    {
-                        if (m_parentToken == null) return;
-                        if (m_transport == null) return;
-                        var storage = m_encoder.Encode(msgType, message);
-                        if (storage == null) return;
-                        m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}");
-                        await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
-                        m_sessionState.LastSentAt = m_clock.Current;
-                        m_encoder.Return(storage);
+                if (m_transport == null) return;
+                switch (m_sessionState.State)
+                {
+                    case SessionState.Stopped:
+                        m_sessionLogger?.Info($"can't send {msgType}, state is now {m_sessionState.State}");
                         break;
-                    }
-            }
+
+                    default:
+                        {
+                            if (m_parentToken == null) return;
+                            if (m_transport == null) return;
+                            var storage = m_encoder.Encode(msgType, message);
+                            if (storage == null) return;
+                            m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
+                            await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
+                            m_sessionState.LastSentAt = m_clock.Current;
+                            m_encoder.Return(storage);
+                            break;
+                        }
+                }
+            });
         }
 
         public async Task OnTimer()
@@ -265,7 +267,7 @@ namespace PureFix.Transport.Session
             m_parser.ParseFrom(buffer, (p, v) => _messages.Add(v), OnFixLog);
             if (_messages.Count == 0) return;
             var plural = _messages.Count > 1 ? "s" : "";
-            m_sessionLogger?.Info($"received {_messages.Count} message{plural}");
+            m_sessionLogger?.Info($"OnRx received {_messages.Count} message{plural}");
             foreach (var msg in _messages)
             {
                 await RxOnMsg(msg);
@@ -286,12 +288,16 @@ namespace PureFix.Transport.Session
             if (view.Structure == null) return;
 
             var msgType = view.GetString((int)MsgTag.MsgType);
+            var peerSeqNum = view.GetInt32((int)MsgTag.MsgSeqNum);
             if (msgType == null) return;
             if (m_logReceivedMessages)
             {
-                m_sessionLogger?.Info($"{msgType}: {view}");
+                m_sessionLogger?.Info($"[{peerSeqNum},{msgType}]: {view}");
             }
+           
+            if (peerSeqNum == null) return;
             m_sessionState.LastReceivedAt = m_clock.Current;
+           
             if (m_manageSession)
             {
                 await OnMsg(msgType, view);

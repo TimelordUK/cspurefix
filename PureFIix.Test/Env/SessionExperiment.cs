@@ -25,9 +25,9 @@ namespace PureFIix.Test.Env
 
         public async Task Run(Func<bool> stopCondition, Func<Task> stopAction)
         {
-          
-            var t1 = Initiator.Run();
             var t2 = Acceptor.Run();
+            var t1 = Initiator.Run();
+           
             bool stopped = false;
             await Task.Factory.StartNew(async () =>
             {
