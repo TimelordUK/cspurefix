@@ -248,6 +248,8 @@ namespace PureFix.Transport.Session
                             m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
+                            var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
+                            OnEncoded(msgType, encoded);
                             m_encoder.Return(storage);
                             break;
                         }
@@ -277,7 +279,7 @@ namespace PureFix.Transport.Session
 
         protected void OnFixLog(StoragePool.Storage storage)
         {
-            var decoded = storage.AsString(AsciiChars.Pipe);
+            var decoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
             var msgType = storage.GetStringAt(2);
             if (msgType == null) return;
             OnDecoded(msgType, decoded);
