@@ -38,6 +38,7 @@ namespace PureFIix.Test.Env
                     {
                         var tc = (TradeCaptureReport)m_msg_factory.ToFixMessage(view);
                         m_reports[tc.TradeReportID] = tc;
+                        m_logger.Info($"{JsonHelper.ToJson(tc)}");
                         m_logger.Info($"[reports: {m_reports.Count}] received tc ExecID = {tc.ExecID} TradeReportID = {tc.TradeReportID} Symbol = {tc.Instrument.Symbol} {tc.LastQty} @ ${tc.LastPx}");
                         break;
                     }

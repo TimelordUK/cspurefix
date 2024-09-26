@@ -26,6 +26,20 @@ namespace PureFIix.Test.Env
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
+
+        public RuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock)
+        {
+            Queue = q;
+            Config = config;
+            Transport = new TestMessageTransport();
+            FixMessageFactory = new FixMessageFactory();
+            MessageStore = new FixMsgMemoryStore(config.Description.SenderCompID);
+            Parser = new AsciiParser(config.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
+            Encoder = new AsciiEncoder(config.Definitions, config.Description, config.MessageFactory, clock);
+            App = new TestAsciiSkeleton(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
+            TokenSource = new CancellationTokenSource();
+        }
+
         public bool OnReady() {
             var appLog = AppLog;
             return AppLog.FirstOrDefault(l => l.Contains("OnReady")) != null;
@@ -54,19 +68,6 @@ namespace PureFIix.Test.Env
             return res.Count;
         }
 
-        public RuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock)
-        {
-            Queue = q;
-            Config = config;
-            Transport = new TestMessageTransport();
-            FixMessageFactory = new FixMessageFactory();
-            MessageStore = new FixMsgMemoryStore(config.Description.SenderCompID);
-            Parser = new AsciiParser(config.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-            Encoder = new AsciiEncoder(config.Definitions, config.Description, config.MessageFactory, clock);
-            App = new TestAsciiSkeleton(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
-            TokenSource = new CancellationTokenSource();
-        }
-
         public void ConnectTo(RuntimeContainer container)
         {
             ((TestMessageTransport)Transport).ConnectTo((TestMessageTransport)container.Transport);
@@ -75,20 +76,6 @@ namespace PureFIix.Test.Env
         public async Task Run()
         {
             await App.Run(Transport, TokenSource.Token);
-        }
-    }
-
-    internal class TradeCaptureRuntimeContainer : RuntimeContainer
-    {
-        public TradeCaptureRuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock) : base(config, q, clock)
-        {
-            if (config.Description.Application.Type == "initiator")
-            {
-                App = new TradeCaptureClient(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
-            } else
-            {
-                App = new TradeCaptureServer(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
-            }
         }
     }
 }

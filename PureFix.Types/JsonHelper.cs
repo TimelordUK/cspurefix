@@ -1,10 +1,11 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PureFix.Types
 {
     public static class JsonHelper
     {
-        public static T FromJson<T>(string s)
+        public static T? FromJson<T>(string s)
         {
             JsonSerializerOptions options2 = new()
             {
@@ -18,7 +19,8 @@ namespace PureFix.Types
         {
             JsonSerializerOptions options = new()
             {
-                WriteIndented = true
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
             var json = JsonSerializer.Serialize(instance, options);
             return json;

@@ -13,11 +13,11 @@ namespace PureFIix.Test.Env
 {
     internal class TradeFactory
     {
-        public IFixClock _fixClock;
+        private readonly IFixClock _fixClock;
         private int _nextTradeId = 100000;
         private int _nextExecId = 600000;
         private int _nextInstrumentId = 0;
-        private string[] _securities =
+        private readonly string[] _securities =
     [
       "Gold",
       "Silver",
@@ -38,8 +38,7 @@ namespace PureFIix.Test.Env
                 TradeRequestType = tcr.TradeRequestType,
                 TradeRequestStatus = status,
                 TradeRequestResult = TradeRequestResultValues.Successful
-            }
-            ;
+            };
         }
 
         public static TradeCaptureReportRequest MakeTradeCaptureReportRequest(string requestId, DateTime tradeDate)
