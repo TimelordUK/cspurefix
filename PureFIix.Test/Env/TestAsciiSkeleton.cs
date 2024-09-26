@@ -1,5 +1,4 @@
 ﻿using Arrow.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Transport.Ascii;

@@ -12,5 +12,6 @@ namespace PureFix.Buffer
     {
         StoragePool.Storage? Encode(string msgType, IFixMessage message);
         void Return(StoragePool.Storage storage);
+        int MsgSeqNum { get; }
     }
 }

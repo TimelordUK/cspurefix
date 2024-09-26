@@ -22,5 +22,12 @@ namespace PureFix.Types
                 destination[i] = (char)source[i];
             }
         }
+
+        public static void MergeFrom(this IStandardHeader header, IStandardHeader rhs)
+        {
+            if (rhs.SendingTime != null) header.OrigSendingTime = rhs.SendingTime;
+            if (rhs.MsgSeqNum != null) header.MsgSeqNum = rhs.MsgSeqNum;
+            if (rhs.PossDupFlag != null) header.PossDupFlag = rhs.PossDupFlag;
+        }
     }
 }
