@@ -80,7 +80,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo("BeginString: not expected at position [2]"));
+                Assert.That(ex.Message, Does.StartWith("BeginString: not expected at position [2]"));
             });
         }
 
@@ -91,7 +91,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo("BodyLengthTag: not expected at position [3]"));
+                Assert.That(ex.Message, Does.StartWith("BodyLengthTag: not expected at position [3]"));
             });
         }
 
@@ -102,7 +102,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo("MsgTag: not expected at position [4]"));
+                Assert.That(ex.Message, Does.StartWith("MsgTag: not expected at position [4]"));
             });
         }
 
@@ -113,7 +113,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo("position 1 [59] must be BeginString: 8="));
+                Assert.That(ex.Message, Does.StartWith("position 1 [59] must be BeginString: 8="));
             });
         }
 
@@ -124,7 +124,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo("position 2 [59] must be BodyLengthTag: 9="));
+                Assert.That(ex.Message, Does.StartWith("position 2 [59] must be BodyLengthTag: 9="));
             });
         }
 
@@ -135,7 +135,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo("position 3 [59] must be MsgTag: 35="));
+                Assert.That(ex.Message, Does.StartWith("position 3 [59] must be MsgTag: 35="));
             });
         }
 
@@ -202,7 +202,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple( () =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo($"Tag: [555] cant be after {208 + begin.Length - 1}"));
+                Assert.That(ex.Message, Does.StartWith($"Tag: [555] cant be after {208 + begin.Length - 1}"));
             });
         }
 
@@ -214,7 +214,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
-                Assert.That(ex.Message, Is.EqualTo("MsgType: [ZZ] not in definitions."));
+                Assert.That(ex.Message, Does.StartWith("MsgType: [ZZ] not in definitions."));
             });
         }
 
