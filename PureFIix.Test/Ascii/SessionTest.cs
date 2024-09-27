@@ -168,8 +168,13 @@ namespace PureFIix.Test.Ascii
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;
-            var tcc = experiment.Initiator.TradeCaptureReportCount();
-            Assert.That(tcc, Is.EqualTo(10));
+            var tcci = experiment.Initiator.TradeCaptureReportCount();
+            var tcca = experiment.Acceptor.TradeCaptureReportCount();
+            Assert.Multiple(() =>
+            {
+                Assert.That(tcci, Is.EqualTo(10));
+                Assert.That(tcca, Is.EqualTo(10));
+            });     
         }
     }
 }
