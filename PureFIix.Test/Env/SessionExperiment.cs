@@ -32,7 +32,7 @@ namespace PureFIix.Test.Env
             int iteration = 0;
             await Task.Factory.StartNew(async () =>
             {
-                while (false == Initiator.TokenSource.IsCancellationRequested && iteration < 100)
+                while (false == Initiator.TokenSource.IsCancellationRequested && false == Acceptor.TokenSource.IsCancellationRequested )
                 {
                     await Task.Delay(20);
                     if (!triggered && stopCondition())
@@ -41,6 +41,10 @@ namespace PureFIix.Test.Env
                         triggered = true;
                     }
                     ++iteration;
+                    if (iteration > 500)
+                    {
+                        break;
+                    }
                 }
             });
             var tasks = new Task[] { t1, t2 };
