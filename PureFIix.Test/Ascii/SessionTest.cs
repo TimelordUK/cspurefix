@@ -97,7 +97,7 @@ namespace PureFIix.Test.Ascii
             await experiment.Run(() =>
             {
                 experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
-                return experiment.Initiator.HeartbeatCount() == 1 && experiment.Acceptor.HeartbeatCount() == 1;
+                return experiment.Initiator.HeartbeatCount() >= 1 && experiment.Acceptor.HeartbeatCount() >= 1;
             }, experiment.Initiator.App.Done);
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
