@@ -1,6 +1,5 @@
 ﻿using Arrow.Threading.Tasks;
 using PureFix.Buffer;
-using PureFix.Buffer.Ascii;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
@@ -8,7 +7,6 @@ using PureFix.Types.FIX50SP2.QuickFix;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +17,10 @@ namespace PureFIix.Test.Env
     { 
         private readonly FixMessageFactory m_msg_factory = new();      
         private readonly Dictionary<string, TradeCaptureReport> m_reports = [];
-        private readonly TradeFactory m_tradeFactory;
-
+     
         public TradeCaptureClient(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, q, clock)
         {
             m_logReceivedMessages = true;
-            m_tradeFactory = new TradeFactory(clock);
         }
 
         protected override async Task OnApplicationMsg(string msgType, IMessageView view)

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 using Arrow.Threading.Tasks;
 using PureFix.Buffer;
-using PureFix.Buffer.Ascii;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
@@ -18,8 +16,7 @@ namespace PureFix.Transport.Ascii
     public abstract class AsciiSession : FixSession
     {
         protected readonly IFixMsgStore m_msgStore;
-        private readonly IFixMsgResender m_resender;
-        private readonly IFixMessageFactory m_fixMessageFactory;
+        private readonly IFixMsgResender m_resender;      
         public bool Heartbeat { get; set; } = true;
 
         protected AsciiSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
@@ -27,7 +24,7 @@ namespace PureFix.Transport.Ascii
         {
             if (config == null) throw new ArgumentNullException("config must be provided");
             if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");
-            m_fixMessageFactory = fixMessageFactory;
+           
             m_msgStore = new FixMsgMemoryStore(config.Description.SenderCompID);
             m_resender = new FixMsgAsciiStoreResend(m_msgStore, fixMessageFactory, config, clock);
         }

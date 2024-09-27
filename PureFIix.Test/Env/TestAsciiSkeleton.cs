@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 namespace PureFIix.Test.Env
 {
     internal class TestAsciiSkeleton : BaseApp
-    { 
-        FixMessageFactory m_msg_factory = new();
+    {
+        readonly FixMessageFactory m_msg_factory = new();
        
         public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, q, clock)
         {
