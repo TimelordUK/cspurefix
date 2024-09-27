@@ -84,11 +84,7 @@ namespace PureFIix.Test.Ascii
         public async Task Initiator_Acceptor_Login_Test()
         {
             var experiment = new SessionExperiment(_testEntity);
-            await experiment.Run(experiment.OnReady, () =>
-            {
-                experiment.Initiator.TokenSource.Cancel();
-                return Task.CompletedTask;
-            });
+            await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
                 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;

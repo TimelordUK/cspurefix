@@ -65,8 +65,9 @@ namespace PureFix.Buffer.Ascii
             {
                 hdr.MergeFrom(message.StandardHeader);
                 // having folded fields from the provided header to the message header, do not wish to serialise the 
-                // old header so reset all fields.
+                // old header so reset all fields. Also reset trailer it will be re-computed.
                 message.StandardHeader.Reset();
+                message.StandardTrailer?.Reset();
             } 
 
             var storage = Pool.Rent();

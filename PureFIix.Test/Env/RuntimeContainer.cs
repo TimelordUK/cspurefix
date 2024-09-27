@@ -27,6 +27,14 @@ namespace PureFIix.Test.Env
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
 
+        public void Dump()
+        {
+            var al = AppLog;
+            var fl = FixLog;
+            Console.WriteLine(string.Join(Environment.NewLine, al));
+            Console.WriteLine(string.Join(Environment.NewLine, fl));
+        }
+
         public RuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock)
         {
             Queue = q;

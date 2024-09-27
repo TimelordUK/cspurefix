@@ -160,7 +160,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (nextTagPos != 1)
                     {
-                        throw new InvalidDataException($"BeginString: not expected at position [{nextTagPos}]");
+                        throw new InvalidDataException($"BeginString: not expected at position [{nextTagPos}] [{Buffer.ToString()}]");
                     }
 
                     break;
@@ -170,7 +170,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (nextTagPos != 2)
                     {
-                        throw new InvalidDataException($"BodyLengthTag: not expected at position [{nextTagPos}]");
+                        throw new InvalidDataException($"BodyLengthTag: not expected at position [{nextTagPos}] [{Buffer.ToString()}]");
                     }
 
                     _bodyLen = (int)Buffer.GetWholeNumber(equalPos + 1, valueEndPos - 1);
@@ -182,7 +182,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (nextTagPos != 3)
                     {
-                        throw new InvalidDataException($"MsgTag: not expected at position [{nextTagPos}]");
+                        throw new InvalidDataException($"MsgTag: not expected at position [{nextTagPos}] [{Buffer.ToString()}]");
                     }
 
                     MsgType = Buffer.GetString(equalPos + 1, valueEndPos);
@@ -192,7 +192,7 @@ namespace PureFix.Buffer.Ascii
                     }
                     else
                     {
-                        throw new InvalidDataException($"MsgType: [{MsgType}] not in definitions.");
+                        throw new InvalidDataException($"MsgType: [{MsgType}] not in definitions. [{Buffer}]");
                     }
 
                     break;
@@ -202,7 +202,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (valueEndPos < _bodyLen)
                     {
-                        throw new InvalidDataException($"CheckSumTag: [{valueEndPos}] expected after {_bodyLen}");
+                        throw new InvalidDataException($"CheckSumTag: [{valueEndPos}] expected after {_bodyLen} [{Buffer}]");
                     }
 
                     ParseState = ParseState.MsgComplete;
@@ -213,7 +213,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (_checksumExpectedPos > 0 && valueEndPos > _checksumExpectedPos)
                     {
-                        throw new InvalidDataException($"Tag: [{tag}] cant be after {_checksumExpectedPos}");
+                        throw new InvalidDataException($"Tag: [{tag}] cant be after {_checksumExpectedPos} [{Buffer}]");
                     }
 
                     break;
@@ -226,7 +226,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (tag != Tags.BeginString)
                     {
-                        throw new InvalidDataException($"position 1 [{tag}] must be BeginString: 8=");
+                        throw new InvalidDataException($"position 1 [{tag}] must be BeginString: 8=  [{Buffer}]" );
                     }
 
                     break;
@@ -235,7 +235,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (tag != Tags.BodyLengthTag)
                     {
-                        throw new InvalidDataException($"position 2 [{tag}] must be BodyLengthTag: 9=");
+                        throw new InvalidDataException($"position 2 [{tag}] must be BodyLengthTag: 9= [{Buffer}]");
                     }
 
                     break;
@@ -244,7 +244,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (tag != Tags.MessageTag)
                     {
-                        throw new InvalidDataException($"position 3 [{tag}] must be MsgTag: 35=");
+                        throw new InvalidDataException($"position 3 [{tag}] must be MsgTag: 35= [{Buffer}]");
                     }
                 }
                     break;

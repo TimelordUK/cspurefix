@@ -28,21 +28,40 @@ namespace PureFIix.Test.Env
             var t2 = Acceptor.Run();
             var t1 = Initiator.Run();
            
-            bool stopped = false;
+            bool triggered = false;
+            int iteration = 0;
             await Task.Factory.StartNew(async () =>
             {
-                while (!Initiator.TokenSource.IsCancellationRequested)
+                while (false == Initiator.TokenSource.IsCancellationRequested && iteration < 100)
                 {
                     await Task.Delay(20);
-                    if (!stopped && stopCondition())
+                    if (!triggered && stopCondition())
                     {
                         await stopAction();
-                        stopped = true;
+                        triggered = true;
                     }
+                    ++iteration;
                 }
             });
             var res = Task.WaitAny(t1, t2);
             Queue.Dispose();
+            if (t1.Exception != null || t2.Exception != null)
+            {
+                Initiator.Dump();
+                Console.WriteLine();
+                Acceptor.Dump();
+            }
+            // check we did not fault from an exception in session.
+            Assert.Multiple(() =>
+            {
+
+                Assert.That(t1.IsFaulted, Is.False);
+                Assert.That(t2.IsFaulted, Is.False);
+              
+                Assert.That(t1.Exception, Is.Null);
+                Assert.That(t2.Exception, Is.Null);
+                Assert.That(triggered, Is.True);
+            }); 
         }
     }
 
