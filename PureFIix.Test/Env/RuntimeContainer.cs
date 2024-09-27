@@ -110,10 +110,15 @@ namespace PureFIix.Test.Env
             return MessageCount(MsgType.TradeCaptureReportRequestAck);
         }
 
-        public int MessageCount(string msgType)
+        public int TradeCaptureReportCount()
+        {
+            return MessageCount(MsgType.TradeCaptureReport);
+        }
+
+        public int MessageCount(string msgType, char delim = '|')
         {
             var fixLog = FixLog;
-            var expected = $"|{(int)MsgTag.MsgType}={msgType}|";
+            var expected = $"{delim}{(int)MsgTag.MsgType}={msgType}{delim}";
             var res = fixLog.Where(l => l.Contains(expected)).ToList();
             return res.Count;
         }

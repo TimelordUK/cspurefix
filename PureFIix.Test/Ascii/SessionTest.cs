@@ -168,6 +168,8 @@ namespace PureFIix.Test.Ascii
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             var (aapp, afix) = experiment.Acceptor.App.Logs;
+            var tcc = experiment.Initiator.TradeCaptureReportCount();
+            Assert.That(tcc, Is.EqualTo(10));
         }
     }
 }
