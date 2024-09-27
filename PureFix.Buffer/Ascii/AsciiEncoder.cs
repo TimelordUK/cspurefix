@@ -87,6 +87,7 @@ namespace PureFix.Buffer.Ascii
             var trailer = SessionMessageFactory.Trailer(checksum);
             if (trailer == null)
             {
+                Return(storage);
                 return null;
             }
             trailer.Encode(writer);
