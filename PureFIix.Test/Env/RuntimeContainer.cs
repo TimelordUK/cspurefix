@@ -62,7 +62,7 @@ namespace PureFIix.Test.Env
             return views;
         }
 
-        public RuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock)
+        public RuntimeContainer(IFixConfig config, ISessionFactory factory, AsyncWorkQueue q, IFixClock clock)
         {
             Queue = q;
             Config = config;
@@ -71,7 +71,7 @@ namespace PureFIix.Test.Env
             MessageStore = new FixMsgMemoryStore(config.Description.SenderCompID);
             Parser = new AsciiParser(config.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
             Encoder = new AsciiEncoder(config.Definitions, config.Description, config.MessageFactory, clock);
-            App = new TestAsciiSkeleton(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
+            App = (BaseApp)factory.MakeSession(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
             TokenSource = new CancellationTokenSource();
         }
 

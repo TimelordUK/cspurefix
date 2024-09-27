@@ -105,7 +105,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        private async Task PeerLogon(MsgView view)
+        private async Task PeerLogon(IMessageView view)
         {
             var logger = m_sessionLogger;
             var heartBtInt = view.HeartBtInt();
@@ -138,7 +138,7 @@ namespace PureFix.Transport.Ascii
             await OnReady(view);
         }
 
-        private async Task<bool> CheckSeqNo(string msgType, MsgView view)
+        private async Task<bool> CheckSeqNo(string msgType, IMessageView view)
         {
             switch (msgType)
             {
@@ -215,7 +215,7 @@ namespace PureFix.Transport.Ascii
 * @protected
 */
 
-        protected async Task OnResendRequest(MsgView view)
+        protected async Task OnResendRequest(IMessageView view)
         {
             // if no records are in store then send a gap fill for entire sequence
             SetState(SessionState.HandleResendRequest);
@@ -246,7 +246,7 @@ namespace PureFix.Transport.Ascii
             return state == SessionState.InitiationLogonSent;
         }
 
-        protected async Task OnSessionMsg(string msgType, MsgView view)
+        protected async Task OnSessionMsg(string msgType, IMessageView view)
         {
             var logger = m_sessionLogger;
 
@@ -319,7 +319,7 @@ namespace PureFix.Transport.Ascii
         {
         }
 
-        protected override async Task OnMsg(string msgType, MsgView view)
+        protected override async Task OnMsg(string msgType, IMessageView view)
         {
             var checkSeqNo = await CheckSeqNo(msgType, view);
             if (!checkSeqNo)
@@ -369,7 +369,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        private async Task<bool> CheckIntegrity(string msgType, MsgView view)
+        private async Task<bool> CheckIntegrity(string msgType, IMessageView view)
         {
             var state = m_sessionState;
             var seqNum = view.GetInt32((int)MsgTag.MsgSeqNum);
@@ -391,7 +391,7 @@ namespace PureFix.Transport.Ascii
         {
         }
 
-        protected async Task CheckForwardMsg(string msgType, MsgView view)
+        protected async Task CheckForwardMsg(string msgType, IMessageView view)
         {
             var okToForward = ValidStateApplicationMsg();
             if (okToForward)

@@ -1,4 +1,8 @@
 ﻿using Arrow.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using PureFix.Buffer;
+using PureFix.Transport.Session;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +19,9 @@ namespace PureFIix.Test.Env
             InitiatorConfig = testEntity.GetTestInitiator52Config();
             AcceptorConfig = testEntity.GetTestAcceptor52Config();
             Queue = new AsyncWorkQueue();
-
-            Initiator = new TradeCaptureRuntimeContainer(InitiatorConfig, Queue, Clock);
-            Acceptor = new TradeCaptureRuntimeContainer(AcceptorConfig, Queue, Clock);
+            var factory = new TradeCaptureSessionFactory();
+            Initiator = new TradeCaptureRuntimeContainer(InitiatorConfig, factory, Queue, Clock);
+            Acceptor = new TradeCaptureRuntimeContainer(AcceptorConfig, factory, Queue, Clock);
 
             Initiator.ConnectTo(Acceptor);
             Acceptor.ConnectTo(Initiator);

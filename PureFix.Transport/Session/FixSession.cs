@@ -146,7 +146,7 @@ namespace PureFix.Transport.Session
             }
         }
         
-        protected async Task PeerLogout(MsgView view) {
+        protected async Task PeerLogout(IMessageView view) {
             var msg = view.GetString((int)MsgTag.Text);
             var state = m_sessionState.State;
             switch (state) {
@@ -412,7 +412,7 @@ namespace PureFix.Transport.Session
            * @param view container for all parsed fields representing the received message.
            * @protected
            */
-        protected abstract Task OnMsg(string msgType, MsgView view);
+        protected abstract Task OnMsg(string msgType, IMessageView view);
 
         /**
          * the parsed txt recieved from the peer application.  Given the applicaton is
@@ -445,7 +445,7 @@ namespace PureFix.Transport.Session
          * @param view a wrapper containing the parsed message received.
          * @protected
          */
-        protected abstract Task OnApplicationMsg(string msgType, MsgView view);
+        protected abstract Task OnApplicationMsg(string msgType, IMessageView view);
 
         /**
          * at this point the application is ready to send messages - peer login has been achieved
@@ -454,7 +454,7 @@ namespace PureFix.Transport.Session
          * @param view the login message causing session to be ready
          * @protected
          */
-        protected abstract Task OnReady(MsgView view);
+        protected abstract Task OnReady(IMessageView view);
 
         /**
          * Inform application this session has now ended - either from logout or connection dropped
@@ -471,7 +471,7 @@ namespace PureFix.Transport.Session
          * @protected
          */
 
-        protected abstract bool OnLogon(MsgView view, string? user, string? password);
+        protected abstract bool OnLogon(IMessageView view, string? user, string? password);
 
         protected abstract Task Tick();
        public void End()

@@ -24,20 +24,20 @@ namespace PureFIix.Test.Env
             var me = config?.Description?.Application?.Name ?? "initiator";
         }
 
-        protected override async Task OnApplicationMsg(string msgType, MsgView view)
+        protected override async Task OnApplicationMsg(string msgType, IMessageView view)
         {
             var res = await m_msgStore.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
             m_logger.Info($"store state {res}");
         }
 
-        protected override bool OnLogon(MsgView view, string user, string password)
+        protected override bool OnLogon(IMessageView view, string user, string password)
         {
             var msg = m_msg_factory.ToFixMessage(view);
             m_logger.Info($"peer logs in user {user}");
             return true;
         }
 
-        protected override Task OnReady(MsgView view)
+        protected override Task OnReady(IMessageView view)
         {
             m_logger.Info("OnReady");
             return Task.CompletedTask;

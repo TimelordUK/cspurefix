@@ -12,17 +12,10 @@ namespace PureFIix.Test.Env
 {
     internal class TradeCaptureRuntimeContainer : RuntimeContainer
     {
-        public TradeCaptureRuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock) : base(config, q, clock)
+        public TradeCaptureRuntimeContainer(IFixConfig config, ISessionFactory factory, AsyncWorkQueue q, IFixClock clock) : base(config, factory, q, clock)
         {
             FixMessageFactory = new FixMessageFactory();
-            if (config.Description.Application.Type == "initiator")
-            {
-                App = new TradeCaptureClient(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
-            }
-            else
-            {
-                App = new TradeCaptureServer(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
-            }
+            App = (BaseApp)factory.MakeSession(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
         }
     }
 }
