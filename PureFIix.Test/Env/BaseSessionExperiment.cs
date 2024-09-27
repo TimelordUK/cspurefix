@@ -50,10 +50,11 @@ namespace PureFIix.Test.Env
             var tasks = new Task[] { t1, t2 };
             var res = Task.WaitAll(tasks, TimeSpan.FromSeconds(5));
 
+#if DEBUG
             Initiator.Dump();
             Console.WriteLine();
             Acceptor.Dump();
-
+#endif
             // check we have processed all messages sent from remote peer in sequence and
             // have not re-ordered in particular a batch sent from server.
             Initiator.CheckSeq(Acceptor.Config.Description.SenderCompID);
