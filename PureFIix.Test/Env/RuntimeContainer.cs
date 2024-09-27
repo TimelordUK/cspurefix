@@ -90,6 +90,11 @@ namespace PureFIix.Test.Env
             return MessageCount(MsgType.TestRequest);
         }
 
+        public int ResendRequestCount()
+        {
+            return MessageCount(MsgType.ResendRequest);
+        }
+
         public int TradeCaptureReportRequestAckCount()
         {
             return MessageCount(MsgType.TradeCaptureReportRequestAck);

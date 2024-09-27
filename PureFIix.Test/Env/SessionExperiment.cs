@@ -51,8 +51,13 @@ namespace PureFIix.Test.Env
             Acceptor.Dump();
 
             Initiator.CheckSeq(Acceptor.Config.Description.SenderCompID);
-            Acceptor.CheckSeq(Initiator.Config.Description.SenderCompID);           
-            
+            Acceptor.CheckSeq(Initiator.Config.Description.SenderCompID);
+
+            var initiatorResends = Initiator.ResendRequestCount();
+            var acceptorResends = Acceptor.ResendRequestCount();
+            Assert.That(initiatorResends, Is.EqualTo(0));
+            Assert.That(acceptorResends, Is.EqualTo(0));
+
             Queue.Dispose();
             // check we did not fault from an exception in session.
             Assert.Multiple(() =>
