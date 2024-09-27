@@ -94,9 +94,10 @@ namespace PureFIix.Test.Ascii
         public async Task Initiator_Acceptor_Heatbeat_Test()
         {
             var experiment = new SessionExperiment(_testEntity);
+            var q = experiment.Queue;
             await experiment.Run(() =>
             {
-                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                q.EnqueueAsync(() => experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5));
                 return experiment.Initiator.HeartbeatCount() >= 1 && experiment.Acceptor.HeartbeatCount() >= 1;
             }, experiment.Initiator.App.Done);
 
@@ -131,9 +132,10 @@ namespace PureFIix.Test.Ascii
         public async Task Initiator_Acceptor_Idle_Test()
         {
             var experiment = new SessionExperiment(_testEntity);
+            var q = experiment.Queue;
             await experiment.Run(() =>
             {
-                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                q.EnqueueAsync(() => experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5));
                 return experiment.Initiator.HeartbeatCount() >= 10 && experiment.Acceptor.HeartbeatCount() >= 10;
             }, experiment.Initiator.App.Done);
 
@@ -145,10 +147,11 @@ namespace PureFIix.Test.Ascii
         public async Task Initiator_Acceptor_TestRequest_Test()
         {
             var experiment = new SessionExperiment(_testEntity);
+            var q = experiment.Queue;
             await experiment.Run(() =>
             {
                 experiment.Acceptor.App.Heartbeat = false;
-                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                q.EnqueueAsync(() => experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5));
                 return experiment.Initiator.HeartbeatCount() > 0 && experiment.Acceptor.TestRequestCount() > 0;
             }, experiment.Initiator.App.Done);
 
@@ -160,9 +163,10 @@ namespace PureFIix.Test.Ascii
         public async Task TradeCapture_Test()
         {
             var experiment = new TradeCaptureSessionExperiment(_testEntity);
+            var q = experiment.Queue;
             await experiment.Run(() =>
             {
-                experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5);
+                q.EnqueueAsync(() => experiment.Clock.Current = experiment.Clock.Current.AddSeconds(5));
                 return experiment.Initiator.TradeCaptureReportRequestAckCount() == 2;
             }, experiment.Initiator.App.Done);
 

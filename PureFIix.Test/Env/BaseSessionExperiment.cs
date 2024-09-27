@@ -48,7 +48,7 @@ namespace PureFIix.Test.Env
                 }
             });
             var tasks = new Task[] { t1, t2 };
-            var res = Task.WaitAny(tasks, TimeSpan.FromSeconds(5));
+            var res = Task.WaitAll(tasks, TimeSpan.FromSeconds(5));
 
             Initiator.Dump();
             Console.WriteLine();
