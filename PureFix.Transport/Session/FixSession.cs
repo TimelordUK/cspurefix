@@ -354,7 +354,7 @@ namespace PureFix.Transport.Session
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             
             await InitiatorLogon();            
-            var dispatcher = new EventDispatcher(m_config.LogFactory, transport);
+            var dispatcher = new EventDispatcher(m_config.LogFactory, m_q, transport);
             // start sending events to the channel on which this session listens.
             await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
             // read from the channel 

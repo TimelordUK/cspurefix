@@ -17,7 +17,7 @@ namespace PureFIix.Test.Env
     {
         public IMessageTransport Transport { get; private set; }
         public IFixConfig Config { get; private set; }
-        public IFixMessageFactory FixMessageFactory { get; private set; }
+        public IFixMessageFactory FixMessageFactory { get; protected set; }
         public IFixMsgStore MessageStore { get; private set; }
         public IMessageParser Parser { get; private set; }
         public IMessageEncoder Encoder { get; private set; }
@@ -33,6 +33,33 @@ namespace PureFIix.Test.Env
             var fl = FixLog;
             Console.WriteLine(string.Join(Environment.NewLine, al));
             Console.WriteLine(string.Join(Environment.NewLine, fl));
+        }
+
+        public void CheckSeq(string compId)
+        {
+            var inflate = InflateLog().Where(v=>v.GetString((int)MsgTag.SenderCompID) == compId).ToList();
+            if (inflate.Count > 0)
+            {
+                var m0 = inflate[0];
+                var prevSeqNo = m0.GetInt32((int)MsgTag.MsgSeqNum);
+                for (var i = 1; i < inflate.Count; ++i)
+                {
+                    var seqNo = inflate[i].GetInt32((int)MsgTag.MsgSeqNum);
+                    Assert.That(seqNo, Is.EqualTo(prevSeqNo + 1));
+                    prevSeqNo = seqNo;
+                }
+            }
+        }
+
+        public IReadOnlyList<MsgView> InflateLog()
+        {
+            var parser = new AsciiParser(Config.Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+            var fl = FixLog;
+            var views = new List<MsgView>();
+            var s = string.Join(Environment.NewLine, fl);
+            var b = Encoding.UTF8.GetBytes(s);
+            parser.ParseFrom(b, (i, view) => views.Add((AsciiView)view));
+            return views;
         }
 
         public RuntimeContainer(IFixConfig config, AsyncWorkQueue q, IFixClock clock)

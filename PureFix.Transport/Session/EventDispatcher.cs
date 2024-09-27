@@ -1,4 +1,5 @@
-﻿using PureFix.Types;
+﻿using Arrow.Threading.Tasks;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,10 +17,12 @@ namespace PureFix.Transport.Session
         private readonly TransportDispatcher _transportDispatcher;
         private readonly Channel<SessionEvent> _channel = Channel.CreateUnbounded<SessionEvent>();
         private CancellationToken _token;
-        private ILogger? _logger;
+        private readonly ILogger? _logger;
+        private readonly AsyncWorkQueue _q;
 
-        public EventDispatcher(ILogFactory? logger, IMessageTransport transport)
+        public EventDispatcher(ILogFactory? logger, AsyncWorkQueue q, IMessageTransport transport)
         {
+            _q = q;
             _logger = logger?.MakeLogger(nameof(EventDispatcher));
             _timerDispatcher = new TimerDispatcher(logger);
             _transportDispatcher = new TransportDispatcher(transport);
@@ -41,15 +44,15 @@ namespace PureFix.Transport.Session
 
         public void OnRx(byte[] buffer)
         {
-            _channel.Writer.WaitToWriteAsync(_token).AsTask().ContinueWith(t =>
+            _q.EnqueueAsync(() =>
             {
                 _channel.Writer.TryWrite(new SessionEvent(buffer));
             });
         }
 
-        public async Task OnTimer()
+        public void OnTimer()
         {
-            await _channel.Writer.WaitToWriteAsync(_token).AsTask().ContinueWith(t =>
+            _q.EnqueueAsync(() =>
             {
                 _channel.Writer.TryWrite(new SessionEvent());
             });

@@ -22,7 +22,7 @@ namespace PureFix.Transport.Session
                 while (!token.IsCancellationRequested)
                 {
                     await timer.WaitForNextTickAsync(token);
-                    await reciever.OnTimer();
+                    reciever.OnTimer();
                 }
                 _logger?.Info("timer exiting.");
             },

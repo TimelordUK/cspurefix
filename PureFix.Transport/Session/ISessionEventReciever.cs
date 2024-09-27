@@ -12,7 +12,7 @@ namespace PureFix.Transport.Session
     public interface ISessionEventReciever
     {
         // the session must check state and if necessary send heartbeat or test request.
-        Task OnTimer();
+        void OnTimer();
         // data received from peer which must be sent to the parser to eventually form a fully constructed view.
         void OnRx(byte[] buffer); 
     }

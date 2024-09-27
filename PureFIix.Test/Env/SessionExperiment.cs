@@ -43,18 +43,20 @@ namespace PureFIix.Test.Env
                     ++iteration;
                 }
             });
-            var res = Task.WaitAny(t1, t2);
+            var tasks = new Task[] { t1, t2 };
+            var res = Task.WaitAny(tasks, TimeSpan.FromSeconds(5));
+            
+            Initiator.Dump();
+            Console.WriteLine();
+            Acceptor.Dump();
+
+            Initiator.CheckSeq(Acceptor.Config.Description.SenderCompID);
+            Acceptor.CheckSeq(Initiator.Config.Description.SenderCompID);           
+            
             Queue.Dispose();
-            if (t1.Exception != null || t2.Exception != null)
-            {
-                Initiator.Dump();
-                Console.WriteLine();
-                Acceptor.Dump();
-            }
             // check we did not fault from an exception in session.
             Assert.Multiple(() =>
             {
-
                 Assert.That(t1.IsFaulted, Is.False);
                 Assert.That(t2.IsFaulted, Is.False);
               
