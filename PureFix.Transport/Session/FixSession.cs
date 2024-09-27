@@ -36,7 +36,7 @@ namespace PureFix.Transport.Session
         protected IFixConfig m_config;
         private CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
-        private readonly List<MsgView> _messages = new();
+        private readonly List<IMessageView> _messages = new();
         private readonly AsyncWorkQueue m_q;
       
         protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
@@ -285,10 +285,8 @@ namespace PureFix.Transport.Session
             OnDecoded(msgType, decoded);
         }
         
-        private async Task RxOnMsg(MsgView view)
+        private async Task RxOnMsg(IMessageView view)
         {
-            if (view.Structure == null) return;
-
             var msgType = view.GetString((int)MsgTag.MsgType);
             var peerSeqNum = view.GetInt32((int)MsgTag.MsgSeqNum);
             if (msgType == null) return;
@@ -362,7 +360,7 @@ namespace PureFix.Transport.Session
             m_sessionLogger?.Info($"Run ends");
         }
 
-        private async Task CheckForwardMessage(string msgType, MsgView view)
+        private async Task CheckForwardMessage(string msgType, IMessageView view)
         {
             m_sessionLogger?.Info($"forwarding msgType = '{msgType}' to application");
             SetState(SessionState.ActiveNormalSession);
