@@ -95,6 +95,16 @@ namespace PureFIix.Test.Env
             return MessageCount(MsgType.ResendRequest);
         }
 
+        public int LogonCount()
+        {
+            return MessageCount(MsgType.Logon);
+        }
+
+        public int LogoutCount()
+        {
+            return MessageCount(MsgType.Logout);
+        }
+
         public int TradeCaptureReportRequestAckCount()
         {
             return MessageCount(MsgType.TradeCaptureReportRequestAck);
@@ -103,7 +113,7 @@ namespace PureFIix.Test.Env
         public int MessageCount(string msgType)
         {
             var fixLog = FixLog;
-            var expected = $"{(int)MsgTag.MsgType}={msgType}";
+            var expected = $"|{(int)MsgTag.MsgType}={msgType}|";
             var res = fixLog.Where(l => l.Contains(expected)).ToList();
             return res.Count;
         }

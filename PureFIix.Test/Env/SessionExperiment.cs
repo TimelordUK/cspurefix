@@ -53,19 +53,35 @@ namespace PureFIix.Test.Env
             Initiator.Dump();
             Console.WriteLine();
             Acceptor.Dump();
-
+            
+            // check we have processed all messages sent from remote peer in sequence and
+            // have not re-ordered in particular a batch sent from server.
             Initiator.CheckSeq(Acceptor.Config.Description.SenderCompID);
             Acceptor.CheckSeq(Initiator.Config.Description.SenderCompID);
 
+            // should not have sent a resend request 
             var initiatorResends = Initiator.ResendRequestCount();
             var acceptorResends = Acceptor.ResendRequestCount();
-            Assert.That(initiatorResends, Is.EqualTo(0));
-            Assert.That(acceptorResends, Is.EqualTo(0));
+
+            var initiatorLogonCount = Initiator.LogonCount();
+            var acceptorLogonCount = Acceptor.LogonCount();
+
+            var initiatorLogoutCount = Initiator.LogoutCount();
+            var acceptorLogoutCount = Acceptor.LogoutCount();
 
             Queue.Dispose();
             // check we did not fault from an exception in session.
             Assert.Multiple(() =>
             {
+                Assert.That(initiatorResends, Is.EqualTo(0));
+                Assert.That(acceptorResends, Is.EqualTo(0));
+
+                Assert.That(initiatorLogonCount, Is.EqualTo(2));
+                Assert.That(acceptorLogonCount, Is.EqualTo(2));
+                
+                //Assert.That(initiatorLogoutCount, Is.EqualTo(2));
+                //Assert.That(acceptorLogoutCount, Is.EqualTo(2));
+
                 Assert.That(t1.IsFaulted, Is.False);
                 Assert.That(t2.IsFaulted, Is.False);
               

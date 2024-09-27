@@ -56,7 +56,7 @@ namespace PureFIix.Test.Env
             switch (LogFormat)
             {
                 case LogFormatTypes.App:
-                    Log.Add($"{level}:[{Me}] {Clock.Current.ToLongTimeString()} {Environment.CurrentManagedThreadId} {msg}");
+                    Log.Add($"{level}:[{Me,-25}] [{Clock.Current.ToLongTimeString()}] [{Environment.CurrentManagedThreadId}] {msg}");
                     break;
 
                 default:
