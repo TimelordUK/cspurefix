@@ -75,46 +75,6 @@ namespace PureFIix.Test.Env
             TokenSource = new CancellationTokenSource();
         }
 
-        public bool OnReady() {
-            var appLog = AppLog;
-            return AppLog.FirstOrDefault(l => l.Contains("OnReady")) != null;
-         }
-
-        public int HeartbeatCount()
-        {
-            return MessageCount(MsgType.Heartbeat);            
-        }
-
-        public int TestRequestCount()
-        {
-            return MessageCount(MsgType.TestRequest);
-        }
-
-        public int ResendRequestCount()
-        {
-            return MessageCount(MsgType.ResendRequest);
-        }
-
-        public int LogonCount()
-        {
-            return MessageCount(MsgType.Logon);
-        }
-
-        public int LogoutCount()
-        {
-            return MessageCount(MsgType.Logout);
-        }
-
-        public int TradeCaptureReportRequestAckCount()
-        {
-            return MessageCount(MsgType.TradeCaptureReportRequestAck);
-        }
-
-        public int TradeCaptureReportCount()
-        {
-            return MessageCount(MsgType.TradeCaptureReport);
-        }
-
         public int MessageCount(string msgType, char delim = '|')
         {
             var fixLog = FixLog;
