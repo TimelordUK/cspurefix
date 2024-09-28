@@ -26,8 +26,7 @@ namespace PureFix.Transport.SocketTransport
           
             if (config?.Description?.Application?.Tcp == null) throw new InvalidDataException("no config tcp parameters given");
             m_tcp = config?.Description?.Application?.Tcp;
-            m_logger = logFactory.MakeLogger("BaseTransport");
-            MakeSocket();
+            m_logger = logFactory.MakeLogger("BaseTransport");  
         }
 
         protected void MakeSocket()
@@ -35,26 +34,35 @@ namespace PureFix.Transport.SocketTransport
             ArgumentNullException.ThrowIfNull(m_tcp);
             ArgumentNullException.ThrowIfNull(m_tcp.Host);
             ArgumentNullException.ThrowIfNull(m_tcp.Port);
-            var hostEntry = Dns.GetHostEntry(m_tcp.Host);
+
+            m_iPEndPoint = MakeEndPoint(m_tcp.Host, m_tcp.Port.Value);
+            ArgumentNullException.ThrowIfNull(m_iPEndPoint);
+            m_socket = new(m_iPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
+        }
+
+        public static IPEndPoint? MakeEndPoint(string host, int port)
+        {
+            var hostEntry = Dns.GetHostEntry(host);
             if (hostEntry.AddressList.Length > 0)
             {
                 var ipAddress = hostEntry.AddressList[0];
-                m_iPEndPoint = new IPEndPoint(ipAddress, m_tcp.Port.Value);
-                m_socket = new(m_iPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                var iPEndPoint = new IPEndPoint(ipAddress, port);
+                return iPEndPoint;
             }
+            return null;
         }
 
         public void Dispose()
         {
             m_socket?.Shutdown(SocketShutdown.Both);
+            m_socket = null;
         }
 
-       
         public async Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)
         {
             if (m_socket != null)
             {
-                var received = await m_socket.ReceiveAsync(buffer, SocketFlags.None);
+                var received = await m_socket.ReceiveAsync(buffer, SocketFlags.None, token);
                 return received;
             }
             else
@@ -67,7 +75,7 @@ namespace PureFix.Transport.SocketTransport
         {
             if (m_socket != null)
             {
-                await m_socket.SendAsync(messageBytes, SocketFlags.None);
+                await m_socket.SendAsync(messageBytes, SocketFlags.None, token);
             }
             else
             {
@@ -75,6 +83,6 @@ namespace PureFix.Transport.SocketTransport
             }
         }
 
-        public abstract Task Start(CancellationToken cancellationToken);
+      
     }
 }

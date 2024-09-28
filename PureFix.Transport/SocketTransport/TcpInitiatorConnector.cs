@@ -13,12 +13,15 @@ namespace PureFix.Transport.SocketTransport
 {
     internal class TcpInitiatorConnector : BaseTcpEntity
     {
-        private readonly BaseTcpTransport m_client;
+        private readonly ClientSocketTransport m_client;
 
         public TcpInitiatorConnector(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory) : base(sessionFactory, config, clock, logFactory)
         {
             m_client = new ClientSocketTransport(config, clock, logFactory);
         }
+
+        // try to connect to an endpoint, once the transport is established create a session from the factory
+        // and start, which will initiate a logon to the remote.
 
         public override async Task Start(CancellationToken cancellationToken)
         {
@@ -41,8 +44,9 @@ namespace PureFix.Transport.SocketTransport
                     ++attempt;
                 }
             }
-            m_logger.Info("connected to endpoint starting a new session.");
+            m_logger.Info("connected to endpoint make a new session.");
             var session = m_sessionFactory.MakeSession();
+            m_logger.Info("running the new session.");
             await session.Run(m_client, cancellationToken);
             m_logger.Info("session has ended.");
         }

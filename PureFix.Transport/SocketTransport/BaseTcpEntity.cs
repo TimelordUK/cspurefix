@@ -10,9 +10,11 @@ namespace PureFix.Transport.SocketTransport
 {
     internal abstract class BaseTcpEntity
     {
-      
         protected readonly ILogger m_logger;
         protected readonly ISessionFactory m_sessionFactory;
+        protected readonly IFixConfig m_config;
+        protected readonly IFixClock m_clock;
+        protected readonly ILogFactory m_logFactory;
 
         public BaseTcpEntity(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory)
         {
@@ -23,6 +25,9 @@ namespace PureFix.Transport.SocketTransport
            
             m_logger = logFactory.MakeLogger("BaseTcpEntity");
             m_sessionFactory = sessionFactory;
+            m_config = config;
+            m_clock = clock;
+            m_logFactory = logFactory;
         }
 
         public abstract Task Start(CancellationToken cancellationToken);

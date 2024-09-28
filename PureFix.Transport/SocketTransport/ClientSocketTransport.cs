@@ -16,9 +16,10 @@ namespace PureFix.Transport.SocketTransport
     {
         public ClientSocketTransport(IFixConfig config, IFixClock clock, ILogFactory logFactory) : base(config, clock, logFactory)
         {
+            MakeSocket();
         }
 
-        public override async Task Start(CancellationToken cancellationToken)
+        public async Task Start(CancellationToken cancellationToken)
         {
             if (m_tcp?.Host == null) throw new InvalidDataException("no host for endpoint in tcp config.");
             if (m_tcp?.Port == null) throw new InvalidDataException("no port for endpoint in tcp config.");
