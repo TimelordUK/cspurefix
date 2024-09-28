@@ -80,10 +80,10 @@ namespace PureFix.ConsoleApp
             builder.Services.AddSingleton<IFixMsgStore>(new FixMsgMemoryStore(config.Description.SenderCompID));
             if (config.Description.Application.Type == "initiator")
             {
-                builder.Services.AddSingleton<BaseTcpEntity, TcpInitiatorConnector>();
+                builder.Services.AddSingleton<ITcpEntity, TcpInitiatorConnector>();
             } else
             {
-                builder.Services.AddSingleton<BaseTcpEntity, TcpAcceptorListener>();
+                builder.Services.AddSingleton<ITcpEntity, TcpAcceptorListener>();
             }
             AppHost = builder.Build();
         }

@@ -38,8 +38,8 @@ var clock = new RealtimeClock();
 var diInitiator = new TradeCaptureDI(qInitiator, clock, initiatorConfig);
 var diAcceptor = new TradeCaptureDI(qAcceptor, clock, acceptorConfig);
 
-var initiator = diInitiator.AppHost.Services.GetService<BaseTcpEntity>();
-var acceptor = diAcceptor.AppHost.Services.GetService<BaseTcpEntity>();
+var initiator = diInitiator.AppHost.Services.GetService<ITcpEntity>();
+var acceptor = diAcceptor.AppHost.Services.GetService<ITcpEntity>();
 
 var cts = new CancellationTokenSource();
 

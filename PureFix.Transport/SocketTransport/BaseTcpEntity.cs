@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.SocketTransport
 {
-    public abstract class BaseTcpEntity
+    public abstract class BaseTcpEntity : ITcpEntity
     {
         protected readonly ILogger m_logger;
         protected readonly ISessionFactory m_sessionFactory;
