@@ -21,8 +21,8 @@ namespace PureFIix.Test.Env.TradeCapture
             Queue = new AsyncWorkQueue();
             var initiatorHost = new TradeCaptureDIContainer(Queue, Clock, InitiatorConfig);
             var acceptorHost = new TradeCaptureDIContainer(Queue, Clock, AcceptorConfig);
-            Initiator = new TradeCaptureRuntimeContainer(initiatorHost.AppHost);
-            Acceptor = new TradeCaptureRuntimeContainer(acceptorHost.AppHost);
+            Initiator = new RuntimeContainer(initiatorHost.AppHost);
+            Acceptor = new RuntimeContainer(acceptorHost.AppHost);
 
             Initiator.ConnectTo(Acceptor);
             Acceptor.ConnectTo(Initiator);
