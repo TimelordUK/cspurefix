@@ -1,5 +1,4 @@
-﻿
-using PureFix.Types;
+﻿using PureFix.Types;
 using PureFix.Types.FIX50SP2.QuickFix;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
 using System;
@@ -9,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.TradeCapture
 {
     internal class TradeFactory
     {
@@ -26,8 +25,9 @@ namespace PureFIix.Test.Env
       "Steel"
     ];
 
-        public TradeFactory(IFixClock clock) { 
-            _fixClock = clock; 
+        public TradeFactory(IFixClock clock)
+        {
+            _fixClock = clock;
         }
 
         public static TradeCaptureReportRequestAck MakeTradeCaptureReportRequestAck(TradeCaptureReportRequest tcr, int status)
