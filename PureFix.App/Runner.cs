@@ -54,9 +54,9 @@ namespace PureFix.ConsoleApp
             var clock = new RealtimeClock();
             FixApp initiator = new("test-qf44-initiator.json");
             FixApp acceptor = new("test-qf44-acceptor.json");
-            var t1 = initiator.Run(clock);
+            var t1 = acceptor.Run(clock);
             await Task.Delay(500);
-            var t2 = acceptor.Run(clock);
+            var t2 = initiator.Run(clock); 
             Task.WaitAll(t1, t2);            
         }
     }
