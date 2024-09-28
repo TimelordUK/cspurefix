@@ -16,16 +16,16 @@ namespace PureFix.Transport.Ascii
     public abstract class AsciiSession : FixSession
     {
         protected readonly IFixMsgStore m_msgStore;
-        private readonly IFixMsgResender m_resender;      
+        private readonly FixMsgAsciiStoreResend m_resender;      
         public bool Heartbeat { get; set; } = true;
 
-        protected AsciiSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
+        protected AsciiSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock)
             : base(config, transport, parser, encoder, q, clock)
         {
             if (config == null) throw new ArgumentNullException("config must be provided");
             if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");
-           
-            m_msgStore = new FixMsgMemoryStore(config.Description.SenderCompID);
+
+            m_msgStore = msgStore;
             m_resender = new FixMsgAsciiStoreResend(m_msgStore, fixMessageFactory, config, clock);
         }
 
