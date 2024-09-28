@@ -17,7 +17,6 @@ namespace PureFIix.Test.Env.TradeCapture
         {
         }
 
-
         public override FixSession MakeSession()
         {
             if (m_config.Description.Application.Type == "initiator")

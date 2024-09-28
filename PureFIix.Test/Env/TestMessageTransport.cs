@@ -18,17 +18,22 @@ namespace PureFIix.Test.Env
             _tx_data = sendingTo._rx_data;
         }
 
-        public Task SendAsync(ReadOnlySpan<byte> messageBytes, CancellationToken token)
+        public Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token)
         {
             _tx_data?.Add(messageBytes.ToArray(), token);
            return Task.CompletedTask;
         }
 
-        public Task<int> ReceiveAsync(Span<byte> buffer, CancellationToken token)
+        public Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)
         {
             var b = _rx_data.Take(token);
             b.CopyTo(buffer);
             return Task.FromResult(b.Length);
+        }
+
+        public void Dispose()
+        {
+            _rx_data?.Dispose();
         }
     }
 }

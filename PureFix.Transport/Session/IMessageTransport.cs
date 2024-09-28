@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.Session
 {
-    public interface IMessageTransport
+    public interface IMessageTransport : IDisposable
     {
-        Task SendAsync(ReadOnlySpan<byte> messageBytes, CancellationToken token);
-        Task<int> ReceiveAsync(Span<byte> buffer, CancellationToken token);
+        Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token);
+        Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token);
     }
 }
