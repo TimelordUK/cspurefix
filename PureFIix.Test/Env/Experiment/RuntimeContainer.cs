@@ -8,13 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureFix.Types.FIX44.QuickFix.Types;
 using Arrow.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.Experiment
 {
     internal class RuntimeContainer
     {
@@ -40,7 +38,7 @@ namespace PureFIix.Test.Env
 
         public void CheckSeq(string compId)
         {
-            var inflate = InflateLog().Where(v=>v.GetString((int)MsgTag.SenderCompID) == compId).ToList();
+            var inflate = InflateLog().Where(v => v.GetString((int)MsgTag.SenderCompID) == compId).ToList();
             if (inflate.Count > 0)
             {
                 var m0 = inflate[0];

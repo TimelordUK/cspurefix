@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Arrow.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PureFIix.Test.Env;
+using PureFIix.Test.Env.Experiment;
 using PureFIix.Test.Env.Skeleton;
 using PureFIix.Test.Env.TradeCapture;
 using PureFix.Transport;

@@ -11,12 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.Experiment
 {
     internal abstract class BaseApp : AsciiSession
     {
         protected readonly ILogger m_logger;
-        protected readonly ILogger m_fixLog;        
+        protected readonly ILogger m_fixLog;
         public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
 
         public BaseApp(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, q, clock)

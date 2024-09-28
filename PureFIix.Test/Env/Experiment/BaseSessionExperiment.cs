@@ -8,12 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.Experiment
 {
     internal abstract class BaseSessionExperiment
     {
-        protected BaseSessionExperiment(TestEntity testEntity) {
-            Clock = testEntity.Clock;           
+        protected BaseSessionExperiment(TestEntity testEntity)
+        {
+            Clock = testEntity.Clock;
             Queue = new AsyncWorkQueue();
         }
         public IFixConfig InitiatorConfig { get; protected set; }

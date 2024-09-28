@@ -12,7 +12,7 @@ using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.Experiment
 {
     internal static class HostApplecationBuilderExtensions
     {

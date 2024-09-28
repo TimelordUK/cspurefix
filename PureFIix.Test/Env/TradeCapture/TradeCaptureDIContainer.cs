@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
+using PureFIix.Test.Env.Experiment;
 
 namespace PureFIix.Test.Env.TradeCapture
 {
