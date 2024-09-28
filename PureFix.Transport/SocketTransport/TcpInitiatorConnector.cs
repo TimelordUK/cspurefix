@@ -11,33 +11,26 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.SocketTransport
 {
-    internal class TcpInitiatorConnector
+    internal class TcpInitiatorConnector : BaseTcpEntity
     {
-        private readonly ClientSocketTransport m_client;
-        private readonly ILogger m_logger;
-        private readonly ISessionFactory m_sessionFactory;
+        private readonly BaseTcpTransport m_client;
 
-        public TcpInitiatorConnector(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory)
+        public TcpInitiatorConnector(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory) : base(sessionFactory, config, clock, logFactory)
         {
-            ArgumentNullException.ThrowIfNull(sessionFactory);
-            ArgumentNullException.ThrowIfNull(config);
-            ArgumentNullException.ThrowIfNull(clock);
-            ArgumentNullException.ThrowIfNull(logFactory);
             m_client = new ClientSocketTransport(config, clock, logFactory);
-            m_logger = logFactory.MakeLogger("TcpInitiatorConnector");
-            m_sessionFactory = sessionFactory;
         }
 
-        public async Task Start(CancellationToken cancellationToken)
+        public override async Task Start(CancellationToken cancellationToken)
         {
             bool connected = false;
+            int attempt = 1;
             var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
             while (!cancellationToken.IsCancellationRequested && false == connected)
             {
                 try
                 {
-                    m_logger.Info($"attempting to connect");
-                    await m_client.Connect(cancellationToken);
+                    m_logger.Info($"attempting to connect attempt {attempt}");
+                    await m_client.Start(cancellationToken);
                     connected = true;
                 }
                 catch (SocketException ex)
@@ -45,6 +38,7 @@ namespace PureFix.Transport.SocketTransport
                     m_logger.Error(ex);
                     m_logger.Info($"waiting for re-connecton attempt");
                     await timer.WaitForNextTickAsync(cancellationToken);
+                    ++attempt;
                 }
             }
             m_logger.Info("connected to endpoint starting a new session.");
