@@ -14,45 +14,10 @@ using PureFix.Buffer.Ascii;
 using PureFix.Transport.Store;
 using PureFIix.Test.Env.TradeCapture;
 using PureFix.Transport.SocketTransport;
-using Serilog.Events;
+
 
 namespace PureFix.ConsoleApp
 {
-    public class ConsoleLogFactory : ILogFactory
-    {
-        private class Logger : ILogger
-        {
-            public void Debug(string messageTemplate)
-            {
-                Console.WriteLine(messageTemplate);
-            }
-
-            public void Error(Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
-            public void Info(string messageTemplate)
-            {
-                Console.WriteLine(messageTemplate);
-            }
-
-            public void Warn(string messageTemplate)
-            {
-                Console.WriteLine(messageTemplate);
-            }
-        }
-        public ILogger MakeLogger(string name)
-        {
-            return new Logger();
-        }
-
-        public ILogger MakePlainLogger(string name)
-        {
-            return new Logger();
-        }
-    }
-
     internal class TradeCaptureDI
     {
         public IHost AppHost { get; private set; }

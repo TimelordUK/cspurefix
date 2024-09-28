@@ -81,8 +81,6 @@ namespace PureFix.Transport.SocketTransport
             {
                 throw new InvalidOperationException("no socket to send on.");
             }
-        }
-
-      
+        }   
     }
 }
