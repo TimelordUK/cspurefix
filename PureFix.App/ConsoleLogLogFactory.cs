@@ -18,7 +18,7 @@ namespace PureFix.ConsoleApp
         private class Logger : Types.ILogger
         {
             ILogger _logger;
-            public Logger()
+            public Logger(string name)
             {
                 _logger = new LoggerConfiguration()
                     .WriteTo.Console()
@@ -46,12 +46,12 @@ namespace PureFix.ConsoleApp
         }
         public Types.ILogger MakeLogger(string name)
         {
-            return new Logger();
+            return new Logger(name);
         }
 
         public Types.ILogger MakePlainLogger(string name)
         {
-            return new Logger();
+            return new Logger(name);
         }
     }
 }

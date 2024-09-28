@@ -20,6 +20,10 @@ namespace PureFix.ConsoleApp
 {
     internal class TradeCaptureDI
     {
+        public T? Resolve<T>()
+        {
+            return AppHost.Services.GetService<T>();
+        }
         public IHost AppHost { get; private set; }
         public TradeCaptureDI(AsyncWorkQueue q, IFixClock clock, IFixConfig config)
         {

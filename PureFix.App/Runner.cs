@@ -3,40 +3,61 @@ using PureFIix.Test.Env;
 using PureFix.ConsoleApp;
 using PureFix.Dictionary.Definition;
 using PureFix.Transport;
+using PureFix.Transport.Session;
 using PureFix.Transport.SocketTransport;
 using PureFix.Types;
 using Serilog;
 using Serilog.Core;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace PureFix.ConsoleApp
 {
     public class Runner()
     {
+        static ILogFactory m_factory = new ConsoleLogFactory();
+      
+        internal class FixApp
+        {
+            public string Name { get; private set; }
+            public IFixConfig Config { get; private set; }
+
+            private IFixConfig MakeConfig(string json)
+            {
+                var config = FixConfig.MakeConfigFromPaths(m_factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
+                return config;
+            }
+
+            public FixApp(string json)
+            {
+                Name = json;
+                Config = MakeConfig(json);
+            }
+
+            public async Task Run(IFixClock clock)
+            {
+                var qInitiator = new AsyncWorkQueue();
+                var qAcceptor = new AsyncWorkQueue();
+
+                var app = new TradeCaptureDI(qAcceptor, clock, Config);
+                var entity = app.Resolve<ITcpEntity>();
+                var cts = new CancellationTokenSource();
+
+                if (entity != null)
+                {
+                    var t = entity.Start(cts.Token);
+                    await t;
+                }
+            }
+        }
+
         public async Task Run()
         {
-            var factory = new ConsoleLogFactory();
-            var initiatorConfig = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator.json"));
-            var acceptorConfig = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-acceptor.json"));
-
-            var qInitiator = new AsyncWorkQueue();
-            var qAcceptor = new AsyncWorkQueue();
             var clock = new RealtimeClock();
-            var diInitiator = new TradeCaptureDI(qInitiator, clock, initiatorConfig);
-            var diAcceptor = new TradeCaptureDI(qAcceptor, clock, acceptorConfig);
-
-            var initiator = diInitiator.AppHost.Services.GetService<ITcpEntity>();
-            var acceptor = diAcceptor.AppHost.Services.GetService<ITcpEntity>();
-
-            var cts = new CancellationTokenSource();
-
-            if (initiator != null && acceptor != null)
-            {
-                var t2 = acceptor.Start(cts.Token);
-                await Task.Delay(500);
-                var t1 = initiator.Start(cts.Token);
-                Task.WaitAll(t1, t2);
-            }
+            FixApp initiator = new("test-qf44-initiator.json");
+            FixApp acceptor = new("test-qf44-acceptor.json");
+            var t1 = initiator.Run(clock);
+            await Task.Delay(500);
+            var t2 = acceptor.Run(clock);
+            Task.WaitAll(t1, t2);            
         }
     }
 }
