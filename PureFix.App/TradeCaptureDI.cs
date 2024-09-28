@@ -25,7 +25,8 @@ namespace PureFix.ConsoleApp
             return AppHost.Services.GetService<T>();
         }
         public IHost AppHost { get; private set; }
-        public TradeCaptureDI(AsyncWorkQueue q, IFixClock clock, IFixConfig config)
+
+        public TradeCaptureDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config)
         {
             ArgumentNullException.ThrowIfNull(config);
             ArgumentNullException.ThrowIfNull(config.Description);
@@ -34,7 +35,7 @@ namespace PureFix.ConsoleApp
             ArgumentNullException.ThrowIfNull(config.Description.SenderCompID);
             var builder = Host.CreateApplicationBuilder();
            
-            builder.Services.AddSingleton<ILogFactory, ConsoleLogFactory>();
+            builder.Services.AddSingleton(factory);
             builder.Services.AddSingleton(clock);
             builder.Services.AddSingleton<ISessionMessageFactory, Fix44SessionMessageFactory>();
             builder.Services.AddSingleton(config);
