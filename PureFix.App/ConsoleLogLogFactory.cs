@@ -20,9 +20,10 @@ namespace PureFix.ConsoleApp
             ILogger _logger;
             public Logger(string name)
             {
-                _logger = new LoggerConfiguration()
-                    .WriteTo.Console()
-                    .CreateLogger();
+                _logger = new LoggerConfiguration().Enrich.WithThreadId()
+               .WriteTo.Console(outputTemplate:
+               "[{Timestamp:HH:mm:ss} {Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}")
+                .CreateLogger();
             }
             public void Debug(string messageTemplate)
             {

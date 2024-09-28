@@ -17,7 +17,7 @@ namespace PureFix.ConsoleApp
         public string Name { get; private set; }
         public IFixConfig? Config { get; private set; }
 
-        private IFixConfig MakeConfig(ILogFactory factory, string json)
+        private static IFixConfig MakeConfig(ILogFactory factory, string json)
         {
             var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
             return config;
@@ -31,10 +31,8 @@ namespace PureFix.ConsoleApp
         public async Task Run(ILogFactory factory, IFixClock clock)
         {
             Config = MakeConfig(factory, Name);
-            var qInitiator = new AsyncWorkQueue();
-            var qAcceptor = new AsyncWorkQueue();
-
-            var app = new TradeCaptureDI(qAcceptor, factory, clock, Config);
+            var queue = new AsyncWorkQueue();
+            var app = new TradeCaptureDI(queue, factory, clock, Config);
             var entity = app.Resolve<ITcpEntity>();
             var cts = new CancellationTokenSource();
 

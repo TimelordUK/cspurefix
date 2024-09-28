@@ -15,7 +15,8 @@ namespace PureFix.Transport.SocketTransport
     {
         private readonly ClientSocketTransport m_client;
 
-        public TcpInitiatorConnector(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory) : base(sessionFactory, config, clock, logFactory)
+        public TcpInitiatorConnector(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory) 
+            : base(sessionFactory, config, clock, logFactory)
         {
             m_client = new ClientSocketTransport(config, clock, logFactory);
         }
