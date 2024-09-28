@@ -19,7 +19,7 @@ namespace PureFIix.Test.Env.Experiment
         protected readonly ILogger m_fixLog;
         public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
 
-        public BaseApp(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, msgStore, q, clock)
+        public BaseApp(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, fixMessageFactory, parser, encoder, msgStore, q, clock)
         {
             m_logReceivedMessages = true;
             var me = config?.Description?.Application?.Name ?? "initiator";

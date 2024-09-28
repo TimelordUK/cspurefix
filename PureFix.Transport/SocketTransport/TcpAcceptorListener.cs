@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.SocketTransport
 {
-    internal class TcpAcceptorListener : BaseTcpEntity
+    public class TcpAcceptorListener : BaseTcpEntity
     {
         public TcpAcceptorListener(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory) : base(sessionFactory, config, clock, logFactory)
         {

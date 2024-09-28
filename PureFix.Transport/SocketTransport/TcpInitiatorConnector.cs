@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.SocketTransport
 {
-    internal class TcpInitiatorConnector : BaseTcpEntity
+    public class TcpInitiatorConnector : BaseTcpEntity
     {
         private readonly ClientSocketTransport m_client;
 

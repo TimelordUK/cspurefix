@@ -39,7 +39,7 @@ namespace PureFix.Transport.Session
         private readonly List<IMessageView> _messages = new();
         private readonly AsyncWorkQueue m_q;
       
-        protected FixSession(IFixConfig config, IMessageTransport transport, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
+        protected FixSession(IFixConfig config, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
         {
             if (config.Definitions == null)
             {
@@ -54,7 +54,6 @@ namespace PureFix.Transport.Session
                 throw new ArgumentException("config had been supplied with no log factory");
             }
             m_config = config;
-            m_transport = transport;
             m_logReceivedMessages = true;
             m_manageSession = true;
             m_clock = clock;
@@ -350,7 +349,7 @@ namespace PureFix.Transport.Session
             m_sessionLogger?.Info($"Run begins");
             m_parentToken = token;
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
-            
+            m_transport = transport;
             await InitiatorLogon();            
             var dispatcher = new EventDispatcher(m_config.LogFactory, m_q, transport);
             // start sending events to the channel on which this session listens.

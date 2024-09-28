@@ -37,7 +37,6 @@ namespace PureFIix.Test.Env
             Parser = new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe };
         }
 
-
         public List<AsciiView> ParseText(string s)
         {
             var views = new List<AsciiView>(10000);

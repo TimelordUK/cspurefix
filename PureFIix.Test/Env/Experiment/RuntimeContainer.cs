@@ -67,7 +67,7 @@ namespace PureFIix.Test.Env.Experiment
         {
             Queue = host.Services.GetService<AsyncWorkQueue>();
             Config = host.Services.GetService<IFixConfig>();
-            Transport = host.Services.GetService<IMessageTransport>();
+            Transport = new TestMessageTransport();
             FixMessageFactory = host.Services.GetService<IFixMessageFactory>();
             MessageStore = host.Services.GetService<IFixMsgStore>();
             Parser = host.Services.GetService<IMessageParser>();
