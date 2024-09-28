@@ -12,6 +12,6 @@ namespace PureFix.Transport.Session
 {
     public interface ISessionFactory
     {
-        FixSession MakeSession(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock);
+        FixSession MakeSession();
     }
 }

@@ -12,12 +12,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.Skeleton
 {
     internal class TestAsciiSkeleton : BaseApp
     {
         readonly FixMessageFactory m_msg_factory = new();
-       
+
         public TestAsciiSkeleton(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, q, clock)
         {
             m_logReceivedMessages = true;

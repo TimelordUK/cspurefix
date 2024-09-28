@@ -1,4 +1,5 @@
 ﻿using Arrow.Threading.Tasks;
+using PureFIix.Test.Env.Skeleton;
 using PureFix.Buffer;
 using PureFix.Transport.Session;
 using PureFix.Types;
@@ -18,9 +19,10 @@ namespace PureFIix.Test.Env
             InitiatorConfig = testEntity.GetTestInitiatorConfig();
             AcceptorConfig = testEntity.GetTestAcceptorConfig();
             Queue = new AsyncWorkQueue();
-            var factory = new SkeletonSessionFactory();
-            Initiator = new RuntimeContainer(InitiatorConfig, factory, Queue, Clock);
-            Acceptor = new RuntimeContainer(AcceptorConfig, factory, Queue, Clock);
+            var initiatorHost = new SkeletonDIContainer(Queue, Clock, InitiatorConfig);
+            var acceptorHost = new SkeletonDIContainer(Queue, Clock, AcceptorConfig);
+            Initiator = new RuntimeContainer(initiatorHost.AppHost);
+            Acceptor = new RuntimeContainer(acceptorHost.AppHost);
 
             Initiator.ConnectTo(Acceptor);
             Acceptor.ConnectTo(Initiator);

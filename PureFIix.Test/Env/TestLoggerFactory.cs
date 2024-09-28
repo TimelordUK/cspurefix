@@ -9,11 +9,10 @@ namespace PureFIix.Test.Env
 {
     public class TestLoggerFactory : ILogFactory
     {
-       
         private readonly IFixClock _clock;
         
-        private LogTrace al = new LogTrace();
-        private LogTrace fl = new LogTrace();
+        private LogTrace m_al = new();
+        private LogTrace m_fl = new();
 
         public TestLoggerFactory(IFixClock clock = null)
         {
@@ -22,12 +21,12 @@ namespace PureFIix.Test.Env
 
         public ILogger MakeLogger(string name)
         {
-            return new TestLogger(name, al, TestLogger.LogFormatTypes.App, _clock);
+            return new TestLogger(name, m_al, TestLogger.LogFormatTypes.App, _clock);
         }
 
         public ILogger MakePlainLogger(string name)
         {
-            return new TestLogger(name, fl, TestLogger.LogFormatTypes.Plain, _clock);
+            return new TestLogger(name, m_fl, TestLogger.LogFormatTypes.Plain, _clock);
         }
     }
 }

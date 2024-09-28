@@ -11,16 +11,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.TradeCapture
 {
     internal class TradeCaptureServer : BaseApp
-    { 
+    {
         private readonly FixMessageFactory m_msg_factory = new();
         private readonly TradeFactory m_tradeFactory;
 
         public TradeCaptureServer(IFixConfig config, IMessageTransport transport, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, transport, fixMessageFactory, parser, encoder, q, clock)
         {
-            m_logReceivedMessages = true;           
+            m_logReceivedMessages = true;
             m_tradeFactory = new TradeFactory(clock);
         }
 

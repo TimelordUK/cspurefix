@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types.FIX44.QuickFix.Types;
 using Arrow.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace PureFIix.Test.Env
 {
@@ -62,16 +65,17 @@ namespace PureFIix.Test.Env
             return views;
         }
 
-        public RuntimeContainer(IFixConfig config, ISessionFactory factory, AsyncWorkQueue q, IFixClock clock)
+        public RuntimeContainer(IHost host)
         {
-            Queue = q;
-            Config = config;
-            Transport = new TestMessageTransport();
-            FixMessageFactory = new FixMessageFactory();
-            MessageStore = new FixMsgMemoryStore(config.Description.SenderCompID);
-            Parser = new AsciiParser(config.Definitions) { Delimiter = AsciiChars.Soh, WriteDelimiter = AsciiChars.Pipe };
-            Encoder = new AsciiEncoder(config.Definitions, config.Description, config.MessageFactory, clock);
-            App = (BaseApp)factory.MakeSession(config, Transport, FixMessageFactory, Parser, Encoder, q, clock);
+            Queue = host.Services.GetService<AsyncWorkQueue>();
+            Config = host.Services.GetService<IFixConfig>();
+            Transport = host.Services.GetService<IMessageTransport>();
+            FixMessageFactory = host.Services.GetService<IFixMessageFactory>();
+            MessageStore = host.Services.GetService<IFixMsgStore>();
+            Parser = host.Services.GetService<IMessageParser>();
+            Encoder = host.Services.GetService<IMessageEncoder>();
+            var sf = host.Services.GetService<ISessionFactory>();
+            App = (BaseApp)sf.MakeSession();
             TokenSource = new CancellationTokenSource();
         }
 

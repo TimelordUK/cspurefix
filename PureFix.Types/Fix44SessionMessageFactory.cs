@@ -12,10 +12,10 @@ namespace PureFix.Types
 {
     public class Fix44SessionMessageFactory : ISessionMessageFactory
     {
-        private readonly SessionDescription m_SessionDescription;
+        private readonly ISessionDescription m_SessionDescription;
         
 
-        public Fix44SessionMessageFactory(SessionDescription sessionDescription)
+        public Fix44SessionMessageFactory(ISessionDescription sessionDescription)
         {
             m_SessionDescription = sessionDescription;
         }

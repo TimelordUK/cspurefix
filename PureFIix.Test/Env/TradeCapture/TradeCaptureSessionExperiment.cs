@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.TradeCapture
 {
     internal class TradeCaptureSessionExperiment : BaseSessionExperiment
     {
@@ -19,9 +19,10 @@ namespace PureFIix.Test.Env
             InitiatorConfig = testEntity.GetTestInitiator52Config();
             AcceptorConfig = testEntity.GetTestAcceptor52Config();
             Queue = new AsyncWorkQueue();
-            var factory = new TradeCaptureSessionFactory();
-            Initiator = new TradeCaptureRuntimeContainer(InitiatorConfig, factory, Queue, Clock);
-            Acceptor = new TradeCaptureRuntimeContainer(AcceptorConfig, factory, Queue, Clock);
+            var initiatorHost = new TradeCaptureDIContainer(Queue, Clock, InitiatorConfig);
+            var acceptorHost = new TradeCaptureDIContainer(Queue, Clock, AcceptorConfig);
+            Initiator = new TradeCaptureRuntimeContainer(initiatorHost.AppHost);
+            Acceptor = new TradeCaptureRuntimeContainer(acceptorHost.AppHost);
 
             Initiator.ConnectTo(Acceptor);
             Acceptor.ConnectTo(Initiator);

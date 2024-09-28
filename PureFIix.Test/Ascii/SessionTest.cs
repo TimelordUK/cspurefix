@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Arrow.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PureFIix.Test.Env;
+using PureFIix.Test.Env.Skeleton;
+using PureFIix.Test.Env.TradeCapture;
 using PureFix.Transport;
 using PureFix.Transport.Session;
 using PureFix.Types;
@@ -26,6 +29,14 @@ namespace PureFIix.Test.Ascii
         public void Setup()
         {
             _testEntity.Prepare();
+        }
+
+        [Test]
+        public void Test_DI_Skeleton()
+        {
+            var config = _testEntity.GetTestInitiatorConfig();
+            var q = new AsyncWorkQueue();
+            var di = new SkeletonDIContainer(q, _testEntity.Clock, config);
         }
 
         [Test]
