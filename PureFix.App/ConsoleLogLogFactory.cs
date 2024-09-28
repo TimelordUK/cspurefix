@@ -22,7 +22,7 @@ namespace PureFix.ConsoleApp
             {
                 _logger = new LoggerConfiguration().Enrich.WithThreadId()
                .WriteTo.Console(outputTemplate:
-               "[{Timestamp:HH:mm:ss} {Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}")
+               "[{Timestamp:HH:mm:ss.fff} {Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
             }
             public void Debug(string messageTemplate)
