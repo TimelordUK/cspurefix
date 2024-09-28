@@ -94,7 +94,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Initiator_Acceptor_Login_Test()
         {
-            var experiment = new SessionExperiment(_testEntity);
+            var experiment = new SkeletonSessionExperiment(_testEntity);
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
                 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
@@ -104,7 +104,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Initiator_Acceptor_Heatbeat_Test()
         {
-            var experiment = new SessionExperiment(_testEntity);
+            var experiment = new SkeletonSessionExperiment(_testEntity);
             var q = experiment.Queue;
             await experiment.Run(() =>
             {
@@ -119,7 +119,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Initiator_Acceptor_Login_Initiator_Logout_Test()
         {
-            var experiment = new SessionExperiment(_testEntity);
+            var experiment = new SkeletonSessionExperiment(_testEntity);
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
@@ -129,7 +129,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Initiator_Acceptor_Login_Acceptor_Logout_Test()
         {
-            var experiment = new SessionExperiment(_testEntity);
+            var experiment = new SkeletonSessionExperiment(_testEntity);
             await experiment.Run(experiment.OnReady, experiment.Acceptor.App.Done);
 
             var (iapp, ifix) = experiment.Initiator.App.Logs;
@@ -142,7 +142,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Initiator_Acceptor_Idle_Test()
         {
-            var experiment = new SessionExperiment(_testEntity);
+            var experiment = new SkeletonSessionExperiment(_testEntity);
             var q = experiment.Queue;
             await experiment.Run(() =>
             {
@@ -157,7 +157,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Initiator_Acceptor_TestRequest_Test()
         {
-            var experiment = new SessionExperiment(_testEntity);
+            var experiment = new SkeletonSessionExperiment(_testEntity);
             var q = experiment.Queue;
             await experiment.Run(() =>
             {

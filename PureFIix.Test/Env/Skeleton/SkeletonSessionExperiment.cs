@@ -1,5 +1,4 @@
 ﻿using Arrow.Threading.Tasks;
-using PureFIix.Test.Env.Skeleton;
 using PureFix.Buffer;
 using PureFix.Transport.Session;
 using PureFix.Types;
@@ -9,23 +8,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFIix.Test.Env.Skeleton
 {
-    internal class SessionExperiment : BaseSessionExperiment
+    internal class SkeletonSessionExperiment : BaseSessionExperiment
     {
-        public SessionExperiment(TestEntity testEntity)
+        public SkeletonSessionExperiment(TestEntity testEntity) : base(testEntity)
         {
-            Clock = testEntity.Clock;
             InitiatorConfig = testEntity.GetTestInitiatorConfig();
             AcceptorConfig = testEntity.GetTestAcceptorConfig();
-            Queue = new AsyncWorkQueue();
             var initiatorHost = new SkeletonDIContainer(Queue, Clock, InitiatorConfig);
             var acceptorHost = new SkeletonDIContainer(Queue, Clock, AcceptorConfig);
-            Initiator = new RuntimeContainer(initiatorHost.AppHost);
-            Acceptor = new RuntimeContainer(acceptorHost.AppHost);
-
-            Initiator.ConnectTo(Acceptor);
-            Acceptor.ConnectTo(Initiator);
+            Connect(initiatorHost.AppHost, acceptorHost.AppHost);           
         }
     }
 }

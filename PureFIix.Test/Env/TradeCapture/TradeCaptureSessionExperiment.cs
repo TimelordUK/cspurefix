@@ -1,4 +1,5 @@
 ﻿using Arrow.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using PureFix.Buffer;
 using PureFix.Transport.Session;
@@ -13,19 +14,13 @@ namespace PureFIix.Test.Env.TradeCapture
 {
     internal class TradeCaptureSessionExperiment : BaseSessionExperiment
     {
-        public TradeCaptureSessionExperiment(TestEntity testEntity)
+        public TradeCaptureSessionExperiment(TestEntity testEntity) : base(testEntity)
         {
-            Clock = testEntity.Clock;
             InitiatorConfig = testEntity.GetTestInitiator52Config();
             AcceptorConfig = testEntity.GetTestAcceptor52Config();
-            Queue = new AsyncWorkQueue();
             var initiatorHost = new TradeCaptureDIContainer(Queue, Clock, InitiatorConfig);
-            var acceptorHost = new TradeCaptureDIContainer(Queue, Clock, AcceptorConfig);
-            Initiator = new RuntimeContainer(initiatorHost.AppHost);
-            Acceptor = new RuntimeContainer(acceptorHost.AppHost);
-
-            Initiator.ConnectTo(Acceptor);
-            Acceptor.ConnectTo(Initiator);
+            var acceptorHost = new TradeCaptureDIContainer(Queue, Clock, AcceptorConfig); 
+            Connect(initiatorHost.AppHost, acceptorHost.AppHost); 
         }
     }
 }

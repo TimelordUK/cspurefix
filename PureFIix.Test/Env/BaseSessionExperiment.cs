@@ -1,4 +1,5 @@
 ﻿using Arrow.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using PureFix.Transport.Session;
 using PureFix.Types;
 using System;
@@ -11,12 +12,24 @@ namespace PureFIix.Test.Env
 {
     internal abstract class BaseSessionExperiment
     {
+        protected BaseSessionExperiment(TestEntity testEntity) {
+            Clock = testEntity.Clock;           
+            Queue = new AsyncWorkQueue();
+        }
         public IFixConfig InitiatorConfig { get; protected set; }
         public IFixConfig AcceptorConfig { get; protected set; }
         public RuntimeContainer Initiator { get; protected set; }
         public RuntimeContainer Acceptor { get; protected set; }
         public IFixClock Clock { get; protected set; }
         public AsyncWorkQueue Queue { get; protected set; }
+
+        protected void Connect(IHost initiator, IHost acceptor)
+        {
+            Initiator = new RuntimeContainer(initiator);
+            Acceptor = new RuntimeContainer(acceptor);
+            Initiator.ConnectTo(Acceptor);
+            Acceptor.ConnectTo(Initiator);
+        }
 
         public bool OnReady()
         {
