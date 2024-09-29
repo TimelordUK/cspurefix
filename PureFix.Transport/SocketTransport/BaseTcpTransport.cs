@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using System.Net.Security;
 
 namespace PureFix.Transport.SocketTransport
 {
@@ -17,6 +18,7 @@ namespace PureFix.Transport.SocketTransport
         protected IPEndPoint? m_iPEndPoint;
         protected readonly TcpTransportDescription? m_tcp;
         protected readonly ILogger m_logger;
+        protected Stream? m_networkStream;
 
         protected BaseTcpTransport(IFixConfig config, IFixClock clock, ILogFactory logFactory)
         {
@@ -37,7 +39,15 @@ namespace PureFix.Transport.SocketTransport
 
             m_iPEndPoint = MakeEndPoint(m_tcp.Host, m_tcp.Port.Value);
             ArgumentNullException.ThrowIfNull(m_iPEndPoint);
-            m_socket = new(m_iPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
+            m_socket = new(m_iPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        protected void AsStream()
+        {
+            if (m_socket != null)
+            {
+                m_networkStream = new NetworkStream(m_socket);
+            }
         }
 
         public static IPEndPoint? MakeEndPoint(string host, int port)
@@ -54,15 +64,17 @@ namespace PureFix.Transport.SocketTransport
 
         public void Dispose()
         {
-            m_socket?.Shutdown(SocketShutdown.Both);
+            m_networkStream?.Dispose();
+            m_networkStream = null;
+            m_socket?.Dispose();
             m_socket = null;
         }
 
         public async Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)
         {
-            if (m_socket != null)
+            if (m_networkStream != null)
             {
-                var received = await m_socket.ReceiveAsync(buffer, SocketFlags.None, token);
+                var received = await m_networkStream.ReadAsync(buffer, token);
                 return received;
             }
             else
@@ -73,9 +85,9 @@ namespace PureFix.Transport.SocketTransport
 
         public async Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token)
         {
-            if (m_socket != null)
+            if (m_networkStream != null)
             {
-                await m_socket.SendAsync(messageBytes, SocketFlags.None, token);
+                await m_networkStream.WriteAsync(messageBytes, token);
             }
             else
             {
