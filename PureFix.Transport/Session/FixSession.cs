@@ -248,7 +248,7 @@ namespace PureFix.Transport.Session
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
                             var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);                        
-                            await OnEncoded(msgType, seqNum, encoded);
+                            OnEncoded(msgType, seqNum, encoded);
                             m_encoder.Return(storage);
                             break;
                         }
