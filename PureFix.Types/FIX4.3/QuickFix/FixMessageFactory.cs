@@ -326,15 +326,15 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 					((IFixParser)o).Parse(view);
 					return o;
 				}
-				case "u":
-				{
-					var o = new CrossOrderCancelRequest();
-					((IFixParser)o).Parse(view);
-					return o;
-				}
 				case "t":
 				{
 					var o = new CrossOrderCancelReplaceRequest();
+					((IFixParser)o).Parse(view);
+					return o;
+				}
+				case "u":
+				{
+					var o = new CrossOrderCancelRequest();
 					((IFixParser)o).Parse(view);
 					return o;
 				}

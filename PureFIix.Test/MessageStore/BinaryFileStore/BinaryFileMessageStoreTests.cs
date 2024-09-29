@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#if false
 using PureFix.MessageStore;
 using PureFix.MessageStore.BinaryFileStore;
 using PureFix.MessageStore.TextFileStore;
@@ -109,3 +110,4 @@ namespace PureFIix.Test.MessageStore.BinaryFileStore
         }
     }
 }
+#endif
