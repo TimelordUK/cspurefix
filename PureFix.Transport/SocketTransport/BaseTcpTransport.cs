@@ -77,11 +77,13 @@ namespace PureFix.Transport.SocketTransport
         private X509Certificate2 MakeCertificate()
         {
             ArgumentNullException.ThrowIfNull(m_sslCertificate);
+            m_logger.Info($"MakeCertificate {m_sslCertificate}");
             return new X509Certificate2(m_sslCertificate, string.Empty); 
         }
 
         private async Task AsSSlStream()
         {
+            m_logger.Info("AsSSlStream constructing ssl stream.");
             ArgumentNullException.ThrowIfNull(m_networkStream);
             ArgumentNullException.ThrowIfNull(m_sslCertificate);
             if (m_config.IsInitiator())
@@ -91,10 +93,13 @@ namespace PureFix.Transport.SocketTransport
                         {
                             MakeCertificate()
                         };
+                m_logger.Info("client is awaiting authentication");
                 await m_sslStream.AuthenticateAsClientAsync("localhost", certs, SslProtocols.Tls12, false);
+                m_logger.Info("client authenticated.");
             }
             else
             {
+                m_logger.Info("server waiting to authenticate clients.");
                 m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
                 m_sslStream.AuthenticateAsServer(MakeCertificate(), false, SslProtocols.Tls12, false);
             }
@@ -121,10 +126,12 @@ namespace PureFix.Transport.SocketTransport
 
         public void Dispose()
         {
-            m_networkStream?.Dispose();
-            m_networkStream = null;
+            m_sslStream?.Dispose();
+            m_networkStream?.Dispose();          
             m_socket?.Dispose();
+            m_networkStream = null;
             m_socket = null;
+            m_sslStream = null;
         }
 
         public async Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)
