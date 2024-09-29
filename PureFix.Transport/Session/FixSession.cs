@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
-using PureFix.Transport.Store;
 using PureFix.Types;
 
 namespace PureFix.Transport.Session
@@ -250,7 +248,7 @@ namespace PureFix.Transport.Session
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
                             var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);                        
-                            OnEncoded(msgType, seqNum, encoded);
+                            await OnEncoded(msgType, seqNum, encoded);
                             m_encoder.Return(storage);
                             break;
                         }
