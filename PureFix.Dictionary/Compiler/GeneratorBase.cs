@@ -12,11 +12,11 @@ namespace PureFix.Dictionary.Compiler
     {
         private string m_Root;
         private readonly Options m_Options;
-        private readonly FixDefinitions m_FixDefinitions;
+        private readonly IFixDefinitions m_FixDefinitions;
 
         private readonly HashSet<string> m_FilesGenerated = new(StringComparer.OrdinalIgnoreCase);
 
-        public GeneratorBase(string root, FixDefinitions fixDefinitions, Options options)
+        public GeneratorBase(string root, IFixDefinitions fixDefinitions, Options options)
         {
             m_Root = root;
             m_FixDefinitions = fixDefinitions;
@@ -79,7 +79,7 @@ namespace PureFix.Dictionary.Compiler
             get{return m_Options;}
         }
 
-        protected FixDefinitions FixDefinitions
+        protected IFixDefinitions FixDefinitions
         {
             get{return m_FixDefinitions;}
         }

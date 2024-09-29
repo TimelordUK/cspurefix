@@ -8,7 +8,7 @@ namespace PureFIix.Test.Ascii
 {
     public class Qf50Sp0DictTest
     {
-        private FixDefinitions _definitions;
+        private IFixDefinitions _definitions;
         private SecDefHelper _secHelper;
         private SetConstraintHelper _setHelper;
 

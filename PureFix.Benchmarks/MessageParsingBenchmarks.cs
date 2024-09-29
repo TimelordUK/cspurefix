@@ -24,7 +24,7 @@ namespace PureFix.Benchmarks
         private readonly byte[] _OrderCancelRejectMessage;
         private readonly byte[] _QuoteRequestMessage;
 
-        private readonly FixDefinitions _FixDefinitions;
+        private readonly IFixDefinitions _FixDefinitions;
         private readonly AsciiParser _Parser;
 
         private readonly Action<int, MsgView> NoAction = (index, view) => {};

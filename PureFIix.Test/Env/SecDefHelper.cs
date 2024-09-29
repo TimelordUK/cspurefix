@@ -8,9 +8,9 @@ using PureFix.Dictionary.Definition;
 
 namespace PureFIix.Test.Env
 {
-    internal class SecDefHelper(FixDefinitions definitions)
+    internal class SecDefHelper(IFixDefinitions definitions)
     {
-        public FixDefinitions Definitions { get; } = definitions;
+        public IFixDefinitions Definitions { get; } = definitions;
 
         public IContainedSet GetSecListGrp()
         {

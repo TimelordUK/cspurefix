@@ -17,7 +17,7 @@ namespace PureFix.Benchmarks
     [MemoryDiagnoser]
     public class ParseFromViewBenchmarks
     {
-        private readonly FixDefinitions _FixDefinitions;
+        private readonly IFixDefinitions _FixDefinitions;
 
         private readonly AsciiView _HeartbeatView;
         private readonly AsciiView _LogonView;

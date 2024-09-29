@@ -13,7 +13,7 @@ namespace PureFIix.Test.Ascii
 {
     public class Qf50Sp2DictTest
     {
-        private FixDefinitions _definitions;
+        private IFixDefinitions _definitions;
         private SetConstraintHelper _setHelper;
 
         [OneTimeSetUp]

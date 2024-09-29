@@ -10,17 +10,17 @@ namespace PureFix.Dictionary.Definition
 {
     public static class FixDefinitionExt
     {
-        public static int GetMajor(this FixDefinitions definitions)
+        public static int GetMajor(this IFixDefinitions definitions)
         {
             return FixVersionParser.GetMajor(definitions.Version);
         }
 
-        public static int GetMinor(this FixDefinitions definitions)
+        public static int GetMinor(this IFixDefinitions definitions)
         {
             return FixVersionParser.GetMinor(definitions.Version);
         }
 
-        public static int GetServicePack(this FixDefinitions definitions)
+        public static int GetServicePack(this IFixDefinitions definitions)
         {
             return FixVersionParser.GetServicePack(definitions.Version);
         }

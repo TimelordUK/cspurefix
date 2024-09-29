@@ -31,7 +31,7 @@ namespace PureFix.Dictionary.Compiler
             public static string DefaultRootOutputPath { get; set; } = Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..");
             
 
-            public static Options FromVersion(FixDefinitions definitions)
+            public static Options FromVersion(IFixDefinitions definitions)
             {
                 switch (definitions.Version)
                 {

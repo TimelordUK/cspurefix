@@ -19,7 +19,7 @@ namespace PureFIix.Test.Env
 {
     internal class TestEntity
     {
-        public FixDefinitions Definitions { get; }
+        public IFixDefinitions Definitions { get; }
         public AsciiParser Parser { get; private set; }
         public IFixClock Clock { get; private set; } 
         
