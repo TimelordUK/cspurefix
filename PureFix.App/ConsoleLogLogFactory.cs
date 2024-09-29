@@ -15,15 +15,24 @@ namespace PureFix.ConsoleApp
 {
     public class ConsoleLogFactory : ILogFactory
     {
+        const string _appTemplate = "[{Timestamp:HH:mm:ss.fff}] [{Name}] [{Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}";
+        const string _fixTemplate = "{Message:lj}{NewLine}";
+        public enum LogFormatTypes
+        {
+            App,
+            Plain
+        }
+
         private class Logger : Types.ILogger
         {
             ILogger _logger;
-            public Logger(string name)
+           
+            public Logger(string name, string template)
             {
                 _logger = new LoggerConfiguration().Enrich.WithThreadId()
                .WriteTo.Console(outputTemplate:
-               "[{Timestamp:HH:mm:ss.fff} {Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}")
-                .CreateLogger();
+               template)
+                .CreateLogger().ForContext("Name", name);
             }
             public void Debug(string messageTemplate)
             {
@@ -47,12 +56,12 @@ namespace PureFix.ConsoleApp
         }
         public Types.ILogger MakeLogger(string name)
         {
-            return new Logger(name);
+            return new Logger(name, _appTemplate);
         }
 
         public Types.ILogger MakePlainLogger(string name)
         {
-            return new Logger(name);
+            return new Logger(name, _fixTemplate);
         }
     }
 }
