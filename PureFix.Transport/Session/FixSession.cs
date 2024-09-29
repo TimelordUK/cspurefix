@@ -247,8 +247,11 @@ namespace PureFix.Transport.Session
                             m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
-                            var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);                        
-                            OnEncoded(msgType, seqNum, encoded);
+                            var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
+                            await m_q.EnqueueAsync(() =>
+                            {
+                                OnEncoded(msgType, seqNum, encoded);
+                            });
                             m_encoder.Return(storage);
                             break;
                         }
