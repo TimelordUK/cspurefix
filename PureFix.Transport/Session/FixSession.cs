@@ -66,7 +66,7 @@ namespace PureFix.Transport.Session
                 throw new InvalidDataException("no application provided in session config");
             m_me = sessionDescription.Application.Name ?? "me";
             m_sessionLogger = config.LogFactory.MakeLogger($"{m_me}:FixSession");
-            m_initiator = sessionDescription.Application.Type == "initiator";
+            m_initiator = config.IsInitiator();
             m_acceptor = !m_initiator;
             m_checkMsgIntegrity = m_acceptor;
             m_sessionState = new FixSessionState(new FixSessionStateArgs

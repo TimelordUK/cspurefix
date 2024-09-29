@@ -48,7 +48,7 @@ namespace PureFix.ConsoleApp
             builder.Services.AddSingleton<IFixMessageFactory, FixMessageFactory>();
             builder.Services.AddSingleton<ISessionFactory, TradeCaptureSessionFactory>();
             builder.Services.AddSingleton<IFixMsgStore>(new FixMsgMemoryStore(config.Description.SenderCompID));
-            if (config.Description.Application.Type == "initiator")
+            if (config.IsInitiator())
             {
                 builder.Services.AddSingleton<ITcpEntity, TcpInitiatorConnector>();
             } else

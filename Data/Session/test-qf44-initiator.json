@@ -5,7 +5,11 @@
     "name": "test_client",
     "tcp": {
       "host": "localhost",
-      "port": 2344
+      "port": 2344,
+      "tls": {
+        "enabled": true,
+        "certificate": "local.cer"
+      }
     },
     "protocol": "ascii",
     "dictionary": "FIX44.xml"

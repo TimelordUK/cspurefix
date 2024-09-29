@@ -8,13 +8,7 @@ namespace PureFix.Types.Config
 {
     public class TlsOptions
     {
-        public string? Key { get; set; }
-        public string? Cert { get; set; }
-        public string[]? ca { get; set; }
-        public int? Timeout { get; set; }
-        public int? SessionTimeout { get; set; }
-        public bool? EnableTrace { get; set; }
-        public bool? RequestCert { get; set; }
-        public bool? RejectUnauthorized { get; set; }
+        public bool? Enabled { get; set; }
+        public string? Certificate { get; set; }        
     }
 }

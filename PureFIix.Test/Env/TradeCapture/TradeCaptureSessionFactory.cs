@@ -20,7 +20,7 @@ namespace PureFIix.Test.Env.TradeCapture
 
         public override FixSession MakeSession()
         {
-            if (m_config.Description.Application.Type == "initiator")
+            if (m_config.IsInitiator())
             {
                 return new TradeCaptureClient(m_config, m_fixMessageFactory, m_parser, m_encoder, m_msgStore, m_q, m_clock);
             }

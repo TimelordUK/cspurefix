@@ -19,6 +19,9 @@ namespace PureFix.Transport.SocketTransport
         protected readonly TcpTransportDescription? m_tcp;
         protected readonly ILogger m_logger;
         protected Stream? m_networkStream;
+        protected Stream? m_sslStream;
+        protected string? m_sslCertificate;
+        protected IFixConfig m_config;
 
         protected BaseTcpTransport(IFixConfig config, IFixClock clock, ILogFactory logFactory)
         {
@@ -27,8 +30,16 @@ namespace PureFix.Transport.SocketTransport
             ArgumentNullException.ThrowIfNull(logFactory);
           
             if (config?.Description?.Application?.Tcp == null) throw new InvalidDataException("no config tcp parameters given");
+            m_config = config;
             m_tcp = config?.Description?.Application?.Tcp;
-            m_logger = logFactory.MakeLogger("BaseTransport");  
+            m_logger = logFactory.MakeLogger("BaseTransport");
+            var tls = config?.Description?.Application?.Tcp.Tls;
+            if (tls != null)
+            {
+                if (tls.Enabled != false && tls.Enabled == true) {
+                    m_sslCertificate = tls.Certificate;
+                }
+            }
         }
 
         protected void MakeSocket()
