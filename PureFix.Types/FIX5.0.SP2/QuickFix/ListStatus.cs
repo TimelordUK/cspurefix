@@ -190,5 +190,25 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ListID = null;
+			ListStatusType = null;
+			NoRpts = null;
+			ListOrderStatus = null;
+			ContingencyType = null;
+			ListRejectReason = null;
+			RptSeq = null;
+			ListStatusText = null;
+			EncodedListStatusTextLen = null;
+			EncodedListStatusText = null;
+			TransactTime = null;
+			TotNoOrders = null;
+			LastFragment = null;
+			((IFixReset?)OrdListStatGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

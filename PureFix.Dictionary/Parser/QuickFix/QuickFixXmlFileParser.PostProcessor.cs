@@ -21,8 +21,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             public IReadOnlyList<(string name, double elapsed)> Elapsed => _elapsed;
             public int Count { get; private set; } = 0;
 
-
-            public void Compute(FixDefinitions definitions)
+            public void Compute(IFixDefinitions definitions)
             {
                 _sw.Start();
                 foreach (var msg in definitions.Message.Values)

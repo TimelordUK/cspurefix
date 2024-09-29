@@ -86,5 +86,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPricingDateUnadjusted = null;
+			LegPricingDateBusinessDayConvention = null;
+			((IFixReset?)LegPricingDateBusinessCenterGrp)?.Reset();
+			LegPricingDateAdjusted = null;
+			LegPricingTime = null;
+			LegPricingTimeBusinessCenter = null;
+		}
 	}
 }

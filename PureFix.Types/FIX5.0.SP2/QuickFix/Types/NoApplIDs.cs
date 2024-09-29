@@ -78,5 +78,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RefApplID = null;
+			RefApplReqID = null;
+			ApplBegSeqNum = null;
+			ApplEndSeqNum = null;
+			((IFixReset?)NestedParties)?.Reset();
+		}
 	}
 }

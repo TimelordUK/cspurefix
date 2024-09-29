@@ -90,5 +90,16 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			StartTickPriceRange = null;
+			EndTickPriceRange = null;
+			TickIncrement = null;
+			TickRuleType = null;
+			TickRuleProductComplex = null;
+			SettlPriceIncrement = null;
+			SettlPriceSecondaryIncrement = null;
+		}
 	}
 }

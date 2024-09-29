@@ -414,5 +414,49 @@ namespace PureFix.Types.FIX42.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			IOIid = null;
+			IOITransType = null;
+			IOIRefID = null;
+			Symbol = null;
+			SymbolSfx = null;
+			SecurityID = null;
+			IDSource = null;
+			SecurityType = null;
+			MaturityMonthYear = null;
+			MaturityDay = null;
+			PutOrCall = null;
+			StrikePrice = null;
+			OptAttribute = null;
+			ContractMultiplier = null;
+			CouponRate = null;
+			SecurityExchange = null;
+			Issuer = null;
+			EncodedIssuerLen = null;
+			EncodedIssuer = null;
+			SecurityDesc = null;
+			EncodedSecurityDescLen = null;
+			EncodedSecurityDesc = null;
+			Side = null;
+			IOIShares = null;
+			Price = null;
+			Currency = null;
+			ValidUntilTime = null;
+			IOIQltyInd = null;
+			IOINaturalFlag = null;
+			NoIOIQualifiers = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			TransactTime = null;
+			URLLink = null;
+			NoRoutingIDs = null;
+			SpreadToBenchmark = null;
+			Benchmark = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

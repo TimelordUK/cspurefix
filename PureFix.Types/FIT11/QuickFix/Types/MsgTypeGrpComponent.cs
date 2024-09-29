@@ -30,5 +30,9 @@ namespace PureFix.Types.FIXT11.QuickFix.Types
 			value = null;
 			return false;
 		}
+		
+		void IFixReset.Reset()
+		{
+		}
 	}
 }

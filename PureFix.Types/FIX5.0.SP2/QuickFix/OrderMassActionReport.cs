@@ -382,5 +382,45 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ClOrdID = null;
+			SecondaryClOrdID = null;
+			MassActionReportID = null;
+			MassActionType = null;
+			MassActionScope = null;
+			MassActionReason = null;
+			MassActionResponse = null;
+			MassActionRejectReason = null;
+			TotalAffectedOrders = null;
+			TotalNotAffectedOrders = null;
+			LastFragment = null;
+			((IFixReset?)AffectedOrdGrp)?.Reset();
+			((IFixReset?)NotAffectedOrdGrp)?.Reset();
+			((IFixReset?)AffectedMarketSegmentGrp)?.Reset();
+			((IFixReset?)NotAffectedMarketSegmentGrp)?.Reset();
+			MarketID = null;
+			MarketSegmentID = null;
+			((IFixReset?)TargetMarketSegmentGrp)?.Reset();
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)TargetParties)?.Reset();
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)UnderlyingInstrument)?.Reset();
+			Side = null;
+			Price = null;
+			TransactTime = null;
+			ComplianceID = null;
+			ComplianceText = null;
+			EncodedComplianceTextLen = null;
+			EncodedComplianceText = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

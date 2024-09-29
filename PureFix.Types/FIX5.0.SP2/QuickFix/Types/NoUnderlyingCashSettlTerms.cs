@@ -218,5 +218,31 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingCashSettlCurrency = null;
+			UnderlyingCashSettlValuationFirstBusinessDayOffset = null;
+			UnderlyingCashSettlValuationSubsequentBusinessDaysOffset = null;
+			UnderlyingCashSettlNumOfValuationDates = null;
+			UnderlyingCashSettlValuationTime = null;
+			UnderlyingCashSettlBusinessCenter = null;
+			UnderlyingCashSettlQuoteMethod = null;
+			UnderlyingCashSettlQuoteAmount = null;
+			UnderlyingCashSettlQuoteCurrency = null;
+			UnderlyingCashSettlMinimumQuoteAmount = null;
+			UnderlyingCashSettlMinimumQuoteCurrency = null;
+			((IFixReset?)UnderlyingCashSettlDealerGrp)?.Reset();
+			UnderlyingCashSettlPriceSource = null;
+			UnderlyingCashSettlPriceDefault = null;
+			UnderlyingCashSettlBusinessDays = null;
+			UnderlyingCashSettlAmount = null;
+			((IFixReset?)UnderlyingCashSettlDate)?.Reset();
+			UnderlyingCashSettlRecoveryFactor = null;
+			UnderlyingCashSettlFixedTermIndicator = null;
+			UnderlyingCashSettlAccruedInterestIndicator = null;
+			UnderlyingCashSettlValuationMethod = null;
+			UnderlyingCashSettlTermXID = null;
+		}
 	}
 }

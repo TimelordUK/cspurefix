@@ -90,5 +90,16 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegMakeWholeDate = null;
+			LegMakeWholeAmount = null;
+			LegMakeWholeBenchmarkCurveName = null;
+			LegMakeWholeBenchmarkCurvePoint = null;
+			LegMakeWholeRecallSpread = null;
+			LegMakeWholeBenchmarkQuote = null;
+			LegMakeWholeInterpolationMethod = null;
+		}
 	}
 }

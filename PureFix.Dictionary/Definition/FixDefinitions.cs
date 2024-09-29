@@ -6,12 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
-using PureFix.Dictionary.Parser;
 using PureFix.Types;
 
 namespace PureFix.Dictionary.Definition
 {
-    public class FixDefinitions : IEnumerable<MessageDefinition>
+    public class FixDefinitions : IEnumerable<MessageDefinition>, IFixDefinitions
     {
         /**
          * all simple fields defined from source definition indexed via name

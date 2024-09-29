@@ -117,5 +117,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MatchExceptionType = null;
+			MatchExceptionElementType = null;
+			MatchExceptionElementName = null;
+			MatchExceptionAllocValue = null;
+			MatchExceptionConfirmValue = null;
+			MatchExceptionToleranceValue = null;
+			MatchExceptionToleranceValueType = null;
+			MatchExceptionText = null;
+			EncodedMatchExceptionTextLen = null;
+			EncodedMatchExceptionText = null;
+		}
 	}
 }

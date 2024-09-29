@@ -190,5 +190,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			NetGrossInd = null;
+			SettlObligID = null;
+			SettlObligTransType = null;
+			SettlObligRefID = null;
+			CcyAmt = null;
+			SettlCurrAmt = null;
+			Currency = null;
+			CurrencyCodeSource = null;
+			SettlCurrency = null;
+			SettlCurrencyCodeSource = null;
+			SettlCurrFxRate = null;
+			SettlDate = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)Parties)?.Reset();
+			EffectiveTime = null;
+			ExpireTime = null;
+			LastUpdateTime = null;
+			((IFixReset?)SettlDetails)?.Reset();
+		}
 	}
 }

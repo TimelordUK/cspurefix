@@ -313,5 +313,39 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingStreamType = null;
+			UnderlyingStreamXID = null;
+			UnderlyingStreamDesc = null;
+			UnderlyingStreamVersion = null;
+			UnderlyingStreamVersionEffectiveDate = null;
+			UnderlyingStreamPaySide = null;
+			UnderlyingStreamReceiveSide = null;
+			UnderlyingStreamNotionalXIDRef = null;
+			UnderlyingStreamNotional = null;
+			UnderlyingStreamCurrency = null;
+			UnderlyingStreamNotionalDeterminationMethod = null;
+			UnderlyingStreamNotionalAdjustments = null;
+			UnderlyingStreamNotionalFrequencyPeriod = null;
+			UnderlyingStreamNotionalFrequencyUnit = null;
+			UnderlyingStreamNotionalCommodityFrequency = null;
+			UnderlyingStreamNotionalUnitOfMeasure = null;
+			UnderlyingStreamTotalNotional = null;
+			UnderlyingStreamTotalNotionalUnitOfMeasure = null;
+			((IFixReset?)UnderlyingStreamCommodity)?.Reset();
+			((IFixReset?)UnderlyingStreamEffectiveDate)?.Reset();
+			((IFixReset?)UnderlyingStreamTerminationDate)?.Reset();
+			((IFixReset?)UnderlyingStreamCalculationPeriodDates)?.Reset();
+			((IFixReset?)UnderlyingPaymentStream)?.Reset();
+			((IFixReset?)UnderlyingPaymentScheduleGrp)?.Reset();
+			((IFixReset?)UnderlyingPaymentStubGrp)?.Reset();
+			((IFixReset?)UnderlyingDeliveryStream)?.Reset();
+			((IFixReset?)UnderlyingDeliveryScheduleGrp)?.Reset();
+			UnderlyingStreamText = null;
+			EncodedUnderlyingStreamTextLen = null;
+			EncodedUnderlyingStreamText = null;
+		}
 	}
 }

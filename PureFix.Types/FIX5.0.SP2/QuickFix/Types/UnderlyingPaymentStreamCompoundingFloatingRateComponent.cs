@@ -178,5 +178,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPaymentStreamCompoundingRateIndex = null;
+			UnderlyingPaymentStreamCompoundingRateIndexCurvePeriod = null;
+			UnderlyingPaymentStreamCompoundingRateIndexCurveUnit = null;
+			UnderlyingPaymentStreamCompoundingRateMultiplier = null;
+			UnderlyingPaymentStreamCompoundingRateSpread = null;
+			UnderlyingPaymentStreamCompoundingRateSpreadPositionType = null;
+			UnderlyingPaymentStreamCompoundingRateTreatment = null;
+			UnderlyingPaymentStreamCompoundingCapRate = null;
+			UnderlyingPaymentStreamCompoundingCapRateBuySide = null;
+			UnderlyingPaymentStreamCompoundingCapRateSellSide = null;
+			UnderlyingPaymentStreamCompoundingFloorRate = null;
+			UnderlyingPaymentStreamCompoundingFloorRateBuySide = null;
+			UnderlyingPaymentStreamCompoundingFloorRateSellSide = null;
+			UnderlyingPaymentStreamCompoundingInitialRate = null;
+			UnderlyingPaymentStreamCompoundingFinalRateRoundingDirection = null;
+			UnderlyingPaymentStreamCompoundingFinalRatePrecision = null;
+			UnderlyingPaymentStreamCompoundingAveragingMethod = null;
+			UnderlyingPaymentStreamCompoundingNegativeRateTreatment = null;
+		}
 	}
 }

@@ -218,5 +218,31 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegCashSettlCurrency = null;
+			LegCasSettlValuationFirstBusinessDayOffset = null;
+			LegCashSettlValuationSubsequentBusinessDaysOffset = null;
+			LegCashSettlNumOfValuationDates = null;
+			LegCashSettlValuationTime = null;
+			LegCashSettlBusinessCenter = null;
+			LegCashSettlQuoteMethod = null;
+			LegCashSettlQuoteAmount = null;
+			LegCashSettlQuoteCurrency = null;
+			LegCashSettlMinimumQuoteAmount = null;
+			LegCashSettlMinimumQuoteCurrency = null;
+			((IFixReset?)LegCashSettlDealerGrp)?.Reset();
+			LegCashSettlPriceSource = null;
+			LegCashSettlPriceDefault = null;
+			LegCashSettlBusinessDays = null;
+			LegCashSettlAmount = null;
+			((IFixReset?)LegCashSettlDate)?.Reset();
+			LegCashSettlRecoveryFactor = null;
+			LegCashSettlFixedTermIndicator = null;
+			LegCashSettlAccruedInterestIndicator = null;
+			LegCashSettlValuationMethod = null;
+			LegCashSettlTermXID = null;
+		}
 	}
 }

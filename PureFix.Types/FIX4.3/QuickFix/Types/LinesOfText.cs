@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+		}
 	}
 }

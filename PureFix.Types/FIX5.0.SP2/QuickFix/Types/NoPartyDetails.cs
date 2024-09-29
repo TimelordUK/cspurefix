@@ -110,5 +110,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PartyDetailID = null;
+			PartyDetailIDSource = null;
+			PartyDetailRole = null;
+			PartyDetailRoleQualifier = null;
+			((IFixReset?)PartyDetailSubGrp)?.Reset();
+			((IFixReset?)PartyDetailAltIDGrp)?.Reset();
+			((IFixReset?)RelatedPartyDetailGrp)?.Reset();
+			PartyDetailStatus = null;
+		}
 	}
 }

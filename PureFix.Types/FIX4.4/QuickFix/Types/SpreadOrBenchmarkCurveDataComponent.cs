@@ -98,5 +98,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			Spread = null;
+			BenchmarkCurveCurrency = null;
+			BenchmarkCurveName = null;
+			BenchmarkCurvePoint = null;
+			BenchmarkPrice = null;
+			BenchmarkPriceType = null;
+			BenchmarkSecurityID = null;
+			BenchmarkSecurityIDSource = null;
+		}
 	}
 }

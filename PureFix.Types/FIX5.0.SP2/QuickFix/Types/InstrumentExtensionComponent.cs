@@ -114,5 +114,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DeliveryForm = null;
+			PctAtRisk = null;
+			((IFixReset?)AttrbGrp)?.Reset();
+			CommodityFinalPriceType = null;
+			((IFixReset?)IndexRollMonthGrp)?.Reset();
+			NextIndexRollDate = null;
+			((IFixReset?)FloatingRateIndex)?.Reset();
+			((IFixReset?)ReferenceDataDateGrp)?.Reset();
+		}
 	}
 }

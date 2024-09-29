@@ -82,5 +82,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPaymentStreamCompoundingEndDateUnadjusted = null;
+			UnderlyingPaymentStreamCompoundingEndDateRelativeTo = null;
+			UnderlyingPaymentStreamCompoundingEndDateOffsetPeriod = null;
+			UnderlyingPaymentStreamCompoundingEndDateOffsetUnit = null;
+			UnderlyingPaymentStreamCompoundingEndDateOffsetDayType = null;
+			UnderlyingPaymentStreamCompoundingEndDateAdjusted = null;
+		}
 	}
 }

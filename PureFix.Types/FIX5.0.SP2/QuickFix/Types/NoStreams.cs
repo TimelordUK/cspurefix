@@ -313,5 +313,39 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			StreamType = null;
+			StreamXID = null;
+			StreamDesc = null;
+			StreamVersion = null;
+			StreamVersionEffectiveDate = null;
+			StreamPaySide = null;
+			StreamReceiveSide = null;
+			StreamNotionalXIDRef = null;
+			StreamNotional = null;
+			StreamCurrency = null;
+			StreamNotionalDeterminationMethod = null;
+			StreamNotionalAdjustments = null;
+			StreamNotionalFrequencyPeriod = null;
+			StreamNotionalFrequencyUnit = null;
+			StreamNotionalCommodityFrequency = null;
+			StreamNotionalUnitOfMeasure = null;
+			StreamTotalNotional = null;
+			StreamTotalNotionalUnitOfMeasure = null;
+			((IFixReset?)StreamCommodity)?.Reset();
+			((IFixReset?)StreamEffectiveDate)?.Reset();
+			((IFixReset?)StreamTerminationDate)?.Reset();
+			((IFixReset?)StreamCalculationPeriodDates)?.Reset();
+			((IFixReset?)PaymentStream)?.Reset();
+			((IFixReset?)PaymentScheduleGrp)?.Reset();
+			((IFixReset?)PaymentStubGrp)?.Reset();
+			((IFixReset?)DeliveryStream)?.Reset();
+			((IFixReset?)DeliveryScheduleGrp)?.Reset();
+			StreamText = null;
+			EncodedStreamTextLen = null;
+			EncodedStreamText = null;
+		}
 	}
 }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Types
 {
-    internal static class JsonHelper
+    public static class JsonHelper
     {
-        public static T FromJson<T>(string s)
+        public static T? FromJson<T>(string s)
         {
             JsonSerializerOptions options2 = new()
             {
@@ -23,7 +19,8 @@ namespace PureFIix.Test.Env
         {
             JsonSerializerOptions options = new()
             {
-                WriteIndented = true
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
             var json = JsonSerializer.Serialize(instance, options);
             return json;

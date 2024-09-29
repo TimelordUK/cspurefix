@@ -358,5 +358,47 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			OrderID = null;
+			SecondaryOrderID = null;
+			ClOrdID = null;
+			SecondaryClOrdID = null;
+			ListID = null;
+			RefOrderID = null;
+			RefOrderIDSource = null;
+			RefOrdIDReason = null;
+			((IFixReset?)RelatedOrderGrp)?.Reset();
+			PreTradeAnonymity = null;
+			OrdType = null;
+			Price = null;
+			StopPx = null;
+			ExecInst = null;
+			OrdStatus = null;
+			((IFixReset?)OrderQtyData)?.Reset();
+			LeavesQty = null;
+			CumQty = null;
+			TimeInForce = null;
+			ExpireTime = null;
+			((IFixReset?)MatchingInstructions)?.Reset();
+			SelfMatchPreventionID = null;
+			SelfMatchPreventionInstruction = null;
+			ExposureDuration = null;
+			ExposureDurationUnit = null;
+			((IFixReset?)DisplayInstruction)?.Reset();
+			OrderCapacity = null;
+			OrderRestrictions = null;
+			BookingType = null;
+			OrigCustOrderCapacity = null;
+			OrderOrigination = null;
+			((IFixReset?)OrderAttributeGrp)?.Reset();
+			ExDestinationType = null;
+			OrderInputDevice = null;
+			LotType = null;
+			TransBkdTime = null;
+			OrigOrdModTime = null;
+			OrderPercentOfTotalVolume = null;
+		}
 	}
 }

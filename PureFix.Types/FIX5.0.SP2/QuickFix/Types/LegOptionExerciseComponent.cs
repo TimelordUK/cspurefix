@@ -173,5 +173,24 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegExerciseDesc = null;
+			EncodedLegExerciseDescLen = null;
+			EncodedLegExerciseDesc = null;
+			LegAutomaticExerciseIndicator = null;
+			LegAutomaticExerciseThresholdRate = null;
+			LegExerciseConfirmationMethod = null;
+			LegManualNoticeBusinessCenter = null;
+			LegFallbackExerciseIndicator = null;
+			LegLimitRightToConfirmIndicator = null;
+			LegExerciseSplitTicketIndicator = null;
+			LegSettlMethodElectingPartySide = null;
+			((IFixReset?)LegSettlMethodElectionDate)?.Reset();
+			((IFixReset?)LegOptionExerciseDates)?.Reset();
+			((IFixReset?)LegOptionExerciseExpiration)?.Reset();
+			((IFixReset?)LegOptionExerciseMakeWholeProvision)?.Reset();
+		}
 	}
 }

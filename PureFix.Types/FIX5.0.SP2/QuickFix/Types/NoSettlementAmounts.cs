@@ -58,5 +58,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			SettlementAmount = null;
+			SettlementAmountCurrency = null;
+			SettlementAmountCurrencyCodeSource = null;
+		}
 	}
 }

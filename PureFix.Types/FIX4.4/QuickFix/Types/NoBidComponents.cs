@@ -106,5 +106,18 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ListID = null;
+			Side = null;
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			NetGrossInd = null;
+			SettlType = null;
+			SettlDate = null;
+			Account = null;
+			AcctIDSource = null;
+		}
 	}
 }

@@ -103,5 +103,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ListID = null;
+			TotNoStrikes = null;
+			LastFragment = null;
+			((IFixReset?)InstrmtStrkPxGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

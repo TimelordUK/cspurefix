@@ -320,5 +320,42 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			Symbol = null;
+			SymbolSfx = null;
+			SecurityID = null;
+			SecurityIDSource = null;
+			NoSecurityAltID = null;
+			Product = null;
+			CFICode = null;
+			SecurityType = null;
+			MaturityMonthYear = null;
+			MaturityDate = null;
+			CouponPaymentDate = null;
+			IssueDate = null;
+			RepoCollateralSecurityType = null;
+			RepurchaseTerm = null;
+			RepurchaseRate = null;
+			Factor = null;
+			CreditRating = null;
+			InstrRegistry = null;
+			CountryOfIssue = null;
+			StateOrProvinceOfIssue = null;
+			LocaleOfIssue = null;
+			RedemptionDate = null;
+			StrikePrice = null;
+			OptAttribute = null;
+			ContractMultiplier = null;
+			CouponRate = null;
+			SecurityExchange = null;
+			Issuer = null;
+			EncodedIssuerLen = null;
+			EncodedIssuer = null;
+			SecurityDesc = null;
+			EncodedSecurityDescLen = null;
+			EncodedSecurityDesc = null;
+		}
 	}
 }

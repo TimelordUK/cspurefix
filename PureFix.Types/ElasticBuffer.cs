@@ -36,7 +36,7 @@ namespace PureFix.Types
         {
             var length = rhs.Pos;
             _buffer = _pool.Rent(length);
-            rhs._buffer[..rhs.Pos].CopyTo(_buffer, length);
+            rhs._buffer[..rhs.Pos].CopyTo(_buffer, 0);
             _returnTo = _buffer.Length;
             Pos = rhs.Pos;
         }
@@ -55,14 +55,14 @@ namespace PureFix.Types
             return Math.Max(digits, 1);
         }
 
-        public int Checksum(int? p)
+        public int Checksum(int? p = null)
         {
             var ptr = p ?? Pos;
             var cks = Sum(ptr);
             return cks % 256;
         }
 
-        public int Sum(int? p)
+        public int Sum(int? p = null)
         {
             var total = 0;
             var ptr = p ?? Pos;
@@ -192,6 +192,22 @@ namespace PureFix.Types
                 _buffer = _pool.Rent(_returnTo);
             }
             return reducing;
+        }
+
+        // body length is written as 8=FIX.4.4|9=0000097|35=BF|
+        // we will assume the position has been set correctly and 
+        // overwrite the existing placeholder.
+
+        public int WriteLeadingZeroes(int number, int width)
+        {
+            CheckGrowBuffer(width);
+            var digits = HowManyDigits(number);
+            for (var i = 0; i < width - digits; ++i)
+            {
+                WriteChar(AsciiZero);
+            }
+            WriteWholeNumber(number);
+            return Pos;
         }
 
         public long GetWholeNumber(int st, int vend)
@@ -336,6 +352,17 @@ namespace PureFix.Types
             }
 
             return null;
+        }
+
+        public Memory<byte> GetBuffer()
+        {
+            return GetBytes();
+        }
+
+        public byte[] GetBytes()
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, 0, Pos);
+            return span.ToArray();
         }
 
         public Memory<byte> GetBuffer(int st, int vend)

@@ -155,5 +155,20 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			SecurityStatusReqID = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)InstrumentExtension)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			Currency = null;
+			SubscriptionRequestType = null;
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

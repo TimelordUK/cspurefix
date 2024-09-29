@@ -78,5 +78,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			SettlDeliveryType = null;
+			StandInstDbType = null;
+			StandInstDbName = null;
+			StandInstDbID = null;
+			((IFixReset?)DlvyInstGrp)?.Reset();
+		}
 	}
 }

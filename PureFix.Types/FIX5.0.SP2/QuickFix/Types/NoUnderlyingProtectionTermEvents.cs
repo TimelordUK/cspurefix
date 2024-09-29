@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingProtectionTermEventType = null;
+			UnderlyingProtectionTermEventValue = null;
+			UnderlyingProtectionTermEventCurrency = null;
+			UnderlyingProtectionTermEventPeriod = null;
+			UnderlyingProtectionTermEventUnit = null;
+			UnderlyingProtectionTermEventDayType = null;
+			UnderlyingProtectionTermEventRateSource = null;
+			((IFixReset?)UnderlyingProtectionTermEventQualifierGrp)?.Reset();
+		}
 	}
 }

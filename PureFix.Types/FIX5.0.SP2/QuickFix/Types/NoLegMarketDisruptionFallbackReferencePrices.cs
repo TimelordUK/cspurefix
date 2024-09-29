@@ -109,5 +109,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegMarketDisruptionFallbackUnderlierType = null;
+			LegMarketDisruptionFallbackUnderlierSecurityID = null;
+			LegMarketDisruptionFallbackUnderlierSecurityIDSource = null;
+			LegMarketDisruptionFallbackUnderlierSecurityDesc = null;
+			EncodedLegMarketDisruptionFallbackUnderlierSecurityDescLen = null;
+			EncodedLegMarketDisruptionFallbackUnderlierSecurityDesc = null;
+			LegMarketDisruptionFallbackOpenUnits = null;
+			LegMarketDisruptionFallbackBasketCurrency = null;
+			LegMarketDisruptionFallbackBasketDivisor = null;
+		}
 	}
 }

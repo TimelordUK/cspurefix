@@ -82,5 +82,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPaymentStreamFormulaCurrency = null;
+			UnderlyingPaymentStreamFormulaCurrencyDeterminationMethod = null;
+			UnderlyingPaymentStreamFormulaReferenceAmount = null;
+			((IFixReset?)UnderlyingPaymentStreamFormulaMathGrp)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamFormulaImage)?.Reset();
+		}
 	}
 }

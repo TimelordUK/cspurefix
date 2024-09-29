@@ -122,5 +122,20 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PegOffsetValue = null;
+			PegPriceType = null;
+			PegMoveType = null;
+			PegOffsetType = null;
+			PegLimitType = null;
+			PegRoundDirection = null;
+			PegScope = null;
+			PegSecurityIDSource = null;
+			PegSecurityID = null;
+			PegSymbol = null;
+			PegSecurityDesc = null;
+		}
 	}
 }

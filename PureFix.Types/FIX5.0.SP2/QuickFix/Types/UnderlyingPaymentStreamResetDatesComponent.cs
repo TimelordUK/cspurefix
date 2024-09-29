@@ -242,5 +242,33 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPaymentStreamResetDateRelativeTo = null;
+			UnderlyingPaymentStreamResetDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingPaymentStreamResetDateBusinessCenterGrp)?.Reset();
+			UnderlyingPaymentStreamResetFrequencyPeriod = null;
+			UnderlyingPaymentStreamResetFrequencyUnit = null;
+			UnderlyingPaymentStreamResetWeeklyRollConvention = null;
+			UnderlyingPaymentStreamInitialFixingDateRelativeTo = null;
+			UnderlyingPaymentStreamInitialFixingDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingPaymentStreamInitialFixingDateBusinessCenterGrp)?.Reset();
+			UnderlyingPaymentStreamInitialFixingDateOffsetPeriod = null;
+			UnderlyingPaymentStreamInitialFixingDateOffsetUnit = null;
+			UnderlyingPaymentStreamInitialFixingDateOffsetDayType = null;
+			UnderlyingPaymentStreamInitialFixingDateAdjusted = null;
+			UnderlyingPaymentStreamFixingDateRelativeTo = null;
+			UnderlyingPaymentStreamFixingDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingPaymentStreamFixingDateBusinessCenterGrp)?.Reset();
+			UnderlyingPaymentStreamFixingDateOffsetPeriod = null;
+			UnderlyingPaymentStreamFixingDateOffsetUnit = null;
+			UnderlyingPaymentStreamFixingDateOffsetDayType = null;
+			UnderlyingPaymentStreamFixingDateAdjusted = null;
+			UnderlyingPaymentStreamRateCutoffDateOffsetPeriod = null;
+			UnderlyingPaymentStreamRateCutoffDateOffsetUnit = null;
+			UnderlyingPaymentStreamRateCutoffDateOffsetDayType = null;
+			((IFixReset?)UnderlyingPaymentStreamFixingDateGrp)?.Reset();
+		}
 	}
 }

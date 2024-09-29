@@ -110,5 +110,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MiscFeeAmt = null;
+			MiscFeeCurr = null;
+			MiscFeeType = null;
+			MiscFeeQualifier = null;
+			((IFixReset?)MiscFeesSubGrp)?.Reset();
+			MiscFeeBasis = null;
+			MiscFeeRate = null;
+			MiscFeeAmountDue = null;
+			MiscFeeDesc = null;
+		}
 	}
 }

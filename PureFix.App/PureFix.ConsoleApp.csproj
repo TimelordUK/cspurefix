@@ -9,7 +9,29 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Data\PureFix.Data.csproj" />
+    <ProjectReference Include="..\PureFIix.Test\PureFIix.Test.csproj" />
+    <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
     <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
+    <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
+    <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="4.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="local.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.pvk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

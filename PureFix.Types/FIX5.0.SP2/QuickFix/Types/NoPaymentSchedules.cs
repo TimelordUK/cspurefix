@@ -506,5 +506,66 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentScheduleType = null;
+			PaymentScheduleXID = null;
+			PaymentScheduleXIDRef = null;
+			PaymentScheduleStubType = null;
+			PaymentScheduleStartDateUnadjusted = null;
+			PaymentScheduleEndDateUnadjusted = null;
+			PaymentSchedulePaySide = null;
+			PaymentScheduleReceiveSide = null;
+			PaymentScheduleNotional = null;
+			PaymentScheduleCurrency = null;
+			PaymentScheduleRate = null;
+			PaymentScheduleRateMultiplier = null;
+			PaymentScheduleRateSpread = null;
+			PaymentScheduleRateCurrency = null;
+			PaymentScheduleRateUnitOfMeasure = null;
+			PaymentScheduleRateConversionFactor = null;
+			PaymentScheduleRateSpreadType = null;
+			PaymentScheduleRateSpreadPositionType = null;
+			PaymentScheduleRateTreatment = null;
+			PaymentScheduleFixedAmount = null;
+			PaymentScheduleFixedCurrency = null;
+			PaymentScheduleSettlPeriodPrice = null;
+			PaymentScheduleSettlPeriodPriceCurrency = null;
+			PaymentScheduleSettlPeriodPriceUnitOfMeasure = null;
+			PaymentScheduleStepUnitOfMeasure = null;
+			PaymentScheduleStepFrequencyPeriod = null;
+			PaymentScheduleStepFrequencyUnit = null;
+			PaymentScheduleStepOffsetValue = null;
+			PaymentScheduleStepRate = null;
+			PaymentScheduleStepOffsetRate = null;
+			PaymentScheduleStepRelativeTo = null;
+			((IFixReset?)PaymentScheduleRateSourceGrp)?.Reset();
+			PaymentScheduleFixingDateUnadjusted = null;
+			PaymentScheduleWeight = null;
+			PaymentScheduleFixingDateRelativeTo = null;
+			PaymentScheduleFixingDateBusinessDayConvention = null;
+			((IFixReset?)PaymentScheduleFixingDateBusinessCenterGrp)?.Reset();
+			PaymentScheduleFixingDateOffsetPeriod = null;
+			PaymentScheduleFixingDateOffsetUnit = null;
+			PaymentScheduleFixingDateOffsetDayType = null;
+			PaymentScheduleFixingDayDistribution = null;
+			PaymentScheduleFixingDayCount = null;
+			PaymentScheduleFixingDateAdjusted = null;
+			((IFixReset?)PaymentScheduleFixingDayGrp)?.Reset();
+			PaymentScheduleFixingLagPeriod = null;
+			PaymentScheduleFixingLagUnit = null;
+			PaymentScheduleFixingFirstObservationDateOffsetPeriod = null;
+			PaymentScheduleFixingFirstObservationDateOffsetUnit = null;
+			PaymentScheduleFixingTime = null;
+			PaymentScheduleFixingTimeBusinessCenter = null;
+			PaymentScheduleInterimExchangePaymentDateRelativeTo = null;
+			PaymentScheduleInterimExchangeDatesBusinessDayConvention = null;
+			((IFixReset?)PaymentScheduleInterimExchangeDateBusinessCenterGrp)?.Reset();
+			PaymentScheduleInterimExchangeDatesOffsetPeriod = null;
+			PaymentScheduleInterimExchangeDatesOffsetUnit = null;
+			PaymentScheduleInterimExchangeDatesOffsetDayType = null;
+			PaymentScheduleInterimExchangeDateAdjusted = null;
+		}
 	}
 }

@@ -765,5 +765,90 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			PosMaintRptID = null;
+			PositionID = null;
+			PosReqID = null;
+			PosReqType = null;
+			PosReportAction = null;
+			MarginReqmtInqID = null;
+			SubscriptionRequestType = null;
+			TotalNumPosReports = null;
+			TotNumReports = null;
+			LastRptRequested = null;
+			PosReqResult = null;
+			UnsolicitedIndicator = null;
+			RegulatoryReportType = null;
+			RegulatoryReportTypeBusinessDate = null;
+			((IFixReset?)TransactionAttributeGrp)?.Reset();
+			((IFixReset?)TrdRegTimestamps)?.Reset();
+			ClearingBusinessDate = null;
+			PreviousClearingBusinessDate = null;
+			ClearingPortfolioID = null;
+			SettlSessID = null;
+			SettlSessSubID = null;
+			PriceType = null;
+			SettlCurrency = null;
+			SettlCurrencyCodeSource = null;
+			MessageEventSource = null;
+			ClearedIndicator = null;
+			ContractRefPosType = null;
+			PositionCapacity = null;
+			TerminatedIndicator = null;
+			TerminationDate = null;
+			IntraFirmTradeIndicator = null;
+			TradeContinuation = null;
+			TradeContinuationText = null;
+			EncodedTradeContinuationTextLen = null;
+			EncodedTradeContinuationText = null;
+			TradeCollateralization = null;
+			((IFixReset?)Parties)?.Reset();
+			Account = null;
+			AcctIDSource = null;
+			AccountType = null;
+			TaxonomyType = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)FinancingDetails)?.Reset();
+			Currency = null;
+			CurrencyCodeSource = null;
+			SettlDate = null;
+			SettlPrice = null;
+			SettlPriceFxRateCalc = null;
+			SettlForwardPoints = null;
+			SettlPriceUnitOfMeasure = null;
+			SettlPriceUnitOfMeasureCurrency = null;
+			SettlPriceUnitOfMeasureCurrencyCodeSource = null;
+			SettlPriceType = null;
+			PriorSettlPrice = null;
+			PositionContingentPrice = null;
+			DiscountFactor = null;
+			ValuationDate = null;
+			ValuationTime = null;
+			ValuationBusinessCenter = null;
+			MatchStatus = null;
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			((IFixReset?)RelatedInstrumentGrp)?.Reset();
+			((IFixReset?)CollateralAmountGrp)?.Reset();
+			CollateralizationValueDate = null;
+			((IFixReset?)PosUndInstrmtGrp)?.Reset();
+			TransactTime = null;
+			((IFixReset?)PositionQty)?.Reset();
+			((IFixReset?)PositionAmountData)?.Reset();
+			((IFixReset?)RegulatoryTradeIDGrp)?.Reset();
+			((IFixReset?)PaymentGrp)?.Reset();
+			RegistStatus = null;
+			DeliveryDate = null;
+			ModelType = null;
+			PriceDelta = null;
+			((IFixReset?)RelatedTradeGrp)?.Reset();
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

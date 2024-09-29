@@ -192,5 +192,28 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RelatdSym = null;
+			SymbolSfx = null;
+			SecurityID = null;
+			IDSource = null;
+			SecurityType = null;
+			MaturityMonthYear = null;
+			MaturityDay = null;
+			PutOrCall = null;
+			StrikePrice = null;
+			OptAttribute = null;
+			ContractMultiplier = null;
+			CouponRate = null;
+			SecurityExchange = null;
+			Issuer = null;
+			EncodedIssuerLen = null;
+			EncodedIssuer = null;
+			SecurityDesc = null;
+			EncodedSecurityDescLen = null;
+			EncodedSecurityDesc = null;
+		}
 	}
 }

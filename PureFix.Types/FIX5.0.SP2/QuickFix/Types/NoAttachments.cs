@@ -113,5 +113,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			AttachmentName = null;
+			AttachmentMediaType = null;
+			AttachmentClassification = null;
+			AttachmentExternalURL = null;
+			AttachmentEncodingType = null;
+			UnencodedAttachmentLen = null;
+			EncodedAttachmentLen = null;
+			EncodedAttachment = null;
+			((IFixReset?)AttachmentKeywordGrp)?.Reset();
+		}
 	}
 }

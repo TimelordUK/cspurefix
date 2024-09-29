@@ -142,5 +142,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			PrevClosePx = null;
+			ClOrdID = null;
+			SecondaryClOrdID = null;
+			Side = null;
+			Price = null;
+			Currency = null;
+			CurrencyCodeSource = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+		}
 	}
 }

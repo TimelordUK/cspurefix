@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.Types
 {
-    public interface IStandardTrailer
+    public interface IStandardTrailer : IFixParser, IFixEncoder, IFixReset
     {
         public int? SignatureLength{get;}
 		

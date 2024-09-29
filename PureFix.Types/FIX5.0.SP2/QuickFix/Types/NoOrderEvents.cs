@@ -90,5 +90,16 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			OrderEventType = null;
+			OrderEventExecID = null;
+			OrderEventReason = null;
+			OrderEventPx = null;
+			OrderEventQty = null;
+			OrderEventLiquidityIndicator = null;
+			OrderEventText = null;
+		}
 	}
 }

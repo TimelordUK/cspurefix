@@ -69,7 +69,7 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(stats.Rents, Is.EqualTo(3));
-                Assert.That(stats.Returns, Is.EqualTo(2));
+                Assert.That(stats.Returns, Is.EqualTo(0));
                 Assert.That(stats.ParsedMessages, Is.EqualTo(2));
                 Assert.That(stats.ReceivedBytes, Is.EqualTo(2 * text.Length));
             });

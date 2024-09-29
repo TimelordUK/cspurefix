@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegDeliveryScheduleSettlDay = null;
+			LegDeliveryScheduleSettlTotalHours = null;
+			((IFixReset?)LegDeliveryScheduleSettlTimeGrp)?.Reset();
+		}
 	}
 }

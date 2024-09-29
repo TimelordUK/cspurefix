@@ -86,5 +86,13 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			QuoteSetID = null;
+			((IFixReset?)UnderlyingInstrument)?.Reset();
+			TotQuoteEntries = null;
+			NoQuoteEntries = null;
+		}
 	}
 }

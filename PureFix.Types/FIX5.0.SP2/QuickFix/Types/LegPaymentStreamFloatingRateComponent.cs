@@ -730,5 +730,93 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPaymentStreamRateIndex = null;
+			LegPaymentStreamRateIndexSource = null;
+			LegPaymentStreamRateIndexID = null;
+			LegPaymentStreamRateIndexIDSource = null;
+			LegPaymentStreamRateIndexCurveUnit = null;
+			LegPaymentStreamRateIndexCurvePeriod = null;
+			LegPaymentStreamRateIndex2 = null;
+			LegPaymentStreamRateIndex2Source = null;
+			LegPaymentStreamRateIndex2ID = null;
+			LegPaymentStreamRateIndex2IDSource = null;
+			LegPaymentStreamRateIndex2CurveUnit = null;
+			LegPaymentStreamRateIndex2CurvePeriod = null;
+			LegPaymentStreamRateIndexLocation = null;
+			LegPaymentStreamRateIndexLevel = null;
+			LegPaymentStreamRateIndexUnitOfMeasure = null;
+			LegPaymentStreamSettlLevel = null;
+			LegPaymentStreamReferenceLevel = null;
+			LegPaymentStreamReferenceLevelUnitOfMeasure = null;
+			LegPaymentStreamReferenceLevelEqualsZeroIndicator = null;
+			LegPaymentStreamRateMultiplier = null;
+			LegPaymentStreamRateSpread = null;
+			LegPaymentStreamRateSpreadCurrency = null;
+			LegPaymentStreamRateSpreadUnitOfMeasure = null;
+			LegPaymentStreamRateConversionFactor = null;
+			LegPaymentStreamRateSpreadType = null;
+			LegPaymentStreamRateSpreadPositionType = null;
+			LegPaymentStreamRateTreatment = null;
+			LegPaymentStreamCapRate = null;
+			LegPaymentStreamCapRateBuySide = null;
+			LegPaymentStreamCapRateSellSide = null;
+			LegPaymentStreamFloorRate = null;
+			LegPaymentStreamFloorRateBuySide = null;
+			LegPaymentStreamFloorRateSellSide = null;
+			LegPaymentStreamInitialRate = null;
+			LegPaymentStreamLastResetRate = null;
+			LegPaymentStreamFinalRate = null;
+			LegPaymentStreamFinalRateRoundingDirection = null;
+			LegPaymentStreamFinalRatePrecision = null;
+			LegPaymentStreamAveragingMethod = null;
+			LegPaymentStreamNegativeRateTreatment = null;
+			LegPaymentStreamCalculationLagPeriod = null;
+			LegPaymentStreamCalculationLagUnit = null;
+			LegPaymentStreamFirstObservationDateUnadjusted = null;
+			LegPaymentStreamFirstObservationDateRelativeTo = null;
+			LegPaymentStreamFirstObservationDateOffsetDayType = null;
+			LegPaymentStreamFirstObservationDateOffsetPeriod = null;
+			LegPaymentStreamFirstObservationDateOffsetUnit = null;
+			LegPaymentStreamFirstObservationDateAdjusted = null;
+			LegPaymentStreamPricingDayType = null;
+			LegPaymentStreamPricingDayDistribution = null;
+			LegPaymentStreamPricingDayCount = null;
+			LegPaymentStreamPricingBusinessCalendar = null;
+			LegPaymentStreamPricingBusinessDayConvention = null;
+			((IFixReset?)LegPaymentStreamPricingBusinessCenterGrp)?.Reset();
+			((IFixReset?)LegPaymentStreamPricingDayGrp)?.Reset();
+			((IFixReset?)LegPaymentStreamPricingDateGrp)?.Reset();
+			LegPaymentStreamInflationLagPeriod = null;
+			LegPaymentStreamInflationLagUnit = null;
+			LegPaymentStreamInflationLagDayType = null;
+			LegPaymentStreamInflationInterpolationMethod = null;
+			LegPaymentStreamInflationIndexSource = null;
+			LegPaymentStreamInflationPublicationSource = null;
+			LegPaymentStreamInflationInitialIndexLevel = null;
+			LegPaymentStreamInflationFallbackBondApplicable = null;
+			LegPaymentStreamFRADiscounting = null;
+			LegPaymentStreamUnderlierRefID = null;
+			((IFixReset?)LegPaymentStreamFormula)?.Reset();
+			((IFixReset?)LegDividendConditions)?.Reset();
+			LegReturnRateNotionalReset = null;
+			((IFixReset?)LegReturnRateGrp)?.Reset();
+			LegPaymentStreamLinkInitialLevel = null;
+			LegPaymentStreamLinkClosingLevelIndicator = null;
+			LegPaymentStreamLinkExpiringLevelIndicator = null;
+			LegPaymentStreamLinkEstimatedTradingDays = null;
+			LegPaymentStreamLinkStrikePrice = null;
+			LegPaymentStreamLinkStrikePriceType = null;
+			LegPaymentStreamLinkMaximumBoundary = null;
+			LegPaymentStreamLinkMinimumBoundary = null;
+			LegPaymentStreamLinkNumberOfDataSeries = null;
+			LegPaymentStreamVarianceUnadjustedCap = null;
+			LegPaymentStreamRealizedVarianceMethod = null;
+			LegPaymentStreamDaysAdjustmentIndicator = null;
+			LegPaymentStreamNearestExchangeContractRefID = null;
+			LegPaymentStreamVegaNotionalAmount = null;
+		}
 	}
 }

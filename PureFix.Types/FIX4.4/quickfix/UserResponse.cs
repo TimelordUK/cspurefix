@@ -98,5 +98,15 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			UserRequestID = null;
+			Username = null;
+			UserStatus = null;
+			UserStatusText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

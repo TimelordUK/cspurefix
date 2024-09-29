@@ -82,5 +82,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPaymentStreamCompoundingStartDateUnadjusted = null;
+			LegPaymentStreamCompoundingStartDateRelativeTo = null;
+			LegPaymentStreamCompoundingStartDateOffsetPeriod = null;
+			LegPaymentStreamCompoundingStartDateOffsetUnit = null;
+			LegPaymentStreamCompoundingStartDateOffsetDayType = null;
+			LegPaymentStreamCompoundingStartDateAdjusted = null;
+		}
 	}
 }

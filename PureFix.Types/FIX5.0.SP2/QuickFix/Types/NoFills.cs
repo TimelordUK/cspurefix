@@ -110,5 +110,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			FillExecID = null;
+			FillPx = null;
+			FillQty = null;
+			FillMatchID = null;
+			FillMatchSubID = null;
+			FillLiquidityInd = null;
+			FillYieldType = null;
+			FillYield = null;
+			((IFixReset?)NestedParties4)?.Reset();
+		}
 	}
 }

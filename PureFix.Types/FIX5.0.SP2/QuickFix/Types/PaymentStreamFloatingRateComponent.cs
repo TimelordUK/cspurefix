@@ -730,5 +730,93 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentStreamRateIndex = null;
+			PaymentStreamRateIndexSource = null;
+			PaymentStreamRateIndexID = null;
+			PaymentStreamRateIndexIDSource = null;
+			PaymentStreamRateIndexCurveUnit = null;
+			PaymentStreamRateIndexCurvePeriod = null;
+			PaymentStreamRateIndex2 = null;
+			PaymentStreamRateIndex2Source = null;
+			PaymentStreamRateIndex2ID = null;
+			PaymentStreamRateIndex2IDSource = null;
+			PaymentStreamRateIndex2CurvePeriod = null;
+			PaymentStreamRateIndex2CurveUnit = null;
+			PaymentStreamRateIndexLocation = null;
+			PaymentStreamRateIndexLevel = null;
+			PaymentStreamRateIndexUnitOfMeasure = null;
+			PaymentStreamSettlLevel = null;
+			PaymentStreamReferenceLevel = null;
+			PaymentStreamReferenceLevelUnitOfMeasure = null;
+			PaymentStreamReferenceLevelEqualsZeroIndicator = null;
+			PaymentStreamRateMultiplier = null;
+			PaymentStreamRateSpread = null;
+			PaymentStreamRateSpreadCurrency = null;
+			PaymentStreamRateSpreadUnitOfMeasure = null;
+			PaymentStreamRateConversionFactor = null;
+			PaymentStreamRateSpreadType = null;
+			PaymentStreamRateSpreadPositionType = null;
+			PaymentStreamRateTreatment = null;
+			PaymentStreamCapRate = null;
+			PaymentStreamCapRateBuySide = null;
+			PaymentStreamCapRateSellSide = null;
+			PaymentStreamFloorRate = null;
+			PaymentStreamFloorRateBuySide = null;
+			PaymentStreamFloorRateSellSide = null;
+			PaymentStreamInitialRate = null;
+			PaymentStreamLastResetRate = null;
+			PaymentStreamFinalRate = null;
+			PaymentStreamFinalRateRoundingDirection = null;
+			PaymentStreamFinalRatePrecision = null;
+			PaymentStreamAveragingMethod = null;
+			PaymentStreamNegativeRateTreatment = null;
+			PaymentStreamCalculationLagPeriod = null;
+			PaymentStreamCalculationLagUnit = null;
+			PaymentStreamFirstObservationDateUnadjusted = null;
+			PaymentStreamFirstObservationDateRelativeTo = null;
+			PaymentStreamFirstObservationDateOffsetDayType = null;
+			PaymentStreamFirstObservationDateOffsetPeriod = null;
+			PaymentStreamFirstObservationDateOffsetUnit = null;
+			PaymentStreamFirstObservationDateAdjusted = null;
+			PaymentStreamPricingDayType = null;
+			PaymentStreamPricingDayDistribution = null;
+			PaymentStreamPricingDayCount = null;
+			PaymentStreamPricingBusinessCalendar = null;
+			PaymentStreamPricingBusinessDayConvention = null;
+			((IFixReset?)PaymentStreamPricingBusinessCenterGrp)?.Reset();
+			((IFixReset?)PaymentStreamPricingDayGrp)?.Reset();
+			((IFixReset?)PaymentStreamPricingDateGrp)?.Reset();
+			PaymentStreamInflationLagPeriod = null;
+			PaymentStreamInflationLagUnit = null;
+			PaymentStreamInflationLagDayType = null;
+			PaymentStreamInflationInterpolationMethod = null;
+			PaymentStreamInflationIndexSource = null;
+			PaymentStreamInflationPublicationSource = null;
+			PaymentStreamInflationInitialIndexLevel = null;
+			PaymentStreamInflationFallbackBondApplicable = null;
+			PaymentStreamFRADiscounting = null;
+			PaymentStreamUnderlierRefID = null;
+			((IFixReset?)PaymentStreamFormula)?.Reset();
+			((IFixReset?)DividendConditions)?.Reset();
+			ReturnRateNotionalReset = null;
+			((IFixReset?)ReturnRateGrp)?.Reset();
+			PaymentStreamLinkInitialLevel = null;
+			PaymentStreamLinkClosingLevelIndicator = null;
+			PaymentStreamLinkExpiringLevelIndicator = null;
+			PaymentStreamLinkEstimatedTradingDays = null;
+			PaymentStreamLinkStrikePrice = null;
+			PaymentStreamLinkStrikePriceType = null;
+			PaymentStreamLinkMaximumBoundary = null;
+			PaymentStreamLinkMinimumBoundary = null;
+			PaymentStreamLinkNumberOfDataSeries = null;
+			PaymentStreamVarianceUnadjustedCap = null;
+			PaymentStreamRealizedVarianceMethod = null;
+			PaymentStreamDaysAdjustmentIndicator = null;
+			PaymentStreamNearestExchangeContractRefID = null;
+			PaymentStreamVegaNotionalAmount = null;
+		}
 	}
 }

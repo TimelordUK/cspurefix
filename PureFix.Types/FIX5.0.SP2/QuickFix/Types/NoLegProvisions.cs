@@ -333,5 +333,42 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegProvisionType = null;
+			LegProvisionDateUnadjusted = null;
+			LegProvisionDateBusinessDayConvention = null;
+			((IFixReset?)LegProvisionDateBusinessCenterGrp)?.Reset();
+			LegProvisionDateAdjusted = null;
+			LegProvisionDateTenorPeriod = null;
+			LegProvisionDateTenorUnit = null;
+			LegProvisionBreakFeeElection = null;
+			LegProvisionBreakFeeRate = null;
+			LegProvisionCalculationAgent = null;
+			LegProvisionOptionSinglePartyBuyerSide = null;
+			LegProvisionOptionSinglePartySellerSide = null;
+			((IFixReset?)LegProvisionCashSettlValueDates)?.Reset();
+			((IFixReset?)LegProvisionOptionExerciseDates)?.Reset();
+			((IFixReset?)LegProvisionOptionExpirationDate)?.Reset();
+			((IFixReset?)LegProvisionOptionRelevantUnderlyingDate)?.Reset();
+			LegProvisionOptionExerciseStyle = null;
+			LegProvisionOptionExerciseMultipleNotional = null;
+			LegProvisionOptionExerciseMinimumNotional = null;
+			LegProvisionOptionExerciseMaximumNotional = null;
+			LegProvisionOptionMinimumNumber = null;
+			LegProvisionOptionMaximumNumber = null;
+			LegProvisionOptionExerciseConfirmation = null;
+			((IFixReset?)LegProvisionCashSettlPaymentDates)?.Reset();
+			LegProvisionCashSettlMethod = null;
+			LegProvisionCashSettlCurrency = null;
+			LegProvisionCashSettlCurrency2 = null;
+			LegProvisionCashSettlQuoteType = null;
+			((IFixReset?)LegProvisionCashSettlQuoteSource)?.Reset();
+			LegProvisionText = null;
+			EncodedLegProvisionTextLen = null;
+			EncodedLegProvisionText = null;
+			((IFixReset?)LegProvisionParties)?.Reset();
+		}
 	}
 }

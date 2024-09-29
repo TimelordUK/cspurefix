@@ -6,39 +6,93 @@ using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
-using static PureFix.Buffer.Ascii.AsciiParser.Pool;
+using PureFix.Types.Config;
+
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiEncoder
+    public class AsciiEncoder : IMessageEncoder
     {
-        public FixDefinitions Definitions { get; set; }
-        private AsciiParser.Pool Pool { get; set; }
+        public IFixDefinitions Definitions { get; set; }
+        private StoragePool Pool { get; set; }
         public byte LogDelimiter { get; set; } = AsciiChars.Pipe;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
+        public ISessionDescription SessionDescription { get; }
+        // application if not reset seq num will need to set correctly
+        public int MsgSeqNum { get; set; } = 1;
+        public ISessionMessageFactory SessionMessageFactory { get; }
+        public IFixClock Clock {get;}
 
-        public AsciiEncoder(FixDefinitions definitions)
+        public AsciiEncoder(IFixDefinitions definitions, ISessionDescription sessionDescription, ISessionMessageFactory messageFactory, IFixClock clock)
         {
             Definitions = definitions;
-            Pool = new AsciiParser.Pool();
+            Pool = new StoragePool();
+            SessionDescription = sessionDescription;
+            SessionMessageFactory = messageFactory;
+            Clock = clock;
+        }
+
+        public void Return(StoragePool.Storage storage)
+        {
+            Pool.Return(storage);
         }
 
         // take an application created object e.g. Logon, and encode to fix wire format such that it
         // can be transmitted to the socket. We expect the storage to be returned to the pool once
         // message has been sent.
 
-        public Storage? Encode(IFixMessage message)
+        public StoragePool.Storage? Encode(string msgType, IFixMessage message)
         {
-            if (message.MsgType == null) return null;
-            if (!Definitions.Message.TryGetValue(message.MsgType, out var msgDefinition))
+            if (msgType == null) return null;
+            if (!Definitions.Message.TryGetValue(msgType, out _))
             {
                 return null; 
             }
 
-            var storage = Pool.Rent();
+            MsgSeqNum = Math.Max(1, MsgSeqNum);
 
+            var hdr = SessionMessageFactory.Header(msgType, MsgSeqNum, Clock.Current);
+            if (hdr == null)
+            {
+                return null;
+            }
+
+            // may have to fold permitted user specified header override fields onto the destination message.
+            // if this is a replay, then ensure the header is set appropriately. The typescript version supports
+            // any other field than BeginString, BodyLength, MsgType, SenderCompID, SendingTime, TargetCompID, TargetSubID
+            // to be overriden in header based on supplied fields, this is not supported here.
+
+            if (message.StandardHeader != null)
+            {
+                hdr.MergeFrom(message.StandardHeader);
+                // having folded fields from the provided header to the message header, do not wish to serialise the 
+                // old header so reset all fields. Also reset trailer it will be re-computed.
+                message.StandardHeader.Reset();
+                message.StandardTrailer?.Reset();
+            } 
+
+            var storage = Pool.Rent();
+            
             var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+            hdr.Encode(writer);
             message.Encode(writer);
+
+            // checksum can only be caluculated after the body length is correctly set which we now will know
+            // having serialised the header and message contents.
+            // "8=FIX.4.4|9=100001|35=D"
+
+            var width = Math.Max(4, SessionDescription.BodyLengthChars ?? 7);
+            storage.PatchBodyLength(width);
+
+            var checksum = storage.Buffer.Checksum();
+            var trailer = SessionMessageFactory.Trailer(checksum);
+            if (trailer == null)
+            {
+                Return(storage);
+                return null;
+            }
+            trailer.Encode(writer);
+            MsgSeqNum = MsgSeqNum + 1;
             return storage;
         }
     }

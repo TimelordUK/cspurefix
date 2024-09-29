@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			RelatedPartyDetailAltID = null;
+			RelatedPartyDetailAltIDSource = null;
+			((IFixReset?)RelatedPartyDetailAltSubGrp)?.Reset();
+		}
 	}
 }

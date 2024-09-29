@@ -77,5 +77,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MiscFeeSubType = null;
+			MiscFeeSubTypeAmt = null;
+			MiscFeeSubTypeDesc = null;
+			EncodedMiscFeeSubTypeDescLen = null;
+			EncodedMiscFeeSubTypeDesc = null;
+		}
 	}
 }

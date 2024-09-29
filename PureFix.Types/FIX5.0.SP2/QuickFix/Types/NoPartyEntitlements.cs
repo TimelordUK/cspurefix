@@ -66,5 +66,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)PartyDetailGrp)?.Reset();
+			EntitlementStatus = null;
+			((IFixReset?)EntitlementGrp)?.Reset();
+		}
 	}
 }

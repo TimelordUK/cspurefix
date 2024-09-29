@@ -114,5 +114,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingProvisionCashSettlPaymentDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingProvisionCashSettlPaymentDateBusinessCenterGrp)?.Reset();
+			UnderlyingProvisionCashSettlPaymentDateRelativeTo = null;
+			UnderlyingProvisionCashSettlPaymentDateOffsetPeriod = null;
+			UnderlyingProvisionCashSettlPaymentDateOffsetUnit = null;
+			UnderlyingProvisionCashSettlPaymentDateOffsetDayType = null;
+			UnderlyingProvisionCashSettlPaymentDateRangeFirst = null;
+			UnderlyingProvisionCashSettlPaymentDateRangeLast = null;
+			((IFixReset?)UnderlyingProvisionCashSettlPaymentFixedDateGrp)?.Reset();
+		}
 	}
 }

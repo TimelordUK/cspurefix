@@ -190,5 +190,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			StreamCalculationPeriodDatesXID = null;
+			StreamCalculationPeriodDatesXIDRef = null;
+			StreamCalculationPeriodBusinessDayConvention = null;
+			((IFixReset?)StreamCalculationPeriodBusinessCenterGrp)?.Reset();
+			((IFixReset?)StreamCalculationPeriodDateGrp)?.Reset();
+			StreamFirstPeriodStartDateUnadjusted = null;
+			StreamFirstPeriodStartDateBusinessDayConvention = null;
+			((IFixReset?)StreamFirstPeriodStartDateBusinessCenterGrp)?.Reset();
+			StreamFirstPeriodStartDateAdjusted = null;
+			StreamFirstRegularPeriodStartDateUnadjusted = null;
+			StreamFirstCompoundingPeriodEndDateUnadjusted = null;
+			StreamLastRegularPeriodEndDateUnadjusted = null;
+			StreamCalculationFrequencyPeriod = null;
+			StreamCalculationFrequencyUnit = null;
+			StreamCalculationRollConvention = null;
+			StreamCalculationBalanceOfFirstPeriod = null;
+			StreamCalculationCorrectionPeriod = null;
+			StreamCalculationCorrectionUnit = null;
+		}
 	}
 }

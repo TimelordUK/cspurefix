@@ -11,7 +11,7 @@ namespace PureFix.Buffer.Ascii
 {
     public static class Extensions
     {
-        public static void Format(this IFixMessage msg, IContainedSet set, AsciiParser.Pool.Storage storage)
+        public static void Format(this IFixMessage msg, IContainedSet set, StoragePool.Storage storage)
         {
         }
     }

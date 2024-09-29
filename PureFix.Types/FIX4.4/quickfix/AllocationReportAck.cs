@@ -215,5 +215,28 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			AllocReportID = null;
+			AllocID = null;
+			((IFixReset?)Parties)?.Reset();
+			SecondaryAllocID = null;
+			TradeDate = null;
+			TransactTime = null;
+			AllocStatus = null;
+			AllocRejCode = null;
+			AllocReportType = null;
+			AllocIntermedReqType = null;
+			MatchStatus = null;
+			Product = null;
+			SecurityType = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)AllocAckGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingDividendAccrualPaymentDateRelativeTo = null;
+			UnderlyingDividendAccrualPaymentDateOffsetPeriod = null;
+			UnderlyingDividendAccrualPaymentDateOffsetUnit = null;
+			UnderlyingDividendAccrualPaymentDateOffsetDayType = null;
+			UnderlyingDividendAccrualPaymentDateUnadjusted = null;
+			UnderlyingDividendAccrualPaymentDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingDividendAccrualPaymentDateBusinessCenterGrp)?.Reset();
+			UnderlyingDividendAccrualPaymentDateAdjusted = null;
+		}
 	}
 }

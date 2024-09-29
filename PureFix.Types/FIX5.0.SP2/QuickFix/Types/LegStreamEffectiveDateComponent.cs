@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegStreamEffectiveDateUnadjusted = null;
+			LegStreamEffectiveDateBusinessDayConvention = null;
+			((IFixReset?)LegStreamEffectiveDateBusinessCenterGrp)?.Reset();
+			LegStreamEffectiveDateRelativeTo = null;
+			LegStreamEffectiveDateOffsetPeriod = null;
+			LegStreamEffectiveDateOffsetUnit = null;
+			LegStreamEffectiveDateOffsetDayType = null;
+			LegStreamEffectiveDateAdjusted = null;
+		}
 	}
 }

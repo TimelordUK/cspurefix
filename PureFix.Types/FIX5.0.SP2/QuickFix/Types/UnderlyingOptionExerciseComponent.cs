@@ -173,5 +173,24 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingExerciseDesc = null;
+			EncodedUnderlyingExerciseDescLen = null;
+			EncodedUnderlyingExerciseDesc = null;
+			UnderlyingAutomaticExerciseIndicator = null;
+			UnderlyingAutomaticExerciseThresholdRate = null;
+			UnderlyingExerciseConfirmationMethod = null;
+			UnderlyingManualNoticeBusinessCenter = null;
+			UnderlyingFallbackExerciseIndicator = null;
+			UnderlyingLimitedRightToConfirmIndicator = null;
+			UnderlyingExerciseSplitTicketIndicator = null;
+			UnderlyingSettlMethodElectingPartySide = null;
+			((IFixReset?)UnderlyingSettlMethodElectionDate)?.Reset();
+			((IFixReset?)UnderlyingOptionExerciseDates)?.Reset();
+			((IFixReset?)UnderlyingOptionExerciseExpiration)?.Reset();
+			((IFixReset?)UnderlyingOptionExerciseMakeWholeProvision)?.Reset();
+		}
 	}
 }

@@ -78,5 +78,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)LegPhysicalSettlDeliverableObligationGrp)?.Reset();
+			LegPhysicalSettlCurency = null;
+			LegPhysicalSettlBusinessDays = null;
+			LegPhysicalSettlMaximumBusinessDays = null;
+			LegPhysicalSettlTermXID = null;
+		}
 	}
 }

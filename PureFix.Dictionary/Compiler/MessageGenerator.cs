@@ -21,7 +21,43 @@ namespace PureFix.Dictionary.Compiler
         public MessageGenerator(string? root, FixDefinitions fixDefinitions, Options options) : base(SelectRoot(root, options.BackingTypeOutputPath!), fixDefinitions, options)
         {
         }
-        
+
+        public override void PostProcess()
+        {
+            var generator = new CodeGenerator();
+            WriteMessageUsings(generator);
+            generator.WriteLine();
+            using (generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
+            {
+                using (generator.BeginBlock("public class FixMessageFactory : IFixMessageFactory"))
+                {
+                    using (generator.BeginBlock($"public IFixMessage? ToFixMessage(IMessageView view)"))
+                    {
+                        generator.WriteLine("var msgType = view.GetString((int)MsgTag.MsgType);");
+                        using (generator.BeginBlock("switch (msgType)"))
+                        {
+                            foreach (var name in FixDefinitions.Message.Select(kv => kv.Value.Name).Distinct())
+                            {
+                                var m = FixDefinitions.Message[name];
+                                if (m == null) continue;
+                                using (generator.BeginBlock($"case \"{m.MsgType}\":"))
+                                {
+                                    generator.WriteLine($"var o = new {m.Name}();");
+                                    generator.WriteLine("((IFixParser)o).Parse(view);");
+                                    generator.WriteLine("return o;");
+                                }
+                            }
+                        }
+                        generator.WriteLine("return null;");
+                    }
+                }
+            }
+            var contents = generator.ToString();
+            var path = Path.Join(Options.BackingTypeOutputPath, "FixMessageFactory.cs");
+            WriteFile(path, contents);
+        }
+
+
         protected override string GenerateType(MessageDefinition message)
         {
             var generator = new CodeGenerator();
@@ -161,6 +197,38 @@ namespace PureFix.Dictionary.Compiler
             WriteParse(generator, set);
             generator.WriteLine();
             WriteTryGetByTag(generator, set);
+            generator.WriteLine();
+            WriteReset(generator, set);
+        }
+
+        private void WriteReset(CodeGenerator generator, IContainedSet containedSet)
+        {
+            using (generator.BeginBlock("void IFixReset.Reset()"))
+            {
+                for (var i = 0; i < containedSet.Fields.Count; i++)
+                {
+                    switch (containedSet.Fields[i])
+                    {
+                        case ContainedSimpleField sf:
+                            {
+                                generator.WriteLine($"{sf.Name} = null;");
+                            }
+                            break;
+
+                        case ContainedComponentField cf:
+                            {
+                                generator.WriteLine($"((IFixReset?){cf.Name})?.Reset();");
+                            }
+                            break;
+
+                        case ContainedGroupField gf:
+                            {
+                                generator.WriteLine($"{gf.Name} = null;");
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         private void WriteTryGetByTag(CodeGenerator generator, IContainedSet containedSet)
@@ -197,8 +265,7 @@ namespace PureFix.Dictionary.Compiler
                 }
             }
         }
-        
-        
+            
         private void WriteParse(CodeGenerator generator, IContainedSet containedSet)
         {
             using (generator.BeginBlock("void IFixParser.Parse(IMessageView? view)"))
@@ -235,7 +302,7 @@ namespace PureFix.Dictionary.Compiler
                         }
                         break;
 
-                        case ContainedField cf:
+                        case ContainedComponentField cf:
                         {
                             var name = cf.Name;
                             var tempName = $"view{name}";

@@ -334,5 +334,43 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPaymentStreamType = null;
+			LegPaymentStreamMarketRate = null;
+			LegPaymentStreamDelayIndicator = null;
+			LegPaymentStreamCashSettlIndicator = null;
+			LegPaymentStreamSettlCurrency = null;
+			LegPaymentStreamDayCount = null;
+			LegPaymentStreamOtherDayCount = null;
+			LegPaymentStreamAccrualDays = null;
+			LegPaymentStreamDiscountType = null;
+			LegPaymentStreamDiscountRate = null;
+			LegPaymentStreamDiscountRateDayCount = null;
+			LegPaymentStreamCompoundingMethod = null;
+			LegPaymentStreamCompoundingXIDRef = null;
+			LegPaymentStreamCompoundingSpread = null;
+			LegPaymentStreamInterpolationMethod = null;
+			LegPaymentStreamInterpolationPeriod = null;
+			LegPaymentStreamInitialPrincipalExchangeIndicator = null;
+			LegPaymentStreamInterimPrincipalExchangeIndicator = null;
+			LegPaymentStreamFinalPrincipalExchangeIndicator = null;
+			LegPaymentStreamFlatRateIndicator = null;
+			LegPaymentStreamFlatRateAmount = null;
+			LegPaymentStreamFlatRateCurrency = null;
+			LegStreamMaximumPaymentAmount = null;
+			LegStreamMaximumPaymentCurrency = null;
+			LegStreamMaximumTransactionAmount = null;
+			LegStreamMaximumTransactionCurrency = null;
+			((IFixReset?)LegPaymentStreamPaymentDates)?.Reset();
+			((IFixReset?)LegPaymentStreamResetDates)?.Reset();
+			((IFixReset?)LegPaymentStreamFixedRate)?.Reset();
+			((IFixReset?)LegPaymentStreamFloatingRate)?.Reset();
+			LegPaymentStreamCompoundingFixedRate = null;
+			((IFixReset?)LegPaymentStreamCompoundingFloatingRate)?.Reset();
+			((IFixReset?)LegPaymentStreamCompoundingDates)?.Reset();
+			((IFixReset?)LegPaymentStreamNonDeliverableSettlTerms)?.Reset();
+		}
 	}
 }

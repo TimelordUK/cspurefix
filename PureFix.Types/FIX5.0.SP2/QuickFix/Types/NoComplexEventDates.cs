@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ComplexEventStartDate = null;
+			ComplexEventEndDate = null;
+			((IFixReset?)ComplexEventTimes)?.Reset();
+		}
 	}
 }

@@ -282,5 +282,38 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegReturnRatePriceSequence = null;
+			LegReturnRateCommissionBasis = null;
+			LegReturnRateCommissionAmount = null;
+			LegReturnRateCommissionCurrency = null;
+			LegReturnRateTotalCommissionPerTrade = null;
+			LegReturnRateDeterminationMethod = null;
+			((IFixReset?)LegReturnRatePriceGrp)?.Reset();
+			((IFixReset?)LegReturnRateFXConversionGrp)?.Reset();
+			LegReturnRateAmountRelativeTo = null;
+			LegReturnRateQuoteMeasureType = null;
+			LegReturnRateQuoteUnits = null;
+			LegReturnRateQuoteMethod = null;
+			LegReturnRateQuoteCurrency = null;
+			LegReturnRateQuoteCurrencyType = null;
+			LegReturnRateQuoteTimeType = null;
+			LegReturnRateQuoteTime = null;
+			LegReturnRateQuoteDate = null;
+			LegReturnRateQuoteExpirationTime = null;
+			LegReturnRateQuoteBusinessCenter = null;
+			LegReturnRateQuoteExchange = null;
+			((IFixReset?)LegReturnRateInformationSourceGrp)?.Reset();
+			LegReturnRateQuotePricingModel = null;
+			LegReturnRateCashFlowType = null;
+			((IFixReset?)LegReturnRateDateGrp)?.Reset();
+			LegReturnRateValuationTimeType = null;
+			LegReturnRateValuationTime = null;
+			LegReturnRateValuationTimeBusinessCenter = null;
+			LegReturnRateValuationPriceOption = null;
+			LegReturnRateFinalPriceFallback = null;
+		}
 	}
 }

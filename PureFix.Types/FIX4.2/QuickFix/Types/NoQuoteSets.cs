@@ -232,5 +232,31 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			QuoteSetID = null;
+			UnderlyingSymbol = null;
+			UnderlyingSymbolSfx = null;
+			UnderlyingSecurityID = null;
+			UnderlyingIDSource = null;
+			UnderlyingSecurityType = null;
+			UnderlyingMaturityMonthYear = null;
+			UnderlyingMaturityDay = null;
+			UnderlyingPutOrCall = null;
+			UnderlyingStrikePrice = null;
+			UnderlyingOptAttribute = null;
+			UnderlyingContractMultiplier = null;
+			UnderlyingCouponRate = null;
+			UnderlyingSecurityExchange = null;
+			UnderlyingIssuer = null;
+			EncodedUnderlyingIssuerLen = null;
+			EncodedUnderlyingIssuer = null;
+			UnderlyingSecurityDesc = null;
+			EncodedUnderlyingSecurityDescLen = null;
+			EncodedUnderlyingSecurityDesc = null;
+			TotQuoteEntries = null;
+			NoQuoteEntries = null;
+		}
 	}
 }

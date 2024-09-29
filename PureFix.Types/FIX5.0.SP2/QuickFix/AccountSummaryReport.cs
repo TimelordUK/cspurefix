@@ -215,5 +215,26 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			AccountSummaryReportID = null;
+			ClearingBusinessDate = null;
+			Currency = null;
+			TotalNetValue = null;
+			MarginExcess = null;
+			SettlSessID = null;
+			SettlSessSubID = null;
+			TransactTime = null;
+			((IFixReset?)SettlementAmountGrp)?.Reset();
+			((IFixReset?)MarginAmount)?.Reset();
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)CollateralAmountGrp)?.Reset();
+			((IFixReset?)PayCollectGrp)?.Reset();
+			((IFixReset?)PositionAmountData)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

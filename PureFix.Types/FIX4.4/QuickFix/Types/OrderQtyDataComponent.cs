@@ -74,5 +74,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			OrderQty = null;
+			CashOrderQty = null;
+			OrderPercent = null;
+			RoundingDirection = null;
+			RoundingModulus = null;
+		}
 	}
 }

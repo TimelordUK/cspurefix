@@ -97,5 +97,13 @@ namespace PureFix.Types.FIX42.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			MDReqID = null;
+			NoMDEntries = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

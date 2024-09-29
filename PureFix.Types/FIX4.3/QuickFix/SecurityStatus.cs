@@ -248,5 +248,33 @@ namespace PureFix.Types.FIX43.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			SecurityStatusReqID = null;
+			((IFixReset?)Instrument)?.Reset();
+			Currency = null;
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			UnsolicitedIndicator = null;
+			SecurityTradingStatus = null;
+			FinancialStatus = null;
+			CorporateAction = null;
+			HaltReasonChar = null;
+			InViewOfCommon = null;
+			DueToRelated = null;
+			BuyVolume = null;
+			SellVolume = null;
+			HighPx = null;
+			LowPx = null;
+			LastPx = null;
+			TransactTime = null;
+			Adjustment = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

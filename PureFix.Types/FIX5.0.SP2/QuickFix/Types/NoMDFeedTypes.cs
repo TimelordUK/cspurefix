@@ -122,5 +122,20 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MDFeedType = null;
+			MDSubFeedType = null;
+			MarketDepth = null;
+			MarketDepthTimeInterval = null;
+			MarketDepthTimeIntervalUnit = null;
+			MDRecoveryTimeInterval = null;
+			MDRecoveryTimeIntervalUnit = null;
+			MDBookType = null;
+			MDSubBookType = null;
+			PrimaryServiceLocationID = null;
+			SecondaryServiceLocationID = null;
+		}
 	}
 }

@@ -78,5 +78,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegInstrumentPartyID = null;
+			LegInstrumentPartyIDSource = null;
+			LegInstrumentPartyRole = null;
+			LegInstrumentPartyRoleQualifier = null;
+			((IFixReset?)LegInstrumentPtysSubGrp)?.Reset();
+		}
 	}
 }

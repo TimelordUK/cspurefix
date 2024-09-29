@@ -286,5 +286,35 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			EncryptMethod = null;
+			HeartBtInt = null;
+			RawDataLength = null;
+			RawData = null;
+			ResetSeqNumFlag = null;
+			NextExpectedMsgSeqNum = null;
+			MaxMessageSize = null;
+			NoMsgTypes = null;
+			TestMessageIndicator = null;
+			Username = null;
+			Password = null;
+			NewPassword = null;
+			EncryptedPasswordMethod = null;
+			EncryptedPasswordLen = null;
+			EncryptedPassword = null;
+			EncryptedNewPasswordLen = null;
+			EncryptedNewPassword = null;
+			SessionStatus = null;
+			DefaultApplVerID = null;
+			DefaultApplExtID = null;
+			DefaultCstmApplVerID = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

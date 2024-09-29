@@ -365,5 +365,49 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentType = null;
+			PaymentSubType = null;
+			PaymentPaySide = null;
+			PaymentReceiveSide = null;
+			PaymentDesc = null;
+			PaymentCurrency = null;
+			PaymentAmount = null;
+			PaymentAmountRelativeTo = null;
+			PaymentAmountDeterminationMethod = null;
+			PaymentFixedRate = null;
+			PaymentFloatingRateIndex = null;
+			PaymentFloatingRateIndexCurveUnit = null;
+			PaymentFloatingRateIndexCurvePeriod = null;
+			PaymentFloatingRateSpread = null;
+			PaymentRateResetFrequencyUnit = null;
+			PaymentRateResetFrequencyPeriod = null;
+			PaymentFrequencyUnit = null;
+			PaymentFrequencyPeriod = null;
+			PaymentPrice = null;
+			PaymentPriceType = null;
+			PaymentUnitOfMeasure = null;
+			PaymentDateUnadjusted = null;
+			PaymentBusinessDayConvention = null;
+			((IFixReset?)PaymentBusinessCenterGrp)?.Reset();
+			PaymentDateRelativeTo = null;
+			PaymentDateOffsetPeriod = null;
+			PaymentDateOffsetUnit = null;
+			PaymentDateOffsetDayType = null;
+			PaymentDateAdjusted = null;
+			PaymentForwardStartType = null;
+			PaymentDiscountFactor = null;
+			PaymentPresentValueAmount = null;
+			PaymentPresentValueCurrency = null;
+			PaymentSettlStyle = null;
+			PaymentMethod = null;
+			((IFixReset?)PaymentSettlGrp)?.Reset();
+			PaymentLegRefID = null;
+			PaymentText = null;
+			EncodedPaymentTextLen = null;
+			EncodedPaymentText = null;
+		}
 	}
 }

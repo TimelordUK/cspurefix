@@ -535,5 +535,63 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			PosMaintRptID = null;
+			PosTransType = null;
+			PositionID = null;
+			PosReqID = null;
+			PosMaintAction = null;
+			OrigPosReqRefID = null;
+			PosMaintStatus = null;
+			PosMaintResult = null;
+			ClearingBusinessDate = null;
+			PreviousClearingBusinessDate = null;
+			ValuationDate = null;
+			ValuationTime = null;
+			ValuationBusinessCenter = null;
+			DiscountFactor = null;
+			RejectText = null;
+			EncodedRejectTextLen = null;
+			EncodedRejectText = null;
+			SettlSessID = null;
+			SettlSessSubID = null;
+			ClearedIndicator = null;
+			ContractRefPosType = null;
+			PositionCapacity = null;
+			TerminatedIndicator = null;
+			InputSource = null;
+			((IFixReset?)Parties)?.Reset();
+			Account = null;
+			AcctIDSource = null;
+			AccountType = null;
+			PosMaintRptRefID = null;
+			((IFixReset?)Instrument)?.Reset();
+			Currency = null;
+			CurrencyCodeSource = null;
+			SettlDate = null;
+			SettlCurrency = null;
+			SettlCurrencyCodeSource = null;
+			ContraryInstructionIndicator = null;
+			PriorSpreadIndicator = null;
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			((IFixReset?)RelatedInstrumentGrp)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			((IFixReset?)TrdgSesGrp)?.Reset();
+			TransactTime = null;
+			((IFixReset?)PositionQty)?.Reset();
+			((IFixReset?)PositionAmountData)?.Reset();
+			((IFixReset?)RegulatoryTradeIDGrp)?.Reset();
+			((IFixReset?)PaymentGrp)?.Reset();
+			AdjustmentType = null;
+			ThresholdAmount = null;
+			((IFixReset?)RelatedTradeGrp)?.Reset();
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

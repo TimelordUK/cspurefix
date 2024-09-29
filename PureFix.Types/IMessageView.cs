@@ -28,5 +28,7 @@ namespace PureFix.Types
         public abstract MonthYear? GetMonthYear(int tag);
         public IMessageView? GetGroupInstance(int i);
         public IMessageView? GetView(string name);
+        public abstract string BufferString();
+        public abstract int Checksum();
     }
 }

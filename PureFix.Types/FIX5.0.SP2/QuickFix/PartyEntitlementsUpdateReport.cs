@@ -169,5 +169,22 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			EntitlementReportID = null;
+			EntitlementRequestID = null;
+			TotNoParties = null;
+			LastFragment = null;
+			((IFixReset?)RequestingPartyGrp)?.Reset();
+			((IFixReset?)PartyEntitlementUpdateGrp)?.Reset();
+			TransactTime = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

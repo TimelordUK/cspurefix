@@ -150,5 +150,23 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegDeliveryScheduleType = null;
+			LegDeliveryScheduleXID = null;
+			LegDeliveryScheduleNotional = null;
+			LegDeliveryScheduleNotionalUnitOfMeasure = null;
+			LegDeliveryScheduleNotionalCommodityFrequency = null;
+			LegDeliveryScheduleNegativeTolerance = null;
+			LegDeliverySchedulePositiveTolerance = null;
+			LegDeliveryScheduleToleranceUnitOfMeasure = null;
+			LegDeliveryScheduleToleranceType = null;
+			LegDeliveryScheduleSettlCountry = null;
+			LegDeliveryScheduleSettlTimeZone = null;
+			LegDeliveryScheduleSettlFlowType = null;
+			LegDeliveryScheduleSettlHolidaysProcessingInstruction = null;
+			((IFixReset?)LegDeliveryScheduleSettlDayGrp)?.Reset();
+		}
 	}
 }

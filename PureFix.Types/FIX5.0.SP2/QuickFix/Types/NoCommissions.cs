@@ -165,5 +165,25 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			CommissionAmount = null;
+			CommissionAmountType = null;
+			CommissionAmountSubType = null;
+			CommissionBasis = null;
+			CommissionCurrency = null;
+			CommissionCurrencyCodeSource = null;
+			CommissionUnitOfMeasure = null;
+			CommissionUnitOfMeasureCurrency = null;
+			CommissionUnitOfMeasureCurrencyCodeSource = null;
+			CommissionRate = null;
+			CommissionSharedIndicator = null;
+			CommissionAmountShared = null;
+			CommissionLegRefID = null;
+			CommissionDesc = null;
+			EncodedCommissionDescLen = null;
+			EncodedCommissionDesc = null;
+		}
 	}
 }

@@ -110,5 +110,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MarketDisruptionProvision = null;
+			((IFixReset?)MarketDisruptionEventGrp)?.Reset();
+			MarketDisruptionFallbackProvision = null;
+			((IFixReset?)MarketDisruptionFallbackGrp)?.Reset();
+			((IFixReset?)MarketDisruptionFallbackReferencePriceGrp)?.Reset();
+			MarketDisruptionMaximumDays = null;
+			MarketDisruptionMaterialityPercentage = null;
+			MarketDisruptionMinimumFuturesContracts = null;
+		}
 	}
 }

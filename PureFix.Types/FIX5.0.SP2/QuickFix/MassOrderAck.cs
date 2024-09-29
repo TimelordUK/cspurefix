@@ -336,5 +336,42 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			MassOrderRequestID = null;
+			MassOrderReportID = null;
+			MassOrderRequestStatus = null;
+			MassOrderRequestResult = null;
+			OrderResponseLevel = null;
+			RejectText = null;
+			EncodedRejectTextLen = null;
+			EncodedRejectText = null;
+			MarketID = null;
+			MarketSegmentID = null;
+			((IFixReset?)Parties)?.Reset();
+			TradingCapacity = null;
+			ClearingAccountType = null;
+			Account = null;
+			AcctIDSource = null;
+			AccountType = null;
+			OrderCapacity = null;
+			OrderRestrictions = null;
+			CustOrderCapacity = null;
+			ManualOrderIndicator = null;
+			CustOrderHandlingInst = null;
+			TransactTime = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			CopyMsgIndicator = null;
+			TotNoOrderEntries = null;
+			LastFragment = null;
+			((IFixReset?)ThrottleResponse)?.Reset();
+			((IFixReset?)OrderEntryAckGrp)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

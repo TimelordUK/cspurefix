@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ComplexEventCreditEventType = null;
+			ComplexEventCreditEventValue = null;
+			ComplexEventCreditEventCurrency = null;
+			ComplexEventCreditEventPeriod = null;
+			ComplexEventCreditEventUnit = null;
+			ComplexEventCreditEventDayType = null;
+			ComplexEventCreditEventRateSource = null;
+			((IFixReset?)ComplexEventCreditEventQualifierGrp)?.Reset();
+		}
 	}
 }

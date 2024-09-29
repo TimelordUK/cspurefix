@@ -134,5 +134,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			SecurityStatusReqID = null;
+			((IFixReset?)InstrumentScope)?.Reset();
+			SubscriptionRequestType = null;
+			SecurityListID = null;
+			MarketID = null;
+			MarketSegmentID = null;
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

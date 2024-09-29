@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
@@ -31,11 +32,14 @@
   <ItemGroup>
     <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
     <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
-    <ProjectReference Include="..\PureFix.MessageStore\PureFix.MessageStore.csproj" />
+    <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Data\examples\FIX.4.4\fix.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\fix.test_client.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\examples\FIX.4.4\fix.txt">

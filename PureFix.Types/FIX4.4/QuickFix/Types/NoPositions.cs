@@ -78,5 +78,14 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PosType = null;
+			LongQty = null;
+			ShortQty = null;
+			PosQtyStatus = null;
+			((IFixReset?)NestedParties)?.Reset();
+		}
 	}
 }

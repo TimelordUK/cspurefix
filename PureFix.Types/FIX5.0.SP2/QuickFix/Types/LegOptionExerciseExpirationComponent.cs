@@ -138,5 +138,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegOptionExerciseExpirationDateBusinessDayConvention = null;
+			((IFixReset?)LegOptionExerciseExpirationDateBusinessCenterGrp)?.Reset();
+			((IFixReset?)LegOptionExerciseExpirationDateGrp)?.Reset();
+			LegOptionExerciseExpirationDateRelativeTo = null;
+			LegOptionExerciseExpirationDateOffsetPeriod = null;
+			LegOptionExerciseExpirationDateOffsetUnit = null;
+			LegOptionExerciseExpirationFrequencyPeriod = null;
+			LegOptionExerciseExpirationFrequencyUnit = null;
+			LegOptionExerciseExpirationRollConvention = null;
+			LegOptionExerciseExpirationDateOffsetDayType = null;
+			LegOptionExerciseExpirationTime = null;
+			LegOptionExerciseExpirationTimeBusinessCenter = null;
+		}
 	}
 }

@@ -110,5 +110,18 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegProvisionCashSettlValueTime = null;
+			LegProvisionCashSettlValueTimeBusinessCenter = null;
+			LegProvisionCashSettlValueDateBusinessDayConvention = null;
+			((IFixReset?)LegProvisionCashSettlValueDateBusinessCenterGrp)?.Reset();
+			LegProvisionCashSettlValueDateRelativeTo = null;
+			LegProvisionCashSettlValueDateOffsetPeriod = null;
+			LegProvisionCashSettlValueDateOffsetUnit = null;
+			LegProvisionCashSettlValueDateOffsetDayType = null;
+			LegProvisionCashSettlValueDateAdjusted = null;
+		}
 	}
 }

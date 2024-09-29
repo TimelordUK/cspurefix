@@ -222,5 +222,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			PayRequestID = null;
+			PayRequestTransType = null;
+			PayRequestRefID = null;
+			CancelText = null;
+			EncodedCancelTextLen = null;
+			EncodedCancelText = null;
+			ClearingBusinessDate = null;
+			TransactTime = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)RelatedTradeGrp)?.Reset();
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)PostTradePayment)?.Reset();
+			((IFixReset?)SettlDetails)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

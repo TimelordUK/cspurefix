@@ -90,5 +90,16 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			Commission = null;
+			CommType = null;
+			CommCurrency = null;
+			CommCurrencyCodeSource = null;
+			CommRate = null;
+			CommUnitOfMeasure = null;
+			FundRenewWaiv = null;
+		}
 	}
 }

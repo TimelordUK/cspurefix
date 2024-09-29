@@ -66,5 +66,13 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ContraBroker = null;
+			ContraTrader = null;
+			ContraTradeQty = null;
+			ContraTradeTime = null;
+		}
 	}
 }

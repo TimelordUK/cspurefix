@@ -170,5 +170,24 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			TrdMatchSubID = null;
+			Quantity = null;
+			Currency = null;
+			CurrencyCodeSource = null;
+			SettlCurrency = null;
+			SettlCurrencyCodeSource = null;
+			QtyType = null;
+			LastQty = null;
+			PriceType = null;
+			LastPx = null;
+			LastMkt = null;
+			((IFixReset?)TrdMatchSideGrp)?.Reset();
+		}
 	}
 }

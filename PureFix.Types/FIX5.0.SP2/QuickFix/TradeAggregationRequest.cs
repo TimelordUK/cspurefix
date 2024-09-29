@@ -196,5 +196,25 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TradeAggregationRequestID = null;
+			TradeAggregationRequestRefID = null;
+			TradeAggregationTransType = null;
+			AggregatedQty = null;
+			Currency = null;
+			CurrencyCodeSource = null;
+			AvgPx = null;
+			Side = null;
+			PricePrecision = null;
+			((IFixReset?)OrderAggregationGrp)?.Reset();
+			((IFixReset?)ExecutionAggregationGrp)?.Reset();
+			Account = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

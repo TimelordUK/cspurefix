@@ -364,5 +364,49 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			MDStatisticType = null;
+			MDStatisticScope = null;
+			MDStatisticSubScope = null;
+			MDStatisticScopeType = null;
+			MDStatisticName = null;
+			MDStatisticDesc = null;
+			EncodedMDStatisticDescLen = null;
+			EncodedMDStatisticDesc = null;
+			MarketDepth = null;
+			MDStatisticFrequencyPeriod = null;
+			MDStatisticFrequencyUnit = null;
+			MDStatisticDelayPeriod = null;
+			MDStatisticDelayUnit = null;
+			MDStatisticIntervalType = null;
+			MDStatisticIntervalTypeUnit = null;
+			MDStatisticIntervalPeriod = null;
+			MDStatisticIntervalUnit = null;
+			MDStatisticStartDate = null;
+			MDStatisticEndDate = null;
+			MDStatisticStartTime = null;
+			MDStatisticEndTime = null;
+			MDStatisticRatioType = null;
+			((IFixReset?)NestedParties)?.Reset();
+			AnnualTradingBusinessDays = null;
+			TradingCapacity = null;
+			OrdType = null;
+			TimeInForce = null;
+			QuoteCondition = null;
+			TradeCondition = null;
+			Side = null;
+			TradeInputSource = null;
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			MDOriginType = null;
+			MDValueTier = null;
+			TradSesMethod = null;
+			MDFeedType = null;
+			ExposureDuration = null;
+			ExposureDurationUnit = null;
+			AggressorIndicator = null;
+		}
 	}
 }

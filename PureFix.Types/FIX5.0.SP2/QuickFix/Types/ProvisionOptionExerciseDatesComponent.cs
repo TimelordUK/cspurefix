@@ -202,5 +202,29 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ProvisionOptionExerciseBusinessDayConvention = null;
+			((IFixReset?)ProvisionOptionExerciseBusinessCenterGrp)?.Reset();
+			((IFixReset?)ProvisionOptionExerciseFixedDateGrp)?.Reset();
+			ProvisionOptionExerciseEarliestDateOffsetPeriod = null;
+			ProvisionOptionExerciseEarliestDateOffsetUnit = null;
+			ProvisionOptionExerciseFrequencyPeriod = null;
+			ProvisionOptionExerciseFrequencyUnit = null;
+			ProvisionOptionExerciseStartDateUnadjusted = null;
+			ProvisionOptionExerciseStartDateRelativeTo = null;
+			ProvisionOptionExerciseStartDateOffsetPeriod = null;
+			ProvisionOptionExerciseStartDateOffsetUnit = null;
+			ProvisionOptionExerciseStartDateOffsetDayType = null;
+			ProvisionOptionExerciseStartDateAdjusted = null;
+			ProvisionOptionExercisePeriodSkip = null;
+			ProvisionOptionExerciseBoundsFirstDateUnadjusted = null;
+			ProvisionOptionExerciseBoundsLastDateUnadjusted = null;
+			ProvisionOptionExerciseEarliestTime = null;
+			ProvisionOptionExerciseEarliestTimeBusinessCenter = null;
+			ProvisionOptionExerciseLatestTime = null;
+			ProvisionOptionExerciseLatestTimeBusinessCenter = null;
+		}
 	}
 }

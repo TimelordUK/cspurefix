@@ -118,5 +118,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PosType = null;
+			LongQty = null;
+			ShortQty = null;
+			CoveredQty = null;
+			PosQtyStatus = null;
+			QuantityDate = null;
+			PosQtyUnitOfMeasure = null;
+			PosQtyUnitOfMeasureCurrency = null;
+			PosQtyUnitOfMeasureCurrencyCodeSource = null;
+			((IFixReset?)NestedParties)?.Reset();
+		}
 	}
 }

@@ -158,5 +158,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)ApplicationSequenceControl)?.Reset();
+			ClearingBusinessDate = null;
+			SettlementCycleNo = null;
+			SettlObligMsgID = null;
+			SettlObligMode = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			TransactTime = null;
+			((IFixReset?)SettlObligationInstructions)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -150,5 +150,23 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingStreamCommoditySettlCountry = null;
+			UnderlyingStreamCommoditySettlTimeZone = null;
+			UnderlyingStreamCommoditySettlFlowType = null;
+			UnderlyingStreamCommoditySettlPeriodNotional = null;
+			UnderlyingStreamCommoditySettlPeriodNotionalUnitOfMeasure = null;
+			UnderlyingStreamCommoditySettlPeriodFrequencyPeriod = null;
+			UnderlyingStreamCommoditySettlPeriodFrequencyUnit = null;
+			UnderlyingStreamCommoditySettlPeriodPrice = null;
+			UnderlyingStreamCommoditySettlPeriodPriceUnitOfMeasure = null;
+			UnderlyingStreamCommoditySettlPeriodPriceCurrency = null;
+			UnderlyingStreamCommoditySettlHolidaysProcessingInstruction = null;
+			((IFixReset?)UnderlyingStreamCommoditySettlDayGrp)?.Reset();
+			UnderlyingStreamCommoditySettlPeriodXID = null;
+			UnderlyingStreamCommoditySettlPeriodXIDRef = null;
+		}
 	}
 }

@@ -263,5 +263,34 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ListID = null;
+			BidID = null;
+			ClientBidID = null;
+			ProgRptReqs = null;
+			BidType = null;
+			ProgPeriodInterval = null;
+			CancellationRights = null;
+			MoneyLaunderingStatus = null;
+			RegistID = null;
+			ListExecInstType = null;
+			ListExecInst = null;
+			ContingencyType = null;
+			EncodedListExecInstLen = null;
+			EncodedListExecInst = null;
+			AllowableOneSidednessPct = null;
+			AllowableOneSidednessValue = null;
+			AllowableOneSidednessCurr = null;
+			ListManualOrderIndicator = null;
+			TotNoOrders = null;
+			LastFragment = null;
+			((IFixReset?)RootParties)?.Reset();
+			((IFixReset?)ListOrdGrp)?.Reset();
+			ThrottleInst = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

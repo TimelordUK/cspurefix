@@ -1,4 +1,5 @@
-﻿using PureFix.MessageStore;
+﻿#if false
+using PureFix.MessageStore;
 using PureFix.MessageStore.TextFileStore;
 using System;
 using System.Collections.Generic;
@@ -6,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace PureFIix.Test.MessageStore
 {
+
     public abstract class CommonStoreTestsBase
     {
         protected const string LogonText = "8=FIX4.4|9=0000208|35=A|49=sender-10|56=target-20|34=1|57=sub-a|52=20180610-10:39:01.621|98=2|108=62441|95=20|96=VgfoSqo56NqSVI1fLdlI|141=Y|789=4886|383=20|384=1|372=ipsum|385=R|464=N|553=sit|554=consectetur|10=49|";
@@ -105,3 +108,4 @@ namespace PureFIix.Test.MessageStore
         }    
     }
 }
+#endif

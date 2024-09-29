@@ -178,5 +178,22 @@ namespace PureFix.Types.FIX43.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ListID = null;
+			ListStatusType = null;
+			NoRpts = null;
+			ListOrderStatus = null;
+			RptSeq = null;
+			ListStatusText = null;
+			EncodedListStatusTextLen = null;
+			EncodedListStatusText = null;
+			TransactTime = null;
+			TotNoOrders = null;
+			NoOrders = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

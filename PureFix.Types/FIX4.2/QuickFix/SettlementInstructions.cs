@@ -359,5 +359,47 @@ namespace PureFix.Types.FIX42.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			SettlInstID = null;
+			SettlInstTransType = null;
+			SettlInstRefID = null;
+			SettlInstMode = null;
+			SettlInstSource = null;
+			AllocAccount = null;
+			SettlLocation = null;
+			TradeDate = null;
+			AllocID = null;
+			LastMkt = null;
+			TradingSessionID = null;
+			Side = null;
+			SecurityType = null;
+			EffectiveTime = null;
+			TransactTime = null;
+			ClientID = null;
+			ExecBroker = null;
+			StandInstDbType = null;
+			StandInstDbName = null;
+			StandInstDbID = null;
+			SettlDeliveryType = null;
+			SettlDepositoryCode = null;
+			SettlBrkrCode = null;
+			SettlInstCode = null;
+			SecuritySettlAgentName = null;
+			SecuritySettlAgentCode = null;
+			SecuritySettlAgentAcctNum = null;
+			SecuritySettlAgentAcctName = null;
+			SecuritySettlAgentContactName = null;
+			SecuritySettlAgentContactPhone = null;
+			CashSettlAgentName = null;
+			CashSettlAgentCode = null;
+			CashSettlAgentAcctNum = null;
+			CashSettlAgentAcctName = null;
+			CashSettlAgentContactName = null;
+			CashSettlAgentContactPhone = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

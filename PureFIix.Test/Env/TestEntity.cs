@@ -10,6 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Diagnostics;
+using PureFix.Transport;
+using PureFix.Transport.Session;
+using PureFix.Transport.Store;
+using PureFix.Types;
 
 namespace PureFIix.Test.Env
 {
@@ -17,9 +21,11 @@ namespace PureFIix.Test.Env
     {
         public FixDefinitions Definitions { get; }
         public AsciiParser Parser { get; private set; }
+        public IFixClock Clock { get; private set; } 
         
         public TestEntity(string dataDict = "FIX44.xml")
         {
+            Clock = new TestClock();
             Definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(Definitions);
             qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, dataDict));
@@ -31,12 +37,11 @@ namespace PureFIix.Test.Env
             Parser = new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe };
         }
 
-
         public List<AsciiView> ParseText(string s)
         {
             var views = new List<AsciiView>(10000);
             var b = Encoding.UTF8.GetBytes(s);
-            Parser.ParseFrom(b, (i, view) => views.Add(view));
+            Parser.ParseFrom(b, (i, view) => views.Add((AsciiView)view));
             return views;
         }
 
@@ -49,7 +54,7 @@ namespace PureFIix.Test.Env
             while (span.Length > 0)
             {
                 var want = Math.Min(span.Length, (iteration % 10) + 1);
-                Parser.ParseFrom(span[..want], (i, view) => views.Add(view));
+                Parser.ParseFrom(span[..want], (i, view) => views.Add((AsciiView)view));
                 span = span[want..];
                 ++iteration;
             }
@@ -103,6 +108,48 @@ namespace PureFIix.Test.Env
             return msgs;
         }
 
+        public IFixConfig GetTestInitiatorConfig(string json = "test-qf44-initiator.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestInitiator52Config(string json = "test-qf52-initiator.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestAcceptorConfig(string json = "test-qf44-acceptor.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestAcceptor52Config(string json = "test-qf52-acceptor.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetConfig(string json)
+        {
+            var factory = new TestLoggerFactory(Clock);
+            var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
+            config.Delimiter = AsciiChars.Pipe;
+            config.LogDelimiter = AsciiChars.Pipe;
+            return config;
+        }
+
+        public async Task<IFixMsgStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string filter = "accept-comp")
+        {
+            var store = new FixMsgMemoryStore($"test-{filter}");
+            foreach (var view in views)
+            {
+                if (view.SenderCompID() == filter)
+                {
+                    await store.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
+                }
+            }
+            return store;
+        }
+
         public void TimeParsePath(string description, string path, int repeats, int batch = 1)
         {
             var sw = new Stopwatch();
@@ -114,11 +161,11 @@ namespace PureFIix.Test.Env
 
             // Move the creating of the action outside the stopwatch code
             // to avoid recording the time to allocate the memory for it
-            Action<int, AsciiView> action = (i, view) => msgs.Add(view);
+            void Action(int i, MsgView view) => msgs.Add((AsciiView)view);
             //_testEntity.Parser.ParseFrom(b, action);
 
             sw.Start();
-            Parser.ParseFrom(b, action);
+            Parser.ParseFrom(b, Action);
             //_testEntity.Parser.ParseFrom(b, null);
             sw.Stop();
             Assert.That(msgs, Has.Count.EqualTo(count));

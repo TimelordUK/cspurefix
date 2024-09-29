@@ -616,5 +616,79 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DerivativeSymbol = null;
+			DerivativeSymbolSfx = null;
+			DerivativeSecurityID = null;
+			DerivativeSecurityIDSource = null;
+			((IFixReset?)DerivativeSecurityAltIDGrp)?.Reset();
+			DerivativeProduct = null;
+			DerivativeProductComplex = null;
+			DerivFlexProductEligibilityIndicator = null;
+			DerivativeSecurityGroup = null;
+			DerivativeCFICode = null;
+			DerivativeUPICode = null;
+			DerivativeSecurityType = null;
+			DerivativeSecuritySubType = null;
+			DerivativeMaturityMonthYear = null;
+			DerivativeMaturityDate = null;
+			DerivativeMaturityTime = null;
+			DerivativeSettleOnOpenFlag = null;
+			DerivativeInstrmtAssignmentMethod = null;
+			DerivativeSecurityStatus = null;
+			DerivativeIssueDate = null;
+			DerivativeInstrRegistry = null;
+			DerivativeCountryOfIssue = null;
+			DerivativeStateOrProvinceOfIssue = null;
+			DerivativeLocaleOfIssue = null;
+			DerivativeStrikePrice = null;
+			DerivativeStrikeCurrency = null;
+			DerivativeStrikeCurrencyCodeSource = null;
+			DerivativeStrikeMultiplier = null;
+			DerivativeStrikeValue = null;
+			DerivativeOptAttribute = null;
+			DerivativeContractMultiplier = null;
+			DerivativeContractMultiplierUnit = null;
+			DerivativeFlowScheduleType = null;
+			DerivativeMinPriceIncrement = null;
+			DerivativeMinPriceIncrementAmount = null;
+			DerivativeUnitOfMeasure = null;
+			DerivativeUnitOfMeasureQty = null;
+			DerivativeUnitOfMeasureCurrency = null;
+			DerivativeUnitOfMeasureCurrencyCodeSource = null;
+			DerivativePriceUnitOfMeasure = null;
+			DerivativePriceUnitOfMeasureQty = null;
+			DerivativePriceUnitOfMeasureCurrency = null;
+			DerivativePriceUnitOfMeasureCurrencyCodeSource = null;
+			DerivativeSettlMethod = null;
+			DerivativePriceQuoteMethod = null;
+			DerivativeValuationMethod = null;
+			DerivativePriceQuoteCurrency = null;
+			DerivativePriceQuoteCurrencyCodeSource = null;
+			DerivativeListMethod = null;
+			DerivativeCapPrice = null;
+			DerivativeFloorPrice = null;
+			DerivativePutOrCall = null;
+			DerivativeInTheMoneyCondition = null;
+			DerivativeContraryInstructionEligibilityIndicator = null;
+			DerivativeExerciseStyle = null;
+			DerivativeOptPayAmount = null;
+			DerivativeTimeUnit = null;
+			DerivativeSecurityExchange = null;
+			DerivativePositionLimit = null;
+			DerivativeNTPositionLimit = null;
+			DerivativeIssuer = null;
+			DerivativeEncodedIssuerLen = null;
+			DerivativeEncodedIssuer = null;
+			DerivativeSecurityDesc = null;
+			DerivativeEncodedSecurityDescLen = null;
+			DerivativeEncodedSecurityDesc = null;
+			((IFixReset?)DerivativeSecurityXML)?.Reset();
+			DerivativeContractSettlMonth = null;
+			((IFixReset?)DerivativeEventsGrp)?.Reset();
+			((IFixReset?)DerivativeInstrumentParties)?.Reset();
+		}
 	}
 }

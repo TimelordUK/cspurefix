@@ -70,5 +70,13 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			SettlPartyID = null;
+			SettlPartyIDSource = null;
+			SettlPartyRole = null;
+			((IFixReset?)SettlPtysSubGrp)?.Reset();
+		}
 	}
 }

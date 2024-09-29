@@ -730,5 +730,93 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPaymentStreamRateIndex = null;
+			UnderlyingPaymentStreamRateIndexSource = null;
+			UnderlyingPaymentStreamRateIndexID = null;
+			UnderlyingPaymentStreamRateIndexIDSource = null;
+			UnderlyingPaymentStreamRateIndexCurveUnit = null;
+			UnderlyingPaymentStreamRateIndexCurvePeriod = null;
+			UnderlyingPaymentStreamRateIndex2 = null;
+			UnderlyingPaymentStreamRateIndex2Source = null;
+			UnderlyingPaymentStreamRateIndex2ID = null;
+			UnderlyingPaymentStreamRateIndex2IDSource = null;
+			UnderlyingPaymentStreamRateIndex2CurveUnit = null;
+			UnderlyingPaymentStreamRateIndex2CurvePeriod = null;
+			UnderlyingPaymentStreamRateIndexLocation = null;
+			UnderlyingPaymentStreamRateIndexLevel = null;
+			UnderlyingPaymentStreamRateIndexUnitOfMeasure = null;
+			UnderlyingPaymentStreamSettlLevel = null;
+			UnderlyingPaymentStreamReferenceLevel = null;
+			UnderlyingPaymentStreamReferenceLevelUnitOfMeasure = null;
+			UnderlyingPaymentStreamReferenceLevelEqualsZeroIndicator = null;
+			UnderlyingPaymentStreamRateMultiplier = null;
+			UnderlyingPaymentStreamRateSpread = null;
+			UnderlyingPaymentStreamRateSpreadCurrency = null;
+			UnderlyingPaymentStreamRateSpreadUnitOfMeasure = null;
+			UnderlyingPaymentStreamRateConversionFactor = null;
+			UnderlyingPaymentStreamRateSpreadType = null;
+			UnderlyingPaymentStreamRateSpreadPositionType = null;
+			UnderlyingPaymentStreamRateTreatment = null;
+			UnderlyingPaymentStreamCapRate = null;
+			UnderlyingPaymentStreamCapRateBuySide = null;
+			UnderlyingPaymentStreamCapRateSellSide = null;
+			UnderlyingPaymentStreamFloorRate = null;
+			UnderlyingPaymentStreamFloorRateBuySide = null;
+			UnderlyingPaymentStreamFloorRateSellSide = null;
+			UnderlyingPaymentStreamInitialRate = null;
+			UnderlyingPaymentStreamLastResetRate = null;
+			UnderlyingPaymentStreamFinalRate = null;
+			UnderlyingPaymentStreamFinalRateRoundingDirection = null;
+			UnderlyingPaymentStreamFinalRatePrecision = null;
+			UnderlyingPaymentStreamAveragingMethod = null;
+			UnderlyingPaymentStreamNegativeRateTreatment = null;
+			UnderlyingPaymentStreamCalculationLagPeriod = null;
+			UnderlyingPaymentStreamCalculationLagUnit = null;
+			UnderlyingPaymentStreamFirstObservationDateUnadjusted = null;
+			UnderlyingPaymentStreamFirstObservationDateRelativeTo = null;
+			UnderlyingPaymentStreamFirstObservationDateOffsetDayType = null;
+			UnderlyingPaymentStreamFirstObservationDateOffsetPeriod = null;
+			UnderlyingPaymentStreamFirstObservationDateOffsetUnit = null;
+			UnderlyingPaymentStreamFirstObservationDateAdjusted = null;
+			UnderlyingPaymentStreamPricingDayType = null;
+			UnderlyingPaymentStreamPricingDayDistribution = null;
+			UnderlyingPaymentStreamPricingDayCount = null;
+			UnderlyingPaymentStreamPricingBusinessCalendar = null;
+			UnderlyingPaymentStreamPricingBusinessDayConvention = null;
+			((IFixReset?)UnderlyingPaymentStreamPricingBusinessCenterGrp)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamPricingDayGrp)?.Reset();
+			((IFixReset?)UnderlyingPaymentStreamPricingDateGrp)?.Reset();
+			UnderlyingPaymentStreamInflationLagPeriod = null;
+			UnderlyingPaymentStreamInflationLagUnit = null;
+			UnderlyingPaymentStreamInflationLagDayType = null;
+			UnderlyingPaymentStreamInflationInterpolationMethod = null;
+			UnderlyingPaymentStreamInflationIndexSource = null;
+			UnderlyingPaymentStreamInflationPublicationSource = null;
+			UnderlyingPaymentStreamInflationInitialIndexLevel = null;
+			UnderlyingPaymentStreamInflationFallbackBondApplicable = null;
+			UnderlyingPaymentStreamFRADiscounting = null;
+			UnderlyingPaymentStreamUnderlierRefID = null;
+			((IFixReset?)UnderlyingPaymentStreamFormula)?.Reset();
+			((IFixReset?)UnderlyingDividendConditions)?.Reset();
+			UnderlyingReturnRateNotionalReset = null;
+			((IFixReset?)UnderlyingReturnRateGrp)?.Reset();
+			UnderlyingPaymentStreamLinkInitialLevel = null;
+			UnderlyingPaymentStreamLinkClosingLevelIndicator = null;
+			UnderlyingPaymentStreamLinkExpiringLevelIndicator = null;
+			UnderlyingPaymentStreamLinkEstimatedTradingDays = null;
+			UnderlyingPaymentStreamLinkStrikePrice = null;
+			UnderlyingPaymentStreamLinkStrikePriceType = null;
+			UnderlyingPaymentStreamLinkMaximumBoundary = null;
+			UnderlyingPaymentStreamLinkMinimumBoundary = null;
+			UnderlyingPaymentStreamLinkNumberOfDataSeries = null;
+			UnderlyingPaymentStreamVarianceUnadjustedCap = null;
+			UnderlyingPaymentStreamRealizedVarianceMethod = null;
+			UnderlyingPaymentStreamDaysAdjustmentIndicator = null;
+			UnderlyingPaymentStreamNearestExchangeContractRefID = null;
+			UnderlyingPaymentStreamVegaNotionalAmount = null;
+		}
 	}
 }

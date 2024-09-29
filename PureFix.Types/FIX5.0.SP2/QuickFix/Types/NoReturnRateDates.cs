@@ -226,5 +226,32 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			ReturnRateDateMode = null;
+			((IFixReset?)ReturnRateValuationDateGrp)?.Reset();
+			ReturnRateValuationDateRelativeTo = null;
+			ReturnRateValuationDateOffsetPeriod = null;
+			ReturnRateValuationDateOffsetUnit = null;
+			ReturnRateValuationDateOffsetDayType = null;
+			ReturnRateValuationStartDateUnadjusted = null;
+			ReturnRateValuationStartDateRelativeTo = null;
+			ReturnRateValuationStartDateOffsetPeriod = null;
+			ReturnRateValuationStartDateOffsetUnit = null;
+			ReturnRateValuationStartDateOffsetDayType = null;
+			ReturnRateValuationStartDateAdjusted = null;
+			ReturnRateValuationEndDateUnadjusted = null;
+			ReturnRateValuationEndDateRelativeTo = null;
+			ReturnRateValuationEndDateOffsetPeriod = null;
+			ReturnRateValuationEndDateOffsetUnit = null;
+			ReturnRateValuationEndDateOffsetDayType = null;
+			ReturnRateValuationEndDateAdjusted = null;
+			ReturnRateValuationFrequencyPeriod = null;
+			ReturnRateValuationFrequencyUnit = null;
+			ReturnRateValuationFrequencyRollConvention = null;
+			ReturnRateValuationDateBusinessDayConvention = null;
+			((IFixReset?)ReturnRateValuationDateBusinessCenterGrp)?.Reset();
+		}
 	}
 }

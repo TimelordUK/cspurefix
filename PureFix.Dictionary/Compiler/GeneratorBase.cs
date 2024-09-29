@@ -32,14 +32,22 @@ namespace PureFix.Dictionary.Compiler
         {
             foreach(var message in FixDefinitions.Message.Values)
             {
-                var filename = MakeFilename(message);
-                if(m_FilesGenerated.Add(filename))
-                {
-                    var content = GenerateType(message);
-                    WriteFile(filename, content);
-                }
+                Process(message);
+            }
+            PostProcess();
+        }
+
+        public void Process(MessageDefinition message)
+        {
+            var filename = MakeFilename(message);
+            if (m_FilesGenerated.Add(filename))
+            {
+                var content = GenerateType(message);
+                WriteFile(filename, content);
             }
         }
+
+        public virtual void PostProcess() { }
 
         private void Process(ContainedGroupField field)
         {

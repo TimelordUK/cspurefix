@@ -126,5 +126,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			EntitlementIndicator = null;
+			EntitlementType = null;
+			EntitlementSubType = null;
+			((IFixReset?)EntitlementAttribGrp)?.Reset();
+			EntitlementID = null;
+			EntitlementPlatform = null;
+			((IFixReset?)InstrumentScopeGrp)?.Reset();
+			((IFixReset?)MarketSegmentScopeGrp)?.Reset();
+			EntitlementStartDate = null;
+			EntitlementEndDate = null;
+		}
 	}
 }

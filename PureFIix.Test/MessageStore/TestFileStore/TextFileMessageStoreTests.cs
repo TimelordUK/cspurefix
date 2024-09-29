@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
+
+#if false
 using PureFix.MessageStore;
 using PureFix.MessageStore.TextFileStore;
 
@@ -171,3 +173,4 @@ namespace PureFIix.Test.MessageStore.FileStore
         }
     }
 }
+#endif

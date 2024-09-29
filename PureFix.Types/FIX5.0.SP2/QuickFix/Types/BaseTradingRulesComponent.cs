@@ -206,5 +206,28 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)TickRules)?.Reset();
+			((IFixReset?)LotTypeRules)?.Reset();
+			((IFixReset?)PriceLimits)?.Reset();
+			((IFixReset?)PriceRangeRuleGrp)?.Reset();
+			((IFixReset?)QuoteSizeRuleGrp)?.Reset();
+			ExpirationCycle = null;
+			TradeVolType = null;
+			MinTradeVol = null;
+			MaxTradeVol = null;
+			MaxPriceVariation = null;
+			ImpliedMarketIndicator = null;
+			TradingCurrency = null;
+			TradingCurrencyCodeSource = null;
+			RoundLot = null;
+			MultilegModel = null;
+			MultilegPriceMethod = null;
+			PriceType = null;
+			FastMarketPercentage = null;
+			QuoteSideIndicator = null;
+		}
 	}
 }

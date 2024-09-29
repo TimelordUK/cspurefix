@@ -117,5 +117,19 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegEventType = null;
+			LegEventDate = null;
+			LegEventTime = null;
+			LegEventTimeUnit = null;
+			LegEventTimePeriod = null;
+			LegEventMonthYear = null;
+			LegEventPx = null;
+			LegEventText = null;
+			EncodedLegEventTextLen = null;
+			EncodedLegEventText = null;
+		}
 	}
 }

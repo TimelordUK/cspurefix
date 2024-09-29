@@ -130,5 +130,21 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PosAmtType = null;
+			PosAmt = null;
+			PosAmtStreamDesc = null;
+			PositionCurrency = null;
+			PositionCurrencyCodeSource = null;
+			PositionFXRate = null;
+			PositionFXRateCalc = null;
+			PosAmtReason = null;
+			PosAmtMarketSegmentID = null;
+			PosAmtMarketID = null;
+			PosAmtPrice = null;
+			PosAmtPriceType = null;
+		}
 	}
 }

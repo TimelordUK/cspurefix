@@ -114,5 +114,17 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TradSesReqID = null;
+			TradingSessionID = null;
+			TradingSessionSubID = null;
+			TradSesMethod = null;
+			TradSesMode = null;
+			SubscriptionRequestType = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -86,5 +86,15 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPricingDateUnadjusted = null;
+			UnderlyingPricingDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingPricingDateBusinessCenterGrp)?.Reset();
+			UnderlyingPricingDateAdjusted = null;
+			UnderlyingPricingTime = null;
+			UnderlyingPricingTimeBusinessCenter = null;
+		}
 	}
 }

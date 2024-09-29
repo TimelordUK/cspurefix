@@ -313,5 +313,39 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegStreamType = null;
+			LegStreamXID = null;
+			LegStreamDesc = null;
+			LegStreamVersion = null;
+			LegStreamVersionEffectiveDate = null;
+			LegStreamPaySide = null;
+			LegStreamReceiveSide = null;
+			LegStreamNotionalXIDRef = null;
+			LegStreamNotional = null;
+			LegStreamCurrency = null;
+			LegStreamNotionalDeterminationMethod = null;
+			LegStreamNotionalAdjustments = null;
+			LegStreamNotionalFrequencyPeriod = null;
+			LegStreamNotionalFrequencyUnit = null;
+			LegStreamNotionalCommodityFrequency = null;
+			LegStreamNotionalUnitOfMeasure = null;
+			LegStreamTotalNotional = null;
+			LegStreamTotalNotionalUnitOfMeasure = null;
+			((IFixReset?)LegStreamCommodity)?.Reset();
+			((IFixReset?)LegStreamEffectiveDate)?.Reset();
+			((IFixReset?)LegStreamTerminationDate)?.Reset();
+			((IFixReset?)LegStreamCalculationPeriodDates)?.Reset();
+			((IFixReset?)LegPaymentStream)?.Reset();
+			((IFixReset?)LegPaymentScheduleGrp)?.Reset();
+			((IFixReset?)LegPaymentStubGrp)?.Reset();
+			((IFixReset?)LegDeliveryStream)?.Reset();
+			((IFixReset?)LegDeliveryScheduleGrp)?.Reset();
+			LegStreamText = null;
+			EncodedLegStreamTextLen = null;
+			EncodedLegStreamText = null;
+		}
 	}
 }

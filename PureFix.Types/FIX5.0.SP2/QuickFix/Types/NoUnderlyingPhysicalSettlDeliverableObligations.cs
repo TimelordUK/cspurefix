@@ -50,5 +50,11 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingPhysicalSettlDeliverableObligationType = null;
+			UnderlyingPhysicalSettlDeliverableObligationValue = null;
+		}
 	}
 }

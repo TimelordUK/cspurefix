@@ -226,5 +226,32 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegReturnRateDateMode = null;
+			((IFixReset?)LegReturnRateValuationDateGrp)?.Reset();
+			LegReturnRateValuationDateRelativeTo = null;
+			LegReturnRateValuationDateOffsetPeriod = null;
+			LegReturnRateValuationDateOffsetUnit = null;
+			LegReturnRateValuationDateOffsetDayType = null;
+			LegReturnRateValuationStartDateUnadjusted = null;
+			LegReturnRateValuationStartDateRelativeTo = null;
+			LegReturnRateValuationStartDateOffsetPeriod = null;
+			LegReturnRateValuationStartDateOffsetUnit = null;
+			LegReturnRateValuationStartDateOffsetDayType = null;
+			LegReturnRateValuationStartDateAdjusted = null;
+			LegReturnRateValuationEndDateUnadjusted = null;
+			LegReturnRateValuationEndDateRelativeTo = null;
+			LegReturnRateValuationEndDateOffsetPeriod = null;
+			LegReturnRateValuationEndDateOffsetUnit = null;
+			LegReturnRateValuationEndDateOffsetDayType = null;
+			LegReturnRateValuationEndDateAdjusted = null;
+			LegReturnRateValuationFrequencyPeriod = null;
+			LegReturnRateValuationFrequencyUnit = null;
+			LegReturnRateValuationFrequencyRollConvention = null;
+			LegReturnRateValuationDateBusinessDayConvention = null;
+			((IFixReset?)LegReturnRateValuationDateBusinessCenterGrp)?.Reset();
+		}
 	}
 }

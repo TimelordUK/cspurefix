@@ -255,5 +255,32 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TradeRequestID = null;
+			TradeID = null;
+			SecondaryTradeID = null;
+			FirmTradeID = null;
+			SecondaryFirmTradeID = null;
+			TradeRequestType = null;
+			SubscriptionRequestType = null;
+			TotNumTradeReports = null;
+			TradeRequestResult = null;
+			TradeRequestStatus = null;
+			((IFixReset?)Instrument)?.Reset();
+			((IFixReset?)InstrumentExtension)?.Reset();
+			((IFixReset?)UndInstrmtGrp)?.Reset();
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			MultiLegReportingType = null;
+			ResponseTransportType = null;
+			ResponseDestination = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			MessageEventSource = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

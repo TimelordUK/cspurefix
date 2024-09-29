@@ -74,5 +74,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingComplexEventScheduleStartDate = null;
+			UnderlyingComplexEventScheduleEndDate = null;
+			UnderlyingComplexEventScheduleFrequencyPeriod = null;
+			UnderlyingComplexEventScheduleFrequencyUnit = null;
+			UnderlyingComplexEventScheduleRollConvention = null;
+		}
 	}
 }

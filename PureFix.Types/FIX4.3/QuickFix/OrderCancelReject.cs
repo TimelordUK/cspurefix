@@ -224,5 +224,30 @@ namespace PureFix.Types.FIX43.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			OrderID = null;
+			SecondaryOrderID = null;
+			SecondaryClOrdID = null;
+			ClOrdID = null;
+			ClOrdLinkID = null;
+			OrigClOrdID = null;
+			OrdStatus = null;
+			WorkingIndicator = null;
+			OrigOrdModTime = null;
+			ListID = null;
+			Account = null;
+			AccountType = null;
+			TradeOriginationDate = null;
+			TransactTime = null;
+			CxlRejResponseTo = null;
+			CxlRejReason = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

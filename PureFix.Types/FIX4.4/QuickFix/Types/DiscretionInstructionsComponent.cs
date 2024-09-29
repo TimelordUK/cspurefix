@@ -90,5 +90,16 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DiscretionInst = null;
+			DiscretionOffsetValue = null;
+			DiscretionMoveType = null;
+			DiscretionOffsetType = null;
+			DiscretionLimitType = null;
+			DiscretionRoundDirection = null;
+			DiscretionScope = null;
+		}
 	}
 }

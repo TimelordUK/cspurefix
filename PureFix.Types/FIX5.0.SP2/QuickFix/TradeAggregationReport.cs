@@ -193,5 +193,26 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			TradeAggregationReportID = null;
+			TradeAggregationRequestID = null;
+			TradeAggregationRequestStatus = null;
+			TradeID = null;
+			TradeAggregationRejectReason = null;
+			AggregatedQty = null;
+			AvgPx = null;
+			AvgSpotRate = null;
+			AvgForwardPoints = null;
+			SettlDate = null;
+			((IFixReset?)Instrument)?.Reset();
+			Side = null;
+			RejectText = null;
+			EncodedRejectTextLen = null;
+			EncodedRejectText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

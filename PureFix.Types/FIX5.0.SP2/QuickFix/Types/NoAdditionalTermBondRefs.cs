@@ -184,5 +184,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			AdditionalTermBondSecurityID = null;
+			AdditionalTermBondSecurityIDSource = null;
+			AdditionalTermBondDesc = null;
+			EncodedAdditionalTermBondDescLen = null;
+			EncodedAdditionalTermBondDesc = null;
+			AdditionalTermBondCurrency = null;
+			AdditionalTermBondIssuer = null;
+			EncodedAdditionalTermBondIssuerLen = null;
+			EncodedAdditionalTermBondIssuer = null;
+			AdditionalTermBondSeniority = null;
+			AdditionalTermBondCouponType = null;
+			AdditionalTermBondCouponRate = null;
+			AdditionalTermBondMaturityDate = null;
+			AdditionalTermBondParValue = null;
+			AdditionalTermBondCurrentTotalIssuedAmount = null;
+			AdditionalTermBondCouponFrequencyPeriod = null;
+			AdditionalTermBondCouponFrequencyUnit = null;
+			AdditionalTermBondDayCount = null;
+		}
 	}
 }

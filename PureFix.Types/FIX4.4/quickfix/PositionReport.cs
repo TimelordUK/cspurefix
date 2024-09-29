@@ -326,5 +326,39 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			PosMaintRptID = null;
+			PosReqID = null;
+			PosReqType = null;
+			SubscriptionRequestType = null;
+			TotalNumPosReports = null;
+			UnsolicitedIndicator = null;
+			PosReqResult = null;
+			ClearingBusinessDate = null;
+			SettlSessID = null;
+			SettlSessSubID = null;
+			((IFixReset?)Parties)?.Reset();
+			Account = null;
+			AcctIDSource = null;
+			AccountType = null;
+			((IFixReset?)Instrument)?.Reset();
+			Currency = null;
+			SettlPrice = null;
+			SettlPriceType = null;
+			PriorSettlPrice = null;
+			((IFixReset?)InstrmtLegGrp)?.Reset();
+			((IFixReset?)PosUndInstrmtGrp)?.Reset();
+			((IFixReset?)PositionQty)?.Reset();
+			((IFixReset?)PositionAmountData)?.Reset();
+			RegistStatus = null;
+			DeliveryDate = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

@@ -506,5 +506,66 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPaymentScheduleType = null;
+			LegPaymentScheduleXID = null;
+			LegPaymentScheduleXIDRef = null;
+			LegPaymentScheduleStubType = null;
+			LegPaymentScheduleStartDateUnadjusted = null;
+			LegPaymentScheduleEndDateUnadjusted = null;
+			LegPaymentSchedulePaySide = null;
+			LegPaymentScheduleReceiveSide = null;
+			LegPaymentScheduleNotional = null;
+			LegPaymentScheduleCurrency = null;
+			LegPaymentScheduleRate = null;
+			LegPaymentScheduleRateMultiplier = null;
+			LegPaymentScheduleRateSpread = null;
+			LegPaymentScheduleRateCurrency = null;
+			LegPaymentScheduleRateUnitOfMeasure = null;
+			LegPaymentScheduleRateConversionFactor = null;
+			LegPaymentScheduleRateSpreadType = null;
+			LegPaymentScheduleRateSpreadPositionType = null;
+			LegPaymentScheduleRateTreatment = null;
+			LegPaymentScheduleFixedAmount = null;
+			LegPaymentScheduleFixedCurrency = null;
+			LegPaymentScheduleSettlPeriodPrice = null;
+			LegPaymentScheduleSettlPeriodPriceCurrency = null;
+			LegPaymentScheduleSettlPeriodPriceUnitOfMeasure = null;
+			LegPaymentScheduleStepUnitOfMeasure = null;
+			LegPaymentScheduleStepFrequencyPeriod = null;
+			LegPaymentScheduleStepFrequencyUnit = null;
+			LegPaymentScheduleStepOffsetValue = null;
+			LegPaymentScheduleStepRate = null;
+			LegPaymentScheduleStepOffsetRate = null;
+			LegPaymentScheduleStepRelativeTo = null;
+			((IFixReset?)LegPaymentScheduleRateSourceGrp)?.Reset();
+			LegPaymentScheduleFixingDateUnadjusted = null;
+			LegPaymentScheduleWeight = null;
+			LegPaymentScheduleFixingDateRelativeTo = null;
+			LegPaymentScheduleFixingDateBusinessDayConvention = null;
+			((IFixReset?)LegPaymentScheduleFixingDateBusinessCenterGrp)?.Reset();
+			LegPaymentScheduleFixingDateOffsetPeriod = null;
+			LegPaymentScheduleFixingDateOffsetUnit = null;
+			LegPaymentScheduleFixingDateOffsetDayType = null;
+			LegPaymentScheduleFixingDayDistribution = null;
+			LegPaymentScheduleFixingDayCount = null;
+			LegPaymentScheduleFixingDateAdjusted = null;
+			((IFixReset?)LegPaymentScheduleFixingDayGrp)?.Reset();
+			LegPaymentScheduleFixingLagPeriod = null;
+			LegPaymentScheduleFixingLagUnit = null;
+			LegPaymentScheduleFixingFirstObservationDateOffsetPeriod = null;
+			LegPaymentScheduleFixingFirstObservationDateOffsetUnit = null;
+			LegPaymentScheduleFixingTime = null;
+			LegPaymentScheduleFixingTimeBusinessCenter = null;
+			LegPaymentScheduleInterimExchangePaymentDateRelativeTo = null;
+			LegPaymentScheduleInterimExchangeDatesBusinessDayConvention = null;
+			((IFixReset?)LegPaymentScheduleInterimExchangeDateBusinessCenterGrp)?.Reset();
+			LegPaymentScheduleInterimExchangeDatesOffsetPeriod = null;
+			LegPaymentScheduleInterimExchangeDatesOffsetUnit = null;
+			LegPaymentScheduleInterimExchangeDatesOffsetDayType = null;
+			LegPaymentScheduleInterimExchangeDateAdjusted = null;
+		}
 	}
 }

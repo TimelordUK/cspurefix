@@ -207,5 +207,27 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			QuoteID = null;
+			QuoteMsgID = null;
+			QuoteReqID = null;
+			QuoteType = null;
+			QuoteCancelType = null;
+			SecondaryQuoteID = null;
+			QuoteAckStatus = null;
+			QuoteRejectReason = null;
+			RejectText = null;
+			EncodedRejectTextLen = null;
+			EncodedRejectText = null;
+			((IFixReset?)Parties)?.Reset();
+			((IFixReset?)QuoteAttributeGrp)?.Reset();
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

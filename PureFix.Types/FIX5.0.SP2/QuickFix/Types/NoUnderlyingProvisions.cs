@@ -333,5 +333,42 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			UnderlyingProvisionType = null;
+			UnderlyingProvisionDateUnadjusted = null;
+			UnderlyingProvisionDateBusinessDayConvention = null;
+			((IFixReset?)UnderlyingProvisionDateBusinessCenterGrp)?.Reset();
+			UnderlyingProvisionDateAdjusted = null;
+			UnderlyingProvisionDateTenorPeriod = null;
+			UnderlyingProvisionDateTenorUnit = null;
+			UnderlyingProvisionBreakFeeElection = null;
+			UnderlyingProvisionBreakFeeRate = null;
+			UnderlyingProvisionCalculationAgent = null;
+			UnderlyingProvisionOptionSinglePartyBuyerSide = null;
+			UnderlyingProvisionOptionSinglePartySellerSide = null;
+			((IFixReset?)UnderlyingProvisionCashSettlValueDates)?.Reset();
+			((IFixReset?)UnderlyingProvisionOptionExerciseDates)?.Reset();
+			((IFixReset?)UnderlyingProvisionOptionExpirationDate)?.Reset();
+			((IFixReset?)UnderlyingProvisionOptionRelevantUnderlyingDate)?.Reset();
+			UnderlyingProvisionOptionExerciseStyle = null;
+			UnderlyingProvisionOptionExerciseMultipleNotional = null;
+			UnderlyingProvisionOptionExerciseMinimumNotional = null;
+			UnderlyingProvisionOptionExerciseMaximumNotional = null;
+			UnderlyingProvisionOptionMinimumNumber = null;
+			UnderlyingProvisionOptionMaximumNumber = null;
+			UnderlyingProvisionOptionExerciseConfirmation = null;
+			((IFixReset?)UnderlyingProvisionCashSettlPaymentDates)?.Reset();
+			UnderlyingProvisionCashSettlMethod = null;
+			UnderlyingProvisionCashSettlCurrency = null;
+			UnderlyingProvisionCashSettlCurrency2 = null;
+			UnderlyingProvisionCashSettlQuoteType = null;
+			((IFixReset?)UnderlyingProvisionCashSettlQuoteSource)?.Reset();
+			UnderlyingProvisionText = null;
+			EncodedUnderlyingProvisionTextLen = null;
+			EncodedUnderlyingProvisionText = null;
+			((IFixReset?)UnderlyingProvisionParties)?.Reset();
+		}
 	}
 }

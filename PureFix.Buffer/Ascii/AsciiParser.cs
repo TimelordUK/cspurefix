@@ -10,29 +10,29 @@ using System.Xml.Serialization;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
-using Microsoft.Extensions.ObjectPool;
+
 
 namespace PureFix.Buffer.Ascii
 {
-    public partial class AsciiParser
+    public partial class AsciiParser : IMessageParser
     {
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
-        public FixDefinitions Definitons { get; }
+        public IFixDefinitions Definitons { get; }
         public int ID { get; } = Interlocked.Increment(ref _nextId);
 
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;
         public Tags? Locations => _state.Locations;
-        private readonly Pool _pool = new();
+        private readonly StoragePool _pool = new();
         private long _receivedBytes;
         private long _parsedMessages;
         private double _totalElapsedSegmentParseMicros;
         private double _totalElapsedParseMicros;
         public Stats ParserStats => new(_receivedBytes, _parsedMessages, _pool.Rents, _pool.Returns, _totalElapsedSegmentParseMicros, _totalElapsedParseMicros);
 
-        public AsciiParser(FixDefinitions definitions)
+        public AsciiParser(IFixDefinitions definitions)
         {
             Definitons = definitions;
             _state = new AsciiParseState(definitions, _pool);
@@ -42,8 +42,9 @@ namespace PureFix.Buffer.Ascii
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
 
-        private void Msg(int ptr, Action<int, AsciiView>? onMsg)
+        private void Msg(int ptr, Action<int, AsciiView>? onMsg, Action<StoragePool.Storage>? onDecode)
         {
+            if (_state.Storage != null) onDecode?.Invoke(_state.Storage);
             var startTicks = Stopwatch.GetTimestamp();
             var view = GetView(ptr);
             var elapsed = Stopwatch.GetElapsedTime(startTicks);
@@ -52,10 +53,6 @@ namespace PureFix.Buffer.Ascii
             if (view == null) return;
             _parsedMessages++;
             onMsg?.Invoke(ptr, view);
-            
-            // storage for this message will be re-used on next invocation now its been handed to
-            // application
-            if (_state.Storage != null) _pool.Deliver(_state.Storage);
             _state.BeginMessage();
         }
 
@@ -67,9 +64,9 @@ namespace PureFix.Buffer.Ascii
             }
             var structure = _segmentParser.Parse(_state.MsgType, Locations, Locations.NextTagPos - 1);
             var msgSegment = structure?.Msg();
-            if (msgSegment != null)
+            if (msgSegment != null && _state.Storage != null)
             {
-                var view = new AsciiView(Definitons, msgSegment, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
+                var view = new AsciiView(Definitons, msgSegment, _state.Storage, structure, ptr, Delimiter, WriteDelimiter);
                 return view;
             }
 
@@ -78,11 +75,11 @@ namespace PureFix.Buffer.Ascii
                 {
                     EndPosition = Locations.NextTagPos - 1
                 };
-            return new AsciiView(Definitons, segment, _state.Buffer, structure, ptr, Delimiter, WriteDelimiter);
+            return new AsciiView(Definitons, segment, _state.Storage ?? new StoragePool.Storage(), structure, ptr, Delimiter, WriteDelimiter);
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.
-        public void ParseFrom(Span<byte> readFrom, Action<int, AsciiView>? onView)
+        public void ParseFrom(ReadOnlySpan<byte> readFrom, Action<int, MsgView>? onView, Action<StoragePool.Storage>? onDecode = null)
         {
             const byte eq = AsciiChars.Eq;
             const byte zero = AsciiChars.Zero;
@@ -108,7 +105,7 @@ namespace PureFix.Buffer.Ascii
                     {
                         case ParseState.MsgComplete:
                         {
-                            Msg(writePtr, onView);
+                            Msg(writePtr, onView, onDecode);
                             continue;
                         }
 
@@ -182,7 +179,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     case ParseState.MsgComplete:
                     {
-                        Msg(_state.Buffer.GetPos(), onView);
+                        Msg(_state.Buffer.GetPos(), onView, onDecode);
                         break;
                     }
                 }
@@ -190,17 +187,19 @@ namespace PureFix.Buffer.Ascii
             catch (Exception)
             {
                 // return buffer given this message has failed to deliver
-                if (_state.Storage != null) _pool.Deliver(_state.Storage);
+                if (_state.Storage != null) _pool.Return(_state.Storage);
                 throw;
             } 
             finally
             {
-                // any views dispatched on the callback from previous call are considered ready to be reclaimed, the expectation
-                // being the recipient must have extracted required data or parsed into a concrete type within the callbak itself.s
-                _pool.Reclaim();
                 var elapsedTime = Stopwatch.GetElapsedTime(startTicks);
                 _totalElapsedParseMicros += elapsedTime.TotalMicroseconds;
             }
+        }
+
+        public void Return(StoragePool.Storage sto)
+        {
+            _pool.Return(sto);
         }
     }
 }

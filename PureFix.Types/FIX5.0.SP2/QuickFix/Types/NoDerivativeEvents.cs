@@ -74,5 +74,14 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DerivativeEventType = null;
+			DerivativeEventDate = null;
+			DerivativeEventTime = null;
+			DerivativeEventPx = null;
+			DerivativeEventText = null;
+		}
 	}
 }

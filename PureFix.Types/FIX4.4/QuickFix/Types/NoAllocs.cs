@@ -86,5 +86,15 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			AllocAccount = null;
+			AllocAcctIDSource = null;
+			AllocSettlCurrency = null;
+			IndividualAllocID = null;
+			((IFixReset?)NestedParties)?.Reset();
+			AllocQty = null;
+		}
 	}
 }

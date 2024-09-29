@@ -62,5 +62,12 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			SignatureLength = null;
+			Signature = null;
+			CheckSum = null;
+		}
 	}
 }

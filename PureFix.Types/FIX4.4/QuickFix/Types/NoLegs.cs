@@ -66,5 +66,12 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)InstrumentLeg)?.Reset();
+			LegIOIQty = null;
+			((IFixReset?)LegStipulations)?.Reset();
+		}
 	}
 }

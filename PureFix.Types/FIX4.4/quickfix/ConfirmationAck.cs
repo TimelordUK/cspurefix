@@ -143,5 +143,20 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ConfirmID = null;
+			TradeDate = null;
+			TransactTime = null;
+			AffirmStatus = null;
+			ConfirmRejReason = null;
+			MatchStatus = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

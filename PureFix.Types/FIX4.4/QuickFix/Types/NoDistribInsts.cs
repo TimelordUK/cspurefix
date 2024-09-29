@@ -98,5 +98,17 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			DistribPaymentMethod = null;
+			DistribPercentage = null;
+			CashDistribCurr = null;
+			CashDistribAgentName = null;
+			CashDistribAgentCode = null;
+			CashDistribAgentAcctNumber = null;
+			CashDistribPayRef = null;
+			CashDistribAgentAcctName = null;
+		}
 	}
 }

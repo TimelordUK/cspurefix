@@ -64,5 +64,11 @@ namespace PureFix.Types.FIXT11.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

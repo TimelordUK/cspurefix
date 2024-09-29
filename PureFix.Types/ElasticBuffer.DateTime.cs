@@ -105,7 +105,7 @@ namespace PureFix.Types
         private int WriteFormat(DateTime dateTime, string format)
         {
             CheckGrowBuffer(format.Length);
-            var span = _buffer.AsSpan()[Pos..format.Length];
+            var span = _buffer.AsSpan(Pos,format.Length);
             dateTime.TryFormat(span, out var written, format);
             Pos += written;
             return Pos;
@@ -114,7 +114,7 @@ namespace PureFix.Types
         private int WriteFormat(DateOnly dateTime, string format)
         {
             CheckGrowBuffer(format.Length);
-            var span = _buffer.AsSpan()[Pos..format.Length];
+            var span = _buffer.AsSpan(Pos, format.Length);
             dateTime.TryFormat(span, out var written, format);
             Pos += written;
             return Pos;
@@ -123,7 +123,7 @@ namespace PureFix.Types
         private int WriteFormat(TimeOnly timeOnly, string format)
         {
             CheckGrowBuffer(format.Length);
-            var span = _buffer.AsSpan()[Pos..format.Length];
+            var span = _buffer.AsSpan(Pos, format.Length);
             timeOnly.TryFormat(span, out var written, format);
             Pos += written;
             return Pos;

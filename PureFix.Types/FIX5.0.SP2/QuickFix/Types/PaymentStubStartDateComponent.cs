@@ -102,5 +102,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			PaymentStubStartDateUnadjusted = null;
+			PaymentStubStartDateBusinessDayConvention = null;
+			((IFixReset?)PaymentStubStartDateBusinessCenterGrp)?.Reset();
+			PaymentStubStartDateRelativeTo = null;
+			PaymentStubStartDateOffsetPeriod = null;
+			PaymentStubStartDateOffsetUnit = null;
+			PaymentStubStartDateOffsetDayType = null;
+			PaymentStubStartDateAdjusted = null;
+		}
 	}
 }

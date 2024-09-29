@@ -117,5 +117,17 @@ namespace PureFix.Types.FIX50SP2.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			PayReportID = null;
+			PayReportStatus = null;
+			PayDisputeReason = null;
+			RejectText = null;
+			EncodedRejectTextLen = null;
+			EncodedRejectText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

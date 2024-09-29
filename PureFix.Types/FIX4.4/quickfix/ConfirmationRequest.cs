@@ -178,5 +178,24 @@ namespace PureFix.Types.FIX44.QuickFix
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			((IFixReset?)StandardHeader)?.Reset();
+			ConfirmReqID = null;
+			ConfirmType = null;
+			((IFixReset?)OrdAllocGrp)?.Reset();
+			AllocID = null;
+			SecondaryAllocID = null;
+			IndividualAllocID = null;
+			TransactTime = null;
+			AllocAccount = null;
+			AllocAcctIDSource = null;
+			AllocAccountType = null;
+			Text = null;
+			EncodedTextLen = null;
+			EncodedText = null;
+			((IFixReset?)StandardTrailer)?.Reset();
+		}
 	}
 }

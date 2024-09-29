@@ -9,9 +9,9 @@ using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
 
 namespace PureFix.Dictionary.Parser.QuickFix;
 
-public partial class QuickFixXmlFileParser(FixDefinitions definitions)
+public partial class QuickFixXmlFileParser(IFixDefinitions definitions)
 {
-    public FixDefinitions Definitions { get; } = definitions;
+    public IFixDefinitions Definitions { get; } = definitions;
     public Queue<Node> Queue { get; } = new ();
 
     private void ParseVersion(XDocument doc)

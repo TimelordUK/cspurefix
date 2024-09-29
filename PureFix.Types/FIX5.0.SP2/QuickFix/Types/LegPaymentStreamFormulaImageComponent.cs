@@ -53,5 +53,11 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			}
 			return true;
 		}
+		
+		void IFixReset.Reset()
+		{
+			LegPaymentStreamFormulaImageLength = null;
+			LegPaymentStreamFormulaImage = null;
+		}
 	}
 }
