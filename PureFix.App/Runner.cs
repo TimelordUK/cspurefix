@@ -15,11 +15,11 @@ namespace PureFix.ConsoleApp
         {
             var clock = new RealtimeClock();
             var factory = new ConsoleLogFactory();
-            FixApp acceptor = new("test-qf44-acceptor.json");
+            FixApp acceptor = new("test-qf52-acceptor.json");
             var t1 = acceptor.Run(factory, clock);            
             await Task.Factory.StartNew(async () =>
             {
-                FixApp initiator = new("test-qf44-initiator.json");
+                FixApp initiator = new("test-qf52-initiator.json");
                 await Task.Delay(500);
                 await initiator.Run(factory, clock);
             });

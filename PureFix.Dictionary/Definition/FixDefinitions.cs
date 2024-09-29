@@ -117,7 +117,7 @@ namespace PureFix.Dictionary.Definition
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append($"message.Count = {Message.Count / 2} types = {string.Join(", ", Message.Keys)}"); // lookup via "A" or "Logon"
+            sb.Append($"[{Version}] message.Count = {Message.Count / 2} types = {string.Join(", ", Message.Keys)}"); // lookup via "A" or "Logon"
             sb.Append($"simple.Count = {Simple.Count} ");
             sb.Append($"component.Count = {Component.Count} ");
             return sb.ToString();

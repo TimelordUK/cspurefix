@@ -27,6 +27,7 @@ namespace PureFix.Transport.Ascii
 
             m_msgStore = msgStore;
             m_resender = new FixMsgAsciiStoreResend(m_msgStore, fixMessageFactory, config, clock);
+            m_sessionLogger?.Info($"{Definitions}");
         }
 
         private async Task SendTestRequest()
