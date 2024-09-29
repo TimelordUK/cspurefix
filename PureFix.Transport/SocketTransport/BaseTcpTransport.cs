@@ -87,9 +87,9 @@ namespace PureFix.Transport.SocketTransport
             m_logger.Info($"AsSSlStream constructing ssl stream. {Protocols}");
             ArgumentNullException.ThrowIfNull(m_networkStream);
             ArgumentNullException.ThrowIfNull(m_sslCertificate);
+            m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
             if (m_config.IsInitiator())
             {
-                m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
                 var certs = new X509Certificate2Collection
                         {
                             MakeCertificate()
@@ -100,8 +100,7 @@ namespace PureFix.Transport.SocketTransport
             }
             else
             {
-                m_logger.Info("server waiting to authenticate clients.");
-                m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
+                m_logger.Info("server waiting to authenticate clients.");             
                 m_sslStream.AuthenticateAsServer(MakeCertificate(), false, Protocols, false);
             }
         }
