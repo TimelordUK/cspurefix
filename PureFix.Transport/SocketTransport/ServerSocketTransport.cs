@@ -13,8 +13,7 @@ namespace PureFix.Transport.SocketTransport
     {
         public ServerSocketTransport(Socket socket, IFixConfig config, IFixClock clock, ILogFactory logFactory) : base(config, clock, logFactory)
         {
-            m_socket = socket;
-            AsStream();
+            m_socket = socket;   
         }
     }
 }

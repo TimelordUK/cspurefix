@@ -7,7 +7,7 @@
       "host": "localhost",
       "port": 2344,
       "tls": {
-        "enabled": true,
+        "enabled": false,
         "certificate": "local.cer"
       }
     },

@@ -42,6 +42,7 @@ namespace PureFix.Transport.SocketTransport
                 {
                     m_logger.Info("received a new connection - create a transport");
                     var transport = new ServerSocketTransport(handle, m_config, m_clock, m_logFactory);
+                    await transport.AsStream();
                     var session = m_sessionFactory.MakeSession();
                     await session.Run(transport, cancellationToken);
                 });

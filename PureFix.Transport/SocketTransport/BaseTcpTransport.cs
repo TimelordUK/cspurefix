@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Authentication;
 
 namespace PureFix.Transport.SocketTransport
 {
@@ -19,7 +21,7 @@ namespace PureFix.Transport.SocketTransport
         protected readonly TcpTransportDescription? m_tcp;
         protected readonly ILogger m_logger;
         protected Stream? m_networkStream;
-        protected Stream? m_sslStream;
+        protected SslStream? m_sslStream;
         protected string? m_sslCertificate;
         protected IFixConfig m_config;
 
@@ -53,12 +55,56 @@ namespace PureFix.Transport.SocketTransport
             m_socket = new(m_iPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        protected void AsStream()
+        public async Task AsStream()
         {
             if (m_socket != null)
             {
-                m_networkStream = new NetworkStream(m_socket);
+                try
+                {
+                    m_networkStream = new NetworkStream(m_socket);
+                    if (m_sslCertificate != null)
+                    {
+                        await AsSSlStream();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    m_logger.Error(ex);
+                }
             }
+        }
+
+        private X509Certificate2 MakeCertificate()
+        {
+            ArgumentNullException.ThrowIfNull(m_sslCertificate);
+            return new X509Certificate2(m_sslCertificate, string.Empty); 
+        }
+
+        private async Task AsSSlStream()
+        {
+            ArgumentNullException.ThrowIfNull(m_networkStream);
+            ArgumentNullException.ThrowIfNull(m_sslCertificate);
+            if (m_config.IsInitiator())
+            {
+                m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
+                var certs = new X509Certificate2Collection
+                        {
+                            MakeCertificate()
+                        };
+                await m_sslStream.AuthenticateAsClientAsync("localhost", certs, SslProtocols.Tls12, false);
+            }
+            else
+            {
+                m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
+                m_sslStream.AuthenticateAsServer(MakeCertificate(), false, SslProtocols.Tls12, false);
+            }
+        }
+
+        private bool ValidateServerCertificate(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+        {
+            // For self-signed certificate, always return true.
+            m_logger.Info("ValidateServerCertificate");
+            return true;
         }
 
         public static IPEndPoint? MakeEndPoint(string host, int port)
@@ -83,26 +129,28 @@ namespace PureFix.Transport.SocketTransport
 
         public async Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)
         {
-            if (m_networkStream != null)
+            var stream = m_sslStream ?? m_networkStream;
+            if (stream != null)
             {
-                var received = await m_networkStream.ReadAsync(buffer, token);
+                var received = await stream.ReadAsync(buffer, token);
                 return received;
             }
             else
             {
-                throw new InvalidOperationException("no socket to receive on.");
+                throw new InvalidOperationException("no stream to receive on.");
             }
         }
 
         public async Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token)
         {
-            if (m_networkStream != null)
+            var stream = m_sslStream ?? m_networkStream;
+            if (stream != null)
             {
-                await m_networkStream.WriteAsync(messageBytes, token);
+                await stream.WriteAsync(messageBytes, token);
             }
             else
             {
-                throw new InvalidOperationException("no socket to send on.");
+                throw new InvalidOperationException("no stream to send on.");
             }
         }   
     }
