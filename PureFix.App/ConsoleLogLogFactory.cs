@@ -27,12 +27,9 @@ namespace PureFix.ConsoleApp
         {
             ILogger _logger;
            
-            public Logger(string name, string template)
+            public Logger(string name, ILogger logger)
             {
-                _logger = new LoggerConfiguration().Enrich.WithThreadId()
-               .WriteTo.Console(outputTemplate:
-               template)
-                .CreateLogger().ForContext("Name", name);
+                _logger = logger;
             }
             public void Debug(string messageTemplate)
             {
@@ -54,14 +51,33 @@ namespace PureFix.ConsoleApp
                 _logger.Warning(messageTemplate);
             }
         }
+
+        private ILogger MakeApp(string name)
+        {
+            var l = new LoggerConfiguration()
+              .WriteTo.Console(outputTemplate: _appTemplate)
+              .Enrich.WithThreadId()
+              .CreateLogger()
+              .ForContext("Name", name);
+            return l;
+        }
+
+        private ILogger MakePlain(string name)
+        {
+            var l = new LoggerConfiguration()
+              .WriteTo.Console(outputTemplate: _fixTemplate)
+              .CreateLogger();
+            return l;
+        }
+
         public Types.ILogger MakeLogger(string name)
         {
-            return new Logger(name, _appTemplate);
+            return new Logger(name, MakeApp(name));
         }
 
         public Types.ILogger MakePlainLogger(string name)
         {
-            return new Logger(name, _fixTemplate);
+            return new Logger(name, MakePlain(name));
         }
     }
 }
