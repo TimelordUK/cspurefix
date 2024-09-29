@@ -15,7 +15,7 @@ namespace PureFix.ConsoleApp
 {
     public class ConsoleLogFactory : ILogFactory
     {
-        const string _appTemplate = "[{Timestamp:HH:mm:ss.fff}] [{Name}] [{Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}";
+        const string _appTemplate = "[{Timestamp:HH:mm:ss.fff zzz}] [{Name}] [{Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}";
         const string _fixTemplate = "{Message:lj}{NewLine}";
         public enum LogFormatTypes
         {
