@@ -24,6 +24,7 @@ namespace PureFix.Transport.SocketTransport
         protected SslStream? m_sslStream;
         protected string? m_sslCertificate;
         protected IFixConfig m_config;
+        public SslProtocols Protocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
         protected BaseTcpTransport(IFixConfig config, IFixClock clock, ILogFactory logFactory)
         {
@@ -38,7 +39,7 @@ namespace PureFix.Transport.SocketTransport
             var tls = config?.Description?.Application?.Tcp.Tls;
             if (tls != null)
             {
-                if (tls.Enabled != false && tls.Enabled == true) {
+                if (tls.Enabled != null && tls.Enabled == true) {
                     m_sslCertificate = tls.Certificate;
                 }
             }
@@ -83,7 +84,7 @@ namespace PureFix.Transport.SocketTransport
 
         private async Task AsSSlStream()
         {
-            m_logger.Info("AsSSlStream constructing ssl stream.");
+            m_logger.Info($"AsSSlStream constructing ssl stream. {Protocols}");
             ArgumentNullException.ThrowIfNull(m_networkStream);
             ArgumentNullException.ThrowIfNull(m_sslCertificate);
             if (m_config.IsInitiator())
@@ -94,14 +95,14 @@ namespace PureFix.Transport.SocketTransport
                             MakeCertificate()
                         };
                 m_logger.Info("client is awaiting authentication");
-                await m_sslStream.AuthenticateAsClientAsync("localhost", certs, SslProtocols.Tls12, false);
+                await m_sslStream.AuthenticateAsClientAsync("localhost", certs, Protocols, false);
                 m_logger.Info("client authenticated.");
             }
             else
             {
                 m_logger.Info("server waiting to authenticate clients.");
                 m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
-                m_sslStream.AuthenticateAsServer(MakeCertificate(), false, SslProtocols.Tls12, false);
+                m_sslStream.AuthenticateAsServer(MakeCertificate(), false, Protocols, false);
             }
         }
 

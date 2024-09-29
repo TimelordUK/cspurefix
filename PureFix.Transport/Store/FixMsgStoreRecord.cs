@@ -23,7 +23,6 @@ namespace PureFix.Transport.Store
             return $"SeqNum = {SeqNum}, MsgType = {MsgType}, Timestamp = {Timestamp}, Encoded = {Encoded}";
         }
 
-
         public string MsgType { get; }
         public DateTime Timestamp { get; }
         public int SeqNum { get; }

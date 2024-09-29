@@ -12,5 +12,10 @@ namespace PureFix.Transport.Session
         {
             return (config?.Description?.Application?.Type == "initiator");
         }
+
+        public static string Name(this IFixConfig config)
+        {
+            return config?.Description?.Application?.Name ?? config?.Description?.Application?.Type ?? string.Empty;
+        }
     }
 }

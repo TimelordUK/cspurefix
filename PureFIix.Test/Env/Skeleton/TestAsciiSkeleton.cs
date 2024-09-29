@@ -22,13 +22,11 @@ namespace PureFIix.Test.Env.Skeleton
         public TestAsciiSkeleton(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, fixMessageFactory, parser, encoder, store, q, clock)
         {
             m_logReceivedMessages = true;
-            var me = config?.Description?.Application?.Name ?? "initiator";
         }
 
-        protected override async Task OnApplicationMsg(string msgType, IMessageView view)
+        protected override Task OnApplicationMsg(string msgType, IMessageView view)
         {
-            var res = await m_msgStore.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
-            m_logger.Info($"store state {res}");
+            return Task.CompletedTask;
         }
 
         protected override bool OnLogon(IMessageView view, string user, string password)

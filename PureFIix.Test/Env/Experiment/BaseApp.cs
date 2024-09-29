@@ -22,7 +22,7 @@ namespace PureFIix.Test.Env.Experiment
         public BaseApp(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, fixMessageFactory, parser, encoder, msgStore, q, clock)
         {
             m_logReceivedMessages = true;
-            var me = config?.Description?.Application?.Name ?? "initiator";
+            var me = config.Name();
             m_fixLog = config.LogFactory.MakePlainLogger($"csfix.{me}.txt");
             m_logger = config.LogFactory.MakeLogger($"csfix.{me}.app");
         }
@@ -32,8 +32,11 @@ namespace PureFIix.Test.Env.Experiment
             m_fixLog.Info(txt);
         }
 
-        protected override void OnEncoded(string msgType, string txt)
+        protected override async Task OnEncoded(string msgType, int seqNum, string txt)
         {
+            var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, txt);
+            var state = await m_msgStore.Put(record);
+            m_logger.Info($"[{msgType},{seqNum}] store state {state}");
             m_fixLog.Info(txt);
         }
 

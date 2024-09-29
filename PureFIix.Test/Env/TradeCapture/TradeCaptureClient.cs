@@ -24,10 +24,9 @@ namespace PureFIix.Test.Env.TradeCapture
             m_logReceivedMessages = true;
         }
 
-        protected override async Task OnApplicationMsg(string msgType, IMessageView view)
+        protected override Task OnApplicationMsg(string msgType, IMessageView view)
         {
-            var res = await m_msgStore.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
-            m_logger.Info($"store state {res}");
+          
             switch (msgType)
             {
                 case MsgType.TradeCaptureReport:
@@ -46,6 +45,8 @@ namespace PureFIix.Test.Env.TradeCapture
                         break;
                     }
             }
+
+            return Task.CompletedTask;
         }
 
         protected override bool OnLogon(IMessageView view, string user, string password)
