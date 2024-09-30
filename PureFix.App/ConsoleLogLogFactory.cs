@@ -26,8 +26,8 @@ namespace PureFix.ConsoleApp
         public string FileName { get; set; }
         public int MaxSizeBytes { get; set; } = 524288000;
 
-        public Serilog.Core.Logger AppLogger { get; set; }
-        public Serilog.Core.Logger PlainLogger { get; set; }
+        public ILogger AppLogger { get; set; }
+        public ILogger PlainLogger { get; set; }
 
         public ConsoleLogFactory(string file)
         {
@@ -65,7 +65,7 @@ namespace PureFix.ConsoleApp
             }
         }
 
-        private Serilog.Core.Logger MakeApp(string name)
+        private ILogger MakeApp(string name)
         {
             var l = new LoggerConfiguration()
               .WriteTo.Console(outputTemplate: _appTemplate)
@@ -81,7 +81,7 @@ namespace PureFix.ConsoleApp
             return l;
         }
         //  .ForContext("Name", name);
-        private Serilog.Core.Logger MakePlain(string name)
+        private ILogger MakePlain(string name)
         {
             var l = new LoggerConfiguration()
               .WriteTo.Console(outputTemplate: _fixTemplate).
