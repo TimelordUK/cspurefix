@@ -18,7 +18,7 @@ namespace PureFix.ConsoleApp
         [Option('o', "output", Required = false, HelpText = "output tags, json", Default = "tags")]
         public string OutputFormat { get; set; } = "";
 
-        [Option('a', "application", Required = false, HelpText = "test app", Default = "tc")]
+        [Option('a', "application", Required = false, HelpText = "test app")]
         public string Application { get; set; } = "";
     }
 }
