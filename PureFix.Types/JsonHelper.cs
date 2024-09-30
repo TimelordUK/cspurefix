@@ -25,5 +25,16 @@ namespace PureFix.Types
             var json = JsonSerializer.Serialize(instance, options);
             return json;
         }
+
+        public static string ToJson(object instance, Type t)
+        {
+            JsonSerializerOptions options = new()
+            {
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+            var json = JsonSerializer.Serialize(instance, t, options);
+            return json;
+        }
     }
 }

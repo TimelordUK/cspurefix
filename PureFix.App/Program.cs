@@ -1,34 +1,28 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Arrow.Threading.Tasks;
-using PureFIix.Test.Env;
 using PureFix.ConsoleApp;
-using PureFix.Dictionary.Definition;
-using PureFix.Transport;
-using PureFix.Transport.SocketTransport;
-using PureFix.Types;
-using Serilog;
-using Serilog.Core;
-using Microsoft.Extensions.DependencyInjection;
+using CommandLine;
 
+class TestClass
+{
+    static async Task Main(string[] args)
+    {
+        var res = Parser.Default.ParseArguments<Options>(args);
+        var options = res.Value;
+        var fixPath = options.FixLogPath;
+        var app = options.Application;
 
-/*
-using Logger log = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateLogger();
-
-log.Information("hello this is a log message");
-
-var definitions = new FixDefinitions();
-var parser = new QuickFixXmlFileParser(definitions);
-// parser.Parse("FIX44.xml");
-parser.Parse("FIX50SP2.xml"); 
-var logon = definitions.Message["A"];
-Console.WriteLine(logon);
-*/
-
-
-var runner = new Runner();
-await runner.Run();
+        if (!string.IsNullOrEmpty(app))
+        {
+            var runner = new Runner();
+            await runner.Run();
+        }
+        else
+        {
+            var parser = new FixLogParser(options.DictPath, options.FixLogPath, options.OutputFormat);
+        }
+    }
+}
 
 
