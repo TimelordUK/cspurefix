@@ -44,12 +44,17 @@ namespace PureFix.Buffer.Ascii
 
         private void Msg(int ptr, Action<int, AsciiView>? onMsg, Action<StoragePool.Storage>? onDecode)
         {
-            if (_state.Storage != null) onDecode?.Invoke(_state.Storage);
+            if (_state.Storage != null)
+            {
+                _state.Storage.Buffer?.SetPos(ptr);
+                onDecode?.Invoke(_state.Storage);
+            }
+
             var startTicks = Stopwatch.GetTimestamp();
             var view = GetView(ptr);
             var elapsed = Stopwatch.GetElapsedTime(startTicks);
             _totalElapsedSegmentParseMicros += elapsed.TotalMicroseconds;
-            
+
             if (view == null) return;
             _parsedMessages++;
             onMsg?.Invoke(ptr, view);
@@ -72,9 +77,9 @@ namespace PureFix.Buffer.Ascii
 
             structure = new Structure(Locations, []);
             var segment = new SegmentDescription("unknown", Locations[0].Tag, null, 0, 1, SegmentType.Unknown)
-                {
-                    EndPosition = Locations.NextTagPos - 1
-                };
+            {
+                EndPosition = Locations.NextTagPos - 1
+            };
             return new AsciiView(Definitons, segment, _state.Storage ?? new StoragePool.Storage(), structure, ptr, Delimiter, WriteDelimiter);
         }
 
@@ -92,9 +97,9 @@ namespace PureFix.Buffer.Ascii
             _receivedBytes += readFrom.Length;
 
             var startTicks = Stopwatch.GetTimestamp();
-            
+
             if (_state.Buffer == null) return;
-            
+
             try
             {
                 while (readPtr < end)
@@ -104,37 +109,57 @@ namespace PureFix.Buffer.Ascii
                     switch (_state.ParseState)
                     {
                         case ParseState.MsgComplete:
-                        {
-                            Msg(writePtr, onView, onDecode);
-                            continue;
-                        }
+                            {
+                                Msg(writePtr, onView, onDecode);
+                                continue;
+                            }
 
                         case ParseState.BeginField:
-                        {
-                            var isDigit = charAtPos is >= zero and <= nine;
-                            if (isDigit)
                             {
-                                _state.BeginTag(writePtr);
+                                var isDigit = charAtPos is >= zero and <= nine;
+                                if (isDigit)
+                                {
+                                    _state.BeginTag(writePtr);
+                                }
+                                break;
                             }
-                            break;
-                        }
 
                         case ParseState.ParsingTag:
-                        {
-                            var isEquals = charAtPos == eq;
-                            if (isEquals)
                             {
-                                _state.EndTag(writePtr);
+                                var isEquals = charAtPos == eq;
+                                if (isEquals)
+                                {
+                                    _state.EndTag(writePtr);
+                                }
+                                break;
                             }
-                            break;
-                        }
 
                         case ParseState.ParsingRawData:
-                        {
-                            // keep skipping until length read, regardless of delimiter or not
-                            if (_state.IncRaw())
                             {
-                                // having consumed the raw field expecting delimiter
+                                // keep skipping until length read, regardless of delimiter or not
+                                if (_state.IncRaw())
+                                {
+                                    // having consumed the raw field expecting delimiter
+                                    if (charAtPos == delimiter)
+                                    {
+                                        if (switchDelimiter)
+                                        {
+                                            _state.Buffer.SwitchChar(WriteDelimiter);
+                                        }
+                                        _state.Store();
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidDataException(
+                                            $"delimiter({delimiter}) expected at position {readPtr} when value is {charAtPos}");
+                                    }
+                                }
+                                break;
+                            }
+
+                        case ParseState.ParsingRawDataLength:
+                        case ParseState.ParsingValue:
+                            {
                                 if (charAtPos == delimiter)
                                 {
                                     if (switchDelimiter)
@@ -143,34 +168,14 @@ namespace PureFix.Buffer.Ascii
                                     }
                                     _state.Store();
                                 }
-                                else
-                                {
-                                    throw new InvalidDataException(
-                                        $"delimiter({delimiter}) expected at position {readPtr} when value is {charAtPos}");
-                                }
+                                break;
                             }
-                            break;
-                        }
-
-                        case ParseState.ParsingRawDataLength:
-                        case ParseState.ParsingValue:
-                        {
-                            if (charAtPos == delimiter)
-                            {
-                                if (switchDelimiter)
-                                {
-                                    _state.Buffer.SwitchChar(WriteDelimiter);
-                                }
-                                _state.Store();
-                            }
-                            break;
-                        }
 
                         default:
-                        {
-                            var st = _state.ParseState;
-                            throw new InvalidDataException($"fix parser in unknown state {st}");
-                        }
+                            {
+                                var st = _state.ParseState;
+                                throw new InvalidDataException($"fix parser in unknown state {st}");
+                            }
                     }
                     readPtr++;
                 }
@@ -178,10 +183,10 @@ namespace PureFix.Buffer.Ascii
                 switch (_state.ParseState)
                 {
                     case ParseState.MsgComplete:
-                    {
-                        Msg(_state.Buffer.GetPos(), onView, onDecode);
-                        break;
-                    }
+                        {
+                            Msg(_state.Buffer.GetPos(), onView, onDecode);
+                            break;
+                        }
                 }
             }
             catch (Exception)
@@ -189,7 +194,7 @@ namespace PureFix.Buffer.Ascii
                 // return buffer given this message has failed to deliver
                 if (_state.Storage != null) _pool.Return(_state.Storage);
                 throw;
-            } 
+            }
             finally
             {
                 var elapsedTime = Stopwatch.GetElapsedTime(startTicks);
