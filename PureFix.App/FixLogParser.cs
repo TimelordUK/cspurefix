@@ -3,6 +3,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
+using PureFix.Types.FIX50SP2.QuickFix;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace PureFix.ConsoleApp
 {
-    class FixLogParser
+    internal class FixLogParser
     {
-        public IReadOnlyList<MsgView> GetViews(string dict, string file, byte delim = (byte)'|')
+        private IReadOnlyList<MsgView> GetViews(string dict, string file, byte delim = (byte)'|')
         {
             var definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(definitions);
@@ -23,7 +24,7 @@ namespace PureFix.ConsoleApp
             var all = streamReader.ReadToEnd();
             var views = new List<MsgView>();
             var b = Encoding.UTF8.GetBytes(all);
-            var mf = new FixMessageFactory();
+           
             asciiParser.ParseFrom(b, (p, v) => views.Add(v));
             return views;
         }
@@ -34,19 +35,19 @@ namespace PureFix.ConsoleApp
             WriteOut(views, format);
         }
 
-        public void WriteOut(IReadOnlyList<MsgView> views, string format)
+        private void WriteOut(IReadOnlyList<MsgView> views, string format)
         {
+            var mf = new FixMessageFactory();
             foreach (var v in views)
             {
-                if (v == null) continue;
                 switch (format)
                 {
                     case "tags":
                         Console.WriteLine(v.ToString());
                         break;
                     default:
-                        {
-                            var f = v.ToFixMessage();
+                    {
+                        var f = mf.ToFixMessage(v);
                             if (f == null) continue;
                             Console.WriteLine(JsonHelper.ToJson(f, f.GetType()));
                             break;
