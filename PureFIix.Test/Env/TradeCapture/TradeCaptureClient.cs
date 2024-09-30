@@ -19,7 +19,7 @@ namespace PureFIix.Test.Env.TradeCapture
         private readonly FixMessageFactory m_msg_factory = new();
         private readonly Dictionary<string, TradeCaptureReport> m_reports = [];
 
-        public TradeCaptureClient(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, fixMessageFactory, parser, encoder, store, q, clock)
+        public TradeCaptureClient(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, store, q, clock)
         {
             m_logReceivedMessages = true;
         }

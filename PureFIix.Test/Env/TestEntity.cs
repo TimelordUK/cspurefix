@@ -131,7 +131,7 @@ namespace PureFIix.Test.Env
         public IFixConfig GetConfig(string json)
         {
             var factory = new TestLoggerFactory(Clock);
-            var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
+            var config = FixConfig.MakeConfigFromPaths(Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
             config.Delimiter = AsciiChars.Pipe;
             config.LogDelimiter = AsciiChars.Pipe;
             return config;

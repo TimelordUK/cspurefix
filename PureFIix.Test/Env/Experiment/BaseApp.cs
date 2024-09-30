@@ -19,12 +19,12 @@ namespace PureFIix.Test.Env.Experiment
         protected readonly ILogger m_fixLog;
         public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
 
-        public BaseApp(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, fixMessageFactory, parser, encoder, msgStore, q, clock)
+        public BaseApp(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, msgStore, q, clock)
         {
             m_logReceivedMessages = true;
             var me = config.Name();
-            m_fixLog = config.LogFactory.MakePlainLogger($"csfix.{me}.txt");
-            m_logger = config.LogFactory.MakeLogger($"csfix.{me}.app");
+            m_fixLog = logFactory.MakePlainLogger($"csfix.{me}.txt");
+            m_logger = logFactory.MakeLogger($"csfix.{me}.app");
         }
 
         protected override void OnDecoded(string msgType, string txt)

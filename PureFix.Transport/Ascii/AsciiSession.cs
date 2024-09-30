@@ -19,8 +19,8 @@ namespace PureFix.Transport.Ascii
         private readonly FixMsgAsciiStoreResend m_resender;      
         public bool Heartbeat { get; set; } = true;
 
-        protected AsciiSession(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock)
-            : base(config, parser, encoder, q, clock)
+        protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock)
+            : base(config, logFactory,  parser, encoder, q, clock)
         {
             if (config == null) throw new ArgumentNullException("config must be provided");
             if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");

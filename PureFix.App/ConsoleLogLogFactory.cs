@@ -23,11 +23,24 @@ namespace PureFix.ConsoleApp
             Plain
         }
 
+        public string FileName { get; set; }
+        public int MaxSizeBytes { get; set; } = 524288000;
+
+        public Serilog.Core.Logger AppLogger { get; set; }
+        public Serilog.Core.Logger PlainLogger { get; set; }
+
+        public ConsoleLogFactory(string file)
+        {
+            FileName = file;
+            AppLogger = MakeApp(file);
+            PlainLogger = MakePlain(file);
+        }
+
         private class Logger : Types.ILogger
         {
             ILogger _logger;
            
-            public Logger(string name, ILogger logger)
+            public Logger(ILogger logger)
             {
                 _logger = logger;
             }
@@ -52,32 +65,44 @@ namespace PureFix.ConsoleApp
             }
         }
 
-        private ILogger MakeApp(string name)
+        private Serilog.Core.Logger MakeApp(string name)
         {
             var l = new LoggerConfiguration()
               .WriteTo.Console(outputTemplate: _appTemplate)
               .Enrich.WithThreadId()
-              .CreateLogger()
-              .ForContext("Name", name);
+              .WriteTo.File($"logs/{FileName}-app-log.txt",
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: _appTemplate,
+                fileSizeLimitBytes: MaxSizeBytes,
+                retainedFileCountLimit: 21,
+                rollOnFileSizeLimit: true)
+              .CreateLogger();
+             
             return l;
         }
-
-        private ILogger MakePlain(string name)
+        //  .ForContext("Name", name);
+        private Serilog.Core.Logger MakePlain(string name)
         {
             var l = new LoggerConfiguration()
-              .WriteTo.Console(outputTemplate: _fixTemplate)
+              .WriteTo.Console(outputTemplate: _fixTemplate).
+                WriteTo.File($"logs/{FileName}-fix-log.txt",
+                outputTemplate: _fixTemplate,
+                rollingInterval: RollingInterval.Day,
+                fileSizeLimitBytes: MaxSizeBytes,
+                retainedFileCountLimit: 21,
+                rollOnFileSizeLimit: true)
               .CreateLogger();
             return l;
         }
 
         public Types.ILogger MakeLogger(string name)
         {
-            return new Logger(name, MakeApp(name));
+            return new Logger(AppLogger.ForContext("Name", name));
         }
 
         public Types.ILogger MakePlainLogger(string name)
         {
-            return new Logger(name, MakePlain(name));
+            return new Logger(PlainLogger.ForContext("Name", name));
         }
     }
 }

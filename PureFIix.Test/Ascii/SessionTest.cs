@@ -76,8 +76,8 @@ namespace PureFIix.Test.Ascii
         public void Get_Config_Test()
         {
             var clock = new TestClock();
-            var factory = new TestLoggerFactory(clock);
-            var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator.json"));
+          
+            var config = FixConfig.MakeConfigFromPaths(Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator.json"));
             Assert.Multiple(() =>
             {
                 Assert.That(config, Is.Not.Null);

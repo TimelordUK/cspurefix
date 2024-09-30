@@ -37,8 +37,9 @@ namespace PureFix.Transport.Session
         private CancellationTokenSource? m_MySource;
         private readonly List<IMessageView> _messages = new();
         private readonly AsyncWorkQueue m_q;
+        private readonly ILogFactory m_logFactory;
       
-        protected FixSession(IFixConfig config, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
+        protected FixSession(IFixConfig config, ILogFactory logFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
         {
             if (config.Definitions == null)
             {
@@ -48,10 +49,11 @@ namespace PureFix.Transport.Session
             {
                 throw new ArgumentException("config had been supplied with no message factory");
             }
-            if (config.LogFactory == null)
+            if (logFactory == null)
             {
                 throw new ArgumentException("config had been supplied with no log factory");
             }
+            m_logFactory = logFactory;
             m_config = config;
             m_logReceivedMessages = true;
             m_manageSession = true;
@@ -64,7 +66,7 @@ namespace PureFix.Transport.Session
             if (sessionDescription?.Application == null)
                 throw new InvalidDataException("no application provided in session config");
             m_me = sessionDescription.Application.Name ?? "me";
-            m_sessionLogger = config.LogFactory.MakeLogger($"{m_me}:FixSession");
+            m_sessionLogger = logFactory.MakeLogger($"{m_me}:FixSession");
             m_initiator = config.IsInitiator();
             m_acceptor = !m_initiator;
             m_checkMsgIntegrity = m_acceptor;
@@ -354,7 +356,7 @@ namespace PureFix.Transport.Session
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             m_transport = transport;
             await InitiatorLogon();            
-            var dispatcher = new EventDispatcher(m_config.LogFactory, m_q, transport);
+            var dispatcher = new EventDispatcher(m_logFactory, m_q, transport);
             // start sending events to the channel on which this session listens.
             await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
             // read from the channel 

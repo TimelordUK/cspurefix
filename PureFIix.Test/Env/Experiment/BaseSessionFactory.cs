@@ -20,7 +20,8 @@ namespace PureFIix.Test.Env.Experiment
         protected readonly AsyncWorkQueue m_q;
         protected readonly IFixClock m_clock;
         protected readonly IFixMsgStore m_msgStore;
-        protected BaseSessionFactory(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock)
+        protected readonly ILogFactory m_logFactory;
+        protected BaseSessionFactory(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock)
         {
             m_config = config;
             m_fixMessageFactory = fixMessageFactory;
@@ -29,6 +30,7 @@ namespace PureFIix.Test.Env.Experiment
             m_q = q;
             m_clock = clock;
             m_msgStore = store;
+            m_logFactory = logFactory;
         }
         public abstract FixSession MakeSession();
     }
