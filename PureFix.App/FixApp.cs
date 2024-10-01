@@ -14,7 +14,7 @@ namespace PureFix.ConsoleApp
 {
     internal class FixApp
     {
-        public string Name { get; private set; }
+        public string Name { get; }
         public IFixConfig? Config { get; private set; }
 
         private static IFixConfig MakeConfig(string json)

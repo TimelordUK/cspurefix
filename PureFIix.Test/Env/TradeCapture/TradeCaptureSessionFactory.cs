@@ -1,6 +1,5 @@
 ﻿using Arrow.Threading.Tasks;
 using PureFIix.Test.Env.Experiment;
-using PureFIix.Test.Env.Skeleton;
 using PureFix.Buffer;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
