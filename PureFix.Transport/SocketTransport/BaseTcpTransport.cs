@@ -14,7 +14,7 @@ using System.Security.Authentication;
 
 namespace PureFix.Transport.SocketTransport
 {
-    internal abstract class BaseTcpTransport : IMessageTransport, IDisposable
+    internal abstract class BaseTcpTransport : IMessageTransport
     {
         protected Socket? m_socket;
         protected IPEndPoint? m_iPEndPoint;
@@ -31,17 +31,13 @@ namespace PureFix.Transport.SocketTransport
             ArgumentNullException.ThrowIfNull(config);
             ArgumentNullException.ThrowIfNull(clock);
             ArgumentNullException.ThrowIfNull(logFactory);
-          
-            if (config?.Description?.Application?.Tcp == null) throw new InvalidDataException("no config tcp parameters given");
+
             m_config = config;
-            m_tcp = config?.Description?.Application?.Tcp;
+            m_tcp = config?.Description?.Application?.Tcp ?? throw new InvalidDataException("no config tcp parameters given");
             m_logger = logFactory.MakeLogger("BaseTransport");
             var tls = config?.Description?.Application?.Tcp.Tls;
-            if (tls != null)
-            {
-                if (tls.Enabled != null && tls.Enabled == true) {
-                    m_sslCertificate = tls.Certificate;
-                }
+            if (tls?.Enabled is true) {
+                m_sslCertificate = tls.Certificate;
             }
         }
 
@@ -101,7 +97,7 @@ namespace PureFix.Transport.SocketTransport
             else
             {
                 m_logger.Info("server waiting to authenticate clients.");             
-                m_sslStream.AuthenticateAsServer(MakeCertificate(), false, Protocols, false);
+               await m_sslStream.AuthenticateAsServerAsync(MakeCertificate(), false, Protocols, false);
             }
         }
 
