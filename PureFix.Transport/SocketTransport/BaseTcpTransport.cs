@@ -98,6 +98,7 @@ namespace PureFix.Transport.SocketTransport
             {
                 m_logger.Info("server waiting to authenticate clients.");             
                await m_sslStream.AuthenticateAsServerAsync(MakeCertificate(), false, Protocols, false);
+                m_logger.Info("server authenticated.");
             }
         }
 

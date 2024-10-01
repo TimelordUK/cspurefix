@@ -28,6 +28,7 @@ namespace PureFIix.Test.Env.TradeCapture
         protected override async Task OnApplicationMsg(string msgType, IMessageView view)
         {
             var res = await m_msgStore.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
+            var seqNo = view.GetInt32((int)MsgTag.MsgSeqNum);
             m_logger.Info($"store state {res}");
             switch (msgType)
             {
@@ -44,6 +45,14 @@ namespace PureFIix.Test.Env.TradeCapture
                         m_logger.Info($"received tcr ack {tca.TradeRequestID} {tca.TradeRequestStatus}");
                         break;
                     }
+
+                default:
+                    {
+                        var reject = m_config.MessageFactory.Reject(msgType, seqNo ?? 0, "unknown msg type.", BusinessRejectReasonValues.UnsupportedMessageType);
+                        await Send(MsgTypeValues.Reject, reject);
+                        m_logger.Info($"rejecting message type {msgType}");
+                        break;
+                    }
             }
         }
 
@@ -53,12 +62,26 @@ namespace PureFIix.Test.Env.TradeCapture
             var ack1 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Accepted);
             await Send(MsgTypeValues.TradeCaptureReportRequestAck, ack1);
             var batch = m_tradeFactory.MakeBatchOfTradeCaptureReport();
+            await CreateSendBatch(10);
+             var ack2 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Completed);
+            await Send(MsgTypeValues.TradeCaptureReportRequestAck, ack2);
+            if (tcr.SubscriptionRequestType == SubscriptionRequestTypeValues.SnapshotAndUpdates)
+            {
+                var timer = new TimerDispatcher.AsyncTimer(m_logger);
+                await timer.Start(TimeSpan.FromSeconds(5), m_parentToken.Value, async () =>
+                {
+                    await CreateSendBatch(3);
+                });
+            }
+        }
+
+        private async Task CreateSendBatch(int size)
+        {
+            var batch = m_tradeFactory.MakeBatchOfTradeCaptureReport(size);
             foreach (var tc in batch)
             {
                 await Send(MsgTypeValues.TradeCaptureReport, tc);
             }
-            var ack2 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Completed);
-            await Send(MsgTypeValues.TradeCaptureReportRequestAck, ack2);
         }
 
         protected override bool OnLogon(IMessageView view, string user, string password)

@@ -33,7 +33,7 @@ namespace PureFix.Transport.Session
         protected bool m_logReceivedMessages;
         protected IMessageTransport? m_transport;
         protected IFixConfig m_config;
-        private CancellationToken? m_parentToken;
+        protected CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
         private readonly List<IMessageView> _messages = new();
         private readonly AsyncWorkQueue m_q;
