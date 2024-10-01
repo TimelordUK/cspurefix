@@ -38,7 +38,8 @@ namespace PureFix.Transport.Session
                     _transportDispatcher.Dispatch(this, token)
                 };
                 _logger?.Info("Writer is waiting on events.");
-                await Task.WhenAll(tasks);
+                await Task.WhenAny(tasks);
+                _logger?.Info("Writer has completed.");
             }, TaskCreationOptions.LongRunning);
         }
 

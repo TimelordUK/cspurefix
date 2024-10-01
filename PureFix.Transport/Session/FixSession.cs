@@ -41,25 +41,13 @@ namespace PureFix.Transport.Session
       
         protected FixSession(IFixConfig config, ILogFactory logFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
         {
-            if (config.Definitions == null)
-            {
-                throw new ArgumentException("config had been supplied with no definitions");
-            }
-            if (config.MessageFactory == null)
-            {
-                throw new ArgumentException("config had been supplied with no message factory");
-            }
-            if (logFactory == null)
-            {
-                throw new ArgumentException("config had been supplied with no log factory");
-            }
-            m_logFactory = logFactory;
+            m_logFactory = logFactory ?? throw new ArgumentException("config had been supplied with no log factory");
             m_config = config;
             m_logReceivedMessages = true;
             m_manageSession = true;
             m_clock = clock;
-            Definitions = config.Definitions;
-            m_factory = config.MessageFactory;
+            Definitions = config.Definitions ?? throw new ArgumentException("config had been supplied with no definitions");
+            m_factory = config.MessageFactory ?? throw new ArgumentException("config had been supplied with no message factory");
             m_parser = parser;
             m_encoder = encoder;
             var sessionDescription = config.Description;
@@ -220,7 +208,7 @@ namespace PureFix.Transport.Session
             
             SetState(SessionState.Stopped);
             OnStopped(error);
-            if (m_MySource != null && !m_MySource.IsCancellationRequested)
+            if (m_MySource is { IsCancellationRequested: false })
             {
                 m_sessionLogger?.Info("stop: cancel token source.");
                 m_MySource?.Cancel();
@@ -351,7 +339,7 @@ namespace PureFix.Transport.Session
 
         public async Task Run(IMessageTransport transport, CancellationToken token)
         {
-            m_sessionLogger?.Info($"Run begins");
+            m_sessionLogger?.Info("Run begins");
             m_parentToken = token;
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             m_transport = transport;
@@ -361,7 +349,7 @@ namespace PureFix.Transport.Session
             await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
             // read from the channel 
             await Reader(dispatcher, m_MySource.Token);
-            m_sessionLogger?.Info($"Run ends");
+            m_sessionLogger?.Info("Run ends");
         }
 
         private async Task CheckForwardMessage(string msgType, IMessageView view)

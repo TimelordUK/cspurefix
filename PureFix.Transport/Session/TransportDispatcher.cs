@@ -21,7 +21,7 @@ namespace PureFix.Transport.Session
             var buffer = new byte[50 * 1024];
             Task task = Task.Factory.StartNew(async () =>
             {
-                while (!token.IsCancellationRequested)
+                while (m_transport.Connected && !token.IsCancellationRequested)
                 {
                     var received = await m_transport.ReceiveAsync(buffer, token);
                     var trimmed = buffer[..received];

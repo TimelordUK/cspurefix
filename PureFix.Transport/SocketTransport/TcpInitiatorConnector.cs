@@ -28,7 +28,8 @@ namespace PureFix.Transport.SocketTransport
         {
             bool connected = false;
             int attempt = 1;
-            var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+            var retrySecs = 30;
+            var timer = new PeriodicTimer(TimeSpan.FromSeconds(retrySecs));
             while (!cancellationToken.IsCancellationRequested && false == connected)
             {
                 try
@@ -40,7 +41,7 @@ namespace PureFix.Transport.SocketTransport
                 catch (SocketException ex)
                 {
                     m_logger.Error(ex);
-                    m_logger.Info($"waiting for re-connecton attempt");
+                    m_logger.Info("waiting for re-connecton attempt");
                     await timer.WaitForNextTickAsync(cancellationToken);
                     ++attempt;
                 }

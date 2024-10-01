@@ -12,10 +12,12 @@ namespace PureFIix.Test.Env
     {
         private readonly BlockingCollection<byte[]> _rx_data = new ();
         private BlockingCollection<byte[]> _tx_data;
+        private bool _connected;
 
         public void ConnectTo(TestMessageTransport sendingTo)
         {
             _tx_data = sendingTo._rx_data;
+            _connected = true;  
         }
 
         public Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token)
@@ -30,6 +32,8 @@ namespace PureFIix.Test.Env
             b.CopyTo(buffer);
             return Task.FromResult(b.Length);
         }
+
+        public bool Connected => _connected;
 
         public void Dispose()
         {

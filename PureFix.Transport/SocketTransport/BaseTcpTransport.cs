@@ -41,6 +41,8 @@ namespace PureFix.Transport.SocketTransport
             }
         }
 
+        public bool Connected => m_socket is { Connected: true };
+
         protected void MakeSocket()
         {
             ArgumentNullException.ThrowIfNull(m_tcp);

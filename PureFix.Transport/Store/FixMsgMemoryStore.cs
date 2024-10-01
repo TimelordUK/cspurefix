@@ -26,7 +26,7 @@ namespace PureFix.Transport.Store
 
         private static int _nextId;
         private int _id = Interlocked.Increment(ref _nextId);
-        public string Name { get; private set; }
+        public string Name { get; }
 
 
         public Task<FixMsgStoreState> Clear()
@@ -48,14 +48,14 @@ namespace PureFix.Transport.Store
 
         private IFixMsgStoreRecord? GetRecord(int seq)
         {
-            if (_sortedBySeqNum.TryGetValue(seq, out IFixMsgStoreRecord? record))
+            if (_sortedBySeqNum.TryGetValue(seq, out var record))
             {
                 return record.Clone();
             }
             return null;
         }
 
-        IFixMsgStoreRecord? GetNearestRecord(int seq)
+        private IFixMsgStoreRecord? GetNearestRecord(int seq)
         {
             seq = Math.Max(seq, 0);
             IFixMsgStoreRecord? startRecord = null;
@@ -80,7 +80,7 @@ namespace PureFix.Transport.Store
                 return Task.FromResult(Array.Empty<IFixMsgStoreRecord?>());
             }
             var lastkv = _sortedBySeqNum.LastOrDefault();
-            IFixMsgStoreRecord lastRecord = lastkv.Value;
+            var lastRecord = lastkv.Value;
             from = Math.Min(lastkv.Key, from);
             var startRecord = GetNearestRecord(from);
             if (to != null)
