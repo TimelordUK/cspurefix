@@ -42,13 +42,13 @@ namespace PureFIix.Test.Env.TradeCapture
                 case MsgType.TradeCaptureReportRequestAck:
                     {
                         var tca = (TradeCaptureReportRequestAck)m_msg_factory.ToFixMessage(view);
-                        m_logger.Info($"received tcr ack {tca.TradeRequestID} {tca.TradeRequestStatus}");
+                        m_logger.Info($"received tcr ack {tca?.TradeRequestID} {tca?.TradeRequestStatus}");
                         break;
                     }
 
                 default:
                     {
-                        var reject = m_config.MessageFactory.Reject(msgType, seqNo ?? 0, "unknown msg type.", BusinessRejectReasonValues.UnsupportedMessageType);
+                        var reject = m_config?.MessageFactory?.Reject(msgType, seqNo ?? 0, "unknown msg type.", BusinessRejectReasonValues.UnsupportedMessageType);
                         await Send(MsgTypeValues.Reject, reject);
                         m_logger.Info($"rejecting message type {msgType}");
                         break;

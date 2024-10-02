@@ -16,8 +16,8 @@ namespace PureFIix.Test.Ascii
     {
         private TestEntity _testEntity;
         private List<AsciiView> _views;
-        IFixConfig _client_config;
-        IFixConfig _server_config;
+        private IFixConfig _client_config;
+        private IFixConfig _server_config;
 
         [OneTimeSetUp]
         public async Task OnceSetup()
@@ -43,7 +43,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Check_Server_Store_State_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _server_config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, _server_config?.Description?.SenderCompID);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(9));
         }
@@ -51,7 +51,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Check_Client_Store_State_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _client_config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, _client_config?.Description?.SenderCompID);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(1));
         }
@@ -59,7 +59,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Server_Replay_Request_Seq_1_To_10_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _server_config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, _server_config?.Description?.SenderCompID);
             var msgFactory = new FixMessageFactory();
             var clock = new TestClock() { Current = DateTime.Today.AddHours(8) };
             IFixMsgResender replayer = new FixMsgAsciiStoreResend(store, msgFactory, _server_config, clock);
@@ -76,9 +76,9 @@ namespace PureFIix.Test.Ascii
                 var v1 = vec[1];
                 Assert.That(v1.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReportRequestAck));
                 Assert.That(v1.SeqNum, Is.EqualTo(2));
-                Assert.That(v1.InflatedMessage.StandardHeader, Is.Not.Null);
-                Assert.That(v1.InflatedMessage.StandardHeader.PossDupFlag, Is.True);
-                Assert.That(v1.InflatedMessage.StandardHeader.OrigSendingTime, Is.Not.Null);
+                Assert.That(v1.InflatedMessage?.StandardHeader, Is.Not.Null);
+                Assert.That(v1.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
+                Assert.That(v1.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
             });
 
             for (var i = 2; i <= 6; ++i)
@@ -88,9 +88,9 @@ namespace PureFIix.Test.Ascii
                 {
                     Assert.That(v.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReport));
                     Assert.That(v.SeqNum, Is.EqualTo(i + 1));
-                    Assert.That(v.InflatedMessage.StandardHeader, Is.Not.Null);
-                    Assert.That(v.InflatedMessage.StandardHeader.PossDupFlag, Is.True);
-                    Assert.That(v.InflatedMessage.StandardHeader.OrigSendingTime, Is.Not.Null);
+                    Assert.That(v.InflatedMessage?.StandardHeader, Is.Not.Null);
+                    Assert.That(v.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
+                    Assert.That(v.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
                 });
             }
 
@@ -99,9 +99,9 @@ namespace PureFIix.Test.Ascii
                 var v1 = vec[7];
                 Assert.That(v1.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReportRequestAck));
                 Assert.That(v1.SeqNum, Is.EqualTo(8));
-                Assert.That(v1.InflatedMessage.StandardHeader, Is.Not.Null);
-                Assert.That(v1.InflatedMessage.StandardHeader.PossDupFlag, Is.True);
-                Assert.That(v1.InflatedMessage.StandardHeader.OrigSendingTime, Is.Not.Null);
+                Assert.That(v1.InflatedMessage?.StandardHeader, Is.Not.Null);
+                Assert.That(v1.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
+                Assert.That(v1.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
             });
 
             for (var i = 8; i < 10; ++i)
@@ -111,9 +111,9 @@ namespace PureFIix.Test.Ascii
                 {
                     Assert.That(v.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReport));
                     Assert.That(v.SeqNum, Is.EqualTo(i + 1));
-                    Assert.That(v.InflatedMessage.StandardHeader, Is.Not.Null);
-                    Assert.That(v.InflatedMessage.StandardHeader.PossDupFlag, Is.True);
-                    Assert.That(v.InflatedMessage.StandardHeader.OrigSendingTime, Is.Not.Null);
+                    Assert.That(v.InflatedMessage?.StandardHeader, Is.Not.Null);
+                    Assert.That(v.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
+                    Assert.That(v.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
                 });
             }
         }
@@ -121,7 +121,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public async Task Client_Replay_Request_Seq_1_To_10_Test()
         {
-            var store = await _testEntity.MakeMsgStore(_views, _client_config.Description.SenderCompID);
+            var store = await _testEntity.MakeMsgStore(_views, _client_config?.Description?.SenderCompID);
             var msgFactory = new FixMessageFactory();
             var clock = new TestClock() { Current = DateTime.Today.AddHours(8) };
             IFixMsgResender replayer = new FixMsgAsciiStoreResend(store, msgFactory, _client_config, clock);
@@ -138,9 +138,9 @@ namespace PureFIix.Test.Ascii
                 var v1 = vec[1];
                 Assert.That(v1.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReportRequest));
                 Assert.That(v1.SeqNum, Is.EqualTo(2));
-                Assert.That(v1.InflatedMessage.StandardHeader, Is.Not.Null);
-                Assert.That(v1.InflatedMessage.StandardHeader.PossDupFlag, Is.True);
-                Assert.That(v1.InflatedMessage.StandardHeader.OrigSendingTime, Is.Not.Null);
+                Assert.That(v1.InflatedMessage?.StandardHeader, Is.Not.Null);
+                Assert.That(v1.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
+                Assert.That(v1.InflatedMessage.StandardHeader?.OrigSendingTime, Is.Not.Null);
             });
 
             CheckSeqReset(vec[2], 3, 11);

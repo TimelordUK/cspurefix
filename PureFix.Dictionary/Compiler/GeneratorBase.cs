@@ -10,13 +10,13 @@ namespace PureFix.Dictionary.Compiler
 {
     public abstract class GeneratorBase
     {
-        private string m_Root;
+        private readonly string m_Root;
         private readonly Options m_Options;
         private readonly IFixDefinitions m_FixDefinitions;
 
         private readonly HashSet<string> m_FilesGenerated = new(StringComparer.OrdinalIgnoreCase);
 
-        public GeneratorBase(string root, IFixDefinitions fixDefinitions, Options options)
+        protected GeneratorBase(string root, IFixDefinitions fixDefinitions, Options options)
         {
             m_Root = root;
             m_FixDefinitions = fixDefinitions;

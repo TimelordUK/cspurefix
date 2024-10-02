@@ -9,8 +9,6 @@ using PureFIix.Test.Env.Experiment;
 using PureFIix.Test.Env.Skeleton;
 using PureFIix.Test.Env.TradeCapture;
 using PureFix.Transport;
-using PureFix.Types;
-
 
 namespace PureFIix.Test.Ascii
 {

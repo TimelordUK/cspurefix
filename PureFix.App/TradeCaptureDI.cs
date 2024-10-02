@@ -24,7 +24,7 @@ namespace PureFix.ConsoleApp
         {
             return AppHost.Services.GetService<T>();
         }
-        public IHost AppHost { get; private set; }
+        public IHost AppHost { get; }
 
         public TradeCaptureDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config)
         {

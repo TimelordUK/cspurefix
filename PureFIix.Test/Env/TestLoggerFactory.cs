@@ -11,8 +11,8 @@ namespace PureFIix.Test.Env
     {
         private readonly IFixClock _clock;
         
-        private LogTrace m_al = new();
-        private LogTrace m_fl = new();
+        private readonly LogTrace m_al = [];
+        private readonly LogTrace m_fl = [];
 
         public TestLoggerFactory(IFixClock clock = null)
         {

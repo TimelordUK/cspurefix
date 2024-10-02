@@ -188,7 +188,7 @@ namespace PureFIix.Test.Ascii
             var view = _views[0];
             var asStrings = view.GetStrings();
             Assert.That(asStrings, Has.Length.EqualTo(22));
-            Assert.That(asStrings[0], Is.EqualTo("FIX4.4"));
+            Assert.That(asStrings?[0], Is.EqualTo("FIX4.4"));
         }
     }
 }
