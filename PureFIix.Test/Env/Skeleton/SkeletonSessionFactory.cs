@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace PureFIix.Test.Env.Skeleton
 {
-  
     internal class SkeletonSessionFactory : BaseSessionFactory
     {
         public SkeletonSessionFactory(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, store, q, clock)

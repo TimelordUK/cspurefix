@@ -80,7 +80,7 @@ namespace PureFIix.Test.Env.TradeCapture
             var tradeReportID = _nextTradeId++;
             var execId = _nextExecId++;
             var instrumentId = _nextInstrumentId++;
-            _nextInstrumentId = _nextInstrumentId % _securities.Length;
+            _nextInstrumentId %= _securities.Length;
 
             return new TradeCaptureReport()
             {

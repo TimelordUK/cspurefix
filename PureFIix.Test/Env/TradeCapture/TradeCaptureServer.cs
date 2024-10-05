@@ -48,9 +48,12 @@ namespace PureFIix.Test.Env.TradeCapture
 
                 default:
                     {
-                        var reject = m_config?.MessageFactory?.Reject(msgType, seqNo ?? 0, "unknown msg type.", BusinessRejectReasonValues.UnsupportedMessageType);
-                        await Send(MsgTypeValues.Reject, reject);
-                        m_logger.Info($"rejecting message type {msgType}");
+                        var reject = m_config.MessageFactory?.Reject(msgType, seqNo ?? 0, "unknown msg type.", BusinessRejectReasonValues.UnsupportedMessageType);
+                        if (reject != null)
+                        {
+                            await Send(MsgTypeValues.Reject, reject);
+                            m_logger.Info($"rejecting message type {msgType}");
+                        }
                         break;
                     }
             }
