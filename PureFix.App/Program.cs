@@ -2,7 +2,7 @@
 
 using PureFix.ConsoleApp;
 using CommandLine;
-using PureFix.Types.FIX50SP2.QuickFix.Types;
+using PureFix.Types;
 
 class TestClass
 {
@@ -19,7 +19,7 @@ class TestClass
         }
         else
         {
-            var mf = new FixMessageFactory();
+            var mf = options.GetFactory();
             var parser = new FixLogParser(options.DictPath, mf, options.FixLogPath, options.OutputFormat);
         }
     }
