@@ -26,6 +26,10 @@ class TestClass
                 var follower = new FollowingTail(new FileInfo(options.FixLogPath),
                   Encoding.ASCII,
                   parser.Parse);
+                while (true)
+                {
+                    Thread.Sleep(1000); 
+                }
             }
         }
     }
