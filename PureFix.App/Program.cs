@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using Arrow.Threading.Tasks;
 using PureFix.ConsoleApp;
 using CommandLine;
+using PureFix.Types.FIX50SP2.QuickFix.Types;
 
 class TestClass
 {
@@ -10,7 +10,6 @@ class TestClass
     {
         var res = Parser.Default.ParseArguments<Options>(args);
         var options = res.Value;
-        var fixPath = options.FixLogPath;
         var app = options.Application;
 
         if (!string.IsNullOrEmpty(app))
@@ -20,7 +19,8 @@ class TestClass
         }
         else
         {
-            var parser = new FixLogParser(options.DictPath, options.FixLogPath, options.OutputFormat);
+            var mf = new FixMessageFactory();
+            var parser = new FixLogParser(options.DictPath, mf, options.FixLogPath, options.OutputFormat);
         }
     }
 }
