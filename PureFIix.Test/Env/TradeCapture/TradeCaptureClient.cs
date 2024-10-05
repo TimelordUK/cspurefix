@@ -52,7 +52,7 @@ namespace PureFIix.Test.Env.TradeCapture
         protected override bool OnLogon(IMessageView view, string user, string password)
         {
             var msg = m_msg_factory.ToFixMessage(view);
-            m_logger.Info($"peer logs in user {user}");
+            m_logger.Info($"peer logs in user {user} {msg}");
             return true;
         }
 
