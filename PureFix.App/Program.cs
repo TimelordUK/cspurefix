@@ -3,6 +3,7 @@
 using PureFix.ConsoleApp;
 using CommandLine;
 using PureFix.Types;
+using System.Text;
 
 class TestClass
 {
@@ -19,8 +20,13 @@ class TestClass
         }
         else
         {
-            var mf = options.GetFactory();
-            var parser = new FixLogParser(options.DictPath, mf, options.FixLogPath, options.OutputFormat);
+            var parser = new FixLogParser(options);
+            if (options.Tail)
+            {
+                var follower = new FollowingTail(new FileInfo(options.FixLogPath),
+                  Encoding.ASCII,
+                  parser.Parse);
+            }
         }
     }
 }

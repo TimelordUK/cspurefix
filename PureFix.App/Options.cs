@@ -20,5 +20,8 @@ namespace PureFix.ConsoleApp
 
         [Option('a', "application", Required = false, HelpText = "test app")]
         public string Application { get; set; } = "";
+
+        [Option('t', "tail", Required = false, HelpText = "tail the fix log and decode")]
+        public bool Tail { get; set; } = false;
     }
 }

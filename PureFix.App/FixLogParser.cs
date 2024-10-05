@@ -1,8 +1,8 @@
-﻿using PureFix.Buffer.Ascii;
+﻿using PureFix.Buffer;
+using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
-using PureFix.Types.FIX50SP2.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,30 +14,41 @@ namespace PureFix.ConsoleApp
     internal class FixLogParser
     {
         readonly IFixMessageFactory _mf;
+        readonly IMessageParser _asciiParser;
+        readonly Action<IMessageView> _onView;
 
-        private static void GetViews(string dict, string file, Action<IMessageView> onView, byte delim = (byte)'|')
-        {
-            var definitions = new FixDefinitions();
-            var qf = new QuickFixXmlFileParser(definitions);
-            qf.Parse(dict);
-            var asciiParser = new AsciiParser(definitions) { Delimiter = delim };
+        private void GetViews(string dict, string file)
+        { 
             using var streamReader = File.OpenText(file);
             while (streamReader != null && !streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
                 if (line != null)
                 {
-                    var b = Encoding.UTF8.GetBytes(line);
-                    asciiParser.ParseFrom(b, b.Length, (p, v) => onView(v));
+                    Parse(line);                
                 }
             }
         }
 
-        public FixLogParser(string dict, IFixMessageFactory factory, string file, string format, byte delim = (byte)'|')
+        public void Parse(string txt)
         {
+            var b = Encoding.UTF8.GetBytes(txt);
+            _asciiParser.ParseFrom(b, b.Length, (p, v) => _onView(v));
+        }
+
+        public FixLogParser(Options options, byte delim = (byte)'|')
+        {
+            string dict = options.DictPath;
+            var definitions = new FixDefinitions();
+            var qf = new QuickFixXmlFileParser(definitions);
+            _asciiParser = new AsciiParser(definitions) { Delimiter = delim };
+            qf.Parse(dict);
+            var factory = options.GetFactory();
+            var file = options.FixLogPath;
+            var format = options.OutputFormat;
             _mf = factory;
-            Action<IMessageView> onView = format == "tags" ? WriteOutAsTags : WriteOutAsJson;
-            GetViews(dict, file, onView, delim);
+            _onView = format == "tags" ? WriteOutAsTags : WriteOutAsJson;
+            GetViews(dict, file);
         }
 
         private void WriteOutAsTags(IMessageView v)
