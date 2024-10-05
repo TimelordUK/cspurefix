@@ -16,7 +16,7 @@ namespace PureFix.Transport.Session
             {
                 m_logger = logger;
             }
-            public Task Start(TimeSpan interval, CancellationToken token, Action onInvoke)
+            public Task Start(TimeSpan interval, Action onInvoke, CancellationToken token)
             {
                 var timer = new PeriodicTimer(interval);
                 Task task = Task.Factory.StartNew(async () =>
@@ -33,7 +33,7 @@ namespace PureFix.Transport.Session
                 return task;
             }
 
-            public Task Start(TimeSpan interval, CancellationToken token, Func<Task> onInvoke)
+            public Task Start(TimeSpan interval, Func<Task> onInvoke, CancellationToken token)
             {
                 var timer = new PeriodicTimer(interval);
                 Task task = Task.Factory.StartNew(async () =>
@@ -60,7 +60,7 @@ namespace PureFix.Transport.Session
         public Task Dispatch(ISessionEventReciever reciever , TimeSpan interval, CancellationToken token)
         {
             var timer = new AsyncTimer(_logger);
-            var t = timer.Start(interval, token, reciever.OnTimer);
+            var t = timer.Start(interval, reciever.OnTimer, token);
             return t;
         }
     }

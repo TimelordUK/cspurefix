@@ -9,6 +9,7 @@ using PureFix.Types.FIX50SP2.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -71,10 +72,11 @@ namespace PureFIix.Test.Env.TradeCapture
             if (tcr.SubscriptionRequestType == SubscriptionRequestTypeValues.SnapshotAndUpdates)
             {
                 var timer = new TimerDispatcher.AsyncTimer(m_logger);
-                await timer.Start(TimeSpan.FromSeconds(5), m_parentToken.Value, async () =>
+                await timer.Start(TimeSpan.FromSeconds(5), async () =>
                 {
+                    m_logger.Info($"sending batch of trades");
                     await CreateSendBatch(3);
-                });
+                }, m_parentToken.Value);
             }
         }
 
