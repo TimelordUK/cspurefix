@@ -69,22 +69,20 @@ namespace PureFix.Dictionary.Parser.QuickFix
             sb.Append(QuickFixXmlFormatter.StartEntity("fields", leadingIndent));
             foreach (var t in tags) {
                 var sf = _definitions.TagToSimple[t];
-                if (sf == null) continue;
                 //   <field number='1' name='Account' type='STRING' />
                 sb.Append(QuickFixXmlFormatter.DefineField(sf, leadingIndent + _indent));
-                if (sf.IsEnum) {
-                    var en = WriteEnumDefinition(sf, leadingIndent + _indent + _indent);
-                    sb.Append(en);
-                    sb.Append(QuickFixXmlFormatter.EndEntity("field", leadingIndent + _indent));
-                }
+                if (!sf.IsEnum) continue;
+                var en = WriteEnumDefinition(sf, leadingIndent + _indent + _indent);
+                sb.Append(en);
+                sb.Append(QuickFixXmlFormatter.EndEntity("field", leadingIndent + _indent));
             }
             sb.Append(QuickFixXmlFormatter.EndEntity("fields", leadingIndent));
             return sb.ToString();
         }
 
-        private string WriteEnumDefinition(SimpleFieldDefinition sf, int leadingIndent) {
+        private static string WriteEnumDefinition(SimpleFieldDefinition sf, int leadingIndent) {
             var sb = new StringBuilder(2 * 1024);
-            var keys = sf?.Enums?.Keys.ToList() ?? [];
+            var keys = sf.Enums?.Keys.ToList() ?? [];
             keys.Sort();
             foreach (var key in keys) {
                 var fe = sf?.Enums?.GetValueOrDefault(key);
@@ -101,9 +99,8 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var components = _seenComponents.Values.ToList();
             foreach (var component in components)
             {
-                if (component == null) continue;
                 sb.Append(QuickFixXmlFormatter.StartComponent(component.Name, leadingIndent + _indent));
-                if (component?.Definition == null) continue;
+                if (component.Definition == null) continue;
                 var def = WriteFields(component.Definition.Fields, leadingIndent + _indent + _indent);
                 sb.Append(def);
                 sb.Append(QuickFixXmlFormatter.EndComponent(leadingIndent + _indent));
@@ -121,7 +118,6 @@ namespace PureFix.Dictionary.Parser.QuickFix
                 var md = _definitions.Message.GetValueOrDefault(mt);
                 if (md == null) continue;
                 sb.Append(QuickFixXmlFormatter.DefineMessage(md, leadingIndent + _indent));
-                var end = md.Fields.Count - 1;
                 var fields = WriteFields(md.Fields.Skip(1).SkipLast(1).ToList(), leadingIndent + _indent + _indent);
                 sb.Append(fields);
                 sb.Append(QuickFixXmlFormatter.EndEntity("message", leadingIndent + _indent));
@@ -157,10 +153,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
         private void WriteGroupField(ContainedGroupField containedGroupField, StringBuilder sb, int leadingIndent)
         { 
             if (containedGroupField?.Definition == null) return;
-            _usedTags[containedGroupField?.Definition?.NoOfField?.Tag ?? 0] = containedGroupField?.Name ?? "";
-            if (containedGroupField == null) return;
+            _usedTags[containedGroupField.Definition?.NoOfField?.Tag ?? 0] = containedGroupField.Name ?? "";
             sb.Append(QuickFixXmlFormatter.AddGroup(containedGroupField, leadingIndent));
-            var groupDef = WriteFields(containedGroupField.Definition.Fields, leadingIndent + _indent);
+            var groupDef = WriteFields(containedGroupField.Definition?.Fields ?? [], leadingIndent + _indent);
             sb.Append(groupDef);
             sb.Append(QuickFixXmlFormatter.EndGroup(leadingIndent));
         }
