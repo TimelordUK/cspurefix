@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Compiler;
 using PureFix.Dictionary.Parser.QuickFix;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using PureFix.Dictionary.Definition;
 
 namespace PureFIix.Test.Ascii.Compiler
@@ -15,6 +14,7 @@ namespace PureFIix.Test.Ascii.Compiler
     public class Fix44TypeCompiler
     {
         private TestEntity _testEntity;
+        private IFixDefinitions Definitions => _testEntity.Definitions;
 
         [OneTimeSetUp]
         public void OnceSetup()
@@ -31,12 +31,12 @@ namespace PureFIix.Test.Ascii.Compiler
         [Test]
         public void MessageGenerator()
         {
-            var generator = new MessageGenerator(null, _testEntity.Definitions,Options.FromVersion(_testEntity.Definitions));
+            var generator = new MessageGenerator(null, Definitions, Options.FromVersion(Definitions));
             generator.Process();
         }
 
         private IFixDefinitions GetTrimDefinitions(string[] types) {
-            var builder = new QuickFixXmlFileBuilder(_testEntity.Definitions);
+            var builder = new QuickFixXmlFileBuilder(Definitions);
             var encoded = builder.Write(types);
             var defs = new FixDefinitions();
             var parser = new QuickFixXmlFileParser(defs);
@@ -47,7 +47,7 @@ namespace PureFIix.Test.Ascii.Compiler
         [Test]
         public void Check_Builder()
         {
-            string[] msgTypes = { "0", "1", "2", "3", "4", "5", "AE" };
+            string[] msgTypes = ["0", "1", "2", "3", "4", "5", "AE"];
             var newdDefinitions = GetTrimDefinitions(msgTypes);
             Assert.That(newdDefinitions, Is.Not.Null);
             foreach (var type in msgTypes)
@@ -60,8 +60,7 @@ namespace PureFIix.Test.Ascii.Compiler
         [Test]
         public void FileGenerator()
         {
-            
-            var generator = new MessageGenerator(null, _testEntity.Definitions, Options.FromVersion(_testEntity.Definitions));
+            var generator = new MessageGenerator(null, Definitions, Options.FromVersion(Definitions));
             generator.Process();
         }
     }
