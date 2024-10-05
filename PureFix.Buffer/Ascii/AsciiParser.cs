@@ -84,17 +84,17 @@ namespace PureFix.Buffer.Ascii
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.
-        public void ParseFrom(ReadOnlySpan<byte> readFrom, Action<int, MsgView>? onView, Action<StoragePool.Storage>? onDecode = null)
+        public void ParseFrom(ReadOnlySpan<byte> readFrom, int end, Action<int, MsgView>? onView, Action<StoragePool.Storage>? onDecode = null)
         {
             const byte eq = AsciiChars.Eq;
             const byte zero = AsciiChars.Zero;
             const byte nine = AsciiChars.Nine;
             var delimiter = Delimiter;
             var switchDelimiter = WriteDelimiter != delimiter;
-            var readPtr = 0;
-            var end = readFrom.Length;
+            var readPtr = 0;          
             var readBuffer = readFrom;
-            _receivedBytes += readFrom.Length;
+            end = Math.Min(end, readFrom.Length);
+            _receivedBytes += end;
 
             var startTicks = Stopwatch.GetTimestamp();
 

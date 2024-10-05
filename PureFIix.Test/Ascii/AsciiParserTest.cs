@@ -63,7 +63,7 @@ namespace PureFIix.Test.Ascii
             var b = Encoding.UTF8.GetBytes(s);
             var ap = _testEntity.Parser;
             var q = new Queue<AsciiView>();
-            ap.ParseFrom(b, (i, view) => q.Enqueue((AsciiView)view));
+            ap.ParseFrom(b, b.Length, (i, view) => q.Enqueue((AsciiView)view));
             Assert.Multiple(() =>
             {
                 Assert.That(ap.Locations, Has.Count.EqualTo(1));

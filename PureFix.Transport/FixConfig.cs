@@ -29,14 +29,18 @@ namespace PureFix.Transport
             var sessionDescription = JsonHelper.FromJson<SessionDescription>(all);
             var definitionsPath = Path.Join(dictionaryRootPath, sessionDescription?.Application?.Dictionary ?? "FIX.xml");
             qfParser.Parse(definitionsPath);
-            var config = new FixConfig
-            {                
-                Definitions = definitions,
-                Description = sessionDescription,
-                MessageFactory = new Fix44SessionMessageFactory(sessionDescription)
-            };
+            if (sessionDescription != null)
+            {
+                var config = new FixConfig
+                {
+                    Definitions = definitions,
+                    Description = sessionDescription,
+                    MessageFactory = new Fix44SessionMessageFactory(sessionDescription)
+                };
 
-            return config;
+                return config;
+            }
+            return new FixConfig();
         }
     }
 }

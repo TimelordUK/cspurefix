@@ -127,7 +127,7 @@ namespace PureFix.Transport.Store
             if (originalRecord.Encoded == null) return;
             var bytes = Encoding.UTF8.GetBytes(originalRecord.Encoded);
             MsgView? msgView = null;
-            m_Parser.ParseFrom(bytes, (ptr, v) => msgView = v);
+            m_Parser.ParseFrom(bytes, bytes.Length, (ptr, v) => msgView = v);
             if (msgView == null) return;
             var o = m_factory.ToFixMessage(msgView);
             if (o?.StandardHeader == null) return;

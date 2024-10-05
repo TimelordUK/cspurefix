@@ -58,37 +58,37 @@ namespace PureFix.Benchmarks
         [Benchmark]
         public void Heartbeat()
         {
-            _Parser.ParseFrom(_HeartbeatMessage, NoAction);
+            _Parser.ParseFrom(_HeartbeatMessage, _HeartbeatMessage.Length, NoAction);
         }
 
         [Benchmark]
         public void Logon()
         {
-            _Parser.ParseFrom(_LogonMessage, NoAction);
+            _Parser.ParseFrom(_LogonMessage, _LogonMessage.Length, NoAction);
         }
 
         [Benchmark]
         public void ExecutionReport()
         {
-            _Parser.ParseFrom(_ExecutionReportMessage, NoAction);
+            _Parser.ParseFrom(_ExecutionReportMessage, _ExecutionReportMessage.Length, NoAction);
         }
 
         [Benchmark]
         public void MarketDataSnapshot()
         {
-            _Parser.ParseFrom(_MarketDataSnapshotMessage, NoAction);
+            _Parser.ParseFrom(_MarketDataSnapshotMessage, _MarketDataSnapshotMessage.Length, NoAction);
         }
 
         [Benchmark]
         public void OrderCancelReject()
         {
-            _Parser.ParseFrom(_OrderCancelRejectMessage, NoAction);
+            _Parser.ParseFrom(_OrderCancelRejectMessage, _OrderCancelRejectMessage.Length, NoAction);
         }
 
         [Benchmark]
         public void QuoteRequest()
         {
-            _Parser.ParseFrom(_QuoteRequestMessage, NoAction);
+            _Parser.ParseFrom(_QuoteRequestMessage, _QuoteRequestMessage.Length, NoAction);
         }
     }
 }

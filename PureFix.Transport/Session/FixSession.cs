@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
@@ -254,11 +255,11 @@ namespace PureFix.Transport.Session
             await Tick();
         }
 
-        public async Task OnRx(byte[] buffer)
+        public async Task OnRx(byte[] buffer, int len)
         {
             _messages.Clear();
-            m_sessionLogger?.Debug($"OnRx {buffer.Length}");
-            m_parser.ParseFrom(buffer, (p, v) => _messages.Add(v), OnFixLog);
+            m_sessionLogger?.Debug($"OnRx {len}");
+            m_parser.ParseFrom(buffer, len, (p, v) => _messages.Add(v), OnFixLog);
             if (_messages.Count == 0) return;
             var plural = _messages.Count > 1 ? "s" : "";
             m_sessionLogger?.Info($"OnRx received {_messages.Count} message{plural}");
@@ -267,6 +268,8 @@ namespace PureFix.Transport.Session
                 await RxOnMsg(msg);
                 m_parser.Return(((AsciiView)msg).Storage);
             }
+            m_sessionLogger?.Info($"OnRx return buffer {buffer.Length}");
+            ArrayPool<byte>.Shared.Return(buffer);
         }
 
         protected void OnFixLog(StoragePool.Storage storage)
@@ -312,7 +315,7 @@ namespace PureFix.Transport.Session
                 }
                 else
                 {
-                    await m_q.EnqueueAsync(()=>OnRx(msg.Data));
+                    await m_q.EnqueueAsync(()=>OnRx(msg.Data, msg.len));
                 }
             }
             m_sessionLogger?.Info("Reader is exiting.");

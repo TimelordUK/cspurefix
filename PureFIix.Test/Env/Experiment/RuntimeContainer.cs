@@ -59,7 +59,7 @@ namespace PureFIix.Test.Env.Experiment
             var views = new List<MsgView>();
             var s = string.Join(Environment.NewLine, fl);
             var b = Encoding.UTF8.GetBytes(s);
-            parser.ParseFrom(b, (i, view) => views.Add((AsciiView)view));
+            parser.ParseFrom(b, b.Length, (i, view) => views.Add((AsciiView)view));
             return views;
         }
 

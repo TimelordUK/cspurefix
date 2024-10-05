@@ -28,7 +28,7 @@ namespace PureFix.ConsoleApp
                 if (line != null)
                 {
                     var b = Encoding.UTF8.GetBytes(line);
-                    asciiParser.ParseFrom(b, (p, v) => onView(v));
+                    asciiParser.ParseFrom(b, b.Length, (p, v) => onView(v));
                 }
             }
         }
