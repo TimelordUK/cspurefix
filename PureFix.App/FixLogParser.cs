@@ -4,7 +4,6 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

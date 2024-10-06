@@ -23,5 +23,11 @@ namespace PureFix.ConsoleApp
 
         [Option('t', "tail", Required = false, HelpText = "tail the fix log and decode")]
         public bool Tail { get; set; } = false;
+
+        [Option('I', "initiator", Required = false, HelpText = "initiator json config", Default = "test-qf52-initiator.json")]
+        public string Initiator { get; set; } = "";
+
+        [Option('A', "acceptor", Required = false, HelpText = "initiator json config", Default = "test-qf52-acceptor.json")]
+        public string Acceptor { get; set; } = "";
     }
 }

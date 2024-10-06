@@ -15,7 +15,7 @@ class TestClass
         if (!string.IsNullOrEmpty(app))
         {
             var runner = new Runner();
-            await runner.Run();
+            await runner.Run(options);
         }
         else
         {

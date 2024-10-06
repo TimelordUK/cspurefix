@@ -38,7 +38,7 @@ namespace PureFix.ConsoleApp
 
         private class Logger : Types.ILogger
         {
-            ILogger _logger;
+            readonly ILogger _logger;
            
             public Logger(ILogger logger)
             {
