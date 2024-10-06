@@ -1,8 +1,10 @@
-﻿using PureFix.Buffer;
+﻿using CommandLine;
+using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
+using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace PureFix.ConsoleApp
         readonly IFixMessageFactory _mf;
         readonly IMessageParser _asciiParser;
         readonly Action<IMessageView> _onView;
+        readonly Options _options;
 
         private void GetViews(string file)
         { 
@@ -38,17 +41,32 @@ namespace PureFix.ConsoleApp
 
         public FixLogParser(Options options, byte delim = (byte)'|')
         {
+            _options = options;
             string dict = options.DictPath;
             var definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(definitions);
             _asciiParser = new AsciiParser(definitions) { Delimiter = delim };
             qf.Parse(dict);
-            var factory = options.GetFactory();
-            var file = options.FixLogPath;
+            var factory = options.GetFactory();           
             var format = options.OutputFormat;
             _mf = factory;
-            _onView = format == "tags" ? WriteOutAsTags : WriteOutAsJson;
+            _onView = format == "tags" ? WriteOutAsTags : WriteOutAsJson;          
+        }
+
+        public void Snapshot()
+        {
+            var file = _options.FixLogPath;
             GetViews(file);
+        }
+
+        public void Tail()
+        {
+            var follower = new FollowingTail(new FileInfo(_options.FixLogPath),
+            Encoding.ASCII, Parse);
+            while (true)
+            {
+                Thread.Sleep(1000);
+            }
         }
 
         private void WriteOutAsTags(IMessageView v)

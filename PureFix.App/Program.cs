@@ -2,8 +2,7 @@
 
 using PureFix.ConsoleApp;
 using CommandLine;
-using PureFix.Types;
-using System.Text;
+
 
 class TestClass
 {
@@ -23,14 +22,11 @@ class TestClass
             var parser = new FixLogParser(options);
             if (options.Tail)
             {
-                var follower = new FollowingTail(new FileInfo(options.FixLogPath),
-                  Encoding.ASCII,
-                  parser.Parse);
-                while (true)
-                {
-                    Thread.Sleep(1000); 
-                }
-            }
+                parser.Tail();
+            }else
+            {
+                parser.Snapshot();
+            }                
         }
     }
 }
