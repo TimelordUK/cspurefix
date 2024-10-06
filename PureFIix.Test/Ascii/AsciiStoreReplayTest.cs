@@ -61,7 +61,8 @@ namespace PureFIix.Test.Ascii
         {
             var store = await _testEntity.MakeMsgStore(_views, _server_config?.Description?.SenderCompID);
             var msgFactory = new FixMessageFactory();
-            var clock = new TestClock() { Current = DateTime.Today.AddHours(8) };
+            var clock = new TestClock { Current = DateTime.Today.AddHours(8) };
+            Assert.That(_server_config, Is.Not.Null);
             IFixMsgResender replayer = new FixMsgAsciiStoreResend(store, msgFactory, _server_config, clock);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(9));
@@ -123,7 +124,8 @@ namespace PureFIix.Test.Ascii
         {
             var store = await _testEntity.MakeMsgStore(_views, _client_config?.Description?.SenderCompID);
             var msgFactory = new FixMessageFactory();
-            var clock = new TestClock() { Current = DateTime.Today.AddHours(8) };
+            var clock = new TestClock { Current = DateTime.Today.AddHours(8) };
+            Assert.That(_client_config, Is.Not.Null);
             IFixMsgResender replayer = new FixMsgAsciiStoreResend(store, msgFactory, _client_config, clock);
             var state = await store.GetState();
             Assert.That(state.Length, Is.EqualTo(1));
@@ -149,7 +151,7 @@ namespace PureFIix.Test.Ascii
 
         private void CheckSeqReset(IFixMsgStoreRecord rec, int from, int to)
         {
-            SequenceReset reset = rec.InflatedMessage as SequenceReset;
+            var reset = rec.InflatedMessage as SequenceReset;
             Assert.That(reset, Is.Not.Null);
             Assert.Multiple(() =>
             {

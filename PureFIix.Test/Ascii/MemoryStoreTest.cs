@@ -1,9 +1,7 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
-using PureFix.Transport;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
-using PureFix.Types.FIX50SP2.QuickFix;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

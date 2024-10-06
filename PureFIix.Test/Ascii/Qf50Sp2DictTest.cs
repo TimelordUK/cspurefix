@@ -265,10 +265,10 @@ namespace PureFIix.Test.Ascii
                 Assert.That(def, Is.Not.Null);
                 Assert.That(def.Tag, Is.EqualTo(4));
                 Assert.That(def.IsEnum, Is.True);
-                _setHelper.IsEnum(def?.Enums, "B", "Buy", "BUY");
-                _setHelper.IsEnum(def?.Enums, "S", "Sell", "SELL");
-                _setHelper.IsEnum(def?.Enums, "X", "Cross", "CROSS");
-                _setHelper.IsEnum(def?.Enums, "T", "Trade", "TRADE");
+                _setHelper.IsEnum(def.Enums, "B", "Buy", "BUY");
+                _setHelper.IsEnum(def.Enums, "S", "Sell", "SELL");
+                _setHelper.IsEnum(def.Enums, "X", "Cross", "CROSS");
+                _setHelper.IsEnum(def.Enums, "T", "Trade", "TRADE");
             });
         }
 
