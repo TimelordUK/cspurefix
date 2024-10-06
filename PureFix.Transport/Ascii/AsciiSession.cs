@@ -369,7 +369,6 @@ namespace PureFix.Transport.Ascii
 
         private async Task<bool> CheckIntegrity(string msgType, IMessageView view)
         {
-            var state = m_sessionState;
             var seqNum = view.GetInt32((int)MsgTag.MsgSeqNum);
             if (seqNum == null) return false;
 

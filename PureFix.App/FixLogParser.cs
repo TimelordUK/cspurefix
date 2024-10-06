@@ -17,7 +17,7 @@ namespace PureFix.ConsoleApp
         readonly IMessageParser _asciiParser;
         readonly Action<IMessageView> _onView;
 
-        private void GetViews(string dict, string file)
+        private void GetViews(string file)
         { 
             using var streamReader = File.OpenText(file);
             while (streamReader != null && !streamReader.EndOfStream)
@@ -48,7 +48,7 @@ namespace PureFix.ConsoleApp
             var format = options.OutputFormat;
             _mf = factory;
             _onView = format == "tags" ? WriteOutAsTags : WriteOutAsJson;
-            GetViews(dict, file);
+            GetViews(file);
         }
 
         private void WriteOutAsTags(IMessageView v)

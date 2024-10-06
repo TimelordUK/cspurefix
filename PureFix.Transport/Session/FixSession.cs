@@ -36,7 +36,7 @@ namespace PureFix.Transport.Session
         protected IFixConfig m_config;
         protected CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
-        private readonly List<IMessageView> _messages = new();
+        private readonly List<IMessageView> _messages = [];
         private readonly AsyncWorkQueue m_q;
         private readonly ILogFactory m_logFactory;
       
@@ -235,7 +235,7 @@ namespace PureFix.Transport.Session
                             var seqNum = m_encoder.MsgSeqNum;
                             var storage = m_encoder.Encode(msgType, message);                            
                             if (storage == null) return;
-                            m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
+                            m_sessionLogger?.Info($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
                             var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
