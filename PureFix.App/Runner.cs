@@ -11,7 +11,7 @@ namespace PureFix.ConsoleApp
 {
     public class Runner()
     {
-        public async Task Run(Options options)
+        public static async Task Run(Options options)
         {
             var clock = new RealtimeClock();
             
