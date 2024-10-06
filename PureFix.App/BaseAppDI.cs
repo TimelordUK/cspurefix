@@ -15,15 +15,15 @@ using PureFix.Transport.SocketTransport;
 
 namespace PureFix.ConsoleApp
 {
-    internal class BaseAppDI<T, U> where T : class, ISessionFactory where U : class, IFixMessageFactory
+    internal abstract class BaseAppDI<T, U> where T : class, ISessionFactory where U : class, IFixMessageFactory
     {
-        public T? Resolve<T>()
+        public V? Resolve<V>()
         {
-            return AppHost.Services.GetService<T>();
+            return AppHost.Services.GetService<V>();
         }
         public IHost AppHost { get; }
 
-        public BaseAppDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config)
+        protected BaseAppDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config)
         {
             ArgumentNullException.ThrowIfNull(config);
             ArgumentNullException.ThrowIfNull(config.Description);
