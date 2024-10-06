@@ -1218,8 +1218,10 @@ namespace PureFIix.Test.Ascii
                     Assert.That(underlying0, Is.Not.Null);
                     Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
                     Assert.That(u1?.UnderlyingSymbol, Is.EqualTo("erat"));
-                    Assert.That(u1.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
-                    Assert.That(u1.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
+                    var s0 = u1.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0];
+                    Assert.That(s0, Is.Not.Null);
+                    Assert.That(s0.UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
+                    Assert.That(s0.UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
                 });
             });
         }

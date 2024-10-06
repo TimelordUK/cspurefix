@@ -91,7 +91,7 @@ namespace PureFIix.Test.Env.TradeCapture
                 TransactTime = _fixClock.Current,
                 ExecID = $"{execId}",
                 PreviouslyReported = false,
-                Instrument = new InstrumentComponent()
+                Instrument = new InstrumentComponent
                 {
                     SecurityID = $"{_securities[instrumentId]}",
                     Symbol = $"{_securities[instrumentId]}"
