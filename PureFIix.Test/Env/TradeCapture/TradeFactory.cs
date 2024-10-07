@@ -48,7 +48,7 @@ namespace PureFIix.Test.Env.TradeCapture
                 TradeRequestID = requestId,
                 TradeRequestType = TradeRequestTypeValues.AllTrades,
                 SubscriptionRequestType = SubscriptionRequestTypeValues.SnapshotAndUpdates,
-                TrdCapDtGrp = new TrdCapDtGrpComponent()
+                TrdCapDtGrp = new TrdCapDtGrpComponent
                 {
                     NoDates = [
                         new NoDates() {
