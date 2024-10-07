@@ -27,7 +27,7 @@ namespace PureFix.ConsoleApp
         [Option('I', "initiator", Required = false, HelpText = "initiator json config", Default = "test-qf52-initiator.json")]
         public string Initiator { get; set; } = "";
 
-        [Option('A', "acceptor", Required = false, HelpText = "initiator json config", Default = "test-qf52-acceptor.json")]
+        [Option('A', "acceptor", Required = false, HelpText = "acceptor json config")]
         public string Acceptor { get; set; } = "";
 
         [Option('g', "generate", Required = false, HelpText = "generate types for dictionary")]

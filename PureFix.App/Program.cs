@@ -35,11 +35,11 @@ internal class Program
         }
         else
         {
-            Examples(options);
+            Examples();
         }
     }
 
-    private static void Examples(CommandOptions options)
+    private static void Examples()
     {
         Console.WriteLine("trim an input dictionary file and output only messages and dependent fields on given message set.");
         Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -T 0 1 2 3 4 5 A AE");
@@ -54,13 +54,13 @@ internal class Program
         Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags");
         Console.WriteLine("");
         Console.WriteLine("run built in skeleton client and server to logon and heartbeat");
-        Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -a sk");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -A test-qf52-acceptor.json -a sk");
         Console.WriteLine("");
         Console.WriteLine("run built in skeleton client and server to logon and heartbeat with fix44 config");
         Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -I test-qf44-initiator.json -A test-qf44-acceptor.json -a sk");
         Console.WriteLine("");
         Console.WriteLine("run built in trade capture client and server to logon and heartbeat");
-        Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -a tc");        
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -A test-qf52-acceptor.json -a tc");        
     }
 
     private static void Trim(CommandOptions options)
