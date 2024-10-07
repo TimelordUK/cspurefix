@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace PureFix.ConsoleApp
 {
-    public class Options
+    public class CommandOptions
     {
-        [Option('f', "fix", Required = false, HelpText = "fix log to parse.")]
+        [Option('f', "fix", Required = false, HelpText = "parse fix log into json or tags")]
         public string FixLogPath { get; set; } = "";
 
         [Option('d', "dict", Required = false, HelpText = "dictionary xml file.")]
         public string DictPath { get; set; } = "";
 
-        [Option('o', "output", Required = false, HelpText = "output tags, json", Default = "tags")]
+        [Option('o', "output", Required = false, HelpText = "output tags | json", Default = "tags")]
         public string OutputFormat { get; set; } = "";
 
         [Option('a', "application", Required = false, HelpText = "test app")]
@@ -29,5 +29,11 @@ namespace PureFix.ConsoleApp
 
         [Option('A', "acceptor", Required = false, HelpText = "initiator json config", Default = "test-qf52-acceptor.json")]
         public string Acceptor { get; set; } = "";
+
+        [Option('g', "generate", Required = false, HelpText = "generate types for dictionary")]
+        public bool Generate { get; set; } = false;
+
+        [Option('p', "path", Required = false, HelpText = "output path of generator", Default = ".")]
+        public string OutputPath { get; set; } = "";
     }
 }

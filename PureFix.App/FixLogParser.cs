@@ -17,7 +17,7 @@ namespace PureFix.ConsoleApp
         readonly IFixMessageFactory _mf;
         readonly IMessageParser _asciiParser;
         readonly Action<IMessageView> _onView;
-        readonly Options _options;
+        readonly CommandOptions _options;
 
         private void GetViews(string file)
         { 
@@ -38,7 +38,7 @@ namespace PureFix.ConsoleApp
             _asciiParser.ParseFrom(b, b.Length, (p, v) => _onView(v));
         }
 
-        public FixLogParser(Options options, byte delim = (byte)'|')
+        public FixLogParser(CommandOptions options, byte delim = (byte)'|')
         {
             _options = options;
             string dict = options.DictPath;

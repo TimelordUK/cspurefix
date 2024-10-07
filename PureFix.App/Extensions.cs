@@ -9,7 +9,7 @@ namespace PureFix.ConsoleApp
 {
     internal static class Extensions
     {
-        public static IFixMessageFactory GetFactory(this Options options)
+        public static IFixMessageFactory GetFactory(this CommandOptions options)
         {
             var path = options.DictPath;
             if (path.EndsWith("FIX50SP2.xml"))
