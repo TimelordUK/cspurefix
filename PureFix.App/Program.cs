@@ -2,7 +2,6 @@
 
 using CommandLine;
 using PureFix.Dictionary.Compiler;
-using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 
 namespace PureFix.ConsoleApp;

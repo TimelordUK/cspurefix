@@ -49,7 +49,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
         private static SimpleFieldDefinition GetField(XElement fieldElement)
         {
             var atts = fieldElement.AsAttributeDict();
-            var tag = int.Parse(atts["number"]); ;
+            var tag = int.Parse(atts["number"]);
             var name = atts["name"];
             var type = atts["type"];
             

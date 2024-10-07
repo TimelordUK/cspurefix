@@ -14,15 +14,15 @@ namespace PureFix.ConsoleApp
 {
     internal class FixLogParser
     {
-        readonly IFixMessageFactory _mf;
-        readonly IMessageParser _asciiParser;
-        readonly Action<IMessageView> _onView;
-        readonly CommandOptions _options;
+        private readonly IFixMessageFactory _mf;
+        private readonly IMessageParser _asciiParser;
+        private readonly Action<IMessageView> _onView;
+        private readonly CommandOptions _options;
 
         private void GetViews(string file)
         { 
             using var streamReader = File.OpenText(file);
-            while (streamReader != null && !streamReader.EndOfStream)
+            while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
                 if (line != null)
@@ -60,7 +60,7 @@ namespace PureFix.ConsoleApp
 
         public void Tail()
         {
-            var follower = new FollowingTail(new FileInfo(_options.FixLogPath),
+            _ = new FollowingTail(new FileInfo(_options.FixLogPath),
             Encoding.ASCII, Parse);
             while (true)
             {
@@ -68,7 +68,7 @@ namespace PureFix.ConsoleApp
             }
         }
 
-        private void WriteOutAsTags(IMessageView v)
+        private static void WriteOutAsTags(IMessageView v)
         {
             Console.WriteLine(v.ToString());
             Console.WriteLine();
