@@ -9,8 +9,6 @@ using PureFIix.Test.Env.Experiment;
 using PureFIix.Test.Env.Skeleton;
 using PureFIix.Test.Env.TradeCapture;
 using PureFix.Transport;
-using PureFix.Types;
-
 
 namespace PureFIix.Test.Ascii
 {
@@ -75,9 +73,7 @@ namespace PureFIix.Test.Ascii
         [Test]
         public void Get_Config_Test()
         {
-            var clock = new TestClock();
-            var factory = new TestLoggerFactory(clock);
-            var config = FixConfig.MakeConfigFromPaths(factory, Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator.json"));
+            var config = FixConfig.MakeConfigFromPaths(Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator.json"));
             Assert.Multiple(() =>
             {
                 Assert.That(config, Is.Not.Null);
@@ -90,14 +86,32 @@ namespace PureFIix.Test.Ascii
             });
         }
 
+        private void CheckLog(BaseSessionExperiment experiment)
+        {
+            var (iapp, ifix) = experiment.Initiator.App.Logs;
+            Assert.Multiple(() =>
+            {
+                Assert.That(iapp, Is.Not.Null);
+                Assert.That(((TestLogger)iapp).Entries(), Has.Count.GreaterThan(0));
+                Assert.That(ifix, Is.Not.Null);
+                Assert.That(((TestLogger)ifix).Entries(), Has.Count.GreaterThan(0));
+            });
+            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            Assert.Multiple(() =>
+            {
+                Assert.That(aapp, Is.Not.Null);
+                Assert.That(((TestLogger)aapp).Entries(), Has.Count.GreaterThan(0));
+                Assert.That(afix, Is.Not.Null);
+                Assert.That(((TestLogger)afix).Entries(), Has.Count.GreaterThan(0));
+            });
+        }
+
         [Test]
         public async Task Initiator_Acceptor_Login_Test()
         {
             var experiment = new SkeletonSessionExperiment(_testEntity);
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
-                
-            var (iapp, ifix) = experiment.Initiator.App.Logs;
-            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            CheckLog(experiment);
         }
 
         [Test]
@@ -111,8 +125,7 @@ namespace PureFIix.Test.Ascii
                 return experiment.Initiator.HeartbeatCount() >= 1 && experiment.Acceptor.HeartbeatCount() >= 1;
             }, experiment.Initiator.App.Done);
 
-            var (iapp, ifix) = experiment.Initiator.App.Logs;
-            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            CheckLog(experiment);
         }
 
         [Test]
@@ -121,8 +134,7 @@ namespace PureFIix.Test.Ascii
             var experiment = new SkeletonSessionExperiment(_testEntity);
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
 
-            var (iapp, ifix) = experiment.Initiator.App.Logs;
-            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            CheckLog(experiment);
         }
 
         [Test]
@@ -131,8 +143,7 @@ namespace PureFIix.Test.Ascii
             var experiment = new SkeletonSessionExperiment(_testEntity);
             await experiment.Run(experiment.OnReady, experiment.Acceptor.App.Done);
 
-            var (iapp, ifix) = experiment.Initiator.App.Logs;
-            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            CheckLog(experiment);
         }
 
         /*
@@ -149,8 +160,7 @@ namespace PureFIix.Test.Ascii
                 return experiment.Initiator.HeartbeatCount() >= 10 && experiment.Acceptor.HeartbeatCount() >= 10;
             }, experiment.Initiator.App.Done);
 
-            var (iapp, ifix) = experiment.Initiator.App.Logs;
-            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            CheckLog(experiment);
         }
 
         [Test]
@@ -165,8 +175,7 @@ namespace PureFIix.Test.Ascii
                 return experiment.Initiator.HeartbeatCount() > 0 && experiment.Acceptor.TestRequestCount() > 0;
             }, experiment.Initiator.App.Done);
 
-            var (iapp, ifix) = experiment.Initiator.App.Logs;
-            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            CheckLog(experiment);
         }
 
         [Test]
@@ -180,8 +189,7 @@ namespace PureFIix.Test.Ascii
                 return experiment.Initiator.TradeCaptureReportRequestAckCount() == 2;
             }, experiment.Initiator.App.Done);
 
-            var (iapp, ifix) = experiment.Initiator.App.Logs;
-            var (aapp, afix) = experiment.Acceptor.App.Logs;
+            CheckLog(experiment);
             var tcci = experiment.Initiator.TradeCaptureReportCount();
             var tcca = experiment.Acceptor.TradeCaptureReportCount();
             Assert.Multiple(() =>

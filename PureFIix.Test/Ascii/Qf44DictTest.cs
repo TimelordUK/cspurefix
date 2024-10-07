@@ -14,7 +14,7 @@ namespace PureFIix.Test.Ascii
 {
     public class Qf44DictTest
     {
-        private FixDefinitions _definitions;
+        private IFixDefinitions _definitions;
         private SetConstraintHelper _setHelper;
 
         [OneTimeSetUp]
@@ -133,7 +133,7 @@ namespace PureFIix.Test.Ascii
         {
             var instrumnet = _definitions.Component["Instrument"];
             Assert.That(instrumnet, Is.Not.Null);
-            var tags = string.Join(",", instrumnet.ContainedTag.Keys.ToList());
+            // var tags = string.Join(",", instrumnet.ContainedTag.Keys.ToList());
             // make sure all tags are held from all contained fields.
             int[] t = [
                  55,65,48,22,460,461,167,762,200,541,201,224,225,239,226,227,228,255,543,470,471,472,240,202,947,206,231,223,207,106,348,349,107,350,351,691,667,875,876,873,874,454,455,456,864,865,866,867,868
@@ -156,7 +156,7 @@ namespace PureFIix.Test.Ascii
             var tags = res.Select(kv=>kv.child).OfType<ContainedSimpleField>().Select(sf=>sf.Definition.Tag).Distinct().ToList();
             // sim[le field collection will be missing the 2 NoOfGroup fields.
             Assert.That(tags, Has.Count.EqualTo(47));
-            var tags2 = res.Select(kv => kv.child).OfType<ContainedGroupField>().Select(sf => sf.Definition.NoOfField?.Tag).Distinct().ToList();
+            var tags2 = res.Select(kv => kv.child).OfType<ContainedGroupField>().Select(sf => sf.Definition?.NoOfField?.Tag).Distinct().ToList();
             Assert.That(tags2, Is.EqualTo(new List<int>() { 454, 864 }));
         }
 

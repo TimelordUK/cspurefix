@@ -17,7 +17,7 @@ namespace PureFix.Benchmarks
     [MemoryDiagnoser]
     public class ParseFromViewBenchmarks
     {
-        private readonly FixDefinitions _FixDefinitions;
+        private readonly IFixDefinitions _FixDefinitions;
 
         private readonly AsciiView _HeartbeatView;
         private readonly AsciiView _LogonView;
@@ -43,7 +43,7 @@ namespace PureFix.Benchmarks
             AsciiView? view = null;
 
             var parser = new AsciiParser(_FixDefinitions);
-            parser.ParseFrom(message, (_, v) => view = (AsciiView)v);
+            parser.ParseFrom(message, message .Length, (_, v) => view = (AsciiView)v);
 
             return view!;
         }

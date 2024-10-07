@@ -12,7 +12,7 @@ namespace PureFix.Transport.Session
 {
     public class EventDispatcher : ISessionEventReciever
     {
-        public readonly record struct SessionEvent(byte[]? Data = null);
+        public readonly record struct SessionEvent(byte[]? Data, int len);
         private readonly TimerDispatcher _timerDispatcher;
         private readonly TransportDispatcher _transportDispatcher;
         private readonly Channel<SessionEvent> _channel = Channel.CreateUnbounded<SessionEvent>();
@@ -38,15 +38,16 @@ namespace PureFix.Transport.Session
                     _transportDispatcher.Dispatch(this, token)
                 };
                 _logger?.Info("Writer is waiting on events.");
-                await Task.WhenAll(tasks);
+                await Task.WhenAny(tasks);
+                _logger?.Info("Writer has completed.");
             }, TaskCreationOptions.LongRunning);
         }
 
-        public void OnRx(byte[] buffer)
+        public void OnRx(byte[] buffer, int len)
         {
             _q.EnqueueAsync(() =>
             {
-                _channel.Writer.TryWrite(new SessionEvent(buffer));
+                _channel.Writer.TryWrite(new SessionEvent(buffer, len));
             });
         }
 

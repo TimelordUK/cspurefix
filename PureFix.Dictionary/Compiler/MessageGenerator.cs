@@ -18,7 +18,7 @@ namespace PureFix.Dictionary.Compiler
     {
         private const string GetSet = "{get; set;}";
 
-        public MessageGenerator(string? root, FixDefinitions fixDefinitions, Options options) : base(SelectRoot(root, options.BackingTypeOutputPath!), fixDefinitions, options)
+        public MessageGenerator(string? root, IFixDefinitions fixDefinitions, Options options) : base(SelectRoot(root, options.BackingTypeOutputPath!), fixDefinitions, options)
         {
         }
 

@@ -16,6 +16,7 @@ namespace PureFIix.Test.Env
         public void ConnectTo(TestMessageTransport sendingTo)
         {
             _tx_data = sendingTo._rx_data;
+            Connected = true;  
         }
 
         public Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token)
@@ -30,6 +31,8 @@ namespace PureFIix.Test.Env
             b.CopyTo(buffer);
             return Task.FromResult(b.Length);
         }
+
+        public bool Connected { get; private set; }
 
         public void Dispose()
         {

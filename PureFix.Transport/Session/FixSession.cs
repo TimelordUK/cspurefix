@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -10,7 +10,6 @@ using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
-using PureFix.Transport.Store;
 using PureFix.Types;
 
 namespace PureFix.Transport.Session
@@ -35,38 +34,28 @@ namespace PureFix.Transport.Session
         protected bool m_logReceivedMessages;
         protected IMessageTransport? m_transport;
         protected IFixConfig m_config;
-        private CancellationToken? m_parentToken;
+        protected CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
-        private readonly List<IMessageView> _messages = new();
+        private readonly List<IMessageView> _messages = [];
         private readonly AsyncWorkQueue m_q;
+        private readonly ILogFactory m_logFactory;
       
-        protected FixSession(IFixConfig config, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
+        protected FixSession(IFixConfig config, ILogFactory logFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
         {
-            if (config.Definitions == null)
-            {
-                throw new ArgumentException("config had been supplied with no definitions");
-            }
-            if (config.MessageFactory == null)
-            {
-                throw new ArgumentException("config had been supplied with no message factory");
-            }
-            if (config.LogFactory == null)
-            {
-                throw new ArgumentException("config had been supplied with no log factory");
-            }
+            m_logFactory = logFactory ?? throw new ArgumentException("config had been supplied with no log factory");
             m_config = config;
             m_logReceivedMessages = true;
             m_manageSession = true;
             m_clock = clock;
-            Definitions = config.Definitions;
-            m_factory = config.MessageFactory;
+            Definitions = config.Definitions ?? throw new ArgumentException("config had been supplied with no definitions");
+            m_factory = config.MessageFactory ?? throw new ArgumentException("config had been supplied with no message factory");
             m_parser = parser;
             m_encoder = encoder;
             var sessionDescription = config.Description;
             if (sessionDescription?.Application == null)
                 throw new InvalidDataException("no application provided in session config");
             m_me = sessionDescription.Application.Name ?? "me";
-            m_sessionLogger = config.LogFactory.MakeLogger($"{m_me}:FixSession");
+            m_sessionLogger = logFactory.MakeLogger($"{m_me}:FixSession");
             m_initiator = config.IsInitiator();
             m_acceptor = !m_initiator;
             m_checkMsgIntegrity = m_acceptor;
@@ -220,7 +209,7 @@ namespace PureFix.Transport.Session
             
             SetState(SessionState.Stopped);
             OnStopped(error);
-            if (m_MySource != null && !m_MySource.IsCancellationRequested)
+            if (m_MySource is { IsCancellationRequested: false })
             {
                 m_sessionLogger?.Info("stop: cancel token source.");
                 m_MySource?.Cancel();
@@ -246,7 +235,7 @@ namespace PureFix.Transport.Session
                             var seqNum = m_encoder.MsgSeqNum;
                             var storage = m_encoder.Encode(msgType, message);                            
                             if (storage == null) return;
-                            m_sessionLogger?.Debug($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
+                            m_sessionLogger?.Info($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
                             var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
@@ -266,11 +255,11 @@ namespace PureFix.Transport.Session
             await Tick();
         }
 
-        public async Task OnRx(byte[] buffer)
+        public async Task OnRx(byte[] buffer, int len)
         {
             _messages.Clear();
-            m_sessionLogger?.Debug($"OnRx {buffer.Length}");
-            m_parser.ParseFrom(buffer, (p, v) => _messages.Add(v), OnFixLog);
+            m_sessionLogger?.Debug($"OnRx {len}");
+            m_parser.ParseFrom(buffer, len, (p, v) => _messages.Add(v), OnFixLog);
             if (_messages.Count == 0) return;
             var plural = _messages.Count > 1 ? "s" : "";
             m_sessionLogger?.Info($"OnRx received {_messages.Count} message{plural}");
@@ -279,6 +268,8 @@ namespace PureFix.Transport.Session
                 await RxOnMsg(msg);
                 m_parser.Return(((AsciiView)msg).Storage);
             }
+            m_sessionLogger?.Info($"OnRx return buffer {buffer.Length}");
+            ArrayPool<byte>.Shared.Return(buffer);
         }
 
         protected void OnFixLog(StoragePool.Storage storage)
@@ -324,7 +315,7 @@ namespace PureFix.Transport.Session
                 }
                 else
                 {
-                    await m_q.EnqueueAsync(()=>OnRx(msg.Data));
+                    await m_q.EnqueueAsync(()=>OnRx(msg.Data, msg.len));
                 }
             }
             m_sessionLogger?.Info("Reader is exiting.");
@@ -351,17 +342,17 @@ namespace PureFix.Transport.Session
 
         public async Task Run(IMessageTransport transport, CancellationToken token)
         {
-            m_sessionLogger?.Info($"Run begins");
+            m_sessionLogger?.Info("Run begins");
             m_parentToken = token;
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             m_transport = transport;
             await InitiatorLogon();            
-            var dispatcher = new EventDispatcher(m_config.LogFactory, m_q, transport);
+            var dispatcher = new EventDispatcher(m_logFactory, m_q, transport);
             // start sending events to the channel on which this session listens.
             await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
             // read from the channel 
             await Reader(dispatcher, m_MySource.Token);
-            m_sessionLogger?.Info($"Run ends");
+            m_sessionLogger?.Info("Run ends");
         }
 
         private async Task CheckForwardMessage(string msgType, IMessageView view)

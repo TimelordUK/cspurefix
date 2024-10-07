@@ -19,14 +19,15 @@ namespace PureFix.Transport.Ascii
         private readonly FixMsgAsciiStoreResend m_resender;      
         public bool Heartbeat { get; set; } = true;
 
-        protected AsciiSession(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock)
-            : base(config, parser, encoder, q, clock)
+        protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock)
+            : base(config, logFactory,  parser, encoder, q, clock)
         {
             if (config == null) throw new ArgumentNullException("config must be provided");
             if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");
 
             m_msgStore = msgStore;
             m_resender = new FixMsgAsciiStoreResend(m_msgStore, fixMessageFactory, config, clock);
+            m_sessionLogger?.Info($"{Definitions}");
         }
 
         private async Task SendTestRequest()
@@ -290,7 +291,7 @@ namespace PureFix.Transport.Ascii
 
                 case MsgType.ResendRequest:
                     {
-                        logger?.Info($"peer sends '${msgType}' resend request.");
+                        logger?.Info($"peer sends '{msgType}' resend request.");
                         await OnResendRequest(view);
                         break;
                     }
@@ -368,7 +369,6 @@ namespace PureFix.Transport.Ascii
 
         private async Task<bool> CheckIntegrity(string msgType, IMessageView view)
         {
-            var state = m_sessionState;
             var seqNum = view.GetInt32((int)MsgTag.MsgSeqNum);
             if (seqNum == null) return false;
 

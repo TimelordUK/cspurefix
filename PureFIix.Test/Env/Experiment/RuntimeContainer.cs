@@ -16,13 +16,13 @@ namespace PureFIix.Test.Env.Experiment
 {
     internal class RuntimeContainer
     {
-        public IMessageTransport Transport { get; private set; }
-        public IFixConfig Config { get; private set; }
+        public IMessageTransport Transport { get; }
+        public IFixConfig Config { get; }
         public IFixMessageFactory FixMessageFactory { get; protected set; }
         public IFixMsgStore MessageStore { get; private set; }
         public IMessageParser Parser { get; private set; }
         public IMessageEncoder Encoder { get; private set; }
-        public CancellationTokenSource TokenSource { get; private set; }
+        public CancellationTokenSource TokenSource { get; }
         public BaseApp App { get; set; }
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
@@ -59,7 +59,7 @@ namespace PureFIix.Test.Env.Experiment
             var views = new List<MsgView>();
             var s = string.Join(Environment.NewLine, fl);
             var b = Encoding.UTF8.GetBytes(s);
-            parser.ParseFrom(b, (i, view) => views.Add((AsciiView)view));
+            parser.ParseFrom(b, b.Length, (i, view) => views.Add((AsciiView)view));
             return views;
         }
 

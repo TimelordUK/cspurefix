@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PureFix.ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "-f logs/test_client-fix-log20241001.txt -d FIX50SP2.xml -T 0 1 2 3 4 5 AE"
+    }
+  }
+}

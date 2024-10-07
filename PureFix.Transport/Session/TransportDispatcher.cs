@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,12 @@ namespace PureFix.Transport.Session
             var buffer = new byte[50 * 1024];
             Task task = Task.Factory.StartNew(async () =>
             {
-                while (!token.IsCancellationRequested)
+                while (m_transport.Connected && !token.IsCancellationRequested)
                 {
-                    var received = await m_transport.ReceiveAsync(buffer, token);
-                    var trimmed = buffer[..received];
-                    reciever.OnRx(trimmed);
+                    var received = await m_transport.ReceiveAsync(buffer, token);                   
+                    var newBuffer = ArrayPool<byte>.Shared.Rent(received);
+                    System.Buffer.BlockCopy(buffer, 0, newBuffer, 0, received);
+                    reciever.OnRx(newBuffer, received);
                 }
             },
                 TaskCreationOptions.LongRunning);

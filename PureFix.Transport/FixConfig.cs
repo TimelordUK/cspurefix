@@ -16,12 +16,11 @@ namespace PureFix.Transport
     {
         public byte? LogDelimiter { get; set; } = AsciiChars.Pipe;
         public byte? Delimiter { get; set; } = AsciiChars.Soh;
-        public ILogFactory? LogFactory { get; set; }
         public IFixDefinitions? Definitions { get; set; }
         public ISessionDescription? Description { get; set; }
         public ISessionMessageFactory? MessageFactory { get; set; }
 
-        public static IFixConfig MakeConfigFromPaths(ILogFactory logFactory, string dictionaryRootPath, string sessionDescriptionPath)
+        public static IFixConfig MakeConfigFromPaths(string dictionaryRootPath, string sessionDescriptionPath)
         {
             var definitions = new FixDefinitions();
             var qfParser = new QuickFixXmlFileParser(definitions);
@@ -30,15 +29,18 @@ namespace PureFix.Transport
             var sessionDescription = JsonHelper.FromJson<SessionDescription>(all);
             var definitionsPath = Path.Join(dictionaryRootPath, sessionDescription?.Application?.Dictionary ?? "FIX.xml");
             qfParser.Parse(definitionsPath);
-            var config = new FixConfig
+            if (sessionDescription != null)
             {
-                LogFactory = logFactory,
-                Definitions = definitions,
-                Description = sessionDescription,
-                MessageFactory = new Fix44SessionMessageFactory(sessionDescription)
-            };
+                var config = new FixConfig
+                {
+                    Definitions = definitions,
+                    Description = sessionDescription,
+                    MessageFactory = new Fix44SessionMessageFactory(sessionDescription)
+                };
 
-            return config;
+                return config;
+            }
+            return new FixConfig();
         }
     }
 }

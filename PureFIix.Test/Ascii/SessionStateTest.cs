@@ -114,7 +114,7 @@ namespace PureFIix.Test.Ascii
                   
             }
 
-            public void OnRx(byte[] buffer)
+            public void OnRx(byte[] buffer, int len)
             {
                 Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnRx {DateTime.Now:HH:mm:ss.fff} {buffer.Length}");
             }

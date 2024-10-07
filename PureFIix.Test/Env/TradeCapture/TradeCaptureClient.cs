@@ -19,7 +19,7 @@ namespace PureFIix.Test.Env.TradeCapture
         private readonly FixMessageFactory m_msg_factory = new();
         private readonly Dictionary<string, TradeCaptureReport> m_reports = [];
 
-        public TradeCaptureClient(IFixConfig config, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, fixMessageFactory, parser, encoder, store, q, clock)
+        public TradeCaptureClient(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, store, q, clock)
         {
             m_logReceivedMessages = true;
         }
@@ -32,16 +32,16 @@ namespace PureFIix.Test.Env.TradeCapture
                 case MsgType.TradeCaptureReport:
                     {
                         var tc = (TradeCaptureReport)m_msg_factory.ToFixMessage(view);
-                        m_reports[tc.TradeReportID] = tc;
+                        m_reports[tc?.TradeReportID ?? ""] = tc;
                         m_logger.Info($"{JsonHelper.ToJson(tc)}");
-                        m_logger.Info($"[reports: {m_reports.Count}] received tc ExecID = {tc.ExecID} TradeReportID = {tc.TradeReportID} Symbol = {tc.Instrument.Symbol} {tc.LastQty} @ ${tc.LastPx}");
+                        m_logger.Info($"[reports: {m_reports.Count}] received tc ExecID = {tc?.ExecID} TradeReportID = {tc?.TradeReportID} Symbol = {tc.Instrument.Symbol} {tc.LastQty} @ ${tc.LastPx}");
                         break;
                     }
 
                 case MsgType.TradeCaptureReportRequestAck:
                     {
                         var tca = (TradeCaptureReportRequestAck)m_msg_factory.ToFixMessage(view);
-                        m_logger.Info($"received tcr ack {tca.TradeRequestID} {tca.TradeRequestStatus}");
+                        m_logger.Info($"received tcr ack {tca?.TradeRequestID} {tca?.TradeRequestStatus}");
                         break;
                     }
             }
@@ -52,7 +52,7 @@ namespace PureFIix.Test.Env.TradeCapture
         protected override bool OnLogon(IMessageView view, string user, string password)
         {
             var msg = m_msg_factory.ToFixMessage(view);
-            m_logger.Info($"peer logs in user {user}");
+            m_logger.Info($"peer logs in user {user} {msg}");
             return true;
         }
 

@@ -1,6 +1,5 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Dictionary.Definition;
-using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
 using System;
@@ -13,7 +12,7 @@ namespace PureFIix.Test.Ascii
 {
     public class Qf50Sp2DictTest
     {
-        private FixDefinitions _definitions;
+        private IFixDefinitions _definitions;
         private SetConstraintHelper _setHelper;
 
         [OneTimeSetUp]
@@ -266,10 +265,10 @@ namespace PureFIix.Test.Ascii
                 Assert.That(def, Is.Not.Null);
                 Assert.That(def.Tag, Is.EqualTo(4));
                 Assert.That(def.IsEnum, Is.True);
-                _setHelper.IsEnum(def?.Enums, "B", "Buy", "BUY");
-                _setHelper.IsEnum(def?.Enums, "S", "Sell", "SELL");
-                _setHelper.IsEnum(def?.Enums, "X", "Cross", "CROSS");
-                _setHelper.IsEnum(def?.Enums, "T", "Trade", "TRADE");
+                _setHelper.IsEnum(def.Enums, "B", "Buy", "BUY");
+                _setHelper.IsEnum(def.Enums, "S", "Sell", "SELL");
+                _setHelper.IsEnum(def.Enums, "X", "Cross", "CROSS");
+                _setHelper.IsEnum(def.Enums, "T", "Trade", "TRADE");
             });
         }
 

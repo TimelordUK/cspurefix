@@ -45,7 +45,7 @@ namespace PureFix.Transport.SocketTransport
                     await transport.AsStream();
                     var session = m_sessionFactory.MakeSession();
                     await session.Run(transport, cancellationToken);
-                });
+                }, cancellationToken);
             }
         }
     }

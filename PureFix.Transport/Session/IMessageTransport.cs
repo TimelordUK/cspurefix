@@ -11,5 +11,6 @@ namespace PureFix.Transport.Session
     {
         Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token);
         Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token);
+        bool Connected { get; }
     }
 }

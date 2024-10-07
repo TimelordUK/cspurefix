@@ -32,7 +32,7 @@ namespace PureFIix.Test.Env.TradeCapture
 
         public static TradeCaptureReportRequestAck MakeTradeCaptureReportRequestAck(TradeCaptureReportRequest tcr, int status)
         {
-            return new TradeCaptureReportRequestAck()
+            return new TradeCaptureReportRequestAck
             {
                 TradeRequestID = tcr.TradeRequestID,
                 TradeRequestType = tcr.TradeRequestType,
@@ -43,12 +43,12 @@ namespace PureFIix.Test.Env.TradeCapture
 
         public static TradeCaptureReportRequest MakeTradeCaptureReportRequest(string requestId, DateTime tradeDate)
         {
-            return new TradeCaptureReportRequest()
+            return new TradeCaptureReportRequest
             {
                 TradeRequestID = requestId,
                 TradeRequestType = TradeRequestTypeValues.AllTrades,
                 SubscriptionRequestType = SubscriptionRequestTypeValues.SnapshotAndUpdates,
-                TrdCapDtGrp = new TrdCapDtGrpComponent()
+                TrdCapDtGrp = new TrdCapDtGrpComponent
                 {
                     NoDates = [
                         new NoDates() {
@@ -80,9 +80,9 @@ namespace PureFIix.Test.Env.TradeCapture
             var tradeReportID = _nextTradeId++;
             var execId = _nextExecId++;
             var instrumentId = _nextInstrumentId++;
-            _nextInstrumentId = _nextInstrumentId % _securities.Length;
+            _nextInstrumentId %= _securities.Length;
 
-            return new TradeCaptureReport()
+            return new TradeCaptureReport
             {
                 TradeReportID = $"{tradeReportID}",
                 TradeReportTransType = TradeReportTransTypeValues.New,
@@ -91,7 +91,7 @@ namespace PureFIix.Test.Env.TradeCapture
                 TransactTime = _fixClock.Current,
                 ExecID = $"{execId}",
                 PreviouslyReported = false,
-                Instrument = new InstrumentComponent()
+                Instrument = new InstrumentComponent
                 {
                     SecurityID = $"{_securities[instrumentId]}",
                     Symbol = $"{_securities[instrumentId]}"

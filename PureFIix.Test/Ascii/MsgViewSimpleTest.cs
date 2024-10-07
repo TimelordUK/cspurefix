@@ -154,6 +154,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(asBool, Is.True);
             // show that the get span positions is only done once.
             var asBool2 = view.GetBool(141);
+            Assert.That(asBool2, Is.True);
         }
 
         [Test]
@@ -188,7 +189,7 @@ namespace PureFIix.Test.Ascii
             var view = _views[0];
             var asStrings = view.GetStrings();
             Assert.That(asStrings, Has.Length.EqualTo(22));
-            Assert.That(asStrings[0], Is.EqualTo("FIX4.4"));
+            Assert.That(asStrings?[0], Is.EqualTo("FIX4.4"));
         }
     }
 }

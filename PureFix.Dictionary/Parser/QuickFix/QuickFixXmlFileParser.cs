@@ -29,8 +29,15 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions)
 
     public void Parse(string path)
     {
+        using var streamReader = File.OpenText(path);
+        var txt = streamReader.ReadToEnd();
+        ParseText(txt);
+    }
+
+    public void ParseText(string xml)
+    {
         // first parse all fields including their enum definitions, and add to the dictionary
-        var doc = XDocument.Load(path);
+        var doc = XDocument.Parse(xml);
         ParseVersion(doc);
         ParseFields(doc);
         // all top level components which will later be further expanded

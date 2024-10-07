@@ -7,22 +7,30 @@ namespace PureFix.Types
     {
         public static T? FromJson<T>(string s)
         {
-            JsonSerializerOptions options2 = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var instance = JsonSerializer.Deserialize<T>(s, options2);
+            var instance = JsonSerializer.Deserialize<T>(s, ReadOptions);
             return instance;
         }
 
-        public static string ToJson<T>(T instance)
+        private static readonly JsonSerializerOptions WriteOptions = new()
         {
-            JsonSerializerOptions options = new()
-            {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
-            var json = JsonSerializer.Serialize(instance, options);
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+
+        private static readonly JsonSerializerOptions ReadOptions = new ()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+    public static string ToJson<T>(T instance)
+        {
+            var json = JsonSerializer.Serialize(instance, WriteOptions);
+            return json;
+        }
+
+        public static string ToJson(object instance, Type t)
+        {
+            var json = JsonSerializer.Serialize(instance, t, WriteOptions);
             return json;
         }
     }

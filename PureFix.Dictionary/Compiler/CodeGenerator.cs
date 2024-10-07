@@ -21,13 +21,13 @@ namespace PureFix.Dictionary.Compiler
             var indent = MakeIndent();
             _Builder.Append(indent).AppendLine(line);
 
-            return new(this);
+            return new BlockIndent(this);
         }
 
         public Indenter BeginIndent()
         {
             var indent = MakeIndent();
-            return new(this);
+            return new Indenter(this);
         }
 
         public CodeGenerator WriteLine()
@@ -62,7 +62,7 @@ namespace PureFix.Dictionary.Compiler
             return _Builder.ToString();
         }
 
-        public ref struct BlockIndent
+        public readonly ref struct BlockIndent
         {
             private readonly CodeGenerator _CodeGenerator;
 
@@ -80,7 +80,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        public ref struct Indenter
+        public readonly ref struct Indenter
         {
             private readonly CodeGenerator _CodeGenerator;
 

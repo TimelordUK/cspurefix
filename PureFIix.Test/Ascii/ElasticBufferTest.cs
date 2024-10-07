@@ -15,7 +15,7 @@ namespace PureFIix.Test.Ascii
 {
     public class ElasticBufferTest
     {
-        private FixDefinitions _definitions;
+        private IFixDefinitions _definitions;
 
         [OneTimeSetUp]
         public void OnceSetup()

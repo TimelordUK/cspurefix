@@ -5,7 +5,6 @@ using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -24,14 +23,9 @@ namespace PureFix.Transport.Store
 
         public FixMsgAsciiStoreResend(IFixMsgStore store, IFixMessageFactory factory, IFixConfig config, IFixClock clock)
         {
-            if (config.Definitions == null)
-            {
-                throw new ArgumentNullException("config must contain definitions");
-            }
-            if (config.MessageFactory == null)
-            {
-                throw new ArgumentNullException("config must contain message factory");
-            }
+            ArgumentNullException.ThrowIfNull(config.Definitions);
+            ArgumentNullException.ThrowIfNull(config.MessageFactory);
+
             m_Parser = new AsciiParser(config.Definitions) { 
                 Delimiter = config.Delimiter ?? AsciiChars.Soh, 
                 WriteDelimiter = config.LogDelimiter ?? AsciiChars.Pipe
@@ -41,10 +35,6 @@ namespace PureFix.Transport.Store
             m_clock = clock;
             m_factory = factory;
             m_sessionFactory = config.MessageFactory;
-            if (m_sessionFactory == null)
-            {
-                throw new ArgumentNullException("config must contain session message factory");
-            }
         }
 
         public async Task<IReadOnlyList<IFixMsgStoreRecord>> GetResendRequest(int startReq, int endSeq)
@@ -136,7 +126,7 @@ namespace PureFix.Transport.Store
             if (originalRecord.Encoded == null) return;
             var bytes = Encoding.UTF8.GetBytes(originalRecord.Encoded);
             MsgView? msgView = null;
-            m_Parser.ParseFrom(bytes, (ptr, v) => msgView = v);
+            m_Parser.ParseFrom(bytes, bytes.Length, (ptr, v) => msgView = v);
             if (msgView == null) return;
             var o = m_factory.ToFixMessage(msgView);
             if (o?.StandardHeader == null) return;

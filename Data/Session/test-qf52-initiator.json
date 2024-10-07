@@ -5,7 +5,11 @@
     "name": "test_client",
     "tcp": {
       "host": "localhost",
-      "port": 2344
+      "port": 2344,
+      "tls": {
+        "enabled": false,
+        "certificate": "local.pfx"
+      }
     },
     "protocol": "ascii",
     "dictionary": "FIX50SP2.xml"

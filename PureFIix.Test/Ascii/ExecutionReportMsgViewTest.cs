@@ -103,8 +103,8 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var parties = structure?.FirstContainedWithin("Parties", msg);
-            var noPartyIDs = structure?.FirstContainedWithin("NoPartyIDs", msg);
+            var parties = structure.Value.FirstContainedWithin("Parties", msg);
+            var noPartyIDs = structure.Value.FirstContainedWithin("NoPartyIDs", msg);
             Assert.Multiple(() =>
             {
                 Assert.That(parties, Is.Not.Null);
@@ -365,7 +365,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var commisionData = structure?.GetInstance("SpreadOrBenchmarkCurveData");
+            var commisionData = structure.Value.GetInstance("SpreadOrBenchmarkCurveData");
             Assert.Multiple(() =>
             {
                 Assert.That(commisionData, Is.Not.Null);
@@ -391,7 +391,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var commisionData = structure?.GetInstance("YieldData");
+            var commisionData = structure.Value.GetInstance("YieldData");
             Assert.Multiple(() =>
             {
                 Assert.That(commisionData, Is.Not.Null);
@@ -419,7 +419,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var contAmtGrp = structure?.GetInstance("ContAmtGrp");
+            var contAmtGrp = structure.Value.GetInstance("ContAmtGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(contAmtGrp, Is.Not.Null);
@@ -431,7 +431,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(contAmtGrp.Type, Is.EqualTo(SegmentType.Component));
             });
 
-            var noContAmts = structure?.GetInstance("NoContAmts");
+            var noContAmts = structure.Value.GetInstance("NoContAmts");
             Assert.Multiple(() =>
             {
                 Assert.That(noContAmts, Is.Not.Null);
@@ -472,7 +472,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(contAmtGrp.Type, Is.EqualTo(SegmentType.Component));
             });
 
-            var noContAmts = structure?.GetInstance("NoMiscFees");
+            var noContAmts = structure.Value.GetInstance("NoMiscFees");
             Assert.Multiple(() =>
             {
                 Assert.That(noContAmts, Is.Not.Null);
@@ -554,7 +554,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var undInstrmtGrp = structure?.GetInstance("UndInstrmtGrp");
+            var undInstrmtGrp = structure.Value.GetInstance("UndInstrmtGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(undInstrmtGrp, Is.Not.Null);
@@ -566,7 +566,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(undInstrmtGrp.Type, Is.EqualTo(SegmentType.Component));
             });
 
-            var noUnderlyings = structure?.GetInstance("NoUnderlyings");
+            var noUnderlyings = structure.Value.GetInstance("NoUnderlyings");
             Assert.Multiple(() =>
             {
                 Assert.That(noUnderlyings, Is.Not.Null);
@@ -576,7 +576,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(noUnderlyings.Type, Is.EqualTo(SegmentType.Group));
             });
 
-            var underlyingInstrument = structure?.GetInstances("UnderlyingInstrument");
+            var underlyingInstrument = structure.Value.GetInstances("UnderlyingInstrument");
             Assert.That(underlyingInstrument, Is.Not.Null);
             Assert.That(underlyingInstrument, Has.Count.EqualTo(2));
 
@@ -602,7 +602,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(underlyingInstrument[1].Type, Is.EqualTo(SegmentType.Component));
             });
 
-            var noUnderlyingSecurityAltID = structure?.GetInstances("NoUnderlyingSecurityAltID");
+            var noUnderlyingSecurityAltID = structure.Value.GetInstances("NoUnderlyingSecurityAltID");
             Assert.That(noUnderlyingSecurityAltID, Is.Not.Null);
             Assert.That(noUnderlyingSecurityAltID, Has.Count.EqualTo(2));
 
@@ -629,7 +629,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(noUnderlyingSecurityAltID[1].DelimiterPositions, Is.EqualTo(new List<int> { 208 }));
             });
 
-            var boundNoUnderlyingSecurityAltID = structure?.FirstContainedWithin(
+            var boundNoUnderlyingSecurityAltID = structure.Value.FirstContainedWithin(
                 "NoUnderlyingSecurityAltID",
                 underlyingInstrument[1]);
             Assert.That(boundNoUnderlyingSecurityAltID, Is.Not.Null);
@@ -765,7 +765,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var instrmtLegExecGrp = structure?.GetInstance("InstrmtLegExecGrp");
+            var instrmtLegExecGrp = structure.Value.GetInstance("InstrmtLegExecGrp");
             Assert.That(instrmtLegExecGrp, Is.Not.Null);
 
             Assert.Multiple(() =>
@@ -779,7 +779,7 @@ namespace PureFIix.Test.Ascii
                 Assert.That(instrmtLegExecGrp.Depth, Is.EqualTo(1));
             });
 
-            var noLegs = structure?.GetInstance("NoLegs");
+            var noLegs = structure.Value.GetInstance("NoLegs");
             Assert.Multiple(() =>
             {
                 Assert.That(noLegs, Is.Not.Null);
@@ -801,7 +801,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var instrumentLeg = structure?.GetInstances("InstrumentLeg");
+            var instrumentLeg = structure.Value.GetInstances("InstrumentLeg");
             Assert.That(instrumentLeg, Is.Not.Null);
             Assert.That(instrumentLeg, Has.Count.EqualTo(3));
 
@@ -845,7 +845,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var noLegSecurityAltID = structure?.GetInstances("NoLegSecurityAltID");
+            var noLegSecurityAltID = structure.Value.GetInstances("NoLegSecurityAltID");
             Assert.That(noLegSecurityAltID, Is.Not.Null);
             Assert.Multiple(() =>
             {
@@ -865,7 +865,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var legSecAltIDGrp = structure?.GetInstances("LegSecAltIDGrp");
+            var legSecAltIDGrp = structure.Value.GetInstances("LegSecAltIDGrp");
             Assert.That(legSecAltIDGrp, Is.Not.Null);
             Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
 
@@ -898,7 +898,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var legSecAltIDGrp = structure?.GetInstances("LegSecAltIDGrp");
+            var legSecAltIDGrp = structure.Value.GetInstances("LegSecAltIDGrp");
             Assert.That(legSecAltIDGrp, Is.Not.Null);
             Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
 
@@ -931,7 +931,7 @@ namespace PureFIix.Test.Ascii
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var legSecAltIDGrp = structure?.GetInstances("LegSecAltIDGrp");
+            var legSecAltIDGrp = structure.Value.GetInstances("LegSecAltIDGrp");
             Assert.That(legSecAltIDGrp, Is.Not.Null);
             Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
 
@@ -1039,7 +1039,7 @@ namespace PureFIix.Test.Ascii
             var instance = JsonHelper.FromJson<NoPartyIDs>(expected);
             Assert.That(parties, DIs.DeepEqualTo(instance));
 
-            var noParties = partyView?.GetView("NoPartyIDs");
+            var noParties = partyView.GetView("NoPartyIDs");
             var np0View = noParties?.GetGroupInstance(0);
             var np0ViewPtysSubGrp = np0View?.GetView("PtysSubGrp");
             var psg = new PtysSubGrpComponent();
@@ -1050,8 +1050,8 @@ namespace PureFIix.Test.Ascii
                 Assert.That(noParties, Is.Not.Null);
                 Assert.That(noParties.GroupCount(), Is.EqualTo(3));
                 Assert.That(np0View, Is.Not.Null);
-                Assert.That(np0View?.GetString("PartyID"), Is.EqualTo("magna."));
-                Assert.That(np0View?.GetString("PartyIDSource"), Is.EqualTo("9"));
+                Assert.That(np0View.GetString("PartyID"), Is.EqualTo("magna."));
+                Assert.That(np0View.GetString("PartyIDSource"), Is.EqualTo("9"));
                 Assert.That(np0ViewPtysSubGrp, Is.Not.Null);
                 Assert.That(psg, DIs.DeepEqualTo(instance.PtysSubGrp));
             });
@@ -1068,7 +1068,7 @@ namespace PureFIix.Test.Ascii
             var instrumentView = erView.GetView("Instrument");
             Assert.That(instrumentView, Is.Not.Null);
             Assert.That(instrumentView.GetString("Symbol"), Is.EqualTo("ac,"));
-            var secAltIDGrpAsObject = instrumentView?.GetView("SecAltIDGrp");
+            var secAltIDGrpAsObject = instrumentView.GetView("SecAltIDGrp");
             var sag = new SecAltIDGrpComponent();
             ((IFixParser)sag).Parse(secAltIDGrpAsObject);
             Assert.Multiple(() =>
@@ -1148,7 +1148,7 @@ namespace PureFIix.Test.Ascii
                                     """;
 
             var er2 = JsonHelper.FromJson<InstrumentComponent>(expected);
-            Assert.That(er2.SecurityID, Is.EqualTo(er.Instrument.SecurityID));
+            Assert.That(er2.SecurityID, Is.EqualTo(er.Instrument?.SecurityID));
         }
 
 
@@ -1163,7 +1163,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(undInstrmtGrpView, Is.Not.Null);
             var uig = new UndInstrmtCollGrpComponent();
             ((IFixParser)uig).Parse(undInstrmtGrpView);
-            var u0 = uig?.NoUnderlyings?[0];
+            var u0 = uig.NoUnderlyings?[0];
             var underlying0 = u0?.UnderlyingInstrument;
 
             Assert.Multiple(() =>
@@ -1212,14 +1212,16 @@ namespace PureFIix.Test.Ascii
             Assert.Multiple(() =>
             {
                 Assert.That(expectedInst, Is.Not.Null);
-                var u1 = uig?.NoUnderlyings?[1].UnderlyingInstrument;
+                var u1 = uig.NoUnderlyings?[1].UnderlyingInstrument;
                 Assert.Multiple(() =>
                 {
                     Assert.That(underlying0, Is.Not.Null);
-                    Assert.That(underlying0?.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
+                    Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
                     Assert.That(u1?.UnderlyingSymbol, Is.EqualTo("erat"));
-                    Assert.That(u1?.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
-                    Assert.That(u1?.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0].UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
+                    var s0 = u1.UndSecAltIDGrp?.NoUnderlyingSecurityAltID?[0];
+                    Assert.That(s0, Is.Not.Null);
+                    Assert.That(s0.UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
+                    Assert.That(s0.UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
                 });
             });
         }

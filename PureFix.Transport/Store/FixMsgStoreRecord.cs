@@ -10,6 +10,12 @@ namespace PureFix.Transport.Store
 {
     public class FixMsgStoreRecord : IFixMsgStoreRecord
     {
+        public string MsgType { get; }
+        public DateTime Timestamp { get; }
+        public int SeqNum { get; }
+        public IFixMessage? InflatedMessage { get; set; }
+        public string? Encoded { get; }
+
         public FixMsgStoreRecord(string msgType, DateTime timestamp, int seqNum, string? encoded = null)
         {
             MsgType = msgType;
@@ -22,12 +28,6 @@ namespace PureFix.Transport.Store
         {
             return $"SeqNum = {SeqNum}, MsgType = {MsgType}, Timestamp = {Timestamp}, Encoded = {Encoded}";
         }
-
-        public string MsgType { get; }
-        public DateTime Timestamp { get; }
-        public int SeqNum { get; }
-        public IFixMessage? InflatedMessage { get; set; }
-        public string? Encoded { get; }
 
         public static IFixMsgStoreRecord ToMsgStoreRecord(IMessageView v)
         {

@@ -9,9 +9,9 @@ using PureFix.Dictionary.Parser;
 
 namespace PureFIix.Test.Env
 {
-    internal class SetConstraintHelper(FixDefinitions definitions)
+    internal class SetConstraintHelper(IFixDefinitions definitions)
     {
-        public FixDefinitions Definitions { get; } = definitions;
+        public IFixDefinitions Definitions { get; } = definitions;
 
         public void IsComponent(IContainedSet set, int index, string name, bool expected)
         {
@@ -47,8 +47,8 @@ namespace PureFIix.Test.Env
                 var field = set?.Fields[index];
                 Assert.That(field, Is.Not.Null);
                 Assert.That(field.Type, Is.EqualTo(ContainedFieldType.Simple));
-                Assert.That(field?.Name, Is.EqualTo(name));
-                Assert.That(field?.Required, Is.EqualTo(expected));
+                Assert.That(field.Name, Is.EqualTo(name));
+                Assert.That(field.Required, Is.EqualTo(expected));
                 Assert.That(Definitions.Simple.TryGetValue(name, out var masterDef), Is.True);
                 Assert.That(masterDef, Is.Not.Null);
                 Assert.That(masterDef.Name, Is.EqualTo(name));

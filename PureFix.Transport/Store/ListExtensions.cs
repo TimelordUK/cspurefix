@@ -15,19 +15,24 @@ namespace PureFix.Transport.Store
 
             comparer = comparer ?? Comparer<T>.Default;
 
-            int lower = 0;
-            int upper = list.Count - 1;
+            var lower = 0;
+            var upper = list.Count - 1;
 
             while (lower <= upper)
             {
-                int middle = lower + (upper - lower) / 2;
-                int comparisonResult = comparer.Compare(value, list[middle]);
-                if (comparisonResult == 0)
-                    return middle;
-                else if (comparisonResult < 0)
-                    upper = middle - 1;
-                else
-                    lower = middle + 1;
+                var middle = lower + (upper - lower) / 2;
+                var comparisonResult = comparer.Compare(value, list[middle]);
+                switch (comparisonResult)
+                {
+                    case 0:
+                        return middle;
+                    case < 0:
+                        upper = middle - 1;
+                        break;
+                    default:
+                        lower = middle + 1;
+                        break;
+                }
             }
 
             return ~lower;

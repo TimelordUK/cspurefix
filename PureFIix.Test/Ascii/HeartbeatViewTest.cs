@@ -62,7 +62,9 @@ namespace PureFIix.Test.Ascii
             // a new parser is constructed for each test, here we parse twice on same instance
             var text = await TestEntity.GetTextAsync(Fix44PathHelper.HeartbeatReplayPath);
             var views1 = _testEntity.ParseText(text);
+            Assert.That(views1, Has.Count.GreaterThan(0));
             var views2 = _testEntity.ParseText(text);
+            Assert.That(views2, Has.Count.GreaterThan(0));
             var stats = _testEntity.Parser.ParserStats;
             // we will have taken 2 buffers, returned 2 for views above and we are waiting to parse into
             // a new buffer

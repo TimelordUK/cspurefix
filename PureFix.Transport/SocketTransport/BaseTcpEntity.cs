@@ -16,7 +16,7 @@ namespace PureFix.Transport.SocketTransport
         protected readonly IFixClock m_clock;
         protected readonly ILogFactory m_logFactory;
 
-        public BaseTcpEntity(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory)
+        protected BaseTcpEntity(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory)
         {
             ArgumentNullException.ThrowIfNull(sessionFactory);
             ArgumentNullException.ThrowIfNull(config);

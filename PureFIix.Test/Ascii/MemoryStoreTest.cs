@@ -1,9 +1,7 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
-using PureFix.Transport;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
-using PureFix.Types.FIX50SP2.QuickFix;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +15,7 @@ namespace PureFIix.Test.Ascii
     {
         private TestEntity _testEntity;
         private List<AsciiView> _views;
-        IFixConfig _config;
+        private IFixConfig _config;
         private string SenderCompID => _config?.Description?.SenderCompID;
 
         [OneTimeSetUp]

@@ -9,8 +9,8 @@ namespace PureFIix.Test.Env
 {
     internal class LogTrace : IEnumerable<string>
     {
-        private object _lock = new object();
-        private List<string> _lines = [];
+        private readonly object _lock = new object();
+        private readonly List<string> _lines = [];
 
         public int Count
         {

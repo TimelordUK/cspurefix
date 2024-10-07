@@ -9,25 +9,59 @@ namespace PureFix.Transport.Session
 {
     public class TimerDispatcher
     {
-        private ILogger? _logger;
+        public class AsyncTimer
+        {
+            private readonly ILogger? m_logger;
+            public AsyncTimer(ILogger? logger)
+            {
+                m_logger = logger;
+            }
+            public Task Start(TimeSpan interval, Action onInvoke, CancellationToken token)
+            {
+                var timer = new PeriodicTimer(interval);
+                Task task = Task.Factory.StartNew(async () =>
+                {
+                    m_logger?.Info("timer starting.");
+                    while (!token.IsCancellationRequested)
+                    {
+                        await timer.WaitForNextTickAsync(token);
+                        onInvoke.Invoke();
+                    }
+                    m_logger?.Info("timer exiting.");
+                },
+                    TaskCreationOptions.LongRunning);
+                return task;
+            }
+
+            public Task Start(TimeSpan interval, Func<Task> onInvoke, CancellationToken token)
+            {
+                var timer = new PeriodicTimer(interval);
+                Task task = Task.Factory.StartNew(async () =>
+                {
+                    m_logger?.Info("timer starting.");
+                    while (!token.IsCancellationRequested)
+                    {
+                        await timer.WaitForNextTickAsync(token);
+                        await onInvoke.Invoke();
+                    }
+                    m_logger?.Info("timer exiting.");
+                },
+                    TaskCreationOptions.LongRunning);
+                return task;
+            }
+
+        }
+        private readonly ILogger? _logger;
+        
         public TimerDispatcher(ILogFactory? factory) {
             _logger = factory?.MakeLogger(nameof(TimerDispatcher));
         }    
+
         public Task Dispatch(ISessionEventReciever reciever , TimeSpan interval, CancellationToken token)
         {
-            var timer = new PeriodicTimer(interval);
-            Task task = Task.Factory.StartNew(async () =>
-            {
-                _logger?.Info("timer starting.");
-                while (!token.IsCancellationRequested)
-                {
-                    await timer.WaitForNextTickAsync(token);
-                    reciever.OnTimer();
-                }
-                _logger?.Info("timer exiting.");
-            },
-                TaskCreationOptions.LongRunning);
-            return task;
+            var timer = new AsyncTimer(_logger);
+            var t = timer.Start(interval, reciever.OnTimer, token);
+            return t;
         }
     }
 }
