@@ -49,6 +49,9 @@ internal class Program
         Console.WriteLine("");
         Console.WriteLine("tail a file and output as json objects");
         Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o json");
+        Console.WriteLine("");        
+        Console.WriteLine("parse a log in decode tag format with no tail");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags");
         Console.WriteLine("");
         Console.WriteLine("run built in skeleton client and server to logon and heartbeat");
         Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -a sk");
