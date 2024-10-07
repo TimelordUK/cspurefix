@@ -1,12 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using PureFix.ConsoleApp;
 using CommandLine;
 
+namespace PureFix.ConsoleApp;
 
-class TestClass
+internal class TestClass
 {
-    static async Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var res = Parser.Default.ParseArguments<Options>(args);
         var options = res.Value;
@@ -29,5 +29,3 @@ class TestClass
         }
     }
 }
-
-

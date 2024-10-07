@@ -20,6 +20,9 @@ namespace PureFix.ConsoleApp
                                          FileMode.Open,
                                          FileAccess.Read,
                                          FileShare.ReadWrite);
+            var endPoint = _fileStream.Length;
+            // Set the stream position to the end of the file.        
+            _fileStream.Seek(endPoint, SeekOrigin.Begin);
 
             _timer = new Timer(o => CheckForUpdate(encoding, fileChanged),
                                null,
