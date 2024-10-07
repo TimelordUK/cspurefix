@@ -8,7 +8,7 @@ using PureFix.Types;
 
 namespace PureFix.ConsoleApp
 {
-    public class Runner()
+    public class Runner
     {
         internal static async Task Run(CommandOptions options, Func<IFixClock, IFixConfig, BaseAppDI> makeHost)
         {           

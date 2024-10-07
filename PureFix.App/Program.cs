@@ -22,7 +22,7 @@ internal class Program
         }
         else if (!string.IsNullOrEmpty(options.Application))
         {
-            await Runner.Run(options, MakeAppHost);
+            await RunApp(options);
         }
         else
         {
@@ -30,11 +30,33 @@ internal class Program
         }
     }
 
-    private static BaseAppDI MakeAppHost(IFixClock clock, IFixConfig config)
+    private static async Task RunApp(CommandOptions options)
+    {
+        switch (options.Application)
+        {
+            case "sk":
+                await Runner.Run(options, MakeSkeletonAppHost);
+                break;
+            default:
+                await Runner.Run(options, MakeTradeCaptureAppHost);
+                break;
+        }
+    }
+
+    // have different makehosts based on application type
+    private static BaseAppDI MakeTradeCaptureAppHost(IFixClock clock, IFixConfig config)
     {
         var factory = new ConsoleLogFactory(config.Name());
         var queue = new AsyncWorkQueue();
         var app = new TradeCaptureDI(queue, factory, clock, config);
+        return app;
+    }
+
+    private static BaseAppDI MakeSkeletonAppHost(IFixClock clock, IFixConfig config)
+    {
+        var factory = new ConsoleLogFactory(config.Name());
+        var queue = new AsyncWorkQueue();
+        var app = new SkeletonDI(queue, factory, clock, config);
         return app;
     }
 
