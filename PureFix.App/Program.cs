@@ -17,7 +17,7 @@ internal class Program
         var res = Parser.Default.ParseArguments<CommandOptions>(args);
         var options = res.Value;
 
-        if (options.MsgTypes.Count() > 0)
+        if (options.MsgTypes?.Count() > 0)
         {
             Trim(options);
         }
@@ -29,10 +29,35 @@ internal class Program
         {
             await RunApp(options);
         }
+        else if (!string.IsNullOrEmpty(options.FixLogPath))
+        {
+            ParseLog(options);
+        }
         else
         {
-           ParseLog(options);            
+            Examples(options);
         }
+    }
+
+    private static void Examples(CommandOptions options)
+    {
+        Console.WriteLine("trim an input dictionary file and output only messages and dependent fields on given message set.");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -T 0 1 2 3 4 5 A AE");
+        Console.WriteLine("");
+        Console.WriteLine("tail a file and output as tag decoded resolving enums.");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o tags");
+        Console.WriteLine("");
+        Console.WriteLine("tail a file and output as json objects");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o json");
+        Console.WriteLine("");
+        Console.WriteLine("run built in skeleton client and server to logon and heartbeat");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -a sk");
+        Console.WriteLine("");
+        Console.WriteLine("run built in skeleton client and server to logon and heartbeat with fix44 config");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -I test-qf44-initiator.json -A test-qf44-acceptor.json -a sk");
+        Console.WriteLine("");
+        Console.WriteLine("run built in trade capture client and server to logon and heartbeat");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX50SP2.xml -a tc");        
     }
 
     private static void Trim(CommandOptions options)

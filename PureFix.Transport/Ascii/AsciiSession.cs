@@ -291,7 +291,7 @@ namespace PureFix.Transport.Ascii
 
                 case MsgType.ResendRequest:
                     {
-                        logger?.Info($"peer sends '${msgType}' resend request.");
+                        logger?.Info($"peer sends '{msgType}' resend request.");
                         await OnResendRequest(view);
                         break;
                     }
