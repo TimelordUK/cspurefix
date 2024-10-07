@@ -7,6 +7,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Transport.Session;
 using PureFix.Types;
+
 namespace PureFix.ConsoleApp;
 
 internal class Program
@@ -15,8 +16,12 @@ internal class Program
     {
         var res = Parser.Default.ParseArguments<CommandOptions>(args);
         var options = res.Value;
-        
-        if (options.Generate)
+
+        if (options.MsgTypes.Count() > 0)
+        {
+            Trim(options);
+        }
+        else if (options.Generate)
         {
             Generate(options);
         }
@@ -27,6 +32,20 @@ internal class Program
         else
         {
            ParseLog(options);            
+        }
+    }
+
+    private static void Trim(CommandOptions options)
+    {
+        if (string.IsNullOrEmpty(options.DictPath))
+        {
+            Console.WriteLine("please specify a dictionary to genereate.");
+        } else
+        {
+            var definitions = GetDefinitions(options);
+            var builder = new QuickFixXmlFileBuilder(definitions);
+            var encoded = builder.Write(options.MsgTypes.ToArray());
+            Console.WriteLine(encoded);
         }
     }
 

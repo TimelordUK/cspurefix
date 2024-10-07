@@ -32,7 +32,7 @@ namespace PureFIix.Test.Env.TradeCapture
 
         public static TradeCaptureReportRequestAck MakeTradeCaptureReportRequestAck(TradeCaptureReportRequest tcr, int status)
         {
-            return new TradeCaptureReportRequestAck()
+            return new TradeCaptureReportRequestAck
             {
                 TradeRequestID = tcr.TradeRequestID,
                 TradeRequestType = tcr.TradeRequestType,
@@ -43,7 +43,7 @@ namespace PureFIix.Test.Env.TradeCapture
 
         public static TradeCaptureReportRequest MakeTradeCaptureReportRequest(string requestId, DateTime tradeDate)
         {
-            return new TradeCaptureReportRequest()
+            return new TradeCaptureReportRequest
             {
                 TradeRequestID = requestId,
                 TradeRequestType = TradeRequestTypeValues.AllTrades,
@@ -82,7 +82,7 @@ namespace PureFIix.Test.Env.TradeCapture
             var instrumentId = _nextInstrumentId++;
             _nextInstrumentId %= _securities.Length;
 
-            return new TradeCaptureReport()
+            return new TradeCaptureReport
             {
                 TradeReportID = $"{tradeReportID}",
                 TradeReportTransType = TradeReportTransTypeValues.New,

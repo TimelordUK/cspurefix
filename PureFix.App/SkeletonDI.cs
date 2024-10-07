@@ -11,10 +11,8 @@ using System.Threading.Tasks;
 
 namespace PureFix.ConsoleApp
 {
-    internal class SkeletonDI : AppHost<SkeletonSessionFactory, FixMessageFactory>
+    internal class SkeletonDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config) 
+        : AppHost<SkeletonSessionFactory, FixMessageFactory>(q, factory, clock, config)
     {
-        public SkeletonDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config) : base(q, factory, clock, config)
-        {
-        }
     }
 }

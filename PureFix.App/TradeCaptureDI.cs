@@ -11,10 +11,8 @@ using PureFix.Types.FIX50SP2.QuickFix.Types;
 
 namespace PureFix.ConsoleApp
 {
-    internal class TradeCaptureDI : AppHost<TradeCaptureSessionFactory, FixMessageFactory>
+    internal class TradeCaptureDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config) 
+        : AppHost<TradeCaptureSessionFactory, FixMessageFactory>(q, factory, clock, config)
     {
-        public TradeCaptureDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config) : base(q, factory, clock, config)
-        {
-        }
     }
 }
