@@ -14,26 +14,23 @@ namespace PureFix.ConsoleApp
 {
     internal class FixApp
     {
-        public string Name { get; }
-        public IFixConfig? Config { get; private set; }
+        public string Name => Config.Name();
+        public IFixConfig Config { get; private set; }
 
-        private static IFixConfig MakeConfig(string json)
+        public static IFixConfig MakeConfig(string json)
         {
             var config = FixConfig.MakeConfigFromPaths(Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
             return config;
         }
 
-        public FixApp(string json)
+        public FixApp(IFixConfig config)
         {
-            Name = json;
+            Config = config;
         }
 
-        public async Task Run(IFixClock clock)
+        public async Task Run(BaseAppDI app)
         {
-            Config = MakeConfig(Name);
-            var factory = new ConsoleLogFactory(Config.Name());
-            var queue = new AsyncWorkQueue();
-            var app = new TradeCaptureDI(queue, factory, clock, Config);
+          
             var entity = app.Resolve<ITcpEntity>();
             var cts = new CancellationTokenSource();
 

@@ -1,9 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using Arrow.Threading.Tasks;
 using CommandLine;
 using PureFix.Dictionary.Compiler;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Transport.Session;
+using PureFix.Types;
 namespace PureFix.ConsoleApp;
 
 internal class Program
@@ -19,12 +22,20 @@ internal class Program
         }
         else if (!string.IsNullOrEmpty(options.Application))
         {
-            await Runner.Run(options);
+            await Runner.Run(options, MakeAppHost);
         }
         else
         {
            ParseLog(options);            
         }
+    }
+
+    private static BaseAppDI MakeAppHost(IFixClock clock, IFixConfig config)
+    {
+        var factory = new ConsoleLogFactory(config.Name());
+        var queue = new AsyncWorkQueue();
+        var app = new TradeCaptureDI(queue, factory, clock, config);
+        return app;
     }
 
     private static IFixDefinitions GetDefinitions(CommandOptions options)
