@@ -57,18 +57,21 @@ namespace PureFIix.Test.Env.TradeCapture
             m_logger.Info($"received tcr {tcr.TradeRequestID}");
             var ack1 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Accepted);
             await Send(MsgTypeValues.TradeCaptureReportRequestAck, ack1);
-            var batch = m_tradeFactory.MakeBatchOfTradeCaptureReport();
             await CreateSendBatch(10);
              var ack2 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Completed);
             await Send(MsgTypeValues.TradeCaptureReportRequestAck, ack2);
             if (tcr.SubscriptionRequestType == SubscriptionRequestTypeValues.SnapshotAndUpdates)
             {
+                var i = 1;
                 var timer = new TimerDispatcher.AsyncTimer(m_logger);
-                await timer.Start(TimeSpan.FromSeconds(5), async () =>
-                {
-                    m_logger.Info($"sending batch of trades");
-                    await CreateSendBatch(3);
-                }, m_parentToken.Value);
+                if (m_parentToken != null)
+                    await timer.Start(TimeSpan.FromSeconds(5), async () =>
+                    {
+                        m_logger.Info($"sending batch of trades {i}");
+                        await CreateSendBatch(i);
+                        i %= 8;
+                        i++;
+                    }, m_parentToken.Value);
             }
         }
 

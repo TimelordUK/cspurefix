@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using CommandLine;
+using Microsoft.Extensions.Options;
 using PureFix.Dictionary.Compiler;
 using PureFix.Dictionary.Parser.QuickFix;
 
@@ -13,7 +14,11 @@ internal partial class Program
         var res = Parser.Default.ParseArguments<CommandOptions>(args);
         var options = res.Value;
 
-        if (options.MsgTypes?.Count() > 0)
+        if (options == null)
+        {
+            Examples();
+        }
+        else if (options.MsgTypes?.Count() > 0)
         {
             Trim(options);
         }
