@@ -1,6 +1,5 @@
 ﻿using Arrow.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using PureFIix.Test.Env.TradeCapture;
 using PureFix.Transport.Session;
 using PureFix.Types;
 using System;
