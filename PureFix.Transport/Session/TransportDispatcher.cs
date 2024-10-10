@@ -21,12 +21,12 @@ namespace PureFix.Transport.Session
 
         public async Task Dispatch(ISessionEventReciever reciever, CancellationToken token)
         {
-            m_logger?.Info("starting to relay transport to session.");
             // use a pool here
             var buffer = new byte[50 * 1024];
             bool terminated = false;
             await Task.Factory.StartNew(async () =>
             {
+                m_logger?.Info("starting to relay transport to session.");
                 while (!terminated && m_transport.Connected && !token.IsCancellationRequested)
                 {
                     var received = await m_transport.ReceiveAsync(buffer, token);  
@@ -40,8 +40,8 @@ namespace PureFix.Transport.Session
                     System.Buffer.BlockCopy(buffer, 0, newBuffer, 0, received);
                     reciever.OnRx(newBuffer, received);
                 }
+                m_logger?.Info($"transport has ended. Connected = {m_transport.Connected}, token =  {token.IsCancellationRequested}, terminated = {terminated}");
             }, TaskCreationOptions.LongRunning);
-            m_logger?.Info("transport has ended.");
         }
     }
 }
