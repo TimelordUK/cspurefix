@@ -26,7 +26,7 @@ namespace PureFix.ConsoleApp
             var config = FixApp.MakeConfig(json);
             FixApp fixApp = new(config);
             var host = makeHost(clock, config);
-            var t1 = fixApp.Run(host);
+            var t1 = FixApp.Run(host);
             return t1;
         }
     }

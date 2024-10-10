@@ -119,6 +119,7 @@ namespace PureFix.Transport.Session
             var lo = m_factory.Logon();
             if (lo != null)
             {
+                m_sessionLogger?.Info("sending logon.");
                 await Send(m_requestLogonType, lo);
             }
         }

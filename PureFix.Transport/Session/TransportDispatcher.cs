@@ -4,34 +4,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Types;
 
 namespace PureFix.Transport.Session
 {
     public class TransportDispatcher
     {
         private readonly IMessageTransport m_transport;
+        private readonly ILogger? m_logger;
 
-        public TransportDispatcher(IMessageTransport transport)
+        public TransportDispatcher(ILogFactory? logger, IMessageTransport transport)
         {
             m_transport = transport;
+            m_logger = logger?.MakeLogger(nameof(TransportDispatcher));
         }
 
-        public Task Dispatch(ISessionEventReciever reciever, CancellationToken token)
+        public async Task Dispatch(ISessionEventReciever reciever, CancellationToken token)
         {
+            m_logger?.Info("starting to relay transport to session.");
             // use a pool here
             var buffer = new byte[50 * 1024];
-            Task task = Task.Factory.StartNew(async () =>
+            bool terminated = false;
+            await Task.Factory.StartNew(async () =>
             {
-                while (m_transport.Connected && !token.IsCancellationRequested)
+                while (!terminated && m_transport.Connected && !token.IsCancellationRequested)
                 {
-                    var received = await m_transport.ReceiveAsync(buffer, token);                   
+                    var received = await m_transport.ReceiveAsync(buffer, token);  
+                    if (received == 0)
+                    {
+                        m_logger?.Info("read 0 from transport, exit");
+                        terminated = true;
+                        continue;
+                    }
                     var newBuffer = ArrayPool<byte>.Shared.Rent(received);
                     System.Buffer.BlockCopy(buffer, 0, newBuffer, 0, received);
                     reciever.OnRx(newBuffer, received);
                 }
-            },
-                TaskCreationOptions.LongRunning);
-            return task;
+            }, TaskCreationOptions.LongRunning);
+            m_logger?.Info("transport has ended.");
         }
     }
 }

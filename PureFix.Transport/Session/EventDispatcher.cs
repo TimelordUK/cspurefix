@@ -25,7 +25,7 @@ namespace PureFix.Transport.Session
             _q = q;
             _logger = logger?.MakeLogger(nameof(EventDispatcher));
             _timerDispatcher = new TimerDispatcher(logger);
-            _transportDispatcher = new TransportDispatcher(transport);
+            _transportDispatcher = new TransportDispatcher(logger, transport);
         }       
 
         public async Task Writer(TimeSpan timer, CancellationToken token)
@@ -54,7 +54,7 @@ namespace PureFix.Transport.Session
         public void OnTimer()
         {
             _q.EnqueueAsync(() =>
-            {
+            { 
                 _channel.Writer.TryWrite(new SessionEvent());
             });
         }
