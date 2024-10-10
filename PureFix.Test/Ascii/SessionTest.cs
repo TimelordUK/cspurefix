@@ -10,7 +10,7 @@ using PureFIix.Test.Env.Skeleton;
 using PureFIix.Test.Env.TradeCapture;
 using PureFix.Transport;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     internal class SessionTest
     {

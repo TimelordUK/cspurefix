@@ -10,7 +10,8 @@ using PureFix.Buffer.Segment;
 using PureFix.Types.FIX44.QuickFix.Types;
 using DIs = NUnit.DeepObjectCompare.Is;
 using PureFix.Types;
-namespace PureFIix.Test.Ascii
+
+namespace PureFix.Test.Ascii
 {
     internal class ExecutionReportMsgViewTest
     {

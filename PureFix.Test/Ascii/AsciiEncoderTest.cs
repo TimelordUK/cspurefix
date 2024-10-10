@@ -13,7 +13,7 @@ using PureFix.Types.Config;
 using PureFix.Types.FIX44.QuickFix;
 using PureFix.Types.FIX44.QuickFix.Types;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class AsciiEncoderTest
     {
@@ -95,7 +95,7 @@ namespace PureFIix.Test.Ascii
         {
             var session = GetDescription();
             ISessionMessageFactory factory = new Fix44SessionMessageFactory(session);
-            var header = factory.Header(MsgTypeValues.NewOrderSingle,1, new DateTime(2024, 1, 1));
+            var header = factory.Header(MsgTypeValues.NewOrderSingle, 1, new DateTime(2024, 1, 1));
             Assert.That(header, Is.Not.Null);
             var (writer, storage) = GetWriter();
             header.Encode(writer);
@@ -134,7 +134,7 @@ namespace PureFIix.Test.Ascii
             Assert.That(def, Is.Not.Null);
             var msg = MakeOrder();
             var formatter = new AsciiEncoder(_testEntity.Definitions, session, new Fix44SessionMessageFactory(session), _clock);
-            var res = formatter.Encode(MsgTypeValues.NewOrderSingle,  msg);
+            var res = formatter.Encode(MsgTypeValues.NewOrderSingle, msg);
             var s = res.AsString(AsciiChars.Pipe);
             Assert.That(s, Is.EqualTo("8=FIX.4.4|9=000160|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|11=NF 0040/03022010|1=ABC123ZYX|21=1|111=0|55=IOC|54=1|38=1000|40=2|44=49.38|59=0|10=231|"));
         }
@@ -153,7 +153,7 @@ namespace PureFIix.Test.Ascii
         private static readonly TagPos SenderCompID = new() { Position = 3, Tag = 49, Start = 27, Len = 13 };
         private static readonly TagPos TargetCompID = new() { Position = 4, Tag = 56, Start = 44, Len = 15 };
         private static readonly TagPos MsgSeqNum = new() { Position = 5, Tag = 34, Start = 63, Len = 1 };
-        
+
         // 012345678901234567890123
         // 8=FIX.4.4|9=000078|35=D|
 

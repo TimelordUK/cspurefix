@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Transport.Session;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class SessionStateTest
     {

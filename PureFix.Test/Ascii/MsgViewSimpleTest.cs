@@ -10,8 +10,7 @@ using System.Text.Unicode;
 using System.Threading.Tasks;
 using PureFix.Types;
 
-
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class MsgViewSimpleTest
     {

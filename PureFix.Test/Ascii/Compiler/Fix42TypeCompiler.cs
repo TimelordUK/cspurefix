@@ -1,4 +1,4 @@
-﻿using PureFIix.Test.Env;
+﻿
 using PureFix.Buffer.Ascii;
 using System;
 using System.Collections.Generic;
@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Compiler;
+using PureFIix.Test.Env;
 
-namespace PureFIix.Test.Ascii.Compiler
+namespace PureFix.Test.Ascii.Compiler
 {
     public class Fix42TypeCompiler
     {
@@ -28,7 +29,7 @@ namespace PureFIix.Test.Ascii.Compiler
         [Test]
         public void MessageGenerator()
         {
-            var generator = new MessageGenerator(null, _testEntity.Definitions,Options.FromVersion(_testEntity.Definitions));
+            var generator = new MessageGenerator(null, _testEntity.Definitions, Options.FromVersion(_testEntity.Definitions));
             generator.Process();
         }
     }

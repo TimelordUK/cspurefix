@@ -2,9 +2,9 @@ using PureFIix.Test.Env;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using System;
-using System.Reflection;
 
-namespace PureFIix.Test.Ascii
+
+namespace PureFix.Test.Ascii
 {
     public class Qf50Sp0DictTest
     {

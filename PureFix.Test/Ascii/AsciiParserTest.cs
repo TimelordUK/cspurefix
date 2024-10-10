@@ -10,7 +10,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class AsciiParserTest
     {
@@ -172,7 +172,7 @@ namespace PureFIix.Test.Ascii
         public void Logon_Chunks_Parsers_Correct_Tag_Set_Test()
         {
             var msgs = _testEntity.ParseTestHunks(Logon);
-            Assert.Multiple( () =>
+            Assert.Multiple(() =>
             {
                 Assert.That(msgs, Has.Count.EqualTo(1));
                 var msg = msgs[0];
@@ -198,7 +198,7 @@ namespace PureFIix.Test.Ascii
             const string begin = "8=FIX4.4|9=0000208|";
             var changed = Logon.Replace("10=49|", "555=you know nothin|10=49");
             var ex = Assert.Throws<InvalidDataException>(() => _testEntity.ParseText(changed));
-            Assert.Multiple( () =>
+            Assert.Multiple(() =>
             {
                 Assert.That(ex, Is.Not.Null);
                 Assert.That(ex.Message, Does.StartWith($"Tag: [555] cant be after {208 + begin.Length - 1}"));

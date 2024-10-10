@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
 using PureFix.Types;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class AsciiTagPosTest
     {

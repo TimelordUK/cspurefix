@@ -1,7 +1,6 @@
 ﻿using PureFIix.Test.Env;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
-using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
 using System;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class Qf44DictTest
     {

@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class ElasticBufferTest
     {

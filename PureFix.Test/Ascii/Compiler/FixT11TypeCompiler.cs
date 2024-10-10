@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Ascii.Compiler
+namespace PureFix.Test.Ascii.Compiler
 {
     public class FixT11TypeCompiler
     {

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Compiler;
 
-namespace PureFIix.Test.Ascii.Compiler
+namespace PureFix.Test.Ascii.Compiler
 {
     public class Fix43TypeCompiler
     {

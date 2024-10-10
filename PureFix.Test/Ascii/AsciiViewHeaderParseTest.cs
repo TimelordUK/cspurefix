@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using PureFix.Types.FIX44.QuickFix.Types;
 
-namespace PureFIix.Test.Ascii
+namespace PureFix.Test.Ascii
 {
     public class AsciiViewHeaderParseTest
     {

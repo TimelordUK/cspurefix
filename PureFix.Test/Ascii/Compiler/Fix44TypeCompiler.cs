@@ -9,7 +9,7 @@ using PureFix.Dictionary.Compiler;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Dictionary.Definition;
 
-namespace PureFIix.Test.Ascii.Compiler
+namespace PureFix.Test.Ascii.Compiler
 {
     public class Fix44TypeCompiler
     {
