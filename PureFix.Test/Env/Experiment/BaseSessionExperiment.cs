@@ -61,7 +61,7 @@ namespace PureFix.Test.Env.Experiment
                     }
                 }
             });
-            var tasks = new Task[] { t1, t2 };
+            var tasks = new[] { t1, t2 };
             var res = Task.WaitAll(tasks, TimeSpan.FromSeconds(5));
 
 #if DEBUG
@@ -69,11 +69,17 @@ namespace PureFix.Test.Env.Experiment
             Console.WriteLine();
             Acceptor.Dump();
 #endif
-            // check we have processed all messages sent from remote peer in sequence and
-            // have not re-ordered in particular a batch sent from server.
-            Initiator.CheckSeq(Acceptor.Config.Description.SenderCompID);
-            Acceptor.CheckSeq(Initiator.Config.Description.SenderCompID);
 
+            Assert.Multiple(() =>
+            {
+                Assert.That(Acceptor.Config.Description, Is.Not.Null);
+                Assert.That(Initiator.Config.Description, Is.Not.Null);
+                Initiator.CheckSeq(Acceptor.Config.Description.SenderCompID);
+                Acceptor.CheckSeq(Initiator.Config.Description.SenderCompID);
+            });
+ 
+            // check we have processed all messages sent from remote peer in sequence and
+            // have not re-ordered in particular a batch sent from server
             // should not have sent a resend request 
             var initiatorResends = Initiator.ResendRequestCount();
             var acceptorResends = Acceptor.ResendRequestCount();
