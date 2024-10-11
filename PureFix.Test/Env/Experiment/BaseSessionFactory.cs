@@ -21,6 +21,7 @@ namespace PureFix.Test.Env.Experiment
         protected readonly IFixClock m_clock;
         protected readonly IFixMsgStore m_msgStore;
         protected readonly ILogFactory m_logFactory;
+
         protected BaseSessionFactory(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock)
         {
             m_config = config;
