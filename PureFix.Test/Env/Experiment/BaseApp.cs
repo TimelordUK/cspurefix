@@ -21,9 +21,9 @@ namespace PureFix.Test.Env.Experiment
         protected readonly ILogger m_logger;
         protected readonly ILogger m_fixLog;
         public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
-        public string FixLogName { get; private set; }
-        public string AppLogName { get; private set; }
-        private IFixLogRecovery Recovery { get; set; }
+        public string FixLogName { get; }
+        public string AppLogName { get; }
+        private IFixLogRecovery Recovery { get; }
 
         protected BaseApp(IFixConfig config, IFixLogRecovery fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, msgStore, q, clock)
         {
