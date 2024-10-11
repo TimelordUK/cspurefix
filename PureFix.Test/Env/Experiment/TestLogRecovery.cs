@@ -13,6 +13,7 @@ namespace PureFix.Test.Env.Experiment
         public int? PeerSeqNum => 0;
         public string LogFilePath { get; set; }
 
+
         public Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record)
         {
             return Task.FromResult(new FixMsgStoreState());
