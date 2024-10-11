@@ -1,9 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using CommandLine;
-using Microsoft.Extensions.Options;
 using PureFix.Dictionary.Compiler;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Transport;
+using PureFix.Types;
 
 namespace PureFix.ConsoleApp;
 
@@ -83,15 +84,44 @@ internal partial class Program
     }
 
     private static void ParseLog(CommandOptions options)
-    {
-        var parser = new FixLogParser(options);
+    {      
+        var parser = new FixLogParser(options.DictPath);
+        var factory = FactoryHelper.GetFactory(options.DictPath);
+        var fixPath = options.FixLogPath;
+
+        parser.OnView = (view) =>
+        {
+            switch (options.OutputFormat)
+            {
+                case "tags":
+                    WriteOutAsTags(view);
+                    break;
+                default:
+                    WriteOutAsJson(factory, view);
+                    break;
+            }
+        };
+
         if (options.Tail)
         {
-            parser.Tail();
+            parser.Tail(fixPath);
         }
         else
         {
-            parser.Snapshot();
+            parser.Snapshot(fixPath);
         }
+    }
+
+    private static void WriteOutAsTags(IMessageView v)
+    {
+        Console.WriteLine(v.ToString());
+        Console.WriteLine();
+    }
+
+    private static void WriteOutAsJson(IFixMessageFactory f, IMessageView v)
+    {       
+        if (f == null) return;
+        Console.WriteLine(JsonHelper.ToJson(f, f.GetType()));
+        Console.WriteLine();
     }
 }

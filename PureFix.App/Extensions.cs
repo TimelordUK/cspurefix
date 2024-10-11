@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace PureFix.ConsoleApp
 {
-    internal static class Extensions
+    internal static class FactoryHelper
     {
-        public static IFixMessageFactory GetFactory(this CommandOptions options)
+        public static IFixMessageFactory GetFactory(string path)
         {
-            var path = options.DictPath;
             if (path.EndsWith("FIX50SP2.xml"))
             {
                 return new Types.FIX50SP2.QuickFix.Types.FixMessageFactory();
