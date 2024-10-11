@@ -19,6 +19,11 @@ namespace PureFix.Test.Env.Experiment
     {
         public static void BuildCommon(this HostApplicationBuilder builder, AsyncWorkQueue q, IFixClock clock, IFixConfig config)
         {
+            if (config.Description == null) throw new InvalidDataException("no config description.");
+            if (config.Definitions == null) throw new InvalidDataException("no config definitions.");
+            if (config.Description.Application == null) throw new InvalidDataException("no config application.");
+            if (config.Description.SenderCompID == null) throw new InvalidDataException("no config sender compId.");
+
             var factory = new TestLoggerFactory();
             builder.Services.AddSingleton<IMessageTransport, TestMessageTransport>();
             builder.Services.AddSingleton<ILogFactory>(factory);

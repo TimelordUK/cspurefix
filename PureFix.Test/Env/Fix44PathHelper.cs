@@ -8,7 +8,8 @@ namespace PureFix.Test.Env
 {
     public static class Fix44PathHelper
     {
-        public static readonly string ExampleRootPath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples", "FIX.4.4");
+        public static readonly string ExampleRootBasePath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples");
+        public static readonly string ExampleRootPath = Path.Join(ExampleRootBasePath, "FIX.4.4");
         public static readonly string DataDictRootPath = Path.Join(Directory.GetCurrentDirectory(), "..", "..",
             "..", "..", "Data");
         public static readonly string SessionRootPath = Path.Join(DataDictRootPath, "Session");

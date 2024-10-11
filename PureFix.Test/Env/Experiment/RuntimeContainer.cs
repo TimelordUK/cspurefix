@@ -54,12 +54,13 @@ namespace PureFix.Test.Env.Experiment
 
         public IReadOnlyList<MsgView> InflateLog()
         {
+            if (Config.Definitions == null) throw new InvalidDataException("no config definitions");
             var parser = new AsciiParser(Config.Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
             var fl = FixLog;
             var views = new List<MsgView>();
             var s = string.Join(Environment.NewLine, fl);
             var b = Encoding.UTF8.GetBytes(s);
-            parser.ParseFrom(b, b.Length, (i, view) => views.Add((AsciiView)view));
+            parser.ParseFrom(b, b.Length, (_, view) => views.Add((AsciiView)view));
             return views;
         }
 
