@@ -128,7 +128,10 @@ namespace PureFix.Test.Ascii
             initDescription.ResetSeqNumFlag = false;
             acceptDescription.ResetSeqNumFlag = false;
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
+          
             CheckLog(experiment);
+            Assert.That(experiment.Initiator.Encoder.MsgSeqNum, Is.GreaterThan(41));
+            Assert.That(experiment.Acceptor.Encoder.MsgSeqNum, Is.GreaterThan(41));
         }
 
         [Test]
