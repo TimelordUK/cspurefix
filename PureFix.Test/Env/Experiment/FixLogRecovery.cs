@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.Test.Env.Experiment
 {
-    internal class FixLogRecovery
+    public class FixLogRecovery : IFixLogRecovery
     {
         public string LogFilePath { get; private set; }
         public string Filter { get; private set; }
@@ -22,7 +22,7 @@ namespace PureFix.Test.Env.Experiment
         public int? MySeqNum { get; private set; } = 0;
         public int? PeerSeqNum { get; private set; } = 0;
 
-        public FixLogRecovery(string logPath, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore = null)
+        public FixLogRecovery(string logPath, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore)
         {
             Config = config;
             LogFilePath = logPath;

@@ -23,9 +23,9 @@ namespace PureFix.Test.Env.Experiment
         public (ILogger appLog, ILogger fixLog) Logs => (m_logger, m_fixLog);
         public string FixLogName { get; private set; }
         public string AppLogName { get; private set; }
-        private FixLogRecovery Recovery { get; set; }
+        private IFixLogRecovery Recovery { get; set; }
 
-        protected BaseApp(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, msgStore, q, clock)
+        protected BaseApp(IFixConfig config, IFixLogRecovery fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, msgStore, q, clock)
         {
             m_logReceivedMessages = true;
             var me = config.Name();
@@ -33,7 +33,7 @@ namespace PureFix.Test.Env.Experiment
             AppLogName = $"csfix.{me}.app";
             m_fixLog = logFactory.MakePlainLogger(FixLogName);
             m_logger = logFactory.MakeLogger(AppLogName);
-            Recovery = new FixLogRecovery("logs", logFactory, config, msgStore);
+            Recovery = fixLogRecovery;
         }
 
         protected override void OnDecoded(string msgType, string txt)

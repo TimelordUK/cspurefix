@@ -18,8 +18,9 @@ namespace PureFix.Test.Env.Experiment
     {
         public static void BuildCommon(this HostApplicationBuilder builder, AsyncWorkQueue q, IFixClock clock, IFixConfig config)
         {
+            var factory = new TestLoggerFactory();
             builder.Services.AddSingleton<IMessageTransport, TestMessageTransport>();
-            builder.Services.AddSingleton<ILogFactory, TestLoggerFactory>();
+            builder.Services.AddSingleton<ILogFactory>(factory);
             builder.Services.AddSingleton(clock);
             builder.Services.AddSingleton<ISessionMessageFactory, Fix44SessionMessageFactory>();
             builder.Services.AddSingleton(config);
@@ -29,7 +30,9 @@ namespace PureFix.Test.Env.Experiment
             builder.Services.AddSingleton(config.Definitions);
             builder.Services.AddSingleton(config.Description.Application);
             builder.Services.AddSingleton(q);
-            builder.Services.AddSingleton<IFixMsgStore>(new FixMsgMemoryStore(config.Description.SenderCompID));
+            var store = new FixMsgMemoryStore(config.Description.SenderCompID);
+            builder.Services.AddSingleton<IFixMsgStore>(store);
+            builder.Services.AddSingleton <IFixLogRecovery, TestLogRecovery>();
         }
     }
 }

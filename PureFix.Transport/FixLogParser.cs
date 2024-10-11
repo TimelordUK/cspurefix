@@ -12,7 +12,7 @@ using System.Text;
 
 namespace PureFix.Transport
 {
-    public class FixLogParser
+    public class FixLogParser : IFixLogParser
     {
         private readonly IMessageParser _asciiParser;
         public Action<IMessageView> OnView { get; set; } = (v) => { };

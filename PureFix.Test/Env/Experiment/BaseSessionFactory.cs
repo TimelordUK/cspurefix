@@ -1,5 +1,6 @@
 ﻿using Arrow.Threading.Tasks;
 using PureFix.Buffer;
+using PureFix.Transport;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
@@ -21,8 +22,9 @@ namespace PureFix.Test.Env.Experiment
         protected readonly IFixClock m_clock;
         protected readonly IFixMsgStore m_msgStore;
         protected readonly ILogFactory m_logFactory;
+        protected readonly IFixLogRecovery m_fixLogRecovery;
 
-        protected BaseSessionFactory(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock)
+        protected BaseSessionFactory(IFixConfig config, IFixLogRecovery fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock)
         {
             m_config = config;
             m_fixMessageFactory = fixMessageFactory;
@@ -32,6 +34,7 @@ namespace PureFix.Test.Env.Experiment
             m_clock = clock;
             m_msgStore = store;
             m_logFactory = logFactory;
+            m_fixLogRecovery = fixLogRecovery;
         }
         public abstract FixSession MakeSession();
     }

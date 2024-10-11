@@ -19,7 +19,7 @@ namespace PureFIix.Test.Env.Skeleton
     {
         private readonly FixMessageFactory m_msg_factory = new();
 
-        public TestAsciiSkeleton(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, logFactory, fixMessageFactory, parser, encoder, store, q, clock)
+        public TestAsciiSkeleton(IFixConfig config, IFixLogRecovery fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecovery, logFactory, fixMessageFactory, parser, encoder, store, q, clock)
         {
             m_logReceivedMessages = true;
         }

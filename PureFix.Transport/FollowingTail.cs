@@ -23,11 +23,7 @@ namespace PureFix.Transport
             var endPoint = _fileStream.Length;
             // Set the stream position to the end of the file.        
             _fileStream.Seek(endPoint, SeekOrigin.Begin);
-
-            _timer = new Timer(o => CheckForUpdate(encoding, fileChanged),
-                               null,
-                               0,
-                               500);
+            _timer = new Timer(o => CheckForUpdate(encoding, fileChanged), null, 0, 500);
         }
 
         private void CheckForUpdate(Encoding encoding,
