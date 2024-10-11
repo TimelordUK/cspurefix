@@ -5,6 +5,7 @@ namespace PureFix.Test.Env.Experiment
 {
     public interface IFixLogRecovery
     {
+        string LogFilePath { get; set; }
         int? MySeqNum { get; }
         int? PeerSeqNum { get; }
         Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record);

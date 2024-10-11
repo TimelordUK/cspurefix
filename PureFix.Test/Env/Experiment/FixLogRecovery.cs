@@ -13,7 +13,7 @@ namespace PureFix.Test.Env.Experiment
 {
     public class FixLogRecovery : IFixLogRecovery
     {
-        public string LogFilePath { get; private set; }
+        public string LogFilePath { get; set; } = "logs";
         public string Filter { get; private set; }
         public IFixMsgStore FixMsgStore { get; private set; }
         public IFixMsgStoreRecord LastRecord { get; private set; }
@@ -21,25 +21,23 @@ namespace PureFix.Test.Env.Experiment
         protected readonly ILogger m_logger;
         public int? MySeqNum { get; private set; } = 0;
         public int? PeerSeqNum { get; private set; } = 0;
+        private IFixLogParser Parser { get; set; }
 
-        public FixLogRecovery(string logPath, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore)
+        public FixLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore)
         {
             Config = config;
-            LogFilePath = logPath;
             FixMsgStore = msgStore;
             Filter = config.Description.SenderCompID;
             m_logger = logFactory.MakeLogger(nameof(FixLogRecovery));
+            Parser = parser;
         }
 
         private List<AsciiView> GetMessages(FileInfo fixLog, string filterComp)
         {
             var messages = new List<AsciiView>();
-            var fixLogger = new FixLogParser(Config)
-            {
-                OnView = v => messages.Add((AsciiView)v)
-            };
+            Parser.OnView = v => messages.Add((AsciiView)v); 
             m_logger?.Info($"loading {fixLog.FullName} to recover store.");
-            fixLogger.Snapshot(fixLog.FullName);
+            Parser.Snapshot(fixLog.FullName);
             var myMessages = messages.Where(v => v.GetString((int)MsgTag.SenderCompID) == filterComp).ToList();
             m_logger?.Info($"{fixLog.FullName} comp {filterComp} recovers {myMessages.Count}");
             return myMessages;

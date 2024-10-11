@@ -47,10 +47,10 @@ namespace PureFix.ConsoleApp
             _builder.Services.AddSingleton(config.Definitions);
             _builder.Services.AddSingleton(config.Description.Application);
             _builder.Services.AddSingleton(q);
-            var store = new FixMsgMemoryStore(config.Description.SenderCompID);
-            var recovery = new FixLogRecovery("logs", factory, config, store);
-            _builder.Services.AddSingleton<IFixMsgStore>(store);
-            _builder.Services.AddSingleton<IFixLogRecovery>(recovery);
+            var store = new FixMsgMemoryStore(config.Description.SenderCompID);            
+            _builder.Services.AddSingleton<IFixMsgStore>(store);          
+            _builder.Services.AddSingleton<IFixLogParser, FixLogParser>();
+            _builder.Services.AddSingleton<IFixLogRecovery, FixLogRecovery>();
             if (config.IsInitiator())
             {
                 _builder.Services.AddSingleton<ITcpEntity, TcpInitiatorConnector>();

@@ -11,6 +11,7 @@ using PureFix.Buffer;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
+using PureFix.Transport;
 
 namespace PureFix.Test.Env.Experiment
 {
@@ -32,7 +33,8 @@ namespace PureFix.Test.Env.Experiment
             builder.Services.AddSingleton(q);
             var store = new FixMsgMemoryStore(config.Description.SenderCompID);
             builder.Services.AddSingleton<IFixMsgStore>(store);
-            builder.Services.AddSingleton <IFixLogRecovery, TestLogRecovery>();
+            builder.Services.AddSingleton<IFixLogParser, FixLogParser>();
+            builder.Services.AddSingleton<IFixLogRecovery, TestLogRecovery>();
         }
     }
 }

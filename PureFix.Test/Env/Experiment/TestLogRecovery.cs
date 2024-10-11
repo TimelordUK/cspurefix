@@ -10,8 +10,8 @@ namespace PureFix.Test.Env.Experiment
     internal class TestLogRecovery : IFixLogRecovery
     {
         public int? MySeqNum => 0;
-
         public int? PeerSeqNum => 0;
+        public string LogFilePath { get; set; }
 
         public Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record)
         {
