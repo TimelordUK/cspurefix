@@ -23,17 +23,17 @@ namespace PureFix.ConsoleApp
             Plain
         }
 
-        public string FileName { get; set; }
+        public string FileNamePrefix { get; set; }
         public int MaxSizeBytes { get; set; } = 524288000;
 
         public ILogger AppLogger { get; set; }
         public ILogger PlainLogger { get; set; }
 
-        public ConsoleLogFactory(string file)
+        public ConsoleLogFactory(string filePrefix)
         {
-            FileName = file;
-            AppLogger = MakeApp(file);
-            PlainLogger = MakePlain(file);
+            FileNamePrefix = filePrefix;
+            AppLogger = MakeApp();
+            PlainLogger = MakePlain();
         }
 
         private class Logger : Types.ILogger
@@ -65,12 +65,12 @@ namespace PureFix.ConsoleApp
             }
         }
 
-        private ILogger MakeApp(string name)
+        private ILogger MakeApp()
         {
             var l = new LoggerConfiguration()
               .WriteTo.Console(outputTemplate: _appTemplate)
               .Enrich.WithThreadId()
-              .WriteTo.File($"logs/{FileName}-app-log.txt",
+              .WriteTo.File($"logs/{FileNamePrefix}-app-log.txt",
                 rollingInterval: RollingInterval.Day,
                 outputTemplate: _appTemplate,
                 fileSizeLimitBytes: MaxSizeBytes,
@@ -81,11 +81,11 @@ namespace PureFix.ConsoleApp
             return l;
         }
         //  .ForContext("Name", name);
-        private ILogger MakePlain(string name)
+        private ILogger MakePlain()
         {
             var l = new LoggerConfiguration()
               .WriteTo.Console(outputTemplate: _fixTemplate).
-                WriteTo.File($"logs/{FileName}-fix-log.txt",
+                WriteTo.File($"logs/{FileNamePrefix}-fix-log.txt",
                 outputTemplate: _fixTemplate,
                 rollingInterval: RollingInterval.Day,
                 fileSizeLimitBytes: MaxSizeBytes,

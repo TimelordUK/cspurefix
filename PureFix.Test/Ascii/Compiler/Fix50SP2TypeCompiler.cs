@@ -1,5 +1,5 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Dictionary.Compiler;
+﻿using PureFix.Dictionary.Compiler;
+using PureFix.Test.Env;
 using System;
 using System.Collections.Generic;
 using System.Linq;

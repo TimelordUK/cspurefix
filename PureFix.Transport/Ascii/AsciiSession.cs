@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 using Arrow.Threading.Tasks;
@@ -313,9 +314,8 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        protected void StartTimer()
-        {
-        }
+        protected override abstract Task OnRun();
+
 
         protected override async Task OnMsg(string msgType, IMessageView view)
         {
@@ -336,8 +336,7 @@ namespace PureFix.Transport.Ascii
                     {
                         case MsgType.Logon:
                             {
-                                SetState(SessionState.PeerLogonRejected);
-                                StartTimer();
+                                SetState(SessionState.PeerLogonRejected);                               
                             }
                             break;
                     }

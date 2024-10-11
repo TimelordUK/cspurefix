@@ -44,8 +44,8 @@ namespace PureFix.ConsoleApp
             _builder.Services.AddSingleton(config.Definitions);
             _builder.Services.AddSingleton(config.Description.Application);
             _builder.Services.AddSingleton(q);
-         
-            _builder.Services.AddSingleton<IFixMsgStore>(new FixMsgMemoryStore(config.Description.SenderCompID));
+            var store = new FixMsgMemoryStore(config.Description.SenderCompID);
+            _builder.Services.AddSingleton<IFixMsgStore>(store);
             if (config.IsInitiator())
             {
                 _builder.Services.AddSingleton<ITcpEntity, TcpInitiatorConnector>();

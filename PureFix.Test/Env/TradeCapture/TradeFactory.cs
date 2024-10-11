@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env.TradeCapture
+namespace PureFix.Test.Env.TradeCapture
 {
     internal class TradeFactory
     {

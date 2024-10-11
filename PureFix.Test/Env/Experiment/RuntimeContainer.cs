@@ -12,7 +12,7 @@ using Arrow.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PureFIix.Test.Env.Experiment
+namespace PureFix.Test.Env.Experiment
 {
     internal class RuntimeContainer
     {

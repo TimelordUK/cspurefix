@@ -1,6 +1,6 @@
 ﻿using Arrow.Threading.Tasks;
-using PureFIix.Test.Env.Experiment;
 using PureFix.Buffer;
+using PureFix.Test.Env.Experiment;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env.TradeCapture
+namespace PureFix.Test.Env.TradeCapture
 {
     internal class TradeCaptureServer : BaseApp
     {
@@ -58,7 +58,7 @@ namespace PureFIix.Test.Env.TradeCapture
             var ack1 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Accepted);
             await Send(MsgTypeValues.TradeCaptureReportRequestAck, ack1);
             await CreateSendBatch(10);
-             var ack2 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Completed);
+            var ack2 = TradeFactory.MakeTradeCaptureReportRequestAck(tcr, TradeRequestStatusValues.Completed);
             await Send(MsgTypeValues.TradeCaptureReportRequestAck, ack2);
             if (tcr.SubscriptionRequestType == SubscriptionRequestTypeValues.SnapshotAndUpdates)
             {

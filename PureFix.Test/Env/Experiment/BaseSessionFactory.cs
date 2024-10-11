@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env.Experiment
+namespace PureFix.Test.Env.Experiment
 {
     public abstract class BaseSessionFactory : ISessionFactory
     {

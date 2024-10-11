@@ -1,5 +1,4 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Buffer;
+﻿using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types;
+using PureFix.Test.Env;
 
 namespace PureFix.Test.Ascii
 {

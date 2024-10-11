@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Compiler;
-using PureFIix.Test.Env;
+using PureFix.Test.Env;
 
 namespace PureFix.Test.Ascii.Compiler
 {

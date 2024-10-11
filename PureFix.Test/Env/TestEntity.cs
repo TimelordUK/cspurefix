@@ -15,14 +15,14 @@ using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Test.Env
 {
     internal class TestEntity
     {
         public IFixDefinitions Definitions { get; }
         public AsciiParser Parser { get; private set; }
-        public IFixClock Clock { get; private set; } 
-        
+        public IFixClock Clock { get; private set; }
+
         public TestEntity(string dataDict = "FIX44.xml")
         {
             Clock = new TestClock();
@@ -41,7 +41,7 @@ namespace PureFIix.Test.Env
         {
             var views = new List<AsciiView>(10000);
             var b = Encoding.UTF8.GetBytes(s);
-            Parser.ParseFrom(b,b.Length,  (i, view) => views.Add((AsciiView)view));
+            Parser.ParseFrom(b, b.Length, (i, view) => views.Add((AsciiView)view));
             return views;
         }
 
@@ -53,15 +53,15 @@ namespace PureFIix.Test.Env
             var views = new List<AsciiView>();
             while (span.Length > 0)
             {
-                var want = Math.Min(span.Length, (iteration % 10) + 1);
-                Parser.ParseFrom(span[..want], want , (i, view) => views.Add((AsciiView)view));
+                var want = Math.Min(span.Length, iteration % 10 + 1);
+                Parser.ParseFrom(span[..want], want, (i, view) => views.Add((AsciiView)view));
                 span = span[want..];
                 ++iteration;
             }
             return views;
         }
 
-        public static async Task<Dictionary<string,int>> GetJsonDict(string file)
+        public static async Task<Dictionary<string, int>> GetJsonDict(string file)
         {
             using var streamReader = File.OpenText(file);
             var json = await streamReader.ReadToEndAsync();
@@ -92,7 +92,7 @@ namespace PureFIix.Test.Env
                     all = string.Concat(Enumerable.Repeat(all, repeats));
                 }
                 var msgs = ParseText(all);
-                  return msgs;
+                return msgs;
             }
             catch (Exception e)
             {

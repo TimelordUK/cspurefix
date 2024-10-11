@@ -1,5 +1,5 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Buffer.Ascii;
+﻿using PureFix.Buffer.Ascii;
+using PureFix.Test.Env;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types.FIX44.QuickFix;

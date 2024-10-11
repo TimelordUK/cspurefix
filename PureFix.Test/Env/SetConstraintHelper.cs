@@ -7,7 +7,7 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Test.Env
 {
     internal class SetConstraintHelper(IFixDefinitions definitions)
     {

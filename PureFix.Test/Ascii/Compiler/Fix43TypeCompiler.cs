@@ -1,11 +1,11 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Buffer.Ascii;
+﻿using PureFix.Buffer.Ascii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Compiler;
+using PureFix.Test.Env;
 
 namespace PureFix.Test.Ascii.Compiler
 {

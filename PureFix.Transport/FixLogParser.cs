@@ -2,6 +2,7 @@
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Transport.Session;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,14 @@ namespace PureFix.Transport
         {
             var b = Encoding.UTF8.GetBytes(txt);
             _asciiParser.ParseFrom(b, b.Length, (p, v) => OnView(v));
+        }
+
+        public FixLogParser(IFixConfig config)
+        {
+            var definitions = config.Definitions;
+            if (definitions == null) throw new ArgumentNullException(nameof(definitions));
+            var qf = new QuickFixXmlFileParser(definitions);
+            _asciiParser = new AsciiParser(definitions) { Delimiter = config.LogDelimiter ?? AsciiChars.Pipe };
         }
 
         public FixLogParser(string dictPath, byte delim = (byte)'|')

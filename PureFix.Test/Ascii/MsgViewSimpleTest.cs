@@ -1,5 +1,4 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Buffer;
+﻿using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Text;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 using PureFix.Types;
+using PureFix.Test.Env;
 
 namespace PureFix.Test.Ascii
 {

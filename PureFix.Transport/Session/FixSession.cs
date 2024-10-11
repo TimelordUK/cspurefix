@@ -347,6 +347,7 @@ namespace PureFix.Transport.Session
             m_parentToken = token;
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             m_transport = transport;
+            await OnRun();
             await InitiatorLogon();            
             var dispatcher = new EventDispatcher(m_logFactory, m_q, transport);
             // start sending events to the channel on which this session listens.
@@ -468,7 +469,8 @@ namespace PureFix.Transport.Session
         protected abstract bool OnLogon(IMessageView view, string? user, string? password);
 
         protected abstract Task Tick();
-       public void End()
+        protected abstract Task OnRun();
+        public void End()
         {
         }
     }

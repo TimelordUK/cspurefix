@@ -1,6 +1,7 @@
 ﻿using Arrow.Threading.Tasks;
-using PureFIix.Test.Env.Experiment;
+using PureFIix.Test.Env.Skeleton;
 using PureFix.Buffer;
+using PureFix.Test.Env.Experiment;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env.Skeleton
+namespace PureFix.Test.Env.Skeleton
 {
     public class SkeletonSessionFactory : BaseSessionFactory
     {

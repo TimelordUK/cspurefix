@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Test.Env
 {
     public class TestLoggerFactory : ILogFactory
     {
         private readonly IFixClock _clock;
-        
+
         private readonly LogTrace m_al = [];
         private readonly LogTrace m_fl = [];
 

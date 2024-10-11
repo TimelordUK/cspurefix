@@ -1,6 +1,8 @@
 ﻿using Arrow.Threading.Tasks;
-using PureFIix.Test.Env.Experiment;
+using PureFIix.Test.Env.Skeleton;
 using PureFix.Buffer;
+using PureFix.Test.Env;
+using PureFix.Test.Env.Experiment;
 using PureFix.Transport.Session;
 using PureFix.Types;
 using System;
@@ -9,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env.Skeleton
+namespace PureFix.Test.Env.Skeleton
 {
     internal class SkeletonSessionExperiment : BaseSessionExperiment
     {
@@ -19,7 +21,7 @@ namespace PureFIix.Test.Env.Skeleton
             AcceptorConfig = testEntity.GetTestAcceptorConfig();
             var initiatorHost = new SkeletonDIContainer(Queue, Clock, InitiatorConfig);
             var acceptorHost = new SkeletonDIContainer(Queue, Clock, AcceptorConfig);
-            Connect(initiatorHost.AppHost, acceptorHost.AppHost);           
+            Connect(initiatorHost.AppHost, acceptorHost.AppHost);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Dictionary.Contained;
+﻿using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Test.Env;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;

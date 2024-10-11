@@ -17,5 +17,10 @@ namespace PureFix.Transport.Session
         {
             return config?.Description?.Application?.Name ?? config?.Description?.Application?.Type ?? string.Empty;
         }
+
+        public static bool ResetSeqNumFlag(this IFixConfig config)
+        {
+            return config?.Description?.ResetSeqNumFlag ?? false;
+        }
     }
 }

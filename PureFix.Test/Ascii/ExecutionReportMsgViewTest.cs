@@ -1,5 +1,4 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Buffer.Ascii;
+﻿using PureFix.Buffer.Ascii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ using PureFix.Buffer.Segment;
 using PureFix.Types.FIX44.QuickFix.Types;
 using DIs = NUnit.DeepObjectCompare.Is;
 using PureFix.Types;
+using PureFix.Test.Env;
 
 namespace PureFix.Test.Ascii
 {

@@ -6,23 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Transport.Session;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Test.Env
 {
     internal class TestMessageTransport : IMessageTransport
     {
-        private readonly BlockingCollection<byte[]> _rx_data = new ();
+        private readonly BlockingCollection<byte[]> _rx_data = new();
         private BlockingCollection<byte[]> _tx_data;
 
         public void ConnectTo(TestMessageTransport sendingTo)
         {
             _tx_data = sendingTo._rx_data;
-            Connected = true;  
+            Connected = true;
         }
 
         public Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token)
         {
             _tx_data?.Add(messageBytes.ToArray(), token);
-           return Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)

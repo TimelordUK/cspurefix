@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Test.Env
 {
     internal class TestLogger : ILogger
     {
@@ -30,7 +30,7 @@ namespace PureFIix.Test.Env
             Log = file;
         }
 
-       
+
         public void Info(string messageTemplate)
         {
             AddEntry("I", messageTemplate);

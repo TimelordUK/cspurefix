@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env
+namespace PureFix.Test.Env
 {
     internal class LogTrace : IEnumerable<string>
     {
@@ -41,7 +41,7 @@ namespace PureFIix.Test.Env
 
         public IEnumerator<string> GetEnumerator()
         {
-           return GetEntries().GetEnumerator();
+            return GetEntries().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

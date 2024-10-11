@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
-using PureFIix.Test.Env.Experiment;
+using PureFix.Test.Env.Experiment;
 
-namespace PureFIix.Test.Env.TradeCapture
+namespace PureFix.Test.Env.TradeCapture
 {
     internal class TradeCaptureDIContainer
     {
@@ -23,7 +23,7 @@ namespace PureFIix.Test.Env.TradeCapture
             builder.BuildCommon(q, clock, config);
             builder.Services.AddSingleton<IFixMessageFactory, FixMessageFactory>();
             builder.Services.AddSingleton<ISessionFactory, TradeCaptureSessionFactory>();
-          
+
             AppHost = builder.Build();
         }
     }

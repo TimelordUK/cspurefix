@@ -1,5 +1,5 @@
-﻿using PureFIix.Test.Env;
-using PureFix.Buffer.Ascii;
+﻿using PureFix.Buffer.Ascii;
+using PureFix.Test.Env;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

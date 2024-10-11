@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using PureFIix.Test.Env;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
+using PureFix.Test.Env;
 using PureFix.Types;
 
 namespace PureFix.Test.Ascii

@@ -1,6 +1,6 @@
 ﻿using Arrow.Threading.Tasks;
-using PureFIix.Test.Env.Experiment;
 using PureFix.Buffer;
+using PureFix.Test.Env.Experiment;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFIix.Test.Env.TradeCapture
+namespace PureFix.Test.Env.TradeCapture
 {
     internal class TradeCaptureClient : BaseApp
     {
@@ -26,7 +26,7 @@ namespace PureFIix.Test.Env.TradeCapture
 
         protected override Task OnApplicationMsg(string msgType, IMessageView view)
         {
-          
+
             switch (msgType)
             {
                 case MsgType.TradeCaptureReport:
