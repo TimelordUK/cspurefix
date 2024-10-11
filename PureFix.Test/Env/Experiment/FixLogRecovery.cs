@@ -15,16 +15,17 @@ namespace PureFix.Test.Env.Experiment
     {
         public string LogFilePath { get; set; } = "logs";
         public string Filter { get; private set; }
-        public IFixMsgStore FixMsgStore { get; private set; }
+        public IFixMsgStore FixMsgStore { get; }
         public IFixMsgStoreRecord LastRecord { get; private set; }
-        public IFixConfig Config { get; private set; }
+        public IFixConfig Config { get; }
         protected readonly ILogger m_logger;
         public int? MySeqNum { get; private set; } = 0;
         public int? PeerSeqNum { get; private set; } = 0;
-        private IFixLogParser Parser { get; set; }
+        private IFixLogParser Parser { get; }
 
         public FixLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore)
         {
+            ArgumentNullException.ThrowIfNull(config?.Description);
             Config = config;
             FixMsgStore = msgStore;
             Filter = config.Description.SenderCompID;
@@ -43,13 +44,13 @@ namespace PureFix.Test.Env.Experiment
             return myMessages;
         }
 
-        private FileInfo GetFixFileInfo()
+        protected virtual FileInfo GetFixFileInfo()
         {
             var dir = new DirectoryInfo(LogFilePath);
-            var fixLog = dir.EnumerateFiles()
+            var fixLog = dir
+                .EnumerateFiles()
                 .OrderByDescending(x => x.CreationTime)
-                .Where(f => f.Name.StartsWith($"{Config.Name()}-fix"))
-                .LastOrDefault();
+                .LastOrDefault(f => f.Name.StartsWith($"{Config.Name()}-fix"));
             return fixLog;
         }
 
@@ -101,8 +102,11 @@ namespace PureFix.Test.Env.Experiment
             }
         }
 
-        public async Task Recover()
+        public virtual async Task Recover()
         {
+            ArgumentNullException.ThrowIfNull(Config?.Description?.SenderCompID);
+            ArgumentNullException.ThrowIfNull(Config?.Description?.TargetCompID);
+
             if (Config.ResetSeqNumFlag())
             {
                 m_logger?.Info("ResetSeqNumFlag hence no recovery from fix log.");
@@ -111,7 +115,6 @@ namespace PureFix.Test.Env.Experiment
 
             try
             {
-                var dir = new DirectoryInfo("logs");
                 var fixLog = GetFixFileInfo();
                 if (fixLog == null)
                 {

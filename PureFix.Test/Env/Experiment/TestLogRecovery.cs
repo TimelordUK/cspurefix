@@ -4,24 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Transport;
+using PureFix.Transport.Session;
+using PureFix.Types;
 
 namespace PureFix.Test.Env.Experiment
 {
-    internal class TestLogRecovery : IFixLogRecovery
+    internal class TestLogRecovery : FixLogRecovery
     {
-        public int? MySeqNum => 0;
-        public int? PeerSeqNum => 0;
-        public string LogFilePath { get; set; }
-
-
-        public Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record)
+        public TestLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore) : base(parser, logFactory, config, msgStore)
         {
-            return Task.FromResult(new FixMsgStoreState());
         }
 
-        public Task Recover()
+        protected override FileInfo GetFixFileInfo()
         {
-            return Task.CompletedTask;
+            return new FileInfo(Fix44PathHelper.SkeletonPath50SP2);
         }
     }
 }

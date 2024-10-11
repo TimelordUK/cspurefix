@@ -11,8 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using PureFix.Transport;
-
 
 namespace PureFix.Test.Env.Experiment
 {

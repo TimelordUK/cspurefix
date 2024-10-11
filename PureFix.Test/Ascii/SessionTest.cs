@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Arrow.Threading.Tasks;
+using PureFIix.Test.Env.Skeleton;
 using PureFix.Test.Env;
 using PureFix.Test.Env.Experiment;
 using PureFix.Test.Env.Skeleton;
 using PureFix.Test.Env.TradeCapture;
 using PureFix.Transport;
+using PureFix.Transport.Session;
+using PureFix.Types.Config;
 
 namespace PureFix.Test.Ascii
 {
@@ -86,7 +89,7 @@ namespace PureFix.Test.Ascii
             });
         }
 
-        private void CheckLog(BaseSessionExperiment experiment)
+        private static void CheckLog(BaseSessionExperiment experiment)
         {
             var (iapp, ifix) = experiment.Initiator.App.Logs;
             Assert.Multiple(() =>
@@ -110,6 +113,20 @@ namespace PureFix.Test.Ascii
         public async Task Initiator_Acceptor_Login_Test()
         {
             var experiment = new SkeletonSessionExperiment(_testEntity);
+            await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
+            CheckLog(experiment);
+        }
+
+        [Test]
+        public async Task Initiator_Acceptor_Recover_From_Log()
+        {
+            var experiment = new SkeletonSessionExperiment(_testEntity);
+            var initDescription = (SessionDescription)experiment.InitiatorConfig.Description;
+            var acceptDescription = (SessionDescription)experiment.AcceptorConfig.Description;
+            Assert.That(initDescription, Is.Not.Null);
+            Assert.That(acceptDescription, Is.Not.Null);
+            initDescription.ResetSeqNumFlag = false;
+            acceptDescription.ResetSeqNumFlag = false;
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
             CheckLog(experiment);
         }
