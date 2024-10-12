@@ -91,8 +91,7 @@ namespace PureFix.Buffer.Ascii
             const byte nine = AsciiChars.Nine;
             var delimiter = Delimiter;
             var switchDelimiter = WriteDelimiter != delimiter;
-            var readPtr = 0;          
-            var readBuffer = readFrom;
+            var readPtr = 0;
             end = Math.Min(end, readFrom.Length);
             _receivedBytes += end;
 
@@ -104,7 +103,7 @@ namespace PureFix.Buffer.Ascii
             {
                 while (readPtr < end)
                 {
-                    var charAtPos = readBuffer[readPtr];
+                    var charAtPos = readFrom[readPtr];
                     var writePtr = _state.Buffer.SaveChar(charAtPos) - 1;
                     switch (_state.ParseState)
                     {

@@ -1,7 +1,6 @@
 ﻿using PureFix.Buffer.Ascii;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
-using PureFix.Transport;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,7 @@ namespace PureFix.Transport.Recovery
         public IFixMsgStore FixMsgStore { get; }
         public FixMsgStoreState? LastStoreState { get; private set; }
         public IFixConfig Config { get; }
-        protected readonly ILogger m_logger;
+        protected readonly ILogger? m_logger;
         public int? MySeqNum { get; private set; } = 0;
         public int? PeerSeqNum { get; private set; } = 0;
         private IFixLogParser Parser { get; }
@@ -47,7 +46,7 @@ namespace PureFix.Transport.Recovery
             }
             catch (Exception ex)
             {
-                m_logger?.Info($"parsed count: {messages.Count}");
+                m_logger?.Info($"error - parsed count: {messages.Count} (clearing)");
                 m_logger?.Error(ex);
                 messages.Clear();
             }
@@ -157,7 +156,7 @@ namespace PureFix.Transport.Recovery
         public async Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record)
         {
             var state = await FixMsgStore.Put(record);
-            m_logger.Info($"[{record.MsgType},{record.SeqNum}] store state {state}");
+            m_logger?.Info($"[{record.MsgType},{record.SeqNum}] store state {state}");
             return state;
         }
     }

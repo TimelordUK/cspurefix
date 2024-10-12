@@ -52,7 +52,7 @@ namespace PureFix.Buffer.Ascii
             
             // We can make a worse case guess at the size of span dictionary
             // But it'll save reallocating 
-            TagSpans = new(SortedTagPosForwards.Length);
+            TagSpans = new Dictionary<int, Range>(SortedTagPosForwards.Length);
 
             for (var i = 0; i < SortedTagPosForwards.Length; ++i)
             {
