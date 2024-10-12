@@ -22,11 +22,13 @@ namespace PureFix.Test.Env.Experiment
         public IFixMsgStore MessageStore { get; private set; }
         public IMessageParser Parser { get; private set; }
         public IMessageEncoder Encoder { get; private set; }
+        public IFixLogRecovery Recovery { get; private set; }
         public CancellationTokenSource TokenSource { get; }
         public BaseApp App { get; set; }
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
+        public IHost Host { get; }
 
         public void Dump()
         {
@@ -73,9 +75,11 @@ namespace PureFix.Test.Env.Experiment
             MessageStore = host.Services.GetService<IFixMsgStore>();
             Parser = host.Services.GetService<IMessageParser>();
             Encoder = host.Services.GetService<IMessageEncoder>();
+            Recovery = host.Services.GetService<IFixLogRecovery>();
             var sf = host.Services.GetService<ISessionFactory>();
             App = (BaseApp)sf.MakeSession();
             TokenSource = new CancellationTokenSource();
+            Host = host;
         }
 
         public int MessageCount(string msgType, char delim = '|')

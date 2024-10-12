@@ -149,7 +149,7 @@ namespace PureFix.Test.Ascii
         }
 
 
-        private void CheckSeqReset(IFixMsgStoreRecord rec, int from, int to)
+        private static void CheckSeqReset(IFixMsgStoreRecord rec, int from, int to)
         {
             var reset = rec.InflatedMessage as SequenceReset;
             Assert.That(reset, Is.Not.Null);

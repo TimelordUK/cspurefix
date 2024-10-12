@@ -116,6 +116,26 @@ namespace PureFix.Test.Ascii
         }
 
         [Test]
+        public async Task Recovery_File_Test()
+        {
+            var experiment = new SkeletonSessionExperiment(_testEntity);
+            var initDescription = (SessionDescription)experiment.InitiatorConfig.Description;
+            var acceptDescription = (SessionDescription)experiment.AcceptorConfig.Description;
+            Assert.Multiple(() =>
+            {
+                Assert.That(initDescription, Is.Not.Null);
+                Assert.That(acceptDescription, Is.Not.Null);
+            });
+            initDescription.ResetSeqNumFlag = false;
+            acceptDescription.ResetSeqNumFlag = false;
+            var recovery = experiment.Initiator.Recovery;
+            Assert.That(recovery, Is.Not.Null);
+            await recovery.Recover();
+            Assert.That(recovery.MySeqNum, Is.EqualTo(40));
+            Assert.That(recovery.PeerSeqNum, Is.EqualTo(40));
+        } 
+
+        [Test]
         public async Task Initiator_Acceptor_Recover_From_Log()
         {
             var experiment = new SkeletonSessionExperiment(_testEntity);
