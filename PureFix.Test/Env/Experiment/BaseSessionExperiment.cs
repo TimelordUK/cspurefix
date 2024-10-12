@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using PureFix.Transport.Session;
 using PureFix.Types;
+using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,12 @@ namespace PureFix.Test.Env.Experiment
         public IFixClock Clock { get; protected set; }
         public AsyncWorkQueue Queue { get; protected set; }
 
+        public void NoResetSeqNumFlag()
+        {
+            Initiator.NoResetSeqNumFlag();
+            Acceptor.NoResetSeqNumFlag();
+        }
+        
         protected void Connect(IHost initiator, IHost acceptor)
         {
             Initiator = new RuntimeContainer(initiator);

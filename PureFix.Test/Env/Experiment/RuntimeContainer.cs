@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using PureFix.Transport.Recovery;
 using PureFix.Transport.Ascii;
+using PureFix.Types.Config;
 
 namespace PureFix.Test.Env.Experiment
 {
@@ -31,7 +32,12 @@ namespace PureFix.Test.Env.Experiment
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
         public IHost Host { get; }
-
+        public void NoResetSeqNumFlag()
+        {
+            if (Config.Description == null) return;
+            ((SessionDescription)Config.Description).ResetSeqNumFlag = false;
+        }
+      
         public void Dump()
         {
             var al = AppLog;
