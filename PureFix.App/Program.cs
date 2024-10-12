@@ -119,8 +119,10 @@ internal partial class Program
     }
 
     private static void WriteOutAsJson(IFixMessageFactory f, IMessageView v)
-    {      
-        Console.WriteLine(JsonHelper.ToJson(v, f.GetType()));
+    {
+        var o = f.ToFixMessage(v);
+        if (o == null) return;
+        Console.WriteLine(JsonHelper.ToJson(o, o.GetType()));
         Console.WriteLine();
     }
 }
