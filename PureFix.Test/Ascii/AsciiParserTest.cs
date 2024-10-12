@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Test.Env;
-using PureFix.Test.Env.Experiment;
 using PureFix.Types;
 
 namespace PureFix.Test.Ascii
@@ -63,7 +62,7 @@ namespace PureFix.Test.Ascii
             var b = Encoding.UTF8.GetBytes(s);
             var ap = _testEntity.Parser;
             var q = new Queue<AsciiView>();
-            ap.ParseFrom(b, b.Length, (i, view) => q.Enqueue((AsciiView)view));
+            ap.ParseFrom(b, b.Length, (_, view) => q.Enqueue((AsciiView)view));
             Assert.Multiple(() =>
             {
                 Assert.That(ap.Locations, Has.Count.EqualTo(1));
@@ -148,7 +147,7 @@ namespace PureFix.Test.Ascii
             {
                 Assert.That(res, Has.Count.EqualTo(0));
                 Assert.That(locs, Has.Count.EqualTo(3));
-                Assert.That(locs.ToArray(), Is.EqualTo(_expectedTagPos[..3]));
+                Assert.That(locs?.ToArray(), Is.EqualTo(_expectedTagPos[..3]));
             });
         }
 
@@ -158,13 +157,13 @@ namespace PureFix.Test.Ascii
             var msgs = _testEntity.ParseText(Logon);
             Assert.Multiple(() =>
             {
-                Assert.That(msgs.Count, Is.AtLeast(1));
+                Assert.That(msgs, Has.Count.AtLeast(1));
                 var msg = msgs[0];
                 Assert.That(msg.Segment?.Name, Is.EqualTo("Logon"));
                 var md = msg.Segment.Set as MessageDefinition;
                 Assert.That(md, Is.Not.Null);
                 Assert.That(md.MsgType, Is.EqualTo("A"));
-                Assert.That(msg.Tags.ToArray(), Is.EqualTo(_expectedTagPos));
+                Assert.That(msg.Tags?.ToArray(), Is.EqualTo(_expectedTagPos));
             });
         }
 
@@ -181,7 +180,7 @@ namespace PureFix.Test.Ascii
                 var md = msg.Segment.Set as MessageDefinition;
                 Assert.That(md, Is.Not.Null);
                 Assert.That(md.MsgType, Is.EqualTo("A"));
-                Assert.That(msg.Tags.ToArray(), Is.EqualTo(_expectedTagPos));
+                Assert.That(msg.Tags?.ToArray(), Is.EqualTo(_expectedTagPos));
             });
         }
 
@@ -191,6 +190,7 @@ namespace PureFix.Test.Ascii
             var msgs = _testEntity.ParseTestHunks(Logon);
             Assert.That(msgs, Has.Count.EqualTo(1));
             msgs = _testEntity.ParseTestHunks(Logon);
+            Assert.That(msgs, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -280,19 +280,31 @@ namespace PureFix.Test.Ascii
             });
         }
 
-        [Test]
-        public void Parse_Heartbeat()
+        private void Check_Views(string s)
         {
-            var s = "8=FIX.4.4|9=0000105|35=0|49=accept-comp|56=init-comp|34=12|57=fix|52=20241011-19:23:54.012|112=heartbeat-10/11/2024 19:23:54|10=027|";
-            var bodyLenCalc = s.Replace("8=FIX.4.4|9=0000105|", string.Empty).Replace("10=027|", string.Empty);
-            Assert.That(bodyLenCalc, Has.Length.EqualTo(105));
             var ap = _testEntity.Parser;
             var views = new List<AsciiView>();
             var b = Encoding.UTF8.GetBytes(s);
             ap.ParseFrom(b, b.Length, (_, v) => views.Add((AsciiView)v));
-            Assert.That(views.Count, Is.EqualTo(1));
+            Assert.That(views, Has.Count.EqualTo(1));
         }
 
-   
+        [Test]
+        public void Parse_Heartbeat_BodyLen_Test()
+        {
+            const string s = "8=FIX.4.4|9=0000105|35=0|49=accept-comp|56=init-comp|34=12|57=fix|52=20241011-19:23:54.012|112=heartbeat-10/11/2024 19:23:54|10=027|";
+            var bodyLenCalc = s.Replace("8=FIX.4.4|9=0000105|", string.Empty).Replace("10=027|", string.Empty);
+            Assert.That(bodyLenCalc, Has.Length.EqualTo(105));
+            Check_Views(s);
+        }
+
+        [Test]
+        public void Parse_Trade_Capture_BodyLen_Test()
+        {
+            const string s = "8=FIX.5.0SP2|9=0000188|35=AE|49=accept-comp|56=init-comp|34=103|57=fix|52=20241012-15:42:29.629|571=100099|487=0|856=0|828=0|17=600099|570=N|55=Steel|48=Steel|32=1000|31=100|75=20241012|60=20241012-15:42:29.628|10=094|";
+            var bodyLenCalc = s.Replace("8=FIX.5.0SP2|9=0000188|", string.Empty).Replace("10=094|", string.Empty);
+            Assert.That(bodyLenCalc, Has.Length.EqualTo(188));
+            Check_Views(s);
+        }
     }
 }
