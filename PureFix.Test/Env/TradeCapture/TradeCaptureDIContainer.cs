@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
 using PureFix.Test.Env.Experiment;
 
+
 namespace PureFix.Test.Env.TradeCapture
 {
     internal class TradeCaptureDIContainer
@@ -20,7 +21,7 @@ namespace PureFix.Test.Env.TradeCapture
         public TradeCaptureDIContainer(AsyncWorkQueue q, IFixClock clock, IFixConfig config)
         {
             var builder = Host.CreateApplicationBuilder();
-            builder.BuildCommon<SkeletonTestLogRecovery>(q, clock, config);
+            builder.BuildCommon<TradeCaptureTestLogRecovery>(q, clock, config);
             builder.Services.AddSingleton<IFixMessageFactory, FixMessageFactory>();
             builder.Services.AddSingleton<ISessionFactory, TradeCaptureSessionFactory>();
 

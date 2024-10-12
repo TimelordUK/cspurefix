@@ -57,6 +57,9 @@
     <None Update="Data\examples\FIX.4.4\skeleton-client.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\examples\FIX.5.0SP2\tc-client.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\fix5-mod.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

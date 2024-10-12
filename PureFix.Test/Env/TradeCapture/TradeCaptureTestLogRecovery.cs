@@ -9,13 +9,13 @@ using PureFix.Transport.Session;
 using PureFix.Types;
 using PureFix.Transport.Recovery;
 
-namespace PureFix.Test.Env.Experiment
+namespace PureFix.Test.Env.TradeCapture
 {
-    internal class SkeletonTestLogRecovery : FixLogRecovery
+    internal class TradeCaptureTestLogRecovery : FixLogRecovery
     {
-        public string Path { get; set; } = Fix44PathHelper.SkeletonRecoveryPath;
+        public string Path { get; set; } = Fix44PathHelper.TradeCaptureRecoveryPath;
 
-        public SkeletonTestLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore) 
+        public TradeCaptureTestLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore)
             : base(parser, logFactory, config, msgStore)
         {
         }
