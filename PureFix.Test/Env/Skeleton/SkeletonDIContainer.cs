@@ -1,7 +1,6 @@
 ﻿using Arrow.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PureFix.Test.Env.Experiment;
 using PureFix.Transport.Session;
 using PureFix.Types;
 using PureFix.Types.FIX44.QuickFix.Types;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Test.Env.Experiment;
 
 namespace PureFix.Test.Env.Skeleton
 {

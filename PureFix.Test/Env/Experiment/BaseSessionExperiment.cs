@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using PureFix.Transport.Session;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
