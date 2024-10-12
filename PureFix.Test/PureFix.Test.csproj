@@ -54,7 +54,7 @@
     <None Update="Data\examples\FIX.4.4\quickfix\logon\fix.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\examples\FIX.5.0SP2\quickfix\skeleton-client.txt">
+    <None Update="Data\examples\FIX.4.4\skeleton-client.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\fix5-mod.xml">

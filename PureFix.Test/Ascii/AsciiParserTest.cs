@@ -9,6 +9,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Test.Env;
 using PureFix.Types;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PureFix.Test.Ascii
 {
@@ -277,6 +278,19 @@ namespace PureFix.Test.Ascii
                 var missing = view.Missing();
                 Assert.That(missing, Is.EqualTo((int[])[98, 108]));
             });
+        }
+
+        [Test]
+        public void Parse_Heartbeat()
+        {
+            var s = "8=FIX.4.4|9=0000105|35=0|49=accept-comp|56=init-comp|34=12|57=fix|52=20241011-19:23:54.012|112=heartbeat-10/11/2024 19:23:54|10=027|";
+            var bodyLenCalc = s.Replace("8=FIX.4.4|9=0000105|", string.Empty).Replace("10=027|", string.Empty);
+            Assert.That(bodyLenCalc, Has.Length.EqualTo(105));
+            var ap = _testEntity.Parser;
+            var views = new List<AsciiView>();
+            var b = Encoding.UTF8.GetBytes(s);
+            ap.ParseFrom(b, b.Length, (_, v) => views.Add((AsciiView)v));
+            Assert.That(views.Count, Is.EqualTo(1));
         }
     }
 }

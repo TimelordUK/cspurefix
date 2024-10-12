@@ -18,7 +18,7 @@ namespace PureFix.Test.Env.Experiment
 
         protected override FileInfo GetFixFileInfo()
         {
-            return new FileInfo(Fix44PathHelper.SkeletonPath50SP2);
+            return new FileInfo(Fix44PathHelper.SkeletonRecoveryPath);
         }
     }
 }

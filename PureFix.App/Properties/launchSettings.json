@@ -2,7 +2,7 @@
   "profiles": {
     "PureFix.ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "-d FIX50SP2.xml -A test-qf52-acceptor.json -a tc"
+      "commandLineArgs": "-d FIX44.xml -I test-qf44-initiator.json -A test-qf44-acceptor.json -a sk"
     }
   }
 }

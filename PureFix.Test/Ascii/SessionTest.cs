@@ -121,15 +121,21 @@ namespace PureFix.Test.Ascii
             var experiment = new SkeletonSessionExperiment(_testEntity);
             var initDescription = (SessionDescription)experiment.InitiatorConfig.Description;
             var acceptDescription = (SessionDescription)experiment.AcceptorConfig.Description;
-            Assert.That(initDescription, Is.Not.Null);
-            Assert.That(acceptDescription, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(initDescription, Is.Not.Null);
+                Assert.That(acceptDescription, Is.Not.Null);
+            });
             initDescription.ResetSeqNumFlag = false;
             acceptDescription.ResetSeqNumFlag = false;
             await experiment.Run(experiment.OnReady, experiment.Initiator.App.Done);
-          
+
             CheckLog(experiment);
-            Assert.That(experiment.Initiator.Encoder.MsgSeqNum, Is.GreaterThan(41));
-            Assert.That(experiment.Acceptor.Encoder.MsgSeqNum, Is.GreaterThan(41));
+            Assert.Multiple(() =>
+            {
+                Assert.That(experiment.Initiator.Encoder.MsgSeqNum, Is.GreaterThan(41));
+                Assert.That(experiment.Acceptor.Encoder.MsgSeqNum, Is.GreaterThan(41));
+            });           
         }
 
         [Test]

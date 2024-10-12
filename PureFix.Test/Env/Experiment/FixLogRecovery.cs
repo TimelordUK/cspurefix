@@ -33,14 +33,32 @@ namespace PureFix.Test.Env.Experiment
             Parser = parser;
         }
 
-        private List<AsciiView> GetMessages(FileInfo fixLog, string filterComp)
+        private List<AsciiView> GetAllMessages(FileInfo fixLog)
         {
             var messages = new List<AsciiView>();
-            Parser.OnView = v => messages.Add((AsciiView)v); 
-            m_logger?.Info($"loading {fixLog.FullName} to recover store.");
-            Parser.Snapshot(fixLog.FullName);
+            try
+            {
+                Parser.OnView = v =>
+                {
+                    Console.WriteLine($"{messages.Count}");
+                    messages.Add((AsciiView)v);
+                };
+                m_logger?.Info($"loading {fixLog.FullName} to recover store.");
+                Parser.Snapshot(fixLog.FullName);                
+            }
+            catch (Exception ex)
+            {
+                m_logger?.Info($"parsed count: {messages.Count}");
+                m_logger?.Error(ex);
+                messages.Clear();
+            }
+            return messages;
+        }
+
+        private List<AsciiView> GetMessages(List<AsciiView> messages, string filterComp)
+        {          
             var myMessages = messages.Where(v => v.GetString((int)MsgTag.SenderCompID) == filterComp).ToList();
-            m_logger?.Info($"{fixLog.FullName} comp {filterComp} recovers {myMessages.Count}");
+            m_logger?.Info($"comp {filterComp} recovers {myMessages.Count}");
             return myMessages;
         }
 
@@ -123,8 +141,9 @@ namespace PureFix.Test.Env.Experiment
                 }
                 var senderComp = Config.Description.SenderCompID;
                 var targetComp = Config.Description.TargetCompID;
-                var myMessages = GetMessages(fixLog, senderComp);
-                var peerMessages = GetMessages(fixLog, targetComp);
+                var all = GetAllMessages(fixLog);
+                var myMessages = GetMessages(all, senderComp);
+                var peerMessages = GetMessages(all, targetComp);
 
                 await LoadStore(myMessages);
                 RecoverPeer(peerMessages);

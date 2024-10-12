@@ -15,7 +15,7 @@ namespace PureFix.Test.Env
             "..", "..", "Data");
         public static readonly string SessionRootPath = Path.Join(DataDictRootPath, "Session");
         public static readonly string DataDictPath = Path.Join(DataDictRootPath, "FIX44.xml");
-        public static readonly string SkeletonPath50SP2 = Path.Join(ExampleRootPath50SP2, "quickfix", "skeleton-client.txt");
+        public static readonly string SkeletonRecoveryPath = Path.Join(ExampleRootPath, "skeleton-client.txt");
         public static readonly string LogonReplayPath = Path.Join(ExampleRootPath, "quickfix", "logon", "fix.txt");
         public static readonly string ExecutionReportReplayPath = Path.Join(ExampleRootPath, "quickfix", "execution-report", "fix.txt");
         public static readonly string HeartbeatReplayPath = Path.Join(ExampleRootPath, "quickfix", "heartbeat", "fix.txt");
