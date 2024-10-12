@@ -89,6 +89,7 @@ namespace PureFix.ConsoleApp
                 outputTemplate: _fixTemplate,
                 rollingInterval: RollingInterval.Day,
                 fileSizeLimitBytes: MaxSizeBytes,
+                flushToDiskInterval: TimeSpan.Zero,
                 retainedFileCountLimit: 21,
                 rollOnFileSizeLimit: true)
               .CreateLogger();

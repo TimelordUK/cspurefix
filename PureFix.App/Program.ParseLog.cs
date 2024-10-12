@@ -15,9 +15,14 @@ namespace PureFix.ConsoleApp
             var parser = new FixLogParser(options.DictPath);
             var factory = FactoryHelper.GetFactory(options.DictPath);
             var fixPath = options.FixLogPath;
+            var filter = options.MsgTypes?.ToHashSet() ?? [];
 
             parser.OnView = (view) =>
             {
+                if (filter.Count > 0)
+                {
+                    if (!filter.Contains(view.MsgType() ?? "")) return;
+                }
                 switch (options.OutputFormat)
                 {
                     case "tags":
