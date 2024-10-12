@@ -20,7 +20,7 @@ namespace PureFix.Test.Env.TradeCapture
         public TradeCaptureDIContainer(AsyncWorkQueue q, IFixClock clock, IFixConfig config)
         {
             var builder = Host.CreateApplicationBuilder();
-            builder.BuildCommon(q, clock, config);
+            builder.BuildCommon<SkeletonTestLogRecovery>(q, clock, config);
             builder.Services.AddSingleton<IFixMessageFactory, FixMessageFactory>();
             builder.Services.AddSingleton<ISessionFactory, TradeCaptureSessionFactory>();
 

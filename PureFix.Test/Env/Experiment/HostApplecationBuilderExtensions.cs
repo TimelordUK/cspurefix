@@ -18,7 +18,7 @@ namespace PureFix.Test.Env.Experiment
 {
     internal static class HostApplecationBuilderExtensions
     {
-        public static void BuildCommon(this HostApplicationBuilder builder, AsyncWorkQueue q, IFixClock clock, IFixConfig config)
+        public static void BuildCommon<T>(this HostApplicationBuilder builder, AsyncWorkQueue q, IFixClock clock, IFixConfig config) where T:class, IFixLogRecovery
         {
             if (config.Description == null) throw new InvalidDataException("no config description.");
             if (config.Definitions == null) throw new InvalidDataException("no config definitions.");
@@ -40,7 +40,7 @@ namespace PureFix.Test.Env.Experiment
             var store = new FixMsgMemoryStore(config.Description.SenderCompID);
             builder.Services.AddSingleton<IFixMsgStore>(store);
             builder.Services.AddSingleton<IFixLogParser, FixLogParser>();
-            builder.Services.AddSingleton<IFixLogRecovery, TestLogRecovery>();
+            builder.Services.AddSingleton<IFixLogRecovery, T>();
         }
     }
 }

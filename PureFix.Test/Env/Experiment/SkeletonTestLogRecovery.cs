@@ -11,15 +11,18 @@ using PureFix.Transport.Recovery;
 
 namespace PureFix.Test.Env.Experiment
 {
-    internal class TestLogRecovery : FixLogRecovery
+    internal class SkeletonTestLogRecovery : FixLogRecovery
     {
-        public TestLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore) : base(parser, logFactory, config, msgStore)
+        public string Path { get; set; } = Fix44PathHelper.SkeletonRecoveryPath;
+
+        public SkeletonTestLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore) 
+            : base(parser, logFactory, config, msgStore)
         {
         }
 
         protected override FileInfo GetFixFileInfo()
         {
-            return new FileInfo(Fix44PathHelper.SkeletonRecoveryPath);
+            return new FileInfo(Path);
         }
     }
 }
