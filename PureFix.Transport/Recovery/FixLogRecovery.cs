@@ -16,7 +16,7 @@ namespace PureFix.Transport.Recovery
         public string LogFilePath { get; set; } = "logs";
       
         public IFixMsgStore FixMsgStore { get; }
-        public IFixMsgStoreRecord? LastRecord { get; private set; }
+        public FixMsgStoreState? LastStoreState { get; private set; }
         public IFixConfig Config { get; }
         protected readonly ILogger m_logger;
         public int? MySeqNum { get; private set; } = 0;
@@ -63,11 +63,12 @@ namespace PureFix.Transport.Recovery
 
         protected virtual FileInfo? GetFixFileInfo()
         {
+            var filter = $"{Config.Name()}-fix";
             var dir = new DirectoryInfo(LogFilePath);
             var fixLog = dir
                 .EnumerateFiles()
                 .OrderByDescending(x => x.CreationTime)
-                .LastOrDefault(f => f.Name.StartsWith($"{Config.Name()}-fix"));
+                .LastOrDefault(f => f.Name.StartsWith(filter));
             return fixLog;
         }
 
@@ -98,9 +99,8 @@ namespace PureFix.Transport.Recovery
                 MySeqNum = record.SeqNum;
                 if (FixMsgStore != null)
                 {
-                    await AddRecord(record);
-                }
-                LastRecord = record;
+                    LastStoreState = await AddRecord(record);
+                }                
             }
         }
 

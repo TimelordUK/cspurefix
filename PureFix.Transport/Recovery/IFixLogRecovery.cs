@@ -7,6 +7,7 @@ namespace PureFix.Transport.Recovery
     {
         int? MySeqNum { get; }
         int? PeerSeqNum { get; }
+        FixMsgStoreState? LastStoreState { get; }
         Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record);
         Task Recover();
     }

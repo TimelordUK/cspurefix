@@ -57,11 +57,17 @@ namespace PureFix.Test.Ascii
             var recovery = experiment.Initiator.Recovery;
             Assert.That(recovery, Is.Not.Null);
             await recovery.Recover();
-            Assert.That(recovery.MySeqNum, Is.EqualTo(5));
-            Assert.That(recovery.PeerSeqNum, Is.EqualTo(122));
+            Assert.Multiple(() =>
+            {
+                Assert.That(recovery.MySeqNum, Is.EqualTo(5));
+                Assert.That(recovery.PeerSeqNum, Is.EqualTo(122));
+                Assert.That(recovery.LastStoreState, Is.Not.Null);
+                // have sent request trade captures and logon (rest heartbeats are ignored).
+                Assert.That(recovery.LastStoreState.Value.LastSeq, Is.EqualTo(2));
+            });
         }
 
-        [Test]
+            [Test]
         public async Task Initiator_Acceptor_Recover_From_Log()
         {
             var experiment = new SkeletonSessionExperiment(_testEntity);
