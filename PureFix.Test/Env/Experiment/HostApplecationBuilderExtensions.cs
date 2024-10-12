@@ -12,6 +12,7 @@ using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Transport;
+using PureFix.Transport.Recovery;
 
 namespace PureFix.Test.Env.Experiment
 {

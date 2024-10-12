@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PureFix.Transport;
 using PureFix.Transport.Session;
 using PureFix.Types;
+using PureFix.Transport.Recovery;
 
 namespace PureFix.Test.Env.Experiment
 {

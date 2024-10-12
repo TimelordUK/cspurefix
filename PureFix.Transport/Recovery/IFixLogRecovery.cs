@@ -1,7 +1,7 @@
 ﻿using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 
-namespace PureFix.Test.Env.Experiment
+namespace PureFix.Transport.Recovery
 {
     public interface IFixLogRecovery
     {

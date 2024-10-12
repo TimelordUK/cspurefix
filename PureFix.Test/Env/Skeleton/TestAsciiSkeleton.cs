@@ -3,6 +3,7 @@ using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Test.Env.Experiment;
 using PureFix.Transport.Ascii;
+using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;

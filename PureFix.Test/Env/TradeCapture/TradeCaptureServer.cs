@@ -1,6 +1,8 @@
 ﻿using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Test.Env.Experiment;
+using PureFix.Transport.Ascii;
+using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;

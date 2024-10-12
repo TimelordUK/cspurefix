@@ -1,7 +1,5 @@
 ﻿using Arrow.Threading.Tasks;
-using PureFix.Buffer.Ascii;
 using PureFix.Buffer;
-using PureFix.Transport.Ascii;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
@@ -11,10 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using PureFix.Transport.Recovery;
 
-namespace PureFix.Test.Env.Experiment
+namespace PureFix.Transport.Ascii
 {
-    internal abstract class BaseApp : AsciiSession
+    public abstract class BaseApp : AsciiSession
     {
         protected readonly ILogger m_logger;
         protected readonly ILogger m_fixLog;
@@ -55,7 +54,7 @@ namespace PureFix.Test.Env.Experiment
             m_fixLog.Info(txt);
         }
 
-        protected override void OnStopped(Exception error)
+        protected override void OnStopped(Exception? error)
         {
             m_logger.Info("OnStopped");
         }

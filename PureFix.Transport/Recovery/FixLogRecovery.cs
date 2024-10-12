@@ -9,14 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFix.Test.Env.Experiment
+namespace PureFix.Transport.Recovery
 {
     public class FixLogRecovery : IFixLogRecovery
     {
         public string LogFilePath { get; set; } = "logs";
-        public string Filter { get; private set; }
+      
         public IFixMsgStore FixMsgStore { get; }
-        public IFixMsgStoreRecord LastRecord { get; private set; }
+        public IFixMsgStoreRecord? LastRecord { get; private set; }
         public IFixConfig Config { get; }
         protected readonly ILogger m_logger;
         public int? MySeqNum { get; private set; } = 0;
@@ -27,8 +27,7 @@ namespace PureFix.Test.Env.Experiment
         {
             ArgumentNullException.ThrowIfNull(config?.Description);
             Config = config;
-            FixMsgStore = msgStore;
-            Filter = config.Description.SenderCompID;
+            FixMsgStore = msgStore;          
             m_logger = logFactory.MakeLogger(nameof(FixLogRecovery));
             Parser = parser;
         }
@@ -44,7 +43,7 @@ namespace PureFix.Test.Env.Experiment
                     messages.Add((AsciiView)v);
                 };
                 m_logger?.Info($"loading {fixLog.FullName} to recover store.");
-                Parser.Snapshot(fixLog.FullName);                
+                Parser.Snapshot(fixLog.FullName);
             }
             catch (Exception ex)
             {
@@ -56,13 +55,13 @@ namespace PureFix.Test.Env.Experiment
         }
 
         private List<AsciiView> GetMessages(List<AsciiView> messages, string filterComp)
-        {          
+        {
             var myMessages = messages.Where(v => v.GetString((int)MsgTag.SenderCompID) == filterComp).ToList();
             m_logger?.Info($"comp {filterComp} recovers {myMessages.Count}");
             return myMessages;
         }
 
-        protected virtual FileInfo GetFixFileInfo()
+        protected virtual FileInfo? GetFixFileInfo()
         {
             var dir = new DirectoryInfo(LogFilePath);
             var fixLog = dir
