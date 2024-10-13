@@ -16,6 +16,7 @@ namespace PureFix.ConsoleApp
             var factory = FactoryHelper.GetFactory(options.DictPath);
             var fixPath = options.FixLogPath;
             var filter = options.MsgTypes?.ToHashSet() ?? [];
+            var counts = new Dictionary<string, int>();
 
             parser.OnView = (view) =>
             {
@@ -32,6 +33,14 @@ namespace PureFix.ConsoleApp
                 }
                 switch (options.OutputFormat)
                 {
+                    case "counts":
+                        var msgType = view.MsgType() ?? "";
+                        if (!counts.TryGetValue(msgType, out var count))
+                        {
+                            count = 0;
+                        }
+                        counts[msgType] = count + 1;
+                        break;
                     case "tags":
                         WriteOutAsTags(view);
                         break;
@@ -48,6 +57,13 @@ namespace PureFix.ConsoleApp
             else
             {
                 parser.Snapshot(fixPath);
+                if (counts.Count > 0)
+                {
+                    foreach ( var kv in counts)
+                    {
+                        Console.WriteLine($"{kv.Key,-3} {kv.Value,-3} {parser.Definitions.Message.GetValueOrDefault(kv.Key)?.Name}");
+                    }
+                }
             }
         }
 
