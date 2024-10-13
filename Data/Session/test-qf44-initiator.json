@@ -4,8 +4,8 @@
     "type": "initiator",
     "name": "test_client",
     "tcp": {
-      "host": "localhost",
-      "port": 2344,
+      "host": "app.fixsim.com",
+      "port": 15000,
       "tls": {
         "enabled": false,
         "certificate": "local.cer"
@@ -14,15 +14,15 @@
     "protocol": "ascii",
     "dictionary": "FIX44.xml"
   },
-  "Username": "js-client",
-  "Password": "pwd-client",
+  "Username": "",
+  "Password": "",
   "EncryptMethod": 0,
   "ResetSeqNumFlag": true,
   "HeartBtInt": 30,
-  "SenderCompId": "init-comp",
-  "TargetCompID": "accept-comp",
-  "TargetSubID": "fix",
+  "SenderCompId": "sjames8888@gmail_com",
+  "TargetCompID": "FIXSIMDEMO",
+  "TargetSubID": "",
   "BeginString": "FIX.4.4",
-  "BodyLengthChars": 6
+  "BodyLengthChars": 7
 }
 

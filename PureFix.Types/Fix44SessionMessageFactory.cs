@@ -48,8 +48,8 @@ namespace PureFix.Types
         {
             return new Logon
             {
-                Username = m_SessionDescription.Username,
-                Password = m_SessionDescription.Password, 
+                Username = !string.IsNullOrEmpty(m_SessionDescription.Username) ? m_SessionDescription.Username : null,
+                Password = !string.IsNullOrEmpty(m_SessionDescription.Password) ? m_SessionDescription.Password : null,              
                 HeartBtInt = m_SessionDescription.HeartBtInt,
                 ResetSeqNumFlag = m_SessionDescription.ResetSeqNumFlag,
                 EncryptMethod = EncryptMethodValues.None
@@ -88,8 +88,8 @@ namespace PureFix.Types
                 MsgSeqNum = seqNum,
                 SendingTime = time,
                 TargetCompID = m_SessionDescription.TargetCompID,
-                TargetSubID = m_SessionDescription.TargetSubID,
-                SenderSubID = m_SessionDescription.SenderSubID
+                TargetSubID = !string.IsNullOrEmpty(m_SessionDescription.TargetSubID) ? m_SessionDescription.TargetSubID : m_SessionDescription.TargetSubID,
+                SenderSubID = !string.IsNullOrEmpty(m_SessionDescription.SenderSubID) ? m_SessionDescription.SenderSubID : m_SessionDescription.SenderSubID,
             };
         }
     }
