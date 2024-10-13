@@ -21,7 +21,14 @@ namespace PureFix.ConsoleApp
             {
                 if (filter.Count > 0)
                 {
-                    if (!filter.Contains(view.MsgType() ?? "")) return;
+                    var isContained = filter.Contains(view.MsgType() ?? "");
+                    if (options.Exclude)
+                    {
+                        if (isContained) return;
+                    } else
+                    {
+                        if (!isContained) return;
+                    }                    
                 }
                 switch (options.OutputFormat)
                 {

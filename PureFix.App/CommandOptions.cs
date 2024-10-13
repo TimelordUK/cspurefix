@@ -38,5 +38,8 @@ namespace PureFix.ConsoleApp
 
         [Option('T', "trim", Required = false, HelpText = "list of message types 0 1 2 3 4 5 AE")]
         public IEnumerable<string> MsgTypes { get; set; } = [];
+
+        [Option('e', "exclude", Required = false, HelpText = "msgtypes to exclude rather than include when parsing log", Default = false)]
+        public bool Exclude { get; set; } = false;
     }
 }
