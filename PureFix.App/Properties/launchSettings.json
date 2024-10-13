@@ -2,7 +2,7 @@
   "profiles": {
     "PureFix.ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "-d FIX44.xml -I test-qf44-initiator.json -a sk"
+      "commandLineArgs": "-d FIX44.xml -I fixsim-qf44-initiator.json -a sk"
     }
   }
 }

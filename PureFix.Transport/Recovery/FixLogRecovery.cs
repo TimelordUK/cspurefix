@@ -37,8 +37,7 @@ namespace PureFix.Transport.Recovery
             try
             {
                 Parser.OnView = v =>
-                {
-                    Console.WriteLine($"{messages.Count}");
+                {                    
                     messages.Add((AsciiView)v);
                 };
                 m_logger?.Info($"loading {fixLog.FullName} to recover store.");
