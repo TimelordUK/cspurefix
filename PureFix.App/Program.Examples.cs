@@ -37,7 +37,11 @@ internal partial class Program
         Console.WriteLine("parse a fix44 log in json format with no tail and exlude all msg type 0 - heartbeats");
         Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o json -e -T 0");
         Console.WriteLine("");
-       
+
+        Console.WriteLine("parse a fix44 log in json format with no tail and show as count frequency each message");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o counts");
+        Console.WriteLine("");
+
         Console.WriteLine("parse a fix52 log in decode tag format with no tail and filter only msg type A");
         Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -T A");
         Console.WriteLine("");
