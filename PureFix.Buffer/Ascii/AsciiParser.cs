@@ -46,7 +46,7 @@ namespace PureFix.Buffer.Ascii
         {
             if (_state.Storage != null)
             {
-                _state.Storage.Buffer?.SetPos(ptr);
+                _state.Storage.Buffer.SetPos(ptr);
                 onDecode?.Invoke(_state.Storage);
             }
 
