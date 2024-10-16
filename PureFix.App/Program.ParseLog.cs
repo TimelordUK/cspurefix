@@ -12,7 +12,7 @@ namespace PureFix.ConsoleApp
     {
         private static void ParseLog(CommandOptions options)
         {
-            var parser = new FixLogParser(options.DictPath, options.Delimiter);
+            var parser = new FixLogParser(options.DictPath, (byte)options.Delimiter);
             var factory = FactoryHelper.GetFactory(options.DictPath);
             var fixPath = options.FixLogPath;
             var filter = options.MsgTypes?.ToHashSet() ?? [];

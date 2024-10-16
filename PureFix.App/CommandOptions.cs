@@ -38,7 +38,7 @@ namespace PureFix.ConsoleApp
         public string OutputPath { get; set; } = "";
 
         [Option('D', "delimiter", Required = false, HelpText = "delimiter to parse a log", Default = AsciiChars.Soh)]
-        public byte Delimiter { get; set; }
+        public char Delimiter { get; set; }
 
         [Option('T', "trim", Required = false, HelpText = "list of message types 0 1 2 3 4 5 AE")]
         public IEnumerable<string> MsgTypes { get; set; } = [];
