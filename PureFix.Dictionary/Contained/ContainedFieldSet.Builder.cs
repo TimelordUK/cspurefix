@@ -13,6 +13,7 @@ namespace PureFix.Dictionary.Contained
     {
         public void Add(ContainedField field)
         {
+            if (_localNameToField.ContainsKey(field.Name)) return;
             _fields.Add(field);
             _localNameToField[field.Name] = field;
             AddUpdate(field);
