@@ -42,9 +42,9 @@ namespace PureFix.Transport.Ascii
         protected override async Task OnRun()
         {
             await Recovery.Recover();
-            m_sessionState.LastPeerMsgSeqNum = Recovery.PeerSeqNum;
-            m_encoder.MsgSeqNum = Recovery.MySeqNum + 1 ?? 1;
-            m_logger.Info($"OnRun m_encoder.MsgSeqNum = {m_encoder.MsgSeqNum}, m_sessionState.LastPeerMsgSeqNum = {m_sessionState.LastPeerMsgSeqNum}");
+            m_sessionState.LastPeerMsgSeqNum = m_config?.Description?.PeerSeqNum ?? Recovery.PeerSeqNum;            
+            m_encoder.MsgSeqNum = m_config?.Description?.MsgSeqNum ?? Recovery.MySeqNum + 1 ?? 1;
+            m_logger.Info($"OnRun MsgSeqNum = {m_encoder.MsgSeqNum}, LastPeerMsgSeqNum = {m_sessionState.LastPeerMsgSeqNum}");
         }
 
         protected override async Task OnEncoded(string msgType, int seqNum, string txt)

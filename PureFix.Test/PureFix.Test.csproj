@@ -45,6 +45,9 @@
     <None Update="Data\examples\FIX.4.4\fix.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\examples\FIX.4.4\fixsim-examples.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\examples\FIX.4.4\quickfix\execution-report\fix.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

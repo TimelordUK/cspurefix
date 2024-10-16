@@ -14,7 +14,8 @@ namespace PureFix.Transport
 {
     public class FixLogParser : IFixLogParser
     {
-        private readonly IMessageParser _asciiParser;
+        private readonly AsciiParser _asciiParser;
+        public IFixDefinitions Definitions { get; private set; }
         public Action<IMessageView> OnView { get; set; } = (v) => { };
 
         private void GetViews(string file)
@@ -40,15 +41,16 @@ namespace PureFix.Transport
         {
             var definitions = config.Definitions;
             if (definitions == null) throw new ArgumentNullException(nameof(definitions));
-            var qf = new QuickFixXmlFileParser(definitions);
-            _asciiParser = new AsciiParser(definitions) { Delimiter = config.LogDelimiter ?? AsciiChars.Pipe };
+            Definitions = definitions;
+            var qf = new QuickFixXmlFileParser(Definitions);
+            _asciiParser = new AsciiParser(Definitions) { Delimiter = config.LogDelimiter ?? AsciiChars.Pipe };
         }
 
         public FixLogParser(string dictPath, byte delim = (byte)'|')
         {
-            var definitions = new FixDefinitions();
-            var qf = new QuickFixXmlFileParser(definitions);
-            _asciiParser = new AsciiParser(definitions) { Delimiter = delim };
+            Definitions = new FixDefinitions();
+            var qf = new QuickFixXmlFileParser(Definitions);
+            _asciiParser = new AsciiParser(Definitions) { Delimiter = delim };
             qf.Parse(dictPath);
         }
 

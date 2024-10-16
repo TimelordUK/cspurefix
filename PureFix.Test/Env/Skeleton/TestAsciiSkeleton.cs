@@ -20,6 +20,12 @@ namespace PureFix.Test.Env.Skeleton
 
         protected override Task OnApplicationMsg(string msgType, IMessageView view)
         {
+            m_logger.Info($"OnApplicationMsg receives {msgType}");
+            var m = m_msg_factory.ToFixMessage(view);
+            if (m != null)
+            {
+                m_logger.Info($"{JsonHelper.ToJson(m, m.GetType())}");
+            }
             return Task.CompletedTask;
         }
 
