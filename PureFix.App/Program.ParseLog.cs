@@ -12,13 +12,13 @@ namespace PureFix.ConsoleApp
     {
         private static void ParseLog(CommandOptions options)
         {
-            var parser = new FixLogParser(options.DictPath);
+            var parser = new FixLogParser(options.DictPath, options.Delimiter);
             var factory = FactoryHelper.GetFactory(options.DictPath);
             var fixPath = options.FixLogPath;
             var filter = options.MsgTypes?.ToHashSet() ?? [];
             var counts = new Dictionary<string, int>();
 
-            parser.OnView = (view) =>
+            parser.OnView = view =>
             {
                 if (filter.Count > 0)
                 {
@@ -35,10 +35,7 @@ namespace PureFix.ConsoleApp
                 {
                     case "counts":
                         var msgType = view.MsgType() ?? "";
-                        if (!counts.TryGetValue(msgType, out var count))
-                        {
-                            count = 0;
-                        }
+                        var count = counts.GetValueOrDefault(msgType, 0);
                         counts[msgType] = count + 1;
                         break;
                     case "tags":

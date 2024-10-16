@@ -2,7 +2,7 @@
   "profiles": {
     "PureFix.ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "-d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o counts"
+      "commandLineArgs": "-d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o json -D 124"
     }
   }
 }

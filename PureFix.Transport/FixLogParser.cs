@@ -15,8 +15,8 @@ namespace PureFix.Transport
     public class FixLogParser : IFixLogParser
     {
         private readonly AsciiParser _asciiParser;
-        public IFixDefinitions Definitions { get; private set; }
-        public Action<IMessageView> OnView { get; set; } = (v) => { };
+        public IFixDefinitions Definitions { get; }
+        public Action<IMessageView> OnView { get; set; } = v => { };
 
         private void GetViews(string file)
         {
@@ -40,8 +40,7 @@ namespace PureFix.Transport
         public FixLogParser(IFixConfig config)
         {
             var definitions = config.Definitions;
-            if (definitions == null) throw new ArgumentNullException(nameof(definitions));
-            Definitions = definitions;
+            Definitions = definitions ?? throw new ArgumentNullException(nameof(definitions));
             var qf = new QuickFixXmlFileParser(Definitions);
             _asciiParser = new AsciiParser(Definitions) { Delimiter = config.LogDelimiter ?? AsciiChars.Pipe };
         }
