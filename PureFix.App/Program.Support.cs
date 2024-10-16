@@ -23,7 +23,7 @@ internal partial class Program
         var name = Path.GetFileName(options.DictPath);
         name = name.Replace(".xml", string.Empty).Replace(".", string.Empty);
         generatorOptions.BackingTypeOutputPath = Path.Join(options.OutputPath, "PureFix.Types", name, "QuickFix");
-        generatorOptions.BackingTypeNamespace = Path.Join("PureFix.Types", name, "QuickFix");
+        generatorOptions.BackingTypeNamespace = $"PureFix.Types.{name}.QuickFix";
         return generatorOptions;
     }
 }
