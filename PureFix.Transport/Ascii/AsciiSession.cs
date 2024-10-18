@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 using Arrow.Threading.Tasks;
@@ -44,7 +43,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        async Task SendHeartbeat(string? text = null)
+        private async Task SendHeartbeat(string? text = null)
         {
             var now = m_clock.Current.ToUniversalTime().ToString(CultureInfo.InvariantCulture);
             text ??= $"heartbeat-{now}";
@@ -314,7 +313,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        protected override abstract Task OnRun();
+        protected abstract override Task OnRun();
 
 
         protected override async Task OnMsg(string msgType, IMessageView view)
