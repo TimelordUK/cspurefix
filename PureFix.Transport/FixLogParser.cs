@@ -16,7 +16,7 @@ namespace PureFix.Transport
     {
         private readonly AsciiParser _asciiParser;
         public IFixDefinitions Definitions { get; }
-        public Action<IMessageView> OnView { get; set; } = v => { };
+        public Action<IMessageView> OnView { get; set; } = _ => { };
 
         private void GetViews(string file)
         {
@@ -24,17 +24,20 @@ namespace PureFix.Transport
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
-                if (line != null)
+                if (line == null) continue;
+                var idx = line.IndexOf("8=FIX", StringComparison.Ordinal);
+                if (idx != -1)
                 {
-                    Parse(line);
+                    line = line[idx..];
                 }
+                Parse(line);
             }
         }
 
         public void Parse(string txt)
         {
             var b = Encoding.UTF8.GetBytes(txt);
-            _asciiParser.ParseFrom(b, b.Length, (p, v) => OnView(v));
+            _asciiParser.ParseFrom(b, b.Length, (_, v) => OnView(v));
         }
 
         public FixLogParser(IFixConfig config)
