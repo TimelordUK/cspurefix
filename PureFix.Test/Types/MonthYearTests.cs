@@ -1,14 +1,7 @@
-﻿using PureFix.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using PureFix.Types;
 
-using NUnit.Framework;
-
-namespace PureFIix.Test.Types
+namespace PureFix.Test.Types
 {
     public class MonthYearTests
     {
