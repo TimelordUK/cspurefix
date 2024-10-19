@@ -10,6 +10,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Test.Env;
 using PureFix.Transport;
 using PureFix.Types;
+using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Test.Ascii
 {
@@ -316,6 +317,9 @@ namespace PureFix.Test.Ascii
             lp.OnView = view => views.Add((AsciiView)view);
             lp.Snapshot(Fix44PathHelper.ReplayPreamblePath);
             Assert.That(views, Has.Count.EqualTo(1));
+            var v = views[0];
+            Assert.That(v, Is.Not.Null);
+            Assert.That(v.MsgType(), Is.EqualTo(MsgTypeValues.Logon));
         }
     }
 }

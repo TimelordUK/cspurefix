@@ -14,7 +14,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
     {
         private void ParseFields(XDocument doc)
         {
-            var fields = doc.Descendants("fields").First().Elements("field");
+            var fielsNode = doc.Descendants("fields").FirstOrDefault();
+            if (fielsNode == null) return;
+            var fields = fielsNode.Elements("field");
             foreach (var fieldElement in fields)
             {
                 var at = fieldElement.AsAttributeDict();
@@ -24,15 +26,15 @@ namespace PureFix.Dictionary.Parser.QuickFix
 
         private void ParseComponents(XDocument doc)
         {
-            var fields = doc.Descendants("components").First().Elements("component");
-            foreach (var componentElement in fields)
+            var componentsNode = doc.Descendants("components").FirstOrDefault();
+            if (componentsNode == null) return;
+            var components = componentsNode.Elements("component");
+            foreach (var componentElement in components)
             {
                 var at = componentElement.AsAttributeDict();
                 MakeNode(at["name"], componentElement, Node.ElementType.ComponentDefinition);
             }
         }
-
-
 
         private void ParseHeader(XDocument doc)
         {

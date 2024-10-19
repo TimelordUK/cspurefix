@@ -11,8 +11,11 @@
 
   <ItemGroup>
     <Compile Remove="DataDict\**" />
+    <Compile Remove="Data\examples\FIX.5.0SP2\quickfix\**" />
     <EmbeddedResource Remove="DataDict\**" />
+    <EmbeddedResource Remove="Data\examples\FIX.5.0SP2\quickfix\**" />
     <None Remove="DataDict\**" />
+    <None Remove="Data\examples\FIX.5.0SP2\quickfix\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,7 +81,6 @@
   <ItemGroup>
     <Folder Include="Data\examples\FIX.4.4\quickfix\logon\" />
     <Folder Include="Data\examples\FIX.4.4\quickfix\heartbeat\" />
-    <Folder Include="Data\examples\FIX.5.0SP2\quickfix\" />
   </ItemGroup>
 
 </Project>
