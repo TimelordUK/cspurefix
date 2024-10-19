@@ -53,9 +53,10 @@ namespace PureFix.Dictionary.Parser.QuickFix
 
         private static SimpleFieldDefinition GetField(XElement fieldElement)
         {
-            var atts = fieldElement.AsAttributeDict();
-            var tag = int.Parse(atts["number"]);
+            var atts = fieldElement.AsAttributeDict();          
             var name = atts["name"];
+            var tag = int.Parse(atts.GetValueOrDefault("number") ?? "-1");
+            if (tag < 0) throw new InvalidDataException($"no tag/number for {name}");           
             var type = atts.GetValueOrDefault("type") ?? "STRING";
             
             var values = GetFieldValues(fieldElement);
