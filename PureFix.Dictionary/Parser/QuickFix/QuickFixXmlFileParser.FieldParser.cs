@@ -39,15 +39,13 @@ namespace PureFix.Dictionary.Parser.QuickFix
 
         private void ParseHeader(XDocument doc)
         {
-            var header = doc.Descendants("header").FirstOrDefault();
-            if (header == null) throw new InvalidDataException("no header declared in fix definitions");
+            var header = doc.Descendants("header").FirstOrDefault() ?? throw new InvalidDataException("no header declared in fix definitions");
             _header = MakeNode("StandardHeader", header, Node.ElementType.ComponentDefinition);
         }
 
         private void ParseTrailer(XDocument doc)
         {
-            var trailer = doc.Descendants("trailer").FirstOrDefault();
-            if (trailer == null) throw new InvalidDataException("no trailer declared in fix definitions");
+            var trailer = doc.Descendants("trailer").FirstOrDefault() ?? throw new InvalidDataException("no trailer declared in fix definitions");
             _trailer = MakeNode("StandardTrailer", trailer, Node.ElementType.ComponentDefinition);
         }
 
