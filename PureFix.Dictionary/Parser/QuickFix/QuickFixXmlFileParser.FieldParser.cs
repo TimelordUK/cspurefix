@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
@@ -38,13 +39,15 @@ namespace PureFix.Dictionary.Parser.QuickFix
 
         private void ParseHeader(XDocument doc)
         {
-            var header = doc.Descendants("header").First();
+            var header = doc.Descendants("header").FirstOrDefault();
+            if (header == null) throw new InvalidDataException("no header declared in fix definitions");
             _header = MakeNode("StandardHeader", header, Node.ElementType.ComponentDefinition);
         }
 
         private void ParseTrailer(XDocument doc)
         {
-            var trailer = doc.Descendants("trailer").First();
+            var trailer = doc.Descendants("trailer").FirstOrDefault();
+            if (trailer == null) throw new InvalidDataException("no trailer declared in fix definitions");
             _trailer = MakeNode("StandardTrailer", trailer, Node.ElementType.ComponentDefinition);
         }
 
@@ -69,7 +72,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             {
                 var atts = value.AsAttributeDict();
                 var enumName = atts["enum"];
-                var description = atts["description"];
+                var description = atts.GetValueOrDefault("description") ?? "";
                 result ??= new List<FieldEnum>();
                 result.Add(new FieldEnum(enumName, description));
             }
