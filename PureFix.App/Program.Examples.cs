@@ -46,7 +46,7 @@ internal partial class Program
         Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -T A -D '|'");
         Console.WriteLine("");
 
-        Console.WriteLine("parse a fix52 todays log in decode tag format with no tail and filter only msg type A");
+        Console.WriteLine("parse a fix52 todays log in decode tag format with no tail and filter out hearbeat");
         Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log$(date '+%Y%m%d').txt -d FIX50SP2.xml -o json -e -T 0 -D '|'");
         Console.WriteLine("");
 
