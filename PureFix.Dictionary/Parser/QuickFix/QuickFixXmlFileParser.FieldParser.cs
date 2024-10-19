@@ -56,7 +56,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             var atts = fieldElement.AsAttributeDict();
             var tag = int.Parse(atts["number"]);
             var name = atts["name"];
-            var type = atts["type"];
+            var type = atts.GetValueOrDefault("type") ?? "STRING";
             
             var values = GetFieldValues(fieldElement);
             var sd = new SimpleFieldDefinition(name, null, type, tag, values);

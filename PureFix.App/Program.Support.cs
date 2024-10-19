@@ -9,7 +9,7 @@ namespace PureFix.ConsoleApp;
 
 internal partial class Program
 {
-    private static IFixDefinitions GetDefinitions(CommandOptions options)
+    private static FixDefinitions GetDefinitions(CommandOptions options)
     {
         var definitions = new FixDefinitions();
         var qfParser = new QuickFixXmlFileParser(definitions);
