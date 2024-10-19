@@ -19,31 +19,31 @@ internal partial class Program
         Console.WriteLine("");
 
         Console.WriteLine("tail a file and output as tag decoded resolving enums.");
-        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o tags -D |");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o tags -D '|'");
         Console.WriteLine("");
 
         Console.WriteLine("tail a file and output as json objects");
-        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o json -D |");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o json -D '|'");
         Console.WriteLine("");        
 
         Console.WriteLine("parse a fix52 log in decode tag format with no tail");
-        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -D |");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -D '|'");
         Console.WriteLine("");
 
         Console.WriteLine("parse a fix44 log in json format with no tail");
-        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX44.xml -o json -D |");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX44.xml -o json -D '|'");
         Console.WriteLine("");
         
         Console.WriteLine("parse a fix44 log in json format with no tail and exlude all msg type 0 - heartbeats");
-        Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o json -e -T 0 -D |");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o json -e -T 0 -D '|'");
         Console.WriteLine("");
 
         Console.WriteLine("parse a fix44 log in json format with no tail and show as count frequency each message");
-        Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o counts -D |");
+        Console.WriteLine("./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o counts -D '|'");
         Console.WriteLine("");
 
         Console.WriteLine("parse a fix52 log in decode tag format with no tail and filter only msg type A");
-        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -T A -D |");
+        Console.WriteLine("./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -T A -D '|'");
         Console.WriteLine("");
 
         Console.WriteLine("run built in skeleton client and server to logon and heartbeat");
