@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Test.Env;
+using PureFix.Transport;
 using PureFix.Types;
 
 namespace PureFix.Test.Ascii
@@ -305,6 +306,16 @@ namespace PureFix.Test.Ascii
             var bodyLenCalc = s.Replace("8=FIX.5.0SP2|9=0000188|", string.Empty).Replace("10=094|", string.Empty);
             Assert.That(bodyLenCalc, Has.Length.EqualTo(188));
             Check_Views(s);
+        }
+
+        [Test]
+        public void Parse_Log_With_Preamble_Test()
+        {
+            var lp = new FixLogParser(Fix44PathHelper.DataDictPath);
+            var views = new List<AsciiView>();
+            lp.OnView = view => views.Add((AsciiView)view);
+            lp.Snapshot(Fix44PathHelper.ReplayPreamblePath);
+            Assert.That(views, Has.Count.EqualTo(1));
         }
     }
 }
