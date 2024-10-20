@@ -43,7 +43,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        async Task SendHeartbeat(string? text = null)
+        private async Task SendHeartbeat(string? text = null)
         {
             var now = m_clock.Current.ToUniversalTime().ToString(CultureInfo.InvariantCulture);
             text ??= $"heartbeat-{now}";
@@ -313,9 +313,8 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        protected void StartTimer()
-        {
-        }
+        protected abstract override Task OnRun();
+
 
         protected override async Task OnMsg(string msgType, IMessageView view)
         {
@@ -336,8 +335,7 @@ namespace PureFix.Transport.Ascii
                     {
                         case MsgType.Logon:
                             {
-                                SetState(SessionState.PeerLogonRejected);
-                                StartTimer();
+                                SetState(SessionState.PeerLogonRejected);                               
                             }
                             break;
                     }

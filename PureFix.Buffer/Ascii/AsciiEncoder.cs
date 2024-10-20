@@ -14,7 +14,7 @@ namespace PureFix.Buffer.Ascii
     public class AsciiEncoder : IMessageEncoder
     {
         public IFixDefinitions Definitions { get; set; }
-        private StoragePool Pool { get; set; }
+        private StoragePool Pool { get; }
         public byte LogDelimiter { get; set; } = AsciiChars.Pipe;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public ISessionDescription SessionDescription { get; }
@@ -43,7 +43,6 @@ namespace PureFix.Buffer.Ascii
 
         public StoragePool.Storage? Encode(string msgType, IFixMessage message)
         {
-            if (msgType == null) return null;
             if (!Definitions.Message.TryGetValue(msgType, out _))
             {
                 return null; 

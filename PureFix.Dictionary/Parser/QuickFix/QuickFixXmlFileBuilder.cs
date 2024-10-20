@@ -13,7 +13,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
         private readonly Dictionary<int, string> _usedTags = [];
         private readonly Dictionary<string, ContainedComponentField> _seenComponents = [];
         private readonly IFixDefinitions _definitions;
-        private int _indent = 2;
+        private readonly int _indent = 2;
 
         public QuickFixXmlFileBuilder(IFixDefinitions definitions)
         {

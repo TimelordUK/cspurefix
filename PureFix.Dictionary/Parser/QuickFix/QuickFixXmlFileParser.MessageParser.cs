@@ -25,7 +25,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
         {
             var atts = fieldElement.AsAttributeDict();
             var name = atts["name"];
-            var msgCat = atts["msgcat"];
+            var msgCat = atts.GetValueOrDefault("msgcat") ?? "";
             var msgType = atts["msgtype"];
          
             var md = new MessageDefinition(name, name, msgType, msgCat, name);

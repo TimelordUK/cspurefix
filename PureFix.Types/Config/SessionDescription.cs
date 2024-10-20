@@ -22,5 +22,7 @@ namespace PureFix.Types.Config
         public int? LastReceivedSeqNum { get; set; }
         public int? BodyLengthChars { get; set; }
         public int? HeartBtInt { get; set; }
+        public int? MsgSeqNum { get; set; }
+        public int? PeerSeqNum { get; set; }
     }
 }

@@ -26,6 +26,7 @@ namespace PureFix.Transport.SocketTransport
             if (m_socket == null) throw new InvalidDataException("no socket to connect on.");
             if (m_iPEndPoint == null) throw new InvalidDataException("no iPEndPoint to connect on.");
 
+            m_logger?.Info($"connecting to {m_iPEndPoint}");
             await m_socket.ConnectAsync(m_iPEndPoint, cancellationToken);
             m_socket.LingerState = new LingerOption(false, 0);
             await AsStream();

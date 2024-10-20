@@ -8,7 +8,14 @@ namespace PureFix.Dictionary.Parser
 {
     public record FieldEnum(string Key, string Description)
     {
-        public string Val => _val ??= Description.UnderscoreToCamelCase();
+        public string Val => _val ??= FromDescription(Description);
         private string? _val;
+
+        private string FromDescription(string description)
+        {
+            if (string.IsNullOrEmpty(description)) return "Unknown";
+            var res = Description.Replace(" ", "").UnderscoreToCamelCase();
+            return res;
+        }
     }
 }

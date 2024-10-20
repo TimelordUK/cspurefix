@@ -119,6 +119,7 @@ namespace PureFix.Transport.Session
             var lo = m_factory.Logon();
             if (lo != null)
             {
+                m_sessionLogger?.Info("sending logon.");
                 await Send(m_requestLogonType, lo);
             }
         }
@@ -259,7 +260,7 @@ namespace PureFix.Transport.Session
         {
             _messages.Clear();
             m_sessionLogger?.Debug($"OnRx {len}");
-            m_parser.ParseFrom(buffer, len, (p, v) => _messages.Add(v), OnFixLog);
+            m_parser.ParseFrom(buffer, len, (_, v) => _messages.Add(v), OnFixLog);
             if (_messages.Count == 0) return;
             var plural = _messages.Count > 1 ? "s" : "";
             m_sessionLogger?.Info($"OnRx received {_messages.Count} message{plural}");
@@ -346,6 +347,7 @@ namespace PureFix.Transport.Session
             m_parentToken = token;
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             m_transport = transport;
+            await OnRun();
             await InitiatorLogon();            
             var dispatcher = new EventDispatcher(m_logFactory, m_q, transport);
             // start sending events to the channel on which this session listens.
@@ -467,7 +469,8 @@ namespace PureFix.Transport.Session
         protected abstract bool OnLogon(IMessageView view, string? user, string? password);
 
         protected abstract Task Tick();
-       public void End()
+        protected abstract Task OnRun();
+        public void End()
         {
         }
     }

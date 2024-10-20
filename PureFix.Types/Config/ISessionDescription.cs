@@ -13,6 +13,8 @@ namespace PureFix.Types.Config
         public string? SenderCompID { get; }
         public string? TargetCompID { get; }
         public bool? ResetSeqNumFlag { get; }
+        public int? MsgSeqNum { get; }
+        public int? PeerSeqNum { get; }
         public string? SenderSubID { get; }
         public string? TargetSubID { get; }
         public string? BeginString { get; }

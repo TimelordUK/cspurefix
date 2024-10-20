@@ -12,6 +12,8 @@ using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Transport.Store;
 using PureFix.Transport.SocketTransport;
+using PureFix.Transport;
+using PureFix.Transport.Recovery;
 
 namespace PureFix.ConsoleApp
 {
@@ -40,12 +42,15 @@ namespace PureFix.ConsoleApp
             _builder.Services.AddSingleton(config);
             _builder.Services.AddSingleton<IMessageParser, AsciiParser>();
             _builder.Services.AddSingleton<IMessageEncoder, AsciiEncoder>();
+            _builder.Services.AddSingleton<IFixLogParser, FixLogParser>();
             _builder.Services.AddSingleton(config.Description);
             _builder.Services.AddSingleton(config.Definitions);
             _builder.Services.AddSingleton(config.Description.Application);
             _builder.Services.AddSingleton(q);
-         
-            _builder.Services.AddSingleton<IFixMsgStore>(new FixMsgMemoryStore(config.Description.SenderCompID));
+            var store = new FixMsgMemoryStore(config.Description.SenderCompID);            
+            _builder.Services.AddSingleton<IFixMsgStore>(store);          
+            _builder.Services.AddSingleton<IFixLogParser, FixLogParser>();
+            _builder.Services.AddSingleton<IFixLogRecovery, FixLogRecovery>();
             if (config.IsInitiator())
             {
                 _builder.Services.AddSingleton<ITcpEntity, TcpInitiatorConnector>();

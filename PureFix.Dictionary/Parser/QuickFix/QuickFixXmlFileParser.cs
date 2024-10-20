@@ -18,10 +18,10 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions)
     {
         var version = doc.Descendants("fix").First();
         var atts = version.AsAttributeDict();
-        var major = int.Parse(atts["major"]);
-        var minor = int.Parse(atts["minor"]);
-        var servicepack = int.Parse(atts["servicepack"]);
-        var description = (major != 5 || servicepack == 0)
+        var major = int.Parse(atts.GetValueOrDefault("major") ?? "0");
+        var minor = int.Parse(atts.GetValueOrDefault("minor") ?? "0");
+        var servicepack = int.Parse(atts.GetValueOrDefault("servicepack") ?? "0");
+        var description = major != 5 || servicepack == 0
             ? $"FIX.{major}.{minor}"
             : $"FIX.{major}.{minor}SP{servicepack}";
         Definitions.SetVersion(VersionUtil.Resolve(description));

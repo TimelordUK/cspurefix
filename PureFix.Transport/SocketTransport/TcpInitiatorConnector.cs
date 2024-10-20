@@ -29,6 +29,9 @@ namespace PureFix.Transport.SocketTransport
             bool connected = false;
             int attempt = 1;
             var retrySecs = 30;
+            
+            m_logger.Info("TcpInitiatorConnector starts.");
+
             var timer = new PeriodicTimer(TimeSpan.FromSeconds(retrySecs));
             while (!cancellationToken.IsCancellationRequested && false == connected)
             {
@@ -46,7 +49,7 @@ namespace PureFix.Transport.SocketTransport
                     ++attempt;
                 }
             }
-            m_logger.Info("connected to endpoint make a new session.");
+            m_logger.Info($"connected to endpoint make a new session.");
             var session = m_sessionFactory.MakeSession();
             m_logger.Info("running the new session.");
             await session.Run(m_client, cancellationToken);

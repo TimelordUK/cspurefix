@@ -3,6 +3,8 @@
 using CommandLine;
 using PureFix.Dictionary.Compiler;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Transport;
+using PureFix.Types;
 
 namespace PureFix.ConsoleApp;
 
@@ -13,7 +15,11 @@ internal partial class Program
         var res = Parser.Default.ParseArguments<CommandOptions>(args);
         var options = res.Value;
 
-        if (options.MsgTypes?.Count() > 0)
+        if (options == null)
+        {
+            Examples();
+        }
+        else if (options.MsgTypes?.Count() > 0 && string.IsNullOrEmpty(options.FixLogPath))
         {
             Trim(options);
         }
@@ -32,61 +38,6 @@ internal partial class Program
         else
         {
             Examples();
-        }
-    }
-
-    private static void Trim(CommandOptions options)
-    {
-        if (string.IsNullOrEmpty(options.DictPath))
-        {
-            Console.WriteLine("please specify a dictionary to genereate.");
-        } else
-        {
-            var definitions = GetDefinitions(options);
-            var builder = new QuickFixXmlFileBuilder(definitions);
-            var encoded = builder.Write(options.MsgTypes.ToArray());
-            Console.WriteLine(encoded);
-        }
-    }
-
-    private static async Task RunApp(CommandOptions options)
-    {
-        switch (options.Application)
-        {
-            case "sk":
-                await Runner.Run(options, MakeSkeletonAppHost);
-                break;
-            default:
-                await Runner.Run(options, MakeTradeCaptureAppHost);
-                break;
-        }
-    }
-
-    private static void Generate(CommandOptions options)
-    {
-        if (string.IsNullOrEmpty(options.DictPath))
-        {
-            Console.WriteLine("please specify a dictionary to genereate.");
-        }
-        else
-        {
-            var definitions = GetDefinitions(options);
-            var generatorOptions = GetGeneratorOptions(definitions, options);
-            var generator = new MessageGenerator(null, definitions, generatorOptions);
-            generator.Process();
-        }
-    }
-
-    private static void ParseLog(CommandOptions options)
-    {
-        var parser = new FixLogParser(options);
-        if (options.Tail)
-        {
-            parser.Tail();
-        }
-        else
-        {
-            parser.Snapshot();
         }
     }
 }

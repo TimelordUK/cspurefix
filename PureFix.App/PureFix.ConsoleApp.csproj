@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,9 +9,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Data\PureFix.Data.csproj" />
-    <ProjectReference Include="..\PureFIix.Test\PureFIix.Test.csproj" />
+    <ProjectReference Include="..\PureFix.Test\PureFix.Test.csproj" />
     <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
     <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
+    <ProjectReference Include="..\PureFix.Test\PureFix.Test.csproj" />
     <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
     <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
   </ItemGroup>

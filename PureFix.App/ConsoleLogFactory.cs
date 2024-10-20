@@ -1,0 +1,109 @@
+﻿using PureFix.Types;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Serilog.Events;
+using ILogger = Serilog.ILogger;
+
+namespace PureFix.ConsoleApp
+{
+    public class ConsoleLogFactory : ILogFactory
+    {
+        private const string _appTemplate = "[{Timestamp:HH:mm:ss.fff zzz}] [{Name}] [{Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}";
+        private const string _fixTemplate = "{Message:lj}{NewLine}";
+        public enum LogFormatTypes
+        {
+            App,
+            Plain
+        }
+
+        public string FileNamePrefix { get; set; }
+        public int MaxSizeBytes { get; set; } = 524288000;
+
+        public ILogger AppLogger { get; set; }
+        public ILogger PlainLogger { get; set; }
+
+        public ConsoleLogFactory(string filePrefix)
+        {
+            FileNamePrefix = filePrefix;
+            AppLogger = MakeApp();
+            PlainLogger = MakePlain();
+        }
+
+        private class Logger : Types.ILogger
+        {
+            private readonly ILogger _logger;
+           
+            public Logger(ILogger logger)
+            {
+                _logger = logger;
+            }
+            public void Debug(string messageTemplate)
+            {
+                _logger.Debug(messageTemplate);
+            }
+
+            public void Error(Exception ex)
+            {
+                _logger.Error(ex.ToString());
+            }
+
+            public void Info(string messageTemplate)
+            {
+                _logger.Information(messageTemplate);
+            }
+
+            public void Warn(string messageTemplate)
+            {
+                _logger.Warning(messageTemplate);
+            }
+        }
+
+        private ILogger MakeApp()
+        {
+            var l = new LoggerConfiguration()
+              .WriteTo.Console(outputTemplate: _appTemplate)
+              .Enrich.WithThreadId()
+              .WriteTo.File($"logs/{FileNamePrefix}-app-log.txt",
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: _appTemplate,
+                fileSizeLimitBytes: MaxSizeBytes,
+                retainedFileCountLimit: 21,
+                rollOnFileSizeLimit: true)
+              .CreateLogger();
+             
+            return l;
+        }
+        //  .ForContext("Name", name);
+        private ILogger MakePlain()
+        {
+            var l = new LoggerConfiguration()
+              .WriteTo.Console(outputTemplate: _fixTemplate).
+                WriteTo.File($"logs/{FileNamePrefix}-fix-log.txt",
+                outputTemplate: _fixTemplate,
+                rollingInterval: RollingInterval.Day,
+                fileSizeLimitBytes: MaxSizeBytes,
+                flushToDiskInterval: TimeSpan.Zero,
+                retainedFileCountLimit: 21,
+                rollOnFileSizeLimit: true)
+              .CreateLogger();
+            return l;
+        }
+
+        public Types.ILogger MakeLogger(string name)
+        {
+            return new Logger(AppLogger.ForContext("Name", name));
+        }
+
+        public Types.ILogger MakePlainLogger(string name)
+        {
+            return new Logger(PlainLogger.ForContext("Name", name));
+        }
+    }
+}

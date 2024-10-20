@@ -8,7 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureFIix.Test.Env;
+using PureFix.Test.Env;
+
 
 namespace PureFix.ConsoleApp
 {
@@ -28,9 +29,8 @@ namespace PureFix.ConsoleApp
             Config = config;
         }
 
-        public async Task Run(BaseAppDI app)
-        {
-          
+        public static async Task Run(BaseAppDI app)
+        {  
             var entity = app.Resolve<ITcpEntity>();
             var cts = new CancellationTokenSource();
 

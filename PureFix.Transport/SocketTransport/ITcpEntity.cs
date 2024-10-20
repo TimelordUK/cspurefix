@@ -8,6 +8,6 @@ namespace PureFix.Transport.SocketTransport
 {
     public interface ITcpEntity
     {
-        public abstract Task Start(CancellationToken cancellationToken);
+        public Task Start(CancellationToken cancellationToken);
     }
 }

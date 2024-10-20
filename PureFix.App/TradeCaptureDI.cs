@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PureFIix.Test.Env.TradeCapture;
 using PureFix.Types.FIX50SP2.QuickFix.Types;
+using PureFix.Test.Env.TradeCapture;
 
 namespace PureFix.ConsoleApp
 {

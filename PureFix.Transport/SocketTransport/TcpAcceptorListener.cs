@@ -27,6 +27,8 @@ namespace PureFix.Transport.SocketTransport
             ArgumentNullException.ThrowIfNull(port);
             ArgumentNullException.ThrowIfNull(m_config);
 
+            m_logger.Info("TcpAcceptorListener starts.");
+
             var endPoint = BaseTcpTransport.MakeEndPoint(host, port.Value);
             ArgumentNullException.ThrowIfNull(endPoint);
             using Socket listener = new(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -40,7 +42,7 @@ namespace PureFix.Transport.SocketTransport
                 var handle = await listener.AcceptAsync(cancellationToken);
                 await Task.Factory.StartNew(async () =>
                 {
-                    m_logger.Info("received a new connection - create a transport");
+                    m_logger.Info($"received a new connection - create a transport. remote = {handle.RemoteEndPoint}");
                     var transport = new ServerSocketTransport(handle, m_config, m_clock, m_logFactory);
                     await transport.AsStream();
                     var session = m_sessionFactory.MakeSession();
