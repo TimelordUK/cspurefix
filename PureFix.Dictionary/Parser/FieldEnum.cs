@@ -14,7 +14,7 @@ namespace PureFix.Dictionary.Parser
         private string FromDescription(string description)
         {
             if (string.IsNullOrEmpty(description)) return "Unknown";
-            var res = Description.Replace(" ", "").UnderscoreToCamelCase();
+            var res = Description.Replace(" ", "_").UnderscoreToCamelCase();
             return res;
         }
     }
