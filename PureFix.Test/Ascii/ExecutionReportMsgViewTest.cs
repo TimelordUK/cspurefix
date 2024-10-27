@@ -1175,7 +1175,7 @@ namespace PureFix.Test.Ascii
                 Assert.That(underlying0, Is.Not.Null);
                 Assert.That(underlying0.UnderlyingSymbol, Is.EqualTo("massa."));
             });
-            
+
             const string expected0 = """
                                      {
                                        "NoUnderlyingSecurityAltID": [
@@ -1226,5 +1226,16 @@ namespace PureFix.Test.Ascii
                 });
             });
         }
+
+        [Test]
+        public void Field_Fetches_With_Container_Test()
+        {
+            var definitions = _testEntity.Definitions;
+            var er = definitions.Message.GetValueOrDefault("E");
+            Assert.That(er, Is.Not.Null);
+            var pf = er.TagToField.GetValueOrDefault(8);
+        }
     }
 }
+
+

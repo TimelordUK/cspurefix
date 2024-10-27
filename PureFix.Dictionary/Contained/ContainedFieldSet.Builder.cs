@@ -159,7 +159,7 @@ namespace PureFix.Dictionary.Contained
             for (var i = 0; i < tagsBelow.Count; i++)
             {
                 var tag = tagsBelow[i];
-                _tagToField[tag] = field;
+                _tagToField[tag] = (set, field);
             }
         }
 

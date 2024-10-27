@@ -118,7 +118,7 @@ namespace PureFix.Buffer.Segment
             }
             else if (Set.TagToField.TryGetValue(tag, out var cf))
             {
-                CurrentField = cf;
+                CurrentField = cf.field;
             }
         }
 

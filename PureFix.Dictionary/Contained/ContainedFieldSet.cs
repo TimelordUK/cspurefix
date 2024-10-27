@@ -29,7 +29,7 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<int, ContainedSimpleField> _localTag = [];
         protected readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
         protected readonly Dictionary<int, ContainedSimpleField> _tagToSimple = [];
-        protected readonly Dictionary<int, ContainedField> _tagToField = [];
+        protected readonly Dictionary<int, (IContainedSet parent, ContainedField field)> _tagToField = [];
         protected readonly Dictionary<string, ContainedField> _localNameToField = [];
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = [];
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = [];
@@ -88,7 +88,7 @@ namespace PureFix.Dictionary.Contained
         /// <summary>
         /// direct any tag contained within this set to field one level down where it belongs.
         /// </summary>
-        public IReadOnlyDictionary<int, ContainedField> TagToField => _tagToField;
+        public IReadOnlyDictionary<int, (IContainedSet parent, ContainedField field)> TagToField => _tagToField;
 
         /// <summary>
         /// only repository directly in this set indexed by name
@@ -159,7 +159,7 @@ namespace PureFix.Dictionary.Contained
 
             if (TagToField.TryGetValue(tag, out var f))
             {
-                return f.Name;
+                return f.field.Name;
             }
 
             return $"{tag}";
