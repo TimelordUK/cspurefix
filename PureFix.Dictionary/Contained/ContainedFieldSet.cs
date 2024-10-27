@@ -1,10 +1,7 @@
 ﻿using PureFix.Dictionary.Parser;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +20,7 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<string, IContainedSet> _components = [];
         protected readonly Dictionary<string, ContainedSimpleField> _simple = [];
         protected readonly List<ContainedField> _fields = [];
-        protected readonly Dictionary<int, bool> _containedTag = [];
+        protected readonly Dictionary<int, IContainedSet> _containedTag = [];
         protected readonly List<int> _flattendTag = [];
         protected readonly Dictionary<int, bool> _containedLength = [];
         protected readonly Dictionary<int, ContainedSimpleField> _localTag = [];
@@ -58,7 +55,7 @@ namespace PureFix.Dictionary.Contained
         /// <summary>
         /// any tag at any level i.e. does this set contain a tag
         /// </summary>
-        public IReadOnlyDictionary<int, bool> ContainedTag => _containedTag;
+        public IReadOnlyDictionary<int, IContainedSet> ContainedTag => _containedTag;
 
         /// <summary>
         /// any tag at any level ordered i.e. all tags flattened to list

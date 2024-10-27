@@ -33,7 +33,7 @@ namespace PureFix.Dictionary.Contained
         /**
          * any tag at any level i.e. does this set contain a tag
          */
-        IReadOnlyDictionary<int, bool> ContainedTag { get; }
+        IReadOnlyDictionary<int, IContainedSet> ContainedTag { get; }
 
         /**
          * any tag at any level ordered i.e. all tags flattened to list

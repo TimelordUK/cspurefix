@@ -1231,9 +1231,15 @@ namespace PureFix.Test.Ascii
         public void Field_Fetches_With_Container_Test()
         {
             var definitions = _testEntity.Definitions;
-            var er = definitions.Message.GetValueOrDefault("E");
+            var er = definitions.Message.GetValueOrDefault(MsgType.ExecutionReport);
             Assert.That(er, Is.Not.Null);
-            var pf = er.TagToField.GetValueOrDefault(8);
+            var beginstring = er.TagToField.GetValueOrDefault((int)MsgTag.BeginString);
+            Assert.That(beginstring.parent, Is.Not.Null);
+            Assert.That(beginstring.parent.Name, Is.EqualTo("StandardHeader"));
+
+            var securityId = er.TagToField.GetValueOrDefault((int)MsgTag.SecurityID);
+            Assert.That(securityId.parent, Is.Not.Null);
+            Assert.That(securityId.parent.Name, Is.EqualTo("Instrument"));
         }
     }
 }

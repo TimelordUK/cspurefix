@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -127,7 +128,7 @@ namespace PureFix.Dictionary.Contained
                 if (nof != null)
                 {
                     var tag = nof.Tag;
-                    _containedTag[tag] = true;
+                    _containedTag[tag] = definition;
                     _flattendTag.Add(tag);
                 }
 
@@ -186,7 +187,7 @@ namespace PureFix.Dictionary.Contained
 
             var tag = field.Definition.Tag;
             _simple[field.Name] = field;
-            _containedTag[tag] = true;
+            _containedTag[tag] = parent;
             _flattendTag.Add(tag);
             _tagToSimple[tag] = field;
         }
