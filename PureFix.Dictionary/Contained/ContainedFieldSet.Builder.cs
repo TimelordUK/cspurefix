@@ -85,6 +85,7 @@ namespace PureFix.Dictionary.Contained
 
             var tag = definition.Tag;
             _localTag[tag] = field;
+            _tagToField[tag] = (this, field);
             if (field.Required)
             {
                 _localRequired[tag] = field;
@@ -156,6 +157,7 @@ namespace PureFix.Dictionary.Contained
 
         private void MapAllBelow(ContainedFieldSet set, ContainedField field)
         {
+            _nameToSet[set.Name] = set;
             var tagsBelow = set.Keys();
             for (var i = 0; i < tagsBelow.Count; i++)
             {

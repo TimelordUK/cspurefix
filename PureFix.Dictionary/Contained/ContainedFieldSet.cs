@@ -27,6 +27,7 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
         protected readonly Dictionary<int, ContainedSimpleField> _tagToSimple = [];
         protected readonly Dictionary<int, (IContainedSet parent, ContainedField field)> _tagToField = [];
+        protected readonly Dictionary<string, IContainedSet> _nameToSet = [];
         protected readonly Dictionary<string, ContainedField> _localNameToField = [];
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = [];
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = [];
@@ -101,6 +102,8 @@ namespace PureFix.Dictionary.Contained
         /// all attributes in order of being declared
         /// </summary>
         public IReadOnlyList<ContainedSimpleField> LocalAttribute => _localAttribute;
+
+        public IReadOnlyDictionary<string, IContainedSet> NameToSet => _nameToSet;
 
         /// <summary>
         /// at any level on this set, first declared simple field

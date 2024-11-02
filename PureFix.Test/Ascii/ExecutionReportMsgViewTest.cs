@@ -1241,6 +1241,24 @@ namespace PureFix.Test.Ascii
             Assert.That(securityId.parent, Is.Not.Null);
             Assert.That(securityId.parent.Name, Is.EqualTo("Instrument"));
         }
+
+        [Test]
+        public void Structure_Parse_ExecReport()
+        {
+            var definitions = _testEntity.Definitions;
+            var er = definitions.Message.GetValueOrDefault(MsgType.ExecutionReport);
+            Assert.That(er, Is.Not.Null);
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var mv = _views[0];
+            var tags = mv.Tags;
+            Assert.That(tags, Is.Not.Null);
+            var s2 = new Structure2(er, tags, tags.NextTagPos - 1);
+            var heder = s2.GetInstance("StandardHeader");
+            var ins = s2.GetInstance("Instrument");
+            var sag = s2.GetInstance("SecAltIDGrp");
+            
+        }
     }
 }
 

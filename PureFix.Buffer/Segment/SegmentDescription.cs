@@ -6,11 +6,38 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
+using PureFix.Types;
 
 namespace PureFix.Buffer.Segment
 {
+    public class SegmentView(string name, IContainedSet set)
+    {
+        public string Name { get; } = name;
+        public int EndTag { get; private set; }
+        public int EndPosition { get; private set; }
+        public int StartPosition { get; private set; }
+        public int StartTag { get; private set; } = -1;
+        public IContainedSet Set { get; } = set;
+        private readonly List<TagPos> _tags = [];
+        public IReadOnlyList<TagPos> Tags => _tags;
+
+        public void Add(TagPos tag)
+        {
+            if (StartTag < 0)
+            {
+                StartTag = tag.Tag;
+                StartPosition = tag.Position;
+            }
+            _tags.Add(tag);
+            EndPosition = tag.Position;
+            EndTag = tag.Tag;
+        }
+    }
+
+
     public class SegmentDescription(
         string? name,
         int startTag,
@@ -33,6 +60,7 @@ namespace PureFix.Buffer.Segment
         public ContainedField? CurrentField { get; private set; }
         private List<int>? _delimterPositions;
         private List<int>? _containedDelimiterPositions;
+        private IReadOnlyList<TagPos>? _fragmentedTags;
         public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)Array.Empty<int>();
 
         public override string ToString()
@@ -141,5 +169,7 @@ namespace PureFix.Buffer.Segment
             EndPosition = pos;
             EndTag = endTag;
         }
+
+
     }
 }

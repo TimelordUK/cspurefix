@@ -80,6 +80,8 @@ namespace PureFix.Dictionary.Contained
          */
         IReadOnlyList<ContainedSimpleField> LocalAttribute { get; }
 
+        IReadOnlyDictionary<string, IContainedSet> NameToSet { get; }
+
         ContainedSetType Type { get; }
         string Name { get; }
         string? Category { get; }
