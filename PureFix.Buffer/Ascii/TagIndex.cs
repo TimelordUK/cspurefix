@@ -17,9 +17,7 @@ namespace PureFix.Buffer.Ascii
             Set = set;
             _sortedTagPosForwards = tags[..tags.Length];
             Array.Sort(_sortedTagPosForwards, TagPos.Compare);
-            _tagSpans = new Dictionary<int, Range>(tags.Length);
-
-            Index();
+            _tagSpans = GetSpans(_sortedTagPosForwards);
             CalcGroups(tags);
         }
 
@@ -28,7 +26,11 @@ namespace PureFix.Buffer.Ascii
             for (var i = 0; i < tags.Length; ++i)
             {
                 var tag = tags[i];
-                var (parent, field) = Set.TagToField.GetValueOrDefault(tag.Tag);
+                var (parent, _) = Set.TagToField.GetValueOrDefault(tag.Tag);
+                if (_tagSpans.TryGetValue(tag.Tag, out var range) && range.End.Value > range.Start.Value)
+                {
+                    _repeated.Add(tag.Tag);
+                }
                 if (parent == null) continue;
                 _names.Add(parent.Name);
                 if (!_tag2delim.ContainsKey(tag.Tag) && Set.TagToSimpleDefinition.TryGetValue(tag.Tag, out var sd) && sd.Type == "NUMINGROUP")
@@ -76,23 +78,6 @@ namespace PureFix.Buffer.Ascii
                 }
             }
             return tagSpans;
-        }
-
-        private void Index()
-        {
-            for (var i = 0; i < _sortedTagPosForwards.Length; ++i)
-            {
-                var t = _sortedTagPosForwards[i];
-                if (_tagSpans.TryGetValue(t.Tag, out var c))
-                {
-                    _tagSpans[t.Tag] = new Range(c.Start, i);
-                    _repeated.Add(t.Tag);
-                }
-                else
-                {
-                    _tagSpans[t.Tag] = new Range(i, i);
-                }
-            }
         }
 
         public SegmentView? GetInstance(string name)
