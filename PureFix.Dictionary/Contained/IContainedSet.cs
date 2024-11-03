@@ -1,4 +1,5 @@
-﻿using PureFix.Dictionary.Parser;
+﻿using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -59,6 +60,8 @@ namespace PureFix.Dictionary.Contained
          * all tags contained within this field set flattened from all levels
          */
         IReadOnlyDictionary<int, ContainedSimpleField> TagToSimple { get; }
+
+        IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimpleDefinition { get; }
 
         /**
          * direct any tag contained within this set to field one level down where it belongs.

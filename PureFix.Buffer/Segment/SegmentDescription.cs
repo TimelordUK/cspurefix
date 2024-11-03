@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -11,14 +9,15 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
 
+
 namespace PureFix.Buffer.Segment
 {
     public class SegmentView(string name, IContainedSet set)
     {
         public string Name { get; } = name;
         public int EndTag { get; private set; }
-        public int EndPosition { get; private set; }
-        public int StartPosition { get; private set; }
+        public int EndPosition { get; private set; } = int.MinValue;
+        public int StartPosition { get; private set; } = int.MaxValue;
         public int StartTag { get; private set; } = -1;
         public IContainedSet Set { get; } = set;
         private readonly List<TagPos> _tags = [];
@@ -26,14 +25,19 @@ namespace PureFix.Buffer.Segment
 
         public void Add(TagPos tag)
         {
-            if (StartTag < 0)
+            if (tag.Position < StartPosition)
             {
-                StartTag = tag.Tag;
                 StartPosition = tag.Position;
+                StartTag = tag.Tag; 
             }
+
+            if (tag.Position > EndPosition)
+            {
+                EndPosition = tag.Position;
+                EndTag = tag.Tag;
+            }
+
             _tags.Add(tag);
-            EndPosition = tag.Position;
-            EndTag = tag.Tag;
         }
     }
 
@@ -51,16 +55,18 @@ namespace PureFix.Buffer.Segment
         public int EndTag { get; private set; }
         public int? DelimiterTag { get; private set; }
         public int EndPosition { get; set; }
-        public int StartPosition { get; } = startPosition;
+        public int StartPosition { get; private set; } = startPosition;
         public int Depth { get; } = depth;
-        public int StartTag { get; } = startTag;
+        public int StartTag { get; private set; } = startTag;
         public SegmentType Type { get; } = type;
-        public IContainedSet? Set { get; } = set;
+        public IContainedSet? Set { get; } = set; 
+        public SegmentView? SegmentView => _segmentView;
 
         public ContainedField? CurrentField { get; private set; }
         private List<int>? _delimterPositions;
         private List<int>? _containedDelimiterPositions;
-        private IReadOnlyList<TagPos>? _fragmentedTags;
+        private SegmentView? _segmentView;
+
         public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)Array.Empty<int>();
 
         public override string ToString()
@@ -153,7 +159,8 @@ namespace PureFix.Buffer.Segment
         public bool GroupAddDelimiter(int tag, int position)
         {
             var delimiter = false;
-            if (Set is GroupFieldDefinition) {
+            if (Set is GroupFieldDefinition)
+            {
                 if (DelimiterTag != null && tag == DelimiterTag)
                 {
                     delimiter = AddDelimiterPosition(position);
@@ -170,6 +177,9 @@ namespace PureFix.Buffer.Segment
             EndTag = endTag;
         }
 
-
+        public void Add(SegmentView segmentView)
+        {
+            _segmentView = segmentView;
+        }
     }
 }

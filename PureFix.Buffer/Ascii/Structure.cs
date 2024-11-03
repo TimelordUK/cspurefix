@@ -1,27 +1,82 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
+using PureFix.Dictionary.Definition;
 using PureFix.Types;
 
 
 namespace PureFix.Buffer.Ascii
 {
-    public class Structure2
+    public class TagIndex
     {
-        private readonly TagPos[] _sortedTagPosForwards;
-        private readonly Dictionary<int, Range> _tagSpans;
-        private readonly Dictionary<string, SegmentView> _cache = [];
-        private readonly SegmentView _top;
-
-
-        public IReadOnlyList<SegmentView>? GetInstances(string name)
+        public TagIndex(IContainedSet set, TagPos[] tags)
         {
-            return new List<SegmentView>();
+            _set = set;
+            _sortedTagPosForwards = tags[..tags.Length];
+            Array.Sort(_sortedTagPosForwards, TagPos.Compare);
+            _tagSpans = new Dictionary<int, Range>(tags.Length);
+
+            Index();
+            CalcGroups(tags);
+        }
+
+        private void CalcGroups(TagPos[] tags)
+        {
+            for (var i = 0; i < tags.Length; ++i)
+            {
+                var tag = tags[i];
+                var (parent, field) = _set.TagToField.GetValueOrDefault(tag.Tag);
+                _names.Add(parent.Name);
+                if (!_tag2delim.ContainsKey(tag.Tag) && _set.TagToSimpleDefinition.TryGetValue(tag.Tag, out var sd) && sd.Type == "NUMINGROUP")
+                {
+                    if (parent.Fields.Count == 1)
+                    {
+                        _componentGroupWrappers.Add(parent.Name);
+                    }
+                    CalcDelim(tags, tag);
+                }
+            }
+        }
+
+        private void CalcDelim(TagPos[] tags, TagPos tag)
+        {
+            var delimPos = Math.Min(tag.Position + 1, tags.Length - 1);
+            var delimTag = tags[delimPos];
+            if (_tagSpans.TryGetValue(delimTag.Tag, out var _))
+            {
+                _tag2delim[tag.Tag] = delimTag.Tag;
+                _noOfTag2NoOfPos[tag.Tag] = tag;
+                if (_set.TagToField.TryGetValue(delimTag.Tag, out var pf))
+                {
+                    _groups[pf.field.Name] = (GroupFieldDefinition)pf.parent;
+                }
+            }
+        }
+    
+
+        private void Index()
+        {
+            for (var i = 0; i < _sortedTagPosForwards.Length; ++i)
+            {
+                var t = _sortedTagPosForwards[i];
+                if (_tagSpans.TryGetValue(t.Tag, out var c))
+                {
+                    _tagSpans[t.Tag] = new Range(c.Start, i);
+                    _repeated.Add(t.Tag);
+                }
+                else
+                {
+                    _tagSpans[t.Tag] = new Range(i, i);
+                }
+            }
         }
 
         public SegmentView? GetInstance(string name)
@@ -31,7 +86,7 @@ namespace PureFix.Buffer.Ascii
                 return singleton;
             }
 
-            var s = _top.Set.NameToSet.GetValueOrDefault(name);
+            var s = _set.NameToSet.GetValueOrDefault(name);
             if (s == null) return null;
             var res = new SegmentView(name, s);
             for (var x = 0; x < s.FlattenedTag.Count; ++x)
@@ -56,44 +111,36 @@ namespace PureFix.Buffer.Ascii
             return res;
         }
 
-        public Structure2(IContainedSet set, Tags tags, int last)
+        public IReadOnlySet<string> Names { get { return _names; } }
+        public IContainedSet Set { get { return _set; } }
+        public IReadOnlyDictionary<int, Range> TagSpans => _tagSpans;
+        public IReadOnlyDictionary<string, GroupFieldDefinition> Groups => _groups;
+        public IReadOnlyDictionary<int, TagPos> NoOfTag2NoOfPos => _noOfTag2NoOfPos;
+        public IReadOnlyDictionary<int, int> Tag2delim => _tag2delim;
+        public IReadOnlySet<int> Repeated => _repeated;
+        public IReadOnlySet<string> ComponentGroupWrappers => _componentGroupWrappers;
+
+        public TagPos this[int i]
         {
-            var msg = new SegmentView(set.Name, set);
-            _cache[set.Name] = msg;
-            for (var i = 0; i <= last; ++i)
+            get
             {
-                var tag = tags[i];
-                msg.Add(tag);
-            }
-
-            _top = msg;
-            _sortedTagPosForwards = tags[..last];
-            Array.Sort(_sortedTagPosForwards, TagPos.Compare);
-
-            // We can make a worse case guess at the size of span dictionary
-            // But it'll save reallocating 
-            _tagSpans = new Dictionary<int, Range>(_sortedTagPosForwards.Length);
-
-           Index();
-        }
-
-        private void Index()
-        {
-            for (var i = 0; i < _sortedTagPosForwards.Length; ++i)
-            {
-                var t = _sortedTagPosForwards[i];
-                if (_tagSpans.TryGetValue(t.Tag, out var c))
-                {
-                    _tagSpans[t.Tag] = new Range(c.Start, i);
-                }
-                else
-                {
-                    _tagSpans[t.Tag] = new Range(i, i);
-                }
+                return _sortedTagPosForwards[i];
             }
         }
+
+        private readonly TagPos[] _sortedTagPosForwards;
+        private readonly Dictionary<int, Range> _tagSpans;
+        private readonly Dictionary<int, TagPos> _noOfTag2NoOfPos = [];
+        private readonly Dictionary<int, int> _tag2delim = [];
+        private readonly HashSet<int> _repeated = [];
+        private readonly HashSet<string> _names = [];
+        private readonly Dictionary<string, GroupFieldDefinition> _groups = [];
+        private readonly HashSet<string> _componentGroupWrappers = [];
+        private readonly IContainedSet _set;
+        private readonly Dictionary<string, SegmentView> _cache = [];
     }
 
+ 
     public readonly record struct Structure 
     {
         private readonly Dictionary<string, SegmentDescription>? _singletons;

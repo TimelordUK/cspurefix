@@ -1,4 +1,5 @@
-﻿using PureFix.Dictionary.Parser;
+﻿using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 using System;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<int, ContainedSimpleField> _localTag = [];
         protected readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
         protected readonly Dictionary<int, ContainedSimpleField> _tagToSimple = [];
+        protected readonly Dictionary<int, SimpleFieldDefinition> _tagToSimpleDefinition = [];
         protected readonly Dictionary<int, (IContainedSet parent, ContainedField field)> _tagToField = [];
         protected readonly Dictionary<string, IContainedSet> _nameToSet = [];
         protected readonly Dictionary<string, ContainedField> _localNameToField = [];
@@ -82,6 +84,7 @@ namespace PureFix.Dictionary.Contained
         /// all tags contained within this field set flattened from all levels
         /// </summary>
         public IReadOnlyDictionary<int, ContainedSimpleField> TagToSimple => _tagToSimple;
+        public IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimpleDefinition => _tagToSimpleDefinition;
 
         /// <summary>
         /// direct any tag contained within this set to field one level down where it belongs.

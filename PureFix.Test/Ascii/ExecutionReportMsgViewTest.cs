@@ -10,6 +10,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 using DIs = NUnit.DeepObjectCompare.Is;
 using PureFix.Types;
 using PureFix.Test.Env;
+using System.Security.Cryptography;
 
 namespace PureFix.Test.Ascii
 {
@@ -1253,11 +1254,15 @@ namespace PureFix.Test.Ascii
             var mv = _views[0];
             var tags = mv.Tags;
             Assert.That(tags, Is.Not.Null);
-            var s2 = new Structure2(er, tags, tags.NextTagPos - 1);
-            var heder = s2.GetInstance("StandardHeader");
-            var ins = s2.GetInstance("Instrument");
-            var sag = s2.GetInstance("SecAltIDGrp");
+            var sm = new AsciiSegmentParser(definitions);
+            var s2 = sm.Parse(MsgType.ExecutionReport, tags, tags.Count);
             
+            var heder = s2.Value.GetInstance("StandardHeader");
+            var ins = s2.Value.GetInstance("Instrument");
+            var sag = s2.Value.GetInstance("SecAltIDGrp");
+            var parties = s2.Value.GetInstance("Parties");
+            var noPartyIDs = s2.Value.GetInstance("NoPartyIDs");
+
         }
     }
 }

@@ -46,8 +46,17 @@ namespace PureFix.Buffer.Ascii
             var end = Segment.EndPosition + 1;
             var start = Segment.StartPosition;
 
-            // slice out the section of tags which represents this view 
-            SortedTagPosForwards = Structure.Value.Tags.Slice(start, end);
+            // these may not have tags all in a slice, so need to take the view which
+            // is all tags within the component regardless of where they are.
+            if (Segment.SegmentView != null)
+            {
+                SortedTagPosForwards = Segment.SegmentView.Tags.ToArray();
+            }
+            else
+            {
+                // slice out the section of tags which represents this view 
+                SortedTagPosForwards = Structure.Value.Tags.Slice(start, end);
+            }
             Array.Sort(SortedTagPosForwards, TagPos.Compare);
             
             // We can make a worse case guess at the size of span dictionary

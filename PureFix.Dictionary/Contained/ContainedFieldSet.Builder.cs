@@ -130,6 +130,10 @@ namespace PureFix.Dictionary.Contained
                 {
                     var tag = nof.Tag;
                     _containedTag[tag] = definition;
+                    if (definition.NoOfField != null)
+                    {
+                        _tagToSimpleDefinition[tag] = definition.NoOfField;
+                    }
                     _flattendTag.Add(tag);
                 }
 
@@ -192,6 +196,7 @@ namespace PureFix.Dictionary.Contained
             _containedTag[tag] = parent;
             _flattendTag.Add(tag);
             _tagToSimple[tag] = field;
+            _tagToSimpleDefinition[tag] = field.Definition;
         }
 
         private void AddAllFields(ContainedFieldSet containedField)
