@@ -66,7 +66,7 @@ namespace PureFix.Dictionary.Contained
         /**
          * direct any tag contained within this set to field one level down where it belongs.
          */
-        IReadOnlyDictionary<int, (IContainedSet parent, ContainedField field)> TagToField { get; }
+        IReadOnlyDictionary<int, (IContainedSet? parent, ContainedField field)> TagToField { get; }
 
         /**
          * only repository directly in this set indexed by name
