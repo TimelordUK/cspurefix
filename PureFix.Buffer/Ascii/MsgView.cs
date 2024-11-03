@@ -44,23 +44,7 @@ namespace PureFix.Buffer.Ascii
             if (Segment == null) return;
 
             SortedTagPosForwards = Structure.Value.GetSortedTags(Segment);
-
-            // We can make a worse case guess at the size of span dictionary
-            // But it'll save reallocating 
-            TagSpans = new Dictionary<int, Range>(SortedTagPosForwards.Length);
-
-            for (var i = 0; i < SortedTagPosForwards.Length; ++i)
-            {
-                var t = SortedTagPosForwards[i];
-                if (TagSpans.TryGetValue(t.Tag, out var c))
-                {
-                    TagSpans[t.Tag] = new Range(c.Start, i);
-                }
-                else
-                {
-                    TagSpans[t.Tag] = new Range(i, i);
-                }
-            }
+            TagSpans = TagIndex.GetSpans(SortedTagPosForwards);
         }
 
         // "BeginString" or 8

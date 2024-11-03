@@ -57,6 +57,27 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
+        public static Dictionary<int, Range> GetSpans(TagPos[] sortedTagPosForwards)
+        {
+            // We can make a worse case guess at the size of span dictionary
+            // But it'll save reallocating 
+            var tagSpans = new Dictionary<int, Range>(sortedTagPosForwards.Length);
+
+            for (var i = 0; i < sortedTagPosForwards.Length; ++i)
+            {
+                var t = sortedTagPosForwards[i];
+                if (tagSpans.TryGetValue(t.Tag, out var c))
+                {
+                    tagSpans[t.Tag] = new Range(c.Start, i);
+                }
+                else
+                {
+                    tagSpans[t.Tag] = new Range(i, i);
+                }
+            }
+            return tagSpans;
+        }
+
         private void Index()
         {
             for (var i = 0; i < _sortedTagPosForwards.Length; ++i)
