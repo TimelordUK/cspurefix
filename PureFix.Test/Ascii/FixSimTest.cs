@@ -84,7 +84,9 @@ R   1   QuoteRequest
                   "ExecType": "2",
                   "OrdStatus": "2",
                   "Instrument": {
-                    "SecurityIDSource": "5"
+                    "SecurityIDSource": "5",
+                    "Symbol": "VOD.L",
+                    "SecurityID": "VOD.L"
                   },
                   "Side": "1",
                   "OrderQtyData": {

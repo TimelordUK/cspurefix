@@ -34,6 +34,7 @@ namespace PureFix.Buffer.Ascii
             {
                 var tag = tags[i];
                 var (parent, field) = _set.TagToField.GetValueOrDefault(tag.Tag);
+                if (parent == null) continue;
                 _names.Add(parent.Name);
                 if (!_tag2delim.ContainsKey(tag.Tag) && _set.TagToSimpleDefinition.TryGetValue(tag.Tag, out var sd) && sd.Type == "NUMINGROUP")
                 {

@@ -45,7 +45,7 @@ namespace PureFix.Buffer.Ascii
 
         private static void Fragments(Context context, TagIndex ti)
         {
-            for (var i = 1; i < context.Segments.Count; ++i)
+            for (var i = 1; i < context.Segments.Count -1; ++i)
             {
                 var seg = context.Segments[i];
                 if (seg.Depth != 1) continue;
