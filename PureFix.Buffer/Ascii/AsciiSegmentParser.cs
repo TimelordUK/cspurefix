@@ -10,7 +10,7 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Types;
-using static PureFix.Buffer.Ascii.AsciiSegmentParser;
+
 
 namespace PureFix.Buffer.Ascii
 {
@@ -52,6 +52,7 @@ namespace PureFix.Buffer.Ascii
                 if (seg.Name == null) continue;
                 // case where there is a component with one field which wraps the group - these will all be self contained.
                 if (ti.ComponentGroupWrappers.Contains(seg.Name)) continue;
+                // for example instrument where tags may be scattered and not all contiguous, compute a view rather than a slice.
                 var v = ti.GetInstance(seg.Name);
                 if (v != null)
                 {
