@@ -46,10 +46,10 @@ namespace PureFix.Buffer.Ascii
             var end = Segment.EndPosition + 1;
             var start = Segment.StartPosition;
 
-            // these may not have tags all in a slice, so need to take the view which
-            // is all tags within the component regardless of where they are.
             if (Segment.SegmentView != null)
             {
+                // these may not have tags all in a slice, so need to take the view which
+                // is all tags within the component regardless of where they are.
                 SortedTagPosForwards = Segment.SegmentView.Tags.ToArray();
             }
             else

@@ -180,6 +180,10 @@ namespace PureFix.Buffer.Segment
         public void Add(SegmentView segmentView)
         {
             _segmentView = segmentView;
+            EndPosition = segmentView.EndPosition;
+            StartPosition = segmentView.StartPosition;
+            EndTag = segmentView.EndTag;
+            StartTag = segmentView.StartTag;
         }
     }
 }
