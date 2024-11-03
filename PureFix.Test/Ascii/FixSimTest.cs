@@ -116,7 +116,7 @@ R   1   QuoteRequest
         [Test]
         public void Parse_Execution_Report()
         {
-            var v = _views.Where(v => v.MsgType() == "8").FirstOrDefault();
+            var v = _views.FirstOrDefault(v => v.MsgType() == MsgType.ExecutionReport);
             Assert.That(v, Is.Not.Null);
             var factory = new FixMessageFactory();
             var execReport = (ExecutionReport)factory.ToFixMessage(v);

@@ -45,17 +45,21 @@ namespace PureFix.Buffer.Ascii
 
         private static void Fragments(Context context, TagIndex ti)
         {
+            var seen = new HashSet<string>();
             for (var i = 1; i < context.Segments.Count -1; ++i)
             {
                 var seg = context.Segments[i];
                 if (seg.Depth != 1) continue;
                 if (seg.Name == null) continue;
+                if (seg.SegmentView != null) continue;
+                if (seen.Contains(seg.Name)) continue;
                 // case where there is a component with one field which wraps the group - these will all be self contained.
                 if (ti.ComponentGroupWrappers.Contains(seg.Name)) continue;
                 // for example instrument where tags may be scattered and not all contiguous, compute a view rather than a slice.
                 var v = ti.GetInstance(seg.Name);
                 if (v != null)
                 {
+                    seen.Add(seg.Name);
                     seg.Add(v);
                 }
             }
