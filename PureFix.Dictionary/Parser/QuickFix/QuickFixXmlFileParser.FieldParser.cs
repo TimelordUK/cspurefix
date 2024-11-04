@@ -72,7 +72,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
                 var atts = value.AsAttributeDict();
                 var enumName = atts["enum"];
                 var description = atts.GetValueOrDefault("description") ?? "";
-                result ??= new List<FieldEnum>();
+                result ??= [];
                 result.Add(new FieldEnum(enumName, description));
             }
             return result;

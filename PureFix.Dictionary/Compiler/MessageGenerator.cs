@@ -465,37 +465,20 @@ namespace PureFix.Dictionary.Compiler
 
             var generator = new CodeGenerator();
 
-            if(enumName == "MsgTypeValues")
-            {
-                Console.WriteLine();
-            }
-
             using(generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
             using(generator.BeginBlock($"public static class {enumName}"))
             {
                 var hasDuplicates = HasDuplicates(enums);
-
+                HashSet<string> keys =[];
                 foreach(var field in enums.Values)
                 {
-                    var value = tagType switch
-                    {
-                        TagType.String  => $"\"{field.Key}\"",
-                        TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
-                        _               => field.Key.ToString()
-                    };
-
+                    var value = GetENumValue(tagType, field);
                     // FIX5 has some duplicate enum values that differ only by case (seriously!)
                     // So we'll need some special handling for the enum values
-                    var constantName = field.Description.UnderscoreToCamelCase();
-                    if(hasDuplicates && csharpBaseType == "string")
-                    {
-                        constantName = new string(field.Key.Where(c => Char.IsLetterOrDigit(c)).ToArray());;
-                    }
-
-                    // Some descriptions start with a number, which won't map to a valid C# symbol
-                    if(char.IsDigit(constantName[0])) constantName = "_" + constantName;
-
+                    var constantName = GetConstantName(field, hasDuplicates, csharpBaseType);
+                    if (keys.Contains(constantName)) continue;
                     generator.WriteLine($"public const {csharpBaseType} {constantName} = {value};");
+                    keys.Add(constantName);
                 }
             }
 
@@ -503,7 +486,31 @@ namespace PureFix.Dictionary.Compiler
             WriteFile(filename, code);
         }
 
-        private bool HasDuplicates(IReadOnlyDictionary<string, FieldEnum> enums)
+        private static string GetENumValue(TagType tagType, FieldEnum field)
+        {
+            var value = tagType switch
+            {
+                TagType.String => $"\"{field.Key}\"",
+                TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
+                _ => field.Key
+            };
+            return value;
+        }
+
+        private static string GetConstantName(FieldEnum field, bool hasDuplicates, string csharpBaseType)
+        {
+            var constantName = field.Description.UnderscoreToCamelCase();
+            if (hasDuplicates && csharpBaseType == "string")
+            {
+                constantName = new string(field.Key.Where(char.IsLetterOrDigit).ToArray()); ;
+            }
+
+            // Some descriptions start with a number, which won't map to a valid C# symbol
+            if (char.IsDigit(constantName[0])) constantName = "_" + constantName;
+            return constantName;
+        }
+
+        private static bool HasDuplicates(IReadOnlyDictionary<string, FieldEnum> enums)
         {
             var uniqueItems = enums.Values.Select(e => e.Description).ToHashSet(StringComparer.OrdinalIgnoreCase);
             return uniqueItems.Count != enums.Count;

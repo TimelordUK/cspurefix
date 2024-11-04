@@ -57,11 +57,9 @@ namespace PureFix.Buffer.Ascii
                 if (ti.ComponentGroupWrappers.Contains(seg.Name)) continue;
                 // for example instrument where tags may be scattered and not all contiguous, compute a view rather than a slice.
                 var v = ti.GetInstance(seg.Name);
-                if (v != null)
-                {
-                    seen.Add(seg.Name);
-                    seg.Add(v);
-                }
+                if (v == null) continue;
+                seen.Add(seg.Name);
+                seg.Add(v);
             }
         }
 
