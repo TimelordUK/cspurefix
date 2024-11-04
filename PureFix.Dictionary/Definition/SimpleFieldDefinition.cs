@@ -29,6 +29,7 @@ namespace PureFix.Dictionary.Definition
         public int Count => _enums?.Count ?? 0;
         public IReadOnlySet<string>? EnumVals => _enumVals;
         public IReadOnlyDictionary<string, FieldEnum>? Enums => _enums;
+        public bool IsNumInGroup => Type == "NUMINGROUP";
 
         // var sd = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
         public SimpleFieldDefinition(string name, string? cat, string type, int tag, List<FieldEnum>? enums) : this(name, null, cat, null, type, name, tag, enums)

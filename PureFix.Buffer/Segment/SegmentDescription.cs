@@ -30,12 +30,11 @@ namespace PureFix.Buffer.Segment
         public int StartTag { get; private set; } = startTag;
         public SegmentType Type { get; } = type;
         public IContainedSet? Set { get; } = set; 
-        public SegmentView? SegmentView => _segmentView;
+        public SegmentView? SegmentView { get; private set; }
 
         public ContainedField? CurrentField { get; private set; }
         private List<int>? _delimterPositions;
         private List<int>? _containedDelimiterPositions;
-        private SegmentView? _segmentView;
 
         public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)Array.Empty<int>();
 
@@ -129,12 +128,10 @@ namespace PureFix.Buffer.Segment
         public bool GroupAddDelimiter(int tag, int position)
         {
             var delimiter = false;
-            if (Set is GroupFieldDefinition)
+            if (Set is not GroupFieldDefinition) return delimiter;
+            if (tag == DelimiterTag)
             {
-                if (DelimiterTag != null && tag == DelimiterTag)
-                {
-                    delimiter = AddDelimiterPosition(position);
-                }
+                delimiter = AddDelimiterPosition(position);
             }
             return delimiter;
         }
@@ -149,7 +146,7 @@ namespace PureFix.Buffer.Segment
 
         public void Add(SegmentView segmentView)
         {
-            _segmentView = segmentView;
+            SegmentView = segmentView;
             EndPosition = segmentView.EndPosition;
             StartPosition = segmentView.StartPosition;
             EndTag = segmentView.EndTag;

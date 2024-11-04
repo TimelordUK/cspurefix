@@ -27,20 +27,28 @@ namespace PureFix.Buffer.Ascii
             {
                 var tag = tags[i];
                 var (parent, _) = Set.TagToField.GetValueOrDefault(tag.Tag);
-                if (_tagSpans.TryGetValue(tag.Tag, out var range) && range.End.Value > range.Start.Value)
-                {
-                    _repeated.Add(tag.Tag);
-                }
+                CalcRepeated(tag);
                 if (parent == null) continue;
                 _names.Add(parent.Name);
-                if (!_tag2delim.ContainsKey(tag.Tag) && Set.TagToSimpleDefinition.TryGetValue(tag.Tag, out var sd) && sd.Type == "NUMINGROUP")
+                if (!IsNumInGroup(tag)) continue;
+                if (parent.Fields.Count == 1)
                 {
-                    if (parent.Fields.Count == 1)
-                    {
-                        _componentGroupWrappers.Add(parent.Name);
-                    }
-                    CalcDelim(tags, tag);
+                    _componentGroupWrappers.Add(parent.Name);
                 }
+                CalcDelim(tags, tag);
+            }
+        }
+
+        private bool IsNumInGroup(TagPos tag)
+        {
+            return _tag2delim.ContainsKey(tag.Tag) && Set.TagToSimpleDefinition.TryGetValue(tag.Tag, out var sd) && sd.IsNumInGroup;
+        }
+
+        private void CalcRepeated(TagPos tag)
+        {
+            if (_tagSpans.TryGetValue(tag.Tag, out var range) && range.End.Value > range.Start.Value)
+            {
+                _repeated.Add(tag.Tag);
             }
         }
 
@@ -48,14 +56,12 @@ namespace PureFix.Buffer.Ascii
         {
             var delimPos = Math.Min(tag.Position + 1, tags.Length - 1);
             var delimTag = tags[delimPos];
-            if (_tagSpans.TryGetValue(delimTag.Tag, out var _))
+            if (!_tagSpans.TryGetValue(delimTag.Tag, out _)) return;
+            _tag2delim[tag.Tag] = delimTag.Tag;
+            _noOfTag2NoOfPos[tag.Tag] = tag;
+            if (Set.TagToField.TryGetValue(delimTag.Tag, out var pf) && pf.parent != null)
             {
-                _tag2delim[tag.Tag] = delimTag.Tag;
-                _noOfTag2NoOfPos[tag.Tag] = tag;
-                if (Set.TagToField.TryGetValue(delimTag.Tag, out var pf) && pf.parent != null)
-                {
-                    _groups[pf.field.Name] = (GroupFieldDefinition)pf.parent;
-                }
+                _groups[pf.field.Name] = (GroupFieldDefinition)pf.parent;
             }
         }
 
@@ -90,9 +96,10 @@ namespace PureFix.Buffer.Ascii
             var s = Set.NameToSet.GetValueOrDefault(name);
             if (s == null) return null;
             var res = new SegmentView(name, s);
-            for (var x = 0; x < s.FlattenedTag.Count; ++x)
+            var tags = s.FlattenedTag;
+            for (var x = 0; x < tags.Count; ++x)
             {
-                var t = s.FlattenedTag[x];
+                var t = tags[x];
                 if (!_tagSpans.TryGetValue(t, out var range)) continue;
                 var start = range.Start.Value;
                 var end = range.End.Value;
@@ -114,7 +121,6 @@ namespace PureFix.Buffer.Ascii
 
         public IReadOnlySet<string> Names => _names;
         public IContainedSet Set { get; }
-
         public IReadOnlyDictionary<int, Range> TagSpans => _tagSpans;
         public IReadOnlyDictionary<string, GroupFieldDefinition> Groups => _groups;
         public IReadOnlyDictionary<int, TagPos> NoOfTag2NoOfPos => _noOfTag2NoOfPos;
