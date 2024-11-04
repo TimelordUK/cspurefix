@@ -9,20 +9,20 @@ namespace PureFix.ConsoleApp;
 
 internal partial class Program
 {
-    private static FixDefinitions GetDefinitions(CommandOptions options)
+    private static FixDefinitions GetDefinitions(string dictPath)
     {
         var definitions = new FixDefinitions();
         var qfParser = new QuickFixXmlFileParser(definitions);
-        qfParser.Parse(options.DictPath);
+        qfParser.Parse(dictPath);
         return definitions;
     }
 
-    private static Options GetGeneratorOptions(IFixDefinitions definitions, CommandOptions options)
+    private static Options GetGeneratorOptions(IFixDefinitions definitions, string dictPath, string outputPath)
     {
         var generatorOptions = Options.FromVersion(definitions);
-        var name = Path.GetFileName(options.DictPath);
+        var name = Path.GetFileName(dictPath);
         name = name.Replace(".xml", string.Empty).Replace(".", string.Empty);
-        generatorOptions.BackingTypeOutputPath = Path.Join(options.OutputPath, "PureFix.Types", name, "QuickFix");
+        generatorOptions.BackingTypeOutputPath = Path.Join(outputPath, "PureFix.Types", name, "QuickFix");
         generatorOptions.BackingTypeNamespace = $"PureFix.Types.{name}.QuickFix";
         return generatorOptions;
     }

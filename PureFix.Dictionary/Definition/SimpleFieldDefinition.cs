@@ -42,7 +42,7 @@ namespace PureFix.Dictionary.Definition
             BaseCategory = baseCategory;
             Description = description;
             BaseCategoryAbbreviation = baseCategoryAbbreviation;
-            Name = name;
+            Name = name.Replace(" ", string.Empty);
             Type = type;
             Tag = tag;
             TagType = TagManager.ToType(type);

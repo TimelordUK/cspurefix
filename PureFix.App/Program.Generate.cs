@@ -9,16 +9,27 @@ internal partial class Program
 {
     private static void Generate(CommandOptions options)
     {
-        if (string.IsNullOrEmpty(options.DictPath))
+        if (options.Dicts.Any())
+        {
+            foreach (var d in options.Dicts)
+            {
+                Generate(d, options.OutputPath);
+            }
+        }
+        else if (!string.IsNullOrEmpty(options.DictPath))
+        {
+            Generate(options.DictPath, options.OutputPath);
+        } else
         {
             Console.WriteLine("please specify a dictionary to genereate.");
         }
-        else
-        {
-            var definitions = GetDefinitions(options);
-            var generatorOptions = GetGeneratorOptions(definitions, options);
-            var generator = new MessageGenerator(null, definitions, generatorOptions);
-            generator.Process();
-        }
+    }
+
+    private static void Generate(string dict, string optionsOutputPath)
+    {
+        var definitions = GetDefinitions(dict);
+        var generatorOptions = GetGeneratorOptions(definitions, dict, optionsOutputPath);
+        var generator = new MessageGenerator(null, definitions, generatorOptions);
+        generator.Process();
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection.PortableExecutable;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
@@ -21,7 +22,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             foreach (var fieldElement in fields)
             {
                 var at = fieldElement.AsAttributeDict();
-                MakeNode(at["name"], fieldElement, Node.ElementType.SimpleFieldDefinition);
+                MakeNode(NameFrom(at), fieldElement, Node.ElementType.SimpleFieldDefinition);
             }
         }
 
@@ -33,7 +34,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             foreach (var componentElement in components)
             {
                 var at = componentElement.AsAttributeDict();
-                MakeNode(at["name"], componentElement, Node.ElementType.ComponentDefinition);
+                MakeNode(NameFrom(at), componentElement, Node.ElementType.ComponentDefinition);
             }
         }
 
@@ -49,10 +50,21 @@ namespace PureFix.Dictionary.Parser.QuickFix
             _trailer = MakeNode("StandardTrailer", trailer, Node.ElementType.ComponentDefinition);
         }
 
+        private static string NameFrom(IReadOnlyDictionary<string, string> atts)
+        {
+            var name = atts["name"];
+            name = name.Replace(" ", string.Empty);
+            if (char.IsNumber(name[0]))
+            {
+                name = $"F{name}";
+            }
+            return name;
+        }
+
         private static SimpleFieldDefinition GetField(XElement fieldElement)
         {
-            var atts = fieldElement.AsAttributeDict();          
-            var name = atts["name"];
+            var atts = fieldElement.AsAttributeDict();
+            var name = NameFrom(atts);
             var tag = int.Parse(atts.GetValueOrDefault("number") ?? "-1");
             if (tag < 0) throw new InvalidDataException($"no tag/number for {name}");           
             var type = atts.GetValueOrDefault("type") ?? "STRING";

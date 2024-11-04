@@ -1,0 +1,8 @@
+namespace PureFix.Types.FIX50SP2.QuickFix.Types
+{
+	public static class PegRoundDirectionValues
+	{
+		public const int MoreAggressive = 1;
+		public const int MorePassive = 2;
+	}
+}

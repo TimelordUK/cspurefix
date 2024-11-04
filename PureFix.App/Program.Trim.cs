@@ -17,7 +17,7 @@ internal partial class Program
         }
         else
         {
-            var definitions = GetDefinitions(options);
+            var definitions = GetDefinitions(options.DictPath);
             var builder = new QuickFixXmlFileBuilder(definitions);
             var encoded = builder.Write(options.MsgTypes.ToArray());
             Console.WriteLine(encoded);
