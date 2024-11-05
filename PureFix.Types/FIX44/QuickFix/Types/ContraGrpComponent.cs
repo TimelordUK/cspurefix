@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class ContraGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 382, Offset = 0, Required = false)]
-		public NoContraBrokers[]? NoContraBrokers {get; set;}
+		public ExecutionReportContraGrpNoContraBrokers[]? NoContraBrokers {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoContraBrokers") is IMessageView viewNoContraBrokers)
 			{
 				var count = viewNoContraBrokers.GroupCount();
-				NoContraBrokers = new NoContraBrokers[count];
+				NoContraBrokers = new ExecutionReportContraGrpNoContraBrokers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoContraBrokers[i] = new();

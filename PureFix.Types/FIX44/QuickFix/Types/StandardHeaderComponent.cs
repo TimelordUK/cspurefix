@@ -88,7 +88,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public int? LastMsgSeqNumProcessed {get; set;}
 		
 		[Group(NoOfTag = 627, Offset = 26, Required = false)]
-		public NoHops[]? NoHops {get; set;}
+		public HeartbeatStandardHeaderNoHops[]? NoHops {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -180,7 +180,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoHops") is IMessageView viewNoHops)
 			{
 				var count = viewNoHops.GroupCount();
-				NoHops = new NoHops[count];
+				NoHops = new HeartbeatStandardHeaderNoHops[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoHops[i] = new();

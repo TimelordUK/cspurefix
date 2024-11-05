@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class CpctyConfGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 862, Offset = 0, Required = true)]
-		public NoCapacities[]? NoCapacities {get; set;}
+		public ConfirmationCpctyConfGrpNoCapacities[]? NoCapacities {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoCapacities") is IMessageView viewNoCapacities)
 			{
 				var count = viewNoCapacities.GroupCount();
-				NoCapacities = new NoCapacities[count];
+				NoCapacities = new ConfirmationCpctyConfGrpNoCapacities[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoCapacities[i] = new();

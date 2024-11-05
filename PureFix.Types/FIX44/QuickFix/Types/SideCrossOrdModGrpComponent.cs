@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class SideCrossOrdModGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 552, Offset = 0, Required = true)]
-		public NoSides[]? NoSides {get; set;}
+		public NewOrderCrossSideCrossOrdModGrpNoSides[]? NoSides {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoSides") is IMessageView viewNoSides)
 			{
 				var count = viewNoSides.GroupCount();
-				NoSides = new NoSides[count];
+				NoSides = new NewOrderCrossSideCrossOrdModGrpNoSides[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSides[i] = new();

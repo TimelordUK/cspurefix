@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class MiscFeesGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 136, Offset = 0, Required = false)]
-		public NoMiscFees[]? NoMiscFees {get; set;}
+		public ExecutionReportMiscFeesGrpNoMiscFees[]? NoMiscFees {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoMiscFees") is IMessageView viewNoMiscFees)
 			{
 				var count = viewNoMiscFees.GroupCount();
-				NoMiscFees = new NoMiscFees[count];
+				NoMiscFees = new ExecutionReportMiscFeesGrpNoMiscFees[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMiscFees[i] = new();

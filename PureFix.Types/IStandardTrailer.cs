@@ -8,10 +8,6 @@ namespace PureFix.Types
 {
     public interface IStandardTrailer : IFixParser, IFixEncoder, IFixReset
     {
-        public int? SignatureLength{get;}
-		
-		public byte[]? Signature{get;}
-		
 		public string? CheckSum{get;}
     }
 }

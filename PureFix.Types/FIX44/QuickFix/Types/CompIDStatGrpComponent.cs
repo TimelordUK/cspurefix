@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class CompIDStatGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 936, Offset = 0, Required = true)]
-		public NoCompIDs[]? NoCompIDs {get; set;}
+		public NetworkCounterpartySystemStatusResponseCompIDStatGrpNoCompIDs[]? NoCompIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoCompIDs") is IMessageView viewNoCompIDs)
 			{
 				var count = viewNoCompIDs.GroupCount();
-				NoCompIDs = new NoCompIDs[count];
+				NoCompIDs = new NetworkCounterpartySystemStatusResponseCompIDStatGrpNoCompIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoCompIDs[i] = new();

@@ -2,7 +2,7 @@
   "profiles": {
     "PureFix.ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "-D FIX44.xml FIX43.xml FIX42.xml FIX50SP2.xml -g "
+      "commandLineArgs": "-D FIX44.xml -g "
     }
   }
 }

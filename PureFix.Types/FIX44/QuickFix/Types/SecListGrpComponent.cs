@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class SecListGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 146, Offset = 0, Required = false)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public SecurityListSecListGrpNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new SecurityListSecListGrpNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();

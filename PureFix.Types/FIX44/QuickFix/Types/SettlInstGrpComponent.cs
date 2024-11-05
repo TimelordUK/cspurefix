@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class SettlInstGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 778, Offset = 0, Required = false)]
-		public NoSettlInst[]? NoSettlInst {get; set;}
+		public SettlementInstructionsSettlInstGrpNoSettlInst[]? NoSettlInst {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoSettlInst") is IMessageView viewNoSettlInst)
 			{
 				var count = viewNoSettlInst.GroupCount();
-				NoSettlInst = new NoSettlInst[count];
+				NoSettlInst = new SettlementInstructionsSettlInstGrpNoSettlInst[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSettlInst[i] = new();

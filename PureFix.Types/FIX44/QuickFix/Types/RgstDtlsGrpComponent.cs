@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class RgstDtlsGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 473, Offset = 0, Required = false)]
-		public NoRegistDtls[]? NoRegistDtls {get; set;}
+		public RegistrationInstructionsRgstDtlsGrpNoRegistDtls[]? NoRegistDtls {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoRegistDtls") is IMessageView viewNoRegistDtls)
 			{
 				var count = viewNoRegistDtls.GroupCount();
-				NoRegistDtls = new NoRegistDtls[count];
+				NoRegistDtls = new RegistrationInstructionsRgstDtlsGrpNoRegistDtls[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRegistDtls[i] = new();

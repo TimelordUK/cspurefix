@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class BidCompReqGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 420, Offset = 0, Required = false)]
-		public NoBidComponents[]? NoBidComponents {get; set;}
+		public BidRequestBidCompReqGrpNoBidComponents[]? NoBidComponents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoBidComponents") is IMessageView viewNoBidComponents)
 			{
 				var count = viewNoBidComponents.GroupCount();
-				NoBidComponents = new NoBidComponents[count];
+				NoBidComponents = new BidRequestBidCompReqGrpNoBidComponents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoBidComponents[i] = new();

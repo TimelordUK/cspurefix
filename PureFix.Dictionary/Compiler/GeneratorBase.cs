@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Dictionary.Parser;
 
 namespace PureFix.Dictionary.Compiler
 {
@@ -39,7 +40,7 @@ namespace PureFix.Dictionary.Compiler
 
         public void Process(MessageDefinition message)
         {
-            var filename = MakeFilename(message);
+            var filename = MakeFilename(message.Name, message);
             if (m_FilesGenerated.Add(filename))
             {
                 var content = GenerateType(message);
@@ -49,22 +50,24 @@ namespace PureFix.Dictionary.Compiler
 
         public virtual void PostProcess() { }
 
-        private void Process(ContainedGroupField field)
+        private void Process(string parentPath, ContainedGroupField field)
         {
-            var filename = MakeFilename(field);
+            if (field.Definition == null) return;
+            var filename = MakeFilename(parentPath, field.Definition);
             if(m_FilesGenerated.Add(filename))
             {
-                var content = GenerateType(field);
+                var content = GenerateType(parentPath, field);
                 WriteFile(filename, content);
             }
         }
 
-        private void Process(ContainedComponentField component)
+        private void Process(string parentPath, ContainedComponentField component)
         {
-            var filename = MakeFilename(component);
+            if (component.Definition == null) return;
+            var filename = MakeFilename(parentPath, component.Definition);
             if(m_FilesGenerated.Add(filename))
             {
-                var content = GenerateType(component);
+                var content = GenerateType(parentPath, component);
                 WriteFile(filename, content);
             }
         }
@@ -84,9 +87,10 @@ namespace PureFix.Dictionary.Compiler
             get{return m_FixDefinitions;}
         }
 
-        protected void ApplyFields(CodeGenerator generator, IReadOnlyList<ContainedField> fields)
+        protected void ApplyFields(CodeGenerator generator, string parentPath, IContainedSet set)
         {
             ContainedField? last = null;
+            var fields = set.Fields;
             for(int i = 0; i < fields.Count; i++)
             {
                 var field = fields[i];
@@ -94,30 +98,30 @@ namespace PureFix.Dictionary.Compiler
 
                 if(field is ContainedSimpleField simpleField)
                 {
-                    HandleFieldProperty(generator, i, simpleField, last, next);
+                    HandleFieldProperty(generator, parentPath, i, simpleField, last, next);
                 }
                 else if(field is ContainedComponentField componentField)
                 {
-                    HandleComponentProperty(generator, i, componentField);
-                    Process(componentField);
+                    HandleComponentProperty(generator, parentPath + set.Name, i, componentField);
+                    Process(parentPath + set.Name, componentField);
                 }
                 else if(field is ContainedGroupField groupField)
                 {
-                    HandleGroupProperty(generator, i, groupField);
-                    Process(groupField);
+                    HandleGroupProperty(generator, parentPath + set.Name, i, groupField);
+                    Process(parentPath + set.Name, groupField);
                 }
 
                 last = field;
             }
         }
 
-        protected abstract void HandleGroupProperty(CodeGenerator generator, int index, ContainedGroupField field);
-        protected abstract void HandleComponentProperty(CodeGenerator generator, int index, ContainedComponentField field);
-        protected abstract void HandleFieldProperty(CodeGenerator generator, int index, ContainedSimpleField field, ContainedField? last, ContainedField? next);
+        protected abstract void HandleGroupProperty(CodeGenerator generator, string parentPath, int index, ContainedGroupField field);
+        protected abstract void HandleComponentProperty(CodeGenerator generator, string parentPath, int index, ContainedComponentField field);
+        protected abstract void HandleFieldProperty(CodeGenerator generator, string parentPath, int index, ContainedSimpleField field, ContainedField? last, ContainedField? next);
 
         protected abstract string GenerateType(MessageDefinition message);
-        protected abstract string GenerateType(ContainedComponentField component);
-        protected abstract string GenerateType(ContainedGroupField group);
+        protected abstract string GenerateType(string parentPath, ContainedComponentField component);
+        protected abstract string GenerateType(string parentPath, ContainedGroupField group);
 
         protected void WriteMessageUsings(CodeGenerator generator)
         {
@@ -137,9 +141,9 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        protected string MakeFilename(IContainedSet set)
+        protected string MakeFilename(string parentPath, IContainedSet set)
         {
-            var typename = MakeTypeName(set);
+            var typename = MakeTypeName(parentPath, set);
 
             if(set is MessageDefinition)
             {
@@ -149,32 +153,20 @@ namespace PureFix.Dictionary.Compiler
             return Path.Combine(m_Root, "Types", typename + ".cs");
         }
 
-        protected string MakeFilename(ContainedField group)
-        {
-            var typename = MakeTypeName(group);
-            return Path.Combine(m_Root, "Types", typename + ".cs");
-        }
-
         protected string MakeEnumFilename(string enumName)
         {
             return Path.Combine(m_Root, "Types", enumName + ".cs");
         }
 
-        protected string MakeTypeName(ContainedField set)
+        protected string MakeTypeName(string parentPath, IContainedSet set)
         {
-            if(set is ContainedComponentField component)
+            if (set.Type == ContainedSetType.Component)
             {
-                return component.Definition!.Name + "Component";
+                return set.Name + "Component";
             }
-
-            return set.Name;
-        }
-
-        protected string MakeTypeName(IContainedSet set)
-        {
-            if(set is ContainedComponentField component)
+            if (set.Type == ContainedSetType.Group)
             {
-                return component.Definition!.Name + "Component";
+                return $"{parentPath}{set.Name}";
             }
 
             return set.Name;

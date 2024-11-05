@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class InstrmtStrkPxGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 428, Offset = 0, Required = true)]
-		public NoStrikes[]? NoStrikes {get; set;}
+		public ListStrikePriceInstrmtStrkPxGrpNoStrikes[]? NoStrikes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoStrikes") is IMessageView viewNoStrikes)
 			{
 				var count = viewNoStrikes.GroupCount();
-				NoStrikes = new NoStrikes[count];
+				NoStrikes = new ListStrikePriceInstrmtStrkPxGrpNoStrikes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStrikes[i] = new();

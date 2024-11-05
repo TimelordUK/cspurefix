@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class MDRjctGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 816, Offset = 0, Required = false)]
-		public NoAltMDSource[]? NoAltMDSource {get; set;}
+		public MarketDataRequestRejectMDRjctGrpNoAltMDSource[]? NoAltMDSource {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoAltMDSource") is IMessageView viewNoAltMDSource)
 			{
 				var count = viewNoAltMDSource.GroupCount();
-				NoAltMDSource = new NoAltMDSource[count];
+				NoAltMDSource = new MarketDataRequestRejectMDRjctGrpNoAltMDSource[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAltMDSource[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class EvntGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 864, Offset = 0, Required = false)]
-		public NoEvents[]? NoEvents {get; set;}
+		public IOIInstrumentEvntGrpNoEvents[]? NoEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoEvents") is IMessageView viewNoEvents)
 			{
 				var count = viewNoEvents.GroupCount();
-				NoEvents = new NoEvents[count];
+				NoEvents = new IOIInstrumentEvntGrpNoEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoEvents[i] = new();

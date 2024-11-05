@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class TrdAllocGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 78, Offset = 0, Required = false)]
-		public NoAllocs[]? NoAllocs {get; set;}
+		public TradeCaptureReportTrdCapRptSideGrpNoSidesTrdAllocGrpNoAllocs[]? NoAllocs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
 			{
 				var count = viewNoAllocs.GroupCount();
-				NoAllocs = new NoAllocs[count];
+				NoAllocs = new TradeCaptureReportTrdCapRptSideGrpNoSidesTrdAllocGrpNoAllocs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAllocs[i] = new();

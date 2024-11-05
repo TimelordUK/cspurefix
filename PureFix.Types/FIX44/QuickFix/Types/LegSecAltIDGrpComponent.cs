@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class LegSecAltIDGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 604, Offset = 0, Required = false)]
-		public NoLegSecurityAltID[]? NoLegSecurityAltID {get; set;}
+		public IOIInstrmtLegIOIGrpNoLegsInstrumentLegLegSecAltIDGrpNoLegSecurityAltID[]? NoLegSecurityAltID {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoLegSecurityAltID") is IMessageView viewNoLegSecurityAltID)
 			{
 				var count = viewNoLegSecurityAltID.GroupCount();
-				NoLegSecurityAltID = new NoLegSecurityAltID[count];
+				NoLegSecurityAltID = new IOIInstrmtLegIOIGrpNoLegsInstrumentLegLegSecAltIDGrpNoLegSecurityAltID[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegSecurityAltID[i] = new();

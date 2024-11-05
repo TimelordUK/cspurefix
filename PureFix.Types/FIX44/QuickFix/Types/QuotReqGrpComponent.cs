@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class QuotReqGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 146, Offset = 0, Required = true)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public QuoteRequestQuotReqGrpNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new QuoteRequestQuotReqGrpNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();

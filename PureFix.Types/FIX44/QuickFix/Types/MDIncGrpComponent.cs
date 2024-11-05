@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class MDIncGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 268, Offset = 0, Required = true)]
-		public NoMDEntries[]? NoMDEntries {get; set;}
+		public MarketDataIncrementalRefreshMDIncGrpNoMDEntries[]? NoMDEntries {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoMDEntries") is IMessageView viewNoMDEntries)
 			{
 				var count = viewNoMDEntries.GroupCount();
-				NoMDEntries = new NoMDEntries[count];
+				NoMDEntries = new MarketDataIncrementalRefreshMDIncGrpNoMDEntries[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMDEntries[i] = new();

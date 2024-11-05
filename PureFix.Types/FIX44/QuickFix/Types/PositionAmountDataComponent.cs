@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class PositionAmountDataComponent : IFixComponent
 	{
 		[Group(NoOfTag = 753, Offset = 0, Required = false)]
-		public NoPosAmt[]? NoPosAmt {get; set;}
+		public TradeCaptureReportPositionAmountDataNoPosAmt[]? NoPosAmt {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoPosAmt") is IMessageView viewNoPosAmt)
 			{
 				var count = viewNoPosAmt.GroupCount();
-				NoPosAmt = new NoPosAmt[count];
+				NoPosAmt = new TradeCaptureReportPositionAmountDataNoPosAmt[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPosAmt[i] = new();

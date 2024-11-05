@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class QuotQualGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 735, Offset = 0, Required = false)]
-		public NoQuoteQualifiers[]? NoQuoteQualifiers {get; set;}
+		public QuoteRequestQuotReqGrpNoRelatedSymQuotQualGrpNoQuoteQualifiers[]? NoQuoteQualifiers {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoQuoteQualifiers") is IMessageView viewNoQuoteQualifiers)
 			{
 				var count = viewNoQuoteQualifiers.GroupCount();
-				NoQuoteQualifiers = new NoQuoteQualifiers[count];
+				NoQuoteQualifiers = new QuoteRequestQuotReqGrpNoRelatedSymQuotQualGrpNoQuoteQualifiers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoQuoteQualifiers[i] = new();

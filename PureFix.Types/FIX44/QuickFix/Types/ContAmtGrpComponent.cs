@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class ContAmtGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 518, Offset = 0, Required = false)]
-		public NoContAmts[]? NoContAmts {get; set;}
+		public ExecutionReportContAmtGrpNoContAmts[]? NoContAmts {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoContAmts") is IMessageView viewNoContAmts)
 			{
 				var count = viewNoContAmts.GroupCount();
-				NoContAmts = new NoContAmts[count];
+				NoContAmts = new ExecutionReportContAmtGrpNoContAmts[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoContAmts[i] = new();

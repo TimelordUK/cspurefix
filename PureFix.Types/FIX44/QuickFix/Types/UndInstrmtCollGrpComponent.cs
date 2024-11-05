@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class UndInstrmtCollGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 711, Offset = 0, Required = false)]
-		public NoUnderlyings[]? NoUnderlyings {get; set;}
+		public CollateralRequestUndInstrmtCollGrpNoUnderlyings[]? NoUnderlyings {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoUnderlyings") is IMessageView viewNoUnderlyings)
 			{
 				var count = viewNoUnderlyings.GroupCount();
-				NoUnderlyings = new NoUnderlyings[count];
+				NoUnderlyings = new CollateralRequestUndInstrmtCollGrpNoUnderlyings[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyings[i] = new();

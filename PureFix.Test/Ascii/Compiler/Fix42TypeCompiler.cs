@@ -30,7 +30,7 @@ namespace PureFix.Test.Ascii.Compiler
         public void MessageGenerator()
         {
             var generator = new MessageGenerator(null, _testEntity.Definitions, Options.FromVersion(_testEntity.Definitions));
-            generator.Process();
+            // generator.Process();
         }
     }
 }

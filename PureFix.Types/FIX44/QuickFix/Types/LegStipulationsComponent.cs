@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 	public sealed partial class LegStipulationsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 683, Offset = 0, Required = false)]
-		public NoLegStipulations[]? NoLegStipulations {get; set;}
+		public IOIInstrmtLegIOIGrpNoLegsLegStipulationsNoLegStipulations[]? NoLegStipulations {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 			if (view.GetView("NoLegStipulations") is IMessageView viewNoLegStipulations)
 			{
 				var count = viewNoLegStipulations.GroupCount();
-				NoLegStipulations = new NoLegStipulations[count];
+				NoLegStipulations = new IOIInstrmtLegIOIGrpNoLegsLegStipulationsNoLegStipulations[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegStipulations[i] = new();

@@ -24,8 +24,8 @@ namespace PureFix.Types.FIX44.QuickFix.Types
 		public const int ProfitSharingPlan = 19;
 		public const int Us401K = 20;
 		public const int SelfDirectedIra = 21;
-		public const int Us403b = 22;
-		public const int Us457 = 23;
+		public const int US403B = 22;
+		public const int US457 = 23;
 		public const int RothIraPrototype = 24;
 		public const int RothIraNonPrototype = 25;
 		public const int RothConversionIraPrototype = 26;
