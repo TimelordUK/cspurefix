@@ -44,7 +44,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? Text {get; set;}
 		
 		[Group(NoOfTag = 296, Offset = 11, Required = false)]
-		public NoQuoteSets[]? NoQuoteSets {get; set;}
+		public MassQuoteAcknowledgementNoQuoteSets[]? NoQuoteSets {get; set;}
 		
 		[Component(Offset = 12, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -111,7 +111,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoQuoteSets") is IMessageView viewNoQuoteSets)
 			{
 				var count = viewNoQuoteSets.GroupCount();
-				NoQuoteSets = new NoQuoteSets[count];
+				NoQuoteSets = new MassQuoteAcknowledgementNoQuoteSets[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoQuoteSets[i] = new();

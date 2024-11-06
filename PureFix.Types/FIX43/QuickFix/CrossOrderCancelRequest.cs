@@ -29,7 +29,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public int? CrossPrioritization {get; set;}
 		
 		[Group(NoOfTag = 552, Offset = 6, Required = true)]
-		public NoSides[]? NoSides {get; set;}
+		public CrossOrderCancelRequestNoSides[]? NoSides {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
 		public InstrumentComponent? Instrument {get; set;}
@@ -96,7 +96,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoSides") is IMessageView viewNoSides)
 			{
 				var count = viewNoSides.GroupCount();
-				NoSides = new NoSides[count];
+				NoSides = new CrossOrderCancelRequestNoSides[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSides[i] = new();

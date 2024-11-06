@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public double? NetChgPrevDay {get; set;}
 		
 		[Group(NoOfTag = 268, Offset = 9, Required = true)]
-		public NoMDEntries[]? NoMDEntries {get; set;}
+		public MarketDataSnapshotFullRefreshNoMDEntries[]? NoMDEntries {get; set;}
 		
 		[Component(Offset = 10, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -102,7 +102,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoMDEntries") is IMessageView viewNoMDEntries)
 			{
 				var count = viewNoMDEntries.GroupCount();
-				NoMDEntries = new NoMDEntries[count];
+				NoMDEntries = new MarketDataSnapshotFullRefreshNoMDEntries[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMDEntries[i] = new();

@@ -91,7 +91,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public DateTime? OnBehalfOfSendingTime {get; set;}
 		
 		[Group(NoOfTag = 627, Offset = 27, Required = false)]
-		public NoHops[]? NoHops {get; set;}
+		public HeartbeatNoHops[]? NoHops {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -185,7 +185,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			if (view.GetView("NoHops") is IMessageView viewNoHops)
 			{
 				var count = viewNoHops.GroupCount();
-				NoHops = new NoHops[count];
+				NoHops = new HeartbeatNoHops[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoHops[i] = new();

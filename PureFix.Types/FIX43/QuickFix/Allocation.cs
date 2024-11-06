@@ -35,10 +35,10 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? BookingRefID {get; set;}
 		
 		[Group(NoOfTag = 73, Offset = 8, Required = false)]
-		public NoOrders[]? NoOrders {get; set;}
+		public AllocationNoOrders[]? NoOrders {get; set;}
 		
 		[Group(NoOfTag = 124, Offset = 9, Required = false)]
-		public NoExecs[]? NoExecs {get; set;}
+		public AllocationNoExecs[]? NoExecs {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 10, Required = true)]
 		public string? Side {get; set;}
@@ -125,7 +125,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public bool? LegalConfirm {get; set;}
 		
 		[Group(NoOfTag = 78, Offset = 38, Required = false)]
-		public NoAllocs[]? NoAllocs {get; set;}
+		public AllocationNoAllocs[]? NoAllocs {get; set;}
 		
 		[Component(Offset = 39, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -236,7 +236,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoOrders") is IMessageView viewNoOrders)
 			{
 				var count = viewNoOrders.GroupCount();
-				NoOrders = new NoOrders[count];
+				NoOrders = new AllocationNoOrders[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoOrders[i] = new();
@@ -246,7 +246,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoExecs") is IMessageView viewNoExecs)
 			{
 				var count = viewNoExecs.GroupCount();
-				NoExecs = new NoExecs[count];
+				NoExecs = new AllocationNoExecs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoExecs[i] = new();
@@ -292,7 +292,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
 			{
 				var count = viewNoAllocs.GroupCount();
-				NoAllocs = new NoAllocs[count];
+				NoAllocs = new AllocationNoAllocs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAllocs[i] = new();

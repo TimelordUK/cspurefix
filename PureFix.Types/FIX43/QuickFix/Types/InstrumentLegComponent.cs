@@ -22,7 +22,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public string? LegSecurityIDSource {get; set;}
 		
 		[Group(NoOfTag = 604, Offset = 4, Required = false)]
-		public NoLegSecurityAltID[]? NoLegSecurityAltID {get; set;}
+		public ExecutionReportNoLegSecurityAltID[]? NoLegSecurityAltID {get; set;}
 		
 		[TagDetails(Tag = 607, Type = TagType.Int, Offset = 5, Required = false)]
 		public int? LegProduct {get; set;}
@@ -183,7 +183,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			if (view.GetView("NoLegSecurityAltID") is IMessageView viewNoLegSecurityAltID)
 			{
 				var count = viewNoLegSecurityAltID.GroupCount();
-				NoLegSecurityAltID = new NoLegSecurityAltID[count];
+				NoLegSecurityAltID = new ExecutionReportNoLegSecurityAltID[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegSecurityAltID[i] = new();

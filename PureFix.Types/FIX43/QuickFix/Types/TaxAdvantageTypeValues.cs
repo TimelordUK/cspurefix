@@ -23,7 +23,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const int MaxiIsa = 1;
 		public const int None = 0;
 		public const int PriorYearPayment = 7;
-		public const int Us457 = 23;
+		public const int US457 = 23;
 		public const int RothIraPrototype = 24;
 		public const int RothIraNonPrototype = 25;
 		public const int RothConversionIraPrototype = 26;
@@ -31,6 +31,6 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public const int EducationIraPrototype = 28;
 		public const int EducationIraNonPrototype = 29;
 		public const int Keogh = 18;
-		public const int Us403b = 22;
+		public const int US403B = 22;
 	}
 }

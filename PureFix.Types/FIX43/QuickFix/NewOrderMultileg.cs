@@ -41,7 +41,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? PreallocMethod {get; set;}
 		
 		[Group(NoOfTag = 78, Offset = 10, Required = false)]
-		public NoAllocs[]? NoAllocs {get; set;}
+		public NewOrderMultilegNoAllocs[]? NoAllocs {get; set;}
 		
 		[TagDetails(Tag = 63, Type = TagType.String, Offset = 11, Required = false)]
 		public string? SettlmntTyp {get; set;}
@@ -71,7 +71,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? ExDestination {get; set;}
 		
 		[Group(NoOfTag = 386, Offset = 20, Required = false)]
-		public NoTradingSessions[]? NoTradingSessions {get; set;}
+		public NewOrderMultilegNoTradingSessions[]? NoTradingSessions {get; set;}
 		
 		[TagDetails(Tag = 81, Type = TagType.String, Offset = 21, Required = false)]
 		public string? ProcessCode {get; set;}
@@ -86,7 +86,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public double? PrevClosePx {get; set;}
 		
 		[Group(NoOfTag = 555, Offset = 25, Required = true)]
-		public NoLegs[]? NoLegs {get; set;}
+		public NewOrderMultilegNoLegs[]? NoLegs {get; set;}
 		
 		[TagDetails(Tag = 114, Type = TagType.Boolean, Offset = 26, Required = false)]
 		public bool? LocateReqd {get; set;}
@@ -346,7 +346,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
 			{
 				var count = viewNoAllocs.GroupCount();
-				NoAllocs = new NoAllocs[count];
+				NoAllocs = new NewOrderMultilegNoAllocs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAllocs[i] = new();
@@ -365,7 +365,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoTradingSessions") is IMessageView viewNoTradingSessions)
 			{
 				var count = viewNoTradingSessions.GroupCount();
-				NoTradingSessions = new NoTradingSessions[count];
+				NoTradingSessions = new NewOrderMultilegNoTradingSessions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTradingSessions[i] = new();
@@ -383,7 +383,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoLegs") is IMessageView viewNoLegs)
 			{
 				var count = viewNoLegs.GroupCount();
-				NoLegs = new NoLegs[count];
+				NoLegs = new NewOrderMultilegNoLegs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegs[i] = new();

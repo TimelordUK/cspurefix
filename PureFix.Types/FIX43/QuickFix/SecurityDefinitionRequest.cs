@@ -41,7 +41,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? TradingSessionSubID {get; set;}
 		
 		[Group(NoOfTag = 555, Offset = 10, Required = false)]
-		public NoLegs[]? NoLegs {get; set;}
+		public SecurityDefinitionRequestNoLegs[]? NoLegs {get; set;}
 		
 		[TagDetails(Tag = 263, Type = TagType.String, Offset = 11, Required = false)]
 		public string? SubscriptionRequestType {get; set;}
@@ -114,7 +114,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoLegs") is IMessageView viewNoLegs)
 			{
 				var count = viewNoLegs.GroupCount();
-				NoLegs = new NoLegs[count];
+				NoLegs = new SecurityDefinitionRequestNoLegs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegs[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 	public sealed partial class StipulationsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 232, Offset = 0, Required = false)]
-		public NoStipulations[]? NoStipulations {get; set;}
+		public ExecutionReportNoStipulations[]? NoStipulations {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			if (view.GetView("NoStipulations") is IMessageView viewNoStipulations)
 			{
 				var count = viewNoStipulations.GroupCount();
-				NoStipulations = new NoStipulations[count];
+				NoStipulations = new ExecutionReportNoStipulations[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStipulations[i] = new();

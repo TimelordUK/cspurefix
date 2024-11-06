@@ -29,10 +29,10 @@ namespace PureFix.Types.FIX42.QuickFix
 		public bool? AggregatedBook {get; set;}
 		
 		[Group(NoOfTag = 267, Offset = 6, Required = true)]
-		public NoMDEntryTypes[]? NoMDEntryTypes {get; set;}
+		public MarketDataRequestNoMDEntryTypes[]? NoMDEntryTypes {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 7, Required = true)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public MarketDataRequestNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[Component(Offset = 8, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -97,7 +97,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoMDEntryTypes") is IMessageView viewNoMDEntryTypes)
 			{
 				var count = viewNoMDEntryTypes.GroupCount();
-				NoMDEntryTypes = new NoMDEntryTypes[count];
+				NoMDEntryTypes = new MarketDataRequestNoMDEntryTypes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMDEntryTypes[i] = new();
@@ -107,7 +107,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new MarketDataRequestNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();

@@ -26,7 +26,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public int? TotalNumSecurityTypes {get; set;}
 		
 		[Group(NoOfTag = 558, Offset = 5, Required = false)]
-		public NoSecurityTypes[]? NoSecurityTypes {get; set;}
+		public SecurityTypesNoSecurityTypes[]? NoSecurityTypes {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 6, Required = false)]
 		public string? Text {get; set;}
@@ -106,7 +106,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoSecurityTypes") is IMessageView viewNoSecurityTypes)
 			{
 				var count = viewNoSecurityTypes.GroupCount();
-				NoSecurityTypes = new NoSecurityTypes[count];
+				NoSecurityTypes = new SecurityTypesNoSecurityTypes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSecurityTypes[i] = new();

@@ -32,7 +32,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public string? ExecBroker {get; set;}
 		
 		[Group(NoOfTag = 382, Offset = 7, Required = false)]
-		public NoContraBrokers[]? NoContraBrokers {get; set;}
+		public ExecutionReportNoContraBrokers[]? NoContraBrokers {get; set;}
 		
 		[TagDetails(Tag = 66, Type = TagType.String, Offset = 8, Required = false)]
 		public string? ListID {get; set;}
@@ -445,7 +445,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoContraBrokers") is IMessageView viewNoContraBrokers)
 			{
 				var count = viewNoContraBrokers.GroupCount();
-				NoContraBrokers = new NoContraBrokers[count];
+				NoContraBrokers = new ExecutionReportNoContraBrokers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoContraBrokers[i] = new();

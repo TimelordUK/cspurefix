@@ -80,7 +80,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? MatchType {get; set;}
 		
 		[Group(NoOfTag = 552, Offset = 23, Required = true)]
-		public NoSides[]? NoSides {get; set;}
+		public TradeCaptureReportNoSides[]? NoSides {get; set;}
 		
 		[Component(Offset = 24, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -183,7 +183,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoSides") is IMessageView viewNoSides)
 			{
 				var count = viewNoSides.GroupCount();
-				NoSides = new NoSides[count];
+				NoSides = new TradeCaptureReportNoSides[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSides[i] = new();

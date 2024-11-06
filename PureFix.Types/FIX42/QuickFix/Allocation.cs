@@ -29,10 +29,10 @@ namespace PureFix.Types.FIX42.QuickFix
 		public int? AllocLinkType {get; set;}
 		
 		[Group(NoOfTag = 73, Offset = 6, Required = false)]
-		public NoOrders[]? NoOrders {get; set;}
+		public AllocationNoOrders[]? NoOrders {get; set;}
 		
 		[Group(NoOfTag = 124, Offset = 7, Required = false)]
-		public NoExecs[]? NoExecs {get; set;}
+		public AllocationNoExecs[]? NoExecs {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 8, Required = true)]
 		public string? Side {get; set;}
@@ -149,7 +149,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public double? AccruedInterestRate {get; set;}
 		
 		[Group(NoOfTag = 78, Offset = 46, Required = false)]
-		public NoAllocs[]? NoAllocs {get; set;}
+		public AllocationNoAllocs[]? NoAllocs {get; set;}
 		
 		[Component(Offset = 47, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -271,7 +271,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoOrders") is IMessageView viewNoOrders)
 			{
 				var count = viewNoOrders.GroupCount();
-				NoOrders = new NoOrders[count];
+				NoOrders = new AllocationNoOrders[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoOrders[i] = new();
@@ -281,7 +281,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoExecs") is IMessageView viewNoExecs)
 			{
 				var count = viewNoExecs.GroupCount();
-				NoExecs = new NoExecs[count];
+				NoExecs = new AllocationNoExecs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoExecs[i] = new();
@@ -329,7 +329,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
 			{
 				var count = viewNoAllocs.GroupCount();
-				NoAllocs = new NoAllocs[count];
+				NoAllocs = new AllocationNoAllocs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAllocs[i] = new();

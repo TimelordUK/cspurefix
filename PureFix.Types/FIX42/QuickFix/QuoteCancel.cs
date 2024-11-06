@@ -29,7 +29,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public string? TradingSessionID {get; set;}
 		
 		[Group(NoOfTag = 295, Offset = 6, Required = true)]
-		public NoQuoteEntries[]? NoQuoteEntries {get; set;}
+		public QuoteCancelNoQuoteEntries[]? NoQuoteEntries {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -84,7 +84,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoQuoteEntries") is IMessageView viewNoQuoteEntries)
 			{
 				var count = viewNoQuoteEntries.GroupCount();
-				NoQuoteEntries = new NoQuoteEntries[count];
+				NoQuoteEntries = new QuoteCancelNoQuoteEntries[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoQuoteEntries[i] = new();

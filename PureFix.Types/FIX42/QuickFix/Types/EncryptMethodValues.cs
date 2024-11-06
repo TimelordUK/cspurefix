@@ -7,7 +7,7 @@ namespace PureFix.Types.FIX42.QuickFix.Types
 		public const int Des = 2;
 		public const int Pkcsdes = 3;
 		public const int Pgpdes = 4;
-		public const int Pgpdesmd5 = 5;
+		public const int PGPDESMD5 = 5;
 		public const int Pem = 6;
 	}
 }

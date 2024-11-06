@@ -98,7 +98,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public byte[]? EncodedText {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 29, Required = false)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public SecurityDefinitionNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[Component(Offset = 30, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -208,7 +208,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new SecurityDefinitionNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();

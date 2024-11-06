@@ -20,7 +20,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? ClientBidID {get; set;}
 		
 		[Group(NoOfTag = 420, Offset = 3, Required = true)]
-		public NoBidComponents[]? NoBidComponents {get; set;}
+		public BidResponseNoBidComponents[]? NoBidComponents {get; set;}
 		
 		[Component(Offset = 4, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -67,7 +67,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoBidComponents") is IMessageView viewNoBidComponents)
 			{
 				var count = viewNoBidComponents.GroupCount();
-				NoBidComponents = new NoBidComponents[count];
+				NoBidComponents = new BidResponseNoBidComponents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoBidComponents[i] = new();

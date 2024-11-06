@@ -20,7 +20,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public int? TotNoStrikes {get; set;}
 		
 		[Group(NoOfTag = 428, Offset = 3, Required = true)]
-		public NoStrikes[]? NoStrikes {get; set;}
+		public ListStrikePriceNoStrikes[]? NoStrikes {get; set;}
 		
 		[Component(Offset = 4, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -69,7 +69,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoStrikes") is IMessageView viewNoStrikes)
 			{
 				var count = viewNoStrikes.GroupCount();
-				NoStrikes = new NoStrikes[count];
+				NoStrikes = new ListStrikePriceNoStrikes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStrikes[i] = new();

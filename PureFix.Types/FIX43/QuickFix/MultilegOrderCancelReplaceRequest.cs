@@ -50,7 +50,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? PreallocMethod {get; set;}
 		
 		[Group(NoOfTag = 78, Offset = 13, Required = false)]
-		public NoAllocs[]? NoAllocs {get; set;}
+		public MultilegOrderCancelReplaceRequestNoAllocs[]? NoAllocs {get; set;}
 		
 		[TagDetails(Tag = 63, Type = TagType.String, Offset = 14, Required = false)]
 		public string? SettlmntTyp {get; set;}
@@ -80,7 +80,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? ExDestination {get; set;}
 		
 		[Group(NoOfTag = 386, Offset = 23, Required = false)]
-		public NoTradingSessions[]? NoTradingSessions {get; set;}
+		public MultilegOrderCancelReplaceRequestNoTradingSessions[]? NoTradingSessions {get; set;}
 		
 		[TagDetails(Tag = 81, Type = TagType.String, Offset = 24, Required = false)]
 		public string? ProcessCode {get; set;}
@@ -95,7 +95,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public double? PrevClosePx {get; set;}
 		
 		[Group(NoOfTag = 555, Offset = 28, Required = true)]
-		public NoLegs[]? NoLegs {get; set;}
+		public MultilegOrderCancelReplaceRequestNoLegs[]? NoLegs {get; set;}
 		
 		[TagDetails(Tag = 114, Type = TagType.Boolean, Offset = 29, Required = false)]
 		public bool? LocateReqd {get; set;}
@@ -362,7 +362,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
 			{
 				var count = viewNoAllocs.GroupCount();
-				NoAllocs = new NoAllocs[count];
+				NoAllocs = new MultilegOrderCancelReplaceRequestNoAllocs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAllocs[i] = new();
@@ -381,7 +381,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoTradingSessions") is IMessageView viewNoTradingSessions)
 			{
 				var count = viewNoTradingSessions.GroupCount();
-				NoTradingSessions = new NoTradingSessions[count];
+				NoTradingSessions = new MultilegOrderCancelReplaceRequestNoTradingSessions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTradingSessions[i] = new();
@@ -399,7 +399,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoLegs") is IMessageView viewNoLegs)
 			{
 				var count = viewNoLegs.GroupCount();
-				NoLegs = new NoLegs[count];
+				NoLegs = new MultilegOrderCancelReplaceRequestNoLegs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegs[i] = new();

@@ -38,7 +38,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public int? TotalAffectedOrders {get; set;}
 		
 		[Group(NoOfTag = 534, Offset = 9, Required = false)]
-		public NoAffectedOrders[]? NoAffectedOrders {get; set;}
+		public OrderMassCancelReportNoAffectedOrders[]? NoAffectedOrders {get; set;}
 		
 		[TagDetails(Tag = 336, Type = TagType.String, Offset = 10, Required = false)]
 		public string? TradingSessionID {get; set;}
@@ -138,7 +138,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoAffectedOrders") is IMessageView viewNoAffectedOrders)
 			{
 				var count = viewNoAffectedOrders.GroupCount();
-				NoAffectedOrders = new NoAffectedOrders[count];
+				NoAffectedOrders = new OrderMassCancelReportNoAffectedOrders[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAffectedOrders[i] = new();

@@ -22,7 +22,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 		public string? UnderlyingSecurityIDSource {get; set;}
 		
 		[Group(NoOfTag = 457, Offset = 4, Required = false)]
-		public NoUnderlyingSecurityAltID[]? NoUnderlyingSecurityAltID {get; set;}
+		public MassQuoteAcknowledgementNoUnderlyingSecurityAltID[]? NoUnderlyingSecurityAltID {get; set;}
 		
 		[TagDetails(Tag = 462, Type = TagType.Int, Offset = 5, Required = false)]
 		public int? UnderlyingProduct {get; set;}
@@ -179,7 +179,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			if (view.GetView("NoUnderlyingSecurityAltID") is IMessageView viewNoUnderlyingSecurityAltID)
 			{
 				var count = viewNoUnderlyingSecurityAltID.GroupCount();
-				NoUnderlyingSecurityAltID = new NoUnderlyingSecurityAltID[count];
+				NoUnderlyingSecurityAltID = new MassQuoteAcknowledgementNoUnderlyingSecurityAltID[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingSecurityAltID[i] = new();

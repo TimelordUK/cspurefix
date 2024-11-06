@@ -35,7 +35,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public string? Account {get; set;}
 		
 		[Group(NoOfTag = 78, Offset = 8, Required = false)]
-		public NoAllocs[]? NoAllocs {get; set;}
+		public OrderCancelReplaceRequestNoAllocs[]? NoAllocs {get; set;}
 		
 		[TagDetails(Tag = 63, Type = TagType.String, Offset = 9, Required = false)]
 		public string? SettlmntTyp {get; set;}
@@ -59,7 +59,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public string? ExDestination {get; set;}
 		
 		[Group(NoOfTag = 386, Offset = 16, Required = false)]
-		public NoTradingSessions[]? NoTradingSessions {get; set;}
+		public OrderCancelReplaceRequestNoTradingSessions[]? NoTradingSessions {get; set;}
 		
 		[TagDetails(Tag = 55, Type = TagType.String, Offset = 17, Required = true)]
 		public string? Symbol {get; set;}
@@ -362,7 +362,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
 			{
 				var count = viewNoAllocs.GroupCount();
-				NoAllocs = new NoAllocs[count];
+				NoAllocs = new OrderCancelReplaceRequestNoAllocs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAllocs[i] = new();
@@ -379,7 +379,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoTradingSessions") is IMessageView viewNoTradingSessions)
 			{
 				var count = viewNoTradingSessions.GroupCount();
-				NoTradingSessions = new NoTradingSessions[count];
+				NoTradingSessions = new OrderCancelReplaceRequestNoTradingSessions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTradingSessions[i] = new();

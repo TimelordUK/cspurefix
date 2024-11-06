@@ -32,7 +32,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public int? MaxMessageSize {get; set;}
 		
 		[Group(NoOfTag = 384, Offset = 7, Required = false)]
-		public NoMsgTypes[]? NoMsgTypes {get; set;}
+		public LogonNoMsgTypes[]? NoMsgTypes {get; set;}
 		
 		[TagDetails(Tag = 464, Type = TagType.Boolean, Offset = 8, Required = false)]
 		public bool? TestMessageIndicator {get; set;}
@@ -103,7 +103,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoMsgTypes") is IMessageView viewNoMsgTypes)
 			{
 				var count = viewNoMsgTypes.GroupCount();
-				NoMsgTypes = new NoMsgTypes[count];
+				NoMsgTypes = new LogonNoMsgTypes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMsgTypes[i] = new();

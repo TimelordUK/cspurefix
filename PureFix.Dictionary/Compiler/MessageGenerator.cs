@@ -72,7 +72,7 @@ namespace PureFix.Dictionary.Compiler
                 var typename = message.Name;
                 using(generator.BeginBlock($"public sealed partial class {typename} : {nameof(IFixMessage)}"))
                 {
-                    ApplyFields(generator, string.Empty, message);
+                    ApplyFields(generator, message.Name, message);
 
                     generator.WriteLine();
                     generator.WriteLine("IStandardHeader? IFixMessage.StandardHeader => StandardHeader;");
@@ -134,7 +134,7 @@ namespace PureFix.Dictionary.Compiler
                     }
 
                     generator.WriteLine();
-                    GenerateSupportingFunctions(generator, parentPath + component.Name, component.Definition!);
+                    GenerateSupportingFunctions(generator, parentPath, component.Definition!);
                 }
             }
 
@@ -144,7 +144,6 @@ namespace PureFix.Dictionary.Compiler
         protected override void HandleGroupProperty(CodeGenerator generator, string parentPath, int index, ContainedGroupField field)
         {
             if (field.Definition == null) return;
-
             var countField = field.Definition.NoOfField!.Tag;
             var typeName = MakeTypeName(parentPath, field.Definition);
 

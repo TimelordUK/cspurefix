@@ -71,7 +71,7 @@ namespace PureFix.Test.Ascii
             ((IFixParser)message).Parse(view);
 
             Assert.That(QuickLookup.On(message)["OrderID"].As<string>(), Is.EqualTo("ipsum"));
-            var parties = QuickLookup.On(message)["Parties"]["NoPartyIDs"].As<ExecutionReportPartiesNoPartyIDs[]>();
+            var parties = QuickLookup.On(message)["Parties"]["NoPartyIDs"].As<ExecutionReportNoPartyIDs[]>();
             Assert.That(parties, Is.Not.Null & Has.Length.EqualTo(3));
             Assert.That(parties[0], Is.Not.Null);
             Assert.That(parties[1], Is.Not.Null);
@@ -1013,7 +1013,7 @@ namespace PureFix.Test.Ascii
             Assert.That(erView, Is.Not.Null);
             var partyView = erView.GetView("Parties");
             Assert.That(partyView, Is.Not.Null);
-            var parties = new ExecutionReportPartiesNoPartyIDs();
+            var parties = new ExecutionReportNoPartyIDs();
             ((IFixParser)parties).Parse(partyView);
             Assert.That(parties, Is.Not.Null);
             var json = JsonHelper.ToJson(parties);
@@ -1038,7 +1038,7 @@ namespace PureFix.Test.Ascii
                                     """;
 
 
-            var instance = JsonHelper.FromJson<ExecutionReportPartiesNoPartyIDs>(expected);
+            var instance = JsonHelper.FromJson<ExecutionReportNoPartyIDs>(expected);
             Assert.That(parties, DIs.DeepEqualTo(instance));
 
             var noParties = partyView.GetView("NoPartyIDs");

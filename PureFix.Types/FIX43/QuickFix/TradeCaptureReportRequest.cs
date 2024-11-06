@@ -41,7 +41,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public InstrumentComponent? Instrument {get; set;}
 		
 		[Group(NoOfTag = 580, Offset = 10, Required = false)]
-		public NoDates[]? NoDates {get; set;}
+		public TradeCaptureReportRequestNoDates[]? NoDates {get; set;}
 		
 		[TagDetails(Tag = 54, Type = TagType.String, Offset = 11, Required = false)]
 		public string? Side {get; set;}
@@ -138,7 +138,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoDates") is IMessageView viewNoDates)
 			{
 				var count = viewNoDates.GroupCount();
-				NoDates = new NoDates[count];
+				NoDates = new TradeCaptureReportRequestNoDates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDates[i] = new();

@@ -17,7 +17,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? RFQReqID {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 2, Required = true)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public RFQRequestNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[TagDetails(Tag = 263, Type = TagType.String, Offset = 3, Required = false)]
 		public string? SubscriptionRequestType {get; set;}
@@ -67,7 +67,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new RFQRequestNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();

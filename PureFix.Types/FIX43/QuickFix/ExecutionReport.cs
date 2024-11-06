@@ -41,7 +41,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? TradeOriginationDate {get; set;}
 		
 		[Group(NoOfTag = 382, Offset = 10, Required = false)]
-		public NoContraBrokers[]? NoContraBrokers {get; set;}
+		public ExecutionReportNoContraBrokers[]? NoContraBrokers {get; set;}
 		
 		[TagDetails(Tag = 66, Type = TagType.String, Offset = 11, Required = false)]
 		public string? ListID {get; set;}
@@ -356,10 +356,10 @@ namespace PureFix.Types.FIX43.QuickFix
 		public double? PriceImprovement {get; set;}
 		
 		[Group(NoOfTag = 518, Offset = 115, Required = false)]
-		public NoContAmts[]? NoContAmts {get; set;}
+		public ExecutionReportNoContAmts[]? NoContAmts {get; set;}
 		
 		[Group(NoOfTag = 555, Offset = 116, Required = false)]
-		public NoLegs[]? NoLegs {get; set;}
+		public ExecutionReportNoLegs[]? NoLegs {get; set;}
 		
 		[Component(Offset = 117, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -556,7 +556,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoContraBrokers") is IMessageView viewNoContraBrokers)
 			{
 				var count = viewNoContraBrokers.GroupCount();
-				NoContraBrokers = new NoContraBrokers[count];
+				NoContraBrokers = new ExecutionReportNoContraBrokers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoContraBrokers[i] = new();
@@ -694,7 +694,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoContAmts") is IMessageView viewNoContAmts)
 			{
 				var count = viewNoContAmts.GroupCount();
-				NoContAmts = new NoContAmts[count];
+				NoContAmts = new ExecutionReportNoContAmts[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoContAmts[i] = new();
@@ -704,7 +704,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoLegs") is IMessageView viewNoLegs)
 			{
 				var count = viewNoLegs.GroupCount();
-				NoLegs = new NoLegs[count];
+				NoLegs = new ExecutionReportNoLegs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegs[i] = new();

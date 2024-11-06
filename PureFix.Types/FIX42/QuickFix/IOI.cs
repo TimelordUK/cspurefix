@@ -101,7 +101,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public bool? IOINaturalFlag {get; set;}
 		
 		[Group(NoOfTag = 199, Offset = 30, Required = false)]
-		public NoIOIQualifiers[]? NoIOIQualifiers {get; set;}
+		public IOINoIOIQualifiers[]? NoIOIQualifiers {get; set;}
 		
 		[TagDetails(Tag = 58, Type = TagType.String, Offset = 31, Required = false)]
 		public string? Text {get; set;}
@@ -119,7 +119,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public string? URLLink {get; set;}
 		
 		[Group(NoOfTag = 215, Offset = 36, Required = false)]
-		public NoRoutingIDs[]? NoRoutingIDs {get; set;}
+		public IOINoRoutingIDs[]? NoRoutingIDs {get; set;}
 		
 		[TagDetails(Tag = 218, Type = TagType.Float, Offset = 37, Required = false)]
 		public double? SpreadToBenchmark {get; set;}
@@ -254,7 +254,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoIOIQualifiers") is IMessageView viewNoIOIQualifiers)
 			{
 				var count = viewNoIOIQualifiers.GroupCount();
-				NoIOIQualifiers = new NoIOIQualifiers[count];
+				NoIOIQualifiers = new IOINoIOIQualifiers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoIOIQualifiers[i] = new();
@@ -269,7 +269,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoRoutingIDs") is IMessageView viewNoRoutingIDs)
 			{
 				var count = viewNoRoutingIDs.GroupCount();
-				NoRoutingIDs = new NoRoutingIDs[count];
+				NoRoutingIDs = new IOINoRoutingIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRoutingIDs[i] = new();

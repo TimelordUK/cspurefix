@@ -29,7 +29,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public double? DefOfferSize {get; set;}
 		
 		[Group(NoOfTag = 296, Offset = 6, Required = true)]
-		public NoQuoteSets[]? NoQuoteSets {get; set;}
+		public MassQuoteNoQuoteSets[]? NoQuoteSets {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -83,7 +83,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoQuoteSets") is IMessageView viewNoQuoteSets)
 			{
 				var count = viewNoQuoteSets.GroupCount();
-				NoQuoteSets = new NoQuoteSets[count];
+				NoQuoteSets = new MassQuoteNoQuoteSets[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoQuoteSets[i] = new();

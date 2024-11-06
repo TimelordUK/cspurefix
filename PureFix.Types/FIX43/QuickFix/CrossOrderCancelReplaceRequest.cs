@@ -29,7 +29,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public int? CrossPrioritization {get; set;}
 		
 		[Group(NoOfTag = 552, Offset = 6, Required = true)]
-		public NoSides[]? NoSides {get; set;}
+		public CrossOrderCancelReplaceRequestNoSides[]? NoSides {get; set;}
 		
 		[Component(Offset = 7, Required = true)]
 		public InstrumentComponent? Instrument {get; set;}
@@ -56,7 +56,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public string? ExDestination {get; set;}
 		
 		[Group(NoOfTag = 386, Offset = 15, Required = false)]
-		public NoTradingSessions[]? NoTradingSessions {get; set;}
+		public CrossOrderCancelReplaceRequestNoTradingSessions[]? NoTradingSessions {get; set;}
 		
 		[TagDetails(Tag = 81, Type = TagType.String, Offset = 16, Required = false)]
 		public string? ProcessCode {get; set;}
@@ -257,7 +257,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoSides") is IMessageView viewNoSides)
 			{
 				var count = viewNoSides.GroupCount();
-				NoSides = new NoSides[count];
+				NoSides = new CrossOrderCancelReplaceRequestNoSides[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSides[i] = new();
@@ -279,7 +279,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoTradingSessions") is IMessageView viewNoTradingSessions)
 			{
 				var count = viewNoTradingSessions.GroupCount();
-				NoTradingSessions = new NoTradingSessions[count];
+				NoTradingSessions = new CrossOrderCancelReplaceRequestNoTradingSessions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTradingSessions[i] = new();

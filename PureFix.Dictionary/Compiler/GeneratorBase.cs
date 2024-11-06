@@ -2,6 +2,7 @@
 using PureFix.Dictionary.Definition;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,13 +103,13 @@ namespace PureFix.Dictionary.Compiler
                 }
                 else if(field is ContainedComponentField componentField)
                 {
-                    HandleComponentProperty(generator, parentPath + set.Name, i, componentField);
-                    Process(parentPath + set.Name, componentField);
+                    HandleComponentProperty(generator, parentPath, i, componentField);
+                    Process(parentPath, componentField);
                 }
                 else if(field is ContainedGroupField groupField)
                 {
-                    HandleGroupProperty(generator, parentPath + set.Name, i, groupField);
-                    Process(parentPath + set.Name, groupField);
+                    HandleGroupProperty(generator, parentPath, i, groupField);
+                    Process(parentPath, groupField);
                 }
 
                 last = field;
@@ -160,6 +161,10 @@ namespace PureFix.Dictionary.Compiler
 
         protected string MakeTypeName(string parentPath, IContainedSet set)
         {
+            if (set.Name == "StandardHeader")
+            {
+               // Debugger.Break();
+            }
             if (set.Type == ContainedSetType.Component)
             {
                 return set.Name + "Component";

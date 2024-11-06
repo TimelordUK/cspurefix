@@ -29,13 +29,13 @@ namespace PureFix.Types.FIX43.QuickFix
 		public byte[]? EncodedHeadline {get; set;}
 		
 		[Group(NoOfTag = 215, Offset = 6, Required = false)]
-		public NoRoutingIDs[]? NoRoutingIDs {get; set;}
+		public NewsNoRoutingIDs[]? NoRoutingIDs {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 7, Required = false)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public NewsNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[Group(NoOfTag = 33, Offset = 8, Required = true)]
-		public LinesOfText[]? LinesOfText {get; set;}
+		public NewsLinesOfText[]? LinesOfText {get; set;}
 		
 		[TagDetails(Tag = 149, Type = TagType.String, Offset = 9, Required = false)]
 		public string? URLLink {get; set;}
@@ -123,7 +123,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoRoutingIDs") is IMessageView viewNoRoutingIDs)
 			{
 				var count = viewNoRoutingIDs.GroupCount();
-				NoRoutingIDs = new NoRoutingIDs[count];
+				NoRoutingIDs = new NewsNoRoutingIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRoutingIDs[i] = new();
@@ -133,7 +133,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new NewsNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();
@@ -143,7 +143,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("LinesOfText") is IMessageView viewLinesOfText)
 			{
 				var count = viewLinesOfText.GroupCount();
-				LinesOfText = new LinesOfText[count];
+				LinesOfText = new NewsLinesOfText[count];
 				for (int i = 0; i < count; i++)
 				{
 					LinesOfText[i] = new();

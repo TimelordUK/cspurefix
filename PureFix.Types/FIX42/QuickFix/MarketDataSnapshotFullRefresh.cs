@@ -83,7 +83,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public double? TotalVolumeTraded {get; set;}
 		
 		[Group(NoOfTag = 268, Offset = 24, Required = true)]
-		public NoMDEntries[]? NoMDEntries {get; set;}
+		public MarketDataSnapshotFullRefreshNoMDEntries[]? NoMDEntries {get; set;}
 		
 		[Component(Offset = 25, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -179,7 +179,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoMDEntries") is IMessageView viewNoMDEntries)
 			{
 				var count = viewNoMDEntries.GroupCount();
-				NoMDEntries = new NoMDEntries[count];
+				NoMDEntries = new MarketDataSnapshotFullRefreshNoMDEntries[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMDEntries[i] = new();

@@ -26,7 +26,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public int? TotalNumSecurities {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 5, Required = false)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public SecurityListNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[Component(Offset = 6, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -79,7 +79,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new SecurityListNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();

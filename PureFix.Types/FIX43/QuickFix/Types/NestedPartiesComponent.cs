@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 	public sealed partial class NestedPartiesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 539, Offset = 0, Required = false)]
-		public NoNestedPartyIDs[]? NoNestedPartyIDs {get; set;}
+		public ExecutionReportNoNestedPartyIDs[]? NoNestedPartyIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX43.QuickFix.Types
 			if (view.GetView("NoNestedPartyIDs") is IMessageView viewNoNestedPartyIDs)
 			{
 				var count = viewNoNestedPartyIDs.GroupCount();
-				NoNestedPartyIDs = new NoNestedPartyIDs[count];
+				NoNestedPartyIDs = new ExecutionReportNoNestedPartyIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoNestedPartyIDs[i] = new();

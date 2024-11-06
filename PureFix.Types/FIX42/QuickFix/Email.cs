@@ -32,10 +32,10 @@ namespace PureFix.Types.FIX42.QuickFix
 		public byte[]? EncodedSubject {get; set;}
 		
 		[Group(NoOfTag = 215, Offset = 7, Required = false)]
-		public NoRoutingIDs[]? NoRoutingIDs {get; set;}
+		public EmailNoRoutingIDs[]? NoRoutingIDs {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 8, Required = false)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public EmailNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[TagDetails(Tag = 37, Type = TagType.String, Offset = 9, Required = false)]
 		public string? OrderID {get; set;}
@@ -44,7 +44,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public string? ClOrdID {get; set;}
 		
 		[Group(NoOfTag = 33, Offset = 11, Required = true)]
-		public LinesOfText[]? LinesOfText {get; set;}
+		public EmailLinesOfText[]? LinesOfText {get; set;}
 		
 		[TagDetails(Tag = 95, Type = TagType.Length, Offset = 12, Required = false, LinksToTag = 96)]
 		public int? RawDataLength {get; set;}
@@ -134,7 +134,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoRoutingIDs") is IMessageView viewNoRoutingIDs)
 			{
 				var count = viewNoRoutingIDs.GroupCount();
-				NoRoutingIDs = new NoRoutingIDs[count];
+				NoRoutingIDs = new EmailNoRoutingIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRoutingIDs[i] = new();
@@ -144,7 +144,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new EmailNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();
@@ -156,7 +156,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("LinesOfText") is IMessageView viewLinesOfText)
 			{
 				var count = viewLinesOfText.GroupCount();
-				LinesOfText = new LinesOfText[count];
+				LinesOfText = new EmailLinesOfText[count];
 				for (int i = 0; i < count; i++)
 				{
 					LinesOfText[i] = new();

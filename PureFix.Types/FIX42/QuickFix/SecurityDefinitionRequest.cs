@@ -92,7 +92,7 @@ namespace PureFix.Types.FIX42.QuickFix
 		public string? TradingSessionID {get; set;}
 		
 		[Group(NoOfTag = 146, Offset = 27, Required = false)]
-		public NoRelatedSym[]? NoRelatedSym {get; set;}
+		public SecurityDefinitionRequestNoRelatedSym[]? NoRelatedSym {get; set;}
 		
 		[Component(Offset = 28, Required = true)]
 		public StandardTrailerComponent? StandardTrailer {get; set;}
@@ -197,7 +197,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoRelatedSym") is IMessageView viewNoRelatedSym)
 			{
 				var count = viewNoRelatedSym.GroupCount();
-				NoRelatedSym = new NoRelatedSym[count];
+				NoRelatedSym = new SecurityDefinitionRequestNoRelatedSym[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedSym[i] = new();

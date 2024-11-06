@@ -44,7 +44,7 @@ namespace PureFix.Types.FIX43.QuickFix
 		public byte[]? EncodedText {get; set;}
 		
 		[Group(NoOfTag = 555, Offset = 11, Required = false)]
-		public NoLegs[]? NoLegs {get; set;}
+		public SecurityDefinitionNoLegs[]? NoLegs {get; set;}
 		
 		[TagDetails(Tag = 561, Type = TagType.Float, Offset = 12, Required = false)]
 		public double? RoundLot {get; set;}
@@ -124,7 +124,7 @@ namespace PureFix.Types.FIX43.QuickFix
 			if (view.GetView("NoLegs") is IMessageView viewNoLegs)
 			{
 				var count = viewNoLegs.GroupCount();
-				NoLegs = new NoLegs[count];
+				NoLegs = new SecurityDefinitionNoLegs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegs[i] = new();

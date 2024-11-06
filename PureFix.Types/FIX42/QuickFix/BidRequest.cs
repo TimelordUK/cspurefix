@@ -44,10 +44,10 @@ namespace PureFix.Types.FIX42.QuickFix
 		public double? SideValue2 {get; set;}
 		
 		[Group(NoOfTag = 398, Offset = 11, Required = false)]
-		public NoBidDescriptors[]? NoBidDescriptors {get; set;}
+		public BidRequestNoBidDescriptors[]? NoBidDescriptors {get; set;}
 		
 		[Group(NoOfTag = 420, Offset = 12, Required = false)]
-		public NoBidComponents[]? NoBidComponents {get; set;}
+		public BidRequestNoBidComponents[]? NoBidComponents {get; set;}
 		
 		[TagDetails(Tag = 409, Type = TagType.Int, Offset = 13, Required = false)]
 		public int? LiquidityIndType {get; set;}
@@ -194,7 +194,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoBidDescriptors") is IMessageView viewNoBidDescriptors)
 			{
 				var count = viewNoBidDescriptors.GroupCount();
-				NoBidDescriptors = new NoBidDescriptors[count];
+				NoBidDescriptors = new BidRequestNoBidDescriptors[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoBidDescriptors[i] = new();
@@ -204,7 +204,7 @@ namespace PureFix.Types.FIX42.QuickFix
 			if (view.GetView("NoBidComponents") is IMessageView viewNoBidComponents)
 			{
 				var count = viewNoBidComponents.GroupCount();
-				NoBidComponents = new NoBidComponents[count];
+				NoBidComponents = new BidRequestNoBidComponents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoBidComponents[i] = new();
