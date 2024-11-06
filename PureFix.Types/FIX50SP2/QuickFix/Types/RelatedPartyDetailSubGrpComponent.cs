@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RelatedPartyDetailSubGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1566, Offset = 0, Required = false)]
-		public NoRelatedPartyDetailSubIDs[]? NoRelatedPartyDetailSubIDs {get; set;}
+		public TradeCaptureReportNoRelatedPartyDetailSubIDs[]? NoRelatedPartyDetailSubIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRelatedPartyDetailSubIDs") is IMessageView viewNoRelatedPartyDetailSubIDs)
 			{
 				var count = viewNoRelatedPartyDetailSubIDs.GroupCount();
-				NoRelatedPartyDetailSubIDs = new NoRelatedPartyDetailSubIDs[count];
+				NoRelatedPartyDetailSubIDs = new TradeCaptureReportNoRelatedPartyDetailSubIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedPartyDetailSubIDs[i] = new();

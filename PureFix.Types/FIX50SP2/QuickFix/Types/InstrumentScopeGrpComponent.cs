@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class InstrumentScopeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1656, Offset = 0, Required = false)]
-		public NoInstrumentScopes[]? NoInstrumentScopes {get; set;}
+		public MarketDefinitionNoInstrumentScopes[]? NoInstrumentScopes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoInstrumentScopes") is IMessageView viewNoInstrumentScopes)
 			{
 				var count = viewNoInstrumentScopes.GroupCount();
-				NoInstrumentScopes = new NoInstrumentScopes[count];
+				NoInstrumentScopes = new MarketDefinitionNoInstrumentScopes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoInstrumentScopes[i] = new();

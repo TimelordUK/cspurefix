@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class CollateralAmountGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1703, Offset = 0, Required = false)]
-		public NoCollateralAmounts[]? NoCollateralAmounts {get; set;}
+		public TradeCaptureReportNoCollateralAmounts[]? NoCollateralAmounts {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoCollateralAmounts") is IMessageView viewNoCollateralAmounts)
 			{
 				var count = viewNoCollateralAmounts.GroupCount();
-				NoCollateralAmounts = new NoCollateralAmounts[count];
+				NoCollateralAmounts = new TradeCaptureReportNoCollateralAmounts[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoCollateralAmounts[i] = new();

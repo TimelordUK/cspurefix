@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegDeliveryStreamCommoditySourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41460, Offset = 0, Required = false)]
-		public NoLegDeliveryStreamCommoditySources[]? NoLegDeliveryStreamCommoditySources {get; set;}
+		public IOINoLegDeliveryStreamCommoditySources[]? NoLegDeliveryStreamCommoditySources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegDeliveryStreamCommoditySources") is IMessageView viewNoLegDeliveryStreamCommoditySources)
 			{
 				var count = viewNoLegDeliveryStreamCommoditySources.GroupCount();
-				NoLegDeliveryStreamCommoditySources = new NoLegDeliveryStreamCommoditySources[count];
+				NoLegDeliveryStreamCommoditySources = new IOINoLegDeliveryStreamCommoditySources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegDeliveryStreamCommoditySources[i] = new();

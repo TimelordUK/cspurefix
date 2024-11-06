@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ReturnRateValuationDateBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42770, Offset = 0, Required = false)]
-		public NoReturnRateValuationDateBusinessCenters[]? NoReturnRateValuationDateBusinessCenters {get; set;}
+		public IOINoReturnRateValuationDateBusinessCenters[]? NoReturnRateValuationDateBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoReturnRateValuationDateBusinessCenters") is IMessageView viewNoReturnRateValuationDateBusinessCenters)
 			{
 				var count = viewNoReturnRateValuationDateBusinessCenters.GroupCount();
-				NoReturnRateValuationDateBusinessCenters = new NoReturnRateValuationDateBusinessCenters[count];
+				NoReturnRateValuationDateBusinessCenters = new IOINoReturnRateValuationDateBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoReturnRateValuationDateBusinessCenters[i] = new();

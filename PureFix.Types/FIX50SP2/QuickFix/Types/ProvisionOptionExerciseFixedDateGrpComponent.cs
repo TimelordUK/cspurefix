@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ProvisionOptionExerciseFixedDateGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40142, Offset = 0, Required = false)]
-		public NoProvisionOptionExerciseFixedDates[]? NoProvisionOptionExerciseFixedDates {get; set;}
+		public IOINoProvisionOptionExerciseFixedDates[]? NoProvisionOptionExerciseFixedDates {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoProvisionOptionExerciseFixedDates") is IMessageView viewNoProvisionOptionExerciseFixedDates)
 			{
 				var count = viewNoProvisionOptionExerciseFixedDates.GroupCount();
-				NoProvisionOptionExerciseFixedDates = new NoProvisionOptionExerciseFixedDates[count];
+				NoProvisionOptionExerciseFixedDates = new IOINoProvisionOptionExerciseFixedDates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoProvisionOptionExerciseFixedDates[i] = new();

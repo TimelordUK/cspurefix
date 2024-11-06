@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingAdditionalTermGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42036, Offset = 0, Required = false)]
-		public NoUnderlyingAdditionalTerms[]? NoUnderlyingAdditionalTerms {get; set;}
+		public IOINoUnderlyingAdditionalTerms[]? NoUnderlyingAdditionalTerms {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingAdditionalTerms") is IMessageView viewNoUnderlyingAdditionalTerms)
 			{
 				var count = viewNoUnderlyingAdditionalTerms.GroupCount();
-				NoUnderlyingAdditionalTerms = new NoUnderlyingAdditionalTerms[count];
+				NoUnderlyingAdditionalTerms = new IOINoUnderlyingAdditionalTerms[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingAdditionalTerms[i] = new();

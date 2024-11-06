@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class PriceQualifierGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2709, Offset = 0, Required = false)]
-		public NoPriceQualifiers[]? NoPriceQualifiers {get; set;}
+		public IOINoPriceQualifiers[]? NoPriceQualifiers {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoPriceQualifiers") is IMessageView viewNoPriceQualifiers)
 			{
 				var count = viewNoPriceQualifiers.GroupCount();
-				NoPriceQualifiers = new NoPriceQualifiers[count];
+				NoPriceQualifiers = new IOINoPriceQualifiers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPriceQualifiers[i] = new();

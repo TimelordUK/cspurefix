@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class PositionQtyComponent : IFixComponent
 	{
 		[Group(NoOfTag = 702, Offset = 0, Required = false)]
-		public NoPositions[]? NoPositions {get; set;}
+		public PositionMaintenanceRequestNoPositions[]? NoPositions {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoPositions") is IMessageView viewNoPositions)
 			{
 				var count = viewNoPositions.GroupCount();
-				NoPositions = new NoPositions[count];
+				NoPositions = new PositionMaintenanceRequestNoPositions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPositions[i] = new();

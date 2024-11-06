@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RiskInstrumentScopeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1534, Offset = 0, Required = false)]
-		public NoRiskInstrumentScopes[]? NoRiskInstrumentScopes {get; set;}
+		public PartyRiskLimitsRequestNoRiskInstrumentScopes[]? NoRiskInstrumentScopes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRiskInstrumentScopes") is IMessageView viewNoRiskInstrumentScopes)
 			{
 				var count = viewNoRiskInstrumentScopes.GroupCount();
-				NoRiskInstrumentScopes = new NoRiskInstrumentScopes[count];
+				NoRiskInstrumentScopes = new PartyRiskLimitsRequestNoRiskInstrumentScopes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRiskInstrumentScopes[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class PaymentScheduleInterimExchangeDateBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40945, Offset = 0, Required = false)]
-		public NoPaymentScheduleInterimExchangeDateBusinessCenters[]? NoPaymentScheduleInterimExchangeDateBusinessCenters {get; set;}
+		public IOINoPaymentScheduleInterimExchangeDateBusinessCenters[]? NoPaymentScheduleInterimExchangeDateBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoPaymentScheduleInterimExchangeDateBusinessCenters") is IMessageView viewNoPaymentScheduleInterimExchangeDateBusinessCenters)
 			{
 				var count = viewNoPaymentScheduleInterimExchangeDateBusinessCenters.GroupCount();
-				NoPaymentScheduleInterimExchangeDateBusinessCenters = new NoPaymentScheduleInterimExchangeDateBusinessCenters[count];
+				NoPaymentScheduleInterimExchangeDateBusinessCenters = new IOINoPaymentScheduleInterimExchangeDateBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPaymentScheduleInterimExchangeDateBusinessCenters[i] = new();

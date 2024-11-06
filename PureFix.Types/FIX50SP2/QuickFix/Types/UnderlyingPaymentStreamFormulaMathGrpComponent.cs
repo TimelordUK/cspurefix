@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingPaymentStreamFormulaMathGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42981, Offset = 0, Required = false)]
-		public NoUnderlyingPaymentStreamFormulas[]? NoUnderlyingPaymentStreamFormulas {get; set;}
+		public IOINoUnderlyingPaymentStreamFormulas[]? NoUnderlyingPaymentStreamFormulas {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingPaymentStreamFormulas") is IMessageView viewNoUnderlyingPaymentStreamFormulas)
 			{
 				var count = viewNoUnderlyingPaymentStreamFormulas.GroupCount();
-				NoUnderlyingPaymentStreamFormulas = new NoUnderlyingPaymentStreamFormulas[count];
+				NoUnderlyingPaymentStreamFormulas = new IOINoUnderlyingPaymentStreamFormulas[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingPaymentStreamFormulas[i] = new();

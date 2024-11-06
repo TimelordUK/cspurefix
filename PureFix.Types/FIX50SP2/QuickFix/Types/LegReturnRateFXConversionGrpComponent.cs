@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegReturnRateFXConversionGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42530, Offset = 0, Required = false)]
-		public NoLegReturnRateFXConversions[]? NoLegReturnRateFXConversions {get; set;}
+		public IOINoLegReturnRateFXConversions[]? NoLegReturnRateFXConversions {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegReturnRateFXConversions") is IMessageView viewNoLegReturnRateFXConversions)
 			{
 				var count = viewNoLegReturnRateFXConversions.GroupCount();
-				NoLegReturnRateFXConversions = new NoLegReturnRateFXConversions[count];
+				NoLegReturnRateFXConversions = new IOINoLegReturnRateFXConversions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegReturnRateFXConversions[i] = new();

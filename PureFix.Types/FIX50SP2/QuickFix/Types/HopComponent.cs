@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class HopComponent : IFixComponent
 	{
 		[Group(NoOfTag = 627, Offset = 0, Required = false)]
-		public NoHops[]? NoHops {get; set;}
+		public LogoutNoHops[]? NoHops {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoHops") is IMessageView viewNoHops)
 			{
 				var count = viewNoHops.GroupCount();
-				NoHops = new NoHops[count];
+				NoHops = new LogoutNoHops[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoHops[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MatchExceptionGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2772, Offset = 0, Required = false)]
-		public NoMatchExceptions[]? NoMatchExceptions {get; set;}
+		public ConfirmationNoMatchExceptions[]? NoMatchExceptions {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMatchExceptions") is IMessageView viewNoMatchExceptions)
 			{
 				var count = viewNoMatchExceptions.GroupCount();
-				NoMatchExceptions = new NoMatchExceptions[count];
+				NoMatchExceptions = new ConfirmationNoMatchExceptions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMatchExceptions[i] = new();

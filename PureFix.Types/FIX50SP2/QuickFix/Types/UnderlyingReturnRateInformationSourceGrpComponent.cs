@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingReturnRateInformationSourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 43060, Offset = 0, Required = false)]
-		public NoUnderlyingReturnRateInformationSources[]? NoUnderlyingReturnRateInformationSources {get; set;}
+		public IOINoUnderlyingReturnRateInformationSources[]? NoUnderlyingReturnRateInformationSources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingReturnRateInformationSources") is IMessageView viewNoUnderlyingReturnRateInformationSources)
 			{
 				var count = viewNoUnderlyingReturnRateInformationSources.GroupCount();
-				NoUnderlyingReturnRateInformationSources = new NoUnderlyingReturnRateInformationSources[count];
+				NoUnderlyingReturnRateInformationSources = new IOINoUnderlyingReturnRateInformationSources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingReturnRateInformationSources[i] = new();

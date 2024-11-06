@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MDReqGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 267, Offset = 0, Required = false)]
-		public NoMDEntryTypes[]? NoMDEntryTypes {get; set;}
+		public MarketDataRequestNoMDEntryTypes[]? NoMDEntryTypes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMDEntryTypes") is IMessageView viewNoMDEntryTypes)
 			{
 				var count = viewNoMDEntryTypes.GroupCount();
-				NoMDEntryTypes = new NoMDEntryTypes[count];
+				NoMDEntryTypes = new MarketDataRequestNoMDEntryTypes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMDEntryTypes[i] = new();

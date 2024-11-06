@@ -19,7 +19,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 		public const int ActThreeSixtyFiveL = 14;
 		public const int NlThreeSixtyFive = 15;
 		public const int NlThreeSixty = 16;
-		public const int Act364 = 17;
+		public const int ACT364 = 17;
 		public const int ThirtyThreeSixtyFive = 18;
 		public const int ThirtyActual = 19;
 		public const int ThirtyThreeSixtyIcma = 20;

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingSettlRateDisruptionFallbackGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40659, Offset = 0, Required = false)]
-		public NoUnderlyingSettlRateFallbacks[]? NoUnderlyingSettlRateFallbacks {get; set;}
+		public IOINoUnderlyingSettlRateFallbacks[]? NoUnderlyingSettlRateFallbacks {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingSettlRateFallbacks") is IMessageView viewNoUnderlyingSettlRateFallbacks)
 			{
 				var count = viewNoUnderlyingSettlRateFallbacks.GroupCount();
-				NoUnderlyingSettlRateFallbacks = new NoUnderlyingSettlRateFallbacks[count];
+				NoUnderlyingSettlRateFallbacks = new IOINoUnderlyingSettlRateFallbacks[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingSettlRateFallbacks[i] = new();

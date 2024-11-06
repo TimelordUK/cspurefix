@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class PaymentStreamFormulaMathGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42683, Offset = 0, Required = false)]
-		public NoPaymentStreamFormulas[]? NoPaymentStreamFormulas {get; set;}
+		public IOINoPaymentStreamFormulas[]? NoPaymentStreamFormulas {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoPaymentStreamFormulas") is IMessageView viewNoPaymentStreamFormulas)
 			{
 				var count = viewNoPaymentStreamFormulas.GroupCount();
-				NoPaymentStreamFormulas = new NoPaymentStreamFormulas[count];
+				NoPaymentStreamFormulas = new IOINoPaymentStreamFormulas[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPaymentStreamFormulas[i] = new();

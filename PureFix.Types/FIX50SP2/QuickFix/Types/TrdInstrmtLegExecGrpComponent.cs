@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TrdInstrmtLegExecGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1892, Offset = 0, Required = false)]
-		public NoLegExecs[]? NoLegExecs {get; set;}
+		public TradeMatchReportNoLegExecs[]? NoLegExecs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegExecs") is IMessageView viewNoLegExecs)
 			{
 				var count = viewNoLegExecs.GroupCount();
-				NoLegExecs = new NoLegExecs[count];
+				NoLegExecs = new TradeMatchReportNoLegExecs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegExecs[i] = new();

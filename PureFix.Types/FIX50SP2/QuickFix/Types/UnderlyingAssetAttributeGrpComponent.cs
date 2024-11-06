@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingAssetAttributeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2312, Offset = 0, Required = false)]
-		public NoUnderlyingAssetAttributes[]? NoUnderlyingAssetAttributes {get; set;}
+		public IOINoUnderlyingAssetAttributes[]? NoUnderlyingAssetAttributes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingAssetAttributes") is IMessageView viewNoUnderlyingAssetAttributes)
 			{
 				var count = viewNoUnderlyingAssetAttributes.GroupCount();
-				NoUnderlyingAssetAttributes = new NoUnderlyingAssetAttributes[count];
+				NoUnderlyingAssetAttributes = new IOINoUnderlyingAssetAttributes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingAssetAttributes[i] = new();

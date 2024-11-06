@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegStreamAssetAttributeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41452, Offset = 0, Required = false)]
-		public NoLegStreamAssetAttributes[]? NoLegStreamAssetAttributes {get; set;}
+		public IOINoLegStreamAssetAttributes[]? NoLegStreamAssetAttributes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegStreamAssetAttributes") is IMessageView viewNoLegStreamAssetAttributes)
 			{
 				var count = viewNoLegStreamAssetAttributes.GroupCount();
-				NoLegStreamAssetAttributes = new NoLegStreamAssetAttributes[count];
+				NoLegStreamAssetAttributes = new IOINoLegStreamAssetAttributes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegStreamAssetAttributes[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class InstrumentPartiesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1018, Offset = 0, Required = false)]
-		public NoInstrumentParties[]? NoInstrumentParties {get; set;}
+		public IOINoInstrumentParties[]? NoInstrumentParties {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoInstrumentParties") is IMessageView viewNoInstrumentParties)
 			{
 				var count = viewNoInstrumentParties.GroupCount();
-				NoInstrumentParties = new NoInstrumentParties[count];
+				NoInstrumentParties = new IOINoInstrumentParties[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoInstrumentParties[i] = new();

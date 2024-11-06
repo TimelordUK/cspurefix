@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DerivativeInstrumentPartySubIDsGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1296, Offset = 0, Required = false)]
-		public NoDerivativeInstrumentPartySubIDs[]? NoDerivativeInstrumentPartySubIDs {get; set;}
+		public DerivativeSecurityListRequestNoDerivativeInstrumentPartySubIDs[]? NoDerivativeInstrumentPartySubIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDerivativeInstrumentPartySubIDs") is IMessageView viewNoDerivativeInstrumentPartySubIDs)
 			{
 				var count = viewNoDerivativeInstrumentPartySubIDs.GroupCount();
-				NoDerivativeInstrumentPartySubIDs = new NoDerivativeInstrumentPartySubIDs[count];
+				NoDerivativeInstrumentPartySubIDs = new DerivativeSecurityListRequestNoDerivativeInstrumentPartySubIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDerivativeInstrumentPartySubIDs[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingComplexEventsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2045, Offset = 0, Required = false)]
-		public NoUnderlyingComplexEvents[]? NoUnderlyingComplexEvents {get; set;}
+		public IOINoUnderlyingComplexEvents[]? NoUnderlyingComplexEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingComplexEvents") is IMessageView viewNoUnderlyingComplexEvents)
 			{
 				var count = viewNoUnderlyingComplexEvents.GroupCount();
-				NoUnderlyingComplexEvents = new NoUnderlyingComplexEvents[count];
+				NoUnderlyingComplexEvents = new IOINoUnderlyingComplexEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingComplexEvents[i] = new();

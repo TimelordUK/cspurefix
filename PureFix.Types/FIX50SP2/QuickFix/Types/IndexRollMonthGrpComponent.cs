@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class IndexRollMonthGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2734, Offset = 0, Required = false)]
-		public NoIndexRollMonths[]? NoIndexRollMonths {get; set;}
+		public IOINoIndexRollMonths[]? NoIndexRollMonths {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoIndexRollMonths") is IMessageView viewNoIndexRollMonths)
 			{
 				var count = viewNoIndexRollMonths.GroupCount();
-				NoIndexRollMonths = new NoIndexRollMonths[count];
+				NoIndexRollMonths = new IOINoIndexRollMonths[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoIndexRollMonths[i] = new();

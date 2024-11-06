@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegPaymentScheduleRateSourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40414, Offset = 0, Required = false)]
-		public NoLegPaymentScheduleRateSources[]? NoLegPaymentScheduleRateSources {get; set;}
+		public IOINoLegPaymentScheduleRateSources[]? NoLegPaymentScheduleRateSources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegPaymentScheduleRateSources") is IMessageView viewNoLegPaymentScheduleRateSources)
 			{
 				var count = viewNoLegPaymentScheduleRateSources.GroupCount();
-				NoLegPaymentScheduleRateSources = new NoLegPaymentScheduleRateSources[count];
+				NoLegPaymentScheduleRateSources = new IOINoLegPaymentScheduleRateSources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegPaymentScheduleRateSources[i] = new();

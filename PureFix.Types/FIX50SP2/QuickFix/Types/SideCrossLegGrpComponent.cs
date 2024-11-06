@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SideCrossLegGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1829, Offset = 0, Required = false)]
-		public NoCrossLegs[]? NoCrossLegs {get; set;}
+		public NewOrderCrossNoCrossLegs[]? NoCrossLegs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoCrossLegs") is IMessageView viewNoCrossLegs)
 			{
 				var count = viewNoCrossLegs.GroupCount();
-				NoCrossLegs = new NoCrossLegs[count];
+				NoCrossLegs = new NewOrderCrossNoCrossLegs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoCrossLegs[i] = new();

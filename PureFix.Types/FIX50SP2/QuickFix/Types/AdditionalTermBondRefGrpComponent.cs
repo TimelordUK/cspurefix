@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class AdditionalTermBondRefGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40000, Offset = 0, Required = false)]
-		public NoAdditionalTermBondRefs[]? NoAdditionalTermBondRefs {get; set;}
+		public IOINoAdditionalTermBondRefs[]? NoAdditionalTermBondRefs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoAdditionalTermBondRefs") is IMessageView viewNoAdditionalTermBondRefs)
 			{
 				var count = viewNoAdditionalTermBondRefs.GroupCount();
-				NoAdditionalTermBondRefs = new NoAdditionalTermBondRefs[count];
+				NoAdditionalTermBondRefs = new IOINoAdditionalTermBondRefs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAdditionalTermBondRefs[i] = new();

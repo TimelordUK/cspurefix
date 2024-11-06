@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegPaymentStreamPricingDateGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41593, Offset = 0, Required = false)]
-		public NoLegPaymentStreamPricingDates[]? NoLegPaymentStreamPricingDates {get; set;}
+		public IOINoLegPaymentStreamPricingDates[]? NoLegPaymentStreamPricingDates {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegPaymentStreamPricingDates") is IMessageView viewNoLegPaymentStreamPricingDates)
 			{
 				var count = viewNoLegPaymentStreamPricingDates.GroupCount();
-				NoLegPaymentStreamPricingDates = new NoLegPaymentStreamPricingDates[count];
+				NoLegPaymentStreamPricingDates = new IOINoLegPaymentStreamPricingDates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegPaymentStreamPricingDates[i] = new();

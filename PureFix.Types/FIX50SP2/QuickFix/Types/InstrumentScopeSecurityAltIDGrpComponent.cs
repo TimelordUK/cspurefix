@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class InstrumentScopeSecurityAltIDGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1540, Offset = 0, Required = false)]
-		public NoInstrumentScopeSecurityAltID[]? NoInstrumentScopeSecurityAltID {get; set;}
+		public MarketDefinitionNoInstrumentScopeSecurityAltID[]? NoInstrumentScopeSecurityAltID {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoInstrumentScopeSecurityAltID") is IMessageView viewNoInstrumentScopeSecurityAltID)
 			{
 				var count = viewNoInstrumentScopeSecurityAltID.GroupCount();
-				NoInstrumentScopeSecurityAltID = new NoInstrumentScopeSecurityAltID[count];
+				NoInstrumentScopeSecurityAltID = new MarketDefinitionNoInstrumentScopeSecurityAltID[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoInstrumentScopeSecurityAltID[i] = new();

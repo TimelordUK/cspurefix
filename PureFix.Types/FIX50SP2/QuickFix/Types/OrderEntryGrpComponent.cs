@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class OrderEntryGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2428, Offset = 0, Required = false)]
-		public NoOrderEntries[]? NoOrderEntries {get; set;}
+		public MassOrderNoOrderEntries[]? NoOrderEntries {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoOrderEntries") is IMessageView viewNoOrderEntries)
 			{
 				var count = viewNoOrderEntries.GroupCount();
-				NoOrderEntries = new NoOrderEntries[count];
+				NoOrderEntries = new MassOrderNoOrderEntries[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoOrderEntries[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingExtraordinaryEventGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42884, Offset = 0, Required = false)]
-		public NoUnderlyingExtraordinaryEvents[]? NoUnderlyingExtraordinaryEvents {get; set;}
+		public IOINoUnderlyingExtraordinaryEvents[]? NoUnderlyingExtraordinaryEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingExtraordinaryEvents") is IMessageView viewNoUnderlyingExtraordinaryEvents)
 			{
 				var count = viewNoUnderlyingExtraordinaryEvents.GroupCount();
-				NoUnderlyingExtraordinaryEvents = new NoUnderlyingExtraordinaryEvents[count];
+				NoUnderlyingExtraordinaryEvents = new IOINoUnderlyingExtraordinaryEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingExtraordinaryEvents[i] = new();

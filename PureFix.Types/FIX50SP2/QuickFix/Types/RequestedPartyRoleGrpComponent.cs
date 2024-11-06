@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RequestedPartyRoleGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1508, Offset = 0, Required = false)]
-		public NoRequestedPartyRoles[]? NoRequestedPartyRoles {get; set;}
+		public PartyDetailsListRequestNoRequestedPartyRoles[]? NoRequestedPartyRoles {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRequestedPartyRoles") is IMessageView viewNoRequestedPartyRoles)
 			{
 				var count = viewNoRequestedPartyRoles.GroupCount();
-				NoRequestedPartyRoles = new NoRequestedPartyRoles[count];
+				NoRequestedPartyRoles = new PartyDetailsListRequestNoRequestedPartyRoles[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRequestedPartyRoles[i] = new();

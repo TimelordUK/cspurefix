@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TransactionAttributeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2871, Offset = 0, Required = false)]
-		public NoTransactionAttributes[]? NoTransactionAttributes {get; set;}
+		public TradeCaptureReportNoTransactionAttributes[]? NoTransactionAttributes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTransactionAttributes") is IMessageView viewNoTransactionAttributes)
 			{
 				var count = viewNoTransactionAttributes.GroupCount();
-				NoTransactionAttributes = new NoTransactionAttributes[count];
+				NoTransactionAttributes = new TradeCaptureReportNoTransactionAttributes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTransactionAttributes[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ClearingPriceParametersGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2580, Offset = 0, Required = false)]
-		public NoClearingPriceParameters[]? NoClearingPriceParameters {get; set;}
+		public SecurityStatusNoClearingPriceParameters[]? NoClearingPriceParameters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoClearingPriceParameters") is IMessageView viewNoClearingPriceParameters)
 			{
 				var count = viewNoClearingPriceParameters.GroupCount();
-				NoClearingPriceParameters = new NoClearingPriceParameters[count];
+				NoClearingPriceParameters = new SecurityStatusNoClearingPriceParameters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoClearingPriceParameters[i] = new();

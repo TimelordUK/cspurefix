@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class PaymentStreamPricingBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41192, Offset = 0, Required = false)]
-		public NoPaymentStreamPricingBusinessCenters[]? NoPaymentStreamPricingBusinessCenters {get; set;}
+		public IOINoPaymentStreamPricingBusinessCenters[]? NoPaymentStreamPricingBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoPaymentStreamPricingBusinessCenters") is IMessageView viewNoPaymentStreamPricingBusinessCenters)
 			{
 				var count = viewNoPaymentStreamPricingBusinessCenters.GroupCount();
-				NoPaymentStreamPricingBusinessCenters = new NoPaymentStreamPricingBusinessCenters[count];
+				NoPaymentStreamPricingBusinessCenters = new IOINoPaymentStreamPricingBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPaymentStreamPricingBusinessCenters[i] = new();

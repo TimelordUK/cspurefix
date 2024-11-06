@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingProtectionTermEventGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42077, Offset = 0, Required = false)]
-		public NoUnderlyingProtectionTermEvents[]? NoUnderlyingProtectionTermEvents {get; set;}
+		public IOINoUnderlyingProtectionTermEvents[]? NoUnderlyingProtectionTermEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingProtectionTermEvents") is IMessageView viewNoUnderlyingProtectionTermEvents)
 			{
 				var count = viewNoUnderlyingProtectionTermEvents.GroupCount();
-				NoUnderlyingProtectionTermEvents = new NoUnderlyingProtectionTermEvents[count];
+				NoUnderlyingProtectionTermEvents = new IOINoUnderlyingProtectionTermEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingProtectionTermEvents[i] = new();

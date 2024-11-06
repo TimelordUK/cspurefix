@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class AttachmentGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2104, Offset = 0, Required = false)]
-		public NoAttachments[]? NoAttachments {get; set;}
+		public EmailNoAttachments[]? NoAttachments {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoAttachments") is IMessageView viewNoAttachments)
 			{
 				var count = viewNoAttachments.GroupCount();
-				NoAttachments = new NoAttachments[count];
+				NoAttachments = new EmailNoAttachments[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAttachments[i] = new();

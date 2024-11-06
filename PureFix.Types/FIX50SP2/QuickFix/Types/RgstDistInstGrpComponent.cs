@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RgstDistInstGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 510, Offset = 0, Required = false)]
-		public NoDistribInsts[]? NoDistribInsts {get; set;}
+		public RegistrationInstructionsNoDistribInsts[]? NoDistribInsts {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDistribInsts") is IMessageView viewNoDistribInsts)
 			{
 				var count = viewNoDistribInsts.GroupCount();
-				NoDistribInsts = new NoDistribInsts[count];
+				NoDistribInsts = new RegistrationInstructionsNoDistribInsts[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDistribInsts[i] = new();

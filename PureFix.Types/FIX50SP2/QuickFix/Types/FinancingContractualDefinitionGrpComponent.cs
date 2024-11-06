@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class FinancingContractualDefinitionGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40040, Offset = 0, Required = false)]
-		public NoContractualDefinitions[]? NoContractualDefinitions {get; set;}
+		public IOINoContractualDefinitions[]? NoContractualDefinitions {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoContractualDefinitions") is IMessageView viewNoContractualDefinitions)
 			{
 				var count = viewNoContractualDefinitions.GroupCount();
-				NoContractualDefinitions = new NoContractualDefinitions[count];
+				NoContractualDefinitions = new IOINoContractualDefinitions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoContractualDefinitions[i] = new();

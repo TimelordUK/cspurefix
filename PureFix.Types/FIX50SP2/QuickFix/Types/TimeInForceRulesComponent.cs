@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TimeInForceRulesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1239, Offset = 0, Required = false)]
-		public NoTimeInForceRules[]? NoTimeInForceRules {get; set;}
+		public SecurityDefinitionNoTimeInForceRules[]? NoTimeInForceRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTimeInForceRules") is IMessageView viewNoTimeInForceRules)
 			{
 				var count = viewNoTimeInForceRules.GroupCount();
-				NoTimeInForceRules = new NoTimeInForceRules[count];
+				NoTimeInForceRules = new SecurityDefinitionNoTimeInForceRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTimeInForceRules[i] = new();

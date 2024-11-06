@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SecAltIDGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 454, Offset = 0, Required = false)]
-		public NoSecurityAltID[]? NoSecurityAltID {get; set;}
+		public IOINoSecurityAltID[]? NoSecurityAltID {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoSecurityAltID") is IMessageView viewNoSecurityAltID)
 			{
 				var count = viewNoSecurityAltID.GroupCount();
-				NoSecurityAltID = new NoSecurityAltID[count];
+				NoSecurityAltID = new IOINoSecurityAltID[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSecurityAltID[i] = new();

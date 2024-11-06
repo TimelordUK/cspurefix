@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TrdCapDtGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 580, Offset = 0, Required = false)]
-		public NoDates[]? NoDates {get; set;}
+		public TradeCaptureReportRequestNoDates[]? NoDates {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDates") is IMessageView viewNoDates)
 			{
 				var count = viewNoDates.GroupCount();
-				NoDates = new NoDates[count];
+				NoDates = new TradeCaptureReportRequestNoDates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDates[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class StreamAssetAttributeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41237, Offset = 0, Required = false)]
-		public NoStreamAssetAttributes[]? NoStreamAssetAttributes {get; set;}
+		public IOINoStreamAssetAttributes[]? NoStreamAssetAttributes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoStreamAssetAttributes") is IMessageView viewNoStreamAssetAttributes)
 			{
 				var count = viewNoStreamAssetAttributes.GroupCount();
-				NoStreamAssetAttributes = new NoStreamAssetAttributes[count];
+				NoStreamAssetAttributes = new IOINoStreamAssetAttributes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStreamAssetAttributes[i] = new();

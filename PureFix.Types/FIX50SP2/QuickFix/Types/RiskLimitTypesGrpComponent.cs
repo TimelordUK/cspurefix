@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RiskLimitTypesGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1529, Offset = 0, Required = false)]
-		public NoRiskLimitTypes[]? NoRiskLimitTypes {get; set;}
+		public PartyRiskLimitsReportNoRiskLimitTypes[]? NoRiskLimitTypes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRiskLimitTypes") is IMessageView viewNoRiskLimitTypes)
 			{
 				var count = viewNoRiskLimitTypes.GroupCount();
-				NoRiskLimitTypes = new NoRiskLimitTypes[count];
+				NoRiskLimitTypes = new PartyRiskLimitsReportNoRiskLimitTypes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRiskLimitTypes[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TickRulesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1205, Offset = 0, Required = false)]
-		public NoTickRules[]? NoTickRules {get; set;}
+		public SecurityDefinitionNoTickRules[]? NoTickRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTickRules") is IMessageView viewNoTickRules)
 			{
 				var count = viewNoTickRules.GroupCount();
-				NoTickRules = new NoTickRules[count];
+				NoTickRules = new SecurityDefinitionNoTickRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTickRules[i] = new();

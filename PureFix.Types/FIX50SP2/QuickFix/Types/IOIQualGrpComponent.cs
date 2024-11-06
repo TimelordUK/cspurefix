@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class IOIQualGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 199, Offset = 0, Required = false)]
-		public NoIOIQualifiers[]? NoIOIQualifiers {get; set;}
+		public IOINoIOIQualifiers[]? NoIOIQualifiers {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoIOIQualifiers") is IMessageView viewNoIOIQualifiers)
 			{
 				var count = viewNoIOIQualifiers.GroupCount();
-				NoIOIQualifiers = new NoIOIQualifiers[count];
+				NoIOIQualifiers = new IOINoIOIQualifiers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoIOIQualifiers[i] = new();

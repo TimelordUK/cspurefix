@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class NstdPtysSubGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 804, Offset = 0, Required = false)]
-		public NoNestedPartySubIDs[]? NoNestedPartySubIDs {get; set;}
+		public ExecutionReportNoNestedPartySubIDs[]? NoNestedPartySubIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoNestedPartySubIDs") is IMessageView viewNoNestedPartySubIDs)
 			{
 				var count = viewNoNestedPartySubIDs.GroupCount();
-				NoNestedPartySubIDs = new NoNestedPartySubIDs[count];
+				NoNestedPartySubIDs = new ExecutionReportNoNestedPartySubIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoNestedPartySubIDs[i] = new();

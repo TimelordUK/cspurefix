@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RelatedMarketSegmentGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2545, Offset = 0, Required = false)]
-		public NoRelatedMarketSegments[]? NoRelatedMarketSegments {get; set;}
+		public MarketDefinitionNoRelatedMarketSegments[]? NoRelatedMarketSegments {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRelatedMarketSegments") is IMessageView viewNoRelatedMarketSegments)
 			{
 				var count = viewNoRelatedMarketSegments.GroupCount();
-				NoRelatedMarketSegments = new NoRelatedMarketSegments[count];
+				NoRelatedMarketSegments = new MarketDefinitionNoRelatedMarketSegments[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedMarketSegments[i] = new();

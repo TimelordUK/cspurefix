@@ -11,8 +11,8 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 		public const int GSpread = 7;
 		public const int CdsBasis = 8;
 		public const int CdsInterpolatedBasis = 9;
-		public const int Dv01 = 10;
-		public const int Pv01 = 11;
-		public const int Cs01 = 12;
+		public const int DV01 = 10;
+		public const int PV01 = 11;
+		public const int CS01 = 12;
 	}
 }

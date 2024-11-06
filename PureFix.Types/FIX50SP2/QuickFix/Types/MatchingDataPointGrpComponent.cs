@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MatchingDataPointGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2781, Offset = 0, Required = false)]
-		public NoMatchingDataPoints[]? NoMatchingDataPoints {get; set;}
+		public ConfirmationNoMatchingDataPoints[]? NoMatchingDataPoints {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMatchingDataPoints") is IMessageView viewNoMatchingDataPoints)
 			{
 				var count = viewNoMatchingDataPoints.GroupCount();
-				NoMatchingDataPoints = new NoMatchingDataPoints[count];
+				NoMatchingDataPoints = new ConfirmationNoMatchingDataPoints[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMatchingDataPoints[i] = new();

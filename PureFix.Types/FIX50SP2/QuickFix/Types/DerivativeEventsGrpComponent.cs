@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DerivativeEventsGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1286, Offset = 0, Required = false)]
-		public NoDerivativeEvents[]? NoDerivativeEvents {get; set;}
+		public DerivativeSecurityListRequestNoDerivativeEvents[]? NoDerivativeEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDerivativeEvents") is IMessageView viewNoDerivativeEvents)
 			{
 				var count = viewNoDerivativeEvents.GroupCount();
-				NoDerivativeEvents = new NoDerivativeEvents[count];
+				NoDerivativeEvents = new DerivativeSecurityListRequestNoDerivativeEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDerivativeEvents[i] = new();

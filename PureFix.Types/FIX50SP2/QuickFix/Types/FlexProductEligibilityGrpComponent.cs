@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class FlexProductEligibilityGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2560, Offset = 0, Required = false)]
-		public NoFlexProductEligibilities[]? NoFlexProductEligibilities {get; set;}
+		public MarketDefinitionNoFlexProductEligibilities[]? NoFlexProductEligibilities {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoFlexProductEligibilities") is IMessageView viewNoFlexProductEligibilities)
 			{
 				var count = viewNoFlexProductEligibilities.GroupCount();
-				NoFlexProductEligibilities = new NoFlexProductEligibilities[count];
+				NoFlexProductEligibilities = new MarketDefinitionNoFlexProductEligibilities[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoFlexProductEligibilities[i] = new();

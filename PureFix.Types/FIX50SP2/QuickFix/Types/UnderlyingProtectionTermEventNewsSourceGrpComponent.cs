@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingProtectionTermEventNewsSourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42090, Offset = 0, Required = false)]
-		public NoUnderlyingProtectionTermEventNewsSources[]? NoUnderlyingProtectionTermEventNewsSources {get; set;}
+		public IOINoUnderlyingProtectionTermEventNewsSources[]? NoUnderlyingProtectionTermEventNewsSources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingProtectionTermEventNewsSources") is IMessageView viewNoUnderlyingProtectionTermEventNewsSources)
 			{
 				var count = viewNoUnderlyingProtectionTermEventNewsSources.GroupCount();
-				NoUnderlyingProtectionTermEventNewsSources = new NoUnderlyingProtectionTermEventNewsSources[count];
+				NoUnderlyingProtectionTermEventNewsSources = new IOINoUnderlyingProtectionTermEventNewsSources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingProtectionTermEventNewsSources[i] = new();

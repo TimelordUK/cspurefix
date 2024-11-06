@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ReferenceDataDateGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2746, Offset = 0, Required = false)]
-		public NoReferenceDataDates[]? NoReferenceDataDates {get; set;}
+		public IOINoReferenceDataDates[]? NoReferenceDataDates {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoReferenceDataDates") is IMessageView viewNoReferenceDataDates)
 			{
 				var count = viewNoReferenceDataDates.GroupCount();
-				NoReferenceDataDates = new NoReferenceDataDates[count];
+				NoReferenceDataDates = new IOINoReferenceDataDates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoReferenceDataDates[i] = new();

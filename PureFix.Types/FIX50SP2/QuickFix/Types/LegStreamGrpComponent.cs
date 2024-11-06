@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegStreamGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40241, Offset = 0, Required = false)]
-		public NoLegStreams[]? NoLegStreams {get; set;}
+		public IOINoLegStreams[]? NoLegStreams {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegStreams") is IMessageView viewNoLegStreams)
 			{
 				var count = viewNoLegStreams.GroupCount();
-				NoLegStreams = new NoLegStreams[count];
+				NoLegStreams = new IOINoLegStreams[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegStreams[i] = new();

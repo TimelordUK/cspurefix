@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class CollInqQualGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 938, Offset = 0, Required = false)]
-		public NoCollInquiryQualifier[]? NoCollInquiryQualifier {get; set;}
+		public CollateralInquiryNoCollInquiryQualifier[]? NoCollInquiryQualifier {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoCollInquiryQualifier") is IMessageView viewNoCollInquiryQualifier)
 			{
 				var count = viewNoCollInquiryQualifier.GroupCount();
-				NoCollInquiryQualifier = new NoCollInquiryQualifier[count];
+				NoCollInquiryQualifier = new CollateralInquiryNoCollInquiryQualifier[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoCollInquiryQualifier[i] = new();

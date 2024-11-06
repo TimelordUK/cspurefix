@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MatchingInstructionsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1624, Offset = 0, Required = false)]
-		public NoMatchInst[]? NoMatchInst {get; set;}
+		public ExecutionReportNoMatchInst[]? NoMatchInst {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMatchInst") is IMessageView viewNoMatchInst)
 			{
 				var count = viewNoMatchInst.GroupCount();
-				NoMatchInst = new NoMatchInst[count];
+				NoMatchInst = new ExecutionReportNoMatchInst[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMatchInst[i] = new();

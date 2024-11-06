@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RoutingGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 215, Offset = 0, Required = false)]
-		public NoRoutingIDs[]? NoRoutingIDs {get; set;}
+		public IOINoRoutingIDs[]? NoRoutingIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRoutingIDs") is IMessageView viewNoRoutingIDs)
 			{
 				var count = viewNoRoutingIDs.GroupCount();
-				NoRoutingIDs = new NoRoutingIDs[count];
+				NoRoutingIDs = new IOINoRoutingIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRoutingIDs[i] = new();

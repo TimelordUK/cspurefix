@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class NewsRefGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1475, Offset = 0, Required = false)]
-		public NoNewsRefIDs[]? NoNewsRefIDs {get; set;}
+		public NewsNoNewsRefIDs[]? NoNewsRefIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoNewsRefIDs") is IMessageView viewNoNewsRefIDs)
 			{
 				var count = viewNoNewsRefIDs.GroupCount();
-				NoNewsRefIDs = new NoNewsRefIDs[count];
+				NoNewsRefIDs = new NewsNoNewsRefIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoNewsRefIDs[i] = new();

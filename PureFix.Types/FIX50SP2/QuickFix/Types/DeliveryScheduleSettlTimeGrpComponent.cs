@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DeliveryScheduleSettlTimeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41054, Offset = 0, Required = false)]
-		public NoDeliveryScheduleSettlTimes[]? NoDeliveryScheduleSettlTimes {get; set;}
+		public IOINoDeliveryScheduleSettlTimes[]? NoDeliveryScheduleSettlTimes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDeliveryScheduleSettlTimes") is IMessageView viewNoDeliveryScheduleSettlTimes)
 			{
 				var count = viewNoDeliveryScheduleSettlTimes.GroupCount();
-				NoDeliveryScheduleSettlTimes = new NoDeliveryScheduleSettlTimes[count];
+				NoDeliveryScheduleSettlTimes = new IOINoDeliveryScheduleSettlTimes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDeliveryScheduleSettlTimes[i] = new();

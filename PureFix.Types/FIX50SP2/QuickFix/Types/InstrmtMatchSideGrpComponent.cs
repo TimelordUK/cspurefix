@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class InstrmtMatchSideGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1889, Offset = 0, Required = false)]
-		public NoInstrmtMatchSides[]? NoInstrmtMatchSides {get; set;}
+		public TradeMatchReportNoInstrmtMatchSides[]? NoInstrmtMatchSides {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoInstrmtMatchSides") is IMessageView viewNoInstrmtMatchSides)
 			{
 				var count = viewNoInstrmtMatchSides.GroupCount();
-				NoInstrmtMatchSides = new NoInstrmtMatchSides[count];
+				NoInstrmtMatchSides = new TradeMatchReportNoInstrmtMatchSides[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoInstrmtMatchSides[i] = new();

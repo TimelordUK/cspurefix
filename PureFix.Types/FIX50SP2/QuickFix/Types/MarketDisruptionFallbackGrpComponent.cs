@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MarketDisruptionFallbackGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41094, Offset = 0, Required = false)]
-		public NoMarketDisruptionFallbacks[]? NoMarketDisruptionFallbacks {get; set;}
+		public IOINoMarketDisruptionFallbacks[]? NoMarketDisruptionFallbacks {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMarketDisruptionFallbacks") is IMessageView viewNoMarketDisruptionFallbacks)
 			{
 				var count = viewNoMarketDisruptionFallbacks.GroupCount();
-				NoMarketDisruptionFallbacks = new NoMarketDisruptionFallbacks[count];
+				NoMarketDisruptionFallbacks = new IOINoMarketDisruptionFallbacks[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMarketDisruptionFallbacks[i] = new();

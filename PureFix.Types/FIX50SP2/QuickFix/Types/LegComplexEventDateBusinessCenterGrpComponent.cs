@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegComplexEventDateBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41387, Offset = 0, Required = false)]
-		public NoLegComplexEventDateBusinessCenters[]? NoLegComplexEventDateBusinessCenters {get; set;}
+		public IOINoLegComplexEventDateBusinessCenters[]? NoLegComplexEventDateBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegComplexEventDateBusinessCenters") is IMessageView viewNoLegComplexEventDateBusinessCenters)
 			{
 				var count = viewNoLegComplexEventDateBusinessCenters.GroupCount();
-				NoLegComplexEventDateBusinessCenters = new NoLegComplexEventDateBusinessCenters[count];
+				NoLegComplexEventDateBusinessCenters = new IOINoLegComplexEventDateBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegComplexEventDateBusinessCenters[i] = new();

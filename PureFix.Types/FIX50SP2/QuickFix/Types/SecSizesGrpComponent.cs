@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SecSizesGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1177, Offset = 0, Required = false)]
-		public NoOfSecSizes[]? NoOfSecSizes {get; set;}
+		public MarketDataSnapshotFullRefreshNoOfSecSizes[]? NoOfSecSizes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoOfSecSizes") is IMessageView viewNoOfSecSizes)
 			{
 				var count = viewNoOfSecSizes.GroupCount();
-				NoOfSecSizes = new NoOfSecSizes[count];
+				NoOfSecSizes = new MarketDataSnapshotFullRefreshNoOfSecSizes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoOfSecSizes[i] = new();

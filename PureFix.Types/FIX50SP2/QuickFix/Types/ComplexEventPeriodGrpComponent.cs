@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ComplexEventPeriodGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41010, Offset = 0, Required = false)]
-		public NoComplexEventPeriods[]? NoComplexEventPeriods {get; set;}
+		public IOINoComplexEventPeriods[]? NoComplexEventPeriods {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoComplexEventPeriods") is IMessageView viewNoComplexEventPeriods)
 			{
 				var count = viewNoComplexEventPeriods.GroupCount();
-				NoComplexEventPeriods = new NoComplexEventPeriods[count];
+				NoComplexEventPeriods = new IOINoComplexEventPeriods[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoComplexEventPeriods[i] = new();

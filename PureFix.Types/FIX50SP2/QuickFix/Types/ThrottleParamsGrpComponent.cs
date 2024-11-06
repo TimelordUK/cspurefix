@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ThrottleParamsGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1610, Offset = 0, Required = false)]
-		public NoThrottles[]? NoThrottles {get; set;}
+		public UserResponseNoThrottles[]? NoThrottles {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoThrottles") is IMessageView viewNoThrottles)
 			{
 				var count = viewNoThrottles.GroupCount();
-				NoThrottles = new NoThrottles[count];
+				NoThrottles = new UserResponseNoThrottles[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoThrottles[i] = new();

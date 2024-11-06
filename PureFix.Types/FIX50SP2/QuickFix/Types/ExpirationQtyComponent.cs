@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ExpirationQtyComponent : IFixComponent
 	{
 		[Group(NoOfTag = 981, Offset = 0, Required = false)]
-		public NoExpiration[]? NoExpiration {get; set;}
+		public ContraryIntentionReportNoExpiration[]? NoExpiration {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoExpiration") is IMessageView viewNoExpiration)
 			{
 				var count = viewNoExpiration.GroupCount();
-				NoExpiration = new NoExpiration[count];
+				NoExpiration = new ContraryIntentionReportNoExpiration[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoExpiration[i] = new();

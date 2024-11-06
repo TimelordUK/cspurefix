@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LinesOfTextGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 33, Offset = 0, Required = false)]
-		public NoLinesOfText[]? NoLinesOfText {get; set;}
+		public NewsNoLinesOfText[]? NoLinesOfText {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLinesOfText") is IMessageView viewNoLinesOfText)
 			{
 				var count = viewNoLinesOfText.GroupCount();
-				NoLinesOfText = new NoLinesOfText[count];
+				NoLinesOfText = new NewsNoLinesOfText[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLinesOfText[i] = new();

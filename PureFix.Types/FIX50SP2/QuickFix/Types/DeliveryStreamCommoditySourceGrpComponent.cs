@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DeliveryStreamCommoditySourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41085, Offset = 0, Required = false)]
-		public NoDeliveryStreamCommoditySources[]? NoDeliveryStreamCommoditySources {get; set;}
+		public IOINoDeliveryStreamCommoditySources[]? NoDeliveryStreamCommoditySources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDeliveryStreamCommoditySources") is IMessageView viewNoDeliveryStreamCommoditySources)
 			{
 				var count = viewNoDeliveryStreamCommoditySources.GroupCount();
-				NoDeliveryStreamCommoditySources = new NoDeliveryStreamCommoditySources[count];
+				NoDeliveryStreamCommoditySources = new IOINoDeliveryStreamCommoditySources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDeliveryStreamCommoditySources[i] = new();

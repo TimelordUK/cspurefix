@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingDeliveryStreamCycleGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41804, Offset = 0, Required = false)]
-		public NoUnderlyingDeliveryStreamCycles[]? NoUnderlyingDeliveryStreamCycles {get; set;}
+		public IOINoUnderlyingDeliveryStreamCycles[]? NoUnderlyingDeliveryStreamCycles {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingDeliveryStreamCycles") is IMessageView viewNoUnderlyingDeliveryStreamCycles)
 			{
 				var count = viewNoUnderlyingDeliveryStreamCycles.GroupCount();
-				NoUnderlyingDeliveryStreamCycles = new NoUnderlyingDeliveryStreamCycles[count];
+				NoUnderlyingDeliveryStreamCycles = new IOINoUnderlyingDeliveryStreamCycles[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingDeliveryStreamCycles[i] = new();

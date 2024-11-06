@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DlvyInstGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 85, Offset = 0, Required = false)]
-		public NoDlvyInst[]? NoDlvyInst {get; set;}
+		public AllocationInstructionNoDlvyInst[]? NoDlvyInst {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDlvyInst") is IMessageView viewNoDlvyInst)
 			{
 				var count = viewNoDlvyInst.GroupCount();
-				NoDlvyInst = new NoDlvyInst[count];
+				NoDlvyInst = new AllocationInstructionNoDlvyInst[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDlvyInst[i] = new();

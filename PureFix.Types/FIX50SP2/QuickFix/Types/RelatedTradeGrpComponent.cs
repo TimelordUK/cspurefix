@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RelatedTradeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1855, Offset = 0, Required = false)]
-		public NoRelatedTrades[]? NoRelatedTrades {get; set;}
+		public MarketDataSnapshotFullRefreshNoRelatedTrades[]? NoRelatedTrades {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRelatedTrades") is IMessageView viewNoRelatedTrades)
 			{
 				var count = viewNoRelatedTrades.GroupCount();
-				NoRelatedTrades = new NoRelatedTrades[count];
+				NoRelatedTrades = new MarketDataSnapshotFullRefreshNoRelatedTrades[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedTrades[i] = new();

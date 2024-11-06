@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegProtectionTermEventNewsSourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41614, Offset = 0, Required = false)]
-		public NoLegProtectionTermEventNewsSources[]? NoLegProtectionTermEventNewsSources {get; set;}
+		public IOINoLegProtectionTermEventNewsSources[]? NoLegProtectionTermEventNewsSources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegProtectionTermEventNewsSources") is IMessageView viewNoLegProtectionTermEventNewsSources)
 			{
 				var count = viewNoLegProtectionTermEventNewsSources.GroupCount();
-				NoLegProtectionTermEventNewsSources = new NoLegProtectionTermEventNewsSources[count];
+				NoLegProtectionTermEventNewsSources = new IOINoLegProtectionTermEventNewsSources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegProtectionTermEventNewsSources[i] = new();

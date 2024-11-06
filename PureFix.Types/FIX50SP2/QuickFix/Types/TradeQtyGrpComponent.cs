@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TradeQtyGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1841, Offset = 0, Required = false)]
-		public NoTradeQtys[]? NoTradeQtys {get; set;}
+		public TradeCaptureReportNoTradeQtys[]? NoTradeQtys {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTradeQtys") is IMessageView viewNoTradeQtys)
 			{
 				var count = viewNoTradeQtys.GroupCount();
-				NoTradeQtys = new NoTradeQtys[count];
+				NoTradeQtys = new TradeCaptureReportNoTradeQtys[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTradeQtys[i] = new();

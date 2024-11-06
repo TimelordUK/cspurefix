@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LotTypeRulesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1234, Offset = 0, Required = false)]
-		public NoLotTypeRules[]? NoLotTypeRules {get; set;}
+		public SecurityDefinitionNoLotTypeRules[]? NoLotTypeRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLotTypeRules") is IMessageView viewNoLotTypeRules)
 			{
 				var count = viewNoLotTypeRules.GroupCount();
-				NoLotTypeRules = new NoLotTypeRules[count];
+				NoLotTypeRules = new SecurityDefinitionNoLotTypeRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLotTypeRules[i] = new();

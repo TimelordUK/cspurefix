@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class StrategyParametersGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 957, Offset = 0, Required = false)]
-		public NoStrategyParameters[]? NoStrategyParameters {get; set;}
+		public ExecutionReportNoStrategyParameters[]? NoStrategyParameters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoStrategyParameters") is IMessageView viewNoStrategyParameters)
 			{
 				var count = viewNoStrategyParameters.GroupCount();
-				NoStrategyParameters = new NoStrategyParameters[count];
+				NoStrategyParameters = new ExecutionReportNoStrategyParameters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStrategyParameters[i] = new();

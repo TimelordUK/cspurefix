@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TargetPtysSubGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2433, Offset = 0, Required = false)]
-		public NoTargetPartySubIDs[]? NoTargetPartySubIDs {get; set;}
+		public ExecutionReportNoTargetPartySubIDs[]? NoTargetPartySubIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTargetPartySubIDs") is IMessageView viewNoTargetPartySubIDs)
 			{
 				var count = viewNoTargetPartySubIDs.GroupCount();
-				NoTargetPartySubIDs = new NoTargetPartySubIDs[count];
+				NoTargetPartySubIDs = new ExecutionReportNoTargetPartySubIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTargetPartySubIDs[i] = new();

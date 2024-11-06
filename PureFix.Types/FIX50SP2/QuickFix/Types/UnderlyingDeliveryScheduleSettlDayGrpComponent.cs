@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingDeliveryScheduleSettlDayGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41770, Offset = 0, Required = false)]
-		public NoUnderlyingDeliveryScheduleSettlDays[]? NoUnderlyingDeliveryScheduleSettlDays {get; set;}
+		public IOINoUnderlyingDeliveryScheduleSettlDays[]? NoUnderlyingDeliveryScheduleSettlDays {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingDeliveryScheduleSettlDays") is IMessageView viewNoUnderlyingDeliveryScheduleSettlDays)
 			{
 				var count = viewNoUnderlyingDeliveryScheduleSettlDays.GroupCount();
-				NoUnderlyingDeliveryScheduleSettlDays = new NoUnderlyingDeliveryScheduleSettlDays[count];
+				NoUnderlyingDeliveryScheduleSettlDays = new IOINoUnderlyingDeliveryScheduleSettlDays[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingDeliveryScheduleSettlDays[i] = new();

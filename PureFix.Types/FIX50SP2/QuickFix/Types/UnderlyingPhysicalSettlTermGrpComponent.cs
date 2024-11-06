@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingPhysicalSettlTermGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42060, Offset = 0, Required = false)]
-		public NoUnderlyingPhysicalSettlTerms[]? NoUnderlyingPhysicalSettlTerms {get; set;}
+		public IOINoUnderlyingPhysicalSettlTerms[]? NoUnderlyingPhysicalSettlTerms {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingPhysicalSettlTerms") is IMessageView viewNoUnderlyingPhysicalSettlTerms)
 			{
 				var count = viewNoUnderlyingPhysicalSettlTerms.GroupCount();
-				NoUnderlyingPhysicalSettlTerms = new NoUnderlyingPhysicalSettlTerms[count];
+				NoUnderlyingPhysicalSettlTerms = new IOINoUnderlyingPhysicalSettlTerms[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingPhysicalSettlTerms[i] = new();

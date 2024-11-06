@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MandatoryClearingJurisdictionGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41312, Offset = 0, Required = false)]
-		public NoMandatoryClearingJurisdictions[]? NoMandatoryClearingJurisdictions {get; set;}
+		public TradeCaptureReportNoMandatoryClearingJurisdictions[]? NoMandatoryClearingJurisdictions {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMandatoryClearingJurisdictions") is IMessageView viewNoMandatoryClearingJurisdictions)
 			{
 				var count = viewNoMandatoryClearingJurisdictions.GroupCount();
-				NoMandatoryClearingJurisdictions = new NoMandatoryClearingJurisdictions[count];
+				NoMandatoryClearingJurisdictions = new TradeCaptureReportNoMandatoryClearingJurisdictions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMandatoryClearingJurisdictions[i] = new();

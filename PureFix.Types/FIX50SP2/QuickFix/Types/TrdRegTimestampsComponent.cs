@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TrdRegTimestampsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 768, Offset = 0, Required = false)]
-		public NoTrdRegTimestamps[]? NoTrdRegTimestamps {get; set;}
+		public ExecutionReportNoTrdRegTimestamps[]? NoTrdRegTimestamps {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTrdRegTimestamps") is IMessageView viewNoTrdRegTimestamps)
 			{
 				var count = viewNoTrdRegTimestamps.GroupCount();
-				NoTrdRegTimestamps = new NoTrdRegTimestamps[count];
+				NoTrdRegTimestamps = new ExecutionReportNoTrdRegTimestamps[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTrdRegTimestamps[i] = new();

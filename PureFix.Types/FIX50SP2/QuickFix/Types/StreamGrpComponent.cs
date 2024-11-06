@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class StreamGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40049, Offset = 0, Required = false)]
-		public NoStreams[]? NoStreams {get; set;}
+		public IOINoStreams[]? NoStreams {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoStreams") is IMessageView viewNoStreams)
 			{
 				var count = viewNoStreams.GroupCount();
-				NoStreams = new NoStreams[count];
+				NoStreams = new IOINoStreams[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStreams[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegAdditionalTermGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41335, Offset = 0, Required = false)]
-		public NoLegAdditionalTerms[]? NoLegAdditionalTerms {get; set;}
+		public IOINoLegAdditionalTerms[]? NoLegAdditionalTerms {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegAdditionalTerms") is IMessageView viewNoLegAdditionalTerms)
 			{
 				var count = viewNoLegAdditionalTerms.GroupCount();
-				NoLegAdditionalTerms = new NoLegAdditionalTerms[count];
+				NoLegAdditionalTerms = new IOINoLegAdditionalTerms[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegAdditionalTerms[i] = new();

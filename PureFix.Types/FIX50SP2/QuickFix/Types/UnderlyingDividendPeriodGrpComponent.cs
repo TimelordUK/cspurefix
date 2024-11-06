@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingDividendPeriodGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42862, Offset = 0, Required = false)]
-		public NoUnderlyingDividendPeriods[]? NoUnderlyingDividendPeriods {get; set;}
+		public IOINoUnderlyingDividendPeriods[]? NoUnderlyingDividendPeriods {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingDividendPeriods") is IMessageView viewNoUnderlyingDividendPeriods)
 			{
 				var count = viewNoUnderlyingDividendPeriods.GroupCount();
-				NoUnderlyingDividendPeriods = new NoUnderlyingDividendPeriods[count];
+				NoUnderlyingDividendPeriods = new IOINoUnderlyingDividendPeriods[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingDividendPeriods[i] = new();

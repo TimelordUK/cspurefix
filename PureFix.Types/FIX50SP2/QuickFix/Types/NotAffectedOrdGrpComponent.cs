@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class NotAffectedOrdGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1370, Offset = 0, Required = false)]
-		public NoNotAffectedOrders[]? NoNotAffectedOrders {get; set;}
+		public OrderMassCancelReportNoNotAffectedOrders[]? NoNotAffectedOrders {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoNotAffectedOrders") is IMessageView viewNoNotAffectedOrders)
 			{
 				var count = viewNoNotAffectedOrders.GroupCount();
-				NoNotAffectedOrders = new NoNotAffectedOrders[count];
+				NoNotAffectedOrders = new OrderMassCancelReportNoNotAffectedOrders[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoNotAffectedOrders[i] = new();

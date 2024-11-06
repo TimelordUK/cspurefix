@@ -51,10 +51,10 @@ namespace PureFix.Test.Env.TradeCapture
                 TrdCapDtGrp = new TrdCapDtGrpComponent
                 {
                     NoDates = [
-                        new NoDates() {
+                        new TradeCaptureReportRequestNoDates() {
                             TransactTime = tradeDate
                         },
-                        new NoDates() {
+                        new TradeCaptureReportRequestNoDates() {
                             TransactTime = tradeDate.AddDays(1)
                         }
                     ]

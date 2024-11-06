@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SettlPartiesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 781, Offset = 0, Required = false)]
-		public NoSettlPartyIDs[]? NoSettlPartyIDs {get; set;}
+		public AllocationInstructionNoSettlPartyIDs[]? NoSettlPartyIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoSettlPartyIDs") is IMessageView viewNoSettlPartyIDs)
 			{
 				var count = viewNoSettlPartyIDs.GroupCount();
-				NoSettlPartyIDs = new NoSettlPartyIDs[count];
+				NoSettlPartyIDs = new AllocationInstructionNoSettlPartyIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSettlPartyIDs[i] = new();

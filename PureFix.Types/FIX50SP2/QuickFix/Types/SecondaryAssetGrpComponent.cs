@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SecondaryAssetGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1976, Offset = 0, Required = false)]
-		public NoSecondaryAssetClasses[]? NoSecondaryAssetClasses {get; set;}
+		public IOINoSecondaryAssetClasses[]? NoSecondaryAssetClasses {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoSecondaryAssetClasses") is IMessageView viewNoSecondaryAssetClasses)
 			{
 				var count = viewNoSecondaryAssetClasses.GroupCount();
-				NoSecondaryAssetClasses = new NoSecondaryAssetClasses[count];
+				NoSecondaryAssetClasses = new IOINoSecondaryAssetClasses[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSecondaryAssetClasses[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegDividendPeriodGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42366, Offset = 0, Required = false)]
-		public NoLegDividendPeriods[]? NoLegDividendPeriods {get; set;}
+		public IOINoLegDividendPeriods[]? NoLegDividendPeriods {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegDividendPeriods") is IMessageView viewNoLegDividendPeriods)
 			{
 				var count = viewNoLegDividendPeriods.GroupCount();
-				NoLegDividendPeriods = new NoLegDividendPeriods[count];
+				NoLegDividendPeriods = new IOINoLegDividendPeriods[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegDividendPeriods[i] = new();

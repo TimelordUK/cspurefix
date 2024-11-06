@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40962, Offset = 0, Required = false)]
-		public NoUnderlyingBusinessCenters[]? NoUnderlyingBusinessCenters {get; set;}
+		public IOINoUnderlyingBusinessCenters[]? NoUnderlyingBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingBusinessCenters") is IMessageView viewNoUnderlyingBusinessCenters)
 			{
 				var count = viewNoUnderlyingBusinessCenters.GroupCount();
-				NoUnderlyingBusinessCenters = new NoUnderlyingBusinessCenters[count];
+				NoUnderlyingBusinessCenters = new IOINoUnderlyingBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingBusinessCenters[i] = new();

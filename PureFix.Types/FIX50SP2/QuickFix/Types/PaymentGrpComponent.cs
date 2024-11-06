@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class PaymentGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40212, Offset = 0, Required = false)]
-		public NoPayments[]? NoPayments {get; set;}
+		public ExecutionReportNoPayments[]? NoPayments {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoPayments") is IMessageView viewNoPayments)
 			{
 				var count = viewNoPayments.GroupCount();
-				NoPayments = new NoPayments[count];
+				NoPayments = new ExecutionReportNoPayments[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPayments[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MarketDisruptionEventGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41092, Offset = 0, Required = false)]
-		public NoMarketDisruptionEvents[]? NoMarketDisruptionEvents {get; set;}
+		public IOINoMarketDisruptionEvents[]? NoMarketDisruptionEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMarketDisruptionEvents") is IMessageView viewNoMarketDisruptionEvents)
 			{
 				var count = viewNoMarketDisruptionEvents.GroupCount();
-				NoMarketDisruptionEvents = new NoMarketDisruptionEvents[count];
+				NoMarketDisruptionEvents = new IOINoMarketDisruptionEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMarketDisruptionEvents[i] = new();

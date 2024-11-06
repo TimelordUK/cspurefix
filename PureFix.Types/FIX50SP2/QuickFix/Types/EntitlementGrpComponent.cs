@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class EntitlementGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1773, Offset = 0, Required = false)]
-		public NoEntitlements[]? NoEntitlements {get; set;}
+		public PartyEntitlementsReportNoEntitlements[]? NoEntitlements {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoEntitlements") is IMessageView viewNoEntitlements)
 			{
 				var count = viewNoEntitlements.GroupCount();
-				NoEntitlements = new NoEntitlements[count];
+				NoEntitlements = new PartyEntitlementsReportNoEntitlements[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoEntitlements[i] = new();

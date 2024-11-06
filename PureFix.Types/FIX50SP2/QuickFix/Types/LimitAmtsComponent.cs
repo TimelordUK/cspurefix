@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LimitAmtsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1630, Offset = 0, Required = false)]
-		public NoLimitAmts[]? NoLimitAmts {get; set;}
+		public ExecutionReportNoLimitAmts[]? NoLimitAmts {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLimitAmts") is IMessageView viewNoLimitAmts)
 			{
 				var count = viewNoLimitAmts.GroupCount();
-				NoLimitAmts = new NoLimitAmts[count];
+				NoLimitAmts = new ExecutionReportNoLimitAmts[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLimitAmts[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegProtectionTermEventQualifierGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41633, Offset = 0, Required = false)]
-		public NoLegProtectionTermEventQualifiers[]? NoLegProtectionTermEventQualifiers {get; set;}
+		public IOINoLegProtectionTermEventQualifiers[]? NoLegProtectionTermEventQualifiers {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegProtectionTermEventQualifiers") is IMessageView viewNoLegProtectionTermEventQualifiers)
 			{
 				var count = viewNoLegProtectionTermEventQualifiers.GroupCount();
-				NoLegProtectionTermEventQualifiers = new NoLegProtectionTermEventQualifiers[count];
+				NoLegProtectionTermEventQualifiers = new IOINoLegProtectionTermEventQualifiers[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegProtectionTermEventQualifiers[i] = new();

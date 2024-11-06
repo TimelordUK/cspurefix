@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ProvisionOptionExerciseBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40954, Offset = 0, Required = false)]
-		public NoProvisionOptionExerciseBusinessCenters[]? NoProvisionOptionExerciseBusinessCenters {get; set;}
+		public IOINoProvisionOptionExerciseBusinessCenters[]? NoProvisionOptionExerciseBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoProvisionOptionExerciseBusinessCenters") is IMessageView viewNoProvisionOptionExerciseBusinessCenters)
 			{
 				var count = viewNoProvisionOptionExerciseBusinessCenters.GroupCount();
-				NoProvisionOptionExerciseBusinessCenters = new NoProvisionOptionExerciseBusinessCenters[count];
+				NoProvisionOptionExerciseBusinessCenters = new IOINoProvisionOptionExerciseBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoProvisionOptionExerciseBusinessCenters[i] = new();

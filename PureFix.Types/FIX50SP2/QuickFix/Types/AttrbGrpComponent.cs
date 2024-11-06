@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class AttrbGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 870, Offset = 0, Required = false)]
-		public NoInstrAttrib[]? NoInstrAttrib {get; set;}
+		public IOINoInstrAttrib[]? NoInstrAttrib {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoInstrAttrib") is IMessageView viewNoInstrAttrib)
 			{
 				var count = viewNoInstrAttrib.GroupCount();
-				NoInstrAttrib = new NoInstrAttrib[count];
+				NoInstrAttrib = new IOINoInstrAttrib[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoInstrAttrib[i] = new();

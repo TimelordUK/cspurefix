@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RegulatoryTradeIDGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1907, Offset = 0, Required = false)]
-		public NoRegulatoryTradeIDs[]? NoRegulatoryTradeIDs {get; set;}
+		public ExecutionReportNoRegulatoryTradeIDs[]? NoRegulatoryTradeIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRegulatoryTradeIDs") is IMessageView viewNoRegulatoryTradeIDs)
 			{
 				var count = viewNoRegulatoryTradeIDs.GroupCount();
-				NoRegulatoryTradeIDs = new NoRegulatoryTradeIDs[count];
+				NoRegulatoryTradeIDs = new ExecutionReportNoRegulatoryTradeIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRegulatoryTradeIDs[i] = new();

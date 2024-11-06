@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DividendPeriodBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42294, Offset = 0, Required = false)]
-		public NoDividendPeriodBusinessCenters[]? NoDividendPeriodBusinessCenters {get; set;}
+		public IOINoDividendPeriodBusinessCenters[]? NoDividendPeriodBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDividendPeriodBusinessCenters") is IMessageView viewNoDividendPeriodBusinessCenters)
 			{
 				var count = viewNoDividendPeriodBusinessCenters.GroupCount();
-				NoDividendPeriodBusinessCenters = new NoDividendPeriodBusinessCenters[count];
+				NoDividendPeriodBusinessCenters = new IOINoDividendPeriodBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDividendPeriodBusinessCenters[i] = new();

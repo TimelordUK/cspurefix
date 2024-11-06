@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RelativeValueGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2529, Offset = 0, Required = false)]
-		public NoRelativeValues[]? NoRelativeValues {get; set;}
+		public IOINoRelativeValues[]? NoRelativeValues {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRelativeValues") is IMessageView viewNoRelativeValues)
 			{
 				var count = viewNoRelativeValues.GroupCount();
-				NoRelativeValues = new NoRelativeValues[count];
+				NoRelativeValues = new IOINoRelativeValues[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelativeValues[i] = new();

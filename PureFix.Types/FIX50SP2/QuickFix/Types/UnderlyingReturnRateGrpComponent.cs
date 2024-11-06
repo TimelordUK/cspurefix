@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingReturnRateGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 43034, Offset = 0, Required = false)]
-		public NoUnderlyingReturnRates[]? NoUnderlyingReturnRates {get; set;}
+		public IOINoUnderlyingReturnRates[]? NoUnderlyingReturnRates {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingReturnRates") is IMessageView viewNoUnderlyingReturnRates)
 			{
 				var count = viewNoUnderlyingReturnRates.GroupCount();
-				NoUnderlyingReturnRates = new NoUnderlyingReturnRates[count];
+				NoUnderlyingReturnRates = new IOINoUnderlyingReturnRates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingReturnRates[i] = new();

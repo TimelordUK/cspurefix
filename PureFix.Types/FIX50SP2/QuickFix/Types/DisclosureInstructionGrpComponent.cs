@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DisclosureInstructionGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1812, Offset = 0, Required = false)]
-		public NoDisclosureInstructions[]? NoDisclosureInstructions {get; set;}
+		public ExecutionReportNoDisclosureInstructions[]? NoDisclosureInstructions {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDisclosureInstructions") is IMessageView viewNoDisclosureInstructions)
 			{
 				var count = viewNoDisclosureInstructions.GroupCount();
-				NoDisclosureInstructions = new NoDisclosureInstructions[count];
+				NoDisclosureInstructions = new ExecutionReportNoDisclosureInstructions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDisclosureInstructions[i] = new();

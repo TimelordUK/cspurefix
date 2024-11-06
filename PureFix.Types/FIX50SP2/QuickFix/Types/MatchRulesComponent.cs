@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MatchRulesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1235, Offset = 0, Required = false)]
-		public NoMatchRules[]? NoMatchRules {get; set;}
+		public SecurityDefinitionNoMatchRules[]? NoMatchRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMatchRules") is IMessageView viewNoMatchRules)
 			{
 				var count = viewNoMatchRules.GroupCount();
-				NoMatchRules = new NoMatchRules[count];
+				NoMatchRules = new SecurityDefinitionNoMatchRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMatchRules[i] = new();

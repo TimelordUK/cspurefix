@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingStreamCommoditySettlTimeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41999, Offset = 0, Required = false)]
-		public NoUnderlyingStreamCommoditySettlTimes[]? NoUnderlyingStreamCommoditySettlTimes {get; set;}
+		public IOINoUnderlyingStreamCommoditySettlTimes[]? NoUnderlyingStreamCommoditySettlTimes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingStreamCommoditySettlTimes") is IMessageView viewNoUnderlyingStreamCommoditySettlTimes)
 			{
 				var count = viewNoUnderlyingStreamCommoditySettlTimes.GroupCount();
-				NoUnderlyingStreamCommoditySettlTimes = new NoUnderlyingStreamCommoditySettlTimes[count];
+				NoUnderlyingStreamCommoditySettlTimes = new IOINoUnderlyingStreamCommoditySettlTimes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingStreamCommoditySettlTimes[i] = new();

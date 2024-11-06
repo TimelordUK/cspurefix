@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class OrdTypeRulesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1237, Offset = 0, Required = false)]
-		public NoOrdTypeRules[]? NoOrdTypeRules {get; set;}
+		public SecurityDefinitionNoOrdTypeRules[]? NoOrdTypeRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoOrdTypeRules") is IMessageView viewNoOrdTypeRules)
 			{
 				var count = viewNoOrdTypeRules.GroupCount();
-				NoOrdTypeRules = new NoOrdTypeRules[count];
+				NoOrdTypeRules = new SecurityDefinitionNoOrdTypeRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoOrdTypeRules[i] = new();

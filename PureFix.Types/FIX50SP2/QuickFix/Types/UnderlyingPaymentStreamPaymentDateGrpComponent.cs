@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingPaymentStreamPaymentDateGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41937, Offset = 0, Required = false)]
-		public NoUnderlyingPaymentStreamPaymentDates[]? NoUnderlyingPaymentStreamPaymentDates {get; set;}
+		public IOINoUnderlyingPaymentStreamPaymentDates[]? NoUnderlyingPaymentStreamPaymentDates {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingPaymentStreamPaymentDates") is IMessageView viewNoUnderlyingPaymentStreamPaymentDates)
 			{
 				var count = viewNoUnderlyingPaymentStreamPaymentDates.GroupCount();
-				NoUnderlyingPaymentStreamPaymentDates = new NoUnderlyingPaymentStreamPaymentDates[count];
+				NoUnderlyingPaymentStreamPaymentDates = new IOINoUnderlyingPaymentStreamPaymentDates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingPaymentStreamPaymentDates[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SettlementAmountGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1700, Offset = 0, Required = false)]
-		public NoSettlementAmounts[]? NoSettlementAmounts {get; set;}
+		public AccountSummaryReportNoSettlementAmounts[]? NoSettlementAmounts {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoSettlementAmounts") is IMessageView viewNoSettlementAmounts)
 			{
 				var count = viewNoSettlementAmounts.GroupCount();
-				NoSettlementAmounts = new NoSettlementAmounts[count];
+				NoSettlementAmounts = new AccountSummaryReportNoSettlementAmounts[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSettlementAmounts[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingSecondaryAssetGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2080, Offset = 0, Required = false)]
-		public NoUnderlyingSecondaryAssetClasses[]? NoUnderlyingSecondaryAssetClasses {get; set;}
+		public IOINoUnderlyingSecondaryAssetClasses[]? NoUnderlyingSecondaryAssetClasses {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingSecondaryAssetClasses") is IMessageView viewNoUnderlyingSecondaryAssetClasses)
 			{
 				var count = viewNoUnderlyingSecondaryAssetClasses.GroupCount();
-				NoUnderlyingSecondaryAssetClasses = new NoUnderlyingSecondaryAssetClasses[count];
+				NoUnderlyingSecondaryAssetClasses = new IOINoUnderlyingSecondaryAssetClasses[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingSecondaryAssetClasses[i] = new();

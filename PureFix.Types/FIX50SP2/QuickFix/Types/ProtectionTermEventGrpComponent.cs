@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ProtectionTermEventGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40191, Offset = 0, Required = false)]
-		public NoProtectionTermEvents[]? NoProtectionTermEvents {get; set;}
+		public IOINoProtectionTermEvents[]? NoProtectionTermEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoProtectionTermEvents") is IMessageView viewNoProtectionTermEvents)
 			{
 				var count = viewNoProtectionTermEvents.GroupCount();
-				NoProtectionTermEvents = new NoProtectionTermEvents[count];
+				NoProtectionTermEvents = new IOINoProtectionTermEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoProtectionTermEvents[i] = new();

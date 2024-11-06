@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class PhysicalSettlDeliverableObligationGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40209, Offset = 0, Required = false)]
-		public NoPhysicalSettlDeliverableObligations[]? NoPhysicalSettlDeliverableObligations {get; set;}
+		public IOINoPhysicalSettlDeliverableObligations[]? NoPhysicalSettlDeliverableObligations {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoPhysicalSettlDeliverableObligations") is IMessageView viewNoPhysicalSettlDeliverableObligations)
 			{
 				var count = viewNoPhysicalSettlDeliverableObligations.GroupCount();
-				NoPhysicalSettlDeliverableObligations = new NoPhysicalSettlDeliverableObligations[count];
+				NoPhysicalSettlDeliverableObligations = new IOINoPhysicalSettlDeliverableObligations[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoPhysicalSettlDeliverableObligations[i] = new();

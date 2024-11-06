@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class FillsGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1362, Offset = 0, Required = false)]
-		public NoFills[]? NoFills {get; set;}
+		public ExecutionReportNoFills[]? NoFills {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoFills") is IMessageView viewNoFills)
 			{
 				var count = viewNoFills.GroupCount();
-				NoFills = new NoFills[count];
+				NoFills = new ExecutionReportNoFills[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoFills[i] = new();

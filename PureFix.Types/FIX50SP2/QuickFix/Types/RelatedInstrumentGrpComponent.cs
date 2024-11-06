@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RelatedInstrumentGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1647, Offset = 0, Required = false)]
-		public NoRelatedInstruments[]? NoRelatedInstruments {get; set;}
+		public IOINoRelatedInstruments[]? NoRelatedInstruments {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRelatedInstruments") is IMessageView viewNoRelatedInstruments)
 			{
 				var count = viewNoRelatedInstruments.GroupCount();
-				NoRelatedInstruments = new NoRelatedInstruments[count];
+				NoRelatedInstruments = new IOINoRelatedInstruments[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRelatedInstruments[i] = new();

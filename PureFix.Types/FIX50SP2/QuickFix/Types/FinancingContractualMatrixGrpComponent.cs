@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class FinancingContractualMatrixGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40042, Offset = 0, Required = false)]
-		public NoContractualMatrices[]? NoContractualMatrices {get; set;}
+		public IOINoContractualMatrices[]? NoContractualMatrices {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoContractualMatrices") is IMessageView viewNoContractualMatrices)
 			{
 				var count = viewNoContractualMatrices.GroupCount();
-				NoContractualMatrices = new NoContractualMatrices[count];
+				NoContractualMatrices = new IOINoContractualMatrices[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoContractualMatrices[i] = new();

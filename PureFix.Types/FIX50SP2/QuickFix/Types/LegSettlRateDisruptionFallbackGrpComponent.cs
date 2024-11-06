@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegSettlRateDisruptionFallbackGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40902, Offset = 0, Required = false)]
-		public NoLegSettlRateFallbacks[]? NoLegSettlRateFallbacks {get; set;}
+		public IOINoLegSettlRateFallbacks[]? NoLegSettlRateFallbacks {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegSettlRateFallbacks") is IMessageView viewNoLegSettlRateFallbacks)
 			{
 				var count = viewNoLegSettlRateFallbacks.GroupCount();
-				NoLegSettlRateFallbacks = new NoLegSettlRateFallbacks[count];
+				NoLegSettlRateFallbacks = new IOINoLegSettlRateFallbacks[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegSettlRateFallbacks[i] = new();

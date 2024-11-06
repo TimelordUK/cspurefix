@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DerivativeSecurityAltIDGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1218, Offset = 0, Required = false)]
-		public NoDerivativeSecurityAltID[]? NoDerivativeSecurityAltID {get; set;}
+		public DerivativeSecurityListRequestNoDerivativeSecurityAltID[]? NoDerivativeSecurityAltID {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDerivativeSecurityAltID") is IMessageView viewNoDerivativeSecurityAltID)
 			{
 				var count = viewNoDerivativeSecurityAltID.GroupCount();
-				NoDerivativeSecurityAltID = new NoDerivativeSecurityAltID[count];
+				NoDerivativeSecurityAltID = new DerivativeSecurityListRequestNoDerivativeSecurityAltID[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDerivativeSecurityAltID[i] = new();

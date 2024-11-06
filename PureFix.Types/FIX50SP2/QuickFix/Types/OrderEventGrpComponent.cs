@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class OrderEventGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1795, Offset = 0, Required = false)]
-		public NoOrderEvents[]? NoOrderEvents {get; set;}
+		public ExecutionReportNoOrderEvents[]? NoOrderEvents {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoOrderEvents") is IMessageView viewNoOrderEvents)
 			{
 				var count = viewNoOrderEvents.GroupCount();
-				NoOrderEvents = new NoOrderEvents[count];
+				NoOrderEvents = new ExecutionReportNoOrderEvents[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoOrderEvents[i] = new();

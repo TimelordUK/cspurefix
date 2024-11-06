@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SettlDetailsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1158, Offset = 0, Required = false)]
-		public NoSettlDetails[]? NoSettlDetails {get; set;}
+		public TradeCaptureReportNoSettlDetails[]? NoSettlDetails {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoSettlDetails") is IMessageView viewNoSettlDetails)
 			{
 				var count = viewNoSettlDetails.GroupCount();
-				NoSettlDetails = new NoSettlDetails[count];
+				NoSettlDetails = new TradeCaptureReportNoSettlDetails[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSettlDetails[i] = new();

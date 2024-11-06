@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class StreamCommodityDataSourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41280, Offset = 0, Required = false)]
-		public NoStreamCommodityDataSources[]? NoStreamCommodityDataSources {get; set;}
+		public IOINoStreamCommodityDataSources[]? NoStreamCommodityDataSources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoStreamCommodityDataSources") is IMessageView viewNoStreamCommodityDataSources)
 			{
 				var count = viewNoStreamCommodityDataSources.GroupCount();
-				NoStreamCommodityDataSources = new NoStreamCommodityDataSources[count];
+				NoStreamCommodityDataSources = new IOINoStreamCommodityDataSources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStreamCommodityDataSources[i] = new();

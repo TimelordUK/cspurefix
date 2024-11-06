@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegInstrumentPtysSubGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2258, Offset = 0, Required = false)]
-		public NoLegInstrumentPartySubIDs[]? NoLegInstrumentPartySubIDs {get; set;}
+		public IOINoLegInstrumentPartySubIDs[]? NoLegInstrumentPartySubIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegInstrumentPartySubIDs") is IMessageView viewNoLegInstrumentPartySubIDs)
 			{
 				var count = viewNoLegInstrumentPartySubIDs.GroupCount();
-				NoLegInstrumentPartySubIDs = new NoLegInstrumentPartySubIDs[count];
+				NoLegInstrumentPartySubIDs = new IOINoLegInstrumentPartySubIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegInstrumentPartySubIDs[i] = new();

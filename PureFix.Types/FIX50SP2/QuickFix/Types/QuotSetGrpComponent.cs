@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class QuotSetGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 296, Offset = 0, Required = false)]
-		public NoQuoteSets[]? NoQuoteSets {get; set;}
+		public MassQuoteNoQuoteSets[]? NoQuoteSets {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoQuoteSets") is IMessageView viewNoQuoteSets)
 			{
 				var count = viewNoQuoteSets.GroupCount();
-				NoQuoteSets = new NoQuoteSets[count];
+				NoQuoteSets = new MassQuoteNoQuoteSets[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoQuoteSets[i] = new();

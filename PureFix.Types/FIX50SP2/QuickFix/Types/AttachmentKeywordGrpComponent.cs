@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class AttachmentKeywordGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2113, Offset = 0, Required = false)]
-		public NoAttachmentKeywords[]? NoAttachmentKeywords {get; set;}
+		public EmailNoAttachmentKeywords[]? NoAttachmentKeywords {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoAttachmentKeywords") is IMessageView viewNoAttachmentKeywords)
 			{
 				var count = viewNoAttachmentKeywords.GroupCount();
-				NoAttachmentKeywords = new NoAttachmentKeywords[count];
+				NoAttachmentKeywords = new EmailNoAttachmentKeywords[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAttachmentKeywords[i] = new();

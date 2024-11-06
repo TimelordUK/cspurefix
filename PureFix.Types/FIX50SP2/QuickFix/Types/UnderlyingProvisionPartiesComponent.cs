@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingProvisionPartiesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42173, Offset = 0, Required = false)]
-		public NoUnderlyingProvisionPartyIDs[]? NoUnderlyingProvisionPartyIDs {get; set;}
+		public IOINoUnderlyingProvisionPartyIDs[]? NoUnderlyingProvisionPartyIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingProvisionPartyIDs") is IMessageView viewNoUnderlyingProvisionPartyIDs)
 			{
 				var count = viewNoUnderlyingProvisionPartyIDs.GroupCount();
-				NoUnderlyingProvisionPartyIDs = new NoUnderlyingProvisionPartyIDs[count];
+				NoUnderlyingProvisionPartyIDs = new IOINoUnderlyingProvisionPartyIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingProvisionPartyIDs[i] = new();

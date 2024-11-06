@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingStreamFirstPeriodStartDateBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40974, Offset = 0, Required = false)]
-		public NoUnderlyingStreamFirstPeriodStartDateBusinessCenters[]? NoUnderlyingStreamFirstPeriodStartDateBusinessCenters {get; set;}
+		public IOINoUnderlyingStreamFirstPeriodStartDateBusinessCenters[]? NoUnderlyingStreamFirstPeriodStartDateBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingStreamFirstPeriodStartDateBusinessCenters") is IMessageView viewNoUnderlyingStreamFirstPeriodStartDateBusinessCenters)
 			{
 				var count = viewNoUnderlyingStreamFirstPeriodStartDateBusinessCenters.GroupCount();
-				NoUnderlyingStreamFirstPeriodStartDateBusinessCenters = new NoUnderlyingStreamFirstPeriodStartDateBusinessCenters[count];
+				NoUnderlyingStreamFirstPeriodStartDateBusinessCenters = new IOINoUnderlyingStreamFirstPeriodStartDateBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingStreamFirstPeriodStartDateBusinessCenters[i] = new();

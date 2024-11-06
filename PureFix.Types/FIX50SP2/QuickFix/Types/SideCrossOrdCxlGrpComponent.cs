@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SideCrossOrdCxlGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 552, Offset = 0, Required = false)]
-		public NoSides[]? NoSides {get; set;}
+		public CrossOrderCancelRequestNoSides[]? NoSides {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoSides") is IMessageView viewNoSides)
 			{
 				var count = viewNoSides.GroupCount();
-				NoSides = new NoSides[count];
+				NoSides = new CrossOrderCancelRequestNoSides[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSides[i] = new();

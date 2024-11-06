@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class AssetAttributeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2304, Offset = 0, Required = false)]
-		public NoAssetAttributes[]? NoAssetAttributes {get; set;}
+		public IOINoAssetAttributes[]? NoAssetAttributes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoAssetAttributes") is IMessageView viewNoAssetAttributes)
 			{
 				var count = viewNoAssetAttributes.GroupCount();
-				NoAssetAttributes = new NoAssetAttributes[count];
+				NoAssetAttributes = new IOINoAssetAttributes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAssetAttributes[i] = new();

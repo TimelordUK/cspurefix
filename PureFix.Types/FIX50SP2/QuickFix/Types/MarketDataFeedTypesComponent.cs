@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MarketDataFeedTypesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1141, Offset = 0, Required = false)]
-		public NoMDFeedTypes[]? NoMDFeedTypes {get; set;}
+		public SecurityDefinitionNoMDFeedTypes[]? NoMDFeedTypes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMDFeedTypes") is IMessageView viewNoMDFeedTypes)
 			{
 				var count = viewNoMDFeedTypes.GroupCount();
-				NoMDFeedTypes = new NoMDFeedTypes[count];
+				NoMDFeedTypes = new SecurityDefinitionNoMDFeedTypes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMDFeedTypes[i] = new();

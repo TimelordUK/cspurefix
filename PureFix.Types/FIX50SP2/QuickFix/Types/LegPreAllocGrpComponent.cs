@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegPreAllocGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 670, Offset = 0, Required = false)]
-		public NoLegAllocs[]? NoLegAllocs {get; set;}
+		public ExecutionReportNoLegAllocs[]? NoLegAllocs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegAllocs") is IMessageView viewNoLegAllocs)
 			{
 				var count = viewNoLegAllocs.GroupCount();
-				NoLegAllocs = new NoLegAllocs[count];
+				NoLegAllocs = new ExecutionReportNoLegAllocs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegAllocs[i] = new();

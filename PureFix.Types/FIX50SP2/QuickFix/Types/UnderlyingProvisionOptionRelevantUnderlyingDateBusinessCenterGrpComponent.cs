@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenterGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 42188, Offset = 0, Required = false)]
-		public NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters[]? NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters {get; set;}
+		public IOINoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters[]? NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters") is IMessageView viewNoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters)
 			{
 				var count = viewNoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters.GroupCount();
-				NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters = new NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters[count];
+				NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters = new IOINoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingProvisionOptionRelevantUnderlyingDateBusinessCenters[i] = new();

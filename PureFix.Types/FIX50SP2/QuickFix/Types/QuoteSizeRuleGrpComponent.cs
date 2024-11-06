@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class QuoteSizeRuleGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2558, Offset = 0, Required = false)]
-		public NoQuoteSizeRules[]? NoQuoteSizeRules {get; set;}
+		public SecurityDefinitionNoQuoteSizeRules[]? NoQuoteSizeRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoQuoteSizeRules") is IMessageView viewNoQuoteSizeRules)
 			{
 				var count = viewNoQuoteSizeRules.GroupCount();
-				NoQuoteSizeRules = new NoQuoteSizeRules[count];
+				NoQuoteSizeRules = new SecurityDefinitionNoQuoteSizeRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoQuoteSizeRules[i] = new();

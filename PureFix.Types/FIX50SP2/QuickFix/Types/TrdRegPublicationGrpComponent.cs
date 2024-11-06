@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TrdRegPublicationGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2668, Offset = 0, Required = false)]
-		public NoTrdRegPublications[]? NoTrdRegPublications {get; set;}
+		public ExecutionReportNoTrdRegPublications[]? NoTrdRegPublications {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTrdRegPublications") is IMessageView viewNoTrdRegPublications)
 			{
 				var count = viewNoTrdRegPublications.GroupCount();
-				NoTrdRegPublications = new NoTrdRegPublications[count];
+				NoTrdRegPublications = new ExecutionReportNoTrdRegPublications[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTrdRegPublications[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingStipulationsComponent : IFixComponent
 	{
 		[Group(NoOfTag = 887, Offset = 0, Required = false)]
-		public NoUnderlyingStips[]? NoUnderlyingStips {get; set;}
+		public IOINoUnderlyingStips[]? NoUnderlyingStips {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingStips") is IMessageView viewNoUnderlyingStips)
 			{
 				var count = viewNoUnderlyingStips.GroupCount();
-				NoUnderlyingStips = new NoUnderlyingStips[count];
+				NoUnderlyingStips = new IOINoUnderlyingStips[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingStips[i] = new();

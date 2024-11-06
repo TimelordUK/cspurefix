@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class TrdRepIndicatorsGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1387, Offset = 0, Required = false)]
-		public NoTrdRepIndicators[]? NoTrdRepIndicators {get; set;}
+		public TradeCaptureReportNoTrdRepIndicators[]? NoTrdRepIndicators {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoTrdRepIndicators") is IMessageView viewNoTrdRepIndicators)
 			{
 				var count = viewNoTrdRepIndicators.GroupCount();
-				NoTrdRepIndicators = new NoTrdRepIndicators[count];
+				NoTrdRepIndicators = new TradeCaptureReportNoTrdRepIndicators[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoTrdRepIndicators[i] = new();

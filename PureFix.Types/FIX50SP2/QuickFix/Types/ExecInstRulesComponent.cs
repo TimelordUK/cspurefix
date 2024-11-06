@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ExecInstRulesComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1232, Offset = 0, Required = false)]
-		public NoExecInstRules[]? NoExecInstRules {get; set;}
+		public SecurityDefinitionNoExecInstRules[]? NoExecInstRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoExecInstRules") is IMessageView viewNoExecInstRules)
 			{
 				var count = viewNoExecInstRules.GroupCount();
-				NoExecInstRules = new NoExecInstRules[count];
+				NoExecInstRules = new SecurityDefinitionNoExecInstRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoExecInstRules[i] = new();

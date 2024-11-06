@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RiskWarningLevelGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1559, Offset = 0, Required = false)]
-		public NoRiskWarningLevels[]? NoRiskWarningLevels {get; set;}
+		public PartyRiskLimitsReportNoRiskWarningLevels[]? NoRiskWarningLevels {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRiskWarningLevels") is IMessageView viewNoRiskWarningLevels)
 			{
 				var count = viewNoRiskWarningLevels.GroupCount();
-				NoRiskWarningLevels = new NoRiskWarningLevels[count];
+				NoRiskWarningLevels = new PartyRiskLimitsReportNoRiskWarningLevels[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRiskWarningLevels[i] = new();

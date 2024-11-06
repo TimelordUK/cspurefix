@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class CashSettlTermGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 40022, Offset = 0, Required = false)]
-		public NoCashSettlTerms[]? NoCashSettlTerms {get; set;}
+		public IOINoCashSettlTerms[]? NoCashSettlTerms {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoCashSettlTerms") is IMessageView viewNoCashSettlTerms)
 			{
 				var count = viewNoCashSettlTerms.GroupCount();
-				NoCashSettlTerms = new NoCashSettlTerms[count];
+				NoCashSettlTerms = new IOINoCashSettlTerms[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoCashSettlTerms[i] = new();

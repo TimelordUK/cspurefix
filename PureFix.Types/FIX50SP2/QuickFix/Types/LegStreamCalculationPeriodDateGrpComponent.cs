@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegStreamCalculationPeriodDateGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41638, Offset = 0, Required = false)]
-		public NoLegStreamCalculationPeriodDates[]? NoLegStreamCalculationPeriodDates {get; set;}
+		public IOINoLegStreamCalculationPeriodDates[]? NoLegStreamCalculationPeriodDates {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegStreamCalculationPeriodDates") is IMessageView viewNoLegStreamCalculationPeriodDates)
 			{
 				var count = viewNoLegStreamCalculationPeriodDates.GroupCount();
-				NoLegStreamCalculationPeriodDates = new NoLegStreamCalculationPeriodDates[count];
+				NoLegStreamCalculationPeriodDates = new IOINoLegStreamCalculationPeriodDates[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegStreamCalculationPeriodDates[i] = new();

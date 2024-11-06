@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class DerivativeInstrumentAttributeComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1311, Offset = 0, Required = false)]
-		public NoDerivativeInstrAttrib[]? NoDerivativeInstrAttrib {get; set;}
+		public DerivativeSecurityListNoDerivativeInstrAttrib[]? NoDerivativeInstrAttrib {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoDerivativeInstrAttrib") is IMessageView viewNoDerivativeInstrAttrib)
 			{
 				var count = viewNoDerivativeInstrAttrib.GroupCount();
-				NoDerivativeInstrAttrib = new NoDerivativeInstrAttrib[count];
+				NoDerivativeInstrAttrib = new DerivativeSecurityListNoDerivativeInstrAttrib[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoDerivativeInstrAttrib[i] = new();

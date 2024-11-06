@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ComplexEventRateSourceGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41013, Offset = 0, Required = false)]
-		public NoComplexEventRateSources[]? NoComplexEventRateSources {get; set;}
+		public IOINoComplexEventRateSources[]? NoComplexEventRateSources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoComplexEventRateSources") is IMessageView viewNoComplexEventRateSources)
 			{
 				var count = viewNoComplexEventRateSources.GroupCount();
-				NoComplexEventRateSources = new NoComplexEventRateSources[count];
+				NoComplexEventRateSources = new IOINoComplexEventRateSources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoComplexEventRateSources[i] = new();

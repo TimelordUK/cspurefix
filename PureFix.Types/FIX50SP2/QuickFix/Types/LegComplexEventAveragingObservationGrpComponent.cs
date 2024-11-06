@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class LegComplexEventAveragingObservationGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41363, Offset = 0, Required = false)]
-		public NoLegComplexEventAveragingObservations[]? NoLegComplexEventAveragingObservations {get; set;}
+		public IOINoLegComplexEventAveragingObservations[]? NoLegComplexEventAveragingObservations {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoLegComplexEventAveragingObservations") is IMessageView viewNoLegComplexEventAveragingObservations)
 			{
 				var count = viewNoLegComplexEventAveragingObservations.GroupCount();
-				NoLegComplexEventAveragingObservations = new NoLegComplexEventAveragingObservations[count];
+				NoLegComplexEventAveragingObservations = new IOINoLegComplexEventAveragingObservations[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoLegComplexEventAveragingObservations[i] = new();

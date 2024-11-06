@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MarginReqmtInqQualGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1636, Offset = 0, Required = false)]
-		public NoMarginReqmtInqQualifier[]? NoMarginReqmtInqQualifier {get; set;}
+		public MarginRequirementInquiryNoMarginReqmtInqQualifier[]? NoMarginReqmtInqQualifier {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMarginReqmtInqQualifier") is IMessageView viewNoMarginReqmtInqQualifier)
 			{
 				var count = viewNoMarginReqmtInqQualifier.GroupCount();
-				NoMarginReqmtInqQualifier = new NoMarginReqmtInqQualifier[count];
+				NoMarginReqmtInqQualifier = new MarginRequirementInquiryNoMarginReqmtInqQualifier[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMarginReqmtInqQualifier[i] = new();

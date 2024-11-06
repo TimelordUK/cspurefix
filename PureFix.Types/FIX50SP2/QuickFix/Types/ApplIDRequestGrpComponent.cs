@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class ApplIDRequestGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1351, Offset = 0, Required = false)]
-		public NoApplIDs[]? NoApplIDs {get; set;}
+		public ApplicationMessageRequestNoApplIDs[]? NoApplIDs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoApplIDs") is IMessageView viewNoApplIDs)
 			{
 				var count = viewNoApplIDs.GroupCount();
-				NoApplIDs = new NoApplIDs[count];
+				NoApplIDs = new ApplicationMessageRequestNoApplIDs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoApplIDs[i] = new();

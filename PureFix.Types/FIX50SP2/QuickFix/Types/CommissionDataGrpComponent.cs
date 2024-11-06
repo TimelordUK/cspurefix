@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class CommissionDataGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2639, Offset = 0, Required = false)]
-		public NoCommissions[]? NoCommissions {get; set;}
+		public ExecutionReportNoCommissions[]? NoCommissions {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoCommissions") is IMessageView viewNoCommissions)
 			{
 				var count = viewNoCommissions.GroupCount();
-				NoCommissions = new NoCommissions[count];
+				NoCommissions = new ExecutionReportNoCommissions[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoCommissions[i] = new();

@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class RateSourceComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1445, Offset = 0, Required = false)]
-		public NoRateSources[]? NoRateSources {get; set;}
+		public ExecutionReportNoRateSources[]? NoRateSources {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoRateSources") is IMessageView viewNoRateSources)
 			{
 				var count = viewNoRateSources.GroupCount();
-				NoRateSources = new NoRateSources[count];
+				NoRateSources = new ExecutionReportNoRateSources[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoRateSources[i] = new();

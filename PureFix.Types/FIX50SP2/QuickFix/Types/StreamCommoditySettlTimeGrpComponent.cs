@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class StreamCommoditySettlTimeGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41286, Offset = 0, Required = false)]
-		public NoStreamCommoditySettlTimes[]? NoStreamCommoditySettlTimes {get; set;}
+		public IOINoStreamCommoditySettlTimes[]? NoStreamCommoditySettlTimes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoStreamCommoditySettlTimes") is IMessageView viewNoStreamCommoditySettlTimes)
 			{
 				var count = viewNoStreamCommoditySettlTimes.GroupCount();
-				NoStreamCommoditySettlTimes = new NoStreamCommoditySettlTimes[count];
+				NoStreamCommoditySettlTimes = new IOINoStreamCommoditySettlTimes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoStreamCommoditySettlTimes[i] = new();

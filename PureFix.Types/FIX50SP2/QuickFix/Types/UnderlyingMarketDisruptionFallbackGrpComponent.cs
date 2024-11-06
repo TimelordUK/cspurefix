@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingMarketDisruptionFallbackGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 41866, Offset = 0, Required = false)]
-		public NoUnderlyingMarketDisruptionFallbacks[]? NoUnderlyingMarketDisruptionFallbacks {get; set;}
+		public IOINoUnderlyingMarketDisruptionFallbacks[]? NoUnderlyingMarketDisruptionFallbacks {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingMarketDisruptionFallbacks") is IMessageView viewNoUnderlyingMarketDisruptionFallbacks)
 			{
 				var count = viewNoUnderlyingMarketDisruptionFallbacks.GroupCount();
-				NoUnderlyingMarketDisruptionFallbacks = new NoUnderlyingMarketDisruptionFallbacks[count];
+				NoUnderlyingMarketDisruptionFallbacks = new IOINoUnderlyingMarketDisruptionFallbacks[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingMarketDisruptionFallbacks[i] = new();

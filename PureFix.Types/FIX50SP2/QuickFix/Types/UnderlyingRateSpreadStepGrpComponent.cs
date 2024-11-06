@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class UnderlyingRateSpreadStepGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 43005, Offset = 0, Required = false)]
-		public NoUnderlyingRateSpreadSteps[]? NoUnderlyingRateSpreadSteps {get; set;}
+		public IOINoUnderlyingRateSpreadSteps[]? NoUnderlyingRateSpreadSteps {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoUnderlyingRateSpreadSteps") is IMessageView viewNoUnderlyingRateSpreadSteps)
 			{
 				var count = viewNoUnderlyingRateSpreadSteps.GroupCount();
-				NoUnderlyingRateSpreadSteps = new NoUnderlyingRateSpreadSteps[count];
+				NoUnderlyingRateSpreadSteps = new IOINoUnderlyingRateSpreadSteps[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoUnderlyingRateSpreadSteps[i] = new();

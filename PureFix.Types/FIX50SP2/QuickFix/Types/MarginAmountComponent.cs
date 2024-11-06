@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class MarginAmountComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1643, Offset = 0, Required = false)]
-		public NoMarginAmt[]? NoMarginAmt {get; set;}
+		public MarginRequirementReportNoMarginAmt[]? NoMarginAmt {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoMarginAmt") is IMessageView viewNoMarginAmt)
 			{
 				var count = viewNoMarginAmt.GroupCount();
-				NoMarginAmt = new NoMarginAmt[count];
+				NoMarginAmt = new MarginRequirementReportNoMarginAmt[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoMarginAmt[i] = new();

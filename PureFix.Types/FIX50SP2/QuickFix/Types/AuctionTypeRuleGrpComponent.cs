@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class AuctionTypeRuleGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 2548, Offset = 0, Required = false)]
-		public NoAuctionTypeRules[]? NoAuctionTypeRules {get; set;}
+		public SecurityDefinitionNoAuctionTypeRules[]? NoAuctionTypeRules {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoAuctionTypeRules") is IMessageView viewNoAuctionTypeRules)
 			{
 				var count = viewNoAuctionTypeRules.GroupCount();
-				NoAuctionTypeRules = new NoAuctionTypeRules[count];
+				NoAuctionTypeRules = new SecurityDefinitionNoAuctionTypeRules[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAuctionTypeRules[i] = new();

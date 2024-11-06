@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class StrmAsgnRptGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 1499, Offset = 0, Required = false)]
-		public NoAsgnReqs[]? NoAsgnReqs {get; set;}
+		public StreamAssignmentReportNoAsgnReqs[]? NoAsgnReqs {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoAsgnReqs") is IMessageView viewNoAsgnReqs)
 			{
 				var count = viewNoAsgnReqs.GroupCount();
-				NoAsgnReqs = new NoAsgnReqs[count];
+				NoAsgnReqs = new StreamAssignmentReportNoAsgnReqs[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoAsgnReqs[i] = new();

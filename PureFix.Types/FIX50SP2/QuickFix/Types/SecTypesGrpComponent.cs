@@ -10,7 +10,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 	public sealed partial class SecTypesGrpComponent : IFixComponent
 	{
 		[Group(NoOfTag = 558, Offset = 0, Required = false)]
-		public NoSecurityTypes[]? NoSecurityTypes {get; set;}
+		public SecurityTypesNoSecurityTypes[]? NoSecurityTypes {get; set;}
 		
 		
 		bool IFixValidator.IsValid(in FixValidatorConfig config)
@@ -37,7 +37,7 @@ namespace PureFix.Types.FIX50SP2.QuickFix.Types
 			if (view.GetView("NoSecurityTypes") is IMessageView viewNoSecurityTypes)
 			{
 				var count = viewNoSecurityTypes.GroupCount();
-				NoSecurityTypes = new NoSecurityTypes[count];
+				NoSecurityTypes = new SecurityTypesNoSecurityTypes[count];
 				for (int i = 0; i < count; i++)
 				{
 					NoSecurityTypes[i] = new();
