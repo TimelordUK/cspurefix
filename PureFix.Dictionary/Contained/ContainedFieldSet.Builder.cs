@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,6 +85,7 @@ namespace PureFix.Dictionary.Contained
 
             var tag = definition.Tag;
             _localTag[tag] = field;
+            _tagToField[tag] = (this, field);
             if (field.Required)
             {
                 _localRequired[tag] = field;
@@ -127,7 +129,11 @@ namespace PureFix.Dictionary.Contained
                 if (nof != null)
                 {
                     var tag = nof.Tag;
-                    _containedTag[tag] = true;
+                    _containedTag[tag] = definition;
+                    if (definition.NoOfField != null)
+                    {
+                        _tagToSimpleDefinition[tag] = definition.NoOfField;
+                    }
                     _flattendTag.Add(tag);
                 }
 
@@ -155,11 +161,12 @@ namespace PureFix.Dictionary.Contained
 
         private void MapAllBelow(ContainedFieldSet set, ContainedField field)
         {
+            _nameToSet[set.Name] = set;
             var tagsBelow = set.Keys();
             for (var i = 0; i < tagsBelow.Count; i++)
             {
                 var tag = tagsBelow[i];
-                _tagToField[tag] = field;
+                _tagToField[tag] = (set, field);
             }
         }
 
@@ -186,9 +193,10 @@ namespace PureFix.Dictionary.Contained
 
             var tag = field.Definition.Tag;
             _simple[field.Name] = field;
-            _containedTag[tag] = true;
+            _containedTag[tag] = parent;
             _flattendTag.Add(tag);
             _tagToSimple[tag] = field;
+            _tagToSimpleDefinition[tag] = field.Definition;
         }
 
         private void AddAllFields(ContainedFieldSet containedField)

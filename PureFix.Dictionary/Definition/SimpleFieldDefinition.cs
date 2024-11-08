@@ -21,7 +21,7 @@ namespace PureFix.Dictionary.Definition
         public TagType TagType { get; }
         private readonly Dictionary<string, FieldEnum>? _enums;
         private readonly HashSet<string>? _enumVals;
-        public bool IsEnum => _enums != null && _enums.Count > 0;
+        public bool IsEnum => _enums is { Count: > 0 };
         // needed for FIXML as "ID" is resolved within the context of its parent.
         public string? Abbreviation { get; }
         public string? BaseCategory { get; }
@@ -29,6 +29,7 @@ namespace PureFix.Dictionary.Definition
         public int Count => _enums?.Count ?? 0;
         public IReadOnlySet<string>? EnumVals => _enumVals;
         public IReadOnlyDictionary<string, FieldEnum>? Enums => _enums;
+        public bool IsNumInGroup => Type == "NUMINGROUP";
 
         // var sd = new SimpleFieldDefinition(name, tag, TagTypeUtil.ToType(type), values);
         public SimpleFieldDefinition(string name, string? cat, string type, int tag, List<FieldEnum>? enums) : this(name, null, cat, null, type, name, tag, enums)
@@ -41,12 +42,12 @@ namespace PureFix.Dictionary.Definition
             BaseCategory = baseCategory;
             Description = description;
             BaseCategoryAbbreviation = baseCategoryAbbreviation;
-            Name = name;
+            Name = name.Replace(" ", string.Empty);
             Type = type;
             Tag = tag;
             TagType = TagManager.ToType(type);
             
-            if (enums != null && enums.Count > 0)
+            if (enums is { Count: > 0 })
             {
                 _enums = enums.ToDictionary(fe => fe.Key, fe => fe);
                 _enumVals = [.._enums.Values.Select(kv => kv.Val).Distinct()];

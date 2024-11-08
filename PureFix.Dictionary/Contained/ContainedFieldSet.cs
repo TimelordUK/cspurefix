@@ -1,10 +1,8 @@
-﻿using PureFix.Dictionary.Parser;
+﻿using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,13 +21,15 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<string, IContainedSet> _components = [];
         protected readonly Dictionary<string, ContainedSimpleField> _simple = [];
         protected readonly List<ContainedField> _fields = [];
-        protected readonly Dictionary<int, bool> _containedTag = [];
+        protected readonly Dictionary<int, IContainedSet> _containedTag = [];
         protected readonly List<int> _flattendTag = [];
         protected readonly Dictionary<int, bool> _containedLength = [];
         protected readonly Dictionary<int, ContainedSimpleField> _localTag = [];
         protected readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
         protected readonly Dictionary<int, ContainedSimpleField> _tagToSimple = [];
-        protected readonly Dictionary<int, ContainedField> _tagToField = [];
+        protected readonly Dictionary<int, SimpleFieldDefinition> _tagToSimpleDefinition = [];
+        protected readonly Dictionary<int, (IContainedSet? parent, ContainedField field)> _tagToField = [];
+        protected readonly Dictionary<string, IContainedSet> _nameToSet = [];
         protected readonly Dictionary<string, ContainedField> _localNameToField = [];
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = [];
         protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = [];
@@ -58,7 +58,7 @@ namespace PureFix.Dictionary.Contained
         /// <summary>
         /// any tag at any level i.e. does this set contain a tag
         /// </summary>
-        public IReadOnlyDictionary<int, bool> ContainedTag => _containedTag;
+        public IReadOnlyDictionary<int, IContainedSet> ContainedTag => _containedTag;
 
         /// <summary>
         /// any tag at any level ordered i.e. all tags flattened to list
@@ -84,11 +84,12 @@ namespace PureFix.Dictionary.Contained
         /// all tags contained within this field set flattened from all levels
         /// </summary>
         public IReadOnlyDictionary<int, ContainedSimpleField> TagToSimple => _tagToSimple;
+        public IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimpleDefinition => _tagToSimpleDefinition;
 
         /// <summary>
         /// direct any tag contained within this set to field one level down where it belongs.
         /// </summary>
-        public IReadOnlyDictionary<int, ContainedField> TagToField => _tagToField;
+        public IReadOnlyDictionary<int, (IContainedSet? parent, ContainedField field)> TagToField => _tagToField;
 
         /// <summary>
         /// only repository directly in this set indexed by name
@@ -104,6 +105,8 @@ namespace PureFix.Dictionary.Contained
         /// all attributes in order of being declared
         /// </summary>
         public IReadOnlyList<ContainedSimpleField> LocalAttribute => _localAttribute;
+
+        public IReadOnlyDictionary<string, IContainedSet> NameToSet => _nameToSet;
 
         /// <summary>
         /// at any level on this set, first declared simple field
@@ -159,7 +162,7 @@ namespace PureFix.Dictionary.Contained
 
             if (TagToField.TryGetValue(tag, out var f))
             {
-                return f.Name;
+                return f.field.Name;
             }
 
             return $"{tag}";

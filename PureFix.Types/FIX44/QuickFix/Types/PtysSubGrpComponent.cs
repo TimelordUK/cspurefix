@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PureFix.Types.FIX44.QuickFix.Types;
+
+namespace PureFix.Types.FIX44.QuickFix.Types
+{
+	public sealed partial class PtysSubGrpComponent : IFixComponent
+	{
+		[Group(NoOfTag = 802, Offset = 0, Required = false)]
+		public ExecutionReportNoPartySubIDs[]? NoPartySubIDs {get; set;}
+		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (NoPartySubIDs is not null && NoPartySubIDs.Length != 0)
+			{
+				writer.WriteWholeNumber(802, NoPartySubIDs.Length);
+				for (int i = 0; i < NoPartySubIDs.Length; i++)
+				{
+					((IFixEncoder)NoPartySubIDs[i]).Encode(writer);
+				}
+			}
+		}
+		
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("NoPartySubIDs") is IMessageView viewNoPartySubIDs)
+			{
+				var count = viewNoPartySubIDs.GroupCount();
+				NoPartySubIDs = new ExecutionReportNoPartySubIDs[count];
+				for (int i = 0; i < count; i++)
+				{
+					NoPartySubIDs[i] = new();
+					((IFixParser)NoPartySubIDs[i]).Parse(viewNoPartySubIDs.GetGroupInstance(i));
+				}
+			}
+		}
+		
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "NoPartySubIDs":
+					value = NoPartySubIDs;
+					break;
+				default: return false;
+			}
+			return true;
+		}
+		
+		void IFixReset.Reset()
+		{
+			NoPartySubIDs = null;
+		}
+	}
+}

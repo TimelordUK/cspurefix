@@ -4,6 +4,7 @@ using PureFix.Dictionary.Parser;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -71,7 +72,7 @@ namespace PureFix.Dictionary.Compiler
                 var typename = message.Name;
                 using(generator.BeginBlock($"public sealed partial class {typename} : {nameof(IFixMessage)}"))
                 {
-                    ApplyFields(generator, message.Fields);
+                    ApplyFields(generator, message.Name, message);
 
                     generator.WriteLine();
                     generator.WriteLine("IStandardHeader? IFixMessage.StandardHeader => StandardHeader;");
@@ -79,7 +80,7 @@ namespace PureFix.Dictionary.Compiler
                     generator.WriteLine("IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;");
 
                     generator.WriteLine();
-                    GenerateSupportingFunctions(generator, message);
+                    GenerateSupportingFunctions(generator, message.Name, message);
                 }
             }
 
@@ -87,7 +88,7 @@ namespace PureFix.Dictionary.Compiler
             return result;
         }
 
-        protected override string GenerateType(ContainedGroupField group)
+        protected override string GenerateType(string parentPath, ContainedGroupField group)
         {
             var generator = new CodeGenerator();
             WriteMessageUsings(generator);
@@ -95,20 +96,22 @@ namespace PureFix.Dictionary.Compiler
 
             using(generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
             {
-                using(generator.BeginBlock($"public sealed partial class {group.Name} : {nameof(IFixGroup)}"))
+                using(generator.BeginBlock($"public sealed partial class {parentPath}{group.Name} : {nameof(IFixGroup)}"))
                 {
-                    var fields = group.Definition?.Fields;
-                    if(fields is not null) ApplyFields(generator, fields);
+                    if (group.Definition != null)
+                    {
+                         ApplyFields(generator, parentPath, group.Definition);
+                    }
 
                     generator.WriteLine();
-                    GenerateSupportingFunctions(generator, group.Definition!);
+                    GenerateSupportingFunctions(generator, parentPath, group.Definition!);
                 }
             }
 
             return generator.ToString();
         }
 
-        protected override string GenerateType(ContainedComponentField component)
+        protected override string GenerateType(string parentPath, ContainedComponentField component)
         {
             var generator = new CodeGenerator();
             WriteMessageUsings(generator);
@@ -125,33 +128,34 @@ namespace PureFix.Dictionary.Compiler
             {
                 using(generator.BeginBlock($"public sealed partial class {component.Name}Component : {nameof(IFixComponent)}{additionImplements}"))
                 {
-                    var fields = component.Definition?.Fields;
-                    if(fields is not null) ApplyFields(generator, fields);
+                    if (component.Definition != null)
+                    {
+                        ApplyFields(generator, parentPath, component.Definition);
+                    }
 
                     generator.WriteLine();
-                    GenerateSupportingFunctions(generator, component.Definition!);
+                    GenerateSupportingFunctions(generator, parentPath, component.Definition!);
                 }
             }
 
             return generator.ToString();
         }        
         
-        protected override void HandleGroupProperty(CodeGenerator generator, int index, ContainedGroupField field)
+        protected override void HandleGroupProperty(CodeGenerator generator, string parentPath, int index, ContainedGroupField field)
         {
             if (field.Definition == null) return;
-
             var countField = field.Definition.NoOfField!.Tag;
-            var typeName = MakeTypeName(field);
+            var typeName = MakeTypeName(parentPath, field.Definition);
 
             generator.WriteLine($"[Group(NoOfTag = {countField}, Offset = {index}, Required = {MapRequired(field.Required)})]");
             generator.WriteLine($"public {typeName}[]? {field.Name} {GetSet}");
             generator.WriteLine();
         }
 
-        protected override void HandleComponentProperty(CodeGenerator generator, int index, ContainedComponentField field)
+        protected override void HandleComponentProperty(CodeGenerator generator, string parentPath, int index, ContainedComponentField field)
         {
             if (field.Definition == null) return;
-            var typename = MakeTypeName(field);
+            var typename = MakeTypeName(parentPath, field.Definition);
             
             generator.WriteLine($"[Component(Offset = {index}, Required = {MapRequired(field.Required)})]");
             generator.WriteLine($"public {typename}? {field.Name} {GetSet}");
@@ -162,7 +166,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        protected override void HandleFieldProperty(CodeGenerator generator, int index, ContainedSimpleField field, ContainedField? last, ContainedField? next)
+        protected override void HandleFieldProperty(CodeGenerator generator, string parentPath, int index, ContainedSimpleField field, ContainedField? last, ContainedField? next)
         {
             var type = TagManager.ToCsType(field.Definition.TagType);
 
@@ -188,13 +192,13 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        private void GenerateSupportingFunctions(CodeGenerator generator, IContainedSet set)
+        private void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set)
         {
             WriteIsValid(generator, set);
             generator.WriteLine();
             WriteEncode(generator, set);
             generator.WriteLine();
-            WriteParse(generator, set);
+            WriteParse(generator, parentPath, set);
             generator.WriteLine();
             WriteTryGetByTag(generator, set);
             generator.WriteLine();
@@ -266,7 +270,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
             
-        private void WriteParse(CodeGenerator generator, IContainedSet containedSet)
+        private void WriteParse(CodeGenerator generator, string parentPath, IContainedSet containedSet)
         {
             using (generator.BeginBlock("void IFixParser.Parse(IMessageView? view)"))
             {
@@ -292,7 +296,7 @@ namespace PureFix.Dictionary.Compiler
                             using(generator.BeginBlock($"if (view.GetView(\"{name}\") is IMessageView {tempName})"))
                             {
                                 generator.WriteLine($"var count = {tempName}.GroupCount();");
-                                generator.WriteLine($"{name} = new {MakeTypeName(gf)}[count];");
+                                generator.WriteLine($"{name} = new {MakeTypeName(parentPath, gf.Definition)}[count];");
                                 using(generator.BeginBlock($"for (int i = 0; i < count; i++)"))
                                 {
                                     generator.WriteLine($"{name}[i] = new();");
@@ -465,37 +469,20 @@ namespace PureFix.Dictionary.Compiler
 
             var generator = new CodeGenerator();
 
-            if(enumName == "MsgTypeValues")
-            {
-                Console.WriteLine();
-            }
-
             using(generator.BeginBlock($"namespace {Options.BackingTypeNamespace}.Types"))
             using(generator.BeginBlock($"public static class {enumName}"))
             {
                 var hasDuplicates = HasDuplicates(enums);
-
+                HashSet<string> keys =[];
                 foreach(var field in enums.Values)
                 {
-                    var value = tagType switch
-                    {
-                        TagType.String  => $"\"{field.Key}\"",
-                        TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
-                        _               => field.Key.ToString()
-                    };
-
+                    var value = GetENumValue(tagType, field);
                     // FIX5 has some duplicate enum values that differ only by case (seriously!)
                     // So we'll need some special handling for the enum values
-                    var constantName = field.Description.UnderscoreToCamelCase();
-                    if(hasDuplicates && csharpBaseType == "string")
-                    {
-                        constantName = new string(field.Key.Where(c => Char.IsLetterOrDigit(c)).ToArray());;
-                    }
-
-                    // Some descriptions start with a number, which won't map to a valid C# symbol
-                    if(char.IsDigit(constantName[0])) constantName = "_" + constantName;
-
+                    var constantName = GetConstantName(field, hasDuplicates, csharpBaseType);
+                    if (keys.Contains(constantName)) continue;
                     generator.WriteLine($"public const {csharpBaseType} {constantName} = {value};");
+                    keys.Add(constantName);
                 }
             }
 
@@ -503,9 +490,40 @@ namespace PureFix.Dictionary.Compiler
             WriteFile(filename, code);
         }
 
-        private bool HasDuplicates(IReadOnlyDictionary<string, FieldEnum> enums)
+        private static string GetENumValue(TagType tagType, FieldEnum field)
         {
-            var uniqueItems = enums.Values.Select(e => e.Description).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var value = tagType switch
+            {
+                TagType.String => $"\"{field.Key}\"",
+                TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
+                _ => field.Key
+            };
+            return value;
+        }
+
+        private static string GetConstantName(FieldEnum field, bool hasDuplicates, string csharpBaseType)
+        {
+            if (string.IsNullOrEmpty(field.Val))
+            {
+                return "Unknown";
+            }
+
+            var constantName = field.Val.UnderscoreToCamelCase();
+            if (hasDuplicates && csharpBaseType == "string")
+            {
+                constantName = new string(field.Key.Where(char.IsLetterOrDigit).ToArray()); ;
+            }
+
+            // Some descriptions start with a number, which won't map to a valid C# symbol
+            if (char.IsDigit(constantName[0])) constantName = "_" + constantName;
+            return constantName;
+        }
+
+        private static bool HasDuplicates(IReadOnlyDictionary<string, FieldEnum> enums)
+        {
+            var uniqueItems = enums.Values
+                .Select(e => e.Description)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
             return uniqueItems.Count != enums.Count;
         }
     }

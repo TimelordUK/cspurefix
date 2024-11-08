@@ -21,7 +21,7 @@ namespace PureFix.Dictionary.Definition
             NoOfField = noOfField;
             if (noOfField != null)
             {
-                _containedTag[noOfField.Tag] = true;
+                _containedTag[noOfField.Tag] = this;
             }
         }
 

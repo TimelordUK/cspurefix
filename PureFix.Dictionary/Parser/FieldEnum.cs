@@ -14,7 +14,16 @@ namespace PureFix.Dictionary.Parser
         private string FromDescription(string description)
         {
             if (string.IsNullOrEmpty(description)) return "Unknown";
-            var res = Description.Replace(" ", "_").UnderscoreToCamelCase();
+            var res = Description
+                .Replace("-", "-")
+                .Replace("+", "Plus")
+                .Replace("-", "_")
+                .Replace("&", "And")
+                .Replace("#", "Hash")
+                .Replace("(", "_")
+                .Replace(")", "_")
+                .Replace(" ", "_")
+                .UnderscoreToCamelCase();
             return res;
         }
     }

@@ -10,6 +10,7 @@ using PureFix.Types.FIX44.QuickFix.Types;
 using DIs = NUnit.DeepObjectCompare.Is;
 using PureFix.Types;
 using PureFix.Test.Env;
+using System.Security.Cryptography;
 
 namespace PureFix.Test.Ascii
 {
@@ -70,7 +71,7 @@ namespace PureFix.Test.Ascii
             ((IFixParser)message).Parse(view);
 
             Assert.That(QuickLookup.On(message)["OrderID"].As<string>(), Is.EqualTo("ipsum"));
-            var parties = QuickLookup.On(message)["Parties"]["NoPartyIDs"].As<NoPartyIDs[]>();
+            var parties = QuickLookup.On(message)["Parties"]["NoPartyIDs"].As<ExecutionReportNoPartyIDs[]>();
             Assert.That(parties, Is.Not.Null & Has.Length.EqualTo(3));
             Assert.That(parties[0], Is.Not.Null);
             Assert.That(parties[1], Is.Not.Null);
@@ -1012,7 +1013,7 @@ namespace PureFix.Test.Ascii
             Assert.That(erView, Is.Not.Null);
             var partyView = erView.GetView("Parties");
             Assert.That(partyView, Is.Not.Null);
-            var parties = new NoPartyIDs();
+            var parties = new ExecutionReportNoPartyIDs();
             ((IFixParser)parties).Parse(partyView);
             Assert.That(parties, Is.Not.Null);
             var json = JsonHelper.ToJson(parties);
@@ -1037,7 +1038,7 @@ namespace PureFix.Test.Ascii
                                     """;
 
 
-            var instance = JsonHelper.FromJson<NoPartyIDs>(expected);
+            var instance = JsonHelper.FromJson<ExecutionReportNoPartyIDs>(expected);
             Assert.That(parties, DIs.DeepEqualTo(instance));
 
             var noParties = partyView.GetView("NoPartyIDs");
@@ -1175,7 +1176,7 @@ namespace PureFix.Test.Ascii
                 Assert.That(underlying0, Is.Not.Null);
                 Assert.That(underlying0.UnderlyingSymbol, Is.EqualTo("massa."));
             });
-            
+
             const string expected0 = """
                                      {
                                        "NoUnderlyingSecurityAltID": [
@@ -1226,5 +1227,44 @@ namespace PureFix.Test.Ascii
                 });
             });
         }
+
+        [Test]
+        public void Field_Fetches_With_Container_Test()
+        {
+            var definitions = _testEntity.Definitions;
+            var er = definitions.Message.GetValueOrDefault(MsgType.ExecutionReport);
+            Assert.That(er, Is.Not.Null);
+            var beginstring = er.TagToField.GetValueOrDefault((int)MsgTag.BeginString);
+            Assert.That(beginstring.parent, Is.Not.Null);
+            Assert.That(beginstring.parent.Name, Is.EqualTo("StandardHeader"));
+
+            var securityId = er.TagToField.GetValueOrDefault((int)MsgTag.SecurityID);
+            Assert.That(securityId.parent, Is.Not.Null);
+            Assert.That(securityId.parent.Name, Is.EqualTo("Instrument"));
+        }
+
+        [Test]
+        public void Structure_Parse_ExecReport()
+        {
+            var definitions = _testEntity.Definitions;
+            var er = definitions.Message.GetValueOrDefault(MsgType.ExecutionReport);
+            Assert.That(er, Is.Not.Null);
+            Assert.That(_views, Is.Not.Null);
+            Assert.That(_views, Has.Count.EqualTo(1));
+            var mv = _views[0];
+            var tags = mv.Tags;
+            Assert.That(tags, Is.Not.Null);
+            var sm = new AsciiSegmentParser(definitions);
+            var s2 = sm.Parse(MsgType.ExecutionReport, tags, tags.Count);
+            
+            var heder = s2.Value.GetInstance("StandardHeader");
+            var ins = s2.Value.GetInstance("Instrument");
+            var sag = s2.Value.GetInstance("SecAltIDGrp");
+            var parties = s2.Value.GetInstance("Parties");
+            var noPartyIDs = s2.Value.GetInstance("NoPartyIDs");
+
+        }
     }
 }
+
+

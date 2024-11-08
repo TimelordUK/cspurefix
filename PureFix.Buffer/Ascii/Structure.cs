@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using PureFix.Buffer.Segment;
 using PureFix.Types;
 
@@ -32,6 +35,20 @@ namespace PureFix.Buffer.Ascii
         public SegmentDescription? GetInstance(string name)
         {
             return _singletons?.GetValueOrDefault(name);
+        }
+
+        public TagPos[] GetSortedTags(SegmentDescription segmentDescription)
+        {
+            var end = segmentDescription.EndPosition + 1;
+            var start = segmentDescription.StartPosition;
+
+            // these may not have tags all in a slice, so need to take the view which
+            // is all tags within the component regardless of where they are.
+            var sortedTagPosForwards = segmentDescription.SegmentView != null ? segmentDescription.SegmentView.Tags.ToArray() :
+                // slice out the section of tags which represents this view 
+                Tags.Slice(start, end);
+            Array.Sort(sortedTagPosForwards, TagPos.Compare);
+            return sortedTagPosForwards;
         }
 
         public SegmentDescription? Msg() => Segments.Count >= 2 ? Segments[^2] : null;

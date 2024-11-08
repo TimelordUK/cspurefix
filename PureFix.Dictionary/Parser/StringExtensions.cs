@@ -10,10 +10,22 @@ namespace PureFix.Dictionary.Parser
     {
         public static string UnderscoreToCamelCase(this string name)
         {
-            if (string.IsNullOrEmpty(name) || !name.Contains("_"))
+            if (string.IsNullOrEmpty(name))
             {
-                return name.ToLower().FirstCharToUpper();
+                return "";
             }
+
+            if (name.All(char.IsUpper))
+            {
+                name = name.ToLower().FirstCharToUpper();
+                return name;
+            }
+
+            if (!name.Contains("_"))
+            {
+                return name.FirstCharToUpper();
+            }
+
             var array = name.Split('_');
             for (var i = 0; i < array.Length; i++)
             {

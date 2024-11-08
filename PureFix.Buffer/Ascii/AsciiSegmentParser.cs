@@ -11,6 +11,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Types;
 
+
 namespace PureFix.Buffer.Ascii
 {
     public partial class AsciiSegmentParser(IFixDefinitions definitions)
@@ -27,18 +28,40 @@ namespace PureFix.Buffer.Ascii
             // in process of being discovered and may have any amount of depth
             // i.e. a component containing a repeated group of components
             // with sub-groups of components
+            var ti = new TagIndex(msgDefinition, tags[..last]);
             var context = new Context(msgDefinition, tags, last);
 
             var msgStructure = new SegmentDescription(msgDefinition.Name, tags[0].Tag, msgDefinition,
                   context.CurrentTagPosition, context.StructureStack.Count, SegmentType.Msg);
             context.StructureStack.Push(msgStructure);
             Discover(context);
+            // for any level root level component, cant guarantee tags will be in a contiguous block so 
+            // switch to using the index
             Clean(context);
-
+            Fragments(context, ti);            
             // now know where all components and groups are positioned within message
             return new Structure(tags, context.Segments);
         }
 
+        private static void Fragments(Context context, TagIndex ti)
+        {
+            var seen = new HashSet<string>();
+            for (var i = 1; i < context.Segments.Count -1; ++i)
+            {
+                var seg = context.Segments[i];
+                if (seg.Depth != 1) continue;
+                if (seg.Name == null) continue;
+                if (seg.SegmentView != null) continue;
+                if (seen.Contains(seg.Name)) continue;
+                // case where there is a component with one field which wraps the group - these will all be self contained.
+                if (ti.ComponentGroupWrappers.Contains(seg.Name)) continue;
+                // for example instrument where tags may be scattered and not all contiguous, compute a view rather than a slice.
+                var v = ti.GetInstance(seg.Name);
+                if (v == null) continue;
+                seen.Add(seg.Name);
+                seg.Add(v);
+            }
+        }
 
         public static Summary Summarise(Context context)
         {

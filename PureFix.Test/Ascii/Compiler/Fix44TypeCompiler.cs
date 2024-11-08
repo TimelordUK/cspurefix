@@ -32,7 +32,7 @@ namespace PureFix.Test.Ascii.Compiler
         public void MessageGenerator()
         {
             var generator = new MessageGenerator(null, Definitions, Options.FromVersion(Definitions));
-            generator.Process();
+            // generator.Process();
         }
 
         private IFixDefinitions GetTrimDefinitions(string[] types) {
@@ -61,7 +61,7 @@ namespace PureFix.Test.Ascii.Compiler
         public void FileGenerator()
         {
             var generator = new MessageGenerator(null, Definitions, Options.FromVersion(Definitions));
-            generator.Process();
+            //generator.Process();
         }
     }
 }

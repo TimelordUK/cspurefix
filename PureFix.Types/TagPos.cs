@@ -4,6 +4,11 @@
     {
         public int End => Start + Len - 1;
 
+        public override string ToString()
+        {
+            return $"Position = {Position}, Tag = {Tag}, Start = {Start}, Len = {Len}";
+        }
+
         public static int BinarySearch(IReadOnlyList<TagPos> ar, int tag)
         {
             var m = 0;

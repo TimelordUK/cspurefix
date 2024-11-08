@@ -12,7 +12,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
     {
         private void ParseMessages(XDocument doc)
         {
-            var messages = doc.Descendants("messages").First().Elements("message");
+            var messages = doc.Descendants("messages")
+                .First()
+                .Elements("message");
             foreach (var messageElement in messages)
             {
                 var ad = messageElement.AsAttributeDict();
@@ -24,7 +26,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
         private static MessageDefinition GetMessage(XElement fieldElement)
         {
             var atts = fieldElement.AsAttributeDict();
-            var name = atts["name"];
+            var name = NameFrom(atts);
             var msgCat = atts.GetValueOrDefault("msgcat") ?? "";
             var msgType = atts["msgtype"];
          

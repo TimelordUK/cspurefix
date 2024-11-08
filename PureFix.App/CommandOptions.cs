@@ -16,6 +16,9 @@ namespace PureFix.ConsoleApp
         [Option('d', "dict", Required = false, HelpText = "dictionary xml file.")]
         public string DictPath { get; set; } = "";
 
+        [Option('D', "dicts", Required = false, HelpText = "list of dict xml to generate")]
+        public IEnumerable<string> Dicts { get; set; } = [];
+
         [Option('o', "output", Required = false, HelpText = "output tags | json", Default = "tags")]
         public string OutputFormat { get; set; } = "";
 
@@ -37,7 +40,7 @@ namespace PureFix.ConsoleApp
         [Option('p', "path", Required = false, HelpText = "output path of generator", Default = ".")]
         public string OutputPath { get; set; } = "";
 
-        [Option('D', "delimiter", Required = false, HelpText = "delimiter to parse a log", Default = AsciiChars.Soh)]
+        [Option('L', "delimiter", Required = false, HelpText = "delimiter to parse a log", Default = AsciiChars.Soh)]
         public char Delimiter { get; set; }
 
         [Option('T', "trim", Required = false, HelpText = "list of message types 0 1 2 3 4 5 AE")]

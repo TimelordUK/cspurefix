@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
+using PureFix.Types;
+
 
 namespace PureFix.Buffer.Segment
 {
@@ -24,15 +25,17 @@ namespace PureFix.Buffer.Segment
         public int EndTag { get; private set; }
         public int? DelimiterTag { get; private set; }
         public int EndPosition { get; set; }
-        public int StartPosition { get; } = startPosition;
+        public int StartPosition { get; private set; } = startPosition;
         public int Depth { get; } = depth;
-        public int StartTag { get; } = startTag;
+        public int StartTag { get; private set; } = startTag;
         public SegmentType Type { get; } = type;
-        public IContainedSet? Set { get; } = set;
+        public IContainedSet? Set { get; } = set; 
+        public SegmentView? SegmentView { get; private set; }
 
         public ContainedField? CurrentField { get; private set; }
         private List<int>? _delimterPositions;
         private List<int>? _containedDelimiterPositions;
+
         public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)Array.Empty<int>();
 
         public override string ToString()
@@ -118,18 +121,17 @@ namespace PureFix.Buffer.Segment
             }
             else if (Set.TagToField.TryGetValue(tag, out var cf))
             {
-                CurrentField = cf;
+                CurrentField = cf.field;
             }
         }
 
         public bool GroupAddDelimiter(int tag, int position)
         {
             var delimiter = false;
-            if (Set is GroupFieldDefinition) {
-                if (DelimiterTag != null && tag == DelimiterTag)
-                {
-                    delimiter = AddDelimiterPosition(position);
-                }
+            if (Set is not GroupFieldDefinition) return delimiter;
+            if (tag == DelimiterTag)
+            {
+                delimiter = AddDelimiterPosition(position);
             }
             return delimiter;
         }
@@ -140,6 +142,15 @@ namespace PureFix.Buffer.Segment
             CurrentField = null;
             EndPosition = pos;
             EndTag = endTag;
+        }
+
+        public void Add(SegmentView segmentView)
+        {
+            SegmentView = segmentView;
+            EndPosition = segmentView.EndPosition;
+            StartPosition = segmentView.StartPosition;
+            EndTag = segmentView.EndTag;
+            StartTag = segmentView.StartTag;
         }
     }
 }

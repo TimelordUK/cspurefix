@@ -1,4 +1,5 @@
-﻿using PureFix.Dictionary.Parser;
+﻿using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,7 +34,7 @@ namespace PureFix.Dictionary.Contained
         /**
          * any tag at any level i.e. does this set contain a tag
          */
-        IReadOnlyDictionary<int, bool> ContainedTag { get; }
+        IReadOnlyDictionary<int, IContainedSet> ContainedTag { get; }
 
         /**
          * any tag at any level ordered i.e. all tags flattened to list
@@ -60,10 +61,12 @@ namespace PureFix.Dictionary.Contained
          */
         IReadOnlyDictionary<int, ContainedSimpleField> TagToSimple { get; }
 
+        IReadOnlyDictionary<int, SimpleFieldDefinition> TagToSimpleDefinition { get; }
+
         /**
          * direct any tag contained within this set to field one level down where it belongs.
          */
-        IReadOnlyDictionary<int, ContainedField> TagToField { get; }
+        IReadOnlyDictionary<int, (IContainedSet? parent, ContainedField field)> TagToField { get; }
 
         /**
          * only repository directly in this set indexed by name
@@ -79,6 +82,8 @@ namespace PureFix.Dictionary.Contained
          * all attributes in order of being declared
          */
         IReadOnlyList<ContainedSimpleField> LocalAttribute { get; }
+
+        IReadOnlyDictionary<string, IContainedSet> NameToSet { get; }
 
         ContainedSetType Type { get; }
         string Name { get; }

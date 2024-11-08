@@ -218,7 +218,7 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions)
             var att = node.AsAttributeDict();
             if (Definitions.Simple.TryGetValue(node.Name, out var noOFieldDefinition))
             {
-                var name = att["name"];
+                var name = NameFrom(att);
                 var definition = new GroupFieldDefinition(name, null, null, noOFieldDefinition, name);
                 var containedGroup = new ContainedGroupField(definition, parentSet.Fields.Count, node.IsRequired(), null);
                 parentSet.Add(containedGroup);
@@ -304,7 +304,7 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions)
     private void ExpandField(Node node, XElement element)
     {
         var at = element.AsAttributeDict();
-        ConstructTailNode(at["name"], node, element, ElementType.SimpleFieldDeclaration);
+        ConstructTailNode(NameFrom(at), node, element, ElementType.SimpleFieldDeclaration);
     }
 
     private void ExpandGroup(Node node, XElement element)
@@ -324,7 +324,7 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions)
     private void ExpandSet(Node node, XElement element, ElementType defineElement, ElementType declareElement)
     {
         var at = element.AsAttributeDict();
-        var name = at["name"];
+        var name = NameFrom(at);
         var inlinedFields = element.Elements();
         var elementType = inlinedFields.Any() ? defineElement : declareElement;
         ConstructTailNode(name, node, element, elementType);
