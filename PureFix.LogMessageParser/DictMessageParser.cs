@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PureFix.LogMessageParser
 {
-    internal class DictMessageParser
+    public class DictMessageParser : IDictMessageParser
     {
         public DictMeta Meta { get; private set; }
         public IFixDefinitions Definitions { get; private set; }
@@ -31,10 +31,10 @@ namespace PureFix.LogMessageParser
             qfParser.Parse(path);
             Definitions = definitions;
             if (meta.Type != null)
-            {                
-                var fixType=  typesAssembly.GetType(meta.Type);
+            {
+                var fixType = typesAssembly.GetType(meta.Type);
                 var factories = typesAssembly.DefinedTypes.Where(t => t.ImplementedInterfaces.Contains(typeof(IFixMessageFactory))).ToList();
-                var ss = factories.FirstOrDefault(t=>t.Namespace == fixNameSpace);
+                var ss = factories.FirstOrDefault(t => t.Namespace == fixNameSpace);
                 if (ss != null)
                 {
                     MessageFactoryTypeInfo = ss;
