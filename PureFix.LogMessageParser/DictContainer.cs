@@ -1,14 +1,7 @@
-﻿using PureFix.Dictionary.Definition;
-using PureFix.LogMessageParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using System.Reflection;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace PureFix.Dictionary.Contained
+namespace PureFix.LogMessageParser
 {
     public class DictContainer : IDictContainer
     {

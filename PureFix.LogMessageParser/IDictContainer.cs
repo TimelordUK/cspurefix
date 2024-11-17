@@ -1,7 +1,6 @@
-﻿using PureFix.LogMessageParser;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace PureFix.Dictionary.Contained
+namespace PureFix.LogMessageParser
 {
     public interface IDictContainer
     {

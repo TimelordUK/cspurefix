@@ -8,9 +8,8 @@ namespace SeeFixSerrver.Controllers
     [Route("[controller]")]
     public class DictMetParserController : ControllerBase
     {
-     
         private readonly ILogger<DictMetParserController> _logger;
-        public IDictContainer DictContainer { get; private set; }
+        public IDictContainer DictContainer { get; }
 
         public DictMetParserController(ILogger<DictMetParserController> logger, IDictContainer dictContainer)
         {
