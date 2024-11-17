@@ -1,27 +1,15 @@
 using Microsoft.Extensions.Configuration;
 using PureFix.Dictionary.Contained;
 using PureFix.LogMessageParser;
+using SeeFixServer;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IDictContainer, DictContainer>();
-
-var app = builder.Build();
-
-var root = app.Configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
-var assembly = Assembly.GetAssembly(typeof(PureFix.Types.FIX44.QuickFix.Logon));
-var dicts = app.Services.GetService<IDictContainer>();
-if (assembly != null && dicts != null)
-{
-    dicts.Init(PathUtil.GetPath("DictionaryMeta.json"), assembly);
-}
+var container = new WebContainer();
+var app = container.Init(args);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
