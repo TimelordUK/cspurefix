@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.MessageStore", "Pur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureFix.Test", "PureFix.Test\PureFix.Test.csproj", "{9BC20E6E-C3DB-4D17-B58F-F08C257DDEAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.LogMessageParser", "PureFix.LogMessageParser\PureFix.LogMessageParser.csproj", "{DD2C81B1-540C-44D8-A7D7-1B90277A8C37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeFixServer", "SeeFixServer\SeeFixServer.csproj", "{1671E15B-DC96-4403-A940-01FC60EE51C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{9BC20E6E-C3DB-4D17-B58F-F08C257DDEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BC20E6E-C3DB-4D17-B58F-F08C257DDEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BC20E6E-C3DB-4D17-B58F-F08C257DDEAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD2C81B1-540C-44D8-A7D7-1B90277A8C37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD2C81B1-540C-44D8-A7D7-1B90277A8C37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD2C81B1-540C-44D8-A7D7-1B90277A8C37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD2C81B1-540C-44D8-A7D7-1B90277A8C37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1671E15B-DC96-4403-A940-01FC60EE51C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1671E15B-DC96-4403-A940-01FC60EE51C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1671E15B-DC96-4403-A940-01FC60EE51C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1671E15B-DC96-4403-A940-01FC60EE51C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

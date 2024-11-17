@@ -1,0 +1,6 @@
+@SeeFixSerrver_HostAddress = http://localhost:5076
+
+GET {{SeeFixSerrver_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

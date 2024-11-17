@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Data\PureFix.Data.csproj" />
+    <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
+    <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
+    <ProjectReference Include="..\PureFix.LogMessageParser\PureFix.LogMessageParser.csproj" />
+    <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
+    <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
+  </ItemGroup>
+
+</Project>
