@@ -13,9 +13,7 @@ namespace PureFix.LogMessageParser
         {
             string path = Directory.GetCurrentDirectory();
             string codeBase = Assembly.GetExecutingAssembly().Location;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string fpath = Uri.UnescapeDataString(uri.Path);
-            var assemblyPath = Path.GetDirectoryName(fpath);
+            var assemblyPath = Path.GetDirectoryName(codeBase);
             return Path.Join(assemblyPath, file);
         }
     }
