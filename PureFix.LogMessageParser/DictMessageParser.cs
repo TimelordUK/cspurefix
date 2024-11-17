@@ -1,4 +1,6 @@
-﻿using PureFix.Dictionary.Definition;
+﻿using PureFix.Buffer;
+using PureFix.Buffer.Ascii;
+using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
 using System;
@@ -17,6 +19,7 @@ namespace PureFix.LogMessageParser
         public IFixDefinitions Definitions { get; private set; }
         public IFixMessageFactory? MessageFactory { get; private set; }
         public TypeInfo? MessageFactoryTypeInfo { get; private set; }
+        public IMessageParser? Parser { get; private set; }
 
         public DictMessageParser(DictMeta meta, Assembly typesAssembly)
         {
@@ -36,6 +39,7 @@ namespace PureFix.LogMessageParser
                 {
                     MessageFactoryTypeInfo = ss;
                     MessageFactory = Activator.CreateInstance(ss.AsType()) as IFixMessageFactory;
+                    Parser = new AsciiParser(definitions);
                 }
             }
         }
