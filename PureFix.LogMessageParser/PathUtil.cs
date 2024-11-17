@@ -11,8 +11,7 @@ namespace PureFix.LogMessageParser
     {
         public static string GetPath(string file)
         {
-            string path = Directory.GetCurrentDirectory();
-            string codeBase = Assembly.GetExecutingAssembly().Location;
+            var codeBase = Assembly.GetExecutingAssembly().Location;
             var assemblyPath = Path.GetDirectoryName(codeBase);
             return Path.Join(assemblyPath, file);
         }
