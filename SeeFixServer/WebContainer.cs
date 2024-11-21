@@ -18,6 +18,11 @@ namespace SeeFixServer
             builder.Services.AddSingleton<IDictContainer, DictContainer>();
 
             var app = builder.Build();
+            app.UseCors(b => b
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithOrigins("http://localhost:3000"));
 
             var root = app.Configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
             var assembly = Assembly.GetAssembly(typeof(PureFix.Types.FIX44.QuickFix.Logon));
