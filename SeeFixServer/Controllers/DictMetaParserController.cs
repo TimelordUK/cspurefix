@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using PureFix.Dictionary.Contained;
 using PureFix.LogMessageParser;
+using SeeFixServer.State;
 
 namespace SeeFixSerrver.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DictMetParserController : ControllerBase
+    public class DictMetaParserController : ControllerBase
     {
-        private readonly ILogger<DictMetParserController> _logger;
+        private readonly ILogger<DictMetaParserController> _logger;
         public IDictContainer DictContainer { get; }
 
-        public DictMetParserController(ILogger<DictMetParserController> logger, IDictContainer dictContainer)
+        public DictMetaParserController(ILogger<DictMetaParserController> logger, IDictContainer dictContainer)
         {
             _logger = logger;
             DictContainer = dictContainer;
@@ -22,5 +23,6 @@ namespace SeeFixSerrver.Controllers
         {
             return DictContainer.Parsers.Values.Select(p => p.Meta);
         }
+
     }
 }

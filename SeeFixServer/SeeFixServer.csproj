@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
@@ -17,6 +18,10 @@
     <ProjectReference Include="..\PureFix.LogMessageParser\PureFix.LogMessageParser.csproj" />
     <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
     <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="State\" />
   </ItemGroup>
 
 </Project>

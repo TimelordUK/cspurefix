@@ -1,6 +1,7 @@
 ﻿using PureFix.Buffer;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
+using SeeFixServer.State;
 using System.Reflection;
 
 namespace PureFix.LogMessageParser
@@ -11,6 +12,6 @@ namespace PureFix.LogMessageParser
         IFixMessageFactory? MessageFactory { get; }
         TypeInfo? MessageFactoryTypeInfo { get; }
         DictMeta Meta { get; }
-        IMessageParser? Parser { get; }
+        ParseResult Parse(ParseRequest request);
     }
 }

@@ -1,6 +1,9 @@
 @SeeFixSerrver_HostAddress = http://localhost:5076
 
-GET {{SeeFixSerrver_HostAddress}}/weatherforecast/
+GET {{SeeFixSerrver_HostAddress}}/DictMetaParser/
 Accept: application/json
 
+
+GET {{SeeFixSerrver_HostAddress}}/Message/
+Accept: application/json
 ###
