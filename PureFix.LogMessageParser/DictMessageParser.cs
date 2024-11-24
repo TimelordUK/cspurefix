@@ -85,10 +85,6 @@ namespace PureFix.LogMessageParser
             var field = Definitions.TagToSimple.GetValueOrDefault(t.Tag);
             if (field == null) return null;
             var v = view.Buffer.GetString(t.Start, t.End + 1);
-            if (field.IsEnum)
-            {
-                field.ResolveEnum(v);
-            }
             MessageTag tag = new()
             {
                 Type = field.Type,
