@@ -17,10 +17,10 @@ namespace PureFix.LogMessageParser
 {
     public class DictMessageParser : IDictMessageParser
     {
-        public DictMeta Meta { get; private set; }
-        public IFixDefinitions Definitions { get; private set; }
-        public IFixMessageFactory? MessageFactory { get; private set; }
-        public TypeInfo? MessageFactoryTypeInfo { get; private set; }
+        public DictMeta Meta { get; }
+        public IFixDefinitions Definitions { get; }
+        public IFixMessageFactory? MessageFactory { get; }
+        public TypeInfo? MessageFactoryTypeInfo { get; }
      
         public DictMessageParser(DictMeta meta, Assembly typesAssembly)
         {
