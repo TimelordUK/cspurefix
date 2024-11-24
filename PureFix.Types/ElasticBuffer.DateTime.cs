@@ -99,7 +99,7 @@ namespace PureFix.Types
 
         public DateOnly? GetLocalDateOnly(int st, int vend)
         {
-            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeLocal);
+            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeUniversal);
         }
 
         private int WriteFormat(DateTime dateTime, string format)
