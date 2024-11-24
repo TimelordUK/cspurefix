@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PureFix.LogMessageParser;
-using SeeFixServer.State;
 
 namespace SeeFixServer.Controllers
 {

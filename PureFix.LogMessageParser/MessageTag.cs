@@ -1,4 +1,4 @@
-﻿namespace SeeFixServer.State
+﻿namespace PureFix.LogMessageParser
 {
     public class MessageTag
     {

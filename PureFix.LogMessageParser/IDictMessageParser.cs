@@ -1,7 +1,6 @@
 ﻿using PureFix.Buffer;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
-using SeeFixServer.State;
 using System.Reflection;
 
 namespace PureFix.LogMessageParser

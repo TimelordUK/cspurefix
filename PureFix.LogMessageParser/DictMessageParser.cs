@@ -5,7 +5,6 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
-using SeeFixServer.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,38 +64,42 @@ namespace PureFix.LogMessageParser
                 var m = new ParsedMessage();
                 var o = MessageFactory.ToFixMessage(view);
                 if (o == null) continue;
-                var settings = new JsonSerializerSettings
-                  {
-                      NullValueHandling = NullValueHandling.Ignore
-                  };
-                //m.Json = JsonConvert.SerializeObject(o, Formatting.None, settings); 
                 m.Json = o;
                 result.Messages.Add(m);
                 if (view.Tags == null) continue;
                 for (var i = 0; i < view.Tags.NextTagPos; i++)
                 {
                     var t = view.Tags[i];
-                    var field = Definitions.TagToSimple.GetValueOrDefault(t.Tag);
-                    if (field == null) continue;
-                    var v = view.Buffer.GetString(t.Start, t.End + 1);
-                    if (field.IsEnum)
+                    var tag = GetTag(t, view);
+                    if (tag != null)
                     {
-                        field.ResolveEnum(v);
+                        m.Tags.Add(tag);
                     }
-                    MessageTag tag = new()
-                    {
-                        Type = field.Type,
-                        Fid = t.Tag,
-                        Name = field.Name,
-                        Start = t.Start,
-                        End = t.End,
-                        Description = field.IsEnum ? field.ResolveEnum(v)  : "",
-                        Value = v
-                    };
-                    m.Tags.Add(tag);
                 }
             }
             return result;
+        }
+
+        private MessageTag? GetTag(TagPos t, AsciiView view)
+        {
+            var field = Definitions.TagToSimple.GetValueOrDefault(t.Tag);
+            if (field == null) return null;
+            var v = view.Buffer.GetString(t.Start, t.End + 1);
+            if (field.IsEnum)
+            {
+                field.ResolveEnum(v);
+            }
+            MessageTag tag = new()
+            {
+                Type = field.Type,
+                Fid = t.Tag,
+                Name = field.Name,
+                Start = t.Start,
+                End = t.End,
+                Description = field.IsEnum ? field.ResolveEnum(v)  : "",
+                Value = v
+            };
+            return tag;
         }
     }
 }

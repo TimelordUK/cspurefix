@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using PureFix.Dictionary.Contained;
 using PureFix.LogMessageParser;
-using SeeFixServer.State;
 
-namespace SeeFixSerrver.Controllers
+namespace SeeFixServer.Controllers
 {
     [ApiController]
     [Route("[controller]")]

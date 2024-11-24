@@ -1,6 +1,6 @@
 ﻿using PureFix.Buffer.Ascii;
 
-namespace SeeFixServer.State
+namespace PureFix.LogMessageParser
 {
     public class ParseRequest
     {

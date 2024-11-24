@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace SeeFixServer.State
+﻿namespace PureFix.LogMessageParser
 {
     public class ParsedMessage
     {
