@@ -65,7 +65,11 @@ namespace PureFix.LogMessageParser
                 var m = new ParsedMessage();
                 var o = MessageFactory.ToFixMessage(view);
                 if (o == null) continue;
-                m.Json = JsonConvert.SerializeObject(o);
+                var settings = new JsonSerializerSettings
+                  {
+                      NullValueHandling = NullValueHandling.Ignore
+                  };
+                m.Json = JsonConvert.SerializeObject(o, Formatting.None, settings); 
                 result.Messages.Add(m);
                 if (view.Tags == null) continue;
                 for (var i = 0; i < view.Tags.NextTagPos; i++)

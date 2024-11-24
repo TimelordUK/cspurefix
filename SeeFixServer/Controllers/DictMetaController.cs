@@ -7,12 +7,12 @@ namespace SeeFixSerrver.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DictMetaParserController : ControllerBase
+    public class DictMetaController : ControllerBase
     {
-        private readonly ILogger<DictMetaParserController> _logger;
+        private readonly ILogger<DictMetaController> _logger;
         public IDictContainer DictContainer { get; }
 
-        public DictMetaParserController(ILogger<DictMetaParserController> logger, IDictContainer dictContainer)
+        public DictMetaController(ILogger<DictMetaController> logger, IDictContainer dictContainer)
         {
             _logger = logger;
             DictContainer = dictContainer;
