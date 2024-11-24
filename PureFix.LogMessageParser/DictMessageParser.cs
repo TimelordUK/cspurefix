@@ -69,7 +69,8 @@ namespace PureFix.LogMessageParser
                   {
                       NullValueHandling = NullValueHandling.Ignore
                   };
-                m.Json = JsonConvert.SerializeObject(o, Formatting.None, settings); 
+                //m.Json = JsonConvert.SerializeObject(o, Formatting.None, settings); 
+                m.Json = o;
                 result.Messages.Add(m);
                 if (view.Tags == null) continue;
                 for (var i = 0; i < view.Tags.NextTagPos; i++)
