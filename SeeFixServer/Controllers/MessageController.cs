@@ -7,13 +7,13 @@ namespace SeeFixServer.Controllers
     [Route("[controller]")]
     public class MessageController : ControllerBase
     {
-        IDictContainer DictContainer { get; set; }
+        private IDictContainer DictContainer { get; }
 
         public MessageController(IDictContainer dictContainer) { 
             DictContainer = dictContainer;
         }
 
-        [HttpPost(Name = "ParseMessage")]
+        [HttpPost(Name = "Parse")]
         public ParseResult Parse([FromBody] ParseRequest request)
         {
             if (string.IsNullOrEmpty(request.DictName)) return new ParseResult { Request = request };
