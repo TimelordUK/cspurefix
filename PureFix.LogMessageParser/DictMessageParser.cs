@@ -52,31 +52,42 @@ namespace PureFix.LogMessageParser
                 Request = request,
             };
             
-            if (MessageFactory == null || request.Message == null)
+            if (MessageFactory == null || request.Messages == null || request.Messages.Count == 0)
             {
                 return result;
             }
 
             List<AsciiView> views = [];
-            parser.ParseFrom(Encoding.ASCII.GetBytes(request.Message), request?.Message?.Length ?? 0, (i, v) => views.Add((AsciiView)v));
-            foreach (var view in views)
+            foreach (var l in request.Messages)
             {
-                var m = new ParsedMessage();
-                var o = MessageFactory.ToFixMessage(view);
-                if (o == null) continue;
-                m.Json = o;
-                result.Messages.Add(m);
-                if (view.Tags == null) continue;
-                for (var i = 0; i < view.Tags.NextTagPos; i++)
+                var line = l;
+                var idx = line.IndexOf("8=FIX", StringComparison.Ordinal);
+                if (idx != -1)
                 {
-                    var t = view.Tags[i];
-                    var tag = GetTag(t, view);
-                    if (tag != null)
+                    line = line[idx..];
+                }
+                views.Clear();
+                parser.ParseFrom(Encoding.ASCII.GetBytes(line), line.Length, (_, v) => views.Add((AsciiView)v));
+                foreach (var view in views)
+                {
+                    var m = new ParsedMessage();
+                    var o = MessageFactory.ToFixMessage(view);
+                    if (o == null) continue;
+                    m.Json = o;
+                    result.Messages.Add(m);
+                    if (view.Tags == null) continue;
+                    for (var i = 0; i < view.Tags.NextTagPos; i++)
                     {
-                        m.Tags.Add(tag);
+                        var t = view.Tags[i];
+                        var tag = GetTag(t, view);
+                        if (tag != null)
+                        {
+                            m.Tags.Add(tag);
+                        }
                     }
                 }
             }
+
             return result;
         }
 

@@ -16,6 +16,7 @@ namespace SeeFixServer.Controllers
         [HttpPost(Name = "Parse")]
         public ParseResult Parse([FromBody] ParseRequest request)
         {
+            
             if (string.IsNullOrEmpty(request.DictName)) return new ParseResult { Request = request };
             var dict = DictContainer[request.DictName];
             if (dict == null) return new ParseResult { Request = request };
