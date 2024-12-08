@@ -60,36 +60,49 @@ namespace PureFix.LogMessageParser
             List<AsciiView> views = [];
             foreach (var l in request.Messages)
             {
-                var line = l;
-                var idx = line.IndexOf("8=FIX", StringComparison.Ordinal);
-                if (idx != -1)
-                {
-                    line = line[idx..];
-                }
+                string line = TrimFix(l);
                 views.Clear();
                 parser.ParseFrom(Encoding.ASCII.GetBytes(line), line.Length, (_, v) => views.Add((AsciiView)v));
                 foreach (var view in views)
                 {
                     var m = new ParsedMessage();
-                    var o = MessageFactory.ToFixMessage(view);
-                    if (o == null) continue;
-                    m.Json = o;
-                    m.Msg = view.Buffer.ToString();
-                    result.Messages.Add(m);
-                    if (view.Tags == null) continue;
-                    for (var i = 0; i < view.Tags.NextTagPos; i++)
-                    {
-                        var t = view.Tags[i];
-                        var tag = GetTag(t, view);
-                        if (tag != null)
-                        {
-                            m.Tags.Add(tag);
-                        }
-                    }
+                    ParseMessage(result, view, m);
                 }
             }
 
             return result;
+        }
+
+        private static string TrimFix(string l)
+        {
+            var line = l;
+            var idx = line.IndexOf("8=FIX", StringComparison.Ordinal);
+            if (idx != -1)
+            {
+                line = line[idx..];
+            }
+
+            return line;
+        }
+
+        private void ParseMessage(ParseResult result, AsciiView view, ParsedMessage m)
+        {
+            if (MessageFactory == null) return;
+            var o = MessageFactory.ToFixMessage(view);
+            if (o == null) return;
+            m.Json = o;
+            m.Msg = view.Buffer.ToString();
+            result.Messages.Add(m);
+            if (view.Tags == null) return;
+            for (var i = 0; i < view.Tags.NextTagPos; i++)
+            {
+                var t = view.Tags[i];
+                var tag = GetTag(t, view);
+                if (tag != null)
+                {
+                    m.Tags.Add(tag);
+                }
+            }
         }
 
         private MessageTag? GetTag(TagPos t, AsciiView view)
