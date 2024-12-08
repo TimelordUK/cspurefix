@@ -74,6 +74,7 @@ namespace PureFix.LogMessageParser
                     var o = MessageFactory.ToFixMessage(view);
                     if (o == null) continue;
                     m.Json = o;
+                    m.Msg = view.Buffer.ToString();
                     result.Messages.Add(m);
                     if (view.Tags == null) continue;
                     for (var i = 0; i < view.Tags.NextTagPos; i++)
