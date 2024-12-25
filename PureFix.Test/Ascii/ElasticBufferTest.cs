@@ -531,6 +531,19 @@ namespace PureFix.Test.Ascii
         }
 
         [Test]
+        public void Write_Utc_TimeStamp_Read_Utc_Timestamp_NoMs_Test()
+        {
+            const string ds = "20180610-10:39:01";
+            var format = ElasticBuffer.TimeFormats.TimestampNoMs;
+            DateTime.TryParseExact(ds, format, null, DateTimeStyles.AssumeUniversal, out var d);
+            var b = new ElasticBuffer(1);
+            b.WriteUtcTimeStamp(d);
+            var dt = b.GetUtcTimeStamp(0, b.Pos - 1);
+            Assume.That(dt, Is.Not.Null);
+            Assume.That(dt, Is.EqualTo(d));
+        }
+
+        [Test]
         public void Write_Utc_Date_Read_Utc_Date_Test()
         {
             const string ds = "20180610";
