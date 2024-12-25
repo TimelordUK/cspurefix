@@ -37,6 +37,7 @@ namespace PureFix.Types
         public static class TimeFormats
         {
             public static readonly string Timestamp = "yyyyMMdd-HH:mm:ss.fff";
+            public static readonly string TimestampNoMs = "yyyyMMdd-HH:mm:ss";
             public static readonly string Date = "yyyyMMdd";
             public static readonly string TimeMs = "HH:mm:ss.fff";
             public static readonly string Time = "HH:mm:ss";
@@ -99,7 +100,7 @@ namespace PureFix.Types
 
         public DateOnly? GetLocalDateOnly(int st, int vend)
         {
-            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeLocal);
+            return GetDateOnlyWithFormat(st, vend, TimeFormats.Date, DateTimeStyles.AssumeUniversal);
         }
 
         private int WriteFormat(DateTime dateTime, string format)
@@ -132,7 +133,9 @@ namespace PureFix.Types
 
         public DateTime? GetUtcTimeStamp(int st, int vend)
         {
-            return GetDateTimeWithFormat(st, vend, TimeFormats.Timestamp, DateTimeStyles.AssumeUniversal);
+            var len = vend - st + 1;
+            var format = len > 17 ? TimeFormats.Timestamp : TimeFormats.TimestampNoMs;
+            return GetDateTimeWithFormat(st, vend, format, DateTimeStyles.AssumeUniversal);
         }
 
         private DateTime? GetDateTimeWithFormat(int st, int vend, string format, DateTimeStyles style)

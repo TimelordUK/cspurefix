@@ -23,6 +23,10 @@ namespace PureFix.Dictionary.Parser
                 .Replace("(", "_")
                 .Replace(")", "_")
                 .Replace(" ", "_")
+                .Replace("\\", "_")
+                .Replace("/", "_")
+                .Replace("@", "_")
+                .Replace("!", "_")
                 .UnderscoreToCamelCase();
             return res;
         }
