@@ -57,8 +57,14 @@ namespace PureFix.LogMessageParser
                 return result;
             }
 
+            var messages = request.Messages;
+            if (messages[0].EndsWith(".log"))
+            {
+                messages = File.ReadAllLines(messages[0]).ToList() ?? [];
+            }
+
             List<AsciiView> views = [];
-            foreach (var l in request.Messages)
+            foreach (var l in messages)
             {
                 string line = TrimFix(l);
                 views.Clear();
