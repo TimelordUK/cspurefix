@@ -9,11 +9,12 @@ namespace SeeFixServer.Controllers
     {
         private IDictContainer DictContainer { get; }
 
-        public MessageController(IDictContainer dictContainer) { 
+        public MessageController(IDictContainer dictContainer)
+        {
             DictContainer = dictContainer;
         }
 
-        [HttpPost(Name = "Parse")]
+        [HttpPost("parse")]
         public ParseResult Parse([FromBody] ParseRequest request)
         {
             var messages = request.Messages;
@@ -27,11 +28,33 @@ namespace SeeFixServer.Controllers
                 messages = System.IO.File.ReadAllLines(messages[0]).ToList() ?? [];
                 request.Messages = messages;
             }
-           
+
             if (string.IsNullOrEmpty(request.DictName)) return new ParseResult { Request = request };
             var dict = DictContainer[request.DictName];
             if (dict == null) return new ParseResult { Request = request };
-            var result = dict.Parse(request);
+            var (result, _) = dict.Parse(request);
+            return result;
+        }
+
+        [HttpPost("parse/structure")]
+        public ParseResult Structure([FromBody] ParseRequest request)
+        {
+            var messages = request.Messages;
+            if (messages == null || messages.Count == 0)
+            {
+                return new ParseResult { Request = request };
+            }
+
+            if (messages[0].EndsWith(".log"))
+            {
+                messages = System.IO.File.ReadAllLines(messages[0]).ToList() ?? [];
+                request.Messages = messages;
+            }
+
+            if (string.IsNullOrEmpty(request.DictName)) return new ParseResult { Request = request };
+            var dict = DictContainer[request.DictName];
+            if (dict == null) return new ParseResult { Request = request };
+            var result = dict.Structure(request);
             return result;
         }
     }

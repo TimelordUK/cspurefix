@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
+using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
@@ -44,7 +45,7 @@ namespace PureFix.LogMessageParser
             }
         }
         
-        public ParseResult Parse(ParseRequest request)
+        public (ParseResult result, List<AsciiView> views) Parse(ParseRequest request)
         {
             var parser = new AsciiParser(Definitions) { Delimiter = request.Delim };
             var result = new ParseResult
@@ -54,7 +55,7 @@ namespace PureFix.LogMessageParser
             
             if (MessageFactory == null || request.Messages == null || request.Messages.Count == 0)
             {
-                return result;
+                return (result, []);
             }
 
             var messages = request.Messages;
@@ -71,6 +72,40 @@ namespace PureFix.LogMessageParser
                     ParseMessage(result, view, m);
                 }
             }
+
+            return (result, views);
+        }
+
+        public ParseResult Structure(ParseRequest request)
+        {
+            var (result, views) = Parse(request);
+            if (views == null || views.Count == 0) return result;
+            var view = views[0];
+            if (view == null) return result;
+            result.Messages.Clear();
+            var taken = new HashSet<string>();
+            view.Structure?.Segments.ToList().ForEach(segment =>
+                {
+                    if (taken.Contains(segment.Name ?? "")) return;
+                    if (!string.IsNullOrEmpty(segment.Name))
+                    {
+                        var tags = view.Structure?.GetSortedTags(segment);
+                        var m = new ParsedMessage() { Name = segment.Name };
+                        if (tags != null)
+                        {
+                            taken.Add(m.Name);
+                            result.Messages.Add(m);
+                            foreach (var tag in tags)
+                            {
+                                var mt = GetTag(tag, view);
+                                if (mt != null)
+                                {
+                                    m.Tags.Add(mt);
+                                }
+                            }
+                        }
+                    }
+                });
 
             return result;
         }
@@ -94,6 +129,7 @@ namespace PureFix.LogMessageParser
             if (o == null) return;
             m.Json = o;
             m.Msg = view.Buffer.ToString();
+            m.Name = view.Segment?.Name ?? string.Empty;
             result.Messages.Add(m);
             if (view.Tags == null) return;
             for (var i = 0; i < view.Tags.NextTagPos; i++)
