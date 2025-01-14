@@ -145,9 +145,17 @@ namespace PureFix.LogMessageParser
 
         private MessageTag? GetTag(TagPos t, AsciiView view)
         {
-            var field = Definitions.TagToSimple.GetValueOrDefault(t.Tag);
-            if (field == null) return null;
             var v = view.Buffer.GetString(t.Start, t.End + 1);
+            var field = Definitions.TagToSimple.GetValueOrDefault(t.Tag);
+            if (field == null) return new MessageTag {
+                Type = "STRING",
+                Fid = t.Tag,
+                Name = $"Custom_{t.Tag}",
+                Start = t.Start, 
+                End = t.End,
+                Description = "not in dict.",
+                Value = v
+            };
             MessageTag tag = new()
             {
                 Type = field.Type,
