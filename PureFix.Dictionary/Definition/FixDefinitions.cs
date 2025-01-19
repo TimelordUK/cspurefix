@@ -61,9 +61,10 @@ namespace PureFix.Dictionary.Definition
             _message[msg.Abbreviation] = msg;
         }
 
-        public void AddComponent(ComponentFieldDefinition component)
+        public void AddComponent(ComponentFieldDefinition component, string? alias = null)
         {
-            _component[component.Name] = component;
+            var key = alias ?? component.Name;
+            _component[key] = component;
         }
 
         /*

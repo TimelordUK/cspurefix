@@ -40,7 +40,8 @@ namespace PureFix.Dictionary.Parser.Repo
                 var type = fieldElement.AsString("Type");
                 var abbr = fieldElement.AsString("AbbrName");
                 var description = fieldElement.AsString("Description");
-                var sf = new SimpleFieldDefinition(name, "", type, tag, Enums.GetValueOrDefault(tag));
+                var fieldName = !string.IsNullOrEmpty(abbr) ? abbr : name;
+                var sf = new SimpleFieldDefinition(fieldName, "", type, tag, Enums.GetValueOrDefault(tag));
                 Definitions.AddSimple(sf);
             }
         }

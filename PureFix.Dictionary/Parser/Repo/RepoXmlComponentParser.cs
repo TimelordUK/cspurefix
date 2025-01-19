@@ -22,8 +22,11 @@ namespace PureFix.Dictionary.Parser.Repo
      */
     public partial class RepoXmlComponentParser : RepoBaseXmlParser
     {
-        private Dictionary<int, RepoComponentDefinition> _components { get; set; } = [];
-        public IReadOnlyDictionary<int, RepoComponentDefinition> Components => _components;
+        private Dictionary<int, RepoComponentDefinition> _componentsByID { get; set; } = [];
+        private Dictionary<string, RepoComponentDefinition> _componentsByName { get; set; } = [];
+
+        public IReadOnlyDictionary<int, RepoComponentDefinition> ComponentsByID => _componentsByID;
+        public IReadOnlyDictionary<string, RepoComponentDefinition> ComponentsByName => _componentsByName;
 
         public RepoXmlComponentParser(IFixDefinitions definitions): base(definitions)
         {
@@ -45,7 +48,8 @@ namespace PureFix.Dictionary.Parser.Repo
                 var description = fieldElement.AsString("Description");
                 var notXmlReq = fieldElement.AsInt("NotReqXML");
                 var comp = new RepoComponentDefinition(id, type, cat, name, abbr, notXmlReq, description);
-                _components[id] = comp;     
+                _componentsByID[id] = comp;
+                _componentsByName[name] = comp;
             }
         }
     }
