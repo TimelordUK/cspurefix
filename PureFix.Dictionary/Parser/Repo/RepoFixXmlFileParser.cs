@@ -28,6 +28,15 @@ namespace PureFix.Dictionary.Parser.Repo
 
             var a = new RepoXmlAbbreviationParser(Definitions);
             a.Parse(Path.Join(basePath, "Abbreviations.xml"));
+
+            var d = new RepoXmlDataTypeParser(Definitions);
+            d.Parse(Path.Join(basePath, "Datatypes.xml"));
+
+            var t = new RepoXmlMsgContentParser(Definitions);
+            t.Parse(Path.Join(basePath, "MsgContents.xml"));
+
+            var m = new RepoXmlMessageParser(Definitions);
+            m.Parse(Path.Join(basePath, "Messages.xml"));
         }
     }
 }
