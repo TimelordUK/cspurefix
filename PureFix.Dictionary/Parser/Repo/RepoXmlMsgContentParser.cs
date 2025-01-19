@@ -22,8 +22,8 @@ namespace PureFix.Dictionary.Parser.Repo
  */
     public partial class RepoXmlMsgContentParser : RepoBaseXmlParser
     {
-        private Dictionary<int, RepoMsgContentDefinition> _contents { get; set; } = [];
-        public IReadOnlyDictionary<int, RepoMsgContentDefinition> Contents => _contents;
+        private Dictionary<int, List<RepoMsgContentDefinition>> _contents { get; set; } = [];
+        public IReadOnlyDictionary<int, List<RepoMsgContentDefinition>> Contents => _contents;
 
         public RepoXmlMsgContentParser(IFixDefinitions definitions): base(definitions)
         {
@@ -45,7 +45,11 @@ namespace PureFix.Dictionary.Parser.Repo
                 var description = fieldElement.AsString("Description");
               
                 var comp = new RepoMsgContentDefinition(id, tagText, indent, position, required, description);
-                _contents[id] = comp;     
+                if (!_contents.TryGetValue(id, out var contents))
+                {
+                    _contents[id] = contents = [];
+                }
+                contents.Add(comp);     
             }
         }
     }
