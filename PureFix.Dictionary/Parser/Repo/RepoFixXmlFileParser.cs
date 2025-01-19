@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PureFix.Dictionary.Parser.Repo
 {
@@ -25,6 +24,12 @@ namespace PureFix.Dictionary.Parser.Repo
         }
 
         public void Parse(string basePath)
+        {
+            Iniit(basePath);
+            Complex();
+        }
+
+        private void Iniit(string basePath)
         {
             var e = new RepoXmlEnumParser(Definitions);
             e.Parse(Path.Join(basePath, "Enums.xml"));
@@ -51,9 +56,6 @@ namespace PureFix.Dictionary.Parser.Repo
             _messages = m.Messages;
             _componentsById = c.ComponentsByID;
             _componentsByName = c.ComponentsByName;
-
-            Complex();
-
         }
 
         private void Complex()
@@ -74,7 +76,7 @@ namespace PureFix.Dictionary.Parser.Repo
 
             if (Definitions.Component.TryGetValue("StandardTrailer", out var tr))
             {
-                Definitions.AddComponent(tr, "trailer");
+                Definitions.AddComponent(tr, "header");
             }
         }
 
