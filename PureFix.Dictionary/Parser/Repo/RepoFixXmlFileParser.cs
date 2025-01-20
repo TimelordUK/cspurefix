@@ -61,15 +61,35 @@ namespace PureFix.Dictionary.Parser.Repo
 
         private void Complex()
         {
-            if (_componentsById == null) return;
-            if (_messages == null) return;
-            if (_content == null) return;
+            Components();
+            HdrTrailer();
+            Messages();
+        }
 
+        private void Components()
+        {
+            if (_componentsById == null) return;
             foreach (var item in _componentsById.Values)
             {
                 var def = Resolve(item);
             }
+        }
 
+        private void Messages()
+        {
+            if (_messages == null) return;
+            foreach (var m in _messages.Values)
+            {
+                var msg = Message(m);
+                if (msg != null)
+                {
+                    Definitions.AddMessage(msg);
+                }
+            }
+        }
+
+        private void HdrTrailer()
+        {
             if (Definitions.Component.TryGetValue("StandardHeader", out var hdr))
             {
                 Definitions.AddComponent(hdr, "header");
@@ -78,15 +98,6 @@ namespace PureFix.Dictionary.Parser.Repo
             if (Definitions.Component.TryGetValue("StandardTrailer", out var tr))
             {
                 Definitions.AddComponent(tr, "header");
-            }
-
-            foreach (var m in _messages.Values)
-            {
-                var msg = Message(m);
-                if (msg != null)
-                {
-                    Definitions.AddMessage(msg);
-                }
             }
         }
 
