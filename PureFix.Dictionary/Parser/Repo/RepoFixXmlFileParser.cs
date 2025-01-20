@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
@@ -71,13 +72,35 @@ namespace PureFix.Dictionary.Parser.Repo
 
             if (Definitions.Component.TryGetValue("StandardHeader", out var hdr))
             {
-                Definitions.AddComponent( hdr, "header");
+                Definitions.AddComponent(hdr, "header");
             }
 
             if (Definitions.Component.TryGetValue("StandardTrailer", out var tr))
             {
                 Definitions.AddComponent(tr, "header");
             }
+
+            foreach (var m in _messages.Values)
+            {
+                var msg = Message(m);
+                if (msg != null)
+                {
+                    Definitions.AddMessage(msg);
+                }
+            }
+        }
+
+        private MessageDefinition? Message(RepoMessageDefinition m)
+        {
+            if (_content == null) return null;
+            if (_content.TryGetValue(m.ComponentID, out var content))
+            {
+                if (Definitions.Message.TryGetValue(m.Name, out var msg)) return msg;
+                msg = new MessageDefinition(m.Name, m.AbbrName, m.MsgType, m.CategoryID, m.Description);
+                ResolveFieldSet(content, msg);
+                return msg;
+            }
+            return null;
         }
 
         private IContainedSet? Resolve(RepoComponentDefinition component)
