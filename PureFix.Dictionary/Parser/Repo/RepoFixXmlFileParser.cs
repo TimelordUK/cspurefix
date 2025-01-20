@@ -17,7 +17,7 @@ namespace PureFix.Dictionary.Parser.Repo
         private IReadOnlyDictionary<int, RepoMessageDefinition>? _messages;
         private IReadOnlyDictionary<int, RepoComponentDefinition>? _componentsById;
         private IReadOnlyDictionary<string, RepoComponentDefinition>? _componentsByName;
-        private Dictionary<int, GroupFieldDefinition> _groups = [];
+        private readonly Dictionary<int, GroupFieldDefinition> _groups = [];
   
         public RepoFixXmlFileParser(IFixDefinitions definitions) 
         {
@@ -26,11 +26,11 @@ namespace PureFix.Dictionary.Parser.Repo
 
         public void Parse(string basePath)
         {
-            Iniit(basePath);
+            Init(basePath);
             Complex();
         }
 
-        private void Iniit(string basePath)
+        private void Init(string basePath)
         {
             var e = new RepoXmlEnumParser(Definitions);
             e.Parse(Path.Join(basePath, "Enums.xml"));
