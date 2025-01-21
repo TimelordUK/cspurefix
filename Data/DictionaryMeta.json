@@ -3,7 +3,7 @@
     {
       "name": "FIX50SP2Repo",
       "dict": "FIX.5.0SP2\\Base",
-      "type": "PureFix.Types.FIX50SP2.Repo.Types"
+      "type": "PureFix.Types.FIX50SP2.FixRepo.Types"
     },
     {
       "name": "FIX42",

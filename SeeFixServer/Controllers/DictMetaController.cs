@@ -16,11 +16,16 @@ namespace SeeFixServer.Controllers
             DictContainer = dictContainer;
         }
 
-        [HttpGet(Name = "GetDictMeta")]
-        public IEnumerable<DictMeta> Get()
+        [HttpGet("meta")]
+        public IEnumerable<DictMeta> GetMeta()
         {
             return DictContainer.Parsers.Values.Select(p => p.Meta);
         }
 
+        [HttpGet("doc")]
+        public DictDoc GetDoc()
+        {
+            return new DictDoc();
+        }
     }
 }
