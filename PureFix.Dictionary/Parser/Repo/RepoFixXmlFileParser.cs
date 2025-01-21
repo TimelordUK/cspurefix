@@ -9,7 +9,7 @@ using PureFix.Dictionary.Definition;
 
 namespace PureFix.Dictionary.Parser.Repo
 {
-    public class RepoFixXmlFileParser
+    public class RepoFixXmlFileParser : IFixDictionaryParser
     {
         public IFixDefinitions Definitions { get; private set; }
 
@@ -19,9 +19,10 @@ namespace PureFix.Dictionary.Parser.Repo
         private IReadOnlyDictionary<string, RepoComponentDefinition>? _componentsByName;
         private readonly Dictionary<int, GroupFieldDefinition> _groups = [];
   
-        public RepoFixXmlFileParser(IFixDefinitions definitions) 
+        public RepoFixXmlFileParser(Types.FixVersion version, IFixDefinitions definitions) 
         {
             Definitions = definitions;
+            definitions.SetVersion(version, Types.FixDefinitionSource.FixRepo);
         }
 
         public void Parse(string basePath)

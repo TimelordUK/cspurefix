@@ -19,7 +19,7 @@ namespace PureFix.Test.Ascii
         public void OnceSetup()
         {
             _definitions = new FixDefinitions();
-            var qf = new RepoFixXmlFileParser(_definitions);
+            var qf = new RepoFixXmlFileParser(PureFix.Types.FixVersion.FIX50SP2, _definitions);
             qf.Parse(DataDictRootPath);
         }
 

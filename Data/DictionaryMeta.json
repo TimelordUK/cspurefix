@@ -1,6 +1,11 @@
 {
   "metas": [
     {
+      "name": "FIX50SP2Repo",
+      "dict": "FIX.5.0SP2\\Base",
+      "type": "PureFix.Types.FIX50SP2.Repo.Types"
+    },
+    {
       "name": "FIX42",
       "dict": "FIX42.xml",
       "type": "PureFix.Types.FIX42.QuickFix.Types"
