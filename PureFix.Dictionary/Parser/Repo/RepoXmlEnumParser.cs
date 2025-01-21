@@ -38,14 +38,14 @@ namespace PureFix.Dictionary.Parser.Repo
                 var at = fieldElement.AsAttributeDict();
                 int tag = fieldElement.AsInt("Tag");
                 var value = fieldElement.AsString("Value");
-                var symbolicNamew = fieldElement.AsString("SymbolicName");
+                var symbolicName = fieldElement.AsString("SymbolicName");
                 var group = fieldElement.AsString("Group");
                 var description = fieldElement.AsString("Description");    
                 if (!_enums.TryGetValue(tag, out var l))
                 {
                     _enums[tag] = l = [];
                 }
-                l.Add(new FieldEnum(value, description));
+                l.Add(new FieldEnum(value, symbolicName ?? description));
             }
         }
     }
