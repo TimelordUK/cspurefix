@@ -25,7 +25,13 @@ namespace SeeFixServer.Controllers
         [HttpGet("doc")]
         public DictDoc GetDoc()
         {
-            return new DictDoc();
+            var doc = new DictDoc();
+            var repo = DictContainer.Parsers.Values.FirstOrDefault(d => d.Meta.Name?.Contains("Repo") ?? false);
+            if (repo == null) return doc;
+            var keys = repo.Definitions.Message.Values.Select(m => m.MsgType).Distinct()
+                .Select(mt => repo.Definitions.Message[mt]).ToList();
+            doc.Messages.AddRange(keys.Select(m => new MessageMeta(m.MsgType, m.Name, m.Description)));
+            return doc;
         }
     }
 }
