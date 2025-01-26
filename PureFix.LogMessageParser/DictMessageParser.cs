@@ -66,7 +66,7 @@ namespace PureFix.LogMessageParser
             List<AsciiView> views = [];
             foreach (var l in messages)
             {
-                string line = TrimFix(l);
+                var line = TrimFix(l);
                 views.Clear();
                 parser.ParseFrom(Encoding.ASCII.GetBytes(line), line.Length, (_, v) => views.Add((AsciiView)v));
                 foreach (var view in views)
@@ -127,8 +127,7 @@ namespace PureFix.LogMessageParser
 
         private void ParseMessage(ParseResult result, AsciiView view, ParsedMessage m)
         {
-            if (MessageFactory == null) return;
-            var o = MessageFactory.ToFixMessage(view);
+            var o = MessageFactory?.ToFixMessage(view);
             if (o == null) return;
             m.Json = o;
             m.Msg = view.Buffer.ToString();
