@@ -13,9 +13,10 @@ namespace PureFix.Dictionary.Definition
         IReadOnlyDictionary<string, MessageDefinition> Message { get; }
         void SetVersion(FixVersion version, FixDefinitionSource source = FixDefinitionSource.QuickFix);
         FixVersion Version { get; }
+        FixDefinitionSource Source { get; }
         void AddSimple(SimpleFieldDefinition simpleField);
         void AddMessage(MessageDefinition msg);
-        void AddComponent(ComponentFieldDefinition component);
+        void AddComponent(ComponentFieldDefinition component, string? alias = null);
         IContainedSet? GetMsgOrComponent(string type);
         IContainedSet? this[string name] { get; }
         IContainedSet? GetSet(string path);

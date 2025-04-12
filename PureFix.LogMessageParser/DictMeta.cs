@@ -7,7 +7,7 @@
         public string? Sender { get; set; }
     }
 
-    public class  DictMetaSet
+    public class DictMetaSet
     {
         public List<DictMeta> Metas { get; set; } = [];
     }

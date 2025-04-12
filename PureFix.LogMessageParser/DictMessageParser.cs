@@ -2,14 +2,14 @@
 using Newtonsoft.Json.Linq;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
-using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Dictionary.Parser.Repo;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,9 +26,12 @@ namespace PureFix.LogMessageParser
         public DictMessageParser(DictMeta meta, Assembly typesAssembly)
         {
             Meta = meta;
-            var definitions = new FixDefinitions();
-            var qfParser = new QuickFixXmlFileParser(definitions);
-            var path = PathUtil.GetPath(meta.Dict ?? "");
+            var definitions = new FixDefinitions();           
+            var path = PathUtil.GetPath(meta.Dict ?? "");            
+            if (path == null) throw new ArgumentException($"path cannot be resolved {meta}");
+            IFixDictionaryParser qfParser = File.Exists(path) ? 
+                new QuickFixXmlFileParser(definitions) :
+                new RepoFixXmlFileParser(FixVersion.FIX50SP2, definitions);
             var fixNameSpace = meta.Type ?? "";
             qfParser.Parse(path);
             Definitions = definitions;
@@ -63,7 +66,7 @@ namespace PureFix.LogMessageParser
             List<AsciiView> views = [];
             foreach (var l in messages)
             {
-                string line = TrimFix(l);
+                var line = TrimFix(l);
                 views.Clear();
                 parser.ParseFrom(Encoding.ASCII.GetBytes(line), line.Length, (_, v) => views.Add((AsciiView)v));
                 foreach (var view in views)
@@ -124,8 +127,7 @@ namespace PureFix.LogMessageParser
 
         private void ParseMessage(ParseResult result, AsciiView view, ParsedMessage m)
         {
-            if (MessageFactory == null) return;
-            var o = MessageFactory.ToFixMessage(view);
+            var o = MessageFactory?.ToFixMessage(view);
             if (o == null) return;
             m.Json = o;
             m.Msg = view.Buffer.ToString();

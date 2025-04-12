@@ -9,7 +9,7 @@ using static PureFix.Dictionary.Parser.QuickFix.QuickFixXmlFileParser.Node;
 
 namespace PureFix.Dictionary.Parser.QuickFix;
 
-public partial class QuickFixXmlFileParser(IFixDefinitions definitions)
+public partial class QuickFixXmlFileParser(IFixDefinitions definitions) : IFixDictionaryParser
 {
     public IFixDefinitions Definitions { get; } = definitions;
     public Queue<Node> Queue { get; } = new ();

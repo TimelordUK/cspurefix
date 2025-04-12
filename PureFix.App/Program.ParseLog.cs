@@ -23,7 +23,7 @@ namespace PureFix.ConsoleApp
                 if (filter.Count > 0)
                 {
                     var isContained = filter.Contains(view.MsgType() ?? "");
-                    if (options.Exclude)
+                    if (options.Exclude) 
                     {
                         if (isContained) return;
                     } else

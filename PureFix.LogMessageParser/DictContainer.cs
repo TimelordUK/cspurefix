@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using PureFix.Dictionary.Compiler;
+using System.Reflection;
 using System.Text.Json;
 
 namespace PureFix.LogMessageParser
@@ -17,10 +18,13 @@ namespace PureFix.LogMessageParser
                 return _messageParsers.GetValueOrDefault(name);
             }
         }
+
+        private readonly JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
+
         public void Init(string jsonMetaDesFile, Assembly typesAssembly)
         {
             using FileStream openStream = File.OpenRead(jsonMetaDesFile);
-            DictMetaSet? set = JsonSerializer.Deserialize<DictMetaSet>(openStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            DictMetaSet? set = JsonSerializer.Deserialize<DictMetaSet>(openStream, options);
             if (set != null)
             {
                 Meta = set;
