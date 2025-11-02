@@ -1,0 +1,189 @@
+CSPureFix - Complete File Structure Summary
+=============================================
+
+SOLUTION: /cspurefix.sln
+
+PROJECTS:
+=========
+
+1. PureFix.Dictionary
+   ├── Parser/
+   │   ├── QuickFix/
+   │   │   ├── QuickFixXmlFileParser.cs (332 lines) - MAIN PARSER
+   │   │   ├── QuickFixXmlFileParser.FieldParser.cs (93 lines)
+   │   │   ├── QuickFixXmlFileParser.MessageParser.cs (37 lines)
+   │   │   ├── QuickFixXmlFileParser.DependencyGraph.cs (108 lines) - NODE & EDGE
+   │   │   ├── QuickFixXmlFileParser.PostProcessor.cs (75 lines) - INDEXVISITOR
+   │   │   ├── QuickFixXmlFileBuilder.cs (~200 lines)
+   │   │   └── QuickFixXmlFormatter.cs
+   │   ├── Repo/
+   │   │   ├── RepoFixXmlFileParser.cs (210 lines) - MAIN REPO PARSER
+   │   │   ├── RepoXmlFieldParser.cs (49 lines)
+   │   │   ├── RepoXmlComponentParser.cs (56 lines)
+   │   │   ├── RepoXmlMessaqeParser.cs (54 lines)
+   │   │   ├── RepoXmlDataTypeParser.cs (56 lines)
+   │   │   ├── RepoXmlMsgContentParser.cs (56 lines)
+   │   │   ├── RepoXmlAbbreviatonParser.cs (41 lines)
+   │   │   ├── RepoXmlEnumParser.cs (52 lines)
+   │   │   ├── RepoBaseXmlParser.cs (34 lines)
+   │   │   ├── RepoComponentDefinition.cs (23 lines)
+   │   │   ├── RepoMsgContentDefinition.cs (23 lines)
+   │   │   ├── RepoMessageDefinition.cs (24 lines)
+   │   │   └── RepoDataTypeDefinition.cs (32 lines)
+   │   ├── FieldEnum.cs (35 lines) *** PROBLEMATIC - LINE 18 BUG ***
+   │   ├── StringExtensions.cs (68 lines)
+   │   ├── IFixDictionaryParser.cs (13 lines)
+   │   ├── VersionUtil.cs
+   │   └── XElementExt.cs
+   ├── Definition/
+   │   ├── FixDefinitions.cs (127 lines) - CONTAINER
+   │   ├── SimpleFieldDefinition.cs (70 lines)
+   │   ├── ComponentFieldDefinition.cs (19 lines)
+   │   ├── GroupFieldDefinition.cs (33 lines)
+   │   ├── MessagerDefinition.cs (27 lines)
+   │   ├── IFixDefinitions.cs
+   │   └── Extensions.cs
+   ├── Contained/
+   │   ├── ContainedFieldSet.cs (185 lines) - BASE CLASS
+   │   ├── ContainedFieldSet.Builder.cs (237 lines) - INDEXING & BUILDING
+   │   ├── ContainedSimpleField.cs (26 lines)
+   │   ├── ContainedComponentField.cs (27 lines)
+   │   ├── ContainedGroupField.cs (31 lines)
+   │   ├── ContainedField.cs (10 lines)
+   │   ├── ContainedFieldType.cs (10 lines)
+   │   ├── ContainedTagCollector.cs (66 lines)
+   │   ├── IContainedSet.cs
+   │   ├── ISetDispatchReceiver.cs
+   │   └── ContainedSetExt.cs
+   ├── Compiler/
+   │   ├── MsgCompiler.cs (DISABLED - removed from build)
+   │   ├── MsgCompiler.CompilerType.cs (DISABLED)
+   │   ├── MsgCompiler.Options.cs (DISABLED)
+   │   ├── MessageGenerator.cs (USED - main generator)
+   │   ├── GeneratorBase.cs (active)
+   │   ├── CodeGenerator.cs (100 lines - code building)
+   │   ├── TypeFormatCompiler.cs
+   │   ├── ViewParserCompiler.cs
+   │   ├── ViewParserGenerator.cs
+   │   ├── BaseCompiler.cs
+   │   └── Options.cs
+   └── bin/ (build outputs)
+
+2. PureFix.Types (Generated)
+   ├── FIX42/QuickFix/ (messages)
+   ├── FIX43/QuickFix/ (messages)
+   ├── FIX44/QuickFix/ (messages)
+   ├── FIX50SP2/
+   │   ├── QuickFix/ (messages - ~100 files)
+   │   │   ├── Logon.cs
+   │   │   ├── Logout.cs
+   │   │   ├── TestRequest.cs
+   │   │   └── ... (more messages)
+   │   └── QuickFix/Types/ (components, groups, enums - ~500+ files)
+   │       ├── StandardHeaderComponent.cs
+   │       ├── StandardTrailerComponent.cs
+   │       ├── OrderNoAllocs.cs (group)
+   │       ├── AdvSideValues.cs (enum)
+   │       └── ... (more)
+   ├── [base types and interfaces]
+   ├── MsgTag.cs (461 KB - tag constants)
+   ├── MsgType.cs (message type mapping)
+   ├── TagManager.cs
+   ├── TagMetaData.cs
+   ├── TagPos.cs
+   ├── Tags.cs
+   ├── TagType.cs
+   └── [more core types]
+
+3. PureFix.ConsoleApp
+   ├── Program.cs (main entry)
+   ├── Program.Generate.cs (generation flow)
+   ├── Program.Support.cs (parser selection)
+   ├── Program.ParseLog.cs
+   ├── Program.RunApp.cs
+   ├── Program.Examples.cs
+   ├── Program.Trim.cs
+   ├── CommandOptions.cs
+   ├── FixApp.cs
+   ├── Runner.cs
+   ├── BaseAppDI.cs
+   ├── SkeletonDI.cs
+   ├── TradeCaptureDI.cs
+   ├── ConsoleLogFactory.cs
+   ├── AppHost.cs
+   ├── Extensions.cs
+   ├── README.txt
+   └── serilog.json
+
+4. PureFix.Buffer
+5. PureFix.Transport
+6. PureFix.MessageStore
+7. PureFix.Data
+8. PureFix.Test
+9. PureFix.Benchmarks
+10. PureFix.LogMessageParser
+11. SeeFixServer
+
+KEY ARCHITECTURAL PATTERNS:
+============================
+
+PARSING PATTERN:
+  QuickFixXmlFileParser → Graph construction → Work queue → ContainedFieldSet → Index visitor
+
+DEFINITION vs RUNTIME vs GENERATED:
+  Definition (metadata) → Contained (with context) → Generated C# (user code)
+
+VISITOR PATTERN:
+  ISetDispatchReceiver → OnSimple/OnComponent/OnGroup (used by IndexVisitor, ContainedFieldCollector)
+
+GENERATION PATTERN:
+  FixDefinitions → MessageGenerator.Process() → CodeGenerator → Write files
+
+CODE ORGANIZATION BY RESPONSIBILITY:
+  Parser/ - XML parsing and graph building
+  Definition/ - Metadata structures
+  Contained/ - Runtime structures with indices
+  Compiler/ - C# code generation
+
+CRITICAL FILES (for understanding flow):
+  1. /Parser/QuickFix/QuickFixXmlFileParser.cs - Entry point for parsing
+  2. /Definition/FixDefinitions.cs - Container and lookup
+  3. /Contained/ContainedFieldSet.cs - Runtime structure
+  4. /Compiler/MessageGenerator.cs - Code generation
+  5. /PureFix.App/Program.cs - CLI entry point
+
+PROBLEMATIC FILE:
+  /Parser/FieldEnum.cs - Line 18 has no-op replace() call
+
+DISABLED COMPONENTS:
+  /Compiler/MsgCompiler.cs - Alternative generator (not compiled)
+
+LARGE FILES (>100 lines):
+  - ContainedFieldSet.cs (185 lines)
+  - ContainedFieldSet.Builder.cs (237 lines)
+  - QuickFixXmlFileParser.cs (332 lines)
+  - MessageGenerator.cs (~200+ lines)
+  - MsgTag.cs (461 KB!)
+  - QuickFixXmlFileBuilder.cs (~200 lines)
+
+INTERFACE USAGE:
+  - IFixDictionaryParser - Parser contract
+  - IFixDefinitions - Definitions lookup
+  - IContainedSet - Set representation
+  - ISetDispatchReceiver - Visitor pattern
+  - IFixMessage - Generated message interface
+  - IFixComponent - Generated component interface
+  - IFixGroup - Generated group interface
+  - IFixValidator - All generated sets
+  - IFixEncoder - All generated sets
+  - IFixParser - All generated sets
+
+ENTRY POINTS:
+  Parser: QuickFixXmlFileParser.ParseText(xml)
+  Generate: MessageGenerator.Process()
+  CLI: Program.Main(args) in PureFix.ConsoleApp
+
+GENERATED OUTPUT LOCATIONS:
+  {OutputPath}/PureFix.Types/{VERSION}/{SOURCE}/
+  - Messages in root
+  - Components/Groups/Enums in ./Types/ subfolder

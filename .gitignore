@@ -363,3 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 /PureFix.App/local.cer
 /PureFix.App/local.pvk
+
+# JetBrains Rider
+.idea/
+*.sln.iml
