@@ -367,3 +367,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Test generated types (temporary)
+test-generated/
