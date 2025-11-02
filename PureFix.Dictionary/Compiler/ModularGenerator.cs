@@ -16,7 +16,7 @@ namespace PureFix.Dictionary.Compiler
         public ModularGenerator(
             IFixDefinitions definitions,
             ModularGeneratorOptions options)
-            : base(options.OutputPath, definitions, options.BaseOptions)
+            : base(options.BaseOptions.BackingTypeOutputPath!, definitions, options.BaseOptions)
         {
             _modularOptions = options;
         }
@@ -112,7 +112,7 @@ namespace PureFix.Dictionary.Compiler
                 using (generator.BeginBlock($"public sealed partial class {message.Name} : IFixMessage"))
                 {
                     // Generate properties for fields/components
-                    ApplyFields(generator, "", message);
+                    ApplyFields(generator, "", message, message.Name);
 
                     generator.WriteLine();
                     generator.WriteLine("IStandardHeader? IFixMessage.StandardHeader => StandardHeader;");
@@ -120,7 +120,7 @@ namespace PureFix.Dictionary.Compiler
                     generator.WriteLine("IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;");
 
                     generator.WriteLine();
-                    GenerateSupportingFunctions(generator, "", message);
+                    GenerateSupportingFunctions(generator, "", message, message.Name);
                 }
             }
 
@@ -137,13 +137,20 @@ namespace PureFix.Dictionary.Compiler
             using (generator.BeginBlock($"namespace {GetNamespace()}.Components"))
             {
                 var componentName = component.Definition?.Name ?? "UnknownComponent";
-                using (generator.BeginBlock($"public sealed partial class {componentName} : IFixComponent"))
+                // StandardHeader and StandardTrailer implement their specific interfaces
+                var interfaces = componentName switch
+                {
+                    "StandardHeader" => "IFixComponent, IStandardHeader",
+                    "StandardTrailer" => "IFixComponent, IStandardTrailer",
+                    _ => "IFixComponent"
+                };
+                using (generator.BeginBlock($"public sealed partial class {componentName} : {interfaces}"))
                 {
                     if (component.Definition != null)
                     {
-                        ApplyFields(generator, "", component.Definition);
+                        ApplyFields(generator, "", component.Definition, componentName);
                         generator.WriteLine();
-                        GenerateSupportingFunctions(generator, "", component.Definition);
+                        GenerateSupportingFunctions(generator, "", component.Definition, componentName);
                     }
                 }
             }
@@ -154,10 +161,50 @@ namespace PureFix.Dictionary.Compiler
         protected override string GenerateType(string parentPath, ContainedGroupField group)
         {
             // Groups are generated as nested classes within their parent message/component
-            // This method shouldn't be called for the new nested approach
-            throw new NotImplementedException(
-                "Nested groups are generated inline within their parent class. " +
-                "Use GenerateNestedGroup instead.");
+            // This method is called by GeneratorBase.Process() but we don't use it
+            // Groups are generated inline by GenerateNestedGroup() called from HandleGroupProperty
+            // Return empty string to satisfy the abstract method
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Override ApplyFields to prevent calling Process() for groups
+        /// since we generate them inline
+        /// </summary>
+        protected new void ApplyFields(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName = null)
+        {
+            ContainedField? last = null;
+            var fields = set.Fields;
+            for (int i = 0; i < fields.Count; i++)
+            {
+                var field = fields[i];
+                var next = (i == fields.Count - 1 ? null : fields[i + 1]);
+
+                if (field is ContainedSimpleField simpleField)
+                {
+                    HandleFieldProperty(generator, parentPath, i, simpleField, last, next);
+                }
+                else if (field is ContainedComponentField componentField)
+                {
+                    HandleComponentProperty(generator, parentPath, i, componentField);
+                    // Generate component as separate file
+                    var componentCode = GenerateType(parentPath, componentField);
+                    if (!string.IsNullOrEmpty(componentCode) && componentField.Definition != null)
+                    {
+                        var componentsDir = Path.Join(Options.BackingTypeOutputPath, "Components");
+                        Directory.CreateDirectory(componentsDir);
+                        var componentPath = Path.Join(componentsDir, $"{componentField.Definition.Name}.cs");
+                        WriteFile(componentPath, componentCode);
+                    }
+                }
+                else if (field is ContainedGroupField groupField)
+                {
+                    HandleGroupProperty(generator, parentPath, i, groupField, parentTypeName);
+                    // DON'T call Process() for groups - they're nested inline
+                }
+
+                last = field;
+            }
         }
 
         private void GenerateNestedGroup(
@@ -173,10 +220,10 @@ namespace PureFix.Dictionary.Compiler
             using (generator.BeginBlock($"public sealed partial class {groupName} : IFixGroup"))
             {
                 // Generate fields for the group
-                ApplyFields(generator, parentPath + groupName, group.Definition);
+                ApplyFields(generator, parentPath + groupName, group.Definition, groupName);
 
                 generator.WriteLine();
-                GenerateSupportingFunctions(generator, parentPath + groupName, group.Definition);
+                GenerateSupportingFunctions(generator, parentPath + groupName, group.Definition, groupName);
             }
         }
 
@@ -215,6 +262,16 @@ namespace PureFix.Dictionary.Compiler
             int index,
             ContainedGroupField field)
         {
+            HandleGroupProperty(generator, parentPath, index, field, null);
+        }
+
+        private void HandleGroupProperty(
+            CodeGenerator generator,
+            string parentPath,
+            int index,
+            ContainedGroupField field,
+            string? parentTypeName)
+        {
             var groupName = field.Name;
 
             // Generate the nested group class first
@@ -223,22 +280,34 @@ namespace PureFix.Dictionary.Compiler
             // Then generate the property
             var noOfTag = field.Definition?.NoOfField?.Tag ?? -1;
             generator.WriteLine($"[Group(NoOfTag = {noOfTag}, Offset = {index}, Required = {(field.Required ? "true" : "false")})]");
-            generator.WriteLine($"public {groupName}[]? {GetGroupPropertyName(field)} {{get; set;}}");
+            generator.WriteLine($"public {groupName}[]? {GetGroupPropertyName(field, parentTypeName)} {{get; set;}}");
             generator.WriteLine();
         }
 
-        private string GetGroupPropertyName(ContainedGroupField field)
+        private string GetGroupPropertyName(ContainedGroupField field, string? parentTypeName)
         {
             // Convert "NoOrders" -> "Orders"
             var name = field.Name;
             if (name.StartsWith("No") && name.Length > 2)
             {
-                return name.Substring(2);
+                var propertyName = name.Substring(2);
+                // Check if property name would conflict with parent type name
+                if (!string.IsNullOrEmpty(parentTypeName) && propertyName == parentTypeName)
+                {
+                    // Append "Items" suffix to avoid collision with parent type name
+                    return propertyName + "Items";
+                }
+                return propertyName;
             }
             return name;
         }
 
         protected void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set)
+        {
+            GenerateSupportingFunctions(generator, parentPath, set, null);
+        }
+
+        private void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName)
         {
             // Generate IsValid
             GenerateIsValid(generator, set);
@@ -253,11 +322,11 @@ namespace PureFix.Dictionary.Compiler
             generator.WriteLine();
 
             // Generate TryGetByTag
-            GenerateTryGetByTag(generator, set);
+            GenerateTryGetByTag(generator, set, parentTypeName);
             generator.WriteLine();
 
             // Generate Reset
-            GenerateReset(generator, set);
+            GenerateReset(generator, set, parentTypeName);
         }
 
         private void GenerateIsValid(CodeGenerator generator, IContainedSet set)
@@ -310,7 +379,7 @@ namespace PureFix.Dictionary.Compiler
                     }
                     else if (field is ContainedGroupField group)
                     {
-                        var propName = GetGroupPropertyName(group);
+                        var propName = GetGroupPropertyName(group, null);
                         // TODO: Implement group encoding
                         generator.WriteLine($"// TODO: Encode group {propName}");
                     }
@@ -349,7 +418,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        private void GenerateTryGetByTag(CodeGenerator generator, IContainedSet set)
+        private void GenerateTryGetByTag(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             using (generator.BeginBlock("bool IFixLookup.TryGetByTag(string name, out object? value)"))
             {
@@ -358,9 +427,13 @@ namespace PureFix.Dictionary.Compiler
                 {
                     foreach (var field in set.Fields)
                     {
+                        var propertyName = field is ContainedGroupField groupField
+                            ? GetGroupPropertyName(groupField, parentTypeName)
+                            : field.Name;
+
                         using (generator.BeginBlock($"case \"{field.Name}\":"))
                         {
-                            generator.WriteLine($"value = {field.Name};");
+                            generator.WriteLine($"value = {propertyName};");
                             generator.WriteLine("break;");
                         }
                     }
@@ -374,7 +447,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        private void GenerateReset(CodeGenerator generator, IContainedSet set)
+        private void GenerateReset(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             using (generator.BeginBlock("void IFixReset.Reset()"))
             {
@@ -383,6 +456,11 @@ namespace PureFix.Dictionary.Compiler
                     if (field is ContainedComponentField component)
                     {
                         generator.WriteLine($"((IFixReset?){component.Name})?.Reset();");
+                    }
+                    else if (field is ContainedGroupField groupField)
+                    {
+                        var propertyName = GetGroupPropertyName(groupField, parentTypeName);
+                        generator.WriteLine($"{propertyName} = null;");
                     }
                     else
                     {
@@ -399,12 +477,8 @@ namespace PureFix.Dictionary.Compiler
             generator.WriteLine("using System.Linq;");
             generator.WriteLine("using System.Text;");
             generator.WriteLine("using System.Threading.Tasks;");
-            generator.WriteLine("using PureFix.Types.Core;");
-            generator.WriteLine("using PureFix.Types.Core.Interfaces;");
-            generator.WriteLine("using PureFix.Types.Core.Attributes;");
-            generator.WriteLine("using PureFix.Types.Core.Enums;");
-            generator.WriteLine("using PureFix.Types.Core.Structs;");
-            generator.WriteLine("using PureFix.Types.Core.Base;");
+            generator.WriteLine("using PureFix.Types;");
+            generator.WriteLine($"using {GetNamespace()}.Components;");
         }
 
         private string GetNamespace()
