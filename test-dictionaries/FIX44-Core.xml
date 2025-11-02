@@ -115,6 +115,35 @@
        <!-- 355 DATA -->
       <field name = 'EncodedText' required = 'N' />
     </message>
+    <message name = 'Logon' msgcat = 'admin' msgtype = 'A' >
+       <!-- 98 INT -->
+      <field name = 'EncryptMethod' required = 'Y' />
+       <!-- 108 INT -->
+      <field name = 'HeartBtInt' required = 'Y' />
+       <!-- 95 LENGTH -->
+      <field name = 'RawDataLength' required = 'N' />
+       <!-- 96 DATA -->
+      <field name = 'RawData' required = 'N' />
+       <!-- 141 BOOLEAN -->
+      <field name = 'ResetSeqNumFlag' required = 'N' />
+       <!-- 789 SEQNUM -->
+      <field name = 'NextExpectedMsgSeqNum' required = 'N' />
+       <!-- 383 LENGTH -->
+      <field name = 'MaxMessageSize' required = 'N' />
+       <!-- 384 NUMINGROUP -->
+       <group name = 'NoMsgTypes' required = 'N'>
+         <!-- 372 STRING -->
+        <field name = 'RefMsgType' required = 'N' />
+         <!-- 385 CHAR -->
+        <field name = 'MsgDirection' required = 'N' />
+      </group>
+       <!-- 464 BOOLEAN -->
+      <field name = 'TestMessageIndicator' required = 'N' />
+       <!-- 553 STRING -->
+      <field name = 'Username' required = 'N' />
+       <!-- 554 STRING -->
+      <field name = 'Password' required = 'N' />
+    </message>
     <message name = 'AllocationInstruction' msgcat = 'app' msgtype = 'J' >
        <!-- 70 STRING -->
       <field name = 'AllocID' required = 'Y' />
@@ -1478,9 +1507,20 @@
     <field number = '90' name = 'SecureDataLen' type = 'LENGTH'/>
     <field number = '91' name = 'SecureData' type = 'DATA'/>
     <field number = '93' name = 'SignatureLength' type = 'LENGTH'/>
+    <field number = '95' name = 'RawDataLength' type = 'LENGTH'/>
+    <field number = '96' name = 'RawData' type = 'DATA'/>
     <field number = '97' name = 'PossResend' type = 'BOOLEAN'>
       <value enum= 'N' description = 'NO' />
       <value enum= 'Y' description = 'YES' />
+    </field>
+    <field number = '98' name = 'EncryptMethod' type = 'INT'>
+      <value enum= '0' description = 'NONE' />
+      <value enum= '1' description = 'PKCS' />
+      <value enum= '2' description = 'DES' />
+      <value enum= '3' description = 'PKCSDES' />
+      <value enum= '4' description = 'PGPDES' />
+      <value enum= '5' description = 'PGPDESMD5' />
+      <value enum= '6' description = 'PEM' />
     </field>
     <field number = '99' name = 'StopPx' type = 'PRICE'/>
     <field number = '103' name = 'OrdRejReason' type = 'INT'>
@@ -1503,6 +1543,7 @@
     </field>
     <field number = '106' name = 'Issuer' type = 'STRING'/>
     <field number = '107' name = 'SecurityDesc' type = 'STRING'/>
+    <field number = '108' name = 'HeartBtInt' type = 'INT'/>
     <field number = '110' name = 'MinQty' type = 'QTY'/>
     <field number = '111' name = 'MaxFloor' type = 'QTY'/>
     <field number = '112' name = 'TestReqID' type = 'STRING'/>
@@ -1540,6 +1581,10 @@
       <value enum= '7' description = 'OTHER' />
       <value enum= '8' description = 'MARKUP' />
       <value enum= '9' description = 'CONSUMPTION_TAX' />
+    </field>
+    <field number = '141' name = 'ResetSeqNumFlag' type = 'BOOLEAN'>
+      <value enum= 'N' description = 'NO' />
+      <value enum= 'Y' description = 'YES' />
     </field>
     <field number = '142' name = 'SenderLocationID' type = 'STRING'/>
     <field number = '143' name = 'TargetLocationID' type = 'STRING'/>
@@ -1893,6 +1938,12 @@
     </field>
     <field number = '381' name = 'GrossTradeAmt' type = 'AMT'/>
     <field number = '382' name = 'NoContraBrokers' type = 'NUMINGROUP'/>
+    <field number = '383' name = 'MaxMessageSize' type = 'LENGTH'/>
+    <field number = '384' name = 'NoMsgTypes' type = 'NUMINGROUP'/>
+    <field number = '385' name = 'MsgDirection' type = 'CHAR'>
+      <value enum= 'R' description = 'RECEIVE' />
+      <value enum= 'S' description = 'SEND' />
+    </field>
     <field number = '388' name = 'DiscretionInst' type = 'CHAR'>
       <value enum= '0' description = 'RELATED_TO_DISPLAYED_PRICE' />
       <value enum= '1' description = 'RELATED_TO_MARKET_PRICE' />
@@ -2009,6 +2060,10 @@
       <value enum= '9' description = 'MONEYMARKET' />
     </field>
     <field number = '461' name = 'CFICode' type = 'STRING'/>
+    <field number = '464' name = 'TestMessageIndicator' type = 'BOOLEAN'>
+      <value enum= 'N' description = 'NO' />
+      <value enum= 'Y' description = 'YES' />
+    </field>
     <field number = '466' name = 'BookingRefID' type = 'STRING'/>
     <field number = '467' name = 'IndividualAllocID' type = 'STRING'/>
     <field number = '468' name = 'RoundingDirection' type = 'CHAR'>
@@ -2117,6 +2172,8 @@
       <value enum= '1' description = 'ONE_SIDE' />
       <value enum= '2' description = 'BOTH_SIDES' />
     </field>
+    <field number = '553' name = 'Username' type = 'STRING'/>
+    <field number = '554' name = 'Password' type = 'STRING'/>
     <field number = '555' name = 'NoLegs' type = 'NUMINGROUP'/>
     <field number = '564' name = 'LegPositionEffect' type = 'CHAR'/>
     <field number = '565' name = 'LegCoveredOrUncovered' type = 'INT'/>
@@ -2327,6 +2384,7 @@
       <value enum= '3' description = 'FLEXIBLE' />
       <value enum= '4' description = 'OPEN' />
     </field>
+    <field number = '789' name = 'NextExpectedMsgSeqNum' type = 'SEQNUM'/>
     <field number = '790' name = 'OrdStatusReqID' type = 'STRING'/>
     <field number = '793' name = 'SecondaryAllocID' type = 'STRING'/>
     <field number = '796' name = 'AllocCancReplaceReason' type = 'INT'>
