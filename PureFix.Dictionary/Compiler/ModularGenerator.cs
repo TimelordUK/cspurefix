@@ -314,11 +314,11 @@ namespace PureFix.Dictionary.Compiler
             generator.WriteLine();
 
             // Generate Encode
-            GenerateEncode(generator, set);
+            GenerateEncode(generator, set, parentTypeName);
             generator.WriteLine();
 
             // Generate Parse
-            GenerateParse(generator, set);
+            GenerateParse(generator, set, parentTypeName);
             generator.WriteLine();
 
             // Generate TryGetByTag
@@ -362,7 +362,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        private void GenerateEncode(CodeGenerator generator, IContainedSet set)
+        private void GenerateEncode(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             using (generator.BeginBlock("void IFixEncoder.Encode(IFixWriter writer)"))
             {
@@ -379,15 +379,23 @@ namespace PureFix.Dictionary.Compiler
                     }
                     else if (field is ContainedGroupField group)
                     {
-                        var propName = GetGroupPropertyName(group, null);
-                        // TODO: Implement group encoding
-                        generator.WriteLine($"// TODO: Encode group {propName}");
+                        var propName = GetGroupPropertyName(group, parentTypeName);
+                        var countField = group.Definition?.NoOfField?.Tag ?? -1;
+
+                        using (generator.BeginBlock($"if ({propName} is not null && {propName}.Length != 0)"))
+                        {
+                            generator.WriteLine($"writer.WriteWholeNumber({countField}, {propName}.Length);");
+                            using (generator.BeginBlock($"for (int i = 0; i < {propName}.Length; i++)"))
+                            {
+                                generator.WriteLine($"((IFixEncoder){propName}[i]).Encode(writer);");
+                            }
+                        }
                     }
                 }
             }
         }
 
-        private void GenerateParse(CodeGenerator generator, IContainedSet set)
+        private void GenerateParse(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             using (generator.BeginBlock("void IFixParser.Parse(IMessageView? view)"))
             {
@@ -411,8 +419,19 @@ namespace PureFix.Dictionary.Compiler
                     }
                     else if (field is ContainedGroupField group)
                     {
-                        // TODO: Implement group parsing
-                        generator.WriteLine($"// TODO: Parse group {group.Name}");
+                        var propName = GetGroupPropertyName(group, parentTypeName);
+                        var tempName = $"view{group.Name}";
+
+                        using (generator.BeginBlock($"if (view.GetView(\"{group.Name}\") is IMessageView {tempName})"))
+                        {
+                            generator.WriteLine($"var count = {tempName}.GroupCount();");
+                            generator.WriteLine($"{propName} = new {group.Name}[count];");
+                            using (generator.BeginBlock($"for (int i = 0; i < count; i++)"))
+                            {
+                                generator.WriteLine($"{propName}[i] = new();");
+                                generator.WriteLine($"((IFixParser){propName}[i]).Parse({tempName}.GetGroupInstance(i));");
+                            }
+                        }
                     }
                 }
             }
