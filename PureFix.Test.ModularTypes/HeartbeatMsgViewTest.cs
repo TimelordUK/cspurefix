@@ -1,7 +1,7 @@
 ﻿using PureFix.Buffer.Ascii;
-using PureFix.Test.Env;
+using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix;
+using PureFix.Types.FIX44;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,8 +9,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuickLookup = PureFix.Test.ModularTypes.Helpers.QuickLookup;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     internal class HeartbeatMsgViewTest
     {

@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 // using PureFix.Types.FIX44.QuickFix.Types;
 
 // New modular types
-using PureFix.Types.FIX44UnitTest;
-using PureFix.Types.FIX44UnitTest.Components;
+using PureFix.Types.FIX44;
+using PureFix.Types.FIX44.Components;
 
 // Explicitly use Core types to avoid ambiguity with legacy PureFix.Types
 using IFixParser = PureFix.Types.IFixParser;
