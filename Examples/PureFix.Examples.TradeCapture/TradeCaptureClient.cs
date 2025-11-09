@@ -32,7 +32,7 @@ namespace PureFix.Examples.TradeCapture
             {
                 case MsgType.TradeCaptureReport:
                     {
-                        var tc = (TradeCaptureReport)m_msg_factory.ToFixMessage(view);
+                        var tc = (TradeCaptureReport)m_msg_factory.ToFixMessage(view)!;
                         m_reports[tc?.TradeReportID ?? ""] = tc;
                         m_logger.Info($"{JsonHelper.ToJson(tc)}");
                         m_logger.Info($"[reports: {m_reports.Count}] received tc ExecID = {tc?.ExecID} TradeReportID = {tc?.TradeReportID} Symbol = {tc?.Instrument?.Symbol} {tc?.LastQty} @ ${tc?.LastPx}");
@@ -41,7 +41,7 @@ namespace PureFix.Examples.TradeCapture
 
                 case MsgType.TradeCaptureReportRequestAck:
                     {
-                        var tca = (TradeCaptureReportRequestAck)m_msg_factory.ToFixMessage(view);
+                        var tca = (TradeCaptureReportRequestAck)m_msg_factory.ToFixMessage(view)!;
                         m_logger.Info($"received tcr ack {tca?.TradeRequestID} {tca?.TradeRequestStatus}");
                         break;
                     }

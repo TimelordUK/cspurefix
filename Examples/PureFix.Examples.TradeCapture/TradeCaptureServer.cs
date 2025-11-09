@@ -35,7 +35,7 @@ namespace PureFix.Examples.TradeCapture
             {
                 case MsgType.TradeCaptureReportRequest:
                     {
-                        var tcr = (TradeCaptureReportRequest)m_msg_factory.ToFixMessage(view);
+                        var tcr = (TradeCaptureReportRequest)m_msg_factory.ToFixMessage(view)!;
                         await ServiceTradeCaptureReportRequest(tcr);
                         break;
                     }

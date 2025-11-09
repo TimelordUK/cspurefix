@@ -4,7 +4,7 @@ using PureFix.Types;
 
 namespace PureFix.Examples.Shared;
 
-public class Runner
+public static class Runner
 {
     public static async Task Run(string acceptorConfigPath, string initiatorConfigPath, string dictRootPath, IFixClock clock, Func<IFixClock, IFixConfig, BaseAppDI> makeHost)
     {

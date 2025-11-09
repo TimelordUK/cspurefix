@@ -21,7 +21,7 @@ namespace PureFix.Dictionary.Parser
                 return name;
             }
 
-            if (!name.Contains("_"))
+            if (!name.Contains('_'))
             {
                 return name.FirstCharToUpper();
             }

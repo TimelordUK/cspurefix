@@ -28,6 +28,7 @@ await Runner.Run(
 
 Console.WriteLine();
 Console.WriteLine("Trade Capture example completed");
+return;
 
 static BaseAppDI MakeTradeCaptureHost(IFixClock clock, IFixConfig config)
 {

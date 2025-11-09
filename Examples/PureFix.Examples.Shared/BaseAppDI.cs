@@ -20,8 +20,8 @@ public abstract class BaseAppDI
         return AppHost.Services.GetService<V>();
     }
 
-    public IHost? AppHost { get; protected set; }
-    protected HostApplicationBuilder _builder;
+    protected IHost? AppHost { get; set; }
+    protected readonly HostApplicationBuilder _builder;
 
     protected BaseAppDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config)
     {

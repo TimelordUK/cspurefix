@@ -16,24 +16,24 @@ namespace PureFix.Transport.Session
 {
     public abstract class FixSession 
     {
-        protected string? m_me;
-        protected bool m_initiator;
-        protected bool m_acceptor;
+        protected readonly string? m_me;
+        protected readonly bool m_initiator;
+        protected readonly bool m_acceptor;
         protected readonly FixSessionState  m_sessionState;
-        protected string? m_requestLogoutType;
+        protected readonly string? m_requestLogoutType;
         protected string? m_respondLogoutType;
-        protected string m_requestLogonType;
-        protected bool m_checkMsgIntegrity;
-        protected ILogger? m_sessionLogger;
-        protected ISessionMessageFactory m_factory;
+        protected readonly string m_requestLogonType;
+        protected readonly bool m_checkMsgIntegrity;
+        protected readonly ILogger? m_sessionLogger;
+        protected readonly ISessionMessageFactory m_factory;
         protected IFixDefinitions Definitions { get; set; }
-        protected IFixClock m_clock;
-        protected IMessageParser m_parser;
-        protected IMessageEncoder m_encoder;
-        protected bool m_manageSession;
+        protected readonly IFixClock m_clock;
+        protected readonly IMessageParser m_parser;
+        protected readonly IMessageEncoder m_encoder;
+        protected readonly bool m_manageSession;
         protected bool m_logReceivedMessages;
         protected IMessageTransport? m_transport;
-        protected IFixConfig m_config;
+        protected readonly IFixConfig m_config;
         protected CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
         private readonly List<IMessageView> _messages = [];
@@ -88,7 +88,7 @@ namespace PureFix.Transport.Session
             }
         }
 
-        public void SetState(SessionState state)
+        protected void SetState(SessionState state)
         {
             var currentState = m_sessionState.State;
             if (currentState == state) return;
@@ -112,7 +112,7 @@ namespace PureFix.Transport.Session
             }
         }
 
-        public async Task SendLogon()
+        protected async Task SendLogon()
         {
             if (m_requestLogonType == null)
                 throw new InvalidDataException("app session needs to assign m_requestLogonType");
