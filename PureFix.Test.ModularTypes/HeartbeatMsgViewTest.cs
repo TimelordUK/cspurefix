@@ -50,11 +50,13 @@ namespace PureFix.Test.ModularTypes
             Assert.That(mv, Is.Not.Null);
             var hb = new Heartbeat();
             ((IFixParser)hb).Parse(mv);
-
-            Assert.That(QuickLookup.On(hb)["StandardHeader"]["BeginString"].As<string>(), Is.EqualTo("FIX.4.4"));
-            Assert.That(QuickLookup.On(hb)["StandardHeader"]["MsgType"].As<string>(), Is.EqualTo("0"));
-            Assert.That(QuickLookup.On(hb)["StandardHeader"]["TargetCompID"].As<string>(), Is.EqualTo("accept-comp"));
-            Assert.That(QuickLookup.On(hb)["TestReqID"].As<string>(), Is.EqualTo("Sun, 01 Jan 2023 14:14:20 GMT"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(QuickLookup.On(hb)["StandardHeader"]["BeginString"].As<string>(), Is.EqualTo("FIX.4.4"));
+                Assert.That(QuickLookup.On(hb)["StandardHeader"]["MsgType"].As<string>(), Is.EqualTo("0"));
+                Assert.That(QuickLookup.On(hb)["StandardHeader"]["TargetCompID"].As<string>(), Is.EqualTo("accept-comp"));
+                Assert.That(QuickLookup.On(hb)["TestReqID"].As<string>(), Is.EqualTo("Sun, 01 Jan 2023 14:14:20 GMT"));
+            });
         }
 
         [Test]

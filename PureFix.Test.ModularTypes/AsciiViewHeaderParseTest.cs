@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using PureFix.Types.FIX44.QuickFix.Types;
-using PureFix.Test.Env;
+using PureFix.Types.FIX44.Components;
+using PureFix.Test.ModularTypes.Helpers;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class AsciiViewHeaderParseTest
     {
@@ -56,7 +56,7 @@ namespace PureFix.Test.Ascii
             Assert.That(mv, Is.Not.Null);
             var sh = mv.GetView("StandardHeader");
             Assert.That(sh, Is.Not.Null);
-            var instance = new StandardHeaderComponent();
+            var instance = new StandardHeader();
             var sw = new Stopwatch();
             sw.Start();
             const int count = 100000;
@@ -84,7 +84,7 @@ namespace PureFix.Test.Ascii
             [6] 57 (TargetSubID) = sub-a, [7] 52 (SendingTime) = 20180610-10:39:01.621
              */
             
-            var instance = new StandardHeaderComponent();
+            var instance = new StandardHeader();
             ((IFixParser)instance).Parse(sh);
             Assert.Multiple(() =>
             {
