@@ -1,0 +1,13 @@
+using System;
+
+namespace PureFix.Types.FIX50SP2
+{
+	public static class PostTradePaymentStatusValues
+	{
+		public const int New = 0;
+		public const int Initiated = 1;
+		public const int Pending = 2;
+		public const int Confirmed = 3;
+		public const int Rejected = 4;
+	}
+}

@@ -253,6 +253,12 @@ namespace PureFix.Dictionary.Compiler
             generator.WriteLine($"[TagDetails(Tag = {field.Definition.Tag}, Type = TagType.{field.Definition.TagType}, Offset = {index}, Required = {(field.Required ? "true" : "false")})]");
             generator.WriteLine($"public {typeName}? {propName} {{get; set;}}");
             generator.WriteLine();
+
+            // Generate enum values if this field has enums
+            if (field.Definition.Enums is not null && field.Definition.Enums.Count > 0)
+            {
+                GenerateEnumValues(typeName, field.Definition.TagType, field.Name, field.Definition.Enums);
+            }
         }
 
         protected override void HandleComponentProperty(
@@ -605,6 +611,64 @@ namespace PureFix.Dictionary.Compiler
                 TagType.MonthYear => true,
                 _ => false
             };
+        }
+
+        private void GenerateEnumValues(string csharpBaseType, TagType tagType, string fieldName, IReadOnlyDictionary<string, FieldEnum> enums)
+        {
+            var builder = new CodeGenerator();
+
+            var enumName = $"{fieldName}Values";
+
+            // Write core usings
+            builder.WriteLine("using System;");
+            builder.WriteLine();
+
+            using (builder.BeginBlock($"namespace {Options.BackingTypeNamespace}"))
+            using (builder.BeginBlock($"public static class {enumName}"))
+            {
+                var usedNames = new HashSet<string>();
+
+                foreach (var field in enums.Values)
+                {
+                    var value = tagType switch
+                    {
+                        TagType.String => $"\"{field.Key}\"",
+                        TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
+                        _ => field.Key.ToString()
+                    };
+
+                    var constantName = field.Description.UnderscoreToCamelCase();
+
+                    // Some descriptions start with a number, which won't map to a valid C# symbol
+                    if (char.IsDigit(constantName[0])) constantName = "_" + constantName;
+
+                    // Handle duplicate constant names by appending the FIX value
+                    var originalName = constantName;
+                    var counter = 1;
+                    while (usedNames.Contains(constantName))
+                    {
+                        // Append sanitized version of the actual FIX value to make it unique
+                        var suffix = field.Key.Replace("-", "").Replace(".", "").Replace(" ", "");
+                        constantName = $"{originalName}{suffix}";
+
+                        // If still duplicate, add a counter
+                        if (usedNames.Contains(constantName))
+                        {
+                            constantName = $"{originalName}{counter++}";
+                        }
+                    }
+
+                    usedNames.Add(constantName);
+
+                    builder.WriteLine($"public const {csharpBaseType} {constantName} = {value};");
+                }
+            }
+
+            var code = builder.ToString();
+            var enumsDir = Path.Join(Options.BackingTypeOutputPath, "Enums");
+            Directory.CreateDirectory(enumsDir);
+            var filename = Path.Join(enumsDir, $"{enumName}.cs");
+            WriteFile(filename, code);
         }
     }
 }

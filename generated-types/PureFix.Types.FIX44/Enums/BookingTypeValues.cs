@@ -1,0 +1,11 @@
+using System;
+
+namespace PureFix.Types.FIX44
+{
+	public static class BookingTypeValues
+	{
+		public const int RegularBooking = 0;
+		public const int Cfd = 1;
+		public const int TotalReturnSwap = 2;
+	}
+}

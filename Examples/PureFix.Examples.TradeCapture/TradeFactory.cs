@@ -1,5 +1,6 @@
 ﻿using PureFix.Types;
 using PureFix.Types.FIX50SP2;
+using PureFix.Types.FIX50SP2.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,13 +48,13 @@ namespace PureFix.Examples.TradeCapture
                 TradeRequestID = requestId,
                 TradeRequestType = TradeRequestTypeValues.AllTrades,
                 SubscriptionRequestType = SubscriptionRequestTypeValues.SnapshotAndUpdates,
-                TrdCapDtGrp = new TrdCapDtGrpComponent
+                TrdCapDtGrp = new TrdCapDtGrp
                 {
-                    NoDates = [
-                        new TradeCaptureReportRequestNoDates() {
+                    Dates = [
+                        new TrdCapDtGrp.NoDates() {
                             TransactTime = tradeDate
                         },
-                        new TradeCaptureReportRequestNoDates() {
+                        new TrdCapDtGrp.NoDates() {
                             TransactTime = tradeDate.AddDays(1)
                         }
                     ]
@@ -90,7 +91,7 @@ namespace PureFix.Examples.TradeCapture
                 TransactTime = _fixClock.Current,
                 ExecID = $"{execId}",
                 PreviouslyReported = false,
-                Instrument = new InstrumentComponent
+                Instrument = new Instrument
                 {
                     SecurityID = $"{_securities[instrumentId]}",
                     Symbol = $"{_securities[instrumentId]}"

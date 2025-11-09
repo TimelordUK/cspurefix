@@ -1,0 +1,11 @@
+using System;
+
+namespace PureFix.Types.FIX50SP2
+{
+	public static class QuoteRequestTypeValues
+	{
+		public const int Manual = 1;
+		public const int Automatic = 2;
+		public const int ConfirmQuote = 3;
+	}
+}
