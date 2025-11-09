@@ -30,6 +30,13 @@ internal partial class Program
         return FixVersion.FIX44;
     }
 
+    private static ModularGeneratorOptions GetModularGeneratorOptions(IFixDefinitions definitions, string dictPath, string outputPath)
+    {
+        var options = ModularGeneratorOptions.FromDictionaryPath(dictPath, outputPath, definitions);
+        return options;
+    }
+
+    [Obsolete("Use GetModularGeneratorOptions instead - this uses the old type system")]
     private static Options GetGeneratorOptions(IFixDefinitions definitions, string dictPath, string outputPath)
     {
         var generatorOptions = Options.FromVersion(definitions);

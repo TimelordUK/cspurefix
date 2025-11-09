@@ -28,8 +28,13 @@ internal partial class Program
     private static void Generate(string dict, string optionsOutputPath)
     {
         var definitions = GetDefinitions(dict);
-        var generatorOptions = GetGeneratorOptions(definitions, dict, optionsOutputPath);
-        var generator = new MessageGenerator(null, definitions, generatorOptions);
+        var generatorOptions = GetModularGeneratorOptions(definitions, dict, optionsOutputPath);
+
+        Console.WriteLine($"Generating {definitions.Message.Count} messages to {generatorOptions.AssemblyName}");
+
+        var generator = new ModularGenerator(definitions, generatorOptions);
         generator.Process();
+
+        Console.WriteLine($"Generation complete! Output: {Path.Join(optionsOutputPath, generatorOptions.AssemblyName)}");
     }
 }
