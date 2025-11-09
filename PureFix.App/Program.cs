@@ -27,10 +27,6 @@ internal partial class Program
         {
             Generate(options);
         }
-        else if (!string.IsNullOrEmpty(options.Application))
-        {
-            await RunApp(options);
-        }
         else if (!string.IsNullOrEmpty(options.FixLogPath))
         {
             ParseLog(options);
@@ -39,5 +35,7 @@ internal partial class Program
         {
             Examples();
         }
+
+        await Task.CompletedTask;
     }
 }

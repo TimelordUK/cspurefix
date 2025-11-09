@@ -10,7 +10,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix;
+using PureFix.Types.FIX44;
 
 namespace PureFix.Benchmarks
 {

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer.Ascii;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix.Types;
 
 namespace PureFix.Transport.Session
 {
