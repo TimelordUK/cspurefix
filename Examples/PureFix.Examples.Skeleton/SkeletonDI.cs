@@ -7,6 +7,6 @@ using PureFix.Types.FIX44;
 namespace PureFix.Examples.Skeleton;
 
 internal class SkeletonDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config)
-    : AppHost<SkeletonSessionFactory, FixMessageFactory>(q, factory, clock, config)
+    : AppHost<SkeletonSessionFactory, FixMessageFactory, Fix44SessionMessageFactory>(q, factory, clock, config)
 {
 }

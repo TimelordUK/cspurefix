@@ -90,7 +90,8 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(config.Definitions, Is.Not.Null);
                 Assert.That(config.Definitions.Message.ContainsKey("0"));
                 Assert.That(config.Definitions.Simple.ContainsKey("BeginString"));
-                Assert.That(config.MessageFactory, Is.Not.Null);
+                // MessageFactory is intentionally null - it should be set by the application using appropriate generated types
+                Assert.That(config.MessageFactory, Is.Null);
             });
         }
 

@@ -19,6 +19,7 @@ using JsonHelper = PureFix.Types.JsonHelper;
 
 namespace PureFix.Test.ModularTypes
 {
+    [Ignore("Requires fix5-mod.xml which is not part of the standard distribution")]
     public class Qf50Sp0DictTest
     {
         private IFixDefinitions _definitions;

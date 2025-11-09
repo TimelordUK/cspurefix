@@ -10,7 +10,7 @@ Console.WriteLine("This example demonstrates a FIX 5.0 SP2 trade capture workflo
 Console.WriteLine();
 
 // Paths for session configuration files
-var dictRootPath = Directory.GetCurrentDirectory(); // Dictionary files are copied via PureFix.Data reference
+var dictRootPath = AppContext.BaseDirectory; // Dictionary files are copied via PureFix.Data reference
 var sessionRootPath = Path.Join(dictRootPath, "Session");
 var acceptorConfig = Path.Join(sessionRootPath, "test-qf52-acceptor.json");
 var initiatorConfig = Path.Join(sessionRootPath, "test-qf52-initiator.json");
