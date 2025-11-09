@@ -182,7 +182,7 @@ namespace PureFix.Dictionary.Compiler
 
                 if (field is ContainedSimpleField simpleField)
                 {
-                    HandleFieldProperty(generator, parentPath, i, simpleField, last, next);
+                    HandleFieldProperty(generator, parentPath, i, simpleField, last, next, parentTypeName);
                 }
                 else if (field is ContainedComponentField componentField)
                 {
@@ -235,7 +235,19 @@ namespace PureFix.Dictionary.Compiler
             ContainedField? last,
             ContainedField? next)
         {
-            var propName = field.Name;
+            HandleFieldProperty(generator, parentPath, index, field, last, next, null);
+        }
+
+        private void HandleFieldProperty(
+            CodeGenerator generator,
+            string parentPath,
+            int index,
+            ContainedSimpleField field,
+            ContainedField? last,
+            ContainedField? next,
+            string? parentTypeName)
+        {
+            var propName = GetFieldPropertyName(field.Name, parentTypeName);
             var typeName = GetCSharpType(field);
 
             generator.WriteLine($"[TagDetails(Tag = {field.Definition.Tag}, Type = TagType.{field.Definition.TagType}, Offset = {index}, Required = {(field.Required ? "true" : "false")})]");
@@ -300,6 +312,17 @@ namespace PureFix.Dictionary.Compiler
                 return propertyName;
             }
             return name;
+        }
+
+        private string GetFieldPropertyName(string fieldName, string? parentTypeName)
+        {
+            // Check for naming collision with parent type
+            if (!string.IsNullOrEmpty(parentTypeName) && fieldName == parentTypeName)
+            {
+                // Append "Value" suffix to avoid collision
+                return fieldName + "Value";
+            }
+            return fieldName;
         }
 
         protected void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set)
@@ -370,8 +393,9 @@ namespace PureFix.Dictionary.Compiler
                 {
                     if (field is ContainedSimpleField simple)
                     {
+                        var propName = GetFieldPropertyName(simple.Name, parentTypeName);
                         var writeMethod = GetWriteMethod(simple.Definition.TagType);
-                        generator.WriteLine($"if ({simple.Name} is not null) writer.{writeMethod}({simple.Definition.Tag}, {simple.Name}{(NeedsValueAccess(simple.Definition.TagType) ? ".Value" : "")});");
+                        generator.WriteLine($"if ({propName} is not null) writer.{writeMethod}({simple.Definition.Tag}, {propName}{(NeedsValueAccess(simple.Definition.TagType) ? ".Value" : "")});");
                     }
                     else if (field is ContainedComponentField component)
                     {
@@ -406,8 +430,9 @@ namespace PureFix.Dictionary.Compiler
                 {
                     if (field is ContainedSimpleField simple)
                     {
+                        var propName = GetFieldPropertyName(simple.Name, parentTypeName);
                         var getMethod = GetGetMethod(simple.Definition.TagType);
-                        generator.WriteLine($"{simple.Name} = view.{getMethod}({simple.Definition.Tag});");
+                        generator.WriteLine($"{propName} = view.{getMethod}({simple.Definition.Tag});");
                     }
                     else if (field is ContainedComponentField component)
                     {
@@ -448,7 +473,9 @@ namespace PureFix.Dictionary.Compiler
                     {
                         var propertyName = field is ContainedGroupField groupField
                             ? GetGroupPropertyName(groupField, parentTypeName)
-                            : field.Name;
+                            : field is ContainedSimpleField simpleField
+                                ? GetFieldPropertyName(simpleField.Name, parentTypeName)
+                                : field.Name;
 
                         using (generator.BeginBlock($"case \"{field.Name}\":"))
                         {
@@ -481,9 +508,10 @@ namespace PureFix.Dictionary.Compiler
                         var propertyName = GetGroupPropertyName(groupField, parentTypeName);
                         generator.WriteLine($"{propertyName} = null;");
                     }
-                    else
+                    else if (field is ContainedSimpleField simpleField)
                     {
-                        generator.WriteLine($"{field.Name} = null;");
+                        var propertyName = GetFieldPropertyName(simpleField.Name, parentTypeName);
+                        generator.WriteLine($"{propertyName} = null;");
                     }
                 }
             }

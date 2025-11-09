@@ -159,6 +159,41 @@ namespace PureFix.Test.Dictionary
             TestContext.WriteLine($"Successfully generated full FIX44 to: {assemblyDir}");
         }
 
+        [Test]
+        [Explicit("Only run when generating full FIX50SP2 types")]
+        public void Generate_Full_FIX50SP2_Types()
+        {
+            // Arrange
+            const string fullDictPath = "../../../../Data/FIX50SP2.xml";
+            const string fullOutputPath = "../../../../generated-types";
+
+            var definitions = new FixDefinitions();
+            var parser = new QuickFixXmlFileParser(definitions);
+            parser.Parse(fullDictPath);
+
+            var options = ModularGeneratorOptions.FromDictionaryPath(
+                fullDictPath,
+                fullOutputPath,
+                definitions);
+
+            TestContext.WriteLine($"Generating {definitions.Message.Count} messages");
+            TestContext.WriteLine($"Assembly: {options.AssemblyName}");
+            TestContext.WriteLine($"Output: {Path.Join(fullOutputPath, options.AssemblyName)}");
+
+            // Act
+            var generator = new ModularGenerator(definitions, options);
+            generator.Process();
+
+            // Assert
+            var assemblyDir = Path.Join(fullOutputPath, options.AssemblyName);
+            Assert.That(Directory.Exists(assemblyDir), Is.True);
+
+            var csprojPath = Path.Join(assemblyDir, $"{options.AssemblyName}.csproj");
+            Assert.That(File.Exists(csprojPath), Is.True);
+
+            TestContext.WriteLine($"Successfully generated full FIX50SP2 to: {assemblyDir}");
+        }
+
         [TearDown]
         public void TearDown()
         {
