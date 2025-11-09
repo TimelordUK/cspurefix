@@ -161,7 +161,53 @@ namespace PureFix.Dictionary.Parser.QuickFix
         private void WriteComponentField(ContainedComponentField containedComponentField, StringBuilder sb, int leadingIndent)
         {
             sb.Append(QuickFixXmlFormatter.AddComponent(containedComponentField, leadingIndent));
-            _seenComponents[containedComponentField.Name] = containedComponentField;            
+
+            // Add to seen components if not already there
+            if (!_seenComponents.ContainsKey(containedComponentField.Name))
+            {
+                _seenComponents[containedComponentField.Name] = containedComponentField;
+
+                // Recursively process nested components to ensure all dependencies are included
+                if (containedComponentField.Definition != null)
+                {
+                    ProcessComponentFields(containedComponentField.Definition.Fields);
+                }
+            }
+        }
+
+        private void ProcessComponentFields(IReadOnlyList<ContainedField> fields)
+        {
+            foreach (var field in fields)
+            {
+                switch (field.Type)
+                {
+                    case ContainedFieldType.Simple:
+                        var simpleField = (ContainedSimpleField)field;
+                        _usedTags[simpleField.Definition.Tag] = simpleField.Name;
+                        break;
+
+                    case ContainedFieldType.Group:
+                        var groupField = (ContainedGroupField)field;
+                        if (groupField?.Definition != null)
+                        {
+                            _usedTags[groupField.Definition?.NoOfField?.Tag ?? 0] = groupField.Name ?? "";
+                            ProcessComponentFields(groupField.Definition?.Fields ?? []);
+                        }
+                        break;
+
+                    case ContainedFieldType.Component:
+                        var componentField = (ContainedComponentField)field;
+                        if (!_seenComponents.ContainsKey(componentField.Name))
+                        {
+                            _seenComponents[componentField.Name] = componentField;
+                            if (componentField.Definition != null)
+                            {
+                                ProcessComponentFields(componentField.Definition.Fields);
+                            }
+                        }
+                        break;
+                }
+            }
         }
 
         private void WriteSimpleField(ContainedSimpleField containedSimpleField, StringBuilder sb, int leadingIndent)

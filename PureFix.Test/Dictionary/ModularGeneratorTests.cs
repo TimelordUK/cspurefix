@@ -8,7 +8,7 @@ namespace PureFix.Test.Dictionary
     [TestFixture]
     public class ModularGeneratorTests
     {
-        private const string TestDictPath = "../../../../test-dictionaries/FIX44-Core.xml";
+        private const string TestDictPath = "../../../../test-dictionaries/FIX44-UnitTest.xml";
         private const string OutputPath = "../../../../test-generated-modular";
 
         [SetUp]
@@ -81,10 +81,10 @@ namespace PureFix.Test.Dictionary
                 definitions);
 
             // Assert
-            // "FIX44-Core.xml" should become "PureFix.Types.FIX44Core"
-            Assert.That(options.AssemblyName, Is.EqualTo("PureFix.Types.FIX44Core"));
-            Assert.That(options.DictionaryName, Is.EqualTo("FIX44Core"));
-            Assert.That(options.BaseOptions.BackingTypeNamespace, Is.EqualTo("PureFix.Types.FIX44Core"));
+            // "FIX44-UnitTest.xml" should become "PureFix.Types.FIX44UnitTest"
+            Assert.That(options.AssemblyName, Is.EqualTo("PureFix.Types.FIX44UnitTest"));
+            Assert.That(options.DictionaryName, Is.EqualTo("FIX44UnitTest"));
+            Assert.That(options.BaseOptions.BackingTypeNamespace, Is.EqualTo("PureFix.Types.FIX44UnitTest"));
         }
 
         [Test]
@@ -122,6 +122,41 @@ namespace PureFix.Test.Dictionary
             // Verify factory was created
             var factoryPath = Path.Join(options.BaseOptions.BackingTypeOutputPath, "FixMessageFactory.cs");
             Assert.That(File.Exists(factoryPath), Is.True, "Factory not created");
+        }
+
+        [Test]
+        [Explicit("Only run when generating full FIX44 types")]
+        public void Generate_Full_FIX44_Types()
+        {
+            // Arrange
+            const string fullDictPath = "../../../../Data/FIX44.xml";
+            const string fullOutputPath = "../../../../generated-types";
+
+            var definitions = new FixDefinitions();
+            var parser = new QuickFixXmlFileParser(definitions);
+            parser.Parse(fullDictPath);
+
+            var options = ModularGeneratorOptions.FromDictionaryPath(
+                fullDictPath,
+                fullOutputPath,
+                definitions);
+
+            TestContext.WriteLine($"Generating {definitions.Message.Count} messages");
+            TestContext.WriteLine($"Assembly: {options.AssemblyName}");
+            TestContext.WriteLine($"Output: {Path.Join(fullOutputPath, options.AssemblyName)}");
+
+            // Act
+            var generator = new ModularGenerator(definitions, options);
+            generator.Process();
+
+            // Assert
+            var assemblyDir = Path.Join(fullOutputPath, options.AssemblyName);
+            Assert.That(Directory.Exists(assemblyDir), Is.True);
+
+            var csprojPath = Path.Join(assemblyDir, $"{options.AssemblyName}.csproj");
+            Assert.That(File.Exists(csprojPath), Is.True);
+
+            TestContext.WriteLine($"Successfully generated full FIX44 to: {assemblyDir}");
         }
 
         [TearDown]

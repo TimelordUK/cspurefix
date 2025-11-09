@@ -25,6 +25,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.LogMessageParser", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeeFixServer", "SeeFixServer\SeeFixServer.csproj", "{1671E15B-DC96-4403-A940-01FC60EE51C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.Core", "PureFix.Types.Core\PureFix.Types.Core.csproj", "{0FACE646-23CD-4A66-8CC4-8A5C707D6B31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Test.ModularTypes", "PureFix.Test.ModularTypes\PureFix.Test.ModularTypes.csproj", "{4030D6A0-CDA0-41E5-8646-1B8EAF612723}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "generated-types", "generated-types", "{3D71C123-DCF9-405D-9ED9-676A99258DB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX44UnitTest", "generated-types\PureFix.Types.FIX44UnitTest\PureFix.Types.FIX44UnitTest.csproj", "{E8F78938-E434-4C8F-A091-0017BB794DC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX44", "generated-types\PureFix.Types.FIX44\PureFix.Types.FIX44.csproj", "{5D64E2CD-47D4-4111-B753-C7BA96DE9389}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,11 +85,31 @@ Global
 		{1671E15B-DC96-4403-A940-01FC60EE51C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1671E15B-DC96-4403-A940-01FC60EE51C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1671E15B-DC96-4403-A940-01FC60EE51C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FACE646-23CD-4A66-8CC4-8A5C707D6B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FACE646-23CD-4A66-8CC4-8A5C707D6B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FACE646-23CD-4A66-8CC4-8A5C707D6B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FACE646-23CD-4A66-8CC4-8A5C707D6B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4030D6A0-CDA0-41E5-8646-1B8EAF612723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4030D6A0-CDA0-41E5-8646-1B8EAF612723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4030D6A0-CDA0-41E5-8646-1B8EAF612723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4030D6A0-CDA0-41E5-8646-1B8EAF612723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8F78938-E434-4C8F-A091-0017BB794DC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8F78938-E434-4C8F-A091-0017BB794DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8F78938-E434-4C8F-A091-0017BB794DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8F78938-E434-4C8F-A091-0017BB794DC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D64E2CD-47D4-4111-B753-C7BA96DE9389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D64E2CD-47D4-4111-B753-C7BA96DE9389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D64E2CD-47D4-4111-B753-C7BA96DE9389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D64E2CD-47D4-4111-B753-C7BA96DE9389}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98AF8022-AC94-4668-BAEE-B9335462D3C3}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E8F78938-E434-4C8F-A091-0017BB794DC5} = {3D71C123-DCF9-405D-9ED9-676A99258DB2}
+		{5D64E2CD-47D4-4111-B753-C7BA96DE9389} = {3D71C123-DCF9-405D-9ED9-676A99258DB2}
 	EndGlobalSection
 EndGlobal

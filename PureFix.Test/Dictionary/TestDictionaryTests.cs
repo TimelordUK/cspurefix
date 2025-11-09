@@ -7,7 +7,7 @@ namespace PureFix.Test.Dictionary
     [TestFixture]
     public class TestDictionaryTests
     {
-        private const string TestDictPath = "../../../../test-dictionaries/FIX44-Core.xml";
+        private const string TestDictPath = "../../../../test-dictionaries/FIX44-UnitTest.xml";
 
         [Test]
         public void FIX44_Core_Dictionary_Parses()

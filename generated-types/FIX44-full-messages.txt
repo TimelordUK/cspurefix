@@ -1,0 +1,79 @@
+PureFix.ConsoleApp 1.0.0+d30626aaec3f094506e56d45bcc3b41b04ab179a
+Copyright (C) 2025 PureFix.ConsoleApp
+
+ERROR(S):
+  Option 'T, trim' has no value.
+
+  -f, --fix            parse fix log into json or tags
+
+  -d, --dict           dictionary xml file.
+
+  -D, --dicts          list of dict xml to generate
+
+  -o, --output         (Default: tags) output tags | json
+
+  -a, --application    test app
+
+  -t, --tail           tail the fix log and decode
+
+  -I, --initiator      (Default: test-qf52-initiator.json) initiator json config
+
+  -A, --acceptor       acceptor json config
+
+  -g, --generate       generate types for dictionary
+
+  -p, --path           (Default: .) output path of generator
+
+  -L, --delimiter      (Default: 1) delimiter to parse a log
+
+  -T, --trim           list of message types 0 1 2 3 4 5 AE
+
+  -e, --exclude        (Default: false) msgtypes to exclude rather than include
+                       when parsing log
+
+  --help               Display this help screen.
+
+  --version            Display version information.
+
+trim an input dictionary file and output only messages and dependent fields on given message set.
+./PureFix.ConsoleApp -d FIX50SP2.xml -T 0 1 2 3 4 5 A AE
+
+tail a file and output as tag decoded resolving enums.
+./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o tags -L '|'
+
+tail a file and output as json objects
+./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -t -o json -L '|'
+
+parse a fix52 log in decode tag format with no tail
+./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -L '|'
+
+parse a fix44 log in json format with no tail
+./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX44.xml -o json -L '|'
+
+parse a fix44 log in json format with no tail and exlude all msg type 0 - heartbeats
+./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o json -e -T 0 -L '|'
+
+parse a fix44 log in json format with no tail and show as count frequency each message
+./PureFix.ConsoleApp -d FIX44.xml -f Data/examples/FIX.4.4/fixsim-examples.txt -o counts -L '|'
+
+parse a fix52 log in decode tag format with no tail and filter only msg type A
+./PureFix.ConsoleApp -f logs/test_client-fix-log20241007.txt -d FIX50SP2.xml -o tags -T A -L '|'
+
+parse a fix52 todays log in decode tag format with no tail and filter out hearbeat
+./PureFix.ConsoleApp -f logs/test_client-fix-log$(date '+%Y%m%d').txt -d FIX50SP2.xml -o json -e -T 0 -L '|'
+
+run built in skeleton client and server to logon and heartbeat
+./PureFix.ConsoleApp -d FIX50SP2.xml -A test-qf52-acceptor.json -a sk
+
+run built in skeleton client and server to logon and heartbeat with fix44 config
+./PureFix.ConsoleApp -d FIX44.xml -I test-qf44-initiator.json -A test-qf44-acceptor.json -a sk
+
+run built in trade capture client and server to logon and heartbeat
+./PureFix.ConsoleApp -d FIX50SP2.xml -A test-qf52-acceptor.json -a tc
+
+run built in skeleton connect to fixsim.com
+./PureFix.ConsoleApp -d FIX44.xml -I fixsim-qf44-initiator.json -a sk
+
+generate code from a set of dict files
+./PureFix.ConsoleApp -D FIX44.xml FIX43.xml FIX42.xml FIX50SP2.xml -g
+

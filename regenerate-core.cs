@@ -1,0 +1,29 @@
+using PureFix.Dictionary.Compiler;
+using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser.QuickFix;
+using System;
+using System.IO;
+
+var dictionaryPath = "test-dictionaries/FIX44-Core.xml";
+var outputPath = "generated-types";
+
+Console.WriteLine($"Generating FIX 4.4 Core types from {dictionaryPath}...");
+
+var definitions = new FixDefinitions();
+var parser = new QuickFixXmlFileParser(definitions);
+parser.Parse(dictionaryPath);
+
+Console.WriteLine($"Parsed {definitions.Messages.Count} messages");
+
+var options = ModularGeneratorOptions.FromDictionaryPath(
+    dictionaryPath,
+    outputPath,
+    definitions);
+
+Console.WriteLine($"Assembly name: {options.AssemblyName}");
+Console.WriteLine($"Output: {Path.Join(outputPath, options.AssemblyName)}");
+
+var generator = new ModularGenerator(definitions, options);
+generator.Process();
+
+Console.WriteLine("Generation complete!");

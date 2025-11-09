@@ -1,0 +1,196 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using PureFix.Types;
+using PureFix.Types.FIX44.Components;
+
+namespace PureFix.Types.FIX44.Components
+{
+	public sealed partial class AllocAckGrp : IFixComponent
+	{
+		public sealed partial class NoAllocs : IFixGroup
+		{
+			[TagDetails(Tag = 79, Type = TagType.String, Offset = 0, Required = false)]
+			public string? AllocAccount {get; set;}
+			
+			[TagDetails(Tag = 661, Type = TagType.Int, Offset = 1, Required = false)]
+			public int? AllocAcctIDSource {get; set;}
+			
+			[TagDetails(Tag = 366, Type = TagType.Float, Offset = 2, Required = false)]
+			public double? AllocPrice {get; set;}
+			
+			[TagDetails(Tag = 467, Type = TagType.String, Offset = 3, Required = false)]
+			public string? IndividualAllocID {get; set;}
+			
+			[TagDetails(Tag = 776, Type = TagType.Int, Offset = 4, Required = false)]
+			public int? IndividualAllocRejCode {get; set;}
+			
+			[TagDetails(Tag = 161, Type = TagType.String, Offset = 5, Required = false)]
+			public string? AllocText {get; set;}
+			
+			[TagDetails(Tag = 360, Type = TagType.Length, Offset = 6, Required = false)]
+			public int? EncodedAllocTextLen {get; set;}
+			
+			[TagDetails(Tag = 361, Type = TagType.RawData, Offset = 7, Required = false)]
+			public byte[]? EncodedAllocText {get; set;}
+			
+			
+			bool IFixValidator.IsValid(in FixValidatorConfig config)
+			{
+				return true;
+			}
+			
+			void IFixEncoder.Encode(IFixWriter writer)
+			{
+				if (AllocAccount is not null) writer.WriteString(79, AllocAccount);
+				if (AllocAcctIDSource is not null) writer.WriteWholeNumber(661, AllocAcctIDSource.Value);
+				if (AllocPrice is not null) writer.WriteNumber(366, AllocPrice.Value);
+				if (IndividualAllocID is not null) writer.WriteString(467, IndividualAllocID);
+				if (IndividualAllocRejCode is not null) writer.WriteWholeNumber(776, IndividualAllocRejCode.Value);
+				if (AllocText is not null) writer.WriteString(161, AllocText);
+				if (EncodedAllocTextLen is not null) writer.WriteWholeNumber(360, EncodedAllocTextLen.Value);
+				if (EncodedAllocText is not null) writer.WriteBuffer(361, EncodedAllocText);
+			}
+			
+			void IFixParser.Parse(IMessageView? view)
+			{
+				if (view is null) return;
+				
+				AllocAccount = view.GetString(79);
+				AllocAcctIDSource = view.GetInt32(661);
+				AllocPrice = view.GetDouble(366);
+				IndividualAllocID = view.GetString(467);
+				IndividualAllocRejCode = view.GetInt32(776);
+				AllocText = view.GetString(161);
+				EncodedAllocTextLen = view.GetInt32(360);
+				EncodedAllocText = view.GetByteArray(361);
+			}
+			
+			bool IFixLookup.TryGetByTag(string name, out object? value)
+			{
+				value = null;
+				switch (name)
+				{
+					case "AllocAccount":
+					{
+						value = AllocAccount;
+						break;
+					}
+					case "AllocAcctIDSource":
+					{
+						value = AllocAcctIDSource;
+						break;
+					}
+					case "AllocPrice":
+					{
+						value = AllocPrice;
+						break;
+					}
+					case "IndividualAllocID":
+					{
+						value = IndividualAllocID;
+						break;
+					}
+					case "IndividualAllocRejCode":
+					{
+						value = IndividualAllocRejCode;
+						break;
+					}
+					case "AllocText":
+					{
+						value = AllocText;
+						break;
+					}
+					case "EncodedAllocTextLen":
+					{
+						value = EncodedAllocTextLen;
+						break;
+					}
+					case "EncodedAllocText":
+					{
+						value = EncodedAllocText;
+						break;
+					}
+					default:
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			
+			void IFixReset.Reset()
+			{
+				AllocAccount = null;
+				AllocAcctIDSource = null;
+				AllocPrice = null;
+				IndividualAllocID = null;
+				IndividualAllocRejCode = null;
+				AllocText = null;
+				EncodedAllocTextLen = null;
+				EncodedAllocText = null;
+			}
+		}
+		[Group(NoOfTag = 78, Offset = 0, Required = false)]
+		public NoAllocs[]? Allocs {get; set;}
+		
+		
+		bool IFixValidator.IsValid(in FixValidatorConfig config)
+		{
+			return true;
+		}
+		
+		void IFixEncoder.Encode(IFixWriter writer)
+		{
+			if (Allocs is not null && Allocs.Length != 0)
+			{
+				writer.WriteWholeNumber(78, Allocs.Length);
+				for (int i = 0; i < Allocs.Length; i++)
+				{
+					((IFixEncoder)Allocs[i]).Encode(writer);
+				}
+			}
+		}
+		
+		void IFixParser.Parse(IMessageView? view)
+		{
+			if (view is null) return;
+			
+			if (view.GetView("NoAllocs") is IMessageView viewNoAllocs)
+			{
+				var count = viewNoAllocs.GroupCount();
+				Allocs = new NoAllocs[count];
+				for (int i = 0; i < count; i++)
+				{
+					Allocs[i] = new();
+					((IFixParser)Allocs[i]).Parse(viewNoAllocs.GetGroupInstance(i));
+				}
+			}
+		}
+		
+		bool IFixLookup.TryGetByTag(string name, out object? value)
+		{
+			value = null;
+			switch (name)
+			{
+				case "NoAllocs":
+				{
+					value = Allocs;
+					break;
+				}
+				default:
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		void IFixReset.Reset()
+		{
+			Allocs = null;
+		}
+	}
+}
