@@ -78,6 +78,7 @@ Currently, PureFix has hardcoded references to generated types (FIX44, FIX50SP2)
       "targetCompIds": ["CLIENT"],
       "version": "FIX.4.4",
       "rootNamespace": "PureFix.Types.JPMFX",
+      "messageStorePath": "MessageStore/JPMFX",
       "enabled": true
     },
     {
@@ -89,6 +90,7 @@ Currently, PureFix has hardcoded references to generated types (FIX44, FIX50SP2)
       "targetCompIds": ["CLIENT"],
       "version": "FIX.4.4",
       "rootNamespace": "PureFix.Types.BBG",
+      "messageStorePath": "MessageStore/BBG",
       "enabled": true
     },
     {
@@ -100,6 +102,7 @@ Currently, PureFix has hardcoded references to generated types (FIX44, FIX50SP2)
       "targetCompIds": ["*"],
       "version": "FIX.4.4",
       "rootNamespace": "PureFix.Types.FIX44",
+      "messageStorePath": "MessageStore/FIX44",
       "enabled": true,
       "isDefault": true
     },
@@ -112,6 +115,7 @@ Currently, PureFix has hardcoded references to generated types (FIX44, FIX50SP2)
       "targetCompIds": ["*"],
       "version": "FIX.5.0SP2",
       "rootNamespace": "PureFix.Types.FIX50SP2",
+      "messageStorePath": "MessageStore/FIX50SP2",
       "enabled": true
     }
   ]
@@ -567,3 +571,624 @@ Applications using PureFix:
 3. Update code generator to emit TypeSystemProvider
 4. Test with JPMFX example dictionary
 5. Gather feedback from stakeholders
+
+## Server Parsing Scenarios
+
+### Scenario 1: Bulk File Parsing with Tag-Level Access
+
+**Use Case**: Upload multi-day FIX log files (up to 50MB), parse at tag level, filter by MsgType, return to React GUI
+
+**Key Requirements**:
+- **Performance**: Tag-level parsing without creating full message objects
+- **Filtering**: Regex filter on tag 35 (MsgType) - e.g., only `35=8` (ExecutionReport)
+- **Memory Efficiency**: Stream through file, don't load all messages
+- **Lazy Parsing**: On message click, parse specific message to full JSON
+
+**API Design**:
+
+```csharp
+/// <summary>
+/// Parse FIX file at tag level - returns tag positions, not objects
+/// </summary>
+public interface IFixFileParser
+{
+    /// <summary>
+    /// Parse file and return tag-level representation for each message
+    /// </summary>
+    /// <param name="fileContents">FIX file contents (multiple days concatenated)</param>
+    /// <param name="filter">Optional regex filter on tag 35 (e.g., "^8$" for ExecutionReport only)</param>
+    /// <param name="registrationName">Dictionary to use (or null for auto-detect)</param>
+    /// <returns>Enumerable of tag-level messages</returns>
+    IEnumerable<TagLevelMessage> ParseFile(
+        ReadOnlySpan<byte> fileContents,
+        string? msgTypeFilter = null,
+        string? registrationName = null);
+
+    /// <summary>
+    /// Parse single message at specific offset to full JSON
+    /// </summary>
+    string ParseMessageToJson(ReadOnlySpan<byte> fileContents, int offset, string? registrationName = null);
+}
+
+/// <summary>
+/// Tag-level message representation for server mode
+/// </summary>
+public class TagLevelMessage
+{
+    /// <summary>Offset of message in file</summary>
+    public int Offset { get; set; }
+
+    /// <summary>Length of message</summary>
+    public int Length { get; set; }
+
+    /// <summary>MsgType (tag 35)</summary>
+    public string? MsgType { get; set; }
+
+    /// <summary>MsgSeqNum (tag 34)</summary>
+    public int? MsgSeqNum { get; set; }
+
+    /// <summary>SendingTime (tag 52)</summary>
+    public DateTime? SendingTime { get; set; }
+
+    /// <summary>SenderCompID (tag 49) - used for auto-detection</summary>
+    public string? SenderCompId { get; set; }
+
+    /// <summary>All tags as key-value pairs (tag number -> string value)</summary>
+    public Dictionary<int, string> Tags { get; set; }
+
+    /// <summary>Structure information from AsciiParser</summary>
+    public Structure? Structure { get; set; }
+}
+```
+
+**Usage Example**:
+
+```csharp
+// Server endpoint: /api/fix/parse-file
+[HttpPost]
+public async Task<IActionResult> ParseFile(IFormFile file, string? msgTypeFilter)
+{
+    var fileContents = await ReadFileAsync(file);
+    
+    // Auto-detect dictionary from first message's SenderCompID
+    var parser = _registry.CreateFixFileParser();
+    var messages = parser.ParseFile(fileContents, msgTypeFilter);
+    
+    // Return tag-level data to React GUI
+    return Json(messages.Select(m => new {
+        offset = m.Offset,
+        msgType = m.MsgType,
+        seqNum = m.MsgSeqNum,
+        sendingTime = m.SendingTime,
+        tags = m.Tags,
+        structures = m.Structure?.ToString()
+    }));
+}
+
+// GUI clicks on message at offset 12345
+[HttpPost]
+public async Task<IActionResult> ParseMessage(IFormFile file, int offset)
+{
+    var fileContents = await ReadFileAsync(file);
+    var parser = _registry.CreateFixFileParser();
+    
+    // Full parse just for this message
+    var json = parser.ParseMessageToJson(fileContents, offset);
+    
+    return Content(json, "application/json");
+}
+```
+
+### Scenario 2: SQL-CLI Field Extraction
+
+**Use Case**: Upload FIX file, select specific tags to extract, return flat JSON array for SQL querying with window functions
+
+**Key Requirements**:
+- **Field Selection**: User specifies which tags to extract
+- **Repeated Groups**: Join repeated tags (e.g., parties) with "|" separator
+- **Flat Format**: CSV-like structure for SQL engine consumption
+- **Aggregation Ready**: Suitable for lag/lead/window functions without database load
+
+**API Design**:
+
+```csharp
+/// <summary>
+/// Extract selected fields from FIX file for SQL-CLI consumption
+/// </summary>
+public interface IFixFieldExtractor
+{
+    /// <summary>
+    /// Extract specified tags from all messages in file
+    /// </summary>
+    /// <param name="fileContents">FIX file contents</param>
+    /// <param name="tagSelectors">Tags to extract (e.g., [35, 55, 54, 38, 44])</param>
+    /// <param name="msgTypeFilter">Optional filter on MsgType</param>
+    /// <param name="registrationName">Dictionary to use</param>
+    /// <returns>Flat array of field values suitable for SQL queries</returns>
+    List<Dictionary<string, string>> ExtractFields(
+        ReadOnlySpan<byte> fileContents,
+        int[] tagSelectors,
+        string? msgTypeFilter = null,
+        string? registrationName = null);
+}
+```
+
+**Usage Example**:
+
+```csharp
+// Server endpoint: /api/fix/extract-fields
+[HttpPost]
+public async Task<IActionResult> ExtractFields(
+    IFormFile file,
+    [FromForm] int[] tags,  // e.g., [35,55,54,38,44,447] = MsgType, Symbol, Side, Qty, Price, PartyRole
+    [FromForm] string? msgTypeFilter)
+{
+    var fileContents = await ReadFileAsync(file);
+    var extractor = _registry.CreateFieldExtractor();
+    
+    // Extract selected tags, joining repeated tags with "|"
+    var rows = extractor.ExtractFields(fileContents, tags, msgTypeFilter);
+    
+    // Return flat JSON array
+    // Example row: { "35": "8", "55": "AAPL", "54": "1", "38": "1000", "44": "150.50", "447": "D|1|4" }
+    return Json(rows);
+}
+
+// SQL-CLI can then query:
+// $ sql-cli query http://localhost:5000/api/fix/extract-fields \
+//   "SELECT Symbol, Side, Qty, Price, 
+//           LAG(Price) OVER (PARTITION BY Symbol ORDER BY SendingTime) as PrevPrice
+//    FROM fix_data 
+//    WHERE MsgType = '8' 
+//    GROUP BY Symbol"
+```
+
+## Persistent Message Store
+
+### Overview
+
+The message store serves three purposes:
+1. **Sequence Number Persistence**: Track last sent/received sequence numbers for session recovery
+2. **Message Persistence**: Store sent messages for resend request servicing (tag 2=ResendRequest)
+3. **Session Recovery**: Recover state after application restart without seq reset
+
+### Message Store Requirements
+
+**Current State**: `FixMsgMemoryStore` - in-memory only, lost on restart
+
+**Required**: `FixMsgFileStore` - file-based persistence like QuickFix
+
+**Key Features**:
+- Persist per session (SenderCompID/TargetCompID pair)
+- Store location configured in TypeRegistry.json
+- Support manual editing (flat files) for out-of-sync recovery
+- Fast lookup by sequence number for resend requests
+- Atomic updates (sequence numbers and messages)
+- Session state: `(OurSeqNum, TheirSeqNum, LastReceivedTime)`
+
+### Message Store Interface Extensions
+
+```csharp
+namespace PureFix.Transport.Store;
+
+/// <summary>
+/// Extended message store interface with session state persistence
+/// </summary>
+public interface IFixMsgStore
+{
+    // Existing methods...
+    Task<FixMsgStoreState> Clear();
+    Task<FixMsgStoreState> GetState();
+    Task<FixMsgStoreState> Put(IFixMsgStoreRecord record);
+    Task<IFixMsgStoreRecord?> Get(int seq);
+    Task<bool> Exists(int seq);
+    Task<IFixMsgStoreRecord?[]> GetSeqNumRange(int from, int? to = null);
+
+    // NEW: Session sequence number tracking
+    /// <summary>
+    /// Get last outbound sequence number we sent
+    /// </summary>
+    Task<int> GetLastSentSeqNum();
+
+    /// <summary>
+    /// Get last inbound sequence number we received
+    /// </summary>
+    Task<int> GetLastReceivedSeqNum();
+
+    /// <summary>
+    /// Set outbound sequence number (after sending message)
+    /// </summary>
+    Task SetLastSentSeqNum(int seqNum);
+
+    /// <summary>
+    /// Set inbound sequence number (after receiving message)
+    /// </summary>
+    Task SetLastReceivedSeqNum(int seqNum);
+
+    /// <summary>
+    /// Get last time we received a message from peer (for heartbeat monitoring)
+    /// </summary>
+    Task<DateTime?> GetLastReceivedTime();
+
+    /// <summary>
+    /// Set last received time
+    /// </summary>
+    Task SetLastReceivedTime(DateTime timestamp);
+
+    /// <summary>
+    /// Reset all sequence numbers and clear messages (seq reset scenario)
+    /// </summary>
+    Task ResetSequences();
+}
+
+/// <summary>
+/// Session state for recovery
+/// </summary>
+public class FixSessionState
+{
+    public int LastSentSeqNum { get; set; }
+    public int LastReceivedSeqNum { get; set; }
+    public DateTime? LastReceivedTime { get; set; }
+    public string SenderCompId { get; set; }
+    public string TargetCompId { get; set; }
+    public DateTime CreatedTime { get; set; }
+    public DateTime LastModifiedTime { get; set; }
+}
+```
+
+### File-Based Message Store Implementation
+
+**File Structure** (per session):
+
+```
+MessageStore/
+  JPMFX/
+    init-comp.accept-comp/
+      session.meta          # Session state (sequence numbers)
+      messages.dat          # Binary message storage
+      messages.idx          # Index for fast seq lookup
+```
+
+**session.meta** format:
+```json
+{
+  "senderCompId": "init-comp",
+  "targetCompId": "accept-comp",
+  "lastSentSeqNum": 1234,
+  "lastReceivedSeqNum": 5678,
+  "lastReceivedTime": "2025-01-09T16:30:45Z",
+  "createdTime": "2025-01-08T09:00:00Z",
+  "lastModifiedTime": "2025-01-09T16:30:45Z"
+}
+```
+
+**messages.dat** format (append-only binary):
+```
+[SeqNum:4][MsgType:1][Timestamp:8][Length:4][EncodedMessage:Length]
+[SeqNum:4][MsgType:1][Timestamp:8][Length:4][EncodedMessage:Length]
+...
+```
+
+**messages.idx** format (for fast lookup):
+```
+[SeqNum:4][Offset:8]
+[SeqNum:4][Offset:8]
+...
+```
+
+### FixMsgFileStore Implementation
+
+```csharp
+namespace PureFix.Transport.Store;
+
+/// <summary>
+/// File-based message store for session recovery
+/// </summary>
+public class FixMsgFileStore : IFixMsgStore
+{
+    private readonly string _storePath;
+    private readonly string _sessionId;
+    private readonly ReaderWriterLockSlim _lock = new();
+    private FixSessionState _sessionState;
+    private readonly Dictionary<int, long> _messageIndex = new();
+
+    public FixMsgFileStore(string storePath, string senderCompId, string targetCompId)
+    {
+        _storePath = storePath;
+        _sessionId = $"{senderCompId}.{targetCompId}";
+        Directory.CreateDirectory(Path.Combine(_storePath, _sessionId));
+        LoadSessionState();
+        LoadMessageIndex();
+    }
+
+    private string SessionMetaPath => Path.Combine(_storePath, _sessionId, "session.meta");
+    private string MessagesDataPath => Path.Combine(_storePath, _sessionId, "messages.dat");
+    private string MessagesIndexPath => Path.Combine(_storePath, _sessionId, "messages.idx");
+
+    public async Task<int> GetLastSentSeqNum()
+    {
+        _lock.EnterReadLock();
+        try
+        {
+            return _sessionState.LastSentSeqNum;
+        }
+        finally
+        {
+            _lock.ExitReadLock();
+        }
+    }
+
+    public async Task<int> GetLastReceivedSeqNum()
+    {
+        _lock.EnterReadLock();
+        try
+        {
+            return _sessionState.LastReceivedSeqNum;
+        }
+        finally
+        {
+            _lock.ExitReadLock();
+        }
+    }
+
+    public async Task SetLastSentSeqNum(int seqNum)
+    {
+        _lock.EnterWriteLock();
+        try
+        {
+            _sessionState.LastSentSeqNum = seqNum;
+            _sessionState.LastModifiedTime = DateTime.UtcNow;
+            await PersistSessionState();
+        }
+        finally
+        {
+            _lock.ExitWriteLock();
+        }
+    }
+
+    public async Task SetLastReceivedSeqNum(int seqNum)
+    {
+        _lock.EnterWriteLock();
+        try
+        {
+            _sessionState.LastReceivedSeqNum = seqNum;
+            _sessionState.LastReceivedTime = DateTime.UtcNow;
+            _sessionState.LastModifiedTime = DateTime.UtcNow;
+            await PersistSessionState();
+        }
+        finally
+        {
+            _lock.ExitWriteLock();
+        }
+    }
+
+    public async Task<FixMsgStoreState> Put(IFixMsgStoreRecord record)
+    {
+        _lock.EnterWriteLock();
+        try
+        {
+            // Append to messages.dat
+            using var dataStream = File.Open(MessagesDataPath, FileMode.Append, FileAccess.Write);
+            var offset = dataStream.Position;
+            
+            // Write: [SeqNum:4][MsgType:1][Timestamp:8][Length:4][EncodedMessage:Length]
+            await WriteIntAsync(dataStream, record.SeqNum);
+            await dataStream.WriteAsync(Encoding.ASCII.GetBytes(record.MsgType)[0..1]);
+            await WriteLongAsync(dataStream, record.Timestamp.Ticks);
+            var encoded = Encoding.ASCII.GetBytes(record.Encoded ?? "");
+            await WriteIntAsync(dataStream, encoded.Length);
+            await dataStream.WriteAsync(encoded);
+            
+            // Update index
+            _messageIndex[record.SeqNum] = offset;
+            
+            // Append to messages.idx
+            using var indexStream = File.Open(MessagesIndexPath, FileMode.Append, FileAccess.Write);
+            await WriteIntAsync(indexStream, record.SeqNum);
+            await WriteLongAsync(indexStream, offset);
+            
+            return await GetState();
+        }
+        finally
+        {
+            _lock.ExitWriteLock();
+        }
+    }
+
+    public async Task<IFixMsgStoreRecord?> Get(int seq)
+    {
+        _lock.EnterReadLock();
+        try
+        {
+            if (!_messageIndex.TryGetValue(seq, out var offset))
+                return null;
+
+            using var dataStream = File.Open(MessagesDataPath, FileMode.Open, FileAccess.Read);
+            dataStream.Seek(offset, SeekOrigin.Begin);
+            
+            var seqNum = await ReadIntAsync(dataStream);
+            var msgType = Encoding.ASCII.GetString(new byte[] { (byte)dataStream.ReadByte() });
+            var ticks = await ReadLongAsync(dataStream);
+            var length = await ReadIntAsync(dataStream);
+            var buffer = new byte[length];
+            await dataStream.ReadAsync(buffer);
+            var encoded = Encoding.ASCII.GetString(buffer);
+            
+            return new FixMsgStoreRecord(msgType, new DateTime(ticks), seqNum, encoded);
+        }
+        finally
+        {
+            _lock.ExitReadLock();
+        }
+    }
+
+    public async Task ResetSequences()
+    {
+        _lock.EnterWriteLock();
+        try
+        {
+            _sessionState.LastSentSeqNum = 0;
+            _sessionState.LastReceivedSeqNum = 0;
+            _messageIndex.Clear();
+            
+            // Delete message files
+            File.Delete(MessagesDataPath);
+            File.Delete(MessagesIndexPath);
+            
+            await PersistSessionState();
+        }
+        finally
+        {
+            _lock.ExitWriteLock();
+        }
+    }
+
+    private void LoadSessionState()
+    {
+        if (File.Exists(SessionMetaPath))
+        {
+            var json = File.ReadAllText(SessionMetaPath);
+            _sessionState = JsonHelper.FromJson<FixSessionState>(json) ?? new FixSessionState();
+        }
+        else
+        {
+            _sessionState = new FixSessionState
+            {
+                SenderCompId = _sessionId.Split('.')[0],
+                TargetCompId = _sessionId.Split('.')[1],
+                CreatedTime = DateTime.UtcNow,
+                LastModifiedTime = DateTime.UtcNow
+            };
+        }
+    }
+
+    private async Task PersistSessionState()
+    {
+        var json = JsonHelper.ToJson(_sessionState);
+        await File.WriteAllTextAsync(SessionMetaPath, json);
+    }
+
+    private void LoadMessageIndex()
+    {
+        if (!File.Exists(MessagesIndexPath))
+            return;
+
+        using var indexStream = File.Open(MessagesIndexPath, FileMode.Open, FileAccess.Read);
+        while (indexStream.Position < indexStream.Length)
+        {
+            var seqNum = ReadIntAsync(indexStream).Result;
+            var offset = ReadLongAsync(indexStream).Result;
+            _messageIndex[seqNum] = offset;
+        }
+    }
+
+    private static async Task WriteIntAsync(Stream stream, int value)
+    {
+        await stream.WriteAsync(BitConverter.GetBytes(value));
+    }
+
+    private static async Task WriteLongAsync(Stream stream, long value)
+    {
+        await stream.WriteAsync(BitConverter.GetBytes(value));
+    }
+
+    private static async Task<int> ReadIntAsync(Stream stream)
+    {
+        var buffer = new byte[4];
+        await stream.ReadAsync(buffer);
+        return BitConverter.ToInt32(buffer);
+    }
+
+    private static async Task<long> ReadLongAsync(Stream stream)
+    {
+        var buffer = new byte[8];
+        await stream.ReadAsync(buffer);
+        return BitConverter.ToInt64(buffer);
+    }
+}
+```
+
+### Session Recovery Flow
+
+```csharp
+// Application startup after restart
+public async Task<IFixSession> RecoverSession(string registrationName)
+{
+    var registration = _registry.GetByName(registrationName);
+    
+    // Create file-based message store
+    var messageStore = new FixMsgFileStore(
+        registration.MessageStorePath,
+        sessionDescription.SenderCompID,
+        sessionDescription.TargetCompID);
+    
+    // Get persisted sequence numbers
+    var lastSent = await messageStore.GetLastSentSeqNum();
+    var lastReceived = await messageStore.GetLastReceivedSeqNum();
+    
+    Log.Info($"Recovering session: LastSent={lastSent}, LastReceived={lastReceived}");
+    
+    // Create session with recovered state
+    var session = new FixSession(config, logFactory, parser, encoder, queue, clock);
+    session.SetSequenceNumbers(lastSent + 1, lastReceived + 1);
+    
+    // Logon without seq reset
+    await session.LogonAsync(resetSeqNum: false);
+    
+    return session;
+}
+
+// Handle ResendRequest (tag 2)
+public async Task HandleResendRequest(int beginSeqNo, int endSeqNo)
+{
+    // Retrieve messages from store
+    var messages = await _messageStore.GetSeqNumRange(beginSeqNo, endSeqNo);
+    
+    foreach (var message in messages)
+    {
+        if (message != null)
+        {
+            // Resend with PossDupFlag=Y
+            await _session.ResendMessage(message.Encoded, possDupFlag: true);
+        }
+        else
+        {
+            // Gap - send SequenceReset
+            await _session.SendSequenceReset(gapFillFlag: true, newSeqNo: ...);
+        }
+    }
+}
+```
+
+### TypeRegistry Integration
+
+Update `TypeRegistration` class:
+
+```csharp
+public class TypeRegistration
+{
+    // ... existing properties ...
+    
+    /// <summary>Path to message store directory for this dictionary</summary>
+    public string MessageStorePath { get; set; }
+}
+```
+
+Update `ITypeRegistry` interface:
+
+```csharp
+public interface ITypeRegistry
+{
+    // ... existing methods ...
+    
+    /// <summary>Create a message store for a registration</summary>
+    IFixMsgStore CreateMessageStore(string registrationName, string senderCompId, string targetCompId);
+    
+    /// <summary>Create a file parser for server mode</summary>
+    IFixFileParser CreateFixFileParser();
+    
+    /// <summary>Create a field extractor for SQL-CLI mode</summary>
+    IFixFieldExtractor CreateFieldExtractor();
+}
+```
+
