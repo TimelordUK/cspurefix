@@ -26,6 +26,10 @@ namespace PureFix.Dictionary.Compiler
             // Generate message factory
             GenerateFactory();
 
+            // Note: SessionMessageFactory is not generated here as it requires PureFix.Types.Config
+            // which would create a circular dependency. It should be created as a helper in projects
+            // that use the generated types.
+
             // Generate .csproj file
             GenerateProjectFile();
         }
@@ -64,6 +68,130 @@ namespace PureFix.Dictionary.Compiler
 
             var contents = generator.ToString();
             var path = Path.Join(Options.BackingTypeOutputPath, "FixMessageFactory.cs");
+            WriteFile(path, contents);
+        }
+
+        private void GenerateSessionMessageFactory()
+        {
+            var generator = new CodeGenerator();
+            WriteCoreUsings(generator);
+            generator.WriteLine("using PureFix.Types.Config;");
+            generator.WriteLine();
+
+            using (generator.BeginBlock($"namespace {GetNamespace()}"))
+            {
+                using (generator.BeginBlock("public class SessionMessageFactory : ISessionMessageFactory"))
+                {
+                    // Add private field for session description
+                    generator.WriteLine("private readonly ISessionDescription m_SessionDescription;");
+                    generator.WriteLine();
+
+                    // Add constructor
+                    using (generator.BeginBlock("public SessionMessageFactory(ISessionDescription sessionDescription)"))
+                    {
+                        generator.WriteLine("m_SessionDescription = sessionDescription;");
+                    }
+                    generator.WriteLine();
+
+                    // TestRequest method
+                    using (generator.BeginBlock("IFixMessage? ISessionMessageFactory.TestRequest(string testReqId)"))
+                    {
+                        generator.WriteLine("return new TestRequest { StandardHeader = new Components.StandardHeader(), TestReqID = testReqId };");
+                    }
+                    generator.WriteLine();
+
+                    // Heartbeat method
+                    using (generator.BeginBlock("IFixMessage? ISessionMessageFactory.Heartbeat(string testReqId)"))
+                    {
+                        generator.WriteLine("return new Heartbeat { StandardHeader = new Components.StandardHeader(), TestReqID = testReqId };");
+                    }
+                    generator.WriteLine();
+
+                    // ResendRequest method
+                    using (generator.BeginBlock("IFixMessage? ISessionMessageFactory.ResendRequest(int beginSeqNo, int endSeqNo)"))
+                    {
+                        generator.WriteLine("return new ResendRequest { StandardHeader = new Components.StandardHeader(), BeginSeqNo = beginSeqNo, EndSeqNo = endSeqNo };");
+                    }
+                    generator.WriteLine();
+
+                    // SequenceReset method
+                    using (generator.BeginBlock("IFixMessage? ISessionMessageFactory.SequenceReset(int newSeqNo, bool? gapFill)"))
+                    {
+                        generator.WriteLine("return new SequenceReset { StandardHeader = new Components.StandardHeader(), GapFillFlag = gapFill, NewSeqNo = newSeqNo };");
+                    }
+                    generator.WriteLine();
+
+                    // Trailer method
+                    using (generator.BeginBlock("IStandardTrailer? ISessionMessageFactory.Trailer(int checksum)"))
+                    {
+                        generator.WriteLine("return new Components.StandardTrailer() { CheckSum = checksum.ToString(\"D3\") };");
+                    }
+                    generator.WriteLine();
+
+                    // Logon method
+                    using (generator.BeginBlock("IFixMessage? ISessionMessageFactory.Logon(string? userRequestId, bool? isResponse)"))
+                    {
+                        using (generator.BeginBlock("return new Logon"))
+                        {
+                            generator.WriteLine("Username = !string.IsNullOrEmpty(m_SessionDescription.Username) ? m_SessionDescription.Username : null,");
+                            generator.WriteLine("Password = !string.IsNullOrEmpty(m_SessionDescription.Password) ? m_SessionDescription.Password : null,");
+                            generator.WriteLine("HeartBtInt = m_SessionDescription.HeartBtInt,");
+                            generator.WriteLine("ResetSeqNumFlag = m_SessionDescription.ResetSeqNumFlag,");
+                            generator.WriteLine("EncryptMethod = 0");
+                        }
+                        generator.WriteLine(";");
+                    }
+                    generator.WriteLine();
+
+                    // Reject method
+                    using (generator.BeginBlock("IFixMessage? ISessionMessageFactory.Reject(string msgType, int seqNo, string msg, int reason)"))
+                    {
+                        using (generator.BeginBlock("return new Reject"))
+                        {
+                            generator.WriteLine("RefMsgType = msgType,");
+                            generator.WriteLine("SessionRejectReason = reason,");
+                            generator.WriteLine("RefSeqNum = seqNo,");
+                            generator.WriteLine("Text = msg");
+                        }
+                        generator.WriteLine(";");
+                    }
+                    generator.WriteLine();
+
+                    // Logout method
+                    using (generator.BeginBlock("IFixMessage? ISessionMessageFactory.Logout(string text)"))
+                    {
+                        using (generator.BeginBlock("return new Logout"))
+                        {
+                            generator.WriteLine("Text = text");
+                        }
+                        generator.WriteLine(";");
+                    }
+                    generator.WriteLine();
+
+                    // Header method
+                    using (generator.BeginBlock("IStandardHeader? ISessionMessageFactory.Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides)"))
+                    {
+                        generator.WriteLine("var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);");
+                        generator.WriteLine("var placeholder = (int)Math.Pow(10, bodyLength - 1) + 1;");
+                        using (generator.BeginBlock("return new Components.StandardHeader"))
+                        {
+                            generator.WriteLine("BeginString = m_SessionDescription.BeginString,");
+                            generator.WriteLine("BodyLength = placeholder,");
+                            generator.WriteLine("MsgType = msgType,");
+                            generator.WriteLine("SenderCompID = m_SessionDescription.SenderCompID,");
+                            generator.WriteLine("MsgSeqNum = seqNum,");
+                            generator.WriteLine("SendingTime = time,");
+                            generator.WriteLine("TargetCompID = m_SessionDescription.TargetCompID,");
+                            generator.WriteLine("TargetSubID = !string.IsNullOrEmpty(m_SessionDescription.TargetSubID) ? m_SessionDescription.TargetSubID : m_SessionDescription.TargetSubID,");
+                            generator.WriteLine("SenderSubID = !string.IsNullOrEmpty(m_SessionDescription.SenderSubID) ? m_SessionDescription.SenderSubID : m_SessionDescription.SenderSubID,");
+                        }
+                        generator.WriteLine(";");
+                    }
+                }
+            }
+
+            var contents = generator.ToString();
+            var path = Path.Join(Options.BackingTypeOutputPath, "SessionMessageFactory.cs");
             WriteFile(path, contents);
         }
 
