@@ -1,5 +1,5 @@
 ﻿using PureFix.Buffer.Ascii;
-using PureFix.Test.Env;
+using PureFix.Test.ModularTypes.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class FixLogReplayTest
     {

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PureFix.Test.ModularTypes.Helpers
@@ -72,6 +73,14 @@ namespace PureFix.Test.ModularTypes.Helpers
             using var streamReader = File.OpenText(file);
             var all = streamReader.ReadToEnd();
             return all;
+        }
+
+        public static async Task<Dictionary<string, int>> GetJsonDict(string file)
+        {
+            using var streamReader = File.OpenText(file);
+            var json = await streamReader.ReadToEndAsync();
+            var values = JsonSerializer.Deserialize<Dictionary<string, int>>(json);
+            return values;
         }
 
         public void TimeParsePath(string description, string path, int repeats, int batch = 1)
