@@ -13,25 +13,17 @@ namespace PureFix.ConsoleApp
         {
             if (path.EndsWith("FIX50SP2.xml"))
             {
-                return new Types.FIX50SP2.QuickFix.Types.FixMessageFactory();
+                return new Types.FIX50SP2.FixMessageFactory();
             }
 
             if (path.EndsWith("FIX44.xml"))
             {
-                return new Types.FIX44.QuickFix.Types.FixMessageFactory();
+                return new Types.FIX44.FixMessageFactory();
             }
 
-            if (path.EndsWith("FIX43.xml"))
-            {
-                return new Types.FIX43.QuickFix.Types.FixMessageFactory();
-            }
-
-            if (path.EndsWith("FIX42.xml"))
-            {
-                return new Types.FIX42.QuickFix.Types.FixMessageFactory();
-            }
-
-            return new Types.FIX44.QuickFix.Types.FixMessageFactory();
+            // FIX43 and FIX42 not yet migrated to new type system
+            // Default to FIX44
+            return new Types.FIX44.FixMessageFactory();
         }
     }
 }

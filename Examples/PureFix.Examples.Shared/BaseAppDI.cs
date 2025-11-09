@@ -35,7 +35,8 @@ public abstract class BaseAppDI
 
         _builder.Services.AddSingleton(factory);
         _builder.Services.AddSingleton(clock);
-        _builder.Services.AddSingleton<ISessionMessageFactory, Fix44SessionMessageFactory>();
+        // Note: ISessionMessageFactory should be registered by derived classes using appropriate generated types
+        // _builder.Services.AddSingleton<ISessionMessageFactory, Fix44SessionMessageFactory>();
         _builder.Services.AddSingleton(config);
         _builder.Services.AddSingleton<IMessageParser, AsciiParser>();
         _builder.Services.AddSingleton<IMessageEncoder, AsciiEncoder>();

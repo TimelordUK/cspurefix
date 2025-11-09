@@ -25,7 +25,7 @@ namespace SeeFixServer
                 .WithOrigins("http://localhost:3000"));
 
             var root = app.Configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
-            var assembly = Assembly.GetAssembly(typeof(PureFix.Types.FIX44.QuickFix.Logon));
+            var assembly = Assembly.GetAssembly(typeof(PureFix.Types.FIX44.Logon));
             var dicts = app.Services.GetService<IDictContainer>();
             if (assembly != null && dicts != null)
             {

@@ -18,6 +18,7 @@
     <ProjectReference Include="..\PureFix.LogMessageParser\PureFix.LogMessageParser.csproj" />
     <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
     <ProjectReference Include="..\PureFix.Types\PureFix.Types.csproj" />
+    <ProjectReference Include="..\generated-types\PureFix.Types.FIX44\PureFix.Types.FIX44.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -33,7 +33,7 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
             builder.Services.AddSingleton<IMessageTransport, TestMessageTransport>();
             builder.Services.AddSingleton<ILogFactory>(factory);
             builder.Services.AddSingleton(clock);
-            builder.Services.AddSingleton<ISessionMessageFactory, Fix44SessionMessageFactory>();
+            builder.Services.AddSingleton<ISessionMessageFactory, Fix44ModularSessionMessageFactory>();
             builder.Services.AddSingleton(config);
             builder.Services.AddSingleton<IMessageParser, AsciiParser>();
             builder.Services.AddSingleton<IMessageEncoder, AsciiEncoder>();

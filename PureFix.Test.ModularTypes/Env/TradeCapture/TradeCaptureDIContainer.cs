@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using PureFix.Types.FIX50SP2.QuickFix.Types;
+using PureFix.Types.FIX50SP2;
 using PureFix.Test.ModularTypes.Env.Experiment;
 
 

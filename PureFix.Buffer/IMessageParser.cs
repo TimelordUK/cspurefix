@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types;
-using PureFix.Types.FIX50SP2.QuickFix.Types;
 
 
 namespace PureFix.Buffer

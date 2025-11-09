@@ -35,7 +35,9 @@ namespace PureFix.Transport
                 {
                     Definitions = definitions,
                     Description = sessionDescription,
-                    MessageFactory = new Fix44SessionMessageFactory(sessionDescription)
+                    // Note: MessageFactory should be set by the application using the appropriate
+                    // generated types (e.g., Fix44ModularSessionMessageFactory from test helpers)
+                    MessageFactory = null
                 };
 
                 return config;
