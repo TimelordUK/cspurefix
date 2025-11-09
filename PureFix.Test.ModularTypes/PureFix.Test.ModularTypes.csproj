@@ -22,6 +22,40 @@
     <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
     <ProjectReference Include="..\generated-types\PureFix.Types.FIX44\PureFix.Types.FIX44.csproj" />
     <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
+    <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\examples\FIX.4.4\fix-preamble.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\fix.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\fix.test_client.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\fix.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\fixsim-examples.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\quickfix\execution-report\fix.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\quickfix\heartbeat\fix.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\quickfix\logon\fix.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.4.4\skeleton-client.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\examples\FIX.5.0SP2\tc-client.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

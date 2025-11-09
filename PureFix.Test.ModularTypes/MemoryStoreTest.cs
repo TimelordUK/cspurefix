@@ -1,5 +1,5 @@
 ﻿using PureFix.Buffer.Ascii;
-using PureFix.Test.Env;
+using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using System;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     internal class MemoryStoreTest
     {

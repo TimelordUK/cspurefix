@@ -1,9 +1,14 @@
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Transport;
+using PureFix.Transport.Session;
+using PureFix.Transport.Store;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,9 +18,11 @@ namespace PureFix.Test.ModularTypes.Helpers
     {
         public IFixDefinitions Definitions { get; }
         public AsciiParser Parser { get; private set; }
+        public IFixClock Clock { get; private set; }
 
         public TestEntity(string dataDict = "FIX44.xml")
         {
+            Clock = new TestClock();
             Definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(Definitions);
             qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, dataDict));
@@ -83,6 +90,48 @@ namespace PureFix.Test.ModularTypes.Helpers
             sw.Stop();
 
             Console.WriteLine($"{description}[{count},{batch}]: {sw.Elapsed.TotalMilliseconds} {(decimal)sw.Elapsed.TotalMicroseconds / count}  micro/msg {Parser.ParserStats.TotalSegmentParseMicro / count} seg/msg {Parser.ParserStats}");
+        }
+
+        public IFixConfig GetTestInitiatorConfig(string json = "test-qf44-initiator.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestInitiator52Config(string json = "test-qf52-initiator.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestAcceptorConfig(string json = "test-qf44-acceptor.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetTestAcceptor52Config(string json = "test-qf52-acceptor.json")
+        {
+            return GetConfig(json);
+        }
+
+        public IFixConfig GetConfig(string json)
+        {
+            var factory = new TestLoggerFactory(Clock);
+            var config = FixConfig.MakeConfigFromPaths(Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
+            config.Delimiter = AsciiChars.Pipe;
+            config.LogDelimiter = AsciiChars.Pipe;
+            return config;
+        }
+
+        public async Task<IFixMsgStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string filter = "accept-comp")
+        {
+            var store = new FixMsgMemoryStore($"test-{filter}");
+            foreach (var view in views)
+            {
+                if (view.SenderCompID() == filter)
+                {
+                    await store.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
+                }
+            }
+            return store;
         }
     }
 }

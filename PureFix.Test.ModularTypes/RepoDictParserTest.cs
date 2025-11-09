@@ -7,7 +7,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Dictionary.Parser.Repo;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     internal class RepoDictParserTest
     {
