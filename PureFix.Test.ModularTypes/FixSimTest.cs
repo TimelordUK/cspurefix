@@ -1,9 +1,8 @@
 ﻿using PureFix.Buffer.Ascii;
-using PureFix.Test.Env;
+using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Transport;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix;
-using PureFix.Types.FIX44.QuickFix.Types;
+using PureFix.Types.FIX44;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,8 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DIs = NUnit.DeepObjectCompare.Is;
+using QuickLookup = PureFix.Test.ModularTypes.Helpers.QuickLookup;
+using JsonHelper = PureFix.Types.JsonHelper;
+using MsgType = PureFix.Types.MsgType;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class FixSimTest
     {
