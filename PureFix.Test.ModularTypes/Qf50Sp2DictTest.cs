@@ -1,14 +1,16 @@
-﻿using PureFix.Dictionary.Definition;
-using PureFix.Dictionary.Parser.QuickFix;
-using PureFix.Test.Env;
-using PureFix.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Dictionary.Contained;
+using PureFix.Dictionary.Definition;
+using PureFix.Dictionary.Parser;
+using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Test.ModularTypes.Helpers;
+using PureFix.Types;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class Qf50Sp2DictTest
     {

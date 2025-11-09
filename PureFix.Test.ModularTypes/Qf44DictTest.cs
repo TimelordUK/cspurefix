@@ -1,15 +1,15 @@
 ﻿using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
-using PureFix.Test.Env;
+using PureFix.Test.ModularTypes.Helpers;
+using PureFix.Transport;
 using PureFix.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PureFix.Types.Config;
+using PureFix.Types.FIX44;
+using PureFix.Types.FIX44.Components;
+using JsonHelper = PureFix.Types.JsonHelper;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class Qf44DictTest
     {
@@ -134,14 +134,18 @@ namespace PureFix.Test.Ascii
             Assert.That(instrumnet, Is.Not.Null);
             // var tags = string.Join(",", instrumnet.ContainedTag.Keys.ToList());
             // make sure all tags are held from all contained fields.
-            int[] t = [
-                 55,65,48,22,460,461,167,762,200,541,201,224,225,239,226,227,228,255,543,470,471,472,240,202,947,206,231,223,207,106,348,349,107,350,351,691,667,875,876,873,874,454,455,456,864,865,866,867,868
-                ];
+            int[] t =
+            [
+                55, 65, 48, 22, 460, 461, 167, 762, 200, 541, 201, 224, 225, 239, 226, 227, 228, 255, 543, 470, 471,
+                472, 240, 202, 947, 206, 231, 223, 207, 106, 348, 349, 107, 350, 351, 691, 667, 875, 876, 873, 874, 454,
+                455, 456, 864, 865, 866, 867, 868
+            ];
             // Console.WriteLine($"{tags}");
             foreach (var tag in t)
             {
-                Assert.That(instrumnet.ContainedTag.ContainsKey(tag), Is.True); 
+                Assert.That(instrumnet.ContainedTag.ContainsKey(tag), Is.True);
             }
+
             Assert.That(instrumnet.ContainedTag, Has.Count.EqualTo(49));
         }
 
@@ -152,10 +156,12 @@ namespace PureFix.Test.Ascii
             Assert.That(instrumnet, Is.Not.Null);
             var collector = new ContainedFieldCollector();
             var res = collector.Compute(instrumnet);
-            var tags = res.Select(kv=>kv.child).OfType<ContainedSimpleField>().Select(sf=>sf.Definition.Tag).Distinct().ToList();
+            var tags = res.Select(kv => kv.child).OfType<ContainedSimpleField>().Select(sf => sf.Definition.Tag)
+                .Distinct().ToList();
             // sim[le field collection will be missing the 2 NoOfGroup fields.
             Assert.That(tags, Has.Count.EqualTo(47));
-            var tags2 = res.Select(kv => kv.child).OfType<ContainedGroupField>().Select(sf => sf.Definition?.NoOfField?.Tag).Distinct().ToList();
+            var tags2 = res.Select(kv => kv.child).OfType<ContainedGroupField>()
+                .Select(sf => sf.Definition?.NoOfField?.Tag).Distinct().ToList();
             Assert.That(tags2, Is.EqualTo(new List<int>() { 454, 864 }));
         }
 

@@ -75,6 +75,22 @@ namespace PureFix.Test.ModularTypes.Helpers
             return all;
         }
 
+        public List<AsciiView> ParseTestHunks(string s)
+        {
+            var b = Encoding.UTF8.GetBytes(s);
+            var span = new Span<byte>(b);
+            var iteration = 0;
+            var views = new List<AsciiView>();
+            while (span.Length > 0)
+            {
+                var want = Math.Min(span.Length, iteration % 10 + 1);
+                Parser.ParseFrom(span[..want], want, (i, view) => views.Add((AsciiView)view));
+                span = span[want..];
+                ++iteration;
+            }
+            return views;
+        }
+
         public static async Task<Dictionary<string, int>> GetJsonDict(string file)
         {
             using var streamReader = File.OpenText(file);

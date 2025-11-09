@@ -1,10 +1,23 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
+using PureFix.Buffer;
+using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
-using PureFix.Test.Env;
-using System;
+using PureFix.Test.ModularTypes.Helpers;
+using PureFix.Transport;
+using PureFix.Types;
+using PureFix.Types.Config;
+using PureFix.Types.FIX44;
+using PureFix.Types.FIX44.Components;
+using JsonHelper = PureFix.Types.JsonHelper;
 
-
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class Qf50Sp0DictTest
     {
