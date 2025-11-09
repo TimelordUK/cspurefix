@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Data/PureFix.Data.csproj" />
-    <ProjectReference Include="../../PureFix.Types/PureFix.Types.csproj" />
+    <ProjectReference Include="../../generated-types/PureFix.Types.FIX50SP2/PureFix.Types.FIX50SP2.csproj" />
     <ProjectReference Include="../../PureFix.Transport/PureFix.Transport.csproj" />
     <ProjectReference Include="../PureFix.Examples.Shared/PureFix.Examples.Shared.csproj" />
   </ItemGroup>

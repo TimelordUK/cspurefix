@@ -2,7 +2,7 @@ using Arrow.Threading.Tasks;
 using PureFix.Examples.Shared;
 using PureFix.Transport.Session;
 using PureFix.Types;
-using PureFix.Types.FIX50SP2.QuickFix.Types;
+using PureFix.Types.FIX50SP2;
 
 namespace PureFix.Examples.TradeCapture;
 

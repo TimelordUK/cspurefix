@@ -1,6 +1,5 @@
 ﻿using PureFix.Types;
-using PureFix.Types.FIX50SP2.QuickFix;
-using PureFix.Types.FIX50SP2.QuickFix.Types;
+using PureFix.Types.FIX50SP2;
 using System;
 using System.Collections.Generic;
 using System.Linq;

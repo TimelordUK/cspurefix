@@ -2,7 +2,7 @@ using Arrow.Threading.Tasks;
 using PureFix.Examples.Shared;
 using PureFix.Transport.Session;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix.Types;
+using PureFix.Types.FIX44;
 
 namespace PureFix.Examples.Skeleton;
 

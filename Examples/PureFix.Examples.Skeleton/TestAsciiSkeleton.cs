@@ -5,7 +5,7 @@ using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
-using PureFix.Types.FIX44.QuickFix.Types;
+using PureFix.Types.FIX44;
 
 namespace PureFix.Examples.Skeleton
 {
