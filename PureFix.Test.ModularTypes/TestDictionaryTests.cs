@@ -2,7 +2,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using System.IO;
 
-namespace PureFix.Test.Dictionary
+namespace PureFix.Test.ModularTypes
 {
     [TestFixture]
     public class TestDictionaryTests

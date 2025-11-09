@@ -1,1 +1,0 @@
-[00:08:08.040 +01:00] [test_client:FixSession] [INF] 8=FIX.4.4|9=0000117|35=A|49=init-comp|56=accept-comp|34=1|57=fix|52=20221003-23:10:22.271|98=0|108=30|141=Y|553=js-client|554=pwd-client|10=014|

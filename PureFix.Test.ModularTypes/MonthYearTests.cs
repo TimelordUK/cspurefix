@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using PureFix.Types;
 
-namespace PureFix.Test.Types
+namespace PureFix.Test.ModularTypes
 {
     public class MonthYearTests
     {
@@ -47,7 +47,7 @@ namespace PureFix.Test.Types
             Assert.That(my.Month, Is.EqualTo(month));
             Assert.That(my.HasWeekCode, Is.True);
             Assert.That(my.HasDayOfMonth, Is.False);
-            
+
             Assert.That(my.TryGetWeekCode(out var w), Is.True);
             Assert.That(w, Is.EqualTo(weekCode));
         }
@@ -149,7 +149,7 @@ namespace PureFix.Test.Types
             // As the use BitConverter we know a bit about the hash codes we'll get
             var def = new MonthYear();
             Assert.That(def.GetHashCode(), Is.EqualTo(0));
-            
+
             var m = new MonthYear(2024, 9, 15);
             Assert.That(m.GetHashCode(), Is.Not.EqualTo(0));
         }
