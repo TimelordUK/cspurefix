@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Data/PureFix.Data.csproj" />
+    <ProjectReference Include="../../PureFix.Types/PureFix.Types.csproj" />
+    <ProjectReference Include="../../PureFix.Transport/PureFix.Transport.csproj" />
+    <ProjectReference Include="../PureFix.Examples.Shared/PureFix.Examples.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
