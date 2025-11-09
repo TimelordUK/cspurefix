@@ -26,11 +26,8 @@ jobs:
     - name: Build solution
       run: dotnet build --configuration Release --no-restore
 
-    - name: Run PureFix.Test (Legacy Test Suite)
-      run: dotnet test PureFix.Test/PureFix.Test.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=legacy-test-results.trx"
-
-    - name: Run PureFix.Test.ModularTypes (New Type System Tests)
-      run: dotnet test PureFix.Test.ModularTypes/PureFix.Test.ModularTypes.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=modular-test-results.trx"
+    - name: Run Tests (Modular Types)
+      run: dotnet test PureFix.Test.ModularTypes/PureFix.Test.ModularTypes.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -39,3 +36,33 @@ jobs:
         name: test-results
         path: |
           **/TestResults/*.trx
+
+  benchmark:
+    name: Run Benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run Benchmarks
+      run: dotnet run --project PureFix.Benchmarks/PureFix.Benchmarks.csproj --configuration Release --no-build -- --filter "*"
+
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: benchmark-results
+        path: |
+          **/BenchmarkDotNet.Artifacts/**/*
