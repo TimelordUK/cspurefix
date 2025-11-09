@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types;
-using PureFix.Test.Env;
+using PureFix.Test.ModularTypes.Helpers;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class ElasticBufferTest
     {
