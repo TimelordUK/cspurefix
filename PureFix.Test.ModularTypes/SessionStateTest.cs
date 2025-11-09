@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Transport.Session;
 
-namespace PureFix.Test.Ascii
+namespace PureFix.Test.ModularTypes
 {
     public class SessionStateTest
     {
@@ -110,7 +110,7 @@ namespace PureFix.Test.Ascii
             public void OnTimer()
             {
                 Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnTimer {DateTime.Now:HH:mm:ss.fff}");
-                  
+
             }
 
             public void OnRx(byte[] buffer, int len)
