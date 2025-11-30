@@ -6,302 +6,245 @@ CSPureFix is a high-performance C# FIX (Financial Information eXchange) protocol
 
 **Origin:** Port of the mature TypeScript/Node.js library [jspurefix](https://www.npmjs.com/package/jspurefix) (used in production at hedge funds).
 
-**Current Status:** Pre-release. Working on robustness improvements before general open-source release.
+**Current Status:** Pre-release, .NET 9. Modular type system complete. Working on XML parser robustness and session persistence.
+
+**Design Goals:**
+- Good memory usage and performance (not ultra-low-latency, but at least as good as QuickFIX)
+- Type safety via compile-time generated types
+- Support for 20+ broker-specific dictionaries simultaneously
+- Production-ready session management with sequence number persistence
 
 ---
 
-## Architecture
+## Key Classes Reference
 
-### Three-Layer Architecture
+### Runtime Parsing Pipeline
+
+#### `AsciiParser` (`PureFix.Buffer/Ascii/AsciiParser.cs`)
+Takes a stream of bytes from a transport (socket, memory buffer) and parses FIX messages. Continues parsing until it reaches end of message (checksum tag 10). Creates a set of `TagPos` representing the position of each tag=value pair in the buffer.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     XML Dictionary                          │
-│                  (QuickFix or Repo format)                  │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         ▼
-              ┌──────────────────────┐
-              │   Dictionary Parser   │
-              │  (QuickFixXmlParser)  │
-              └──────────┬────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│              LAYER 1: Definition Layer                       │
-│  Metadata about FIX elements (fields, components, groups)   │
-│  - SimpleFieldDefinition                                     │
-│  - ComponentFieldDefinition                                  │
-│  - GroupFieldDefinition                                      │
-│  - MessageDefinition                                         │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│              LAYER 2: Contained Layer                        │
-│  Runtime representations with position/context               │
-│  - ContainedFieldSet (base)                                  │
-│  - ContainedSimpleField                                      │
-│  - ContainedComponentField                                   │
-│  - ContainedGroupField                                       │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         ▼
-              ┌──────────────────────┐
-              │   Type Generator      │
-              │  (MessageGenerator)   │
-              └──────────┬────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│              LAYER 3: Generated Layer                        │
-│  C# types implementing FIX interfaces                        │
-│  - IFixMessage (messages)                                    │
-│  - IFixComponent (components)                                │
-│  - IFixGroup (repeating groups)                              │
-└─────────────────────────────────────────────────────────────┘
+Input: Raw bytes from socket/buffer
+Output: TagPos[] - positions of all tags in the message
 ```
+
+#### `AsciiSegmentParser` (`PureFix.Buffer/Ascii/AsciiSegmentParser.cs`)
+Creates structure from parsed tags. Iterates over the set of `TagPos` and works out where all segments (components, groups) are located.
+
+**Important Design Note:** Root-level components may not have contiguous tags. For example, an Instrument component at root level may have its tags scattered throughout the message (not in one direct span). The segment parser handles this via fragment detection and `TagIndex` lookups.
+
+```
+Input: TagPos[] + MessageDefinition
+Output: Structure - tree of SegmentDescription objects
+```
+
+#### `AsciiView` (`PureFix.Buffer/Ascii/AsciiView.cs`)
+Represents a single parsed message. Provides low-level access to extract field values and types. Recursive in nature - you can request a view from another view. For example, requesting an Instrument component returns just that slice (handling non-contiguous segments).
+
+```csharp
+var view = parser.GetView();
+var instrument = view.GetComponent("Instrument"); // Returns view of just Instrument
+var symbol = instrument.GetString(55); // Tag 55 = Symbol
+```
+
+#### `Structure` and `SegmentDescription` (`PureFix.Buffer/Segment/`)
+`Structure` holds the parsed tag positions plus a list of `SegmentDescription` objects representing the message hierarchy (header, body components, groups, trailer).
+
+### Session Management
+
+#### `AsciiSession` (`PureFix.Transport/Ascii/AsciiSession.cs`)
+Abstract class managing a real FIX session. Handles:
+- Login/logout handshake
+- Heartbeat/TestRequest exchange
+- Sequence number tracking
+- Resend request handling
+- Session state machine
+
+**Needs Enhancement:** Validation of illegal enums, illegal message types, persistent sequence numbers.
+
+#### `IFixMsgStore` (`PureFix.Transport/Store/IFixMsgStore.cs`)
+Interface for storing sent messages (for resend requests). Current implementations:
+- `FixMsgMemoryStore` - in-memory only
+- File-based store needed for production (QuickFIX-style flat file)
+
+**TODO:** Add sequence number persistence methods:
+- `GetLastSentSeqNum()` / `SetLastSentSeqNum()`
+- `GetLastReceivedSeqNum()` / `SetLastReceivedSeqNum()`
+
+### XML Dictionary Parsing
+
+#### `QuickFixXmlFileParser` (`PureFix.Dictionary/Parser/QuickFix/QuickFixXmlFileParser.cs`)
+Parses QuickFIX-format XML data dictionaries. Uses a graph-based approach to handle forward references (e.g., a component referencing another component not yet parsed).
+
+**Parsing Phases:**
+1. Parse fields (with enums) → `SimpleFieldDefinition`
+2. Parse components → `ComponentFieldDefinition`
+3. Parse header/trailer
+4. Parse messages → `MessageDefinition`
+5. Work queue processes forward references
+6. `IndexVisitor` flattens hierarchies and builds lookup indices
+
+**Needs Enhancement:**
+- Duplicate detection (fields, components, messages)
+- Character sanitization for weird enum names (numbers, symbols)
+- Good error messages with line numbers
+- "Did you mean X?" suggestions for undefined references
+
+#### `IFixDefinitions` / `FixDefinitions` (`PureFix.Dictionary/Definition/`)
+Represents all types within an XML dictionary. Provides lookups:
+- `Message[msgType]` - get message definition by MsgType (e.g., "D" for NewOrderSingle)
+- `Component[name]` - get component by name
+- `TagToSimple[tag]` - get field definition by tag number
+- `Simple[name]` - get field by name
+
+#### `ContainedFieldSet` (`PureFix.Dictionary/Contained/ContainedFieldSet.cs`)
+Represents everything needed to perfectly describe a message, component, or group. Recursive structure - fields may themselves be components or groups containing more fields.
+
+Key indices maintained:
+- `Fields` - ordered list of all fields
+- `Groups` / `Components` - named lookups
+- `ContainedTag` - any tag at any depth
+- `FlattenedTag` - all tags in order
+- `LocalTag` - tags at this level only (not nested)
+- `TagToField` - maps tag to its containing field
+
+### Type Generation
+
+#### `ModularGenerator` (`PureFix.Dictionary/Compiler/ModularGenerator.cs`)
+Generates C# types from parsed definitions. Creates one assembly per dictionary with:
+- Nested group classes (no more namespace pollution)
+- Clean folder structure (Messages/, Components/, Enums/)
+- References to `PureFix.Types.Core` for interfaces
+
+### Example Applications
+
+#### Skeleton (`Examples/PureFix.Examples.Skeleton/`)
+Simple example showing how to build an application. Uses DI to inject dependencies:
+- `IFixConfig` - session configuration
+- `IMessageParser` / `IMessageEncoder`
+- `IFixMsgStore` - message store
+- Factory classes for message creation
 
 ---
 
 ## Project Structure
 
-### Core Projects
-
 ```
 cspurefix/
-├── PureFix.Dictionary/         # XML parsing & type generation
-│   ├── Parser/
-│   │   ├── QuickFix/           # QuickFix XML parser
-│   │   ├── Repo/               # FIX Repository parser
-│   │   └── FieldEnum.cs        # ⚠️ Character sanitization (has bug)
-│   ├── Definition/             # Metadata layer
-│   ├── Contained/              # Runtime representation
-│   └── Compiler/               # Type generator
+├── PureFix.Buffer/              # Low-level buffer operations
+│   └── Ascii/
+│       ├── AsciiParser.cs       # Byte stream → TagPos[]
+│       ├── AsciiSegmentParser.cs # TagPos[] → Structure
+│       └── AsciiView.cs         # Message view with field access
 │
-├── PureFix.Types/              # Generated FIX types (3,797 files)
-│   ├── FIX42/QuickFix/
-│   ├── FIX43/QuickFix/
-│   ├── FIX44/QuickFix/
-│   └── FIX50SP2/QuickFix/
-│       ├── *.cs                # Message types
-│       └── Types/              # Components, groups, enums
+├── PureFix.Dictionary/          # XML parsing & type generation
+│   ├── Parser/QuickFix/         # XML parser (graph-based)
+│   ├── Definition/              # FixDefinitions, field/message defs
+│   ├── Contained/               # ContainedFieldSet and variants
+│   └── Compiler/                # ModularGenerator
 │
-├── PureFix.Buffer/             # Low-level buffer operations
-├── PureFix.Transport/          # Network transport layer
-├── PureFix.MessageStore/       # Message persistence
-├── PureFix.Data/               # Data models
-├── PureFix.Test/               # Unit tests
-├── PureFix.ConsoleApp/         # CLI tool
-├── PureFix.LogMessageParser/   # Parse FIX logs
-└── SeeFixServer/               # FIX server implementation
-```
-
-### Key Entry Points
-
-- **Console App:** `PureFix.App/Program.cs` - CLI for generation and parsing
-- **Parser Entry:** `PureFix.Dictionary/Parser/QuickFix/QuickFixXmlFileParser.cs`
-- **Generator Entry:** `PureFix.Dictionary/Compiler/MessageGenerator.cs`
-- **Type Examples:** `PureFix.Types/FIX50SP2/QuickFix/`
-
----
-
-## How It Works
-
-### 1. Dictionary Parsing (4-Phase Process)
-
-```
-Phase 1: Initial Construction
-   ↓ Parse XML sections (fields, components, messages)
-   ↓ Create nodes in dependency graph
-
-Phase 2: Graph Building
-   ↓ Build edges between nodes (parent-child relationships)
-   ↓ Store in adjacency lists
-
-Phase 3: Deferred Work Queue
-   ↓ Breadth-first processing of nodes
-   ↓ Expand messages/components/groups
-   ↓ Resolve references
-
-Phase 4: Post-Processing
-   ↓ IndexVisitor flattens hierarchies
-   ↓ Create tag lookup indices
-   ↓ Build fast parsing structures
-```
-
-### 2. Type Generation
-
-```csharp
-// Input: FIX50SP2.xml
-// Output: C# types
-
-// Generated Message:
-[MessageType("D", FixVersion.FIX50SP2)]
-public sealed partial class NewOrderSingle : IFixMessage
-{
-    [Component(Offset = 0, Required = true)]
-    public StandardHeaderComponent? StandardHeader { get; set; }
-
-    [TagDetails(Tag = 11, Type = TagType.String, Offset = 1, Required = true)]
-    public string? ClOrdID { get; set; }
-
-    [TagDetails(Tag = 54, Type = TagType.Char, Offset = 2, Required = true)]
-    public char? Side { get; set; }
-
-    // ... more fields
-
-    void IFixEncoder.Encode(IFixWriter writer) { /* generated */ }
-    void IFixParser.Parse(IMessageView view) { /* generated */ }
-}
-```
-
-### 3. Runtime Usage
-
-```csharp
-// Parse incoming FIX message
-var factory = new FixMessageFactory();
-var message = factory.ToFixMessage(messageView);
-
-if (message is NewOrderSingle order)
-{
-    Console.WriteLine($"Order: {order.ClOrdID} Side: {order.Side}");
-}
-
-// Encode outgoing message
-var heartbeat = new Heartbeat { TestReqID = "123" };
-((IFixEncoder)heartbeat).Encode(writer);
+├── PureFix.Transport/           # Session management
+│   ├── Ascii/AsciiSession.cs    # FIX session state machine
+│   └── Store/IFixMsgStore.cs    # Message store interface
+│
+├── PureFix.Types.Core/          # Shared interfaces & attributes
+│   ├── IFixMessage, IFixComponent, IFixGroup
+│   └── TagDetailsAttribute, etc.
+│
+├── generated-types/             # Per-dictionary assemblies
+│   ├── PureFix.Types.FIX44/
+│   ├── PureFix.Types.FIX44UnitTest/  # Reduced test dictionary
+│   └── PureFix.Types.FIX50SP2/
+│
+├── PureFix.Test.ModularTypes/   # Unit tests (250 passing)
+└── Examples/                    # Example applications
 ```
 
 ---
 
-## Current Issues (Pre-Release)
+## Current Development Status
 
-### 🔴 Critical Issues (Must Fix)
+### Completed
+- [x] Modular type system (one assembly per dictionary)
+- [x] Nested groups (no more `OrderNoAllocs` pollution)
+- [x] Core type extraction to `PureFix.Types.Core`
+- [x] .NET 9 upgrade
+- [x] 250 unit tests passing
+- [x] Basic session management (login, heartbeat, resend)
 
-1. **FieldEnum.cs Character Handling** (`PureFix.Dictionary/Parser/FieldEnum.cs:18`)
-   - Bug: Line 18 is a no-op `.Replace("-", "-")`
-   - Real broker XMLs contain exotic characters not handled
-   - Missing systematic character sanitization
+### In Progress
+- [ ] **XML Parser Robustness**
+  - Duplicate field/component detection
+  - Character sanitization for weird enum names (starting with numbers, symbols)
+  - Good error messages with line numbers
+  - "Did you mean X?" suggestions
 
-2. **Global Groups Create Collisions**
-   - Groups generated as global types with parent prefix
-   - Same group name in different messages causes issues
-   - Should be nested types within parent messages/components
-   - 3,797 types in flat namespace
+### Planned
+- [ ] **Persistent Sequence Numbers** (QuickFIX-style)
+  - Flat file: `session.meta` with seq numbers
+  - Broker resets at agreed time (e.g., 22:30)
+  - Reconnect with same seq numbers if no reset
 
-3. **Missing Duplicate Detection**
-   - Parser doesn't detect duplicate field names/tags
-   - QuickFix C++ does this - we should too
-   - Silent failures with malformed dictionaries
+- [ ] **Type Registry** (for server mode)
+  - Upload FIX log → auto-detect broker by tag 49 (SenderCompID)
+  - Parse with correct type system
+  - Docker container with web endpoint
 
-4. **Assembly Size Explosion**
-   - Production use: 20+ broker dictionaries
-   - Each generates 3,000+ types
-   - Single assembly becomes massive (hundreds of MB)
-   - **Compilation crashes on Linux**
-
-### 🟡 Important Issues (Should Fix)
-
-5. **Type Organization**
-   - All 3,797 types in single folder
-   - No separation by category (messages/components/enums)
-   - IntelliSense overwhelmed
-
-6. **Missing Validation**
-   - No validation of field type consistency
-   - No check for circular component references
-   - No tag number range validation
-   - Errors surface too late (during generation)
-
-7. **Test Coverage**
-   - No comprehensive tests for:
-     - Character sanitization
-     - Duplicate detection
-     - Type generation correctness
-     - Round-trip XML → Parse → Generate → Compile
-
-### 🟢 Minor Issues (Can Address Later)
-
-8. **Two Generator Implementations**
-   - `MessageGenerator` (active) vs `MsgCompiler` (disabled)
-   - Code duplication, unclear which is better
-
-9. **Static Memoization**
-   - `ContainedFieldCollector` uses static cache without invalidation
-   - Thread safety not explicit
-
-10. **Documentation Gaps**
-    - No README for architecture
-    - No contributor guide
-    - No examples of extending generator
-
-See `docs/CURRENT_ISSUES.md` for detailed analysis.
+- [ ] **Session Validation**
+  - Illegal enum value detection
+  - Illegal message type detection
+  - Sequence number gap handling
 
 ---
 
-## Development Roadmap
+## XML Parser Edge Cases (TODO)
 
-### Phase 1: Foundation (Weeks 1-2)
-- ✅ Deep dive analysis completed
-- Fix FieldEnum.cs character handling
-- Add comprehensive duplicate detection
-- Implement robust XML validation
-- Add extensive test coverage
+Real broker dictionaries contain:
+1. **Names starting with numbers** - `"1stLegSymbol"` → invalid C# identifier
+2. **Incompatible enum names** - symbols like `N/A`, `+`, `-` in enum values
+3. **Duplicate definitions** - same tag or name defined twice
+4. **Forward references** - component A references component B not yet parsed
+5. **Missing definitions** - message references undefined component
 
-### Phase 2: Type System Redesign (Weeks 3-5)
-- Design nested group types architecture
-- Implement new recursive compiler
-- Preserve backward compatibility
-- Extensive testing with real messages
-
-### Phase 3: Scalability (Weeks 6-7)
-- Multi-assembly generation for multiple dictionaries
-- Improve type organization (folders by category)
-- Performance optimization
-- Memory usage improvements
-
-### Phase 4: Polish (Week 8)
-- Documentation
-- Examples
-- Clean up dead code
-- Prepare for open-source release
-
-See `docs/IMPROVEMENT_PLAN.md` for detailed roadmap.
+Test dictionary: `test-dictionaries/` should contain edge cases for validation.
 
 ---
 
-## Testing Strategy
+## Architecture Diagrams
 
-### Real-World Validation
-- Code tested carefully against real FIX messages
-- Only messages from other FIX engines tested (not live sessions yet)
-- Need session recovery with sequence numbers before live testing
-- Socket session management improvements planned
+### Message Parsing Flow
+```
+┌─────────────┐    ┌─────────────┐    ┌──────────────────┐
+│ Socket/     │───▶│ AsciiParser │───▶│ AsciiSegmentParser│
+│ Buffer      │    │ (TagPos[])  │    │ (Structure)       │
+└─────────────┘    └─────────────┘    └──────────────────┘
+                                              │
+                                              ▼
+                   ┌─────────────┐    ┌──────────────────┐
+                   │ Generated   │◀───│ AsciiView        │
+                   │ IFixMessage │    │ (field access)   │
+                   └─────────────┘    └──────────────────┘
+```
 
-### Missing Test Areas
-1. Live session with sequence number recovery
-2. Session persistence
-3. Failover handling
-4. Multiple concurrent sessions
-5. Broker-specific dictionary edge cases
-
----
-
-## Technical Highlights
-
-### Strengths
-- **Type Safety:** Compile-time checking of FIX messages
-- **Performance:** No runtime reflection or parsing overhead
-- **Clean Architecture:** Clear separation of concerns
-- **Extensibility:** Partial classes allow user extensions
-- **Sophisticated Indexing:** Fast tag lookups via post-processing
-
-### Design Patterns
-- **Visitor Pattern:** Field traversal (`ISetDispatchReceiver`)
-- **Builder Pattern:** `ContainedFieldSet.Builder`
-- **Factory Pattern:** `FixMessageFactory` for message instantiation
-- **Graph Processing:** Dependency graph for parsing
+### Type Generation Flow
+```
+┌─────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ FIX44.xml   │───▶│ QuickFixXmlParser│───▶│ FixDefinitions  │
+└─────────────┘    │ (graph-based)    │    │ (all types)     │
+                   └──────────────────┘    └─────────────────┘
+                                                   │
+                                                   ▼
+                   ┌──────────────────┐    ┌─────────────────┐
+                   │ C# Source Files  │◀───│ ModularGenerator│
+                   │ (.cs)            │    │ (nested groups) │
+                   └──────────────────┘    └─────────────────┘
+                           │
+                           ▼
+                   ┌──────────────────┐
+                   │ PureFix.Types.   │
+                   │ FIX44.dll        │
+                   └──────────────────┘
+```
 
 ---
 
@@ -312,9 +255,18 @@ See `docs/IMPROVEMENT_PLAN.md` for detailed roadmap.
 | **Type System** | Runtime dictionary | Compile-time generated types |
 | **Performance** | Runtime parsing | Pre-compiled, fast |
 | **Type Safety** | Dictionary-based | Full C# type checking |
-| **Memory** | Single dictionary | Type per dictionary (larger) |
-| **Flexibility** | Runtime changes | Requires regeneration |
-| **Language** | C++ | C# (.NET 8) |
+| **Multi-Dialect** | Single dictionary | 20+ dictionaries as separate DLLs |
+| **Language** | C++ | C# (.NET 9) |
+| **Origin** | Open source | Port of jspurefix (TypeScript) |
+
+---
+
+## Related Documentation
+
+- `docs/TypeRegistryDesign.md` - Server mode, auto-detection, persistent store design
+- `docs/IMPROVEMENT_PLAN.md` - Phased 8-week roadmap
+- `docs/MULTI_ASSEMBLY_GENERATOR_DESIGN.md` - Per-dictionary assembly architecture
+- `docs/CODEBASE_EXPLORATION.md` - Deep technical exploration
 
 ---
 
@@ -323,39 +275,3 @@ See `docs/IMPROVEMENT_PLAN.md` for detailed roadmap.
 - **Original TypeScript Project:** https://www.npmjs.com/package/jspurefix
 - **FIX Protocol:** https://www.fixtrading.org/
 - **QuickFIX:** http://quickfixengine.org/
-
----
-
-## Contributing
-
-⚠️ **Not yet ready for contributions** - Working toward open-source release.
-
-Current focus:
-1. Fix critical bugs (FieldEnum, duplicates)
-2. Redesign group type generation
-3. Improve scalability for multiple dictionaries
-4. Add comprehensive tests
-
----
-
-## Documentation
-
-- **`docs/CODEBASE_EXPLORATION.md`** - Comprehensive technical exploration (972 lines)
-- **`docs/CURRENT_ISSUES.md`** - Detailed issue analysis
-- **`docs/QUICK_REFERENCE.md`** - Quick lookup guide
-- **`docs/FILE_STRUCTURE.txt`** - Complete file organization
-- **`docs/IMPROVEMENT_PLAN.md`** - Phased roadmap (coming)
-
----
-
-## License
-
-TBD - Will be open-sourced once robustness improvements are complete.
-
----
-
-## Contact
-
-For questions or collaboration:
-- Original jspurefix: https://www.npmjs.com/package/jspurefix
-- This C# port: (contact info TBD)
