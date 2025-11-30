@@ -14,6 +14,17 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions) : IFixDi
     public IFixDefinitions Definitions { get; } = definitions;
     public Queue<Node> Queue { get; } = new ();
 
+    /// <summary>
+    /// When true, validates the dictionary before parsing and throws DictionaryValidationException on errors.
+    /// Default is true.
+    /// </summary>
+    public bool ValidateBeforeParsing { get; set; } = true;
+
+    /// <summary>
+    /// Gets the validator used during parsing. Contains warnings even if parsing succeeded.
+    /// </summary>
+    public DictionaryValidator? Validator { get; private set; }
+
     private void ParseVersion(XDocument doc)
     {
         var version = doc.Descendants("fix").First();
@@ -36,8 +47,18 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions) : IFixDi
 
     public void ParseText(string xml)
     {
+        // Parse XML with line info preservation for better error messages
+        var doc = XDocument.Parse(xml, LoadOptions.SetLineInfo);
+
+        // Validate the dictionary before parsing if enabled
+        if (ValidateBeforeParsing)
+        {
+            Validator = new DictionaryValidator();
+            Validator.Validate(doc);
+            Validator.ThrowIfErrors(); // Throws DictionaryValidationException if there are errors
+        }
+
         // first parse all fields including their enum definitions, and add to the dictionary
-        var doc = XDocument.Parse(xml);
         ParseVersion(doc);
         ParseFields(doc);
         // all top level components which will later be further expanded
