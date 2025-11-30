@@ -371,3 +371,4 @@ FodyWeavers.xsd
 # Test generated types (temporary)
 test-generated/
 test-generated-modular/
+packages-microsoft-prod.deb
