@@ -280,13 +280,9 @@ public class CSharpIdentifierSanitizerTests
         var sanitized1 = CSharpIdentifierSanitizer.SanitizeStatic("Test");
         var sanitized2 = CSharpIdentifierSanitizer.SanitizeStatic("test");
 
-        // They should be different (Test vs test -> Test vs Test after case handling)
-        // Actually let me use truly colliding values
+        // ALL_CAPS becomes Title Case, so "AB" -> "Ab"
         var result1 = _sanitizer.Sanitize("AB", "ctx");
-
-        // Now register something else with same sanitized output
-        // Manually force by checking the dictionary behavior
-        Assert.That(result1.Sanitized, Is.EqualTo("AB"));
+        Assert.That(result1.Sanitized, Is.EqualTo("Ab"));
     }
 
     [Test]
@@ -393,7 +389,8 @@ public class CSharpIdentifierSanitizerTests
     public void Broker_Complex_Symbol()
     {
         var result = _sanitizer.Sanitize("USD/JPY @ 110.50");
-        Assert.That(result.Sanitized, Is.EqualTo("USDSlashJPYAt110Dot50")); // Dot becomes "Dot"
+        // ALL_CAPS segments become Title Case: USD -> Usd, JPY -> Jpy
+        Assert.That(result.Sanitized, Is.EqualTo("UsdSlashJpyAt110Dot50"));
     }
 
     [Test]
@@ -408,10 +405,12 @@ public class CSharpIdentifierSanitizerTests
     {
         Assert.Multiple(() =>
         {
+            // Single chars preserved (not all uppercase since only 1 letter)
             Assert.That(_sanitizer.Sanitize("Y").Sanitized, Is.EqualTo("Y"));
             Assert.That(_sanitizer.Sanitize("N").Sanitized, Is.EqualTo("N"));
-            Assert.That(_sanitizer.Sanitize("YES").Sanitized, Is.EqualTo("YES"));
-            Assert.That(_sanitizer.Sanitize("NO").Sanitized, Is.EqualTo("NO"));
+            // ALL_CAPS -> Title Case
+            Assert.That(_sanitizer.Sanitize("YES").Sanitized, Is.EqualTo("Yes"));
+            Assert.That(_sanitizer.Sanitize("NO").Sanitized, Is.EqualTo("No"));
         });
     }
 

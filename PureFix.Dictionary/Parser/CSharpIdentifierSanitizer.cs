@@ -151,101 +151,86 @@ public partial class CSharpIdentifierSanitizer
     }
 
     /// <summary>
-    /// Core sanitization logic
+    /// Core sanitization logic.
+    /// Converts input to PascalCase, handling ALL_CAPS words, special characters, etc.
+    /// For example: "BUY_MINUS" -> "BuyMinus", "email@domain" -> "EmailAtDomain"
+    ///
+    /// The logic mirrors the old UnderscoreToCamelCase behavior:
+    /// - Special chars are replaced (+ -> Plus, etc.) and act as word boundaries
+    /// - Underscores and spaces act as word boundaries (removed from output)
+    /// - ALL_CAPS segments become Title Case (BUY -> Buy)
+    /// - Mixed case segments preserve casing (just ensure first letter is upper)
     /// </summary>
     private static string SanitizeCore(string input)
     {
-        var sb = new StringBuilder(input.Length + 10);
-        var needsCapitalize = true;    // Start with capital for PascalCase
-        var isFirstOutputChar = true;
+        // First pass: replace special characters and collect segments
+        var segments = new List<string>();
+        var currentSegment = new StringBuilder();
 
         foreach (var c in input)
         {
-            string replacement;
-            var isSeparator = false;
-            var isSpecialReplacement = false;  // Track if this is a word replacement like "Minus"
-
             if (CharacterReplacements.TryGetValue(c, out var mapped))
             {
-                replacement = mapped;
-                // Empty replacements act as separators for PascalCase
-                isSeparator = string.IsNullOrEmpty(mapped);
-                // Non-empty replacements are special words that should be followed by capital
-                isSpecialReplacement = !isSeparator;
+                // Flush current segment
+                if (currentSegment.Length > 0)
+                {
+                    segments.Add(currentSegment.ToString());
+                    currentSegment.Clear();
+                }
+                // Add replacement as its own segment if non-empty
+                if (!string.IsNullOrEmpty(mapped))
+                {
+                    segments.Add(mapped);
+                }
+            }
+            else if (c == '_' || char.IsWhiteSpace(c))
+            {
+                // Separator - flush current segment
+                if (currentSegment.Length > 0)
+                {
+                    segments.Add(currentSegment.ToString());
+                    currentSegment.Clear();
+                }
             }
             else if (char.IsLetterOrDigit(c))
             {
-                replacement = c.ToString();
+                currentSegment.Append(c);
             }
-            else if (c == '_')
+            // Other chars are ignored (treated as separators)
+        }
+
+        // Flush final segment
+        if (currentSegment.Length > 0)
+        {
+            segments.Add(currentSegment.ToString());
+        }
+
+        if (segments.Count == 0)
+        {
+            return "Unknown";
+        }
+
+        // Second pass: build result with proper casing
+        var sb = new StringBuilder();
+        var isFirstSegment = true;
+
+        foreach (var segment in segments)
+        {
+            if (string.IsNullOrEmpty(segment)) continue;
+
+            var processed = ProcessSegment(segment);
+
+            // Handle first character of output - prefix with underscore if digit
+            if (isFirstSegment && processed.Length > 0 && char.IsDigit(processed[0]))
             {
-                replacement = "";  // Treat underscore as separator, don't output it
-                isSeparator = true;
-            }
-            else if (char.IsWhiteSpace(c))
-            {
-                replacement = "";
-                isSeparator = true;
-            }
-            else
-            {
-                // Unknown character - treat as separator
-                replacement = "";
-                isSeparator = true;
+                sb.Append('_');
             }
 
-            // Track separators for PascalCase conversion
-            if (isSeparator)
-            {
-                needsCapitalize = true;
-                continue;
-            }
-
-            // Skip empty replacements
-            if (string.IsNullOrEmpty(replacement))
-            {
-                continue;
-            }
-
-            // Handle first output character - must be letter or underscore
-            // If it's a digit, we need to prefix with underscore
-            if (isFirstOutputChar)
-            {
-                var firstChar = replacement[0];
-                if (char.IsDigit(firstChar))
-                {
-                    sb.Append('_');
-                }
-                isFirstOutputChar = false;
-            }
-
-            // Apply PascalCase: capitalize first letter of each "word"
-            if (needsCapitalize)
-            {
-                sb.Append(char.ToUpperInvariant(replacement[0]));
-                if (replacement.Length > 1)
-                {
-                    sb.Append(replacement[1..]);
-                }
-                needsCapitalize = false;
-            }
-            else
-            {
-                sb.Append(replacement);
-            }
-
-            // Special replacements (like "Minus", "Plus") act as word boundaries
-            // The next character should be capitalized
-            if (isSpecialReplacement)
-            {
-                needsCapitalize = true;
-            }
+            sb.Append(processed);
+            isFirstSegment = false;
         }
 
         var result = sb.ToString();
-
-        // Remove trailing underscores
-        result = result.TrimEnd('_');
 
         // If empty after sanitization, use a default
         if (string.IsNullOrEmpty(result))
@@ -254,7 +239,6 @@ public partial class CSharpIdentifierSanitizer
         }
 
         // Handle C# keywords by prefixing with @
-        // Check case-insensitive for keywords (since we PascalCase everything)
         var lowerResult = result.ToLowerInvariant();
         if (CSharpKeywords.Contains(lowerResult) || ContextualKeywords.Contains(lowerResult))
         {
@@ -262,6 +246,31 @@ public partial class CSharpIdentifierSanitizer
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Process a single segment (word) for PascalCase.
+    /// - If all uppercase letters, convert to Title Case (BUY -> Buy)
+    /// - Otherwise, just capitalize first letter (preserves mixed case like "iPhone")
+    /// </summary>
+    private static string ProcessSegment(string segment)
+    {
+        if (string.IsNullOrEmpty(segment)) return segment;
+
+        // Check if segment is all uppercase (ignoring digits)
+        var letters = segment.Where(char.IsLetter).ToArray();
+        var isAllUppercase = letters.Length > 0 && letters.All(char.IsUpper);
+
+        if (isAllUppercase)
+        {
+            // Convert to Title Case: first letter upper, rest lower
+            return char.ToUpperInvariant(segment[0]) + segment[1..].ToLowerInvariant();
+        }
+        else
+        {
+            // Just ensure first letter is uppercase, preserve rest
+            return char.ToUpperInvariant(segment[0]) + segment[1..];
+        }
     }
 
     /// <summary>
