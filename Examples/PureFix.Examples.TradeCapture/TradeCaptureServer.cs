@@ -3,7 +3,6 @@ using PureFix.Buffer;
 using PureFix.Transport.Ascii;
 using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
-using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.FIX50SP2;
 using System;
@@ -20,7 +19,7 @@ namespace PureFix.Examples.TradeCapture
         private readonly TradeFactory m_tradeFactory;
         public Action? OnReadyCallback { get; set; }
 
-        public TradeCaptureServer(IFixConfig config, IFixLogRecovery fixLogRecover, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecover, logFactory, fixMessageFactory, parser, encoder, store, q, clock)
+        public TradeCaptureServer(IFixConfig config, IFixLogRecovery? fixLogRecover, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecover, logFactory, fixMessageFactory, parser, encoder, q, clock)
         {
             m_logReceivedMessages = true;
             m_tradeFactory = new TradeFactory(clock);
@@ -28,9 +27,7 @@ namespace PureFix.Examples.TradeCapture
 
         protected override async Task OnApplicationMsg(string msgType, IMessageView view)
         {
-            var res = await m_msgStore.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
             var seqNo = view.GetInt32((int)MsgTag.MsgSeqNum);
-            m_logger.Info($"store state {res}");
             switch (msgType)
             {
                 case MsgType.TradeCaptureReportRequest:

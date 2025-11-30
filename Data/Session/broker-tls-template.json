@@ -1,0 +1,29 @@
+{
+  "application": {
+    "reconnectSeconds": 30,
+    "type": "initiator",
+    "name": "broker_client",
+    "tcp": {
+      "host": "fix.broker.example.com",
+      "port": 9876,
+      "tls": {
+        "enabled": true,
+        "certificate": "/path/to/your/certificate.pfx",
+        "password": "your-certificate-password",
+        "targetHost": "fix.broker.example.com",
+        "validateServerCertificate": false
+      }
+    },
+    "protocol": "ascii",
+    "dictionary": "repo44"
+  },
+  "Username": "your-fix-username",
+  "Password": "your-fix-password",
+  "EncryptMethod": 0,
+  "ResetSeqNumFlag": true,
+  "HeartBtInt": 30,
+  "SenderCompId": "YOUR_SENDER_COMP_ID",
+  "TargetCompID": "BROKER_TARGET_COMP_ID",
+  "BeginString": "FIX.4.4",
+  "BodyLengthChars": 6
+}

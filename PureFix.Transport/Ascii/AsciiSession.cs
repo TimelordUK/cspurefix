@@ -15,18 +15,29 @@ namespace PureFix.Transport.Ascii
 {
     public abstract class AsciiSession : FixSession
     {
-        protected readonly IFixMsgStore m_msgStore;
-        private readonly FixMsgAsciiStoreResend m_resender;      
+        protected readonly IFixSessionStore m_sessionStore;
+        private readonly IFixMessageFactory m_fixMessageFactory;
+        private FixMsgAsciiStoreResend? m_resender;
         public bool Heartbeat { get; set; } = true;
 
-        protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore msgStore, AsyncWorkQueue q, IFixClock clock)
-            : base(config, logFactory,  parser, encoder, q, clock)
+        protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
+            : base(config, logFactory, parser, encoder, q, clock)
         {
             if (config == null) throw new ArgumentNullException("config must be provided");
             if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");
+            if (config?.Description?.TargetCompID == null) throw new ArgumentNullException("config must have application description with TargetCompID");
+            if (config?.Description?.BeginString == null) throw new ArgumentNullException("config must have application description with BeginString");
 
-            m_msgStore = msgStore;
-            m_resender = new FixMsgAsciiStoreResend(m_msgStore, fixMessageFactory, config, clock);
+            m_fixMessageFactory = fixMessageFactory;
+
+            // Create session store from factory (defaults to in-memory if not configured)
+            var storeFactory = config.SessionStoreFactory ?? new MemorySessionStoreFactory();
+            var sessionId = new SessionId(
+                config.Description.BeginString,
+                config.Description.SenderCompID,
+                config.Description.TargetCompID);
+            m_sessionStore = storeFactory.Create(sessionId);
+
             m_sessionLogger?.Info($"{Definitions}");
         }
 
@@ -208,6 +219,35 @@ namespace PureFix.Transport.Ascii
         }
 
 
+/// <summary>
+/// Initializes the session store and loads persisted sequence numbers.
+/// Must be called before the session starts processing messages.
+/// </summary>
+        protected async Task InitializeSessionStore()
+        {
+            await m_sessionStore.Initialize();
+
+            // Load persisted sequence numbers into encoder and session state
+            m_encoder.MsgSeqNum = m_sessionStore.SenderSeqNum;
+            m_sessionState.LastPeerMsgSeqNum = m_sessionStore.TargetSeqNum > 0
+                ? m_sessionStore.TargetSeqNum - 1
+                : 0;
+
+            m_sessionLogger?.Info($"Session store initialized: SenderSeqNum={m_sessionStore.SenderSeqNum}, TargetSeqNum={m_sessionStore.TargetSeqNum}");
+
+            // Create resender now that store is initialized
+            m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
+        }
+
+/// <summary>
+/// Stores an encoded message to the session store.
+/// </summary>
+        protected async Task StoreEncodedMessage(string msgType, int seqNum, string encoded)
+        {
+            var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, encoded);
+            await m_sessionStore.Put(record);
+        }
+
 /**
 * Override to resend stored messages following a sequence reset.
 * @protected
@@ -224,6 +264,13 @@ namespace PureFix.Transport.Ascii
             var endSeqNo = requestedEndSeqNo == 0 ? m_sessionState.LastSentSeqNum : requestedEndSeqNo.Value;
 
             m_sessionLogger?.Info($"onResendRequest getResendRequest beginSeqNo = {beginSeqNo}, endSeqNo = {endSeqNo}");
+
+            if (m_resender == null)
+            {
+                m_sessionLogger?.Warn("Resender not initialized, sending gap fill for entire range");
+                return;
+            }
+
             var records = await m_resender.GetResendRequest(beginSeqNo.Value, endSeqNo);
             m_sessionLogger?.Info($"sending {records.Count}");
             foreach (var rec in records)

@@ -3,7 +3,6 @@ using PureFix.Buffer;
 using PureFix.Transport.Ascii;
 using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
-using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.FIX50SP2;
 using System;
@@ -20,7 +19,7 @@ namespace PureFix.Examples.TradeCapture
         private readonly Dictionary<string, TradeCaptureReport> m_reports = [];
         public Action? OnReadyCallback { get; set; }
 
-        public TradeCaptureClient(IFixConfig config, IFixLogRecovery fixLogRecover, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecover, logFactory, fixMessageFactory, parser, encoder, store, q, clock)
+        public TradeCaptureClient(IFixConfig config, IFixLogRecovery? fixLogRecover, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecover, logFactory, fixMessageFactory, parser, encoder, q, clock)
         {
             m_logReceivedMessages = true;
         }

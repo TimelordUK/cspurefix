@@ -3,7 +3,6 @@ using PureFix.Buffer;
 using PureFix.Transport.Ascii;
 using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
-using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.FIX44;
 
@@ -13,7 +12,7 @@ namespace PureFix.Examples.Skeleton
     {
         private readonly FixMessageFactory m_msg_factory = new();
 
-        public TestAsciiSkeleton(IFixConfig config, IFixLogRecovery fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixMsgStore store, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecovery, logFactory, fixMessageFactory, parser, encoder, store, q, clock)
+        public TestAsciiSkeleton(IFixConfig config, IFixLogRecovery? fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecovery, logFactory, fixMessageFactory, parser, encoder, q, clock)
         {
             m_logReceivedMessages = true;
         }

@@ -52,16 +52,16 @@ namespace PureFix.Test.ModularTypes
         public async Task Check_Server_Store_State_Test()
         {
             var store = await _testEntity.MakeMsgStore(_views, _server_config?.Description?.SenderCompID);
-            var state = await store.GetState();
-            Assert.That(state.Length, Is.EqualTo(9));
+            var records = await store.GetRange(1, 1000);
+            Assert.That(records.Count, Is.EqualTo(9));
         }
 
         [Test]
         public async Task Check_Client_Store_State_Test()
         {
             var store = await _testEntity.MakeMsgStore(_views, _client_config?.Description?.SenderCompID);
-            var state = await store.GetState();
-            Assert.That(state.Length, Is.EqualTo(1));
+            var records = await store.GetRange(1, 1000);
+            Assert.That(records.Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -72,8 +72,8 @@ namespace PureFix.Test.ModularTypes
             var clock = new TestClock { Current = DateTime.Today.AddHours(8) };
             Assert.That(_server_config, Is.Not.Null);
             IFixMsgResender replayer = new FixMsgAsciiStoreResend(store, msgFactory, _server_config, clock);
-            var state = await store.GetState();
-            Assert.That(state.Length, Is.EqualTo(9));
+            var records = await store.GetRange(1, 1000);
+            Assert.That(records.Count, Is.EqualTo(9));
             var vec = await replayer.GetResendRequest(1, 10);
             Assert.That(vec, Is.Not.Null);
             Assert.That(vec, Has.Count.EqualTo(10));
@@ -135,8 +135,8 @@ namespace PureFix.Test.ModularTypes
             var clock = new TestClock { Current = DateTime.Today.AddHours(8) };
             Assert.That(_client_config, Is.Not.Null);
             IFixMsgResender replayer = new FixMsgAsciiStoreResend(store, msgFactory, _client_config, clock);
-            var state = await store.GetState();
-            Assert.That(state.Length, Is.EqualTo(1));
+            var records = await store.GetRange(1, 1000);
+            Assert.That(records.Count, Is.EqualTo(1));
             var vec = await replayer.GetResendRequest(1, 10);
             Assert.That(vec, Is.Not.Null);
             Assert.That(vec, Has.Count.EqualTo(3));

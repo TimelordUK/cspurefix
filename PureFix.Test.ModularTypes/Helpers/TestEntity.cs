@@ -153,13 +153,26 @@ namespace PureFix.Test.ModularTypes.Helpers
             return config;
         }
 
-        public async Task<IFixMsgStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string filter = "accept-comp")
+        public async Task<IFixSessionStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string filter = "accept-comp")
         {
-            var store = new FixMsgMemoryStore($"test-{filter}");
+            // Session messages to filter out (for backward compatibility with tests)
+            var sessionMessages = new HashSet<string>
+            {
+                MsgType.Logon, MsgType.Logout, MsgType.ResendRequest,
+                MsgType.Heartbeat, MsgType.TestRequest, MsgType.SequenceReset
+            };
+
+            var sessionId = new SessionId("FIX.4.4", filter, "target");
+            var store = new MemorySessionStore(sessionId);
+            await store.Initialize();
             foreach (var view in views)
             {
                 if (view.SenderCompID() == filter)
                 {
+                    var msgType = view.MsgType();
+                    // Filter out session messages for test compatibility
+                    if (msgType != null && sessionMessages.Contains(msgType))
+                        continue;
                     await store.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
                 }
             }

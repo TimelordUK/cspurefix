@@ -1,12 +1,7 @@
 ﻿using PureFix.Transport.Session;
 using PureFix.Types.Config;
 using PureFix.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -22,7 +17,7 @@ namespace PureFix.Transport.SocketTransport
         protected readonly ILogger m_logger;
         protected Stream? m_networkStream;
         protected SslStream? m_sslStream;
-        protected string? m_sslCertificate;
+        protected readonly TlsOptions? m_tlsOptions;
         protected IFixConfig m_config;
         public SslProtocols Protocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
@@ -36,8 +31,9 @@ namespace PureFix.Transport.SocketTransport
             m_tcp = config?.Description?.Application?.Tcp ?? throw new InvalidDataException("no config tcp parameters given");
             m_logger = logFactory.MakeLogger("BaseTransport");
             var tls = config?.Description?.Application?.Tcp.Tls;
-            if (tls?.Enabled is true) {
-                m_sslCertificate = tls.Certificate;
+            if (tls?.Enabled is true)
+            {
+                m_tlsOptions = tls;
             }
         }
 
@@ -61,7 +57,7 @@ namespace PureFix.Transport.SocketTransport
                 try
                 {
                     m_networkStream = new NetworkStream(m_socket);
-                    if (m_sslCertificate != null)
+                    if (m_tlsOptions != null)
                     {
                         await AsSSlStream();
                     }
@@ -75,40 +71,78 @@ namespace PureFix.Transport.SocketTransport
 
         private X509Certificate2 MakeCertificate()
         {
-            ArgumentNullException.ThrowIfNull(m_sslCertificate);
-            m_logger.Info($"MakeCertificate {m_sslCertificate}");
-            return new X509Certificate2(m_sslCertificate, string.Empty); 
+            ArgumentNullException.ThrowIfNull(m_tlsOptions?.Certificate);
+            m_logger.Info($"MakeCertificate {m_tlsOptions.Certificate}");
+
+            // Use the new X509CertificateLoader API (.NET 9+) for loading certificates
+            // This replaces the deprecated X509Certificate2 constructor
+            var certPath = m_tlsOptions.Certificate;
+            var password = m_tlsOptions.Password;
+
+            if (certPath.EndsWith(".pfx", StringComparison.OrdinalIgnoreCase) ||
+                certPath.EndsWith(".p12", StringComparison.OrdinalIgnoreCase))
+            {
+                // PKCS#12 format (typically password-protected)
+                return X509CertificateLoader.LoadPkcs12FromFile(certPath, password);
+            }
+            else if (certPath.EndsWith(".pem", StringComparison.OrdinalIgnoreCase))
+            {
+                // PEM format
+                return X509CertificateLoader.LoadCertificateFromFile(certPath);
+            }
+            else
+            {
+                // Try PKCS#12 first (most common for client certificates)
+                return X509CertificateLoader.LoadPkcs12FromFile(certPath, password);
+            }
         }
 
         private async Task AsSSlStream()
         {
-            m_logger.Info($"AsSSlStream constructing ssl stream. {Protocols}");
+            m_logger.Info($"AsSSlStream constructing ssl stream. Protocols={Protocols}");
             ArgumentNullException.ThrowIfNull(m_networkStream);
-            ArgumentNullException.ThrowIfNull(m_sslCertificate);
+            ArgumentNullException.ThrowIfNull(m_tlsOptions);
+
             m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
+
             if (m_config.IsInitiator())
             {
-                var certs = new X509Certificate2Collection
-                        {
-                            MakeCertificate()
-                        };
-                m_logger.Info("client is awaiting authentication");
-                await m_sslStream.AuthenticateAsClientAsync("localhost", certs, Protocols, false);
-                m_logger.Info("client authenticated.");
+                // Client mode - authenticate to server
+                var targetHost = m_tlsOptions.TargetHost ?? m_tcp?.Host ?? "localhost";
+                m_logger.Info($"Client authenticating to {targetHost}");
+
+                var certs = new X509Certificate2Collection();
+                if (m_tlsOptions.Certificate != null)
+                {
+                    certs.Add(MakeCertificate());
+                }
+
+                await m_sslStream.AuthenticateAsClientAsync(targetHost, certs, Protocols, checkCertificateRevocation: false);
+                m_logger.Info("Client authenticated.");
             }
             else
             {
-                m_logger.Info("server waiting to authenticate clients.");             
-               await m_sslStream.AuthenticateAsServerAsync(MakeCertificate(), false, Protocols, false);
-                m_logger.Info("server authenticated.");
+                // Server mode - authenticate clients
+                m_logger.Info("Server waiting to authenticate clients.");
+                var serverCert = MakeCertificate();
+                await m_sslStream.AuthenticateAsServerAsync(serverCert, clientCertificateRequired: false, Protocols, checkCertificateRevocation: false);
+                m_logger.Info("Server authenticated.");
             }
         }
 
         private bool ValidateServerCertificate(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
         {
-            // For self-signed certificate, always return true.
-            m_logger.Info("ValidateServerCertificate");
-            return true;
+            var validate = m_tlsOptions?.ValidateServerCertificate ?? false;
+            m_logger.Info($"ValidateServerCertificate: errors={sslPolicyErrors}, validate={validate}");
+
+            if (!validate)
+            {
+                // Accept all certificates (useful for self-signed certs in dev/test)
+                return true;
+            }
+
+            // Only accept if no errors
+            return sslPolicyErrors == SslPolicyErrors.None;
         }
 
         public static IPEndPoint? MakeEndPoint(string host, int port)

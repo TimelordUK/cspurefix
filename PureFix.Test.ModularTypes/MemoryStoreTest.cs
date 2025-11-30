@@ -1,4 +1,4 @@
-﻿using PureFix.Buffer.Ascii;
+using PureFix.Buffer.Ascii;
 using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
@@ -38,7 +38,7 @@ namespace PureFix.Test.ModularTypes
             Assert.That(_views, Has.Count.EqualTo(15));
         }
 
-        private async Task<IFixMsgStore> GetStore()
+        private async Task<IFixSessionStore> GetStore()
         {
             var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
             return store;
@@ -49,9 +49,10 @@ namespace PureFix.Test.ModularTypes
         {
             Assert.That(_config, Is.Not.Null);
             var store = await _testEntity.MakeMsgStore(_views, SenderCompID);
-            var state = await store.GetState();
-            Assert.That(state.Length, Is.EqualTo(9));
-            Assert.That(state.LastSeq, Is.EqualTo(10));
+            var records = await store.GetRange(1, 1000);
+            Assert.That(records.Count, Is.EqualTo(9));
+            // Check the last record has seqnum 10
+            Assert.That(records[^1].SeqNum, Is.EqualTo(10));
         }
 
         [Test]
@@ -59,12 +60,10 @@ namespace PureFix.Test.ModularTypes
         {
             var store = await GetStore();
             Assert.That(store, Is.Not.Null);
-            var res1 = await store.Exists(1);
-            Assert.That(res1, Is.False);
+            var res1 = await store.Get(1);
+            Assert.That(res1, Is.Null); // Seq 1 not in store
             for (var seq = 2; seq <= 10; ++seq)
             {
-                var res = await store.Exists(seq);
-                Assert.That(res, Is.True);
                 var get = await store.Get(seq);
                 Assert.That(get, Is.Not.Null);
             }
@@ -75,13 +74,13 @@ namespace PureFix.Test.ModularTypes
         {
             var store = await GetStore();
             Assert.That(store, Is.Not.Null);
-            var range1 = await store.GetSeqNumRange(5);
+            var range1 = await store.GetRange(5, 1000);
             Assert.Multiple(() =>
             {
-                Assert.That(range1, Has.Length.EqualTo(6));
+                Assert.That(range1, Has.Count.EqualTo(6));
                 Assert.That(range1[0].SeqNum, Is.EqualTo(5));
                 Assert.That(range1[^1].SeqNum, Is.EqualTo(10));
-            });            
+            });
         }
 
         [Test]
@@ -89,10 +88,10 @@ namespace PureFix.Test.ModularTypes
         {
             var store = await GetStore();
             Assert.That(store, Is.Not.Null);
-            var range1 = await store.GetSeqNumRange(5, int.MaxValue);
+            var range1 = await store.GetRange(5, int.MaxValue);
             Assert.Multiple(() =>
             {
-                Assert.That(range1, Has.Length.EqualTo(6));
+                Assert.That(range1, Has.Count.EqualTo(6));
                 Assert.That(range1[0].SeqNum, Is.EqualTo(5));
                 Assert.That(range1[^1].SeqNum, Is.EqualTo(10));
             });
@@ -103,8 +102,8 @@ namespace PureFix.Test.ModularTypes
         {
             var store = await GetStore();
             Assert.That(store, Is.Not.Null);
-            var range1 = await store.GetSeqNumRange(5, 5);
-            Assert.That(range1, Has.Length.EqualTo(1));
+            var range1 = await store.GetRange(5, 5);
+            Assert.That(range1, Has.Count.EqualTo(1));
             Assert.That(range1[0].SeqNum, Is.EqualTo(5));
         }
 
@@ -113,8 +112,8 @@ namespace PureFix.Test.ModularTypes
         {
             var store = await GetStore();
             Assert.That(store, Is.Not.Null);
-            var range1 = await store.GetSeqNumRange(1);
-            Assert.That(range1, Has.Length.EqualTo(9));
+            var range1 = await store.GetRange(1, 1000);
+            Assert.That(range1, Has.Count.EqualTo(9));
             Assert.That(range1[^1].SeqNum, Is.EqualTo(10));
         }
     }

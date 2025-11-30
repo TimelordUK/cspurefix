@@ -15,19 +15,19 @@ namespace PureFix.Transport.Store
     public class FixMsgAsciiStoreResend : IFixMsgResender
     {
         private readonly IMessageParser m_Parser;
-        private readonly IFixMsgStore m_store;
+        private readonly IFixSessionStore m_store;
         private readonly IFixConfig m_config;
         private readonly IFixClock m_clock;
         private readonly IFixMessageFactory m_factory;
         private readonly ISessionMessageFactory m_sessionFactory;
 
-        public FixMsgAsciiStoreResend(IFixMsgStore store, IFixMessageFactory factory, IFixConfig config, IFixClock clock)
+        public FixMsgAsciiStoreResend(IFixSessionStore store, IFixMessageFactory factory, IFixConfig config, IFixClock clock)
         {
             ArgumentNullException.ThrowIfNull(config.Definitions);
             ArgumentNullException.ThrowIfNull(config.MessageFactory);
 
-            m_Parser = new AsciiParser(config.Definitions) { 
-                Delimiter = config.Delimiter ?? AsciiChars.Soh, 
+            m_Parser = new AsciiParser(config.Definitions) {
+                Delimiter = config.Delimiter ?? AsciiChars.Soh,
                 WriteDelimiter = config.LogDelimiter ?? AsciiChars.Pipe
             };
             m_store = store;
@@ -42,8 +42,8 @@ namespace PureFix.Transport.Store
             // need to cover request from start to end where any missing numbers are
             // included as gaps to allow vector of messages to be sent by the session
             // on a request
-            var records = await m_store.GetSeqNumRange(startReq, endSeq);
-            if (records == null)
+            var records = await m_store.GetRange(startReq, endSeq);
+            if (records == null || records.Count == 0)
             {
                 List<IFixMsgStoreRecord> toResend = [];
                 return toResend;
@@ -52,19 +52,18 @@ namespace PureFix.Transport.Store
             return inflated;
         }
 
-        private IReadOnlyList<IFixMsgStoreRecord> InflateRange(int startSeq, int endSeq, IFixMsgStoreRecord?[] input)
+        private IReadOnlyList<IFixMsgStoreRecord> InflateRange(int startSeq, int endSeq, IReadOnlyList<IFixMsgStoreRecord> input)
         {
             List<IFixMsgStoreRecord> toResend = [];
-            if (input.Length == 0)
+            if (input.Count == 0)
             {
                 return toResend;
             }
 
             var expected = startSeq;
-            for (int i = 0; i < input.Length; i++)
+            for (int i = 0; i < input.Count; i++)
             {
                 var v = input[i];
-                if (v == null) continue;
                 // inflate the record back from encoded form to an object and set standard header params.
                 var record = PrepareRecordForRetransmission(v);
                 if (record == null) continue;

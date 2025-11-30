@@ -103,10 +103,10 @@ public sealed class MemorySessionStore : IFixSessionStore
         var results = new List<IFixMsgStoreRecord>();
         lock (_lock)
         {
-            for (int seq = fromSeqNum; seq <= toSeqNum; seq++)
+            // Iterate over stored keys rather than the range to avoid very large ranges
+            foreach (var seq in _messages.Keys.Where(k => k >= fromSeqNum && k <= toSeqNum).OrderBy(k => k))
             {
-                if (_messages.TryGetValue(seq, out var record))
-                    results.Add(record.Clone());
+                results.Add(_messages[seq].Clone());
             }
         }
         return Task.FromResult<IReadOnlyList<IFixMsgStoreRecord>>(results);

@@ -7,6 +7,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Transport.Session;
+using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.Config;
 
@@ -19,6 +20,12 @@ namespace PureFix.Transport
         public IFixDefinitions? Definitions { get; set; }
         public ISessionDescription? Description { get; set; }
         public ISessionMessageFactory? MessageFactory { get; set; }
+
+        /// <summary>
+        /// Factory for creating session stores. Defaults to MemorySessionStoreFactory if not set.
+        /// Use FileSessionStoreFactory for disk persistence (QuickFix-compatible format).
+        /// </summary>
+        public IFixSessionStoreFactory? SessionStoreFactory { get; set; }
 
         public static IFixConfig MakeConfigFromPaths(string dictionaryRootPath, string sessionDescriptionPath)
         {
