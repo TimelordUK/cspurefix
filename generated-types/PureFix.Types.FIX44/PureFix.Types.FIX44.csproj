@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../PureFix.Types.Core/PureFix.Types.Core.csproj" />
+    <ProjectReference Include="../../PureFix.Types/PureFix.Types.csproj" />
   </ItemGroup>
 
 </Project>

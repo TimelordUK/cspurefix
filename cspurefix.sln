@@ -43,6 +43,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Examples.Shared", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX50SP2", "generated-types\PureFix.Types.FIX50SP2\PureFix.Types.FIX50SP2.csproj", "{CE1F747E-C994-4415-AC75-54FF5A26C59C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B7D1A2C3-4E5F-6A7B-8C9D-0E1F2A3B4C5D}"
+	ProjectSection(SolutionItems) = preProject
+		docs\CODEBASE_EXPLORATION.md = docs\CODEBASE_EXPLORATION.md
+		docs\CURRENT_ISSUES.md = docs\CURRENT_ISSUES.md
+		docs\FILE_STRUCTURE.txt = docs\FILE_STRUCTURE.txt
+		docs\GETTING_STARTED.md = docs\GETTING_STARTED.md
+		docs\IMPROVEMENT_PLAN.md = docs\IMPROVEMENT_PLAN.md
+		docs\MULTI_ASSEMBLY_GENERATOR_DESIGN.md = docs\MULTI_ASSEMBLY_GENERATOR_DESIGN.md
+		docs\QUICK_REFERENCE.md = docs\QUICK_REFERENCE.md
+		docs\README.md = docs\README.md
+		docs\TEST_INFRASTRUCTURE_PLAN.md = docs\TEST_INFRASTRUCTURE_PLAN.md
+		docs\TypeRegistryDesign.md = docs\TypeRegistryDesign.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

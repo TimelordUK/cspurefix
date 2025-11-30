@@ -36,6 +36,13 @@ namespace PureFix.Dictionary.Compiler
         public string CoreProjectPath { get; set; } = "../../PureFix.Types.Core/PureFix.Types.Core.csproj";
 
         /// <summary>
+        /// Relative path to PureFix.Types.csproj from the generated assembly.
+        /// Required for ITypeSystemProvider and ISessionDescription.
+        /// Default: "../../PureFix.Types/PureFix.Types.csproj"
+        /// </summary>
+        public string TypesProjectPath { get; set; } = "../../PureFix.Types/PureFix.Types.csproj";
+
+        /// <summary>
         /// Base options used by GeneratorBase
         /// </summary>
         public Options BaseOptions { get; set; } = new();

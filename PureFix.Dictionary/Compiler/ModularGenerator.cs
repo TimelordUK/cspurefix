@@ -26,9 +26,11 @@ namespace PureFix.Dictionary.Compiler
             // Generate message factory
             GenerateFactory();
 
-            // Note: SessionMessageFactory is not generated here as it requires PureFix.Types.Config
-            // which would create a circular dependency. It should be created as a helper in projects
-            // that use the generated types.
+            // Generate session message factory
+            GenerateSessionMessageFactory();
+
+            // Generate TypeSystemProvider for registry integration
+            GenerateTypeSystemProvider();
 
             // Generate .csproj file
             GenerateProjectFile();
@@ -195,6 +197,96 @@ namespace PureFix.Dictionary.Compiler
             WriteFile(path, contents);
         }
 
+        private void GenerateTypeSystemProvider()
+        {
+            var generator = new CodeGenerator();
+            WriteCoreUsings(generator);
+            generator.WriteLine("using PureFix.Types.Config;");
+            generator.WriteLine("using PureFix.Types.Registry;");
+            generator.WriteLine();
+
+            using (generator.BeginBlock($"namespace {GetNamespace()}"))
+            {
+                generator.WriteLine("/// <summary>");
+                generator.WriteLine("/// Type system provider for registry integration.");
+                generator.WriteLine("/// Enables dynamic loading and factory creation via ITypeRegistry.");
+                generator.WriteLine("/// </summary>");
+                using (generator.BeginBlock("public class TypeSystemProvider : ITypeSystemProvider"))
+                {
+                    // Convert enum to proper FIX version string (e.g., FIX44 -> "FIX.4.4")
+                    var version = FormatFixVersion(FixDefinitions.Version);
+
+                    // GetVersion
+                    using (generator.BeginBlock("public string GetVersion()"))
+                    {
+                        generator.WriteLine($"return \"{version}\";");
+                    }
+                    generator.WriteLine();
+
+                    // GetRootNamespace
+                    using (generator.BeginBlock("public string GetRootNamespace()"))
+                    {
+                        generator.WriteLine($"return \"{GetNamespace()}\";");
+                    }
+                    generator.WriteLine();
+
+                    // CreateMessageFactory
+                    using (generator.BeginBlock("public IFixMessageFactory CreateMessageFactory()"))
+                    {
+                        generator.WriteLine("return new FixMessageFactory();");
+                    }
+                    generator.WriteLine();
+
+                    // CreateSessionMessageFactory
+                    using (generator.BeginBlock("public ISessionMessageFactory CreateSessionMessageFactory(ISessionDescription sessionDescription)"))
+                    {
+                        generator.WriteLine("return new SessionMessageFactory(sessionDescription);");
+                    }
+                    generator.WriteLine();
+
+                    // GetMessageTypes - return all message types
+                    using (generator.BeginBlock("public IEnumerable<Type> GetMessageTypes()"))
+                    {
+                        using (generator.BeginBlock("return new Type[]"))
+                        {
+                            var messages = FixDefinitions.Message.Select(kv => kv.Value.Name).Distinct().ToList();
+                            for (int i = 0; i < messages.Count; i++)
+                            {
+                                var comma = i < messages.Count - 1 ? "," : "";
+                                generator.WriteLine($"typeof({messages[i]}){comma}");
+                            }
+                        }
+                        generator.WriteLine(";");
+                    }
+                    generator.WriteLine();
+
+                    // GetMessageTypeByMsgType
+                    using (generator.BeginBlock("public Type? GetMessageTypeByMsgType(string msgType)"))
+                    {
+                        using (generator.BeginBlock("return msgType switch"))
+                        {
+                            // Use distinct by MsgType to avoid duplicate switch cases
+                            var seenMsgTypes = new HashSet<string>();
+                            foreach (var kv in FixDefinitions.Message)
+                            {
+                                var m = kv.Value;
+                                if (seenMsgTypes.Add(m.MsgType))
+                                {
+                                    generator.WriteLine($"\"{m.MsgType}\" => typeof({m.Name}),");
+                                }
+                            }
+                            generator.WriteLine("_ => null");
+                        }
+                        generator.WriteLine(";");
+                    }
+                }
+            }
+
+            var contents = generator.ToString();
+            var path = Path.Join(Options.BackingTypeOutputPath, "TypeSystemProvider.cs");
+            WriteFile(path, contents);
+        }
+
         private void GenerateProjectFile()
         {
             var assemblyName = _modularOptions.AssemblyName ?? "PureFix.Types.Generated";
@@ -202,7 +294,7 @@ namespace PureFix.Dictionary.Compiler
             var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -211,6 +303,7 @@ namespace PureFix.Dictionary.Compiler
 
   <ItemGroup>
     <ProjectReference Include=""{_modularOptions.CoreProjectPath}"" />
+    <ProjectReference Include=""{_modularOptions.TypesProjectPath}"" />
   </ItemGroup>
 
 </Project>";
@@ -797,6 +890,24 @@ namespace PureFix.Dictionary.Compiler
             Directory.CreateDirectory(enumsDir);
             var filename = Path.Join(enumsDir, $"{enumName}.cs");
             WriteFile(filename, code);
+        }
+
+        private static string FormatFixVersion(FixVersion version)
+        {
+            return version switch
+            {
+                FixVersion.FIX40 => "FIX.4.0",
+                FixVersion.FIX41 => "FIX.4.1",
+                FixVersion.FIX42 => "FIX.4.2",
+                FixVersion.FIX43 => "FIX.4.3",
+                FixVersion.FIX44 => "FIX.4.4",
+                FixVersion.FIX50 => "FIX.5.0",
+                FixVersion.FIX50SP1 => "FIX.5.0SP1",
+                FixVersion.FIX50SP2 => "FIX.5.0SP2",
+                FixVersion.FIXML50SP2 => "FIXML.5.0SP2",
+                FixVersion.FIXT11 => "FIXT.1.1",
+                _ => version.ToString()
+            };
         }
     }
 }
