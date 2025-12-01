@@ -204,15 +204,18 @@ public class FileSessionStoreTests
     [Test]
     public async Task HeaderFile_QuickFixFormat()
     {
-        await using var store = new FileSessionStore(_sessionId, _testDir);
-        await store.Initialize();
-
         var msg1 = "8=FIX.4.4\u000135=A\u000134=1\u000110=000\u0001";
         var msg2 = "8=FIX.4.4\u000135=0\u000134=2\u000110=000\u0001";
 
-        await store.Put(new FixMsgStoreRecord("A", DateTime.UtcNow, 1, msg1));
-        await store.Put(new FixMsgStoreRecord("0", DateTime.UtcNow, 2, msg2));
+        // Write messages and close store (releases file handles for Windows)
+        await using (var store = new FileSessionStore(_sessionId, _testDir))
+        {
+            await store.Initialize();
+            await store.Put(new FixMsgStoreRecord("A", DateTime.UtcNow, 1, msg1));
+            await store.Put(new FixMsgStoreRecord("0", DateTime.UtcNow, 2, msg2));
+        }
 
+        // Now we can read the file (store is disposed)
         var filePath = _sessionId.GetFilePath(_testDir, "header");
         var lines = await File.ReadAllLinesAsync(filePath);
 
@@ -225,15 +228,18 @@ public class FileSessionStoreTests
     [Test]
     public async Task BodyFile_ContainsConcatenatedMessages()
     {
-        await using var store = new FileSessionStore(_sessionId, _testDir);
-        await store.Initialize();
-
         var msg1 = "8=FIX.4.4\u000135=A\u000134=1\u000110=000\u0001";
         var msg2 = "8=FIX.4.4\u000135=0\u000134=2\u000110=000\u0001";
 
-        await store.Put(new FixMsgStoreRecord("A", DateTime.UtcNow, 1, msg1));
-        await store.Put(new FixMsgStoreRecord("0", DateTime.UtcNow, 2, msg2));
+        // Write messages and close store (releases file handles for Windows)
+        await using (var store = new FileSessionStore(_sessionId, _testDir))
+        {
+            await store.Initialize();
+            await store.Put(new FixMsgStoreRecord("A", DateTime.UtcNow, 1, msg1));
+            await store.Put(new FixMsgStoreRecord("0", DateTime.UtcNow, 2, msg2));
+        }
 
+        // Now we can read the file (store is disposed)
         var filePath = _sessionId.GetFilePath(_testDir, "body");
         var content = await File.ReadAllTextAsync(filePath);
 

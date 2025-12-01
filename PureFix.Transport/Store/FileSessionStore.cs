@@ -14,31 +14,49 @@ namespace PureFix.Transport.Store;
 /// </summary>
 public sealed class FileSessionStore : IFixSessionStore
 {
-    private const int SeqNumWidth = 20;
     private const string SeqNumsFormat = "{0,20} : {1,20}";
     private const string SessionTimeFormat = "yyyyMMdd-HH:mm:ss.ffffff";
 
-    private readonly string _directory;
     private readonly object _lock = new();
+    private readonly ISessionStreamProvider _streamProvider;
+    private readonly bool _ownsProvider;
 
     private int _senderSeqNum;
     private int _targetSeqNum;
     private DateTime _creationTime;
 
-    // File streams - kept open for performance
-    private FileStream? _bodyStream;
+    // Streams - managed by provider or opened directly
+    private Stream? _bodyStream;
     private StreamWriter? _headerWriter;
 
     // In-memory index: seqnum -> (offset, length)
     private readonly Dictionary<int, (long Offset, int Length)> _headerIndex = new();
 
+    /// <summary>
+    /// Creates a FileSessionStore with the default file-based stream provider.
+    /// </summary>
     public FileSessionStore(SessionId sessionId, string directory)
+        : this(sessionId, new FileSessionStreamProvider(sessionId, directory), ownsProvider: true)
+    {
+    }
+
+    /// <summary>
+    /// Creates a FileSessionStore with a custom stream provider.
+    /// Useful for testing with in-memory streams.
+    /// </summary>
+    public FileSessionStore(SessionId sessionId, ISessionStreamProvider streamProvider, bool ownsProvider = false)
     {
         SessionId = sessionId;
-        _directory = directory;
+        _streamProvider = streamProvider;
+        _ownsProvider = ownsProvider;
     }
 
     public SessionId SessionId { get; }
+
+    /// <summary>
+    /// Gets the stream provider for direct access (useful for testing).
+    /// </summary>
+    public ISessionStreamProvider StreamProvider => _streamProvider;
 
     #region Sequence Numbers
 
@@ -102,11 +120,8 @@ public sealed class FileSessionStore : IFixSessionStore
         // Close existing streams
         await CloseStreams();
 
-        // Delete existing files
-        DeleteFileIfExists("seqnums");
-        DeleteFileIfExists("session");
-        DeleteFileIfExists("header");
-        DeleteFileIfExists("body");
+        // Reset provider (clears files/memory)
+        await _streamProvider.ResetAsync();
 
         // Persist new state
         await PersistSeqNums();
@@ -138,11 +153,11 @@ public sealed class FileSessionStore : IFixSessionStore
             _headerIndex[record.SeqNum] = (offset, length);
         }
 
-        // Write to body file
+        // Write to body stream
         await _bodyStream!.WriteAsync(bytes);
         await _bodyStream.FlushAsync();
 
-        // Write to header file
+        // Write to header
         await _headerWriter!.WriteLineAsync($"{record.SeqNum},{offset},{length}");
         await _headerWriter.FlushAsync();
     }
@@ -245,8 +260,6 @@ public sealed class FileSessionStore : IFixSessionStore
 
     public async Task Initialize()
     {
-        Directory.CreateDirectory(_directory);
-
         // Load sequence numbers
         await LoadSeqNums();
 
@@ -271,49 +284,35 @@ public sealed class FileSessionStore : IFixSessionStore
     public async ValueTask DisposeAsync()
     {
         await CloseStreams();
+
+        if (_ownsProvider && _streamProvider is IAsyncDisposable disposable)
+        {
+            await disposable.DisposeAsync();
+        }
     }
 
     #endregion
 
-    #region Private - File Operations
-
-    private string GetFilePath(string extension) => SessionId.GetFilePath(_directory, extension);
-
-    private void DeleteFileIfExists(string extension)
-    {
-        var path = GetFilePath(extension);
-        if (File.Exists(path))
-            File.Delete(path);
-    }
+    #region Private - Stream Operations
 
     private void OpenStreams()
     {
-        _bodyStream = new FileStream(
-            GetFilePath("body"),
-            FileMode.OpenOrCreate,
-            FileAccess.ReadWrite,
-            FileShare.Read);
-        _bodyStream.Seek(0, SeekOrigin.End); // Append mode
-
-        var headerStream = new FileStream(
-            GetFilePath("header"),
-            FileMode.OpenOrCreate,
-            FileAccess.Write,
-            FileShare.Read);
-        headerStream.Seek(0, SeekOrigin.End); // Append mode
-        _headerWriter = new StreamWriter(headerStream, Encoding.UTF8) { AutoFlush = false };
+        _bodyStream = _streamProvider.OpenBodyStream();
+        _headerWriter = _streamProvider.OpenHeaderWriter();
     }
 
     private async Task CloseStreams()
     {
+        // We don't dispose the streams themselves as they're owned by the provider
+        // Just flush and clear our references
         if (_headerWriter != null)
         {
-            await _headerWriter.DisposeAsync();
+            await _headerWriter.FlushAsync();
             _headerWriter = null;
         }
         if (_bodyStream != null)
         {
-            await _bodyStream.DisposeAsync();
+            await _bodyStream.FlushAsync();
             _bodyStream = null;
         }
     }
@@ -321,20 +320,19 @@ public sealed class FileSessionStore : IFixSessionStore
     private async Task PersistSeqNums()
     {
         var content = string.Format(SeqNumsFormat, _senderSeqNum, _targetSeqNum);
-        await File.WriteAllTextAsync(GetFilePath("seqnums"), content);
+        await _streamProvider.WriteSeqNumsAsync(content);
     }
 
     private async Task LoadSeqNums()
     {
-        var path = GetFilePath("seqnums");
-        if (!File.Exists(path))
+        var content = await _streamProvider.ReadSeqNumsAsync();
+        if (content == null)
         {
             _senderSeqNum = 1;
             _targetSeqNum = 1;
             return;
         }
 
-        var content = await File.ReadAllTextAsync(path);
         // Format: "SSSSSSSSSSSSSSSSSSSS : TTTTTTTTTTTTTTTTTTTT"
         var parts = content.Split(':');
         if (parts.Length == 2)
@@ -347,20 +345,19 @@ public sealed class FileSessionStore : IFixSessionStore
     private async Task PersistSessionTime()
     {
         var content = _creationTime.ToString(SessionTimeFormat, CultureInfo.InvariantCulture);
-        await File.WriteAllTextAsync(GetFilePath("session"), content);
+        await _streamProvider.WriteSessionTimeAsync(content);
     }
 
     private async Task LoadSessionTime()
     {
-        var path = GetFilePath("session");
-        if (!File.Exists(path))
+        var content = await _streamProvider.ReadSessionTimeAsync();
+        if (content == null)
         {
             _creationTime = DateTime.UtcNow;
             await PersistSessionTime();
             return;
         }
 
-        var content = await File.ReadAllTextAsync(path);
         if (DateTime.TryParseExact(content.Trim(), SessionTimeFormat,
             CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var time))
         {
@@ -374,11 +371,7 @@ public sealed class FileSessionStore : IFixSessionStore
 
     private async Task LoadHeaderIndex()
     {
-        var path = GetFilePath("header");
-        if (!File.Exists(path))
-            return;
-
-        var lines = await File.ReadAllLinesAsync(path);
+        var lines = await _streamProvider.ReadHeaderLinesAsync();
         foreach (var line in lines)
         {
             if (string.IsNullOrWhiteSpace(line))
