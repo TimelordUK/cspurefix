@@ -1,12 +1,5 @@
-﻿using Arrow.Threading.Tasks;
-using PureFix.Types;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using PureFix.Types;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace PureFix.Transport.Session
 {
@@ -18,45 +11,35 @@ namespace PureFix.Transport.Session
         private readonly Channel<SessionEvent> _channel = Channel.CreateUnbounded<SessionEvent>();
         private CancellationToken _token;
         private readonly ILogger? _logger;
-        private readonly AsyncWorkQueue _q;
 
-        public EventDispatcher(ILogFactory? logger, AsyncWorkQueue q, IMessageTransport transport)
+        public EventDispatcher(ILogFactory? logger, IMessageTransport transport)
         {
-            _q = q;
             _logger = logger?.MakeLogger(nameof(EventDispatcher));
             _timerDispatcher = new TimerDispatcher(logger);
             _transportDispatcher = new TransportDispatcher(logger, transport);
         }       
 
-        public async Task Writer(TimeSpan timer, CancellationToken token)
+        public void Writer(TimeSpan timer, CancellationToken token)
         {
-            await Task.Factory.StartNew(async () =>
-            {
-                _token = token;
-                var tasks = new[] {
-                    _timerDispatcher.Dispatch(this, timer, token),
-                    _transportDispatcher.Dispatch(this, token)
-                };
-                _logger?.Info("Writer is waiting on events.");
-                await Task.WhenAny(tasks);
-                _logger?.Info("Writer has completed.");
-            }, TaskCreationOptions.LongRunning);
+            _token = token;
+            // Start dispatchers in background - they run until cancelled
+            // These fire-and-forget tasks write to the channel that Reader consumes
+            // We don't await them - they run in background while Reader consumes from channel
+            _ = _timerDispatcher.Dispatch(this, timer, token);
+            _ = _transportDispatcher.Dispatch(this, token);
+            _logger?.Info("Writer started timer and transport dispatchers.");
         }
 
         public void OnRx(byte[] buffer, int len)
         {
-            _q.EnqueueAsync(() =>
-            {
-                _channel.Writer.TryWrite(new SessionEvent(buffer, len));
-            });
+            // Channel is thread-safe, no need to serialize through queue
+            _channel.Writer.TryWrite(new SessionEvent(buffer, len));
         }
 
         public void OnTimer()
         {
-            _q.EnqueueAsync(() =>
-            { 
-                _channel.Writer.TryWrite(new SessionEvent());
-            });
+            // Channel is thread-safe, no need to serialize through queue
+            _channel.Writer.TryWrite(new SessionEvent());
         }
 
         public async Task<SessionEvent> WaitRead()

@@ -349,10 +349,11 @@ namespace PureFix.Transport.Session
             m_transport = transport;
             await OnRun();
             await InitiatorLogon();            
-            var dispatcher = new EventDispatcher(m_logFactory, m_q, transport);
+            var dispatcher = new EventDispatcher(m_logFactory, transport);
             // start sending events to the channel on which this session listens.
-            await dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
-            // read from the channel 
+            // Writer starts background tasks that write to channel - doesn't block
+            dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
+            // read from the channel
             await Reader(dispatcher, m_MySource.Token);
             m_sessionLogger?.Info("Run ends");
         }

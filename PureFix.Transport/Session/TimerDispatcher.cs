@@ -19,6 +19,7 @@ namespace PureFix.Transport.Session
             public Task Start(TimeSpan interval, Action onInvoke, CancellationToken token)
             {
                 var timer = new PeriodicTimer(interval);
+                // Use .Unwrap() to properly await the inner async task
                 Task task = Task.Factory.StartNew(async () =>
                 {
                     m_logger?.Info("timer starting.");
@@ -28,14 +29,14 @@ namespace PureFix.Transport.Session
                         onInvoke.Invoke();
                     }
                     m_logger?.Info("timer exiting.");
-                },
-                    TaskCreationOptions.LongRunning);
+                }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
                 return task;
             }
 
             public Task Start(TimeSpan interval, Func<Task> onInvoke, CancellationToken token)
             {
                 var timer = new PeriodicTimer(interval);
+                // Use .Unwrap() to properly await the inner async task
                 Task task = Task.Factory.StartNew(async () =>
                 {
                     m_logger?.Info("timer starting.");
@@ -45,8 +46,7 @@ namespace PureFix.Transport.Session
                         await onInvoke.Invoke();
                     }
                     m_logger?.Info("timer exiting.");
-                },
-                    TaskCreationOptions.LongRunning);
+                }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
                 return task;
             }
 

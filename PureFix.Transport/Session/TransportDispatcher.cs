@@ -19,17 +19,18 @@ namespace PureFix.Transport.Session
             m_logger = logger?.MakeLogger(nameof(TransportDispatcher));
         }
 
-        public async Task Dispatch(ISessionEventReciever reciever, CancellationToken token)
+        public Task Dispatch(ISessionEventReciever reciever, CancellationToken token)
         {
             // use a pool here
             var buffer = new byte[50 * 1024];
             bool terminated = false;
-            await Task.Factory.StartNew(async () =>
+            // Use .Unwrap() to properly await the inner async task
+            return Task.Factory.StartNew(async () =>
             {
                 m_logger?.Info("starting to relay transport to session.");
                 while (!terminated && m_transport.Connected && !token.IsCancellationRequested)
                 {
-                    var received = await m_transport.ReceiveAsync(buffer, token);  
+                    var received = await m_transport.ReceiveAsync(buffer, token);
                     if (received == 0)
                     {
                         m_logger?.Info("read 0 from transport, exit");
@@ -41,7 +42,7 @@ namespace PureFix.Transport.Session
                     reciever.OnRx(newBuffer, received);
                 }
                 m_logger?.Info($"transport has ended. Connected = {m_transport.Connected}, token =  {token.IsCancellationRequested}, terminated = {terminated}");
-            }, TaskCreationOptions.LongRunning);
+            }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
         }
     }
 }
