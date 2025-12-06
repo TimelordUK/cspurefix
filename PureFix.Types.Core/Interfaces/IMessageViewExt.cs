@@ -55,5 +55,10 @@ namespace PureFix.Transport
         {
             return view.GetDateTime((int)MsgTag.SendingTime);
         }
+
+        public static bool? ResetSeqNumFlag(this IMessageView view)
+        {
+            return view.GetBool((int)MsgTag.ResetSeqNumFlag);
+        }
     }
 }

@@ -121,7 +121,37 @@ namespace PureFix.Transport.Ascii
             var peerCompId = view.SenderCompID();
             var userName = view.Username();
             var password = view.Password();
-            logger?.Info($"peerLogon Username = {userName}, heartBtInt = {heartBtInt}, peerCompId = {peerCompId}, userName = {userName}");
+            var resetSeqNumFlag = view.ResetSeqNumFlag();
+            logger?.Info($"peerLogon Username = {userName}, heartBtInt = {heartBtInt}, peerCompId = {peerCompId}, resetSeqNumFlag = {resetSeqNumFlag}");
+
+            // Handle ResetSeqNumFlag from peer's logon
+            // When peer sends ResetSeqNumFlag=Y, both sides should reset to 1.
+            if (resetSeqNumFlag == true)
+            {
+                var peerSeqNum = view.MsgSeqNum() ?? 1;
+                var weAlsoReset = m_config.ResetSeqNumFlag();
+
+                logger?.Info($"Peer sent ResetSeqNumFlag=Y with SeqNum={peerSeqNum}, weAlsoReset={weAlsoReset}");
+
+                // Always reset our expected incoming sequence
+                m_sessionState.LastPeerMsgSeqNum = peerSeqNum;
+                await m_sessionStore.SetTargetSeqNum(peerSeqNum + 1);
+
+                // Reset our outgoing sequence ONLY if we didn't already reset (via our own ResetSeqNumFlag=Y)
+                // If we also sent ResetSeqNumFlag=Y, our outgoing was already reset when we sent our Logon
+                if (!weAlsoReset)
+                {
+                    logger?.Info("Resetting our outgoing sequence to match peer's reset request");
+                    await m_sessionStore.Reset();
+                    m_encoder.MsgSeqNum = m_sessionStore.SenderSeqNum;
+
+                    // Recreate resender with empty store
+                    m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
+                }
+
+                logger?.Info($"Reset complete: SenderSeqNum={m_sessionStore.SenderSeqNum}, TargetSeqNum={m_sessionStore.TargetSeqNum}, LastPeerMsgSeqNum={m_sessionState.LastPeerMsgSeqNum}");
+            }
+
             var state = m_sessionState;
             state.PeerHeartBeatSecs = view.GetInt32((int)MsgTag.HeartBtInt);
             state.PeerCompID = peerCompId;
@@ -191,6 +221,9 @@ namespace PureFix.Transport.Ascii
                         {
                             ret = true;
                             state.LastPeerMsgSeqNum = seqNo;
+
+                            // Update store's target sequence number (next expected incoming seq = seqNo + 1)
+                            await m_sessionStore.SetTargetSeqNum(seqNo.Value + 1);
                         }
                         return ret;
                     }
@@ -240,12 +273,15 @@ namespace PureFix.Transport.Ascii
         }
 
 /// <summary>
-/// Stores an encoded message to the session store.
+/// Stores an encoded message to the session store and updates sender sequence number.
 /// </summary>
         protected async Task StoreEncodedMessage(string msgType, int seqNum, string encoded)
         {
             var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, encoded);
             await m_sessionStore.Put(record);
+
+            // Update store's sender sequence number (next outgoing seq = seqNum + 1)
+            await m_sessionStore.SetSenderSeqNum(seqNum + 1);
         }
 
 /**
@@ -347,8 +383,14 @@ namespace PureFix.Transport.Ascii
                     {
                         var newSeqNo = view.GetInt32((int)MsgTag.NewSeqNo);
                         logger?.Info($"peer sends '{msgType}' sequence reset.newSeqNo = {newSeqNo}");
-                        // expect  newSeqNo to be the next message's sequence number.
+                        // expect newSeqNo to be the next message's sequence number.
                         m_sessionState.LastPeerMsgSeqNum = newSeqNo - 1;
+
+                        // Update store's target sequence number to match
+                        if (newSeqNo.HasValue)
+                        {
+                            await m_sessionStore.SetTargetSeqNum(newSeqNo.Value);
+                        }
                         break;
                     }
 
