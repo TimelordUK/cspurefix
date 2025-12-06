@@ -28,11 +28,6 @@ public sealed class ConsoleMetricsListener : IDisposable
     private double _sendMin = double.MaxValue;
     private double _sendMax;
 
-    private double _receiveLatencySum;
-    private int _receiveCount;
-    private double _receiveMin = double.MaxValue;
-    private double _receiveMax;
-
     // Counters
     private long _messagesSent;
     private long _messagesReceived;
@@ -84,13 +79,6 @@ public sealed class ConsoleMetricsListener : IDisposable
                     _sendCount++;
                     _sendMin = Math.Min(_sendMin, measurement);
                     _sendMax = Math.Max(_sendMax, measurement);
-                    break;
-
-                case "purefix.receive.latency":
-                    _receiveLatencySum += measurement;
-                    _receiveCount++;
-                    _receiveMin = Math.Min(_receiveMin, measurement);
-                    _receiveMax = Math.Max(_receiveMax, measurement);
                     break;
             }
         }
@@ -144,12 +132,6 @@ public sealed class ConsoleMetricsListener : IDisposable
             {
                 var avgSend = _sendLatencySum / _sendCount;
                 Console.WriteLine($"Send:    count={_sendCount}, avg={avgSend:F1}us, min={_sendMin:F1}us, max={_sendMax:F1}us");
-            }
-
-            if (_receiveCount > 0)
-            {
-                var avgReceive = _receiveLatencySum / _receiveCount;
-                Console.WriteLine($"Receive: count={_receiveCount}, avg={avgReceive:F1}us, min={_receiveMin:F1}us, max={_receiveMax:F1}us");
             }
 
             Console.WriteLine($"Messages: sent={_messagesSent}, received={_messagesReceived}");

@@ -170,14 +170,16 @@ namespace PureFix.Transport.SocketTransport
 
         public async Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)
         {
-            var startTicks = Stopwatch.GetTimestamp();
             var stream = m_sslStream ?? m_networkStream;
             if (stream != null)
             {
                 var received = await stream.ReadAsync(buffer, token);
-                var elapsed = Stopwatch.GetElapsedTime(startTicks);
-                FixMetrics.ReceiveLatency.Record(elapsed.TotalMicroseconds);
-                FixMetrics.BytesReceived.Add(received);
+                // Only track bytes received - latency for blocking reads is meaningless
+                // as it measures wait time for data, not processing time
+                if (received > 0)
+                {
+                    FixMetrics.BytesReceived.Add(received);
+                }
                 return received;
             }
             else

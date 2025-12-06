@@ -27,10 +27,8 @@ public static class FixMetrics
         unit: "us",
         description: "Time to send message over transport");
 
-    public static readonly Histogram<double> ReceiveLatency = s_meter.CreateHistogram<double>(
-        "purefix.receive.latency",
-        unit: "us",
-        description: "Time to receive message from transport");
+    // Note: Receive latency is not measured as ReadAsync blocks waiting for data,
+    // making latency meaningless. Parse latency captures actual processing time.
 
     // Counters for throughput
     public static readonly Counter<long> MessagesSent = s_meter.CreateCounter<long>(
