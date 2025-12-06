@@ -1,6 +1,7 @@
 ﻿using PureFix.Transport.Session;
 using PureFix.Types.Config;
 using PureFix.Types;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net;
 using System.Net.Security;
@@ -169,10 +170,14 @@ namespace PureFix.Transport.SocketTransport
 
         public async Task<int> ReceiveAsync(Memory<byte> buffer, CancellationToken token)
         {
+            var startTicks = Stopwatch.GetTimestamp();
             var stream = m_sslStream ?? m_networkStream;
             if (stream != null)
             {
                 var received = await stream.ReadAsync(buffer, token);
+                var elapsed = Stopwatch.GetElapsedTime(startTicks);
+                FixMetrics.ReceiveLatency.Record(elapsed.TotalMicroseconds);
+                FixMetrics.BytesReceived.Add(received);
                 return received;
             }
             else
@@ -183,10 +188,15 @@ namespace PureFix.Transport.SocketTransport
 
         public async Task SendAsync(ReadOnlyMemory<byte> messageBytes, CancellationToken token)
         {
+            var startTicks = Stopwatch.GetTimestamp();
             var stream = m_sslStream ?? m_networkStream;
             if (stream != null)
             {
                 await stream.WriteAsync(messageBytes, token);
+                var elapsed = Stopwatch.GetElapsedTime(startTicks);
+                FixMetrics.SendLatency.Record(elapsed.TotalMicroseconds);
+                FixMetrics.BytesSent.Add(messageBytes.Length);
+                FixMetrics.MessagesSent.Add(1);
             }
             else
             {

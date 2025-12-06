@@ -198,6 +198,8 @@ namespace PureFix.Buffer.Ascii
             {
                 var elapsedTime = Stopwatch.GetElapsedTime(startTicks);
                 _totalElapsedParseMicros += elapsedTime.TotalMicroseconds;
+                FixMetrics.ParseLatency.Record(elapsedTime.TotalMicroseconds,
+                    new KeyValuePair<string, object?>("bytes", end));
             }
         }
 

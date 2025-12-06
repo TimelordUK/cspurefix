@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,56 +44,67 @@ namespace PureFix.Buffer.Ascii
 
         public StoragePool.Storage? Encode(string msgType, IFixMessage message)
         {
-            if (!Definitions.Message.TryGetValue(msgType, out _))
+            var startTicks = Stopwatch.GetTimestamp();
+            try
             {
-                return null; 
+                if (!Definitions.Message.TryGetValue(msgType, out _))
+                {
+                    return null;
+                }
+
+                MsgSeqNum = Math.Max(1, MsgSeqNum);
+
+                var hdr = SessionMessageFactory.Header(msgType, MsgSeqNum, Clock.Current);
+                if (hdr == null)
+                {
+                    return null;
+                }
+
+                // may have to fold permitted user specified header override fields onto the destination message.
+                // if this is a replay, then ensure the header is set appropriately. The typescript version supports
+                // any other field than BeginString, BodyLength, MsgType, SenderCompID, SendingTime, TargetCompID, TargetSubID
+                // to be overriden in header based on supplied fields, this is not supported here.
+
+                if (message.StandardHeader != null)
+                {
+                    hdr.MergeFrom(message.StandardHeader);
+                    // having folded fields from the provided header to the message header, do not wish to serialise the
+                    // old header so reset all fields. Also reset trailer it will be re-computed.
+                    message.StandardHeader.Reset();
+                    message.StandardTrailer?.Reset();
+                }
+
+                var storage = Pool.Rent();
+
+                var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+                hdr.Encode(writer);
+                message.Encode(writer);
+
+                // checksum can only be caluculated after the body length is correctly set which we now will know
+                // having serialised the header and message contents.
+                // "8=FIX.4.4|9=100001|35=D"
+
+                var width = Math.Max(4, SessionDescription.BodyLengthChars ?? 7);
+                storage.PatchBodyLength(width);
+
+                var checksum = storage.Buffer.Checksum();
+                var trailer = SessionMessageFactory.Trailer(checksum);
+                if (trailer == null)
+                {
+                    Return(storage);
+                    return null;
+                }
+
+                trailer.Encode(writer);
+                MsgSeqNum = MsgSeqNum + 1;
+                return storage;
             }
-
-            MsgSeqNum = Math.Max(1, MsgSeqNum);
-
-            var hdr = SessionMessageFactory.Header(msgType, MsgSeqNum, Clock.Current);
-            if (hdr == null)
+            finally
             {
-                return null;
+                var elapsed = Stopwatch.GetElapsedTime(startTicks);
+                FixMetrics.EncodeLatency.Record(elapsed.TotalMicroseconds,
+                    new KeyValuePair<string, object?>("msgType", msgType));
             }
-
-            // may have to fold permitted user specified header override fields onto the destination message.
-            // if this is a replay, then ensure the header is set appropriately. The typescript version supports
-            // any other field than BeginString, BodyLength, MsgType, SenderCompID, SendingTime, TargetCompID, TargetSubID
-            // to be overriden in header based on supplied fields, this is not supported here.
-
-            if (message.StandardHeader != null)
-            {
-                hdr.MergeFrom(message.StandardHeader);
-                // having folded fields from the provided header to the message header, do not wish to serialise the 
-                // old header so reset all fields. Also reset trailer it will be re-computed.
-                message.StandardHeader.Reset();
-                message.StandardTrailer?.Reset();
-            } 
-
-            var storage = Pool.Rent();
-            
-            var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
-            hdr.Encode(writer);
-            message.Encode(writer);
-
-            // checksum can only be caluculated after the body length is correctly set which we now will know
-            // having serialised the header and message contents.
-            // "8=FIX.4.4|9=100001|35=D"
-
-            var width = Math.Max(4, SessionDescription.BodyLengthChars ?? 7);
-            storage.PatchBodyLength(width);
-
-            var checksum = storage.Buffer.Checksum();
-            var trailer = SessionMessageFactory.Trailer(checksum);
-            if (trailer == null)
-            {
-                Return(storage);
-                return null;
-            }
-            trailer.Encode(writer);
-            MsgSeqNum = MsgSeqNum + 1;
-            return storage;
         }
     }
 }
