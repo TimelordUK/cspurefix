@@ -239,8 +239,8 @@ namespace PureFix.Transport.Session
                             m_sessionLogger?.Info($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
-                            // Use Pipe for human-readable FIX log, SOH for store
-                            var forLog = storage.AsString(AsciiChars.Pipe);
+                            // Use LogDelimiter for FIX log (defaults to Pipe), StoreDelimiter for store (defaults to SOH)
+                            var forLog = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
                             var forStore = storage.AsString(m_config.StoreDelimiter ?? AsciiChars.Soh);
                             await m_q.EnqueueAsync(() =>
                             {
@@ -277,8 +277,8 @@ namespace PureFix.Transport.Session
 
         protected void OnFixLog(StoragePool.Storage storage)
         {
-            // Use Pipe for human-readable FIX log
-            var decoded = storage.AsString(AsciiChars.Pipe);
+            // Use LogDelimiter for FIX log (defaults to Pipe for readability)
+            var decoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
             var msgType = storage.GetStringAt(2);
             if (msgType == null) return;
             OnDecoded(msgType, decoded);

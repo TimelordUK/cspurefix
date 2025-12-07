@@ -1,4 +1,5 @@
 using Arrow.Threading.Tasks;
+using PureFix.Buffer.Ascii;
 using PureFix.Examples.Shared;
 using PureFix.Examples.Skeleton;
 using PureFix.Transport;
@@ -13,6 +14,7 @@ Console.WriteLine("============================");
 var clientOnly = false;
 var dryRun = false;
 var noReset = false;
+var sohLog = false;
 string? customConfig = null;
 string? storeDirectory = null;
 
@@ -36,6 +38,9 @@ for (var i = 0; i < args.Length; i++)
         case "--no-reset" or "-n":
             noReset = true;
             break;
+        case "--soh-log":
+            sohLog = true;
+            break;
         case "--dry-run" or "-d":
             dryRun = true;
             clientOnly = true; // dry-run implies client mode
@@ -45,6 +50,9 @@ for (var i = 0; i < args.Length; i++)
             return;
     }
 }
+
+// Determine log delimiter (null = use default Pipe, or SOH for production)
+byte? logDelimiter = sohLog ? AsciiChars.Soh : null;
 
 // Paths for session configuration files
 var dictRootPath = AppContext.BaseDirectory; // Dictionary files are copied via PureFix.Data reference
@@ -200,7 +208,7 @@ if (clientOnly)
     }
     Console.WriteLine();
 
-    await Runner.RunSingle(configPath, dictRootPath, clock, MakeSkeletonHost, storeDirectory);
+    await Runner.RunSingle(configPath, dictRootPath, clock, MakeSkeletonHost, storeDirectory, logDelimiter);
 }
 else
 {
@@ -223,6 +231,10 @@ else
     {
         Console.WriteLine("Mode:   NO-RESET (ResetSeqNumFlag=false, HeartBtInt=5s)");
     }
+    if (sohLog)
+    {
+        Console.WriteLine("Log:    SOH delimiter (production mode - copy/paste compatible)");
+    }
     if (storeDirectory != null)
     {
         Console.WriteLine($"Store:  {storeDirectory} (QuickFix-compatible file store)");
@@ -237,7 +249,7 @@ else
     }
     Console.WriteLine();
 
-    await Runner.Run(acceptorConfig, initiatorConfig, dictRootPath, clock, MakeSkeletonHost, storeDirectory);
+    await Runner.Run(acceptorConfig, initiatorConfig, dictRootPath, clock, MakeSkeletonHost, storeDirectory, logDelimiter);
 }
 
 Console.WriteLine();
@@ -261,6 +273,8 @@ static void PrintHelp()
     Console.WriteLine("                         Store files created per-session based on comp IDs");
     Console.WriteLine("  --no-reset, -n         Use configs with ResetSeqNumFlag=false (for resume testing)");
     Console.WriteLine("                         Also uses faster heartbeat (5s vs 30s)");
+    Console.WriteLine("  --soh-log              Use SOH delimiter in FIX logs (production mode)");
+    Console.WriteLine("                         Default is pipe (|) for readability in tests");
     Console.WriteLine("  --dry-run, -d          Show session/store status without connecting");
     Console.WriteLine("                         Use to verify QuickFix store recovery before connecting");
     Console.WriteLine("  --help, -h             Show this help message");
@@ -269,6 +283,7 @@ static void PrintHelp()
     Console.WriteLine("  dotnet run                                    # Run both locally (in-memory)");
     Console.WriteLine("  dotnet run -- -s ./teststore                  # Run both with file persistence");
     Console.WriteLine("  dotnet run -- -s ./teststore -n               # Run with store, no seq reset");
+    Console.WriteLine("  dotnet run -- -s ./teststore --soh-log        # Run with SOH log delimiter");
     Console.WriteLine("  dotnet run -- --client                        # Client with default config");
     Console.WriteLine("  dotnet run -- -c broker.json                  # Client with custom config");
     Console.WriteLine("  dotnet run -- -c broker.json -s ./store       # Client with file persistence");

@@ -17,7 +17,8 @@ public class FixApp
     /// <param name="sessionConfigPath">Path to session JSON config</param>
     /// <param name="dictRootPath">Root path for dictionaries</param>
     /// <param name="storeDirectory">Optional: directory for file-based session store (QuickFix-compatible)</param>
-    public static IFixConfig MakeConfig(string sessionConfigPath, string dictRootPath, string? storeDirectory = null)
+    /// <param name="logDelimiter">Optional: delimiter for FIX log (null=Pipe for tests, SOH for production)</param>
+    public static IFixConfig MakeConfig(string sessionConfigPath, string dictRootPath, string? storeDirectory = null, byte? logDelimiter = null)
     {
         var config = FixConfig.MakeConfigFromPaths(dictRootPath, sessionConfigPath);
 
@@ -33,6 +34,12 @@ public class FixApp
             {
                 // Default to in-memory store
                 fixConfig.SessionStoreFactory = new MemorySessionStoreFactory();
+            }
+
+            // Override log delimiter if specified
+            if (logDelimiter.HasValue)
+            {
+                fixConfig.LogDelimiter = logDelimiter.Value;
             }
         }
 

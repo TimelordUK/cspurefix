@@ -7,7 +7,13 @@ namespace PureFix.Transport.Session
 {
     public interface IFixConfig
     {
+        /// <summary>
+        /// Delimiter used for human-readable FIX log output.
+        /// Defaults to Pipe (|) for readability in tests/debugging.
+        /// Set to SOH (0x01) for production logs that can be copy-pasted to test environments.
+        /// </summary>
         byte? LogDelimiter { get; set; }
+
         byte? Delimiter { get; set; }
 
         /// <summary>
