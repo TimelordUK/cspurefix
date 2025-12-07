@@ -12,6 +12,7 @@ Console.WriteLine("============================");
 // Parse command line arguments
 var clientOnly = false;
 var dryRun = false;
+var noReset = false;
 string? customConfig = null;
 string? storeDirectory = null;
 
@@ -31,6 +32,9 @@ for (var i = 0; i < args.Length; i++)
             {
                 storeDirectory = args[++i];
             }
+            break;
+        case "--no-reset" or "-n":
+            noReset = true;
             break;
         case "--dry-run" or "-d":
             dryRun = true;
@@ -201,10 +205,36 @@ if (clientOnly)
 else
 {
     // Default: run both acceptor and initiator for local testing
-    var acceptorConfig = Path.Join(sessionRootPath, "test-qf44-acceptor.json");
-    var initiatorConfig = Path.Join(sessionRootPath, "test-qf44-initiator.json");
+    string acceptorConfig, initiatorConfig;
+    if (noReset)
+    {
+        // Use configs with ResetSeqNumFlag=false for resume testing
+        acceptorConfig = Path.Join(sessionRootPath, "test-qf44-acceptor-noresetseq.json");
+        initiatorConfig = Path.Join(sessionRootPath, "test-qf44-initiator-noresetseq.json");
+    }
+    else
+    {
+        acceptorConfig = Path.Join(sessionRootPath, "test-qf44-acceptor.json");
+        initiatorConfig = Path.Join(sessionRootPath, "test-qf44-initiator.json");
+    }
 
     Console.WriteLine("Starting FIX sessions (Initiator and Acceptor)...");
+    if (noReset)
+    {
+        Console.WriteLine("Mode:   NO-RESET (ResetSeqNumFlag=false, HeartBtInt=5s)");
+    }
+    if (storeDirectory != null)
+    {
+        Console.WriteLine($"Store:  {storeDirectory} (QuickFix-compatible file store)");
+        Console.WriteLine();
+        Console.WriteLine("Expected store files:");
+        Console.WriteLine($"  Acceptor:  FIX.4.4-accept-comp-init-comp.{{seqnums,session,header,body}}");
+        Console.WriteLine($"  Initiator: FIX.4.4-init-comp-accept-comp.{{seqnums,session,header,body}}");
+    }
+    else
+    {
+        Console.WriteLine("Store:  in-memory (no persistence)");
+    }
     Console.WriteLine();
 
     await Runner.Run(acceptorConfig, initiatorConfig, dictRootPath, clock, MakeSkeletonHost, storeDirectory);
@@ -228,15 +258,27 @@ static void PrintHelp()
     Console.WriteLine("  --client, -c [config]  Run client only (connect to external server)");
     Console.WriteLine("                         Optional: path to session config JSON");
     Console.WriteLine("  --store, -s <dir>      Use QuickFix-compatible file store in <dir>");
-    Console.WriteLine("                         Copy existing .seqnums/.session/.header/.body files here");
+    Console.WriteLine("                         Store files created per-session based on comp IDs");
+    Console.WriteLine("  --no-reset, -n         Use configs with ResetSeqNumFlag=false (for resume testing)");
+    Console.WriteLine("                         Also uses faster heartbeat (5s vs 30s)");
     Console.WriteLine("  --dry-run, -d          Show session/store status without connecting");
     Console.WriteLine("                         Use to verify QuickFix store recovery before connecting");
     Console.WriteLine("  --help, -h             Show this help message");
     Console.WriteLine();
     Console.WriteLine("Examples:");
     Console.WriteLine("  dotnet run                                    # Run both locally (in-memory)");
+    Console.WriteLine("  dotnet run -- -s ./teststore                  # Run both with file persistence");
+    Console.WriteLine("  dotnet run -- -s ./teststore -n               # Run with store, no seq reset");
     Console.WriteLine("  dotnet run -- --client                        # Client with default config");
     Console.WriteLine("  dotnet run -- -c broker.json                  # Client with custom config");
     Console.WriteLine("  dotnet run -- -c broker.json -s ./store       # Client with file persistence");
     Console.WriteLine("  dotnet run -- -c broker.json -s ./store -d    # Dry run - verify store state");
+    Console.WriteLine();
+    Console.WriteLine("Store Resume Testing:");
+    Console.WriteLine("  1. Delete store folder:  rm -rf ./teststore");
+    Console.WriteLine("  2. First run:            dotnet run -- -s ./teststore -n");
+    Console.WriteLine("  3. Let heartbeats run, then Ctrl+C");
+    Console.WriteLine("  4. Check store:          cat ./teststore/*.seqnums");
+    Console.WriteLine("  5. Restart:              dotnet run -- -s ./teststore -n");
+    Console.WriteLine("  6. Sessions should resume from last sequence numbers");
 }

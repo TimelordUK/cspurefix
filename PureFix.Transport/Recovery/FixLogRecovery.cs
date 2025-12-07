@@ -18,8 +18,8 @@ namespace PureFix.Transport.Recovery
         public FixMsgStoreState? LastStoreState { get; private set; }
         public IFixConfig Config { get; }
         protected readonly ILogger? m_logger;
-        public int? MySeqNum { get; private set; } = 0;
-        public int? PeerSeqNum { get; private set; } = 0;
+        public int? MySeqNum { get; private set; }
+        public int? PeerSeqNum { get; private set; }
         private IFixLogParser Parser { get; }
 
         public FixLogRecovery(IFixLogParser parser, ILogFactory logFactory, IFixConfig config, IFixMsgStore msgStore)
@@ -63,6 +63,7 @@ namespace PureFix.Transport.Recovery
         {
             var filter = $"{Config.Name()}-fix";
             var dir = new DirectoryInfo(LogFilePath);
+            if (!dir.Exists) return null;
             var fixLog = dir
                 .EnumerateFiles()
                 .OrderByDescending(x => x.CreationTime)

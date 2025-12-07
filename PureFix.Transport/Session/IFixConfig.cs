@@ -9,6 +9,13 @@ namespace PureFix.Transport.Session
     {
         byte? LogDelimiter { get; set; }
         byte? Delimiter { get; set; }
+
+        /// <summary>
+        /// Delimiter used when storing messages to the session store.
+        /// Defaults to SOH (0x01) for QuickFix compatibility.
+        /// </summary>
+        byte? StoreDelimiter { get; set; }
+
         IFixDefinitions? Definitions { get; }
         ISessionDescription? Description { get; }
         ISessionMessageFactory? MessageFactory { get; }

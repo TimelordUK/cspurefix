@@ -17,6 +17,7 @@ namespace PureFix.Transport
     {
         public byte? LogDelimiter { get; set; } = AsciiChars.Pipe;
         public byte? Delimiter { get; set; } = AsciiChars.Soh;
+        public byte? StoreDelimiter { get; set; } = AsciiChars.Soh;
         public IFixDefinitions? Definitions { get; set; }
         public ISessionDescription? Description { get; set; }
         public ISessionMessageFactory? MessageFactory { get; set; }

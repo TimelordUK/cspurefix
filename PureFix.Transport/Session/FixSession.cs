@@ -239,10 +239,12 @@ namespace PureFix.Transport.Session
                             m_sessionLogger?.Info($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
-                            var encoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
+                            // Use Pipe for human-readable FIX log, SOH for store
+                            var forLog = storage.AsString(AsciiChars.Pipe);
+                            var forStore = storage.AsString(m_config.StoreDelimiter ?? AsciiChars.Soh);
                             await m_q.EnqueueAsync(() =>
                             {
-                                OnEncoded(msgType, seqNum, encoded);
+                                OnEncoded(msgType, seqNum, forLog, forStore);
                             });
                             m_encoder.Return(storage);
                             break;
@@ -275,10 +277,11 @@ namespace PureFix.Transport.Session
 
         protected void OnFixLog(StoragePool.Storage storage)
         {
-            var decoded = storage.AsString(m_config.LogDelimiter ?? AsciiChars.Pipe);
+            // Use Pipe for human-readable FIX log
+            var decoded = storage.AsString(AsciiChars.Pipe);
             var msgType = storage.GetStringAt(2);
-            if (msgType == null) return;           
-            OnDecoded(msgType, decoded);            
+            if (msgType == null) return;
+            OnDecoded(msgType, decoded);
         }
         
         private async Task RxOnMsg(IMessageView view)
@@ -426,11 +429,11 @@ namespace PureFix.Transport.Session
          * responible for maintaining the fix log, this can be used to persist all transmitted
          * messages. use msgType for example to persist only trade capture messages to database
          * @param msgType the msg type representing the message.
-         * @param txt the sent message where for Ascii, the wire SOH delimeter is replaced
-         * with that specified in the config e.g. '|'
+         * @param logTxt the sent message with pipe delimiters for human-readable logging
+         * @param storeTxt the sent message with SOH delimiters for QuickFix-compatible store
          * @protected
          */
-        protected abstract Task OnEncoded(string msgType, int seqNum, string txt);
+        protected abstract Task OnEncoded(string msgType, int seqNum, string logTxt, string storeTxt);
 
         /**
          * typically all session level messages are handled by AsciiSession and these are

@@ -39,17 +39,19 @@ namespace PureFix.Transport.Ascii
             m_fixLog.Info(txt);
         }
 
-        // Initialize session store and optionally recover from log files
+        // Initialize session store
         protected override async Task OnRun()
         {
             // Initialize the session store (loads persisted seq nums from files if using FileSessionStore)
             await InitializeSessionStore();
 
-            // If legacy log recovery is configured, use it as fallback/override
-            if (Recovery != null)
+            // When a session store factory is configured, it handles all persistence
+            // FixLogRecovery is only used as a fallback when no store factory is set
+            var useLogRecovery = m_config.SessionStoreFactory == null && Recovery != null;
+            if (useLogRecovery)
             {
-                await Recovery.Recover();
-                // Config values take precedence, then recovery, then store values (already loaded)
+                await Recovery!.Recover();
+                // Config values take precedence, then recovery
                 if (m_config?.Description?.PeerSeqNum != null)
                 {
                     m_sessionState.LastPeerMsgSeqNum = m_config.Description.PeerSeqNum;
@@ -72,19 +74,20 @@ namespace PureFix.Transport.Ascii
             m_logger.Info($"OnRun MsgSeqNum = {m_encoder.MsgSeqNum}, LastPeerMsgSeqNum = {m_sessionState.LastPeerMsgSeqNum}");
         }
 
-        protected override async Task OnEncoded(string msgType, int seqNum, string txt)
+        protected override async Task OnEncoded(string msgType, int seqNum, string logTxt, string storeTxt)
         {
-            // Store to session store
-            await StoreEncodedMessage(msgType, seqNum, txt);
+            // Store to session store (using SOH delimiter format)
+            await StoreEncodedMessage(msgType, seqNum, storeTxt);
 
             // Also add to legacy recovery if configured
             if (Recovery != null)
             {
-                var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, txt);
+                var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, storeTxt);
                 await Recovery.AddRecord(record);
             }
 
-            m_fixLog.Info(txt);
+            // Log with pipe delimiter for human readability
+            m_fixLog.Info(logTxt);
         }
 
         protected override void OnStopped(Exception? error)
