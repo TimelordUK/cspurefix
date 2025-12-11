@@ -8,10 +8,13 @@ namespace PureFix.Test.ModularTypes.Helpers
 {
     public static class Fix44PathHelper
     {
-        public static readonly string ExampleRootBasePath = Path.Join(Directory.GetCurrentDirectory(), "Data", "examples");
+        // Use BaseDirectory for reliable path resolution regardless of working directory
+        private static readonly string BaseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+        public static readonly string ExampleRootBasePath = Path.Join(BaseDir, "Data", "examples");
         public static readonly string ExampleRootPath = Path.Join(ExampleRootBasePath, "FIX.4.4");
         public static readonly string ExampleRootPath50SP2 = Path.Join(ExampleRootBasePath, "FIX.5.0SP2");
-        public static readonly string DataDictRootPath = Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "Data");
+        public static readonly string DataDictRootPath = Path.Join(BaseDir, "..", "..", "..", "..", "Data");
         public static readonly string SessionRootPath = Path.Join(DataDictRootPath, "Session");
         public static readonly string DataDictPath = Path.Join(DataDictRootPath, "FIX44.xml");
         public static readonly string SkeletonRecoveryPath = Path.Join(ExampleRootPath, "skeleton-client.txt");

@@ -29,7 +29,7 @@ namespace PureFix.Test.ModularTypes
         [OneTimeSetUp]
         public void OnceSetup()
         {
-            var rootFolder = Directory.GetCurrentDirectory();
+            var rootFolder = AppDomain.CurrentDomain.BaseDirectory;
             _definitions = new FixDefinitions();
             _secHelper = new SecDefHelper(_definitions);
             _setHelper = new SetConstraintHelper(_definitions);

@@ -12,7 +12,7 @@ namespace PureFix.Test.ModularTypes
     internal class RepoDictParserTest
     {
         FixDefinitions _definitions = new FixDefinitions();
-        public static readonly string DataDictRootPath = Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "Data", "FIX.5.0SP2","Base");
+        public static readonly string DataDictRootPath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Data", "FIX.5.0SP2","Base");
         public static readonly string FieldDictPath = Path.Join(DataDictRootPath, "Fields.xml");
 
         [OneTimeSetUp]
