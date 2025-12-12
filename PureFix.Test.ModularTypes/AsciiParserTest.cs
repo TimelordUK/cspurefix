@@ -12,6 +12,7 @@ using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Transport;
 using PureFix.Types;
 using PureFix.Types.Config;
+using PureFix.Types.Core;
 using PureFix.Types.FIX44;
 using PureFix.Types.FIX44.Components;
 using JsonHelper = PureFix.Types.JsonHelper;

@@ -7,6 +7,7 @@ using PureFix.Dictionary.Parser;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Dictionary.Parser.Repo;
 using PureFix.Types;
+using PureFix.Types.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 
-namespace PureFix.Types
+namespace PureFix.Types.Core
 {
     public class Tags
     {

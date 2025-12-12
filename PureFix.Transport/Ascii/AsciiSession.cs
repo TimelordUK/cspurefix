@@ -10,6 +10,7 @@ using PureFix.Buffer;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
+using PureFix.Types.Core;
 
 namespace PureFix.Transport.Ascii
 {

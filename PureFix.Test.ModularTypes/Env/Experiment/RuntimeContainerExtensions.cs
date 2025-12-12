@@ -21,37 +21,37 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
 
         public static int HeartbeatCount(this RuntimeContainer runtimeContainer)
         {
-            return runtimeContainer.MessageCount(PureFix.Types.MsgType.Heartbeat);
+            return runtimeContainer.MessageCount(PureFix.Types.Core.MsgType.Heartbeat);
         }
 
         public static int TestRequestCount(this RuntimeContainer runtimeContainer)
         {
-            return runtimeContainer.MessageCount(PureFix.Types.MsgType.TestRequest);
+            return runtimeContainer.MessageCount(PureFix.Types.Core.MsgType.TestRequest);
         }
 
         public static int ResendRequestCount(this RuntimeContainer runtimeContainer)
         {
-            return runtimeContainer.MessageCount(PureFix.Types.MsgType.ResendRequest);
+            return runtimeContainer.MessageCount(PureFix.Types.Core.MsgType.ResendRequest);
         }
 
         public static int LogonCount(this RuntimeContainer runtimeContainer)
         {
-            return runtimeContainer.MessageCount(PureFix.Types.MsgType.Logon);
+            return runtimeContainer.MessageCount(PureFix.Types.Core.MsgType.Logon);
         }
 
         public static int LogoutCount(this RuntimeContainer runtimeContainer)
         {
-            return runtimeContainer.MessageCount(PureFix.Types.MsgType.Logout);
+            return runtimeContainer.MessageCount(PureFix.Types.Core.MsgType.Logout);
         }
 
         public static int TradeCaptureReportRequestAckCount(this RuntimeContainer runtimeContainer)
         {
-            return runtimeContainer.MessageCount(PureFix.Types.MsgType.TradeCaptureReportRequestAck);
+            return runtimeContainer.MessageCount(PureFix.Types.Core.MsgType.TradeCaptureReportRequestAck);
         }
 
         public static int TradeCaptureReportCount(this RuntimeContainer runtimeContainer)
         {
-            return runtimeContainer.MessageCount(PureFix.Types.MsgType.TradeCaptureReport);
+            return runtimeContainer.MessageCount(PureFix.Types.Core.MsgType.TradeCaptureReport);
         }
     }
 }

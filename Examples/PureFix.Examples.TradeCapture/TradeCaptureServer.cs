@@ -4,6 +4,7 @@ using PureFix.Transport.Ascii;
 using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
 using PureFix.Types;
+using PureFix.Types.Core;
 using PureFix.Types.FIX50SP2;
 using System;
 using System.Collections.Generic;

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
+using PureFix.Types.Core;
 
 namespace PureFix.Buffer.Ascii
 {

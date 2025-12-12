@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Types;
+using PureFix.Types.Core;
 using Microsoft.Extensions.ObjectPool;
 using System.Xml.Linq;
 using System.Threading.Channels;

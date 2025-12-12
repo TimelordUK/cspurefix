@@ -10,6 +10,7 @@ using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser;
 using PureFix.Types;
+using PureFix.Types.Core;
 
 
 namespace PureFix.Buffer.Ascii

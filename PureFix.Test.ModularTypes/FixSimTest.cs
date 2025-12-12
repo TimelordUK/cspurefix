@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using DIs = NUnit.DeepObjectCompare.Is;
 using QuickLookup = PureFix.Test.ModularTypes.Helpers.QuickLookup;
 using JsonHelper = PureFix.Types.JsonHelper;
-using MsgType = PureFix.Types.MsgType;
+using MsgType = PureFix.Types.Core.MsgType;
 
 namespace PureFix.Test.ModularTypes
 {

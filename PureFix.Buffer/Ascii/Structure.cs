@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using PureFix.Buffer.Segment;
 using PureFix.Types;
+using PureFix.Types.Core;
 
 namespace PureFix.Buffer.Ascii
 {
