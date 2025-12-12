@@ -30,36 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\examples\FIX.4.4\fix-preamble.txt">
+    <!-- Copy all test data files to output directory -->
+    <Content Include="Data\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\fix.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\fix.test_client.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\fix.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\fixsim-examples.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\quickfix\execution-report\fix.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\quickfix\heartbeat\fix.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\quickfix\logon\fix.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.4.4\skeleton-client.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\examples\FIX.5.0SP2\tc-client.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 
 </Project>
