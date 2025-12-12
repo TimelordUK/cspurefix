@@ -27,9 +27,9 @@ EndProject
 # =============================================================================
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PureFix.Types.Standard", "PureFix.Types.Standard", "{B2C3D4E5-F6A7-8901-BCDE-F23456789012}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX44", "generated-types\PureFix.Types.FIX44\PureFix.Types.FIX44.csproj", "{5D64E2CD-47D4-4111-B753-C7BA96DE9389}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX44", "PureFix.Types.FIX44\PureFix.Types.FIX44.csproj", "{5D64E2CD-47D4-4111-B753-C7BA96DE9389}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX50SP2", "generated-types\PureFix.Types.FIX50SP2\PureFix.Types.FIX50SP2.csproj", "{CE1F747E-C994-4415-AC75-54FF5A26C59C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX50SP2", "PureFix.Types.FIX50SP2\PureFix.Types.FIX50SP2.csproj", "{CE1F747E-C994-4415-AC75-54FF5A26C59C}"
 EndProject
 
 # =============================================================================
@@ -51,7 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C3D4E5F6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Test.ModularTypes", "PureFix.Test.ModularTypes\PureFix.Test.ModularTypes.csproj", "{4030D6A0-CDA0-41E5-8646-1B8EAF612723}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX44UnitTest", "generated-types\PureFix.Types.FIX44UnitTest\PureFix.Types.FIX44UnitTest.csproj", "{E8F78938-E434-4C8F-A091-0017BB794DC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureFix.Types.FIX44UnitTest", "PureFix.Types.FIX44UnitTest\PureFix.Types.FIX44UnitTest.csproj", "{E8F78938-E434-4C8F-A091-0017BB794DC5}"
 EndProject
 
 # =============================================================================
