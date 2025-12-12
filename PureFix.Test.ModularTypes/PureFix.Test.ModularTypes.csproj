@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PureFix.Buffer\PureFix.Buffer.csproj" />
-    <ProjectReference Include="..\generated-types\PureFix.Types.FIX44\PureFix.Types.FIX44.csproj" />
+    <ProjectReference Include="..\PureFix.Types.FIX44\PureFix.Types.FIX44.csproj" />
     <ProjectReference Include="..\PureFix.Dictionary\PureFix.Dictionary.csproj" />
     <ProjectReference Include="..\PureFix.Transport\PureFix.Transport.csproj" />
     <ProjectReference Include="..\Examples\PureFix.Examples.Skeleton\PureFix.Examples.Skeleton.csproj" />
