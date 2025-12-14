@@ -22,7 +22,7 @@ namespace PureFix.Dictionary.Contained
         protected readonly Dictionary<string, ContainedSimpleField> _simple = [];
         protected readonly List<ContainedField> _fields = [];
         protected readonly Dictionary<int, IContainedSet> _containedTag = [];
-        protected readonly List<int> _flattendTag = [];
+        protected readonly List<int> _flattenedTag = [];
         protected readonly Dictionary<int, bool> _containedLength = [];
         protected readonly Dictionary<int, ContainedSimpleField> _localTag = [];
         protected readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
@@ -63,7 +63,7 @@ namespace PureFix.Dictionary.Contained
         /// <summary>
         /// any tag at any level ordered i.e. all tags flattened to list
         /// </summary>
-        public IReadOnlyList<int> FlattenedTag => _flattendTag;
+        public IReadOnlyList<int> FlattenedTag => _flattenedTag;
 
         /// <summary>
         /// any data tags contained length within this set.
@@ -133,7 +133,7 @@ namespace PureFix.Dictionary.Contained
             _components.Clear();
             _simple.Clear();
             _fields.Clear();
-            _flattendTag.Clear();
+            _flattenedTag.Clear();
             _localAttribute.Clear();
             _localNameToField.Clear();
         }

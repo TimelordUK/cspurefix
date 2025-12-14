@@ -342,7 +342,7 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions) : IFixDi
      * if declaring, then a definition node should exist
      */
 
-    private void ExpandSet(Node node, XElement element, ElementType defineElement, ElementType declareElement)
+    private void ExpandSet(Node node, XElement element, Node.ElementType defineElement, Node.ElementType declareElement)
     {
         var at = element.AsAttributeDict();
         var name = NameFrom(at);

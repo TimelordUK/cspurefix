@@ -10,7 +10,7 @@ public sealed class ConsoleMetricsListener : IDisposable
 {
     private readonly MeterListener _listener;
     private readonly Timer _printTimer;
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
 
     // Latency tracking (microseconds)
     private double _encodeLatencySum;

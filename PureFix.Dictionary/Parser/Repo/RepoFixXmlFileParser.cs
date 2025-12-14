@@ -11,7 +11,7 @@ namespace PureFix.Dictionary.Parser.Repo
 {
     public class RepoFixXmlFileParser : IFixDictionaryParser
     {
-        public IFixDefinitions Definitions { get; private set; }
+        public IFixDefinitions Definitions { get; }
 
         private IReadOnlyDictionary<int, List<RepoMsgContentDefinition>>? _content;
         private IReadOnlyDictionary<int, RepoMessageDefinition>? _messages;

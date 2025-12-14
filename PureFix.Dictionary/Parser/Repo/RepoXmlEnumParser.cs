@@ -21,7 +21,7 @@ namespace PureFix.Dictionary.Parser.Repo
      */
     public partial class RepoXmlEnumParser : RepoBaseXmlParser
     {
-        private Dictionary<int, List<FieldEnum>> _enums = [];
+        private readonly Dictionary<int, List<FieldEnum>> _enums = [];
         public IReadOnlyDictionary<int, List<FieldEnum>> Enums => _enums;
         public RepoXmlEnumParser(IFixDefinitions definitions): base(definitions)
         {

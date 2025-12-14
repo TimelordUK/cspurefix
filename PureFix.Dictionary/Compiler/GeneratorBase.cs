@@ -13,22 +13,17 @@ namespace PureFix.Dictionary.Compiler
     public abstract class GeneratorBase
     {
         private readonly string m_Root;
-        private readonly Options m_Options;
-        private readonly IFixDefinitions m_FixDefinitions;
 
         private readonly HashSet<string> m_FilesGenerated = new(StringComparer.OrdinalIgnoreCase);
 
         protected GeneratorBase(string root, IFixDefinitions fixDefinitions, Options options)
         {
             m_Root = root;
-            m_FixDefinitions = fixDefinitions;
-            m_Options = options;
+            FixDefinitions = fixDefinitions;
+            Options = options;
         }
 
-        public ISet<string> FilesGenerated
-        {
-            get{return m_FilesGenerated;}
-        }
+        public ISet<string> FilesGenerated => m_FilesGenerated;
 
         public void Process()
         {
@@ -78,15 +73,9 @@ namespace PureFix.Dictionary.Compiler
             return root ?? other;
         }
 
-        protected Options Options
-        {
-            get{return m_Options;}
-        }
+        protected Options Options { get; }
 
-        protected IFixDefinitions FixDefinitions
-        {
-            get{return m_FixDefinitions;}
-        }
+        protected IFixDefinitions FixDefinitions { get; }
 
         protected void ApplyFields(CodeGenerator generator, string parentPath, IContainedSet set)
         {
@@ -97,19 +86,19 @@ namespace PureFix.Dictionary.Compiler
                 var field = fields[i];
                 var next = (i == fields.Count - 1 ? null : fields[i + 1]);
 
-                if(field is ContainedSimpleField simpleField)
+                switch (field)
                 {
-                    HandleFieldProperty(generator, parentPath, i, simpleField, last, next);
-                }
-                else if(field is ContainedComponentField componentField)
-                {
-                    HandleComponentProperty(generator, parentPath, i, componentField);
-                    Process(parentPath, componentField);
-                }
-                else if(field is ContainedGroupField groupField)
-                {
-                    HandleGroupProperty(generator, parentPath, i, groupField);
-                    Process(parentPath, groupField);
+                    case ContainedSimpleField simpleField:
+                        HandleFieldProperty(generator, parentPath, i, simpleField, last, next);
+                        break;
+                    case ContainedComponentField componentField:
+                        HandleComponentProperty(generator, parentPath, i, componentField);
+                        Process(parentPath, componentField);
+                        break;
+                    case ContainedGroupField groupField:
+                        HandleGroupProperty(generator, parentPath, i, groupField);
+                        Process(parentPath, groupField);
+                        break;
                 }
 
                 last = field;
@@ -126,17 +115,17 @@ namespace PureFix.Dictionary.Compiler
 
         protected void WriteMessageUsings(CodeGenerator generator)
         {
-            foreach(var use in m_Options.DefaultUsing)
+            foreach(var use in Options.DefaultUsing)
             {
                 generator.WriteLine($"using {use};");
             }
 
-            generator.WriteLine($"using {m_Options.BackingTypeNamespace}.Types;");
+            generator.WriteLine($"using {Options.BackingTypeNamespace}.Types;");
         }
 
         protected void WriteUsings(CodeGenerator generator)
         {
-            foreach(var use in m_Options.DefaultUsing)
+            foreach(var use in Options.DefaultUsing)
             {
                 generator.WriteLine($"using {use};");
             }
@@ -165,16 +154,13 @@ namespace PureFix.Dictionary.Compiler
             {
                // Debugger.Break();
             }
-            if (set.Type == ContainedSetType.Component)
-            {
-                return set.Name + "Component";
-            }
-            if (set.Type == ContainedSetType.Group)
-            {
-                return $"{parentPath}{set.Name}";
-            }
 
-            return set.Name;
+            return set.Type switch
+            {
+                ContainedSetType.Component => set.Name + "Component",
+                ContainedSetType.Group => $"{parentPath}{set.Name}",
+                _ => set.Name
+            };
         }
 
         protected string MapRequired(bool value)

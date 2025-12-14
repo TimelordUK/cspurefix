@@ -26,9 +26,9 @@ namespace PureFix.Dictionary.Parser.Repo
 
         protected override void ParseDoc(XDocument doc)
         {
-            var fielsNode = doc.Descendants("Abbreviations").FirstOrDefault();
-            if (fielsNode == null) return;
-            var fields = fielsNode.Elements("Abbreviation");
+            var fieldsNode = doc.Descendants("Abbreviations").FirstOrDefault();
+            if (fieldsNode == null) return;
+            var fields = fieldsNode.Elements("Abbreviation");
             foreach (var fieldElement in fields)
             { 
                 var term = fieldElement.AsString("Term");

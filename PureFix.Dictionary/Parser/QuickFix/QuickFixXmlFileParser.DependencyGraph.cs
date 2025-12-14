@@ -25,7 +25,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             public IReadOnlyDictionary<string, string> AsAttributeDict() => Element.AsAttributeDict();
             public bool IsRequired() => Name == "StandardHeader" || 
                                         Name == "StandardTrailer" || 
-                                        AsAttributeDict().TryGetValue("required", out var val) && val == "Y";
+                                        (AsAttributeDict().TryGetValue("required", out var val) && val == "Y");
             
             public Node(int id, string name, ElementType elementType, XElement element)
             {

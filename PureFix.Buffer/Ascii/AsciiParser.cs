@@ -20,7 +20,7 @@ namespace PureFix.Buffer.Ascii
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
-        public IFixDefinitions Definitons { get; }
+        public IFixDefinitions Definitions { get; }
         public int ID { get; } = Interlocked.Increment(ref _nextId);
 
         private readonly AsciiParseState _state;
@@ -35,9 +35,9 @@ namespace PureFix.Buffer.Ascii
 
         public AsciiParser(IFixDefinitions definitions)
         {
-            Definitons = definitions;
+            Definitions = definitions;
             _state = new AsciiParseState(definitions, _pool);
-            _segmentParser = new AsciiSegmentParser(Definitons);
+            _segmentParser = new AsciiSegmentParser(Definitions);
             _state.BeginMessage();
         }
 
@@ -72,7 +72,7 @@ namespace PureFix.Buffer.Ascii
             var msgSegment = structure?.Msg();
             if (msgSegment != null && _state.Storage != null)
             {
-                var view = new AsciiView(Definitons, msgSegment, _state.Storage, structure, ptr, Delimiter, WriteDelimiter);
+                var view = new AsciiView(Definitions, msgSegment, _state.Storage, structure, ptr, Delimiter, WriteDelimiter);
                 return view;
             }
 
@@ -81,7 +81,7 @@ namespace PureFix.Buffer.Ascii
             {
                 EndPosition = Locations.NextTagPos - 1
             };
-            return new AsciiView(Definitons, segment, _state.Storage ?? new StoragePool.Storage(), structure, ptr, Delimiter, WriteDelimiter);
+            return new AsciiView(Definitions, segment, _state.Storage ?? new StoragePool.Storage(), structure, ptr, Delimiter, WriteDelimiter);
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.

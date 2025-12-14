@@ -39,7 +39,6 @@ public static class Runner
         if (string.IsNullOrEmpty(configPath)) return Task.CompletedTask;
 
         var config = FixApp.MakeConfig(configPath, dictRootPath, storeDirectory, logDelimiter);
-        FixApp fixApp = new(config);
         var host = makeHost(clock, config);
         var t1 = FixApp.Run(host);
         return t1;

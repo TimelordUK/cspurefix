@@ -39,9 +39,9 @@ The following data types are based on int.
 
         protected override void ParseDoc(XDocument doc)
         {
-            var fielsNode = doc.Descendants("Datatypes").FirstOrDefault();
-            if (fielsNode == null) return;
-            var fields = fielsNode.Elements("Datatype");
+            var fieldsNode = doc.Descendants("Datatypes").FirstOrDefault();
+            if (fieldsNode == null) return;
+            var fields = fieldsNode.Elements("Datatype");
             foreach (var fieldElement in fields)
             {
                 var at = fieldElement.AsAttributeDict();

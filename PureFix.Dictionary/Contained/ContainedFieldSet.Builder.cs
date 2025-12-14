@@ -134,7 +134,7 @@ namespace PureFix.Dictionary.Contained
                     {
                         _tagToSimpleDefinition[tag] = definition.NoOfField;
                     }
-                    _flattendTag.Add(tag);
+                    _flattenedTag.Add(tag);
                 }
 
                 AddAllFields(definition);
@@ -194,7 +194,7 @@ namespace PureFix.Dictionary.Contained
             var tag = field.Definition.Tag;
             _simple[field.Name] = field;
             _containedTag[tag] = parent;
-            _flattendTag.Add(tag);
+            _flattenedTag.Add(tag);
             _tagToSimple[tag] = field;
             _tagToSimpleDefinition[tag] = field.Definition;
         }

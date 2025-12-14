@@ -401,27 +401,30 @@ namespace PureFix.Dictionary.Compiler
                 var field = fields[i];
                 var next = (i == fields.Count - 1 ? null : fields[i + 1]);
 
-                if (field is ContainedSimpleField simpleField)
+                switch (field)
                 {
-                    HandleFieldProperty(generator, parentPath, i, simpleField, last, next, parentTypeName);
-                }
-                else if (field is ContainedComponentField componentField)
-                {
-                    HandleComponentProperty(generator, parentPath, i, componentField);
-                    // Generate component as separate file
-                    var componentCode = GenerateType(parentPath, componentField);
-                    if (!string.IsNullOrEmpty(componentCode) && componentField.Definition != null)
+                    case ContainedSimpleField simpleField:
+                        HandleFieldProperty(generator, parentPath, i, simpleField, last, next, parentTypeName);
+                        break;
+                    case ContainedComponentField componentField:
                     {
-                        var componentsDir = Path.Join(Options.BackingTypeOutputPath, "Components");
-                        Directory.CreateDirectory(componentsDir);
-                        var componentPath = Path.Join(componentsDir, $"{componentField.Definition.Name}.cs");
-                        WriteFile(componentPath, componentCode);
+                        HandleComponentProperty(generator, parentPath, i, componentField);
+                        // Generate component as separate file
+                        var componentCode = GenerateType(parentPath, componentField);
+                        if (!string.IsNullOrEmpty(componentCode) && componentField.Definition != null)
+                        {
+                            var componentsDir = Path.Join(Options.BackingTypeOutputPath, "Components");
+                            Directory.CreateDirectory(componentsDir);
+                            var componentPath = Path.Join(componentsDir, $"{componentField.Definition.Name}.cs");
+                            WriteFile(componentPath, componentCode);
+                        }
+
+                        break;
                     }
-                }
-                else if (field is ContainedGroupField groupField)
-                {
-                    HandleGroupProperty(generator, parentPath, i, groupField, parentTypeName);
-                    // DON'T call Process() for groups - they're nested inline
+                    case ContainedGroupField groupField:
+                        HandleGroupProperty(generator, parentPath, i, groupField, parentTypeName);
+                        // DON'T call Process() for groups - they're nested inline
+                        break;
                 }
 
                 last = field;
@@ -523,7 +526,7 @@ namespace PureFix.Dictionary.Compiler
             generator.WriteLine();
         }
 
-        private string GetGroupPropertyName(ContainedGroupField field, string? parentTypeName)
+        private static string GetGroupPropertyName(ContainedGroupField field, string? parentTypeName)
         {
             // Convert "NoOrders" -> "Orders"
             var name = field.Name;
@@ -541,7 +544,7 @@ namespace PureFix.Dictionary.Compiler
             return name;
         }
 
-        private string GetFieldPropertyName(string fieldName, string? parentTypeName)
+        private static string GetFieldPropertyName(string fieldName, string? parentTypeName)
         {
             // Check for naming collision with parent type
             if (!string.IsNullOrEmpty(parentTypeName) && fieldName == parentTypeName)
@@ -579,7 +582,7 @@ namespace PureFix.Dictionary.Compiler
             GenerateReset(generator, set, parentTypeName);
         }
 
-        private void GenerateIsValid(CodeGenerator generator, IContainedSet set)
+        private static void GenerateIsValid(CodeGenerator generator, IContainedSet set)
         {
             using (generator.BeginBlock("bool IFixValidator.IsValid(in FixValidatorConfig config)"))
             {
@@ -589,13 +592,14 @@ namespace PureFix.Dictionary.Compiler
                 {
                     if (field is ContainedComponentField component)
                     {
-                        if (component.Name == "StandardHeader")
+                        switch (component.Name)
                         {
-                            conditions.Add($"(!config.CheckStandardHeader || ({component.Name} is not null && ((IFixValidator){component.Name}).IsValid(in config)))");
-                        }
-                        else if (component.Name == "StandardTrailer")
-                        {
-                            conditions.Add($"(!config.CheckStandardTrailer || ({component.Name} is not null && ((IFixValidator){component.Name}).IsValid(in config)))");
+                            case "StandardHeader":
+                                conditions.Add($"(!config.CheckStandardHeader || ({component.Name} is not null && ((IFixValidator){component.Name}).IsValid(in config)))");
+                                break;
+                            case "StandardTrailer":
+                                conditions.Add($"(!config.CheckStandardTrailer || ({component.Name} is not null && ((IFixValidator){component.Name}).IsValid(in config)))");
+                                break;
                         }
                     }
                 }
@@ -618,28 +622,33 @@ namespace PureFix.Dictionary.Compiler
             {
                 foreach (var field in set.Fields)
                 {
-                    if (field is ContainedSimpleField simple)
+                    switch (field)
                     {
-                        var propName = GetFieldPropertyName(simple.Name, parentTypeName);
-                        var writeMethod = GetWriteMethod(simple.Definition.TagType);
-                        generator.WriteLine($"if ({propName} is not null) writer.{writeMethod}({simple.Definition.Tag}, {propName}{(NeedsValueAccess(simple.Definition.TagType) ? ".Value" : "")});");
-                    }
-                    else if (field is ContainedComponentField component)
-                    {
-                        generator.WriteLine($"if ({component.Name} is not null) ((IFixEncoder){component.Name}).Encode(writer);");
-                    }
-                    else if (field is ContainedGroupField group)
-                    {
-                        var propName = GetGroupPropertyName(group, parentTypeName);
-                        var countField = group.Definition?.NoOfField?.Tag ?? -1;
-
-                        using (generator.BeginBlock($"if ({propName} is not null && {propName}.Length != 0)"))
+                        case ContainedSimpleField simple:
                         {
-                            generator.WriteLine($"writer.WriteWholeNumber({countField}, {propName}.Length);");
-                            using (generator.BeginBlock($"for (int i = 0; i < {propName}.Length; i++)"))
+                            var propName = GetFieldPropertyName(simple.Name, parentTypeName);
+                            var writeMethod = GetWriteMethod(simple.Definition.TagType);
+                            generator.WriteLine($"if ({propName} is not null) writer.{writeMethod}({simple.Definition.Tag}, {propName}{(NeedsValueAccess(simple.Definition.TagType) ? ".Value" : "")});");
+                            break;
+                        }
+                        case ContainedComponentField component:
+                            generator.WriteLine($"if ({component.Name} is not null) ((IFixEncoder){component.Name}).Encode(writer);");
+                            break;
+                        case ContainedGroupField group:
+                        {
+                            var propName = GetGroupPropertyName(group, parentTypeName);
+                            var countField = group.Definition?.NoOfField?.Tag ?? -1;
+
+                            using (generator.BeginBlock($"if ({propName} is not null && {propName}.Length != 0)"))
                             {
-                                generator.WriteLine($"((IFixEncoder){propName}[i]).Encode(writer);");
+                                generator.WriteLine($"writer.WriteWholeNumber({countField}, {propName}.Length);");
+                                using (generator.BeginBlock($"for (int i = 0; i < {propName}.Length; i++)"))
+                                {
+                                    generator.WriteLine($"((IFixEncoder){propName}[i]).Encode(writer);");
+                                }
                             }
+
+                            break;
                         }
                     }
                 }
@@ -655,34 +664,42 @@ namespace PureFix.Dictionary.Compiler
 
                 foreach (var field in set.Fields)
                 {
-                    if (field is ContainedSimpleField simple)
+                    switch (field)
                     {
-                        var propName = GetFieldPropertyName(simple.Name, parentTypeName);
-                        var getMethod = GetGetMethod(simple.Definition.TagType);
-                        generator.WriteLine($"{propName} = view.{getMethod}({simple.Definition.Tag});");
-                    }
-                    else if (field is ContainedComponentField component)
-                    {
-                        using (generator.BeginBlock($"if (view.GetView(\"{component.Name}\") is IMessageView view{component.Name})"))
+                        case ContainedSimpleField simple:
                         {
-                            generator.WriteLine($"{component.Name} = new();");
-                            generator.WriteLine($"((IFixParser){component.Name}).Parse(view{component.Name});");
+                            var propName = GetFieldPropertyName(simple.Name, parentTypeName);
+                            var getMethod = GetGetMethod(simple.Definition.TagType);
+                            generator.WriteLine($"{propName} = view.{getMethod}({simple.Definition.Tag});");
+                            break;
                         }
-                    }
-                    else if (field is ContainedGroupField group)
-                    {
-                        var propName = GetGroupPropertyName(group, parentTypeName);
-                        var tempName = $"view{group.Name}";
-
-                        using (generator.BeginBlock($"if (view.GetView(\"{group.Name}\") is IMessageView {tempName})"))
+                        case ContainedComponentField component:
                         {
-                            generator.WriteLine($"var count = {tempName}.GroupCount();");
-                            generator.WriteLine($"{propName} = new {group.Name}[count];");
-                            using (generator.BeginBlock($"for (int i = 0; i < count; i++)"))
+                            using (generator.BeginBlock($"if (view.GetView(\"{component.Name}\") is IMessageView view{component.Name})"))
                             {
-                                generator.WriteLine($"{propName}[i] = new();");
-                                generator.WriteLine($"((IFixParser){propName}[i]).Parse({tempName}.GetGroupInstance(i));");
+                                generator.WriteLine($"{component.Name} = new();");
+                                generator.WriteLine($"((IFixParser){component.Name}).Parse(view{component.Name});");
                             }
+
+                            break;
+                        }
+                        case ContainedGroupField group:
+                        {
+                            var propName = GetGroupPropertyName(group, parentTypeName);
+                            var tempName = $"view{group.Name}";
+
+                            using (generator.BeginBlock($"if (view.GetView(\"{group.Name}\") is IMessageView {tempName})"))
+                            {
+                                generator.WriteLine($"var count = {tempName}.GroupCount();");
+                                generator.WriteLine($"{propName} = new {group.Name}[count];");
+                                using (generator.BeginBlock($"for (int i = 0; i < count; i++)"))
+                                {
+                                    generator.WriteLine($"{propName}[i] = new();");
+                                    generator.WriteLine($"((IFixParser){propName}[i]).Parse({tempName}.GetGroupInstance(i));");
+                                }
+                            }
+
+                            break;
                         }
                     }
                 }
@@ -726,19 +743,23 @@ namespace PureFix.Dictionary.Compiler
             {
                 foreach (var field in set.Fields)
                 {
-                    if (field is ContainedComponentField component)
+                    switch (field)
                     {
-                        generator.WriteLine($"((IFixReset?){component.Name})?.Reset();");
-                    }
-                    else if (field is ContainedGroupField groupField)
-                    {
-                        var propertyName = GetGroupPropertyName(groupField, parentTypeName);
-                        generator.WriteLine($"{propertyName} = null;");
-                    }
-                    else if (field is ContainedSimpleField simpleField)
-                    {
-                        var propertyName = GetFieldPropertyName(simpleField.Name, parentTypeName);
-                        generator.WriteLine($"{propertyName} = null;");
+                        case ContainedComponentField component:
+                            generator.WriteLine($"((IFixReset?){component.Name})?.Reset();");
+                            break;
+                        case ContainedGroupField groupField:
+                        {
+                            var propertyName = GetGroupPropertyName(groupField, parentTypeName);
+                            generator.WriteLine($"{propertyName} = null;");
+                            break;
+                        }
+                        case ContainedSimpleField simpleField:
+                        {
+                            var propertyName = GetFieldPropertyName(simpleField.Name, parentTypeName);
+                            generator.WriteLine($"{propertyName} = null;");
+                            break;
+                        }
                     }
                 }
             }
@@ -798,7 +819,7 @@ namespace PureFix.Dictionary.Compiler
             };
         }
 
-        private string GetGetMethod(TagType type)
+        private static string GetGetMethod(TagType type)
         {
             return type switch
             {
@@ -817,7 +838,7 @@ namespace PureFix.Dictionary.Compiler
             };
         }
 
-        private bool NeedsValueAccess(TagType type)
+        private static bool NeedsValueAccess(TagType type)
         {
             return type switch
             {

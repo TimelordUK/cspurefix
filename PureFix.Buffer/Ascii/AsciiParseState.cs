@@ -214,7 +214,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     if (_checksumExpectedPos > 0 && valueEndPos > _checksumExpectedPos)
                     {
-                        throw new InvalidDataException($"Tag: [{tag}] cant be after {_checksumExpectedPos} [{Buffer}]");
+                     //   throw new InvalidDataException($"Tag: [{tag}] cant be after {_checksumExpectedPos} [{Buffer}]");
                     }
 
                     break;

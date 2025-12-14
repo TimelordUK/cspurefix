@@ -415,17 +415,17 @@ namespace PureFix.Dictionary.Compiler
                         }
                         else
                         {
-                            if (field.Type == ContainedFieldType.Component)
+                            switch (field.Type)
                             {
-                                checks.Add($"{name} is not null && ((IFixValidator){name}).IsValid(in config)");
-                            }
-                            else if (field.Type == ContainedFieldType.Group)
-                            {
-                                checks.Add($"{name} is not null && FixValidator.IsValid({name}, in config)");
-                            }
-                            else
-                            {
-                                checks.Add($"{name} is not null");
+                                case ContainedFieldType.Component:
+                                    checks.Add($"{name} is not null && ((IFixValidator){name}).IsValid(in config)");
+                                    break;
+                                case ContainedFieldType.Group:
+                                    checks.Add($"{name} is not null && FixValidator.IsValid({name}, in config)");
+                                    break;
+                                default:
+                                    checks.Add($"{name} is not null");
+                                    break;
                             }
                         }
                     }

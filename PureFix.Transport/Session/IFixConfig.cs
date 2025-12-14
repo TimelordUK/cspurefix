@@ -7,25 +7,45 @@ namespace PureFix.Transport.Session
 {
     public interface IFixConfig
     {
-        /// <summary>
-        /// Delimiter used for human-readable FIX log output.
-        /// Defaults to Pipe (|) for readability in tests/debugging.
-        /// Set to SOH (0x01) for production logs that can be copy-pasted to test environments.
-        /// </summary>
-        byte? LogDelimiter { get; set; }
+        public byte? LogDelimiter
+        {
+            get => Description?.Application?.LogDelimiter;
+            set
+            {
+                if (Description?.Application != null)
+                {
+                    Description.Application.LogDelimiter = value;
+                }
+            }
+        }
 
-        byte? Delimiter { get; set; }
+        public byte? StoreDelimiter
+        {
+            get => Description?.Application?.StoreDelimiter;
+            set
+            {
+                if (Description?.Application != null)
+                {
+                    Description.Application.StoreDelimiter = value;
+                }
+            }
+        }
 
-        /// <summary>
-        /// Delimiter used when storing messages to the session store.
-        /// Defaults to SOH (0x01) for QuickFix compatibility.
-        /// </summary>
-        byte? StoreDelimiter { get; set; }
+        public byte? Delimiter
+        {
+            get => Description?.Application?.Delimiter;
+            set
+            {
+                if (Description?.Application != null)
+                {
+                    Description.Application.Delimiter = value;
+                }
+            }
+        }
 
         IFixDefinitions? Definitions { get; }
         ISessionDescription? Description { get; }
         ISessionMessageFactory? MessageFactory { get; }
-
         /// <summary>
         /// Factory for creating session stores. If null, uses MemorySessionStoreFactory.
         /// Applications can provide FileSessionStoreFactory for persistence or custom implementations.

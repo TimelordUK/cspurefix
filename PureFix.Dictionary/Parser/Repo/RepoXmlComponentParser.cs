@@ -34,9 +34,9 @@ namespace PureFix.Dictionary.Parser.Repo
 
         protected override void ParseDoc(XDocument doc)
         {
-            var fielsNode = doc.Descendants("Components").FirstOrDefault();
-            if (fielsNode == null) return;
-            var fields = fielsNode.Elements("Component");
+            var fieldsNode = doc.Descendants("Components").FirstOrDefault();
+            if (fieldsNode == null) return;
+            var fields = fieldsNode.Elements("Component");
             foreach (var fieldElement in fields)
             {
                 var at = fieldElement.AsAttributeDict();

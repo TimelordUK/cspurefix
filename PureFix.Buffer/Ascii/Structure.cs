@@ -143,6 +143,11 @@ namespace PureFix.Buffer.Ascii
                             singletons[current.Name] = current;
                         }
                         break;
+                    case SegmentType.Gap:
+                    case SegmentType.Unknown:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 

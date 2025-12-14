@@ -197,9 +197,8 @@ namespace PureFix.Dictionary.Parser.QuickFix
 
                     case ContainedFieldType.Component:
                         var componentField = (ContainedComponentField)field;
-                        if (!_seenComponents.ContainsKey(componentField.Name))
+                        if (_seenComponents.TryAdd(componentField.Name, componentField))
                         {
-                            _seenComponents[componentField.Name] = componentField;
                             if (componentField.Definition != null)
                             {
                                 ProcessComponentFields(componentField.Definition.Fields);
