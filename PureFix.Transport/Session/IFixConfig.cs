@@ -7,41 +7,9 @@ namespace PureFix.Transport.Session
 {
     public interface IFixConfig
     {
-        public byte? LogDelimiter
-        {
-            get => Description?.Application?.LogDelimiter;
-            set
-            {
-                if (Description?.Application != null)
-                {
-                    Description.Application.LogDelimiter = value;
-                }
-            }
-        }
-
-        public byte? StoreDelimiter
-        {
-            get => Description?.Application?.StoreDelimiter;
-            set
-            {
-                if (Description?.Application != null)
-                {
-                    Description.Application.StoreDelimiter = value;
-                }
-            }
-        }
-
-        public byte? Delimiter
-        {
-            get => Description?.Application?.Delimiter;
-            set
-            {
-                if (Description?.Application != null)
-                {
-                    Description.Application.Delimiter = value;
-                }
-            }
-        }
+        public byte LogDelimiter { get; set; }
+        public byte Delimiter { get; set; }
+        public byte StoreDelimiter { get; set; }
 
         IFixDefinitions? Definitions { get; }
         ISessionDescription? Description { get; }

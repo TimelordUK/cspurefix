@@ -45,7 +45,10 @@ namespace PureFix.Transport
             var definitions = config.Definitions;
             Definitions = definitions ?? throw new ArgumentNullException(nameof(definitions));
             var qf = new QuickFixXmlFileParser(Definitions);
-            _asciiParser = new AsciiParser(Definitions) { Delimiter = config.LogDelimiter ?? AsciiChars.Pipe };
+            _asciiParser = new AsciiParser(Definitions)
+            {
+                Delimiter = config.LogDelimiter
+            };
         }
 
         public FixLogParser(string dictPath, byte delim = (byte)'|')

@@ -28,8 +28,8 @@ namespace PureFix.Transport.Store
             ArgumentNullException.ThrowIfNull(config.MessageFactory);
 
             m_Parser = new AsciiParser(config.Definitions) {
-                Delimiter = config.Delimiter ?? AsciiChars.Soh,
-                WriteDelimiter = config.LogDelimiter ?? AsciiChars.Pipe
+                Delimiter = config.Delimiter,
+                WriteDelimiter = config.LogDelimiter
             };
             m_store = store;
             m_config = config;

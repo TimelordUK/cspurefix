@@ -15,9 +15,42 @@ namespace PureFix.Transport
 {
     public class FixConfig : IFixConfig
     {
-        public byte? LogDelimiter { get; set; } = AsciiChars.Pipe;
-        public byte? Delimiter { get; set; } = AsciiChars.Soh;
-        public byte? StoreDelimiter { get; set; } = AsciiChars.Soh;
+        public byte LogDelimiter
+        {
+            get => Description?.Application?.LogDelimiter ?? AsciiChars.Soh;
+            set
+            {
+                if (Description?.Application != null)
+                {
+                    Description.Application.LogDelimiter = value;
+                }
+            }
+        }
+
+        public byte Delimiter
+        {
+            get => Description?.Application?.Delimiter ?? AsciiChars.Soh;
+            set
+            {
+                if (Description?.Application != null)
+                {
+                    Description.Application.Delimiter = value;
+                }
+            }
+        }
+
+        public byte StoreDelimiter
+        {
+            get => Description?.Application?.StoreDelimiter ?? AsciiChars.Soh;
+            set
+            {
+                if (Description?.Application != null)
+                {
+                    Description.Application.StoreDelimiter = value;
+                }
+            }
+        }
+
         public IFixDefinitions? Definitions { get; set; }
         public ISessionDescription? Description { get; set; }
         public ISessionMessageFactory? MessageFactory { get; set; }

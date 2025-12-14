@@ -10,12 +10,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Test.ModularTypes.Helpers;
-using PureFix.Transport;
-using PureFix.Types;
-using PureFix.Types.Config;
-using PureFix.Types.FIX44;
-using PureFix.Types.FIX44.Components;
-using JsonHelper = PureFix.Types.JsonHelper;
+
 
 namespace PureFix.Test.ModularTypes
 {
