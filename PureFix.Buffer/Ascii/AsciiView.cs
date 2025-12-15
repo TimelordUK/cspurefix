@@ -183,7 +183,7 @@ namespace PureFix.Buffer.Ascii
         {
             return GetPosition(tag) switch
             {
-                var position when position < 0 => default,
+                < 0 => default,
                 var position => BoolAtPosition(position)
             };
         }
@@ -197,7 +197,7 @@ namespace PureFix.Buffer.Ascii
         {
             return GetPosition(tag) switch
             {
-                var position when position < 0 => default,
+                < 0 => default,
                 var position => DecimalAtPosition(position)
             };
         }
@@ -211,7 +211,7 @@ namespace PureFix.Buffer.Ascii
         {
             return GetPosition(tag) switch
             {
-                var position when position < 0 => default,
+                < 0 => default,
                 var position => BufferAtPosition(position)?.ToArray()
             };
         }
@@ -220,7 +220,7 @@ namespace PureFix.Buffer.Ascii
         {
             return GetPosition(tag) switch
             {
-                var position when position < 0 => default,
+                < 0 => default,
                 var position => BufferAtPosition(position)
             };
         }

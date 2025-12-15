@@ -16,8 +16,6 @@ namespace PureFix.Buffer.Ascii
     {
         public IFixDefinitions Definitions { get; set; }
         private StoragePool Pool { get; }
-        public byte LogDelimiter { get; set; } = AsciiChars.Pipe;
-        public byte Delimiter { get; set; } = AsciiChars.Soh;
         public ISessionDescription SessionDescription { get; }
         // application if not reset seq num will need to set correctly
         public int MsgSeqNum { get; set; } = 1;
