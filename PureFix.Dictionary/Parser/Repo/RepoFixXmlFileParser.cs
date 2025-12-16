@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
+using PureFix.Types;
+
 
 namespace PureFix.Dictionary.Parser.Repo
 {
@@ -19,7 +21,7 @@ namespace PureFix.Dictionary.Parser.Repo
         private IReadOnlyDictionary<string, RepoComponentDefinition>? _componentsByName;
         private readonly Dictionary<int, GroupFieldDefinition> _groups = [];
   
-        public RepoFixXmlFileParser(Types.FixVersion version, IFixDefinitions definitions) 
+        public RepoFixXmlFileParser(FixVersion version, IFixDefinitions definitions) 
         {
             Definitions = definitions;
             definitions.SetVersion(version, Types.FixDefinitionSource.FixRepo);

@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace PureFix.LogMessageParser
 {
     public class DictMessageParser : IDictMessageParser

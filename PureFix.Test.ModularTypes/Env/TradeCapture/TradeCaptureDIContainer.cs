@@ -14,6 +14,7 @@ using PureFix.Types.FIX50SP2;
 using PureFix.Test.ModularTypes.Env.Experiment;
 
 
+
 namespace PureFix.Test.ModularTypes.Env.TradeCapture
 {
     internal class TradeCaptureDIContainer

@@ -19,7 +19,7 @@ namespace PureFix.Buffer.Ascii
     {
         private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
-        public byte WriteDelimiter { get; set; } = AsciiChars.Pipe;
+        public byte WriteDelimiter { get; set; } = AsciiChars.Soh;
         public IFixDefinitions Definitions { get; }
         public int ID { get; } = Interlocked.Increment(ref _nextId);
 

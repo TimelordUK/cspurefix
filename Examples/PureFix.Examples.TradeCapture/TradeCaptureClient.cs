@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace PureFix.Examples.TradeCapture
 {
     internal class TradeCaptureClient : BaseApp

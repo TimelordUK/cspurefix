@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+
 namespace PureFix.Test.ModularTypes.Helpers
 {
     internal class TestEntity
@@ -32,7 +33,7 @@ namespace PureFix.Test.ModularTypes.Helpers
 
         public void Prepare()
         {
-            Parser = new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe };
+            Parser = new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
         }
 
         public async Task<List<AsciiView>> Replay(string path)
@@ -108,13 +109,14 @@ namespace PureFix.Test.ModularTypes.Helpers
             var b = Encoding.UTF8.GetBytes(all);
             var msgs = new List<AsciiView>(count);
 
-            void Action(int i, MsgView view) => msgs.Add((AsciiView)view);
-
             sw.Start();
             Parser.ParseFrom(b, b.Length, Action);
             sw.Stop();
 
             Console.WriteLine($"{description}[{count},{batch}]: {sw.Elapsed.TotalMilliseconds} {(decimal)sw.Elapsed.TotalMicroseconds / count}  micro/msg {Parser.ParserStats.TotalSegmentParseMicro / count} seg/msg {Parser.ParserStats}");
+            return;
+
+            void Action(int i, MsgView view) => msgs.Add((AsciiView)view);
         }
 
         public IFixConfig GetTestInitiatorConfig(string json = "test-qf44-initiator.json")
@@ -140,7 +142,6 @@ namespace PureFix.Test.ModularTypes.Helpers
         public IFixConfig GetConfig(string json)
         {
             var config = FixConfig.MakeConfigFromPaths(Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
-            // config.Delimiter = AsciiChars.Pipe;
             config.LogDelimiter = AsciiChars.Pipe;
 
             // Cast to FixConfig to access the setter and use the new modular type system's SessionMessageFactory
@@ -152,7 +153,7 @@ namespace PureFix.Test.ModularTypes.Helpers
             return config;
         }
 
-        public async Task<IFixSessionStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string filter = "accept-comp")
+        public async Task<IFixSessionStore> MakeMsgStore(IReadOnlyList<AsciiView> views, string? filter = null)
         {
             // Session messages to filter out (for backward compatibility with tests)
             var sessionMessages = new HashSet<string>
@@ -160,20 +161,20 @@ namespace PureFix.Test.ModularTypes.Helpers
                 MsgType.Logon, MsgType.Logout, MsgType.ResendRequest,
                 MsgType.Heartbeat, MsgType.TestRequest, MsgType.SequenceReset
             };
-
+            filter ??= "accept-comp";
             var sessionId = new SessionId("FIX.4.4", filter, "target");
             var store = new MemorySessionStore(sessionId);
             await store.Initialize();
             foreach (var view in views)
             {
-                if (view.SenderCompID() == filter)
+                if (view.SenderCompID() != filter) continue;
+                var msgType = view.MsgType();
+                // Filter out session messages for test compatibility
+                if (msgType != null && sessionMessages.Contains(msgType))
                 {
-                    var msgType = view.MsgType();
-                    // Filter out session messages for test compatibility
-                    if (msgType != null && sessionMessages.Contains(msgType))
-                        continue;
-                    await store.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
+                    continue;
                 }
+                await store.Put(FixMsgStoreRecord.ToMsgStoreRecord(view));
             }
             return store;
         }

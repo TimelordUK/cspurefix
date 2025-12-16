@@ -4,6 +4,7 @@ using PureFix.Examples.TradeCapture;
 using PureFix.Transport.Session;
 using PureFix.Types;
 
+
 Console.WriteLine("FIX Protocol Trade Capture Example");
 Console.WriteLine("===================================");
 Console.WriteLine("This example demonstrates a FIX 5.0 SP2 trade capture workflow");

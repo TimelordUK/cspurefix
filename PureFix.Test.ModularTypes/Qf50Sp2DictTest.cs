@@ -10,6 +10,7 @@ using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Types;
 
+
 namespace PureFix.Test.ModularTypes
 {
     public class Qf50Sp2DictTest

@@ -12,6 +12,7 @@ using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.Core;
 
+
 namespace PureFix.Transport.Ascii
 {
     public abstract class AsciiSession : FixSession

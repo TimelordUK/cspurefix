@@ -7,6 +7,7 @@ using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
 
+
 Console.WriteLine("FIX Protocol Skeleton Example");
 Console.WriteLine("============================");
 

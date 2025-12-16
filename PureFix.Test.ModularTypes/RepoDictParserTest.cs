@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Dictionary.Parser.Repo;
+using PureFix.Types;
+
 
 namespace PureFix.Test.ModularTypes
 {
@@ -19,7 +21,7 @@ namespace PureFix.Test.ModularTypes
         public void OnceSetup()
         {
             _definitions = new FixDefinitions();
-            var qf = new RepoFixXmlFileParser(PureFix.Types.FixVersion.FIX50SP2, _definitions);
+            var qf = new RepoFixXmlFileParser(FixVersion.FIX50SP2, _definitions);
             qf.Parse(DataDictRootPath);
         }
 

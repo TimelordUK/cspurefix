@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PureFix.Dictionary.Contained;
 using PureFix.Types;
 
+
 namespace PureFix.Dictionary.Definition
 {
     public class FixDefinitions : IEnumerable<MessageDefinition>, IFixDefinitions

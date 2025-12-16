@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.IO;
 using PureFix.Transport.Recovery;
 
+
 namespace PureFix.Transport.Ascii
 {
     public abstract class BaseApp : AsciiSession

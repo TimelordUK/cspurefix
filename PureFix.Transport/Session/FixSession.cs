@@ -12,6 +12,7 @@ using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
 
+
 namespace PureFix.Transport.Session
 {
     public abstract class FixSession 

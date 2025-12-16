@@ -1,5 +1,6 @@
 using PureFix.Types;
 
+
 namespace PureFix.Examples.Shared;
 
 public class ConsoleLogger : ILogger

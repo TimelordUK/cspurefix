@@ -4,6 +4,7 @@ using PureFix.Dictionary.Parser;
 using PureFix.Types;
 using System.Text;
 
+
 namespace PureFix.Dictionary.Compiler
 {
     /// <summary>

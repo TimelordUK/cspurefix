@@ -10,6 +10,7 @@ using PureFix.Transport.SocketTransport;
 using PureFix.Transport;
 using PureFix.Transport.Recovery;
 
+
 namespace PureFix.Examples.Shared;
 
 public abstract class BaseAppDI
