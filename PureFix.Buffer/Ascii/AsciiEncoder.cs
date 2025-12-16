@@ -74,7 +74,8 @@ namespace PureFix.Buffer.Ascii
 
                 var storage = Pool.Rent();
 
-                var writer = new DefaultFixWriter(storage.Buffer, storage.Locations);
+                var delimiter = SessionDescription.Application?.Delimiter ?? AsciiChars.Soh;
+                var writer = new DefaultFixWriter(storage.Buffer, storage.Locations, delimiter);
                 hdr.Encode(writer);
                 message.Encode(writer);
 

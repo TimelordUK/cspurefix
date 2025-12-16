@@ -15,32 +15,32 @@ public class Fix44SessionMessageFactory : ISessionMessageFactory
         m_SessionDescription = sessionDescription;
     }
 
-    IFixMessage? ISessionMessageFactory.TestRequest(string testReqId)
+    IFixMessage ISessionMessageFactory.TestRequest(string testReqId)
     {
         return new TestRequest { StandardHeader = new StandardHeader(), TestReqID = testReqId };
     }
 
-    IFixMessage? ISessionMessageFactory.Heartbeat(string testReqId)
+    IFixMessage ISessionMessageFactory.Heartbeat(string testReqId)
     {
         return new Heartbeat { StandardHeader = new StandardHeader(), TestReqID = testReqId };
     }
 
-    IFixMessage? ISessionMessageFactory.ResendRequest(int beginSeqNo, int endSeqNo)
+    IFixMessage ISessionMessageFactory.ResendRequest(int beginSeqNo, int endSeqNo)
     {
         return new ResendRequest { StandardHeader = new StandardHeader(), BeginSeqNo = beginSeqNo, EndSeqNo = endSeqNo };
     }
 
-    IFixMessage? ISessionMessageFactory.SequenceReset(int newSeqNo, bool? gapFill)
+    IFixMessage ISessionMessageFactory.SequenceReset(int newSeqNo, bool? gapFill)
     {
         return new SequenceReset { StandardHeader = new StandardHeader(), GapFillFlag = gapFill, NewSeqNo = newSeqNo };
     }
 
-    IStandardTrailer? ISessionMessageFactory.Trailer(int checksum)
+    IStandardTrailer ISessionMessageFactory.Trailer(int checksum)
     {
-        return new StandardTrailer() { CheckSum = checksum.ToString("D3") };
+        return new StandardTrailer { CheckSum = checksum.ToString("D3") };
     }
 
-    IFixMessage? ISessionMessageFactory.Logon(string? userRequestId, bool? isResponse)
+    IFixMessage ISessionMessageFactory.Logon(string? userRequestId, bool? isResponse)
     {
         return new Logon
         {
@@ -52,7 +52,7 @@ public class Fix44SessionMessageFactory : ISessionMessageFactory
         };
     }
 
-    IFixMessage? ISessionMessageFactory.Reject(string msgType, int seqNo, string msg, int reason)
+    IFixMessage ISessionMessageFactory.Reject(string msgType, int seqNo, string msg, int reason)
     {
         return new Reject
         {
@@ -63,7 +63,7 @@ public class Fix44SessionMessageFactory : ISessionMessageFactory
         };
     }
 
-    IFixMessage? ISessionMessageFactory.Logout(string text)
+    IFixMessage ISessionMessageFactory.Logout(string text)
     {
         return new Logout
         {
@@ -71,7 +71,7 @@ public class Fix44SessionMessageFactory : ISessionMessageFactory
         };
     }
 
-    IStandardHeader? ISessionMessageFactory.Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides)
+    IStandardHeader ISessionMessageFactory.Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides)
     {
         var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);
         var placeholder = (int)Math.Pow(10, bodyLength - 1) + 1;
@@ -84,8 +84,8 @@ public class Fix44SessionMessageFactory : ISessionMessageFactory
             MsgSeqNum = seqNum,
             SendingTime = time,
             TargetCompID = m_SessionDescription.TargetCompID,
-            TargetSubID = !string.IsNullOrEmpty(m_SessionDescription.TargetSubID) ? m_SessionDescription.TargetSubID : m_SessionDescription.TargetSubID,
-            SenderSubID = !string.IsNullOrEmpty(m_SessionDescription.SenderSubID) ? m_SessionDescription.SenderSubID : m_SessionDescription.SenderSubID,
+            TargetSubID = m_SessionDescription.TargetSubID,
+            SenderSubID = m_SessionDescription.SenderSubID,
         };
     }
 }

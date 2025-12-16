@@ -139,13 +139,12 @@ namespace PureFix.Test.ModularTypes.Helpers
 
         public IFixConfig GetConfig(string json)
         {
-            var factory = new TestLoggerFactory(Clock);
             var config = FixConfig.MakeConfigFromPaths(Fix44PathHelper.DataDictRootPath, Path.Join(Fix44PathHelper.SessionRootPath, json));
-            config.Delimiter = AsciiChars.Pipe;
+            // config.Delimiter = AsciiChars.Pipe;
             config.LogDelimiter = AsciiChars.Pipe;
 
             // Cast to FixConfig to access the setter and use the new modular type system's SessionMessageFactory
-            if (config is FixConfig fixConfig && fixConfig.Description != null)
+            if (config is FixConfig { Description: not null } fixConfig)
             {
                 fixConfig.MessageFactory = new Fix44ModularSessionMessageFactory(fixConfig.Description);
             }

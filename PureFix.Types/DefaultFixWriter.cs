@@ -13,15 +13,15 @@ namespace PureFix.Types
     public sealed class DefaultFixWriter : IFixWriter
     {
         private const byte EQ = (byte)'=';
-        private const byte Delimiter = 1;
-
+        public byte Delimiter { get; }
         private readonly ElasticBuffer m_Buffer;
         private readonly Tags m_Tags;
 
-        public DefaultFixWriter(ElasticBuffer buffer, Tags tags)
+        public DefaultFixWriter(ElasticBuffer buffer, Tags tags, byte delimiter = 1)
         {
             m_Buffer = buffer;
             m_Tags = tags;
+            Delimiter = delimiter;
         }
 
         /// <summary>

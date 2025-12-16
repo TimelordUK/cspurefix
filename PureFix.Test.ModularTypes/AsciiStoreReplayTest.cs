@@ -15,8 +15,7 @@ using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.Config;
 using PureFix.Types.FIX44;
-using PureFix.Types.FIX44.Components;
-using JsonHelper = PureFix.Types.JsonHelper;
+
 
 namespace PureFix.Test.ModularTypes
 {
@@ -34,6 +33,8 @@ namespace PureFix.Test.ModularTypes
             _views = await _testEntity.Replay(Fix44PathHelper.ReplayTestClientPath);
             _client_config = _testEntity.GetTestInitiatorConfig();
             _server_config = _testEntity.GetTestAcceptorConfig();
+            _client_config.Delimiter = AsciiChars.Pipe;
+            _server_config.Delimiter = AsciiChars.Pipe;
         }
 
         [SetUp]
