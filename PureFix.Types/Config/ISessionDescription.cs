@@ -24,5 +24,15 @@ namespace PureFix.Types.Config
         public int? LastReceivedSeqNum { get; }
         public int? BodyLengthChars { get; }
         public int? HeartBtInt { get; }
+
+        /// <summary>
+        /// Logging configuration. If null, defaults are used.
+        /// </summary>
+        public LoggingConfig? Logging { get; }
+
+        /// <summary>
+        /// Message store configuration. If null, in-memory store is used.
+        /// </summary>
+        public StoreConfig? Store { get; }
     }
 }

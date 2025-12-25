@@ -14,6 +14,28 @@
     "protocol": "ascii",
     "dictionary": "FIX50SP2.xml"
   },
+  "logging": {
+    "minimumLevel": "Information",
+    "appLog": {
+      "console": true,
+      "file": {
+        "path": "logs/initiator-app.log",
+        "rollingInterval": "Day",
+        "retainedFileCountLimit": 7
+      }
+    },
+    "fixLog": {
+      "console": false,
+      "file": {
+        "path": "logs/initiator-fix.log",
+        "rollingInterval": "Day",
+        "retainedFileCountLimit": 7
+      }
+    }
+  },
+  "store": {
+    "type": "memory"
+  },
   "Username": "js-client",
   "Password": "pwd-client",
   "EncryptMethod": 0,

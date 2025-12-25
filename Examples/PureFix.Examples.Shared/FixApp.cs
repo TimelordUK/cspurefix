@@ -13,30 +13,41 @@ public class FixApp
 
     /// <summary>
     /// Creates a FIX config from paths.
+    /// Store factory is auto-created from the "store" section in the JSON config.
     /// </summary>
     /// <param name="sessionConfigPath">Path to session JSON config</param>
     /// <param name="dictRootPath">Root path for dictionaries</param>
-    /// <param name="storeDirectory">Optional: directory for file-based session store (QuickFix-compatible)</param>
-    /// <param name="logDelimiter">Optional: delimiter for FIX log (null=Pipe for tests, SOH for production)</param>
-    public static IFixConfig MakeConfig(string sessionConfigPath, string dictRootPath, string? storeDirectory = null, byte? logDelimiter = null)
+    public static IFixConfig MakeConfig(string sessionConfigPath, string dictRootPath)
+    {
+        return FixConfig.MakeConfigFromPaths(dictRootPath, sessionConfigPath);
+    }
+
+    /// <summary>
+    /// Creates a FIX config from paths with explicit store directory override.
+    /// Store directory parameter overrides the "store" section in JSON config.
+    /// </summary>
+    [Obsolete("Store directory should be configured in JSON config 'store' section")]
+    public static IFixConfig MakeConfig(string sessionConfigPath, string dictRootPath, string? storeDirectory)
+    {
+        return MakeConfig(sessionConfigPath, dictRootPath, storeDirectory, null);
+    }
+
+    /// <summary>
+    /// Creates a FIX config from paths with explicit store directory and log delimiter override.
+    /// </summary>
+    [Obsolete("Store directory and log delimiter should be configured in JSON config")]
+    public static IFixConfig MakeConfig(string sessionConfigPath, string dictRootPath, string? storeDirectory, byte? logDelimiter)
     {
         var config = FixConfig.MakeConfigFromPaths(dictRootPath, sessionConfigPath);
 
-        // Configure session store factory
         if (config is FixConfig fixConfig)
         {
+            // Override store factory if explicitly specified
             if (!string.IsNullOrEmpty(storeDirectory))
             {
-                // Use file-based store for persistence (QuickFix-compatible)
                 fixConfig.SessionStoreFactory = new FileSessionStoreFactory(storeDirectory);
             }
-            else
-            {
-                // Default to in-memory store
-                fixConfig.SessionStoreFactory = new MemorySessionStoreFactory();
-            }
 
-            // Override log delimiter if specified
             if (logDelimiter.HasValue)
             {
                 fixConfig.LogDelimiter = logDelimiter.Value;

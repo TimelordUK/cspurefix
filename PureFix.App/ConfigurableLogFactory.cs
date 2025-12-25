@@ -4,13 +4,13 @@ using Serilog;
 using Serilog.Events;
 using ILogger = Serilog.ILogger;
 
-namespace PureFix.Examples.Shared;
+namespace PureFix.ConsoleApp;
 
 /// <summary>
 /// A log factory that creates loggers based on LoggingConfig.
 /// Uses Serilog for all logging.
 /// </summary>
-public class ConsoleLogFactory : ILogFactory
+public class ConfigurableLogFactory : ILogFactory
 {
     private const string AppTemplate = "[{Timestamp:HH:mm:ss.fff zzz}] [{Name}] [{Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}";
     private const string PlainTemplate = "{Message:lj}{NewLine}";
@@ -21,23 +21,15 @@ public class ConsoleLogFactory : ILogFactory
     /// <summary>
     /// Creates a log factory with default configuration (console only).
     /// </summary>
-    public ConsoleLogFactory() : this((LoggingConfig?)null)
-    {
-    }
-
-    /// <summary>
-    /// Creates a log factory from session description (reads Logging config).
-    /// </summary>
-    public ConsoleLogFactory(ISessionDescription? description) : this(description?.Logging)
+    public ConfigurableLogFactory() : this(new LoggingConfig())
     {
     }
 
     /// <summary>
     /// Creates a log factory from LoggingConfig.
     /// </summary>
-    public ConsoleLogFactory(LoggingConfig? config)
+    public ConfigurableLogFactory(LoggingConfig config)
     {
-        config ??= new LoggingConfig();
         var level = ParseLevel(config.MinimumLevel);
         _appLogger = BuildLogger(config.AppLog, level, AppTemplate, withMetadata: true);
         _plainLogger = BuildLogger(config.FixLog, level, PlainTemplate, withMetadata: false);
@@ -47,7 +39,7 @@ public class ConsoleLogFactory : ILogFactory
     /// Creates a log factory with a file prefix for both logs.
     /// This is a convenience constructor for backward compatibility.
     /// </summary>
-    public ConsoleLogFactory(string filePrefix) : this(new LoggingConfig
+    public ConfigurableLogFactory(string filePrefix) : this(new LoggingConfig
     {
         AppLog = new LogOutputConfig
         {
@@ -60,14 +52,6 @@ public class ConsoleLogFactory : ILogFactory
             File = new FileLogConfig { Path = $"logs/{filePrefix}-fix.log" }
         }
     })
-    {
-    }
-
-    /// <summary>
-    /// Legacy constructor for backward compatibility.
-    /// </summary>
-    [Obsolete("Use constructor with LoggingConfig or ISessionDescription")]
-    public ConsoleLogFactory(IFixClock clock) : this((LoggingConfig?)null)
     {
     }
 

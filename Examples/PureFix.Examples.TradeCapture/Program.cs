@@ -20,24 +20,24 @@ var acceptorConfig = Path.Join(sessionRootPath, "test-qf52-acceptor.json");
 var initiatorConfig = Path.Join(sessionRootPath, "test-qf52-initiator.json");
 
 Console.WriteLine("Starting FIX sessions (Trade Capture Client and Server)...");
-Console.WriteLine("Metrics will be printed every 5 seconds.");
+Console.WriteLine("Logging and store are configured via JSON config.");
 Console.WriteLine();
 
-var clock = new RealtimeClock();
 await Runner.Run(
     acceptorConfig,
     initiatorConfig,
     dictRootPath,
-    clock,
     MakeTradeCaptureHost);
 
 Console.WriteLine();
 Console.WriteLine("Trade Capture example completed");
 return;
 
-static BaseAppDI MakeTradeCaptureHost(IFixClock clock, IFixConfig config)
+static BaseAppDI MakeTradeCaptureHost(IFixConfig config)
 {
-    var factory = new ConsoleLogFactory(clock);
+    // Create log factory from config - reads "logging" section from JSON
+    var factory = new ConsoleLogFactory(config.Description);
     var queue = new AsyncWorkQueue();
+    var clock = new RealtimeClock();
     return new TradeCaptureDI(queue, factory, clock, config);
 }

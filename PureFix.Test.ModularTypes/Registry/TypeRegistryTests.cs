@@ -518,6 +518,8 @@ public class TypeRegistryTests
         public int? LastReceivedSeqNum => null;
         public int? BodyLengthChars => 7;
         public int? HeartBtInt => 30;
+        public LoggingConfig? Logging => null;
+        public StoreConfig? Store => null;
     }
 
     #endregion

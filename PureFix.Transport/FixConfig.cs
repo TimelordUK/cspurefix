@@ -81,9 +81,31 @@ namespace PureFix.Transport
                     MessageFactory = null
                 };
 
+                // Auto-create session store factory from config
+                config.SessionStoreFactory = CreateStoreFactory(sessionDescription.Store);
+
                 return config;
             }
             return new FixConfig();
+        }
+
+        /// <summary>
+        /// Creates a session store factory from StoreConfig.
+        /// </summary>
+        private static IFixSessionStoreFactory CreateStoreFactory(StoreConfig? storeConfig)
+        {
+            if (storeConfig == null)
+            {
+                return new MemorySessionStoreFactory();
+            }
+
+            return storeConfig.Type?.ToLowerInvariant() switch
+            {
+                "file" when !string.IsNullOrEmpty(storeConfig.Directory)
+                    => new FileSessionStoreFactory(storeConfig.Directory),
+                "file" => new FileSessionStoreFactory("store"),
+                _ => new MemorySessionStoreFactory()
+            };
         }
     }
 }
