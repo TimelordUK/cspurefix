@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <!-- Package metadata -->
+    <Version>0.1.0-alpha</Version>
+    <Authors>TimelordUK</Authors>
+    <Company>TimelordUK</Company>
+    <Description>PureFix - A pure C# FIX protocol engine</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/TimelordUK/cspurefix</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TimelordUK/cspurefix</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>fix;fix-protocol;trading;financial</PackageTags>
+
+    <!-- Generate packages on build (optional - remove if you only want explicit pack) -->
+    <!-- <GeneratePackageOnBuild>true</GeneratePackageOnBuild> -->
+
+    <!-- Include symbols for debugging -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>
