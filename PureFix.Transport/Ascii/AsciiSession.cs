@@ -164,6 +164,21 @@ namespace PureFix.Transport.Ascii
             {
                 SetState(SessionState.InitiationLogonResponse);
                 logger?.Info("acceptor responds to logon request");
+
+                // If WE (acceptor) are sending ResetSeqNumFlag=Y, we need to reset our incoming
+                // sequence expectation to 0 (expecting 1 next from peer) BEFORE sending our logon.
+                // This handles the broker-reset pattern where client sends N, we respond with Y.
+                var weReset = m_config.ResetSeqNumFlag();
+                if (weReset)
+                {
+                    logger?.Info("Acceptor sending ResetSeqNumFlag=Y, resetting incoming sequence expectation");
+                    m_sessionState.LastPeerMsgSeqNum = 0;
+                    await m_sessionStore.SetTargetSeqNum(1);
+                    await m_sessionStore.Reset();
+                    m_encoder.MsgSeqNum = 1;
+                    m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
+                }
+
                 await SendLogon();  // if res send response else reject, terminate
             }
             else
