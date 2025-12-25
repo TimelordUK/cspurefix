@@ -50,7 +50,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test PureFix.Test.ModularTypes/PureFix.Test.ModularTypes.csproj --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName!~TradeCapture_Test"
+      run: dotnet test PureFix.Test.ModularTypes/PureFix.Test.ModularTypes.csproj --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName!~SessionTest"
 
     - name: Pack NuGet packages
       run: |
