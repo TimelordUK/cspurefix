@@ -6,6 +6,31 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
+  <PropertyGroup>
+  <!-- Description shown on nuget.org and in package managers -->
+  <Description>High-performance C# FIX protocol engine for .NET. Features strongly-typed message generation from FIX XML dictionaries, automatic serialization/deserialization, full session management (logon, heartbeat, sequence numbers, gap fill recovery), SSL/TLS support, file and memory message stores, and broker reset handling. Supports FIX 4.x and 5.x protocols.</Description>
+
+  <!-- Tags for NuGet search - crucial for discoverability -->
+  <PackageTags>cspurefix;fix;fix-protocol;fix-engine;fix-api;financial;trading;fix44;fix50;fix42;quickfix;session;ssl;tls;strongly-typed;codegen;serialization;fintech;capital-markets;order-management;execution;market-data</PackageTags>
+
+  <!-- README file displayed on nuget.org package page -->
+  <PackageReadmeFile>README.md</PackageReadmeFile>
+
+  <!-- Links -->
+  <PackageProjectUrl>https://github.com/TimelordUK/purefix-standalone-demo</PackageProjectUrl>
+  <RepositoryUrl>https://github.com/TimelordUK/PureFix</RepositoryUrl>
+  <RepositoryType>git</RepositoryType>
+
+  <!-- Optional: Icon, license, etc -->
+  <!-- <PackageIcon>icon.png</PackageIcon> -->
+  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+</PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
   </ItemGroup>
