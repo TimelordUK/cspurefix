@@ -73,11 +73,11 @@ jobs:
     - name: List packages
       run: ls -la ./nupkg
 
-    - name: Publish to GitHub Packages
+    - name: Publish to NuGet.org
       run: |
         dotnet nuget push ./nupkg/*.nupkg \
-          --source "https://nuget.pkg.github.com/TimelordUK/index.json" \
-          --api-key ${{ secrets.GITHUB_TOKEN }} \
+          --source "https://api.nuget.org/v3/index.json" \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
           --skip-duplicate
 
     - name: Upload packages artifact
