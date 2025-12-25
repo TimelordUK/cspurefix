@@ -48,5 +48,14 @@ namespace PureFix.ConsoleApp
 
         [Option('e', "exclude", Required = false, HelpText = "msgtypes to exclude rather than include when parsing log", Default = false)]
         public bool Exclude { get; set; } = false;
+
+        [Option('n', "nuget", Required = false, HelpText = "Use NuGet package references instead of project references")]
+        public bool UseNuGetPackages { get; set; } = false;
+
+        [Option('v', "pkg-version", Required = false, Default = "0.1.0-alpha", HelpText = "Package version to reference when using --nuget")]
+        public string PackageVersion { get; set; } = "0.1.0-alpha";
+
+        [Option('N', "namespace", Required = false, HelpText = "Custom namespace for generated types (default: PureFix.Types.{DictName})")]
+        public string? CustomNamespace { get; set; }
     }
 }

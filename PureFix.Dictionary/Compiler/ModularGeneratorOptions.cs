@@ -43,6 +43,25 @@ namespace PureFix.Dictionary.Compiler
         public string TypesProjectPath { get; set; } = "../../PureFix.Types/PureFix.Types.csproj";
 
         /// <summary>
+        /// If true, generate PackageReference instead of ProjectReference.
+        /// Use this for standalone applications that reference PureFix via NuGet.
+        /// </summary>
+        public bool UsePackageReferences { get; set; } = false;
+
+        /// <summary>
+        /// Version of PureFix packages to reference when UsePackageReferences is true.
+        /// Example: "0.1.0-alpha"
+        /// </summary>
+        public string PackageVersion { get; set; } = "0.1.0-alpha";
+
+        /// <summary>
+        /// Custom namespace for generated types.
+        /// If null, uses "PureFix.Types.{DictionaryName}".
+        /// Example: "MyApp.Types.FIX50SP2Custom"
+        /// </summary>
+        public string? CustomNamespace { get; set; }
+
+        /// <summary>
         /// Base options used by GeneratorBase
         /// </summary>
         public Options BaseOptions { get; set; } = new();
@@ -53,11 +72,16 @@ namespace PureFix.Dictionary.Compiler
         public static ModularGeneratorOptions FromDictionaryPath(
             string dictionaryPath,
             string outputPath,
-            IFixDefinitions definitions)
+            IFixDefinitions definitions,
+            string? customNamespace = null,
+            bool usePackageReferences = false,
+            string packageVersion = "0.1.0-alpha")
         {
             var dictFileName = Path.GetFileNameWithoutExtension(dictionaryPath);
             var sanitizedName = SanitizeName(dictFileName);
-            var assemblyName = $"PureFix.Types.{sanitizedName}";
+
+            // Use custom namespace if provided, otherwise default to PureFix.Types.{sanitizedName}
+            var assemblyName = customNamespace ?? $"PureFix.Types.{sanitizedName}";
 
             return new ModularGeneratorOptions
             {
@@ -65,6 +89,9 @@ namespace PureFix.Dictionary.Compiler
                 AssemblyName = assemblyName,
                 DictionaryName = sanitizedName,
                 DictionaryPath = dictionaryPath,
+                CustomNamespace = customNamespace,
+                UsePackageReferences = usePackageReferences,
+                PackageVersion = packageVersion,
                 BaseOptions = new Options
                 {
                     MsgTypes = definitions.Message.Select(kv => kv.Value.MsgType).Distinct().ToList(),

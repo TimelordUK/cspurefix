@@ -5,6 +5,15 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- dotnet tool packaging -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>purefix-gen</ToolCommandName>
+    <PackageId>PureFix.Generator</PackageId>
+    <Version>0.1.0-alpha</Version>
+    <Authors>TimelordUK</Authors>
+    <Description>FIX protocol type generator for PureFix engine. Generate C# types from QuickFix-compatible XML dictionaries.</Description>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

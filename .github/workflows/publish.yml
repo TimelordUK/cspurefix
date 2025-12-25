@@ -1,0 +1,87 @@
+name: Publish NuGet Packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version (e.g., 0.1.0-alpha)'
+        required: true
+        default: '0.1.0-alpha'
+
+env:
+  DOTNET_VERSION: '9.0.x'
+
+jobs:
+  publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Determine version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" == "release" ]; then
+          VERSION="${{ github.event.release.tag_name }}"
+          # Remove 'v' prefix if present
+          VERSION="${VERSION#v}"
+        else
+          VERSION="${{ github.event.inputs.version }}"
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Using version: $VERSION"
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test PureFix.Test.ModularTypes/PureFix.Test.ModularTypes.csproj --configuration Release --no-build --verbosity normal
+
+    - name: Pack NuGet packages
+      run: |
+        for project in PureFix.Types.Core PureFix.Types PureFix.Buffer PureFix.Dictionary PureFix.Transport; do
+          dotnet pack $project/$project.csproj \
+            --configuration Release \
+            --no-build \
+            -p:PackageVersion=${{ steps.version.outputs.version }} \
+            --output ./nupkg
+        done
+
+    - name: Pack Generator Tool
+      run: |
+        dotnet pack PureFix.App/PureFix.ConsoleApp.csproj \
+          --configuration Release \
+          --no-build \
+          -p:PackageVersion=${{ steps.version.outputs.version }} \
+          --output ./nupkg
+
+    - name: List packages
+      run: ls -la ./nupkg
+
+    - name: Publish to GitHub Packages
+      run: |
+        dotnet nuget push ./nupkg/*.nupkg \
+          --source "https://nuget.pkg.github.com/TimelordUK/index.json" \
+          --api-key ${{ secrets.GITHUB_TOKEN }} \
+          --skip-duplicate
+
+    - name: Upload packages artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./nupkg/*.nupkg

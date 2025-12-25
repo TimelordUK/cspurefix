@@ -30,9 +30,21 @@ internal partial class Program
         return FixVersion.FIX44;
     }
 
-    private static ModularGeneratorOptions GetModularGeneratorOptions(IFixDefinitions definitions, string dictPath, string outputPath)
+    private static ModularGeneratorOptions GetModularGeneratorOptions(
+        IFixDefinitions definitions,
+        string dictPath,
+        string outputPath,
+        string? customNamespace = null,
+        bool usePackageReferences = false,
+        string packageVersion = "0.1.0-alpha")
     {
-        var options = ModularGeneratorOptions.FromDictionaryPath(dictPath, outputPath, definitions);
+        var options = ModularGeneratorOptions.FromDictionaryPath(
+            dictPath,
+            outputPath,
+            definitions,
+            customNamespace,
+            usePackageReferences,
+            packageVersion);
         return options;
     }
 

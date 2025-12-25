@@ -292,6 +292,17 @@ namespace PureFix.Dictionary.Compiler
         {
             var assemblyName = _modularOptions.AssemblyName ?? "PureFix.Types.Generated";
 
+            // Generate either PackageReference or ProjectReference based on options
+            var itemGroup = _modularOptions.UsePackageReferences
+                ? $@"  <ItemGroup>
+    <PackageReference Include=""PureFix.Types.Core"" Version=""{_modularOptions.PackageVersion}"" />
+    <PackageReference Include=""PureFix.Types"" Version=""{_modularOptions.PackageVersion}"" />
+  </ItemGroup>"
+                : $@"  <ItemGroup>
+    <ProjectReference Include=""{_modularOptions.CoreProjectPath}"" />
+    <ProjectReference Include=""{_modularOptions.TypesProjectPath}"" />
+  </ItemGroup>";
+
             var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
 
   <PropertyGroup>
@@ -302,10 +313,7 @@ namespace PureFix.Dictionary.Compiler
     <RootNamespace>{GetNamespace()}</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include=""{_modularOptions.CoreProjectPath}"" />
-    <ProjectReference Include=""{_modularOptions.TypesProjectPath}"" />
-  </ItemGroup>
+{itemGroup}
 
 </Project>";
 
