@@ -1,4 +1,5 @@
-﻿using PureFix.Buffer.Segment;
+﻿using Microsoft.Extensions.ObjectPool;
+using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
@@ -14,23 +15,46 @@ namespace PureFix.Buffer.Ascii
 {
     public class TagIndex : IDisposable
     {
-        private static readonly ArrayPool<TagPos> Pool = ArrayPool<TagPos>.Shared;
+        private static readonly ArrayPool<TagPos> ArrayPool = ArrayPool<TagPos>.Shared;
+        private static readonly ObjectPool<TagIndex> ObjectPool = new DefaultObjectPool<TagIndex>(
+            new DefaultPooledObjectPolicy<TagIndex>(), maximumRetained: 16);
 
         /// <summary>
-        /// Creates a TagIndex from a Tags object, avoiding an extra copy.
-        /// Uses ArrayPool for the sorted array to reduce allocations.
-        /// Dispose should be called when done to return the array to the pool.
+        /// Rents a TagIndex from the pool and initializes it.
+        /// Call Dispose() when done to return both the sorted array and TagIndex to their pools.
         /// </summary>
-        /// <param name="set">The message definition</param>
-        /// <param name="tags">The Tags object containing tag positions</param>
-        /// <param name="count">Number of tags to include (typically tags.Count)</param>
+        public static TagIndex Rent(IContainedSet set, Tags tags, int count)
+        {
+            var instance = ObjectPool.Get();
+            instance.Initialize(set, tags, count);
+            return instance;
+        }
+
+        /// <summary>
+        /// Creates a TagIndex directly (not pooled). Use Rent() for pooled instances.
+        /// </summary>
         public TagIndex(IContainedSet set, Tags tags, int count)
+        {
+            Initialize(set, tags, count);
+        }
+
+        /// <summary>
+        /// Default constructor for object pool.
+        /// </summary>
+        public TagIndex()
+        {
+            // Dictionaries are created with default capacity
+            // They will grow as needed and retain capacity across reuses
+        }
+
+        private void Initialize(IContainedSet set, Tags tags, int count)
         {
             Set = set;
             _count = count;
+            _disposed = false;
 
-            // Rent array from pool instead of allocating
-            _sortedTagPosForwards = Pool.Rent(count);
+            // Rent array from pool (may be larger than needed)
+            _sortedTagPosForwards = ArrayPool.Rent(count);
 
             // Copy tags into rented array
             for (var i = 0; i < count; i++)
@@ -40,17 +64,34 @@ namespace PureFix.Buffer.Ascii
 
             // Sort only the portion we're using
             Array.Sort(_sortedTagPosForwards, 0, count, Comparer<TagPos>.Create(TagPos.Compare));
-            _tagSpans = GetSpans(_sortedTagPosForwards, count);
+            PopulateTagSpans(_sortedTagPosForwards, count);
             CalcGroups(tags, count);
         }
 
         public void Dispose()
         {
-            if (!_disposed && _sortedTagPosForwards != null)
+            if (_disposed) return;
+            _disposed = true;
+
+            // Return sorted array to ArrayPool
+            if (_sortedTagPosForwards != null)
             {
-                Pool.Return(_sortedTagPosForwards);
-                _disposed = true;
+                ArrayPool.Return(_sortedTagPosForwards);
+                _sortedTagPosForwards = null!;
             }
+
+            // Clear all dictionaries (keeps capacity for reuse)
+            _tagSpans.Clear();
+            _noOfTag2NoOfPos.Clear();
+            _tag2delim.Clear();
+            _repeated.Clear();
+            _names.Clear();
+            _groups.Clear();
+            _componentGroupWrappers.Clear();
+            _cache.Clear();
+
+            // Return self to object pool
+            ObjectPool.Return(this);
         }
 
         private void CalcGroups(Tags tags, int count)
@@ -98,7 +139,7 @@ namespace PureFix.Buffer.Ascii
         }
 
         /// <summary>
-        /// Gets spans for all tags in the array.
+        /// Gets spans for all tags in the array. Creates a new dictionary.
         /// </summary>
         public static Dictionary<int, Range> GetSpans(TagPos[] sortedTagPosForwards)
         {
@@ -106,15 +147,27 @@ namespace PureFix.Buffer.Ascii
         }
 
         /// <summary>
-        /// Gets spans for the first 'count' tags in the array.
+        /// Gets spans for the first 'count' tags in the array. Creates a new dictionary.
         /// Used when array is rented from pool and may be larger than needed.
         /// </summary>
         public static Dictionary<int, Range> GetSpans(TagPos[] sortedTagPosForwards, int count)
         {
-            // We can make a worse case guess at the size of span dictionary
-            // But it'll save reallocating
             var tagSpans = new Dictionary<int, Range>(count);
+            PopulateTagSpans(tagSpans, sortedTagPosForwards, count);
+            return tagSpans;
+        }
 
+        /// <summary>
+        /// Populates tag spans into an existing dictionary.
+        /// Dictionary is expected to be empty (caller should Clear() if reusing).
+        /// </summary>
+        private void PopulateTagSpans(TagPos[] sortedTagPosForwards, int count)
+        {
+            PopulateTagSpans(_tagSpans, sortedTagPosForwards, count);
+        }
+
+        private static void PopulateTagSpans(Dictionary<int, Range> tagSpans, TagPos[] sortedTagPosForwards, int count)
+        {
             for (var i = 0; i < count; ++i)
             {
                 var t = sortedTagPosForwards[i];
@@ -127,7 +180,6 @@ namespace PureFix.Buffer.Ascii
                     tagSpans[t.Tag] = new Range(i, i);
                 }
             }
-            return tagSpans;
         }
 
         public SegmentView? GetInstance(string name)
@@ -164,7 +216,7 @@ namespace PureFix.Buffer.Ascii
         }
 
         public IReadOnlySet<string> Names => _names;
-        public IContainedSet Set { get; }
+        public IContainedSet Set { get; private set; } = null!;
         public IReadOnlyDictionary<int, Range> TagSpans => _tagSpans;
         public IReadOnlyDictionary<string, GroupFieldDefinition> Groups => _groups;
         public IReadOnlyDictionary<int, TagPos> NoOfTag2NoOfPos => _noOfTag2NoOfPos;
@@ -174,16 +226,17 @@ namespace PureFix.Buffer.Ascii
 
         public TagPos this[int i] => _sortedTagPosForwards[i];
 
-        private readonly TagPos[] _sortedTagPosForwards;
-        private readonly int _count;
-        private readonly Dictionary<int, Range> _tagSpans;
-        private readonly Dictionary<int, TagPos> _noOfTag2NoOfPos = [];
-        private readonly Dictionary<int, int> _tag2delim = [];
-        private readonly HashSet<int> _repeated = [];
-        private readonly HashSet<string> _names = [];
-        private readonly Dictionary<string, GroupFieldDefinition> _groups = [];
-        private readonly HashSet<string> _componentGroupWrappers = [];
-        private readonly Dictionary<string, SegmentView> _cache = [];
+        // Mutable fields for pooling - these are reused across instances
+        private TagPos[] _sortedTagPosForwards = null!;
+        private int _count;
+        private readonly Dictionary<int, Range> _tagSpans = new();
+        private readonly Dictionary<int, TagPos> _noOfTag2NoOfPos = new();
+        private readonly Dictionary<int, int> _tag2delim = new();
+        private readonly HashSet<int> _repeated = new();
+        private readonly HashSet<string> _names = new();
+        private readonly Dictionary<string, GroupFieldDefinition> _groups = new();
+        private readonly HashSet<string> _componentGroupWrappers = new();
+        private readonly Dictionary<string, SegmentView> _cache = new();
         private bool _disposed;
     }
 }

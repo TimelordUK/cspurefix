@@ -8,33 +8,37 @@ A high-performance, pure C# FIX protocol engine for .NET.
 
 ## Performance
 
-PureFix processes FIX messages in two stages, each optimized for its purpose:
+PureFix processes FIX messages in two stages:
 
 ### Stage 1: View Parsing (buffer to indexed view)
 
-Tokenizes raw bytes into an indexed view structure for efficient field access:
+Tokenizes raw bytes into an indexed view with structure analysis for component/group access:
 
 | Message Type      | Fields | Size   | Parse Time | Allocated |
 |-------------------|--------|--------|------------|-----------|
-| Heartbeat         | ~10    | 131 B  | 1.77 us    | 4.50 KB   |
-| Logon             | ~22    | 214 B  | 3.11 us    | 5.73 KB   |
-| QuoteRequest      | ~30    | 334 B  | 3.88 us    | 4.92 KB   |
-| OrderCancelReject | ~370   | 3.9 KB | 58.8 us    | 75.0 KB   |
-| ExecutionReport   | ~646   | 6.6 KB | 102.9 us   | 126.5 KB  |
+| Heartbeat         | ~10    | 131 B  | 1.7 us     | 3.4 KB    |
+| Logon             | ~22    | 214 B  | 3.1 us     | 4.2 KB    |
+| QuoteRequest      | ~30    | 334 B  | 3.7 us     | 3.4 KB    |
+| OrderCancelReject | ~370   | 3.9 KB | 56 us      | 57 KB     |
+| ExecutionReport   | ~646   | 6.6 KB | 103 us     | 100 KB    |
+
+*Note: View parsing includes full structure analysis to support non-contiguous component access (required for some broker message formats). Byte buffers, tag positions, and index dictionaries are pooled for reuse.*
 
 ### Stage 2: Field Extraction (view to typed message)
 
 Extracts field values from the pre-indexed view into typed message objects:
 
-| Message Type      | Extract Time | Allocated |
-|-------------------|--------------|-----------|
-| Heartbeat         | 3.8 ns       | 40 B      |
-| Logon             | 4.6 ns       | 112 B     |
-| QuoteRequest      | 4.3 ns       | 96 B      |
-| OrderCancelReject | 6.0 ns       | 216 B     |
-| ExecutionReport   | 25.1 ns      | 1,480 B   |
+| Message Type      | Extract Time | Allocated (new) | Allocated (pooled) |
+|-------------------|--------------|-----------------|-------------------|
+| Heartbeat         | 3.8 ns       | 40 B            | 0 B               |
+| Logon             | 4.6 ns       | 112 B           | 0 B               |
+| QuoteRequest      | 4.3 ns       | 96 B            | 0 B               |
+| OrderCancelReject | 6.0 ns       | 216 B           | 0 B               |
+| ExecutionReport   | 25.1 ns      | 1,480 B         | 0 B               |
 
-*Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. View parsing includes structure analysis and index building. Field extraction benefits from pooled buffers and tag reuse. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions).*
+*Field extraction is extremely efficient. Message objects can be pooled and reused via `Reset()` for zero-allocation extraction.*
+
+*Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions).*
 
 ## Why PureFix?
 
@@ -45,14 +49,14 @@ Extracts field values from the pre-indexed view into typed message objects:
 | **Implementation** | Pure C# | C++ core with C# wrapper |
 | **Debugging** | Full source debugging | Limited - crosses native boundary |
 | **Custom Types** | Generate types for *your* dictionary | Generic field accessors only |
-| **Allocations** | Minimal, designed for low-GC | Allocates heavily during parsing |
+| **Field Extraction** | Nanosecond extraction, poolable messages | Allocates per field access |
 | **Code Generation** | First-class tool (`purefix-gen`) | Limited/manual |
 
 ### Key Features
 
 - **Strongly-typed messages** - Generate C# classes from any FIX dictionary with full IntelliSense
 - **Custom dictionary support** - Generate types for broker-specific extensions, not just vanilla FIX
-- **Minimal allocations** - Parse messages without GC pressure
+- **Pooled message extraction** - Reuse message objects for zero-allocation field extraction
 - **Pure C#** - Debug everything, no native interop boundaries
 - **Session management** - Logon, heartbeat, sequence numbers, gap fill handled automatically
 - **File & memory stores** - Session persistence with QuickFix-compatible file format

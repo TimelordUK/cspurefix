@@ -29,7 +29,7 @@ namespace PureFix.Buffer.Ascii
             // in process of being discovered and may have any amount of depth
             // i.e. a component containing a repeated group of components
             // with sub-groups of components
-            using var ti = new TagIndex(msgDefinition, tags, last);
+            using var ti = TagIndex.Rent(msgDefinition, tags, last);
             var context = new Context(msgDefinition, tags, last);
 
             var msgStructure = new SegmentDescription(msgDefinition.Name, tags[0].Tag, msgDefinition,

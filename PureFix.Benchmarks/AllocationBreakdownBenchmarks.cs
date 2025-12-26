@@ -1,8 +1,12 @@
 using System;
+using System.Buffers;
+using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using PureFix.Buffer.Ascii;
+using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
+using PureFix.Types;
 using PureFix.Types.Core;
 
 namespace PureFix.Benchmarks
@@ -23,6 +27,8 @@ namespace PureFix.Benchmarks
         // Pre-parsed components for isolated testing
         private Tags _heartbeatTags = null!;
         private Tags _executionReportTags = null!;
+        private TagPos[] _heartbeatSortedArray = null!;
+        private TagPos[] _executionReportSortedArray = null!;
         private AsciiSegmentParser _segmentParser = null!;
 
         [GlobalSetup]
@@ -40,6 +46,19 @@ namespace PureFix.Benchmarks
             // Pre-parse to get Tags for isolated tests
             _heartbeatTags = ParseToTags(_heartbeatMessage);
             _executionReportTags = ParseToTags(_executionReportMessage);
+
+            // Pre-create sorted arrays
+            _heartbeatSortedArray = CreateSortedArray(_heartbeatTags);
+            _executionReportSortedArray = CreateSortedArray(_executionReportTags);
+        }
+
+        private TagPos[] CreateSortedArray(Tags tags)
+        {
+            var arr = new TagPos[tags.Count];
+            for (var i = 0; i < tags.Count; i++)
+                arr[i] = tags[i];
+            Array.Sort(arr, TagPos.Compare);
+            return arr;
         }
 
         private byte[] LoadMessage(string filename)
@@ -143,6 +162,88 @@ namespace PureFix.Benchmarks
             // Full structure parsing
             var structure = _segmentParser.Parse("8", _executionReportTags, _executionReportTags.Count);
             return structure!;
+        }
+
+        // ============================================================
+        // GRANULAR BREAKDOWN - Isolate specific allocation sources
+        // ============================================================
+
+        [Benchmark]
+        [BenchmarkCategory("Granular")]
+        public object Heartbeat_GetSpans()
+        {
+            // Just the _tagSpans dictionary creation
+            return TagIndex.GetSpans(_heartbeatSortedArray, _heartbeatTags.Count);
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Granular")]
+        public object ExecReport_GetSpans()
+        {
+            // Just the _tagSpans dictionary creation
+            return TagIndex.GetSpans(_executionReportSortedArray, _executionReportTags.Count);
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Granular")]
+        public object Heartbeat_DictionaryBaseline()
+        {
+            // Baseline: creating the empty dictionaries that TagIndex creates
+            var count = _heartbeatTags.Count;
+            var tagSpans = new Dictionary<int, Range>(count);
+            var noOfTag2NoOfPos = new Dictionary<int, TagPos>();
+            var tag2delim = new Dictionary<int, int>();
+            var repeated = new HashSet<int>();
+            var names = new HashSet<string>();
+            var groups = new Dictionary<string, object>();
+            var componentGroupWrappers = new HashSet<string>();
+            var cache = new Dictionary<string, object>();
+            return (tagSpans, noOfTag2NoOfPos, tag2delim, repeated, names, groups, componentGroupWrappers, cache);
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Granular")]
+        public object ExecReport_DictionaryBaseline()
+        {
+            // Baseline: creating the empty dictionaries that TagIndex creates
+            var count = _executionReportTags.Count;
+            var tagSpans = new Dictionary<int, Range>(count);
+            var noOfTag2NoOfPos = new Dictionary<int, TagPos>();
+            var tag2delim = new Dictionary<int, int>();
+            var repeated = new HashSet<int>();
+            var names = new HashSet<string>();
+            var groups = new Dictionary<string, object>();
+            var componentGroupWrappers = new HashSet<string>();
+            var cache = new Dictionary<string, object>();
+            return (tagSpans, noOfTag2NoOfPos, tag2delim, repeated, names, groups, componentGroupWrappers, cache);
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Granular")]
+        public object Heartbeat_ArrayPoolRent()
+        {
+            // Just the array pool rent/return overhead
+            var arr = ArrayPool<TagPos>.Shared.Rent(_heartbeatTags.Count);
+            ArrayPool<TagPos>.Shared.Return(arr);
+            return arr;
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Granular")]
+        public object ExecReport_ArrayPoolRent()
+        {
+            // Just the array pool rent/return overhead
+            var arr = ArrayPool<TagPos>.Shared.Rent(_executionReportTags.Count);
+            ArrayPool<TagPos>.Shared.Return(arr);
+            return arr;
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Granular")]
+        public object ParserCreation()
+        {
+            // Cost of creating a new AsciiParser instance
+            return new AsciiParser(_fixDefinitions) { Delimiter = AsciiChars.Pipe };
         }
     }
 }
