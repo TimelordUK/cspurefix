@@ -8,7 +8,7 @@ A high-performance, pure C# FIX protocol engine for .NET.
 
 ## Performance
 
-PureFix is designed for low-latency trading applications with minimal allocations:
+PureFix is designed for efficiency with minimal allocations:
 
 | Message Type        | Parse Time | Allocated |
 |---------------------|------------|-----------|
