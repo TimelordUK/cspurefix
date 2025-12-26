@@ -29,17 +29,17 @@ namespace PureFix.Buffer.Ascii
             // in process of being discovered and may have any amount of depth
             // i.e. a component containing a repeated group of components
             // with sub-groups of components
-            var ti = new TagIndex(msgDefinition, tags, last);
+            using var ti = new TagIndex(msgDefinition, tags, last);
             var context = new Context(msgDefinition, tags, last);
 
             var msgStructure = new SegmentDescription(msgDefinition.Name, tags[0].Tag, msgDefinition,
                   context.CurrentTagPosition, context.StructureStack.Count, SegmentType.Msg);
             context.StructureStack.Push(msgStructure);
             Discover(context);
-            // for any level root level component, cant guarantee tags will be in a contiguous block so 
+            // for any level root level component, cant guarantee tags will be in a contiguous block so
             // switch to using the index
             Clean(context);
-            Fragments(context, ti);            
+            Fragments(context, ti);
             // now know where all components and groups are positioned within message
             return new Structure(tags, context.Segments);
         }

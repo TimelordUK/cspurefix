@@ -4,6 +4,7 @@ using PureFix.Dictionary.Definition;
 using PureFix.Types;
 using PureFix.Types.Core;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,14 @@ using System.Threading.Tasks;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class TagIndex
+    public class TagIndex : IDisposable
     {
+        private static readonly ArrayPool<TagPos> Pool = ArrayPool<TagPos>.Shared;
+
         /// <summary>
         /// Creates a TagIndex from a Tags object, avoiding an extra copy.
+        /// Uses ArrayPool for the sorted array to reduce allocations.
+        /// Dispose should be called when done to return the array to the pool.
         /// </summary>
         /// <param name="set">The message definition</param>
         /// <param name="tags">The Tags object containing tag positions</param>
@@ -22,11 +27,30 @@ namespace PureFix.Buffer.Ascii
         public TagIndex(IContainedSet set, Tags tags, int count)
         {
             Set = set;
-            // Create sorted copy directly from Tags - single copy instead of double
-            _sortedTagPosForwards = tags.Slice(0, count);
-            Array.Sort(_sortedTagPosForwards, TagPos.Compare);
-            _tagSpans = GetSpans(_sortedTagPosForwards);
+            _count = count;
+
+            // Rent array from pool instead of allocating
+            _sortedTagPosForwards = Pool.Rent(count);
+
+            // Copy tags into rented array
+            for (var i = 0; i < count; i++)
+            {
+                _sortedTagPosForwards[i] = tags[i];
+            }
+
+            // Sort only the portion we're using
+            Array.Sort(_sortedTagPosForwards, 0, count, Comparer<TagPos>.Create(TagPos.Compare));
+            _tagSpans = GetSpans(_sortedTagPosForwards, count);
             CalcGroups(tags, count);
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed && _sortedTagPosForwards != null)
+            {
+                Pool.Return(_sortedTagPosForwards);
+                _disposed = true;
+            }
         }
 
         private void CalcGroups(Tags tags, int count)
@@ -73,13 +97,25 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
+        /// <summary>
+        /// Gets spans for all tags in the array.
+        /// </summary>
         public static Dictionary<int, Range> GetSpans(TagPos[] sortedTagPosForwards)
         {
-            // We can make a worse case guess at the size of span dictionary
-            // But it'll save reallocating 
-            var tagSpans = new Dictionary<int, Range>(sortedTagPosForwards.Length);
+            return GetSpans(sortedTagPosForwards, sortedTagPosForwards.Length);
+        }
 
-            for (var i = 0; i < sortedTagPosForwards.Length; ++i)
+        /// <summary>
+        /// Gets spans for the first 'count' tags in the array.
+        /// Used when array is rented from pool and may be larger than needed.
+        /// </summary>
+        public static Dictionary<int, Range> GetSpans(TagPos[] sortedTagPosForwards, int count)
+        {
+            // We can make a worse case guess at the size of span dictionary
+            // But it'll save reallocating
+            var tagSpans = new Dictionary<int, Range>(count);
+
+            for (var i = 0; i < count; ++i)
             {
                 var t = sortedTagPosForwards[i];
                 if (tagSpans.TryGetValue(t.Tag, out var c))
@@ -139,6 +175,7 @@ namespace PureFix.Buffer.Ascii
         public TagPos this[int i] => _sortedTagPosForwards[i];
 
         private readonly TagPos[] _sortedTagPosForwards;
+        private readonly int _count;
         private readonly Dictionary<int, Range> _tagSpans;
         private readonly Dictionary<int, TagPos> _noOfTag2NoOfPos = [];
         private readonly Dictionary<int, int> _tag2delim = [];
@@ -147,5 +184,6 @@ namespace PureFix.Buffer.Ascii
         private readonly Dictionary<string, GroupFieldDefinition> _groups = [];
         private readonly HashSet<string> _componentGroupWrappers = [];
         private readonly Dictionary<string, SegmentView> _cache = [];
+        private bool _disposed;
     }
 }
