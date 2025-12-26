@@ -276,5 +276,54 @@ namespace PureFix.Buffer.Ascii
             var tag = GetTag(position);
             return tag == null ? null : Buffer.GetMonthYear(tag.Value.Start, tag.Value.End);
         }
+
+        /// <summary>
+        /// Creates an independent deep copy of this view that the caller owns.
+        /// Use this when you need to hold onto the view data after the parse callback returns.
+        /// The cloned view is not pooled and must be managed by the caller.
+        /// </summary>
+        public AsciiView Clone()
+        {
+            // Clone the buffer to get our own copy of the bytes
+            var clonedBuffer = Buffer.Clone();
+
+            // Clone the tags to get our own copy of tag positions
+            var clonedTags = new Tags(Structure?.Tags ?? new Tags());
+
+            // Create new storage with cloned data (not from pool - caller owns it)
+            var clonedStorage = new ClonedStorage(clonedBuffer, clonedTags);
+
+            // Create new structure with cloned tags but same segments (position metadata is still valid)
+            Structure? clonedStructure = Structure.HasValue
+                ? new Structure(clonedTags, Structure.Value.Segments)
+                : null;
+
+            return new AsciiView(
+                Definitions,
+                Segment!,
+                clonedStorage,
+                clonedStructure,
+                Ptr,
+                Delimiter,
+                WriteDelimiter);
+        }
+
+        /// <summary>
+        /// Lightweight storage wrapper for cloned views (not pooled).
+        /// </summary>
+        private sealed class ClonedStorage : StoragePool.Storage
+        {
+            private readonly ElasticBuffer _buffer;
+            private readonly Tags _locations;
+
+            public ClonedStorage(ElasticBuffer buffer, Tags locations)
+            {
+                _buffer = buffer;
+                _locations = locations;
+            }
+
+            public override ElasticBuffer Buffer => _buffer;
+            public override Tags Locations => _locations;
+        }
     }
 }

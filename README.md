@@ -8,17 +8,33 @@ A high-performance, pure C# FIX protocol engine for .NET.
 
 ## Performance
 
-PureFix is designed for efficiency with minimal allocations:
+PureFix processes FIX messages in two stages, each optimized for its purpose:
 
-| Message Type        | Fields | Size   | Parse Time | Allocated |
-|---------------------|--------|--------|------------|-----------|
-| Heartbeat           | ~10    | 131 B  | 3.7 ns     | 40 B      |
-| Logon               | ~22    | 214 B  | 4.9 ns     | 112 B     |
-| QuoteRequest        | ~30    | 334 B  | 4.5 ns     | 96 B      |
-| OrderCancelReject   | ~370   | 3.9 KB | 6.4 ns     | 216 B     |
-| ExecutionReport     | ~646   | 6.6 KB | 26.0 ns    | 1,480 B   |
+### Stage 1: View Parsing (buffer to indexed view)
 
-*Parse Time = tokenize message into indexed view (field extraction is additional). Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions) for comparison.*
+Tokenizes raw bytes into an indexed view structure for efficient field access:
+
+| Message Type      | Fields | Size   | Parse Time | Allocated |
+|-------------------|--------|--------|------------|-----------|
+| Heartbeat         | ~10    | 131 B  | 1.65 us    | 4.73 KB   |
+| Logon             | ~22    | 214 B  | 3.02 us    | 6.34 KB   |
+| QuoteRequest      | ~30    | 334 B  | 3.67 us    | 5.78 KB   |
+| OrderCancelReject | ~370   | 3.9 KB | 55.5 us    | 86.5 KB   |
+| ExecutionReport   | ~646   | 6.6 KB | 99.8 us    | ~146 KB   |
+
+### Stage 2: Field Extraction (view to typed message)
+
+Extracts field values from the pre-indexed view into typed message objects:
+
+| Message Type      | Extract Time | Allocated |
+|-------------------|--------------|-----------|
+| Heartbeat         | 3.8 ns       | 40 B      |
+| Logon             | 4.6 ns       | 112 B     |
+| QuoteRequest      | 4.3 ns       | 96 B      |
+| OrderCancelReject | 6.0 ns       | 216 B     |
+| ExecutionReport   | 25.1 ns      | 1,480 B   |
+
+*Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. View parsing includes structure analysis and index building. Field extraction benefits from pooled buffers and tag reuse. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions).*
 
 ## Why PureFix?
 

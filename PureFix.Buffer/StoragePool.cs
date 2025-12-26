@@ -13,8 +13,8 @@ namespace PureFix.Buffer
     {
         public class Storage
         {
-            public ElasticBuffer Buffer { get; } = new();
-            public Tags Locations { get; } = new();
+            public virtual ElasticBuffer Buffer { get; } = new();
+            public virtual Tags Locations { get; } = new();
 
             public TagPos? BeginStringLoc => Locations?[0];
             public TagPos? BodyLengthLoc => Locations?[1];

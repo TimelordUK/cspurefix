@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,6 +79,7 @@ namespace PureFix.Types
             return total;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetPos()
         {
             return Pos;
@@ -94,6 +96,7 @@ namespace PureFix.Types
             return prev;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte Get(int pos)
         {
             return _buffer[pos];
@@ -105,15 +108,17 @@ namespace PureFix.Types
             return Pos;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int SwitchChar(byte c)
         {
             _buffer[Pos - 1] = c;
             return Pos;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int SaveChar(byte c)
         {
-            CheckGrowBuffer(1);
+            if (Pos >= _buffer.Length) CheckGrowBuffer(1);
             _buffer[Pos++] = c;
             return Pos;
         }
@@ -271,6 +276,7 @@ namespace PureFix.Types
             return str;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void CheckGrowBuffer(int required)
         {
             var len = _buffer.Length;
