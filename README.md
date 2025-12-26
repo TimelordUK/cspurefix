@@ -16,11 +16,11 @@ Tokenizes raw bytes into an indexed view structure for efficient field access:
 
 | Message Type      | Fields | Size   | Parse Time | Allocated |
 |-------------------|--------|--------|------------|-----------|
-| Heartbeat         | ~10    | 131 B  | 1.65 us    | 4.73 KB   |
-| Logon             | ~22    | 214 B  | 3.02 us    | 6.34 KB   |
-| QuoteRequest      | ~30    | 334 B  | 3.67 us    | 5.78 KB   |
-| OrderCancelReject | ~370   | 3.9 KB | 55.5 us    | 86.5 KB   |
-| ExecutionReport   | ~646   | 6.6 KB | 99.8 us    | ~146 KB   |
+| Heartbeat         | ~10    | 131 B  | 1.73 us    | 4.57 KB   |
+| Logon             | ~22    | 214 B  | 3.08 us    | 5.98 KB   |
+| QuoteRequest      | ~30    | 334 B  | 3.78 us    | 5.30 KB   |
+| OrderCancelReject | ~370   | 3.9 KB | 57.7 us    | 80.7 KB   |
+| ExecutionReport   | ~646   | 6.6 KB | 100.8 us   | 136.5 KB  |
 
 ### Stage 2: Field Extraction (view to typed message)
 

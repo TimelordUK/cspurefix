@@ -13,18 +13,25 @@ namespace PureFix.Buffer.Ascii
 {
     public class TagIndex
     {
-        public TagIndex(IContainedSet set, TagPos[] tags)
+        /// <summary>
+        /// Creates a TagIndex from a Tags object, avoiding an extra copy.
+        /// </summary>
+        /// <param name="set">The message definition</param>
+        /// <param name="tags">The Tags object containing tag positions</param>
+        /// <param name="count">Number of tags to include (typically tags.Count)</param>
+        public TagIndex(IContainedSet set, Tags tags, int count)
         {
             Set = set;
-            _sortedTagPosForwards = tags[..tags.Length];
+            // Create sorted copy directly from Tags - single copy instead of double
+            _sortedTagPosForwards = tags.Slice(0, count);
             Array.Sort(_sortedTagPosForwards, TagPos.Compare);
             _tagSpans = GetSpans(_sortedTagPosForwards);
-            CalcGroups(tags);
+            CalcGroups(tags, count);
         }
 
-        private void CalcGroups(TagPos[] tags)
+        private void CalcGroups(Tags tags, int count)
         {
-            for (var i = 0; i < tags.Length; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var tag = tags[i];
                 var (parent, _) = Set.TagToField.GetValueOrDefault(tag.Tag);
@@ -36,7 +43,7 @@ namespace PureFix.Buffer.Ascii
                 {
                     _componentGroupWrappers.Add(parent.Name);
                 }
-                CalcDelim(tags, tag);
+                CalcDelim(tags, count, tag);
             }
         }
 
@@ -53,9 +60,9 @@ namespace PureFix.Buffer.Ascii
             }
         }
 
-        private void CalcDelim(TagPos[] tags, TagPos tag)
+        private void CalcDelim(Tags tags, int count, TagPos tag)
         {
-            var delimPos = Math.Min(tag.Position + 1, tags.Length - 1);
+            var delimPos = Math.Min(tag.Position + 1, count - 1);
             var delimTag = tags[delimPos];
             if (!_tagSpans.TryGetValue(delimTag.Tag, out _)) return;
             _tag2delim[tag.Tag] = delimTag.Tag;

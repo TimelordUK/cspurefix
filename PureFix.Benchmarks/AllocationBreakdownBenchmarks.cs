@@ -89,8 +89,7 @@ namespace PureFix.Benchmarks
             // TagIndex creation with its copies and dictionaries
             if (!_fixDefinitions.Message.TryGetValue("0", out var msgDef))
                 return null!;
-            var slice = _heartbeatTags.Slice(0, _heartbeatTags.Count);
-            var ti = new TagIndex(msgDef, slice);
+            var ti = new TagIndex(msgDef, _heartbeatTags, _heartbeatTags.Count);
             return ti;
         }
 
@@ -133,8 +132,7 @@ namespace PureFix.Benchmarks
             // TagIndex creation with its copies and dictionaries
             if (!_fixDefinitions.Message.TryGetValue("8", out var msgDef))
                 return null!;
-            var slice = _executionReportTags.Slice(0, _executionReportTags.Count);
-            var ti = new TagIndex(msgDef, slice);
+            var ti = new TagIndex(msgDef, _executionReportTags, _executionReportTags.Count);
             return ti;
         }
 
