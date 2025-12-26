@@ -15,21 +15,61 @@ namespace PureFix.Buffer.Ascii
 {
     public class AsciiView : MsgView
     {
-        public int Ptr { get; }
-        public int Delimiter { get; }
-        public int WriteDelimiter { get; }
-        public StoragePool.Storage Storage { get; }
+        private static readonly ObjectPool<AsciiView> Pool = new DefaultObjectPool<AsciiView>(
+            new DefaultPooledObjectPolicy<AsciiView>(), maximumRetained: 16);
+
+        public int Ptr { get; private set; }
+        public int Delimiter { get; private set; }
+        public int WriteDelimiter { get; private set; }
+        public StoragePool.Storage Storage { get; private set; } = null!;
         public ElasticBuffer Buffer => Storage.Buffer;
 
         // For lazy structure parsing
-        private readonly AsciiSegmentParser? _segmentParser;
-        private readonly string? _msgType;
+        private AsciiSegmentParser? _segmentParser;
+        private string? _msgType;
         private bool _structureParsed;
+        private bool _isPooled;
 
         public override string BufferString()
         {
             return Buffer.ToString();
         }
+
+        /// <summary>
+        /// Rents a view from the pool and initializes it.
+        /// Call Return() when done to return the view to the pool.
+        /// </summary>
+        internal static AsciiView Rent(
+            IFixDefinitions definitions,
+            StoragePool.Storage storage,
+            int ptr,
+            int delimiter,
+            int writeDelimiter,
+            AsciiSegmentParser? segmentParser,
+            string? msgType)
+        {
+            var view = Pool.Get();
+            view.Initialize(definitions, null, storage, null, ptr, delimiter, writeDelimiter, segmentParser, msgType);
+            view._isPooled = true;
+            return view;
+        }
+
+        /// <summary>
+        /// Returns this view to the pool if it was rented.
+        /// Safe to call on non-pooled views (e.g., cloned views).
+        /// </summary>
+        public void Return()
+        {
+            if (!_isPooled) return;
+            _isPooled = false;
+            Reset();
+            Pool.Return(this);
+        }
+
+        /// <summary>
+        /// Default constructor for object pooling.
+        /// </summary>
+        public AsciiView() { }
 
         public AsciiView (
             IFixDefinitions definitions,
@@ -49,6 +89,40 @@ namespace PureFix.Buffer.Ascii
             _segmentParser = segmentParser;
             _msgType = msgType;
             _structureParsed = structure != null;
+            _isPooled = false;
+        }
+
+        private void Initialize(
+            IFixDefinitions definitions,
+            SegmentDescription? segment,
+            StoragePool.Storage storage,
+            Structure? structure,
+            int ptr,
+            int delimiter,
+            int writeDelimiter,
+            AsciiSegmentParser? segmentParser,
+            string? msgType)
+        {
+            Definitions = definitions;
+            Segment = segment;
+            Structure = structure;
+            Tags = storage.Locations;
+            Ptr = ptr;
+            Delimiter = delimiter;
+            WriteDelimiter = writeDelimiter;
+            Storage = storage;
+            _segmentParser = segmentParser;
+            _msgType = msgType;
+            _structureParsed = structure != null;
+        }
+
+        private void Reset()
+        {
+            ResetBase();
+            _segmentParser = null;
+            _msgType = null;
+            _structureParsed = false;
+            Storage = null!;
         }
 
         /// <summary>

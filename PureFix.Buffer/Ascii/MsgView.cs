@@ -15,7 +15,7 @@ namespace PureFix.Buffer.Ascii
 {
     public abstract partial class MsgView
     {
-        public IFixDefinitions Definitions { get; }
+        public IFixDefinitions Definitions { get; private protected set; } = null!;
 
         // Backing fields for lazy-loaded properties
         private SegmentDescription? _segment;
@@ -44,12 +44,30 @@ namespace PureFix.Buffer.Ascii
         protected TagPos[]? SortedTagPosForwards;
         protected Dictionary<int, Range>? TagSpans;
 
+        /// <summary>
+        /// Default constructor for object pooling. Call Initialize() after renting.
+        /// </summary>
+        protected MsgView() { }
+
         protected MsgView(IFixDefinitions definitions, SegmentDescription? segment, Structure? structure, Tags? tags = null)
         {
             Definitions = definitions;
             _segment = segment;
             _structure = structure;
             Tags = tags ?? structure?.Tags;
+        }
+
+        /// <summary>
+        /// Resets base view state for pooling reuse.
+        /// </summary>
+        protected void ResetBase()
+        {
+            _segment = null;
+            _structure = null;
+            Tags = null;
+            TagScanStart = 3;
+            SortedTagPosForwards = null;
+            TagSpans = null;
         }
 
         /// <summary>

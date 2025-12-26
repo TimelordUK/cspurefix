@@ -71,6 +71,7 @@ namespace PureFix.Benchmarks
             if (view != null)
             {
                 parser.Return(view.Storage);
+                view.Return();
             }
         }
 
@@ -92,6 +93,7 @@ namespace PureFix.Benchmarks
             if (_lastView != null)
             {
                 _HeartbeatParser.Return(_lastView.Storage);
+                _lastView.Return();
                 _lastView = null;
             }
         }
@@ -103,6 +105,7 @@ namespace PureFix.Benchmarks
             if (_lastView != null)
             {
                 _LogonParser.Return(_lastView.Storage);
+                _lastView.Return();
                 _lastView = null;
             }
         }
@@ -114,6 +117,7 @@ namespace PureFix.Benchmarks
             if (_lastView != null)
             {
                 _ExecutionReportParser.Return(_lastView.Storage);
+                _lastView.Return();
                 _lastView = null;
             }
         }
@@ -125,6 +129,7 @@ namespace PureFix.Benchmarks
             if (_lastView != null)
             {
                 _OrderCancelRejectParser.Return(_lastView.Storage);
+                _lastView.Return();
                 _lastView = null;
             }
         }
@@ -136,6 +141,7 @@ namespace PureFix.Benchmarks
             if (_lastView != null)
             {
                 _QuoteRequestParser.Return(_lastView.Storage);
+                _lastView.Return();
                 _lastView = null;
             }
         }

@@ -69,19 +69,26 @@ namespace PureFix.Buffer.Ascii
                 return null;
             }
 
-            // Create view with lazy structure parsing - structure will be parsed
+            // Rent view from pool with lazy structure parsing - structure will be parsed
             // on-demand when component/group access is needed (GetView, GetGroupInstance).
             // Simple field-by-tag access uses linear scan and doesn't need structure.
-            return new AsciiView(
+            return AsciiView.Rent(
                 Definitions,
-                segment: null,
                 _state.Storage,
-                structure: null,
                 ptr,
                 Delimiter,
                 WriteDelimiter,
                 _segmentParser,
                 _state.MsgType);
+        }
+
+        /// <summary>
+        /// Returns both the storage and view to their respective pools.
+        /// </summary>
+        public void ReturnView(AsciiView view)
+        {
+            _pool.Return(view.Storage);
+            view.Return();
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.

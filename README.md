@@ -16,13 +16,13 @@ Tokenizes raw bytes into an indexed view. Structure analysis is deferred until n
 
 | Message Type      | Fields | Size   | Time   | Allocated (pooled) |
 |-------------------|--------|--------|--------|-------------------|
-| Heartbeat         | ~10    | 131 B  | 655 ns | 256 B             |
-| Logon             | ~22    | 214 B  | 1.1 μs | 256 B             |
-| QuoteRequest      | ~30    | 334 B  | 1.5 μs | 256 B             |
-| OrderCancelReject | ~370   | 3.9 KB | 17 μs  | 1.3 KB            |
-| ExecutionReport   | ~646   | 6.6 KB | 29 μs  | 3.4 KB            |
+| Heartbeat         | ~10    | 131 B  | 645 ns | 112 B             |
+| Logon             | ~22    | 214 B  | 1.0 μs | 112 B             |
+| QuoteRequest      | ~30    | 334 B  | 1.5 μs | 112 B             |
+| OrderCancelReject | ~370   | 3.9 KB | 17 μs  | 1.2 KB            |
+| ExecutionReport   | ~646   | 6.6 KB | 29 μs  | 3.2 KB            |
 
-*Storage is pooled and reused. The 256 B allocation is the lightweight view wrapper only.*
+*Storage and views are pooled and reused.*
 
 Simple field-by-tag access (e.g., `view.GetString(tag)`) uses O(n) linear scan - ideal for session messages, drop copy handlers, and routing where only a few fields are needed.
 

@@ -270,7 +270,9 @@ namespace PureFix.Transport.Session
             foreach (var msg in _messages)
             {
                 await RxOnMsg(msg);
-                m_parser.Return(((AsciiView)msg).Storage);
+                var view = (AsciiView)msg;
+                m_parser.Return(view.Storage);
+                view.Return();
             }
             m_sessionLogger?.Info($"OnRx return buffer {buffer.Length}");
             ArrayPool<byte>.Shared.Return(buffer);
