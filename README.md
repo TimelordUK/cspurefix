@@ -16,11 +16,11 @@ Tokenizes raw bytes into an indexed view with structure analysis for component/g
 
 | Message Type      | Fields | Size   | Parse Time | Allocated |
 |-------------------|--------|--------|------------|-----------|
-| Heartbeat         | ~10    | 131 B  | 1.7 us     | 3.4 KB    |
-| Logon             | ~22    | 214 B  | 3.1 us     | 4.2 KB    |
-| QuoteRequest      | ~30    | 334 B  | 3.7 us     | 3.4 KB    |
-| OrderCancelReject | ~370   | 3.9 KB | 56 us      | 57 KB     |
-| ExecutionReport   | ~646   | 6.6 KB | 103 us     | 100 KB    |
+| Heartbeat         | ~10    | 131 B  | 1.7 us     | 3.2 KB    |
+| Logon             | ~22    | 214 B  | 3.2 us     | 4.0 KB    |
+| QuoteRequest      | ~30    | 334 B  | 3.8 us     | 3.2 KB    |
+| OrderCancelReject | ~370   | 3.9 KB | 56 us      | 56 KB     |
+| ExecutionReport   | ~646   | 6.6 KB | 102 us     | 98 KB     |
 
 *Note: View parsing includes full structure analysis to support non-contiguous component access (required for some broker message formats). Byte buffers, tag positions, and index dictionaries are pooled for reuse.*
 

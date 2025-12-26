@@ -24,7 +24,10 @@ namespace PureFix.Buffer.Ascii
         public Structure(Tags tags, IReadOnlyList<SegmentDescription> segments)
         {
             Tags = tags;
-            Segments = segments;
+            // Copy segments to own list - allows caller's list to be pooled/reused
+            Segments = segments is List<SegmentDescription> list
+                ? new List<SegmentDescription>(list)
+                : segments.ToList();
             (_singletons, _arrays) = BoundLayout(Segments);
         }
 

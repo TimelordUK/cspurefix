@@ -30,7 +30,7 @@ namespace PureFix.Buffer.Ascii
             // i.e. a component containing a repeated group of components
             // with sub-groups of components
             using var ti = TagIndex.Rent(msgDefinition, tags, last);
-            var context = new Context(msgDefinition, tags, last);
+            using var context = Context.Rent(msgDefinition, tags, last);
 
             var msgStructure = new SegmentDescription(msgDefinition.Name, tags[0].Tag, msgDefinition,
                   context.CurrentTagPosition, context.StructureStack.Count, SegmentType.Msg);
@@ -41,6 +41,7 @@ namespace PureFix.Buffer.Ascii
             Clean(context);
             Fragments(context, ti);
             // now know where all components and groups are positioned within message
+            // Structure copies segments, so context can be returned to pool
             return new Structure(tags, context.Segments);
         }
 
