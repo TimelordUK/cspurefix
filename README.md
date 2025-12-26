@@ -10,15 +10,15 @@ A high-performance, pure C# FIX protocol engine for .NET.
 
 PureFix is designed for efficiency with minimal allocations:
 
-| Message Type        | Parse Time | Allocated |
-|---------------------|------------|-----------|
-| Heartbeat           | 3.9 ns     | 40 B      |
-| Logon               | 5.1 ns     | 112 B     |
-| QuoteRequest        | 4.4 ns     | 96 B      |
-| OrderCancelReject   | 6.5 ns     | 216 B     |
-| ExecutionReport     | 26.5 ns    | 1,480 B   |
+| Message Type        | Fields | Size   | Parse Time | Allocated |
+|---------------------|--------|--------|------------|-----------|
+| Heartbeat           | ~10    | 131 B  | 3.7 ns     | 40 B      |
+| Logon               | ~22    | 214 B  | 4.9 ns     | 112 B     |
+| QuoteRequest        | ~30    | 334 B  | 4.5 ns     | 96 B      |
+| OrderCancelReject   | ~370   | 3.9 KB | 6.4 ns     | 216 B     |
+| ExecutionReport     | ~646   | 6.6 KB | 26.0 ns    | 1,480 B   |
 
-*Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions) for comparison.*
+*Parse Time = tokenize message into indexed view (field extraction is additional). Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions) for comparison.*
 
 ## Why PureFix?
 

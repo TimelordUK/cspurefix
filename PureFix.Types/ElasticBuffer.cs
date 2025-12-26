@@ -127,15 +127,10 @@ namespace PureFix.Types
 
         public int WriteString(string s)
         {
-            CheckGrowBuffer(s.Length);
             var length = s.Length;
-            
-            for (var i = 0; i < length; i++)
-            {
-                var c = s[i];
-                _buffer[Pos++] = (byte)c;
-            }
-            
+            CheckGrowBuffer(length);
+            Encoding.ASCII.GetBytes(s, _buffer.AsSpan(Pos, length));
+            Pos += length;
             return Pos;
         }
 
@@ -157,12 +152,8 @@ namespace PureFix.Types
             var span = v.Span;
             var length = span.Length;
             CheckGrowBuffer(length);
-            
-            for (var i = 0; i < length; i++)
-            {
-                var b = span[i];
-                _buffer[Pos++] = b;
-            }
+            span.CopyTo(_buffer.AsSpan(Pos, length));
+            Pos += length;
             return Pos;
         }
 
