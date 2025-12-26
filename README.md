@@ -12,13 +12,13 @@ PureFix is designed for low-latency trading applications with minimal allocation
 
 | Message Type        | Parse Time | Allocated |
 |---------------------|------------|-----------|
-| Heartbeat           | 6.4 ns     | 40 B      |
-| Logon               | 9.2 ns     | 112 B     |
-| QuoteRequest        | 8.2 ns     | 96 B      |
-| OrderCancelReject   | 12.1 ns    | 216 B     |
-| ExecutionReport     | 52.6 ns    | 1,480 B   |
+| Heartbeat           | 3.9 ns     | 40 B      |
+| Logon               | 5.1 ns     | 112 B     |
+| QuoteRequest        | 4.4 ns     | 96 B      |
+| OrderCancelReject   | 6.5 ns     | 216 B     |
+| ExecutionReport     | 26.5 ns    | 1,480 B   |
 
-*Benchmarks run on .NET 9.0, see [full benchmark results](https://github.com/TimelordUK/cspurefix/actions)*
+*Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions) for comparison.*
 
 ## Why PureFix?
 
