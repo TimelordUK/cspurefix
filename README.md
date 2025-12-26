@@ -14,13 +14,15 @@ PureFix uses a lazy parsing architecture that minimizes allocations:
 
 Tokenizes raw bytes into an indexed view. Structure analysis is deferred until needed:
 
-| Message Type      | Fields | Size   | Tokenize Time | Allocated |
-|-------------------|--------|--------|---------------|-----------|
-| Heartbeat         | ~10    | 131 B  | 0.72 μs       | 2.1 KB    |
-| Logon             | ~22    | 214 B  | 1.16 μs       | 2.1 KB    |
-| QuoteRequest      | ~30    | 334 B  | 1.60 μs       | 2.1 KB    |
-| OrderCancelReject | ~370   | 3.9 KB | 18.4 μs       | 19.2 KB   |
-| ExecutionReport   | ~646   | 6.6 KB | 30.8 μs       | 39.7 KB   |
+| Message Type      | Fields | Size   | Time   | Allocated (pooled) |
+|-------------------|--------|--------|--------|-------------------|
+| Heartbeat         | ~10    | 131 B  | 655 ns | 256 B             |
+| Logon             | ~22    | 214 B  | 1.1 μs | 256 B             |
+| QuoteRequest      | ~30    | 334 B  | 1.5 μs | 256 B             |
+| OrderCancelReject | ~370   | 3.9 KB | 17 μs  | 1.3 KB            |
+| ExecutionReport   | ~646   | 6.6 KB | 29 μs  | 3.4 KB            |
+
+*Storage is pooled and reused. The 256 B allocation is the lightweight view wrapper only.*
 
 Simple field-by-tag access (e.g., `view.GetString(tag)`) uses O(n) linear scan - ideal for session messages, drop copy handlers, and routing where only a few fields are needed.
 

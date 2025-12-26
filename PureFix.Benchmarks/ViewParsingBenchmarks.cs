@@ -14,28 +14,31 @@ namespace PureFix.Benchmarks
     /// <summary>
     /// Benchmarks for parsing raw bytes into an indexed view (tokenization).
     /// This measures the cost of creating the view structure from a FIX message buffer.
+    /// Storage is returned to pool after each parse to show steady-state allocation.
     /// </summary>
     [MemoryDiagnoser]
     public class ViewParsingBenchmarks
     {
-        private readonly byte[] _HeartbeatMessage;
-        private readonly byte[] _LogonMessage;
-        private readonly byte[] _ExecutionReportMessage;
-        private readonly byte[] _OrderCancelRejectMessage;
-        private readonly byte[] _QuoteRequestMessage;
+        private byte[] _HeartbeatMessage = null!;
+        private byte[] _LogonMessage = null!;
+        private byte[] _ExecutionReportMessage = null!;
+        private byte[] _OrderCancelRejectMessage = null!;
+        private byte[] _QuoteRequestMessage = null!;
 
-        private readonly IFixDefinitions _FixDefinitions;
+        private IFixDefinitions _FixDefinitions = null!;
 
         // Separate parser per message type to avoid state accumulation
-        private readonly AsciiParser _HeartbeatParser;
-        private readonly AsciiParser _LogonParser;
-        private readonly AsciiParser _ExecutionReportParser;
-        private readonly AsciiParser _OrderCancelRejectParser;
-        private readonly AsciiParser _QuoteRequestParser;
+        private AsciiParser _HeartbeatParser = null!;
+        private AsciiParser _LogonParser = null!;
+        private AsciiParser _ExecutionReportParser = null!;
+        private AsciiParser _OrderCancelRejectParser = null!;
+        private AsciiParser _QuoteRequestParser = null!;
 
-        private readonly Action<int, MsgView> NoAction = (index, view) => {};
+        // Store last view to return to pool
+        private AsciiView? _lastView;
 
-        public ViewParsingBenchmarks()
+        [GlobalSetup]
+        public void Setup()
         {
             _HeartbeatMessage = LoadMessage(Fix44PathHelper.HeartbeatFile);
             _LogonMessage = LoadMessage(Fix44PathHelper.LogonFile);
@@ -52,6 +55,23 @@ namespace PureFix.Benchmarks
             _ExecutionReportParser = CreateParser();
             _OrderCancelRejectParser = CreateParser();
             _QuoteRequestParser = CreateParser();
+
+            // Warmup: parse once and return to pre-populate pools
+            WarmupParser(_HeartbeatParser, _HeartbeatMessage);
+            WarmupParser(_LogonParser, _LogonMessage);
+            WarmupParser(_ExecutionReportParser, _ExecutionReportMessage);
+            WarmupParser(_OrderCancelRejectParser, _OrderCancelRejectMessage);
+            WarmupParser(_QuoteRequestParser, _QuoteRequestMessage);
+        }
+
+        private void WarmupParser(AsciiParser parser, byte[] message)
+        {
+            AsciiView? view = null;
+            parser.ParseFrom(message, message.Length, (_, v) => view = (AsciiView)v);
+            if (view != null)
+            {
+                parser.Return(view.Storage);
+            }
         }
 
         private AsciiParser CreateParser()
@@ -59,7 +79,7 @@ namespace PureFix.Benchmarks
             return new AsciiParser(_FixDefinitions) { Delimiter = AsciiChars.Pipe };
         }
 
-        private byte[] LoadMessage(string filename)
+        private static byte[] LoadMessage(string filename)
         {
             var message = System.IO.File.ReadAllText(filename);
             return System.Text.Encoding.UTF8.GetBytes(message);
@@ -68,31 +88,56 @@ namespace PureFix.Benchmarks
         [Benchmark]
         public void Heartbeat()
         {
-            _HeartbeatParser.ParseFrom(_HeartbeatMessage, _HeartbeatMessage.Length, NoAction);
+            _HeartbeatParser.ParseFrom(_HeartbeatMessage, _HeartbeatMessage.Length, (_, v) => _lastView = (AsciiView)v);
+            if (_lastView != null)
+            {
+                _HeartbeatParser.Return(_lastView.Storage);
+                _lastView = null;
+            }
         }
 
         [Benchmark]
         public void Logon()
         {
-            _LogonParser.ParseFrom(_LogonMessage, _LogonMessage.Length, NoAction);
+            _LogonParser.ParseFrom(_LogonMessage, _LogonMessage.Length, (_, v) => _lastView = (AsciiView)v);
+            if (_lastView != null)
+            {
+                _LogonParser.Return(_lastView.Storage);
+                _lastView = null;
+            }
         }
 
         [Benchmark]
         public void ExecutionReport()
         {
-            _ExecutionReportParser.ParseFrom(_ExecutionReportMessage, _ExecutionReportMessage.Length, NoAction);
+            _ExecutionReportParser.ParseFrom(_ExecutionReportMessage, _ExecutionReportMessage.Length, (_, v) => _lastView = (AsciiView)v);
+            if (_lastView != null)
+            {
+                _ExecutionReportParser.Return(_lastView.Storage);
+                _lastView = null;
+            }
         }
 
         [Benchmark]
         public void OrderCancelReject()
         {
-            _OrderCancelRejectParser.ParseFrom(_OrderCancelRejectMessage, _OrderCancelRejectMessage.Length, NoAction);
+            _OrderCancelRejectParser.ParseFrom(_OrderCancelRejectMessage, _OrderCancelRejectMessage.Length, (_, v) => _lastView = (AsciiView)v);
+            if (_lastView != null)
+            {
+                _OrderCancelRejectParser.Return(_lastView.Storage);
+                _lastView = null;
+            }
         }
 
         [Benchmark]
         public void QuoteRequest()
         {
-            _QuoteRequestParser.ParseFrom(_QuoteRequestMessage, _QuoteRequestMessage.Length, NoAction);
+            _QuoteRequestParser.ParseFrom(_QuoteRequestMessage, _QuoteRequestMessage.Length, (_, v) => _lastView = (AsciiView)v);
+            if (_lastView != null)
+            {
+                _QuoteRequestParser.Return(_lastView.Storage);
+                _lastView = null;
+            }
         }
     }
 }
