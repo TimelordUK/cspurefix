@@ -39,7 +39,14 @@ public abstract class BaseAppDI
         // Note: ISessionMessageFactory should be registered by derived classes using appropriate generated types
         // _builder.Services.AddSingleton<ISessionMessageFactory, Fix44SessionMessageFactory>();
         _builder.Services.AddSingleton(config);
-        _builder.Services.AddSingleton<IMessageParser, AsciiParser>();
+        _builder.Services.AddSingleton<IMessageParser>(sp =>
+        {
+            var cfg = sp.GetRequiredService<IFixConfig>();
+            return new AsciiParser(cfg.Definitions!)
+            {
+                Delimiter = cfg.Delimiter
+            };
+        });
         _builder.Services.AddSingleton<IMessageEncoder, AsciiEncoder>();
         _builder.Services.AddSingleton<IFixLogParser, FixLogParser>();
         _builder.Services.AddSingleton(config.Description);

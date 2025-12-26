@@ -16,20 +16,47 @@ namespace PureFix.Buffer.Ascii
     public abstract partial class MsgView
     {
         public IFixDefinitions Definitions { get; }
-        public SegmentDescription? Segment { get; }
-        public Structure? Structure { get; }
-        public Tags? Tags => Structure?.Tags;
-        // do not allocate unless tags are fetched as a view may be used to fetch a component 
+
+        // Backing fields for lazy-loaded properties
+        private SegmentDescription? _segment;
+        private Structure? _structure;
+
+        public SegmentDescription? Segment
+        {
+            get { EnsureStructureParsed(); return _segment; }
+            protected set => _segment = value;
+        }
+
+        public Structure? Structure
+        {
+            get { EnsureStructureParsed(); return _structure; }
+            protected set => _structure = value;
+        }
+
+        // Direct Tags access - can be set independently of Structure for lazy parsing
+        public Tags? Tags { get; protected set; }
+
+        // Start position for linear scan (skip header: BeginString, BodyLength, MsgType)
+        protected int TagScanStart { get; set; } = 3;
+
+        // do not allocate unless tags are fetched as a view may be used to fetch a component
         // without fetching a specific tag.
         protected TagPos[]? SortedTagPosForwards;
         protected Dictionary<int, Range>? TagSpans;
 
-        protected MsgView(IFixDefinitions definitions, SegmentDescription segment, Structure? structure)
+        protected MsgView(IFixDefinitions definitions, SegmentDescription? segment, Structure? structure, Tags? tags = null)
         {
             Definitions = definitions;
-            Segment = segment;
-            Structure = structure;
+            _segment = segment;
+            _structure = structure;
+            Tags = tags ?? structure?.Tags;
         }
+
+        /// <summary>
+        /// Override in derived classes to trigger lazy structure parsing on-demand.
+        /// Called automatically when component/group access is needed.
+        /// </summary>
+        protected virtual void EnsureStructureParsed() { }
 
         /*
          * sort the local copy of tags sliced for this view (i.e. only ones bounded)
@@ -68,6 +95,7 @@ namespace PureFix.Buffer.Ascii
 
         public int GroupCount()
         {
+            EnsureStructureParsed();
             var count = Segment?.DelimiterPositions.Count ?? 0;
             return count;
         }
@@ -111,6 +139,7 @@ namespace PureFix.Buffer.Ascii
      */
         public MsgView? GetGroupInstance(int i)
         {
+            EnsureStructureParsed();
             var instance = Segment?.GetInstance(i);
             return instance == null ? null : Create(instance);
         }
@@ -119,6 +148,8 @@ namespace PureFix.Buffer.Ascii
 
         public MsgView? GetView(string name)
         {
+            EnsureStructureParsed();
+
             // As this is the most common case we'll optimize for it
             if (name.IndexOf('.') == -1)
             {
@@ -127,9 +158,10 @@ namespace PureFix.Buffer.Ascii
 
             var parts = name.Split('.');
             return parts.Aggregate(this, static (a, current) => Process(a, current)!);
-            
+
             static MsgView? Process(MsgView a, string current)
             {
+                a.EnsureStructureParsed();
                 var subStructure = a.Structure;
                 if (a.Segment == null)
                 {
@@ -156,18 +188,60 @@ namespace PureFix.Buffer.Ascii
 
         protected int GetPosition(int tag)
         {
-            if (TagSpans == null) EnumerateSpan();
-            if (TagSpans == null) return -1;
-            if (SortedTagPosForwards == null) return -1;
-            if (TagSpans.TryGetValue(tag, out var r))
+            // Fast path: use indexed lookup if Structure is available
+            if (Structure != null)
             {
-                return SortedTagPosForwards[r.Start.Value].Position;
+                if (TagSpans == null) EnumerateSpan();
+                if (TagSpans != null && SortedTagPosForwards != null)
+                {
+                    if (TagSpans.TryGetValue(tag, out var r))
+                    {
+                        return SortedTagPosForwards[r.Start.Value].Position;
+                    }
+                    return -1;
+                }
             }
+
+            // Slow path: linear scan for simple field access without structure
+            // This is efficient for small session messages (Heartbeat, Logon, etc.)
+            return LinearScanForTag(tag);
+        }
+
+        /// <summary>
+        /// Linear scan through tags to find a tag by number.
+        /// O(n) but avoids all structure parsing allocation.
+        /// For small messages like Heartbeat (10 fields), this is faster than building indexes.
+        /// </summary>
+        private int LinearScanForTag(int tag)
+        {
+            if (Tags == null) return -1;
+
+            var count = Tags.NextTagPos;
+            // Start from TagScanStart to skip header fields (BeginString, BodyLength, MsgType)
+            // which have fixed positions anyway
+            for (var i = TagScanStart; i < count; i++)
+            {
+                if (Tags[i].Tag == tag)
+                {
+                    return i;
+                }
+            }
+
+            // Also check header fields if not found in body
+            for (var i = 0; i < TagScanStart && i < count; i++)
+            {
+                if (Tags[i].Tag == tag)
+                {
+                    return i;
+                }
+            }
+
             return -1;
         }
 
         private string?[]? AllStrings()
         {
+            EnsureStructureParsed();
             if (Segment == null) return null;
             var range = new int[Segment.EndPosition - Segment.StartPosition +1];
             var j = 0;
@@ -180,6 +254,7 @@ namespace PureFix.Buffer.Ascii
 
         protected Range? GetPositions(int tag)
         {
+            EnsureStructureParsed();
             EnumerateSpan();
             if (TagSpans == null) return null;
             if (!TagSpans.TryGetValue(tag, out var r))
@@ -232,6 +307,7 @@ namespace PureFix.Buffer.Ascii
 
         private string Stringify(Func<SimpleFieldDefinition, string, int, int, TagPos, string> getToken)
         {
+            EnsureStructureParsed();
             if (Structure == null) return "";
             var buffer = new StringBuilder();
             var tags = Structure.Value.Tags;

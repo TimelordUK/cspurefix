@@ -64,24 +64,24 @@ namespace PureFix.Buffer.Ascii
 
         private AsciiView? GetView(int ptr)
         {
-            if (_state.MsgType == null || Locations == null || _state.Buffer == null)
+            if (_state.MsgType == null || Locations == null || _state.Buffer == null || _state.Storage == null)
             {
                 return null;
             }
-            var structure = _segmentParser.Parse(_state.MsgType, Locations, Locations.NextTagPos - 1);
-            var msgSegment = structure?.Msg();
-            if (msgSegment != null && _state.Storage != null)
-            {
-                var view = new AsciiView(Definitions, msgSegment, _state.Storage, structure, ptr, Delimiter, WriteDelimiter);
-                return view;
-            }
 
-            structure = new Structure(Locations, []);
-            var segment = new SegmentDescription("unknown", Locations[0].Tag, null, 0, 1, SegmentType.Unknown)
-            {
-                EndPosition = Locations.NextTagPos - 1
-            };
-            return new AsciiView(Definitions, segment, _state.Storage ?? new StoragePool.Storage(), structure, ptr, Delimiter, WriteDelimiter);
+            // Create view with lazy structure parsing - structure will be parsed
+            // on-demand when component/group access is needed (GetView, GetGroupInstance).
+            // Simple field-by-tag access uses linear scan and doesn't need structure.
+            return new AsciiView(
+                Definitions,
+                segment: null,
+                _state.Storage,
+                structure: null,
+                ptr,
+                Delimiter,
+                WriteDelimiter,
+                _segmentParser,
+                _state.MsgType);
         }
 
         // will callback with ptr as to current location through byte array and the view with all parsed locations.

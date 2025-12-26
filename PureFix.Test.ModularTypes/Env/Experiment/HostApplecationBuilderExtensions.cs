@@ -36,7 +36,14 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
             builder.Services.AddSingleton(clock);
             builder.Services.AddSingleton<ISessionMessageFactory, Fix44ModularSessionMessageFactory>();
             builder.Services.AddSingleton(config);
-            builder.Services.AddSingleton<IMessageParser, AsciiParser>();
+            builder.Services.AddSingleton<IMessageParser>(sp =>
+            {
+                var cfg = sp.GetRequiredService<IFixConfig>();
+                return new AsciiParser(cfg.Definitions!)
+                {
+                    Delimiter = cfg.Delimiter
+                };
+            });
             builder.Services.AddSingleton<IMessageEncoder, AsciiEncoder>();
             builder.Services.AddSingleton(config.Description);
             builder.Services.AddSingleton(config.Definitions);

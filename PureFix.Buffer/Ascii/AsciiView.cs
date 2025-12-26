@@ -17,9 +17,14 @@ namespace PureFix.Buffer.Ascii
     {
         public int Ptr { get; }
         public int Delimiter { get; }
-        public int WriteDelimiter { get; } 
+        public int WriteDelimiter { get; }
         public StoragePool.Storage Storage { get; }
         public ElasticBuffer Buffer => Storage.Buffer;
+
+        // For lazy structure parsing
+        private readonly AsciiSegmentParser? _segmentParser;
+        private readonly string? _msgType;
+        private bool _structureParsed;
 
         public override string BufferString()
         {
@@ -28,17 +33,50 @@ namespace PureFix.Buffer.Ascii
 
         public AsciiView (
             IFixDefinitions definitions,
-            SegmentDescription segment,
+            SegmentDescription? segment,
             StoragePool.Storage storage,
             Structure? structure,
             int ptr,
             int delimiter,
-            int writeDelimiter) : base(definitions, segment, structure)
+            int writeDelimiter,
+            AsciiSegmentParser? segmentParser = null,
+            string? msgType = null) : base(definitions, segment, structure, storage.Locations)
         {
             Ptr = ptr;
             Delimiter = delimiter;
             WriteDelimiter = writeDelimiter;
             Storage = storage;
+            _segmentParser = segmentParser;
+            _msgType = msgType;
+            _structureParsed = structure != null;
+        }
+
+        /// <summary>
+        /// Triggers structure parsing on-demand if not already parsed.
+        /// Called automatically when component/group access is needed.
+        /// </summary>
+        protected override void EnsureStructureParsed()
+        {
+            if (_structureParsed) return;
+            _structureParsed = true;
+
+            if (_segmentParser == null || _msgType == null || Tags == null) return;
+
+            var structure = _segmentParser.Parse(_msgType, Tags, Tags.NextTagPos - 1);
+            if (structure != null)
+            {
+                Structure = structure;
+                Segment = structure.Value.Msg();
+            }
+            else
+            {
+                // Fallback for unknown message types
+                Structure = new Structure(Tags, []);
+                Segment = new SegmentDescription("unknown", Tags[0].Tag, null, 0, 1, SegmentType.Unknown)
+                {
+                    EndPosition = Tags.NextTagPos - 1
+                };
+            }
         }
 
     
@@ -55,28 +93,27 @@ namespace PureFix.Buffer.Ascii
 
         private TagPos? GetTag(int position)
         {
-            if (Structure == null) return null;
-            var tags = Structure.Value.Tags;
-            if (position < 0 || position >= tags.NextTagPos)
+            if (Tags == null) return null;
+            if (position < 0 || position >= Tags.NextTagPos)
             {
                 return null;
             }
-            var tag = tags[position];
-            return tag;
+            return Tags[position];
         }
 
         public override int Checksum()
         {
-            if (Structure == null) return -1;
+            if (Tags == null) return -1;
             var t = GetPosition((int)MsgTag.CheckSum);
-            var prev = Structure.Value.Tags[t - 1];
+            if (t < 1) return -1;
+            var prev = Tags[t - 1];
             var tp = prev.Start + prev.Len + 1;
             var cs = Buffer.Sum(tp);
             var delimiter = Delimiter;
             var writeDelimiter = WriteDelimiter;
             if (writeDelimiter != delimiter)
             {
-                var changes = Structure.Value.Tags.NextTagPos - 1;
+                var changes = Tags.NextTagPos - 1;
                 cs -= changes * writeDelimiter;
                 cs += changes * delimiter;
             }

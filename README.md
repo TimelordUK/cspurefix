@@ -8,35 +8,37 @@ A high-performance, pure C# FIX protocol engine for .NET.
 
 ## Performance
 
-PureFix processes FIX messages in two stages:
+PureFix uses a lazy parsing architecture that minimizes allocations:
 
-### Stage 1: View Parsing (buffer to indexed view)
+### Stage 1: Tokenization (buffer to view)
 
-Tokenizes raw bytes into an indexed view with structure analysis for component/group access:
+Tokenizes raw bytes into an indexed view. Structure analysis is deferred until needed:
 
-| Message Type      | Fields | Size   | Parse Time | Allocated |
-|-------------------|--------|--------|------------|-----------|
-| Heartbeat         | ~10    | 131 B  | 1.7 us     | 3.2 KB    |
-| Logon             | ~22    | 214 B  | 3.2 us     | 4.0 KB    |
-| QuoteRequest      | ~30    | 334 B  | 3.8 us     | 3.2 KB    |
-| OrderCancelReject | ~370   | 3.9 KB | 56 us      | 56 KB     |
-| ExecutionReport   | ~646   | 6.6 KB | 102 us     | 98 KB     |
+| Message Type      | Fields | Size   | Tokenize Time | Allocated |
+|-------------------|--------|--------|---------------|-----------|
+| Heartbeat         | ~10    | 131 B  | 0.72 μs       | 2.1 KB    |
+| Logon             | ~22    | 214 B  | 1.16 μs       | 2.1 KB    |
+| QuoteRequest      | ~30    | 334 B  | 1.60 μs       | 2.1 KB    |
+| OrderCancelReject | ~370   | 3.9 KB | 18.4 μs       | 19.2 KB   |
+| ExecutionReport   | ~646   | 6.6 KB | 30.8 μs       | 39.7 KB   |
 
-*Note: View parsing includes full structure analysis to support non-contiguous component access (required for some broker message formats). Byte buffers, tag positions, and index dictionaries are pooled for reuse.*
+Simple field-by-tag access (e.g., `view.GetString(tag)`) uses O(n) linear scan - ideal for session messages, drop copy handlers, and routing where only a few fields are needed.
+
+Structure parsing is triggered on-demand only when accessing components or repeating groups via `GetView()` or `GetGroupInstance()`.
 
 ### Stage 2: Field Extraction (view to typed message)
 
-Extracts field values from the pre-indexed view into typed message objects:
+Extracts field values from the view into typed message objects:
 
 | Message Type      | Extract Time | Allocated (new) | Allocated (pooled) |
 |-------------------|--------------|-----------------|-------------------|
-| Heartbeat         | 3.8 ns       | 40 B            | 0 B               |
-| Logon             | 4.6 ns       | 112 B           | 0 B               |
-| QuoteRequest      | 4.3 ns       | 96 B            | 0 B               |
-| OrderCancelReject | 6.0 ns       | 216 B           | 0 B               |
-| ExecutionReport   | 25.1 ns      | 1,480 B         | 0 B               |
+| Heartbeat         | 4.7 ns       | 40 B            | 0 B               |
+| Logon             | 5.9 ns       | 112 B           | 0 B               |
+| QuoteRequest      | 5.7 ns       | 96 B            | 0 B               |
+| OrderCancelReject | 7.6 ns       | 216 B           | 0 B               |
+| ExecutionReport   | 27 ns        | 1,480 B         | 0 B               |
 
-*Field extraction is extremely efficient. Message objects can be pooled and reused via `Reset()` for zero-allocation extraction.*
+*Message objects can be pooled and reused via `Reset()` for zero-allocation extraction.*
 
 *Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions).*
 
