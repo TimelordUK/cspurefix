@@ -413,7 +413,7 @@ namespace PureFix.Transport.Ascii
 
                 case MsgType.Reject:
                     {
-                        logger?.Info("peer rejects type '{MsgType}' with text '{Text}'", msgType, view.GetString((int)MsgTag.Text));
+                        logger?.Info("peer rejects type '{MsgType}' with text '{Text}'", msgType, view.Lazy((int)MsgTag.Text));
                         break;
                     }
             }
