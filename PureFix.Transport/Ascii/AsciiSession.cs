@@ -67,7 +67,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        protected bool ValidStateApplicationMsg() {
+        private bool ValidStateApplicationMsg() {
             switch (m_sessionState.State)
             {
                 case SessionState.Idle:
@@ -248,7 +248,7 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        protected async Task SendResendRequest(int lastSeq, int receivedSeq)
+        private async Task SendResendRequest(int lastSeq, int receivedSeq)
         {
             var resend = m_config.MessageFactory?.ResendRequest(lastSeq + 1, 0);
             if (resend != null)
@@ -302,12 +302,10 @@ namespace PureFix.Transport.Ascii
             await m_sessionStore.SetSenderSeqNum(seqNum + 1);
         }
 
-/**
-* Override to resend stored messages following a sequence reset.
-* @protected
-*/
-
-        protected async Task OnResendRequest(IMessageView view)
+        /// <summary>
+        /// Handles resend request from peer - replays stored messages or sends gap fill.
+        /// </summary>
+        private async Task OnResendRequest(IMessageView view)
         {
             // if no records are in store then send a gap fill for entire sequence
             SetState(SessionState.HandleResendRequest);
@@ -337,7 +335,7 @@ namespace PureFix.Transport.Ascii
             SetState(SessionState.ActiveNormalSession);
         }
 
-        bool OkForLogon() {
+        private bool OkForLogon() {
             var state = m_sessionState.State;
             if (m_acceptor) {
                 return state == SessionState.WaitingForALogon;
@@ -345,7 +343,7 @@ namespace PureFix.Transport.Ascii
             return state == SessionState.InitiationLogonSent;
         }
 
-        protected async Task OnSessionMsg(string msgType, IMessageView view)
+        private async Task OnSessionMsg(string msgType, IMessageView view)
         {
             var logger = m_sessionLogger;
 
@@ -488,11 +486,12 @@ namespace PureFix.Transport.Ascii
             return true;
         }
 
-        private void Terminate(Exception ex)
+        private void Terminate(Exception _)
         {
+            // TODO: implement proper termination handling
         }
 
-        protected async Task CheckForwardMsg(string msgType, IMessageView view)
+        private async Task CheckForwardMsg(string msgType, IMessageView view)
         {
             var okToForward = ValidStateApplicationMsg();
             if (okToForward)
