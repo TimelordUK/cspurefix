@@ -26,9 +26,10 @@ namespace PureFix.Transport.Ascii
             : base(config, logFactory, parser, encoder, q, clock)
         {
             ArgumentNullException.ThrowIfNull(config);
-            if (config?.Description?.SenderCompID == null) throw new ArgumentNullException(nameof(config));
-            if (config?.Description?.TargetCompID == null) throw new ArgumentNullException("config must have application description with TargetCompID");
-            if (config?.Description?.BeginString == null) throw new ArgumentNullException("config must have application description with BeginString");
+            ArgumentNullException.ThrowIfNull(config.Description);
+            ArgumentException.ThrowIfNullOrEmpty(config.Description.SenderCompID);
+            ArgumentException.ThrowIfNullOrEmpty(config.Description.TargetCompID);
+            ArgumentException.ThrowIfNullOrEmpty(config.Description.BeginString);
 
             m_fixMessageFactory = fixMessageFactory;
 
