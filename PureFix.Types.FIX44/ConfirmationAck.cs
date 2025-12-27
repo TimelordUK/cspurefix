@@ -73,11 +73,6 @@ namespace PureFix.Types.FIX44
 		{
 			if (view is null) return;
 			
-			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
-			{
-				StandardHeader = new();
-				((IFixParser)StandardHeader).Parse(viewStandardHeader);
-			}
 			ConfirmID = view.GetString(664);
 			TradeDate = view.GetDateOnly(75);
 			TransactTime = view.GetDateTime(60);
@@ -87,11 +82,6 @@ namespace PureFix.Types.FIX44
 			Text = view.GetString(58);
 			EncodedTextLen = view.GetInt32(354);
 			EncodedText = view.GetByteArray(355);
-			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
-			{
-				StandardTrailer = new();
-				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
-			}
 		}
 		
 		bool IFixLookup.TryGetByTag(string name, out object? value)

@@ -664,8 +664,32 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
+        /// <summary>
+        /// Determines if a message/component is "simple" - no groups and only standard header/trailer components.
+        /// Simple messages can skip expensive structure parsing in the generated Parse method.
+        /// </summary>
+        private static bool IsSimpleMessage(IContainedSet set)
+        {
+            foreach (var field in set.Fields)
+            {
+                switch (field)
+                {
+                    case ContainedGroupField:
+                        return false; // Has groups = needs full structure parsing
+                    case ContainedComponentField component:
+                        // Only StandardHeader/StandardTrailer allowed for simple messages
+                        if (component.Name != "StandardHeader" && component.Name != "StandardTrailer")
+                            return false;
+                        break;
+                }
+            }
+            return true;
+        }
+
         private void GenerateParse(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
+            bool isSimple = IsSimpleMessage(set);
+
             using (generator.BeginBlock("void IFixParser.Parse(IMessageView? view)"))
             {
                 generator.WriteLine("if (view is null) return;");
@@ -684,6 +708,14 @@ namespace PureFix.Dictionary.Compiler
                         }
                         case ContainedComponentField component:
                         {
+                            // For simple messages, skip header/trailer to avoid triggering structure parsing
+                            if (isSimple && (component.Name == "StandardHeader" || component.Name == "StandardTrailer"))
+                            {
+                                // Don't call GetView - header/trailer stay null
+                                // This avoids expensive EnsureStructureParsed() for simple admin messages
+                                break;
+                            }
+
                             using (generator.BeginBlock($"if (view.GetView(\"{component.Name}\") is IMessageView view{component.Name})"))
                             {
                                 generator.WriteLine($"{component.Name} = new();");

@@ -52,10 +52,16 @@ namespace PureFix.Test.ModularTypes
             ((IFixParser)hb).Parse(mv);
             Assert.Multiple(() =>
             {
-                Assert.That(QuickLookup.On(hb)["StandardHeader"]["BeginString"].As<string>(), Is.EqualTo("FIX.4.4"));
-                Assert.That(QuickLookup.On(hb)["StandardHeader"]["MsgType"].As<string>(), Is.EqualTo("0"));
-                Assert.That(QuickLookup.On(hb)["StandardHeader"]["TargetCompID"].As<string>(), Is.EqualTo("accept-comp"));
-                Assert.That(QuickLookup.On(hb)["TestReqID"].As<string>(), Is.EqualTo("Sun, 01 Jan 2023 14:14:20 GMT"));
+                // Simple messages (no groups) skip header/trailer parsing for performance.
+                // This avoids expensive structure resolution. Access header via view if needed.
+                Assert.That(hb.StandardHeader, Is.Null);
+                Assert.That(hb.StandardTrailer, Is.Null);
+                Assert.That(hb.TestReqID, Is.EqualTo("Sun, 01 Jan 2023 14:14:20 GMT"));
+
+                // Header fields are still accessible from the view directly
+                Assert.That(mv.GetString((int)MsgTag.BeginString), Is.EqualTo("FIX.4.4"));
+                Assert.That(mv.GetString((int)MsgTag.MsgType), Is.EqualTo("0"));
+                Assert.That(mv.GetString((int)MsgTag.TargetCompID), Is.EqualTo("accept-comp"));
             });
         }
 
