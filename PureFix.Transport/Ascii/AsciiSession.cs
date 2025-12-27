@@ -474,15 +474,14 @@ namespace PureFix.Transport.Ascii
 
         private async Task<bool> CheckIntegrity(string msgType, IMessageView view)
         {
-            var seqNum = view.GetInt32((int)MsgTag.MsgSeqNum);
-            if (seqNum == null) return false;
+            if (!view.TryGetInt32((int)MsgTag.MsgSeqNum, out var seqNum)) return false;
+            if (!view.TryGetInt32((int)MsgTag.CheckSum, out var received)) return false;
 
-            var received = int.Parse(view.GetString((int)MsgTag.CheckSum) ?? "");
             var computed = view.Checksum();
             if (received != computed)
             {
                 var msg = $"msgType {msgType} checksum failed. received = {received} computed = {computed}";
-                await SendReject(msgType, seqNum.Value, msg, (int)SessionRejectReason.ValueIsIncorrect);
+                await SendReject(msgType, seqNum, msg, (int)SessionRejectReason.ValueIsIncorrect);
                 return false;
             }
 
