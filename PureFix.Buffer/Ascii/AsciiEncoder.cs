@@ -12,24 +12,22 @@ using PureFix.Types.Config;
 
 namespace PureFix.Buffer.Ascii
 {
-    public class AsciiEncoder : IMessageEncoder
+    public class AsciiEncoder(
+        IFixDefinitions definitions,
+        ISessionDescription sessionDescription,
+        ISessionMessageFactory messageFactory,
+        IFixClock clock)
+        : IMessageEncoder
     {
-        public IFixDefinitions Definitions { get; set; }
-        private StoragePool Pool { get; }
-        public ISessionDescription SessionDescription { get; }
+        public IFixDefinitions Definitions { get; set; } = definitions;
+        private StoragePool Pool { get; } = new();
+
+        public ISessionDescription SessionDescription { get; } = sessionDescription;
+
         // application if not reset seq num will need to set correctly
         public int MsgSeqNum { get; set; } = 1;
-        public ISessionMessageFactory SessionMessageFactory { get; }
-        public IFixClock Clock {get;}
-
-        public AsciiEncoder(IFixDefinitions definitions, ISessionDescription sessionDescription, ISessionMessageFactory messageFactory, IFixClock clock)
-        {
-            Definitions = definitions;
-            Pool = new StoragePool();
-            SessionDescription = sessionDescription;
-            SessionMessageFactory = messageFactory;
-            Clock = clock;
-        }
+        public ISessionMessageFactory SessionMessageFactory { get; } = messageFactory;
+        public IFixClock Clock {get;} = clock;
 
         public void Return(StoragePool.Storage storage)
         {

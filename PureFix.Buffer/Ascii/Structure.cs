@@ -26,7 +26,7 @@ namespace PureFix.Buffer.Ascii
             Tags = tags;
             // Copy segments to own list - allows caller's list to be pooled/reused
             Segments = segments is List<SegmentDescription> list
-                ? new List<SegmentDescription>(list)
+                ? [..list]
                 : segments.ToList();
             (_singletons, _arrays) = BoundLayout(Segments);
         }

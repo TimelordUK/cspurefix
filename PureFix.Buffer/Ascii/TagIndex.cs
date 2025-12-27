@@ -232,10 +232,10 @@ namespace PureFix.Buffer.Ascii
         private readonly Dictionary<int, Range> _tagSpans = new();
         private readonly Dictionary<int, TagPos> _noOfTag2NoOfPos = new();
         private readonly Dictionary<int, int> _tag2delim = new();
-        private readonly HashSet<int> _repeated = new();
-        private readonly HashSet<string> _names = new();
+        private readonly HashSet<int> _repeated = [];
+        private readonly HashSet<string> _names = [];
         private readonly Dictionary<string, GroupFieldDefinition> _groups = new();
-        private readonly HashSet<string> _componentGroupWrappers = new();
+        private readonly HashSet<string> _componentGroupWrappers = [];
         private readonly Dictionary<string, SegmentView> _cache = new();
         private bool _disposed;
     }

@@ -264,7 +264,7 @@ namespace PureFix.Buffer.Ascii
             var position = GetPosition(tag);
             if (position < 0)
             {
-                return default;
+                return null;
             }
 
             var value = LongAtPosition(position);
@@ -341,7 +341,7 @@ namespace PureFix.Buffer.Ascii
             var position = GetPosition(tag);
             if (position < 0)
             {
-                return default;
+                return null;
             }
 
             return UtcTimestampAtPosition(position);
@@ -352,7 +352,7 @@ namespace PureFix.Buffer.Ascii
             var position = GetPosition(tag);
             if (position < 0)
             {
-                return default;
+                return null;
             }
 
             return UtcTimeOnlyAtPosition(position);
@@ -363,11 +363,11 @@ namespace PureFix.Buffer.Ascii
             var position = GetPosition(tag);
             if (position < 0)
             {
-                return default;
+                return null;
             }
 
             var sf = Definitions.TagToSimple.GetValueOrDefault(tag);
-            if (sf == null) return default;
+            if (sf == null) return null;
 
             switch (sf.TagType)
             {
@@ -378,7 +378,7 @@ namespace PureFix.Buffer.Ascii
                     return LocalDateOnlyAtPosition(position);
 
                 default:
-                    return default;
+                    return null;
             }
         }
 
@@ -422,19 +422,10 @@ namespace PureFix.Buffer.Ascii
         /// <summary>
         /// Lightweight storage wrapper for cloned views (not pooled).
         /// </summary>
-        private sealed class ClonedStorage : StoragePool.Storage
+        private sealed class ClonedStorage(ElasticBuffer buffer, Tags locations) : StoragePool.Storage
         {
-            private readonly ElasticBuffer _buffer;
-            private readonly Tags _locations;
-
-            public ClonedStorage(ElasticBuffer buffer, Tags locations)
-            {
-                _buffer = buffer;
-                _locations = locations;
-            }
-
-            public override ElasticBuffer Buffer => _buffer;
-            public override Tags Locations => _locations;
+            public override ElasticBuffer Buffer => buffer;
+            public override Tags Locations => locations;
         }
     }
 }
