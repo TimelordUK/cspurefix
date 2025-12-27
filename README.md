@@ -42,6 +42,44 @@ Extracts field values from the view into typed message objects:
 
 *Message objects can be pooled and reused via `Reset()` for zero-allocation extraction.*
 
+### Zero-Allocation View Access
+
+For routing, filtering, and validation scenarios, the span-based API eliminates per-field allocation entirely:
+
+| Pattern | String API | Span API | Speed | Allocation |
+|---------|-----------|----------|-------|------------|
+| Single field check | 11.2 ns / 24 B | 8.7 ns / 0 B | **23% faster** | **0 B** |
+| Message routing | 11.3 ns / 24 B | 9.2 ns / 0 B | **18% faster** | **0 B** |
+| Prefix check | 22.0 ns / 40 B | 9.3 ns / 0 B | **57% faster** | **0 B** |
+| Two-field validation | 26.6 ns / 64 B | 14.5 ns / 0 B | **45% faster** | **0 B** |
+
+```csharp
+// Zero-allocation message type check
+if (view.IsTagEqual(35, "AE"u8))  // vs view.GetString(35) == "AE"
+{
+    // handle Trade Capture Report
+}
+
+// Zero-allocation routing
+switch (view.MatchTag(35, "0"u8, "A"u8, "5"u8))
+{
+    case 0: HandleHeartbeat(view); break;
+    case 1: HandleLogon(view); break;
+    case 2: HandleLogout(view); break;
+}
+
+// Zero-allocation prefix check
+if (view.TagStartsWith(8, "FIXT"u8))
+{
+    // FIXT 1.1 protocol
+}
+
+// Raw span access for custom parsing
+ReadOnlySpan<byte> clOrdId = view.GetSpan(11);
+```
+
+See [docs/msgview-span-api.md](docs/msgview-span-api.md) for full API reference.
+
 *Benchmarks: .NET 9.0 on AMD Ryzen 9 7950X. See [CI benchmarks](https://github.com/TimelordUK/cspurefix/actions).*
 
 ## Why PureFix?

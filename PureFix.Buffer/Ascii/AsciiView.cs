@@ -388,6 +388,244 @@ namespace PureFix.Buffer.Ascii
             return tag == null ? null : Buffer.GetMonthYear(tag.Value.Start, tag.Value.End);
         }
 
+        // ===== Zero-allocation span-based API implementations =====
+
+        public override ReadOnlySpan<byte> GetSpan(int tag)
+        {
+            var position = GetPosition(tag);
+            if (position < 0) return ReadOnlySpan<byte>.Empty;
+            var tagPos = GetTag(position);
+            if (tagPos == null) return ReadOnlySpan<byte>.Empty;
+            return Buffer.GetSpan(tagPos.Value.Start, tagPos.Value.End);
+        }
+
+        public override bool TryGetSpan(int tag, out ReadOnlySpan<byte> value)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                value = ReadOnlySpan<byte>.Empty;
+                return false;
+            }
+            var tagPos = GetTag(position);
+            if (tagPos == null)
+            {
+                value = ReadOnlySpan<byte>.Empty;
+                return false;
+            }
+            value = Buffer.GetSpan(tagPos.Value.Start, tagPos.Value.End);
+            return true;
+        }
+
+        public override bool IsTagEqual(int tag, ReadOnlySpan<byte> expected)
+        {
+            var position = GetPosition(tag);
+            if (position < 0) return false;
+            var tagPos = GetTag(position);
+            if (tagPos == null) return false;
+            return Buffer.SequenceEqual(tagPos.Value.Start, tagPos.Value.End, expected);
+        }
+
+        public override bool TagStartsWith(int tag, ReadOnlySpan<byte> prefix)
+        {
+            var position = GetPosition(tag);
+            if (position < 0) return false;
+            var tagPos = GetTag(position);
+            if (tagPos == null) return false;
+            return Buffer.StartsWith(tagPos.Value.Start, tagPos.Value.End, prefix);
+        }
+
+        public override int MatchTag(int tag, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1)
+        {
+            var position = GetPosition(tag);
+            if (position < 0) return -1;
+            var tagPos = GetTag(position);
+            if (tagPos == null) return -1;
+            return Buffer.MatchValue(tagPos.Value.Start, tagPos.Value.End, value0, value1);
+        }
+
+        public override int MatchTag(int tag, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1, ReadOnlySpan<byte> value2)
+        {
+            var position = GetPosition(tag);
+            if (position < 0) return -1;
+            var tagPos = GetTag(position);
+            if (tagPos == null) return -1;
+            return Buffer.MatchValue(tagPos.Value.Start, tagPos.Value.End, value0, value1, value2);
+        }
+
+        public override int MatchTag(int tag, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1, ReadOnlySpan<byte> value2, ReadOnlySpan<byte> value3)
+        {
+            var position = GetPosition(tag);
+            if (position < 0) return -1;
+            var tagPos = GetTag(position);
+            if (tagPos == null) return -1;
+            return Buffer.MatchValue(tagPos.Value.Start, tagPos.Value.End, value0, value1, value2, value3);
+        }
+
+        // ===== Try-pattern method implementations =====
+
+        public override bool TryGetInt32(int tag, out int value)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                value = 0;
+                return false;
+            }
+            var longVal = LongAtPosition(position);
+            if (longVal == null)
+            {
+                value = 0;
+                return false;
+            }
+            value = (int)longVal.Value;
+            return true;
+        }
+
+        public override bool TryGetInt64(int tag, out long value)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                value = 0;
+                return false;
+            }
+            var longVal = LongAtPosition(position);
+            if (longVal == null)
+            {
+                value = 0;
+                return false;
+            }
+            value = longVal.Value;
+            return true;
+        }
+
+        public override bool TryGetDouble(int tag, out double value)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                value = 0;
+                return false;
+            }
+            var doubleVal = FloatAtPosition(position);
+            if (doubleVal == null)
+            {
+                value = 0;
+                return false;
+            }
+            value = doubleVal.Value;
+            return true;
+        }
+
+        public override bool TryGetDecimal(int tag, out decimal value)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                value = 0;
+                return false;
+            }
+            var decimalVal = DecimalAtPosition(position);
+            if (decimalVal == null)
+            {
+                value = 0;
+                return false;
+            }
+            value = decimalVal.Value;
+            return true;
+        }
+
+        public override bool TryGetBool(int tag, out bool value)
+        {
+            var position = GetPosition(tag);
+            if (position < 0)
+            {
+                value = false;
+                return false;
+            }
+            var boolVal = BoolAtPosition(position);
+            if (boolVal == null)
+            {
+                value = false;
+                return false;
+            }
+            value = boolVal.Value;
+            return true;
+        }
+
+        // ===== Position-based access (for use with EnumerateTagPositions) =====
+
+        /// <summary>
+        /// Gets the raw span at a specific position index. Zero allocation.
+        /// Use with EnumerateTagPositions for repeated tag access.
+        /// </summary>
+        public ReadOnlySpan<byte> GetSpanAtPosition(int position)
+        {
+            var tagPos = GetTag(position);
+            if (tagPos == null) return ReadOnlySpan<byte>.Empty;
+            return Buffer.GetSpan(tagPos.Value.Start, tagPos.Value.End);
+        }
+
+        /// <summary>
+        /// Compares value at a specific position to expected bytes. Zero allocation.
+        /// Use with EnumerateTagPositions for repeated tag access.
+        /// </summary>
+        public bool IsEqualAtPosition(int position, ReadOnlySpan<byte> expected)
+        {
+            var tagPos = GetTag(position);
+            if (tagPos == null) return false;
+            return Buffer.SequenceEqual(tagPos.Value.Start, tagPos.Value.End, expected);
+        }
+
+        /// <summary>
+        /// Gets int32 at a specific position without boxing.
+        /// Use with EnumerateTagPositions for repeated tag access.
+        /// </summary>
+        public bool TryGetInt32AtPosition(int position, out int value)
+        {
+            var longVal = LongAtPosition(position);
+            if (longVal == null)
+            {
+                value = 0;
+                return false;
+            }
+            value = (int)longVal.Value;
+            return true;
+        }
+
+        /// <summary>
+        /// Gets int64 at a specific position without boxing.
+        /// Use with EnumerateTagPositions for repeated tag access.
+        /// </summary>
+        public bool TryGetInt64AtPosition(int position, out long value)
+        {
+            var longVal = LongAtPosition(position);
+            if (longVal == null)
+            {
+                value = 0;
+                return false;
+            }
+            value = longVal.Value;
+            return true;
+        }
+
+        /// <summary>
+        /// Gets double at a specific position without boxing.
+        /// Use with EnumerateTagPositions for repeated tag access.
+        /// </summary>
+        public bool TryGetDoubleAtPosition(int position, out double value)
+        {
+            var doubleVal = FloatAtPosition(position);
+            if (doubleVal == null)
+            {
+                value = 0;
+                return false;
+            }
+            value = doubleVal.Value;
+            return true;
+        }
+
         /// <summary>
         /// Creates an independent deep copy of this view that the caller owns.
         /// Use this when you need to hold onto the view data after the parse callback returns.

@@ -111,6 +111,208 @@ namespace PureFix.Buffer.Ascii
         public abstract MonthYear? GetMonthYear(int tag);
         public abstract string BufferString();
 
+        // ===== Zero-allocation span-based API =====
+
+        /// <summary>
+        /// Gets the raw bytes for a tag value as a ReadOnlySpan. Zero allocation.
+        /// Returns empty span if tag not found.
+        /// </summary>
+        public abstract ReadOnlySpan<byte> GetSpan(int tag);
+
+        /// <summary>
+        /// Tries to get the raw bytes for a tag value. Zero allocation.
+        /// </summary>
+        /// <returns>true if tag found, false otherwise</returns>
+        public abstract bool TryGetSpan(int tag, out ReadOnlySpan<byte> value);
+
+        /// <summary>
+        /// Compares a tag's value to an expected byte sequence. Zero allocation.
+        /// Returns false if tag not found.
+        /// </summary>
+        public abstract bool IsTagEqual(int tag, ReadOnlySpan<byte> expected);
+
+        /// <summary>
+        /// Compares a tag's value to an expected string (converted to UTF8). Minimal allocation.
+        /// Returns false if tag not found.
+        /// </summary>
+        public bool IsTagEqual(int tag, string expected)
+        {
+            Span<byte> bytes = stackalloc byte[expected.Length];
+            System.Text.Encoding.ASCII.GetBytes(expected, bytes);
+            return IsTagEqual(tag, bytes);
+        }
+
+        /// <summary>
+        /// Checks if a tag's value starts with a prefix. Zero allocation.
+        /// Returns false if tag not found.
+        /// </summary>
+        public abstract bool TagStartsWith(int tag, ReadOnlySpan<byte> prefix);
+
+        /// <summary>
+        /// Finds which value in a list matches the tag. Zero allocation.
+        /// Returns the index of the matching value (0-based), or -1 if tag not found or no match.
+        /// </summary>
+        public abstract int MatchTag(int tag, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1);
+
+        /// <summary>
+        /// Finds which value in a list matches the tag. Zero allocation.
+        /// Returns the index of the matching value (0-based), or -1 if tag not found or no match.
+        /// </summary>
+        public abstract int MatchTag(int tag, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1, ReadOnlySpan<byte> value2);
+
+        /// <summary>
+        /// Finds which value in a list matches the tag. Zero allocation.
+        /// Returns the index of the matching value (0-based), or -1 if tag not found or no match.
+        /// </summary>
+        public abstract int MatchTag(int tag, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1, ReadOnlySpan<byte> value2, ReadOnlySpan<byte> value3);
+
+        // ===== Try-pattern methods (avoid nullable boxing) =====
+
+        /// <summary>
+        /// Tries to get an int32 value for a tag. Avoids nullable boxing.
+        /// </summary>
+        public abstract bool TryGetInt32(int tag, out int value);
+
+        /// <summary>
+        /// Tries to get a long value for a tag. Avoids nullable boxing.
+        /// </summary>
+        public abstract bool TryGetInt64(int tag, out long value);
+
+        /// <summary>
+        /// Tries to get a double value for a tag. Avoids nullable boxing.
+        /// </summary>
+        public abstract bool TryGetDouble(int tag, out double value);
+
+        /// <summary>
+        /// Tries to get a decimal value for a tag. Avoids nullable boxing.
+        /// </summary>
+        public abstract bool TryGetDecimal(int tag, out decimal value);
+
+        /// <summary>
+        /// Tries to get a boolean value for a tag. Avoids nullable boxing.
+        /// </summary>
+        public abstract bool TryGetBool(int tag, out bool value);
+
+        // ===== Lightweight repeated tag iteration (no structure parse) =====
+
+        /// <summary>
+        /// Counts occurrences of a tag using linear scan. Does NOT trigger structure parsing.
+        /// O(n) where n is total number of tags.
+        /// </summary>
+        public int CountTag(int tag)
+        {
+            if (Tags == null) return 0;
+            var count = 0;
+            var total = Tags.NextTagPos;
+            for (var i = 0; i < total; i++)
+            {
+                if (Tags[i].Tag == tag) count++;
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// Invokes a callback for each occurrence of a tag. Does NOT trigger structure parsing.
+        /// The callback receives the position index in the Tags array.
+        /// Returns the number of occurrences found.
+        /// </summary>
+        public int ForEachTagPosition(int tag, Action<int> callback)
+        {
+            if (Tags == null) return 0;
+            var count = 0;
+            var total = Tags.NextTagPos;
+            for (var i = 0; i < total; i++)
+            {
+                if (Tags[i].Tag == tag)
+                {
+                    callback(i);
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// Gets an enumerator for all positions of a tag. Does NOT trigger structure parsing.
+        /// Zero allocation - uses a struct enumerator.
+        /// </summary>
+        public TagPositionEnumerable EnumerateTagPositions(int tag) => new(Tags, tag);
+
+        /// <summary>
+        /// Zero-allocation enumerator for tag positions.
+        /// </summary>
+        public readonly struct TagPositionEnumerable
+        {
+            private readonly Tags? _tags;
+            private readonly int _tag;
+
+            public TagPositionEnumerable(Tags? tags, int tag)
+            {
+                _tags = tags;
+                _tag = tag;
+            }
+
+            public TagPositionEnumerator GetEnumerator() => new(_tags, _tag);
+        }
+
+        /// <summary>
+        /// Zero-allocation enumerator for tag positions.
+        /// </summary>
+        public ref struct TagPositionEnumerator
+        {
+            private readonly Tags? _tags;
+            private readonly int _tag;
+            private readonly int _count;
+            private int _index;
+
+            public TagPositionEnumerator(Tags? tags, int tag)
+            {
+                _tags = tags;
+                _tag = tag;
+                _count = tags?.NextTagPos ?? 0;
+                _index = -1;
+            }
+
+            public int Current => _index;
+
+            public bool MoveNext()
+            {
+                if (_tags == null) return false;
+                while (++_index < _count)
+                {
+                    if (_tags[_index].Tag == _tag) return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets all positions of a tag without structure parsing, returning as a span.
+        /// Uses stackalloc for small counts, falls back to array allocation for larger.
+        /// For performance-critical code, prefer EnumerateTagPositions or ForEachTagPosition.
+        /// </summary>
+        public int[] GetAllTagPositions(int tag)
+        {
+            if (Tags == null) return [];
+
+            // First pass: count occurrences
+            var count = CountTag(tag);
+            if (count == 0) return [];
+
+            // Second pass: collect positions
+            var positions = new int[count];
+            var idx = 0;
+            var total = Tags.NextTagPos;
+            for (var i = 0; i < total && idx < count; i++)
+            {
+                if (Tags[i].Tag == tag)
+                {
+                    positions[idx++] = i;
+                }
+            }
+            return positions;
+        }
+
         public int GroupCount()
         {
             EnsureStructureParsed();

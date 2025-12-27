@@ -156,3 +156,39 @@ Context ObjectPool (global, max 16)
 | 44d1b0b9 | Pool Context | 3.4 KB → 3.2 KB | 100 KB → 98 KB |
 | 879af247 | Lazy structure | 2.1 KB → 1.3 KB | 40 KB → 3.4 KB |
 | 4b50113f | Fix benchmarks | (methodology fix) | (methodology fix) |
+
+## Zero-Allocation View Access API
+
+For scenarios where you only need to probe a few fields (routing, filtering, validation), the span-based API eliminates all per-field allocation:
+
+| Pattern | String API | Span API | Speed | Allocation |
+|---------|-----------|----------|-------|------------|
+| Single field check | 11.2 ns / 24 B | 8.7 ns / 0 B | **23% faster** | **0 B** |
+| Routing (3 values) | 11.3 ns / 24 B | 9.2 ns / 0 B | **18% faster** | **0 B** |
+| Prefix check | 22.0 ns / 40 B | 9.3 ns / 0 B | **57% faster** | **0 B** |
+| Two-field validation | 26.6 ns / 64 B | 14.5 ns / 0 B | **45% faster** | **0 B** |
+
+```csharp
+// Zero-allocation message routing
+if (view.IsTagEqual(35, "AE"u8))
+{
+    // Trade Capture Report - extract only what we need
+    var tradeId = view.GetSpan(571);  // zero allocation
+}
+
+// Multi-value routing without string allocation
+switch (view.MatchTag(35, "0"u8, "A"u8, "5"u8))
+{
+    case 0: HandleHeartbeat(view); break;
+    case 1: HandleLogon(view); break;
+    case 2: HandleLogout(view); break;
+}
+
+// Validate without allocating strings
+if (view.IsTagEqual(35, "A"u8) && view.TagStartsWith(8, "FIX"u8))
+{
+    // valid FIX logon
+}
+```
+
+See [msgview-span-api.md](msgview-span-api.md) for complete API reference.

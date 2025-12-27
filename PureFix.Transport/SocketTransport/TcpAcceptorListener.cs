@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.SocketTransport
 {
-    public class TcpAcceptorListener : BaseTcpEntity
+    public class TcpAcceptorListener(
+        ISessionFactory sessionFactory,
+        IFixConfig config,
+        IFixClock clock,
+        ILogFactory logFactory)
+        : BaseTcpEntity(sessionFactory, config, clock, logFactory)
     {
-        public TcpAcceptorListener(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory)
-            : base(sessionFactory, config, clock, logFactory)
-        {
-        }
-
         public override async Task Start(CancellationToken cancellationToken)
         {
             var host = m_config?.Description?.Application?.Tcp?.Host;

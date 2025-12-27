@@ -12,15 +12,14 @@ using System.Threading.Tasks;
 
 namespace PureFix.Transport.SocketTransport
 {
-    public class TcpInitiatorConnector : BaseTcpEntity
+    public class TcpInitiatorConnector(
+        ISessionFactory sessionFactory,
+        IFixConfig config,
+        IFixClock clock,
+        ILogFactory logFactory)
+        : BaseTcpEntity(sessionFactory, config, clock, logFactory)
     {
-        private readonly ClientSocketTransport m_client;
-
-        public TcpInitiatorConnector(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory) 
-            : base(sessionFactory, config, clock, logFactory)
-        {
-            m_client = new ClientSocketTransport(config, clock, logFactory);
-        }
+        private readonly ClientSocketTransport m_client = new(config, clock, logFactory);
 
         // try to connect to an endpoint, once the transport is established create a session from the factory
         // and start, which will initiate a logon to the remote.
@@ -45,7 +44,7 @@ namespace PureFix.Transport.SocketTransport
                 catch (SocketException ex)
                 {
                     m_logger.Error(ex);
-                    m_logger.Info("waiting for re-connecton attempt");
+                    m_logger.Info("waiting for re-connection attempt");
                     await timer.WaitForNextTickAsync(cancellationToken);
                     ++attempt;
                 }

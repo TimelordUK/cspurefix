@@ -368,6 +368,79 @@ namespace PureFix.Types
             return span.ToArray();
         }
 
+        /// <summary>
+        /// Gets a ReadOnlySpan over the buffer range. Zero allocation.
+        /// </summary>
+        /// <param name="start">Start position (inclusive)</param>
+        /// <param name="end">End position (inclusive)</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ReadOnlySpan<byte> GetSpan(int start, int end)
+        {
+            return new ReadOnlySpan<byte>(_buffer, start, end - start + 1);
+        }
+
+        /// <summary>
+        /// Compares a buffer range to an expected byte sequence. Zero allocation.
+        /// </summary>
+        /// <param name="start">Start position (inclusive)</param>
+        /// <param name="end">End position (inclusive)</param>
+        /// <param name="expected">Expected byte sequence to compare against</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool SequenceEqual(int start, int end, ReadOnlySpan<byte> expected)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, start, end - start + 1);
+            return span.SequenceEqual(expected);
+        }
+
+        /// <summary>
+        /// Checks if a buffer range starts with a prefix. Zero allocation.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool StartsWith(int start, int end, ReadOnlySpan<byte> prefix)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, start, end - start + 1);
+            return span.StartsWith(prefix);
+        }
+
+        /// <summary>
+        /// Finds which value in a list matches the buffer range. Zero allocation.
+        /// Returns the index of the matching value, or -1 if none match.
+        /// </summary>
+        public int MatchValue(int start, int end, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, start, end - start + 1);
+            if (span.SequenceEqual(value0)) return 0;
+            if (span.SequenceEqual(value1)) return 1;
+            return -1;
+        }
+
+        /// <summary>
+        /// Finds which value in a list matches the buffer range. Zero allocation.
+        /// Returns the index of the matching value, or -1 if none match.
+        /// </summary>
+        public int MatchValue(int start, int end, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1, ReadOnlySpan<byte> value2)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, start, end - start + 1);
+            if (span.SequenceEqual(value0)) return 0;
+            if (span.SequenceEqual(value1)) return 1;
+            if (span.SequenceEqual(value2)) return 2;
+            return -1;
+        }
+
+        /// <summary>
+        /// Finds which value in a list matches the buffer range. Zero allocation.
+        /// Returns the index of the matching value, or -1 if none match.
+        /// </summary>
+        public int MatchValue(int start, int end, ReadOnlySpan<byte> value0, ReadOnlySpan<byte> value1, ReadOnlySpan<byte> value2, ReadOnlySpan<byte> value3)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, start, end - start + 1);
+            if (span.SequenceEqual(value0)) return 0;
+            if (span.SequenceEqual(value1)) return 1;
+            if (span.SequenceEqual(value2)) return 2;
+            if (span.SequenceEqual(value3)) return 3;
+            return -1;
+        }
+
         public bool GetBoolean(int start)
         {
             return _buffer[start] == AsciiY;

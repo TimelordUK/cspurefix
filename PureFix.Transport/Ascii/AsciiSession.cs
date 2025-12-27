@@ -25,8 +25,8 @@ namespace PureFix.Transport.Ascii
         protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
             : base(config, logFactory, parser, encoder, q, clock)
         {
-            if (config == null) throw new ArgumentNullException("config must be provided");
-            if (config?.Description?.SenderCompID == null) throw new ArgumentNullException("config must have application description with SenderCompID");
+            ArgumentNullException.ThrowIfNull(config);
+            if (config?.Description?.SenderCompID == null) throw new ArgumentNullException(nameof(config));
             if (config?.Description?.TargetCompID == null) throw new ArgumentNullException("config must have application description with TargetCompID");
             if (config?.Description?.BeginString == null) throw new ArgumentNullException("config must have application description with BeginString");
 
