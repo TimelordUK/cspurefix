@@ -84,7 +84,7 @@ namespace PureFix.Transport.Session
             if (state != m_sessionState.State)
             {
                 var currentState = m_sessionState.State;
-                m_sessionLogger?.Info($"current state {currentState} ({currentState} moves to {state})");
+                m_sessionLogger?.Info("current state {CurrentState} ({CurrentState} moves to {NewState})", currentState, state);
                 m_sessionState.State = state;
             }
         }
@@ -99,7 +99,7 @@ namespace PureFix.Transport.Session
                 case SessionState.Stopped:
                     if (currentState != SessionState.NetworkConnectionEstablished)
                     {
-                        m_sessionLogger?.Info($"ignoring request to change stat e as now already in {currentState}");
+                        m_sessionLogger?.Info("ignoring request to change state as now already in {CurrentState}", currentState);
                     }
                     else
                     {
@@ -129,7 +129,7 @@ namespace PureFix.Transport.Session
         {
             if (m_requestLogoutType == null)
                 throw new InvalidDataException("session needs m_requestLogoutType assigned");
-            m_sessionLogger?.Info($"sending logout with {msg}");
+            m_sessionLogger?.Info("sending logout with {Message}", msg);
             var lo = m_factory?.Logout(msg);
             if (lo != null)
             {
@@ -143,7 +143,7 @@ namespace PureFix.Transport.Session
             switch (state) {
                 case SessionState.WaitingLogoutConfirm:
                 {
-                    m_sessionLogger?.Info($"peer confirms logout Text = '{msg}'");
+                    m_sessionLogger?.Info("peer confirms logout Text = '{Message}'", msg);
                     Stop();
                     break;
                 }
@@ -153,7 +153,7 @@ namespace PureFix.Transport.Session
                 case SessionState.InitiationLogonReceived:
                 {
                     SetState(SessionState.ConfirmingLogout);
-                    m_sessionLogger?.Info($"peer initiates logout Text = '{msg}'");
+                    m_sessionLogger?.Info("peer initiates logout Text = '{Message}'", msg);
                     await SessionLogout();
                     break;
                 }
@@ -192,7 +192,7 @@ namespace PureFix.Transport.Session
 
                 default:
                 {
-                    m_sessionLogger?.Info($"sessionLogout ignored as in state {m_sessionState.State}");
+                    m_sessionLogger?.Info("sessionLogout ignored as in state {State}", m_sessionState.State);
                     break;
                 }
             }
@@ -203,10 +203,10 @@ namespace PureFix.Transport.Session
             {
                 return;
             }
-            m_sessionLogger?.Info($"stop: kill transport {m_sessionState.State}");
+            m_sessionLogger?.Info("stop: kill transport {State}", m_sessionState.State);
             if (error != null)
             {
-                m_sessionLogger?.Info($"stop: emit error ${error}");
+                m_sessionLogger?.Info("stop: emit error {Error}", error);
             }
             
             SetState(SessionState.Stopped);
@@ -227,7 +227,7 @@ namespace PureFix.Transport.Session
                 switch (m_sessionState.State)
                 {
                     case SessionState.Stopped:
-                        m_sessionLogger?.Info($"can't send {msgType}, state is now {m_sessionState.State}");
+                        m_sessionLogger?.Info("can't send {MsgType}, state is now {State}", msgType, m_sessionState.State);
                         break;
 
                     default:
@@ -237,7 +237,7 @@ namespace PureFix.Transport.Session
                             var seqNum = m_encoder.MsgSeqNum;
                             var storage = m_encoder.Encode(msgType, message);                            
                             if (storage == null) return;
-                            m_sessionLogger?.Info($"sending {msgType}, pos = {storage.Buffer.Pos}, MsgSeqNum = {m_encoder.MsgSeqNum}");
+                            m_sessionLogger?.Info("sending {MsgType}, pos = {Pos}, MsgSeqNum = {MsgSeqNum}", msgType, storage.Buffer.Pos, m_encoder.MsgSeqNum);
                             await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                             m_sessionState.LastSentAt = m_clock.Current;
                             // Use LogDelimiter for FIX log (defaults to Pipe), StoreDelimiter for store (defaults to SOH)
@@ -262,11 +262,11 @@ namespace PureFix.Transport.Session
         public async Task OnRx(byte[] buffer, int len)
         {
             _messages.Clear();
-            m_sessionLogger?.Debug($"OnRx {len}");
+            m_sessionLogger?.Debug("OnRx {Length}", len);
             m_parser.ParseFrom(buffer, len, (_, v) => _messages.Add(v), OnFixLog);
             if (_messages.Count == 0) return;
             var plural = _messages.Count > 1 ? "s" : "";
-            m_sessionLogger?.Info($"OnRx received {_messages.Count} message{plural}");
+            m_sessionLogger?.Info("OnRx received {Count} message{Plural}", _messages.Count, plural);
             foreach (var msg in _messages)
             {
                 await RxOnMsg(msg);
@@ -274,7 +274,7 @@ namespace PureFix.Transport.Session
                 m_parser.Return(view.Storage);
                 view.Return();
             }
-            m_sessionLogger?.Info($"OnRx return buffer {buffer.Length}");
+            m_sessionLogger?.Info("OnRx return buffer {BufferLength}", buffer.Length);
             ArrayPool<byte>.Shared.Return(buffer);
         }
 
@@ -294,7 +294,7 @@ namespace PureFix.Transport.Session
             if (msgType == null) return;
             if (m_logReceivedMessages)
             {
-                m_sessionLogger?.Info($"[{peerSeqNum},{msgType}]: {view}");
+                m_sessionLogger?.Info("[{PeerSeqNum},{MsgType}]: {View}", peerSeqNum, msgType, view);
             }
            
             if (peerSeqNum == null) return;
@@ -336,13 +336,13 @@ namespace PureFix.Transport.Session
          
             if (m_initiator)
             {
-                m_sessionLogger?.Debug($"initiator sending logon state = {m_sessionState.State}");
+                m_sessionLogger?.Debug("initiator sending logon state = {State}", m_sessionState.State);
                 await SendLogon();
                 SetState(SessionState.InitiationLogonSent);
             }
             else
             {
-                m_sessionLogger?.Debug($"acceptor waits for logon state = {m_sessionState.State}");
+                m_sessionLogger?.Debug("acceptor waits for logon state = {State}", m_sessionState.State);
                 SetState(SessionState.WaitingForALogon);
             }
         }
@@ -366,14 +366,14 @@ namespace PureFix.Transport.Session
 
         private async Task CheckForwardMessage(string msgType, IMessageView view)
         {
-            m_sessionLogger?.Info($"forwarding msgType = '{msgType}' to application");
+            m_sessionLogger?.Info("forwarding msgType = '{MsgType}' to application", msgType);
             SetState(SessionState.ActiveNormalSession);
             await OnApplicationMsg(msgType, view);
         }
 
         public async Task Done()
         {
-            m_sessionLogger?.Info($"Done state for logout confirm state = {m_sessionState.State}");
+            m_sessionLogger?.Info("Done state for logout confirm state = {State}", m_sessionState.State);
             switch (m_sessionState.State)
             {
                 case SessionState.InitiationLogonSent:
@@ -401,7 +401,7 @@ namespace PureFix.Transport.Session
                     }
             }
 
-            m_sessionLogger?.Info($"done.check logout sequence state = {m_sessionState.State}");
+            m_sessionLogger?.Info("done.check logout sequence state = {State}", m_sessionState.State);
         }
 
         /**

@@ -41,7 +41,7 @@ namespace PureFix.Transport.Ascii
                 config.Description.TargetCompID);
             m_sessionStore = storeFactory.Create(sessionId);
 
-            m_sessionLogger?.Info($"{Definitions}");
+            m_sessionLogger?.Info("{Definitions}", Definitions);
         }
 
         private async Task SendTestRequest()
@@ -94,7 +94,7 @@ namespace PureFix.Transport.Ascii
 
                 case TickAction.TestRequest:
                     {
-                        m_sessionLogger?.Debug($"sending test req. state = {m_sessionState.State}");
+                        m_sessionLogger?.Debug("sending test req. state = {State}", m_sessionState.State);
                         await SendTestRequest();
                         break;
                     }
@@ -103,7 +103,7 @@ namespace PureFix.Transport.Ascii
                     {
                         if (Heartbeat)
                         {
-                            m_sessionLogger?.Debug($"sending heartbeat. state = {m_sessionState.State}");
+                            m_sessionLogger?.Debug("sending heartbeat. state = {State}", m_sessionState.State);
                             await SendHeartbeat();
                         }
                         break;
@@ -134,7 +134,7 @@ namespace PureFix.Transport.Ascii
                 var peerSeqNum = view.MsgSeqNum() ?? 1;
                 var weAlsoReset = m_config.ResetSeqNumFlag();
 
-                logger?.Info($"Peer sent ResetSeqNumFlag=Y with SeqNum={peerSeqNum}, weAlsoReset={weAlsoReset}");
+                logger?.Info("Peer sent ResetSeqNumFlag=Y with SeqNum={PeerSeqNum}, weAlsoReset={WeAlsoReset}", peerSeqNum, weAlsoReset);
 
                 // Always reset our expected incoming sequence
                 m_sessionState.LastPeerMsgSeqNum = peerSeqNum;
@@ -152,7 +152,7 @@ namespace PureFix.Transport.Ascii
                     m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
                 }
 
-                logger?.Info($"Reset complete: SenderSeqNum={m_sessionStore.SenderSeqNum}, TargetSeqNum={m_sessionStore.TargetSeqNum}, LastPeerMsgSeqNum={m_sessionState.LastPeerMsgSeqNum}");
+                logger?.Info("Reset complete: SenderSeqNum={SenderSeqNum}, TargetSeqNum={TargetSeqNum}, LastPeerMsgSeqNum={LastPeerMsgSeqNum}", m_sessionStore.SenderSeqNum, m_sessionStore.TargetSeqNum, m_sessionState.LastPeerMsgSeqNum);
             }
 
             var state = m_sessionState;
@@ -160,7 +160,7 @@ namespace PureFix.Transport.Ascii
             state.PeerCompID = peerCompId;
             var res = OnLogon(view, userName, password);
             // currently not using this.
-            logger?.Info($"peerLogon onLogon returns {res}");
+            logger?.Info("peerLogon onLogon returns {Result}", res);
             if (m_acceptor)
             {
                 SetState(SessionState.InitiationLogonResponse);
@@ -217,7 +217,7 @@ namespace PureFix.Transport.Ascii
                         if (seqDelta <= 0)
                         {
                             // serious problem ... drop immediately
-                            m_sessionLogger?.Warn($"terminate as seqDelta({seqDelta}) < 0 lastSeq = {lastSeq} seqNo = {seqNo}");
+                            m_sessionLogger?.Warn("terminate as seqDelta({SeqDelta}) < 0 lastSeq = {LastSeq} seqNo = {SeqNo}", seqDelta, lastSeq, seqNo);
                             Stop();
                         }
                         else if (seqDelta > 1)
@@ -254,7 +254,7 @@ namespace PureFix.Transport.Ascii
             var resend = m_config.MessageFactory?.ResendRequest(lastSeq + 1, 0);
             if (resend != null)
             {
-                m_sessionLogger?.Warn($"received seq {receivedSeq}, but last known seq is {lastSeq}. Sending resend request for all messages > {lastSeq}");
+                m_sessionLogger?.Warn("received seq {ReceivedSeq}, but last known seq is {LastSeq}. Sending resend request", receivedSeq, lastSeq);
                 await Send(MsgType.ResendRequest, resend);
             }
         }
@@ -265,7 +265,7 @@ namespace PureFix.Transport.Ascii
             var reject = factory?.Reject(msgType, seqNo, msg, reason);
             if (reject != null)
             {
-                m_sessionLogger?.Warn($"rejecting with {JsonHelper.ToJson(reject)}");
+                m_sessionLogger?.Warn("rejecting with {RejectJson}", JsonHelper.ToJson(reject));
                 await Send(MsgType.Reject, reject);
             }
         }
@@ -285,7 +285,7 @@ namespace PureFix.Transport.Ascii
                 ? m_sessionStore.TargetSeqNum - 1
                 : 0;
 
-            m_sessionLogger?.Info($"Session store initialized: SenderSeqNum={m_sessionStore.SenderSeqNum}, TargetSeqNum={m_sessionStore.TargetSeqNum}");
+            m_sessionLogger?.Info("Session store initialized: SenderSeqNum={SenderSeqNum}, TargetSeqNum={TargetSeqNum}", m_sessionStore.SenderSeqNum, m_sessionStore.TargetSeqNum);
 
             // Create resender now that store is initialized
             m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
@@ -316,7 +316,7 @@ namespace PureFix.Transport.Ascii
             if (requestedEndSeqNo == null) return;
             var endSeqNo = requestedEndSeqNo == 0 ? m_sessionState.LastSentSeqNum : requestedEndSeqNo.Value;
 
-            m_sessionLogger?.Info($"onResendRequest getResendRequest beginSeqNo = {beginSeqNo}, endSeqNo = {endSeqNo}");
+            m_sessionLogger?.Info("onResendRequest getResendRequest beginSeqNo = {BeginSeqNo}, endSeqNo = {EndSeqNo}", beginSeqNo, endSeqNo);
 
             if (m_resender == null)
             {
@@ -325,7 +325,7 @@ namespace PureFix.Transport.Ascii
             }
 
             var records = await m_resender.GetResendRequest(beginSeqNo.Value, endSeqNo);
-            m_sessionLogger?.Info($"sending {records.Count}");
+            m_sessionLogger?.Info("sending {Count}", records.Count);
             foreach (var rec in records)
             {
                 if (rec.InflatedMessage != null)
@@ -391,7 +391,7 @@ namespace PureFix.Transport.Ascii
 
                 case MsgType.ResendRequest:
                     {
-                        logger?.Info($"peer sends '{msgType}' resend request.");
+                        logger?.Info("peer sends '{MsgType}' resend request.", msgType);
                         await OnResendRequest(view);
                         break;
                     }
@@ -399,7 +399,7 @@ namespace PureFix.Transport.Ascii
                 case MsgType.SequenceReset:
                     {
                         var newSeqNo = view.GetInt32((int)MsgTag.NewSeqNo);
-                        logger?.Info($"peer sends '{msgType}' sequence reset.newSeqNo = {newSeqNo}");
+                        logger?.Info("peer sends '{MsgType}' sequence reset. newSeqNo = {NewSeqNo}", msgType, newSeqNo);
                         // expect newSeqNo to be the next message's sequence number.
                         m_sessionState.LastPeerMsgSeqNum = newSeqNo - 1;
 
@@ -413,7 +413,7 @@ namespace PureFix.Transport.Ascii
 
                 case MsgType.Reject:
                     {
-                        logger?.Info($"peer rejects type '{msgType}' with text '{view.GetString((int)MsgTag.Text)}");
+                        logger?.Info("peer rejects type '{MsgType}' with text '{Text}'", msgType, view.GetString((int)MsgTag.Text));
                         break;
                     }
             }
@@ -427,7 +427,7 @@ namespace PureFix.Transport.Ascii
             var checkSeqNo = await CheckSeqNo(msgType, view);
             if (!checkSeqNo)
             {
-                m_sessionLogger?.Info($"message '{msgType}' failed checkSeqNo.");
+                m_sessionLogger?.Info("message '{MsgType}' failed checkSeqNo.", msgType);
                 return;
             }
 
@@ -436,7 +436,7 @@ namespace PureFix.Transport.Ascii
                 var checkIntegrity = await CheckIntegrity(msgType, view);
                 if (!checkIntegrity)
                 {
-                    m_sessionLogger?.Info($"message '${msgType}' failed checkIntegrity.");
+                    m_sessionLogger?.Info("message '{MsgType}' failed checkIntegrity.", msgType);
                     switch (msgType)
                     {
                         case MsgType.Logon:
@@ -497,7 +497,7 @@ namespace PureFix.Transport.Ascii
             var okToForward = ValidStateApplicationMsg();
             if (okToForward)
             {
-                m_sessionLogger?.Info($"ascii forwarding msgType = '{msgType}' to application");
+                m_sessionLogger?.Info("ascii forwarding msgType = '{MsgType}' to application", msgType);
                 SetState(SessionState.ActiveNormalSession);
                 await OnApplicationMsg(msgType, view);
             }
