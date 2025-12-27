@@ -49,19 +49,9 @@ namespace PureFix.Types.FIX50SP2
 		{
 			if (view is null) return;
 			
-			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
-			{
-				StandardHeader = new();
-				((IFixParser)StandardHeader).Parse(viewStandardHeader);
-			}
 			Text = view.GetString(58);
 			EncodedTextLen = view.GetInt32(354);
 			EncodedText = view.GetByteArray(355);
-			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
-			{
-				StandardTrailer = new();
-				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
-			}
 		}
 		
 		bool IFixLookup.TryGetByTag(string name, out object? value)

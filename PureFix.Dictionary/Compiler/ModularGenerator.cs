@@ -539,18 +539,25 @@ namespace PureFix.Dictionary.Compiler
         {
             // Convert "NoOrders" -> "Orders"
             var name = field.Name;
+            string propertyName;
+
             if (name.StartsWith("No") && name.Length > 2)
             {
-                var propertyName = name.Substring(2);
-                // Check if property name would conflict with parent type name
-                if (!string.IsNullOrEmpty(parentTypeName) && propertyName == parentTypeName)
-                {
-                    // Append "Items" suffix to avoid collision with parent type name
-                    return propertyName + "Items";
-                }
-                return propertyName;
+                propertyName = name.Substring(2);
             }
-            return name;
+            else
+            {
+                // Group name doesn't start with "No" - property would collide with nested class name
+                // e.g., LinesOfText group -> LinesOfText class, need LinesOfTextItems property
+                propertyName = name + "Items";
+            }
+
+            // Check if property name would conflict with parent type name
+            if (!string.IsNullOrEmpty(parentTypeName) && propertyName == parentTypeName)
+            {
+                return propertyName + "Items";
+            }
+            return propertyName;
         }
 
         private static string GetFieldPropertyName(string fieldName, string? parentTypeName)

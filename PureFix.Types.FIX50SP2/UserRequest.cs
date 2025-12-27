@@ -85,11 +85,6 @@ namespace PureFix.Types.FIX50SP2
 		{
 			if (view is null) return;
 			
-			if (view.GetView("StandardHeader") is IMessageView viewStandardHeader)
-			{
-				StandardHeader = new();
-				((IFixParser)StandardHeader).Parse(viewStandardHeader);
-			}
 			UserRequestID = view.GetString(923);
 			UserRequestType = view.GetInt32(924);
 			Username = view.GetString(553);
@@ -102,11 +97,6 @@ namespace PureFix.Types.FIX50SP2
 			EncryptedNewPassword = view.GetByteArray(1404);
 			RawDataLength = view.GetInt32(95);
 			RawData = view.GetByteArray(96);
-			if (view.GetView("StandardTrailer") is IMessageView viewStandardTrailer)
-			{
-				StandardTrailer = new();
-				((IFixParser)StandardTrailer).Parse(viewStandardTrailer);
-			}
 		}
 		
 		bool IFixLookup.TryGetByTag(string name, out object? value)

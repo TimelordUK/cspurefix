@@ -1,0 +1,76 @@
+using System;
+
+namespace PureFix.Types.FIX43
+{
+	public static class MsgTypeValues
+	{
+		public const string Heartbeat = "0";
+		public const string TestRequest = "1";
+		public const string ResendRequest = "2";
+		public const string Reject = "3";
+		public const string SequenceReset = "4";
+		public const string Logout = "5";
+		public const string Ioi = "6";
+		public const string Advertisement = "7";
+		public const string ExecutionReport = "8";
+		public const string OrderCancelReject = "9";
+		public const string QuoteStatusRequest = "a";
+		public const string Logon = "A";
+		public const string DerivativeSecurityList = "AA";
+		public const string NewOrderMultileg = "AB";
+		public const string MultilegOrderCancelReplace = "AC";
+		public const string TradeCaptureReportRequest = "AD";
+		public const string TradeCaptureReport = "AE";
+		public const string OrderMassStatusRequest = "AF";
+		public const string QuoteRequestReject = "AG";
+		public const string RfqRequest = "AH";
+		public const string QuoteStatusReport = "AI";
+		public const string MassQuoteAcknowledgement = "b";
+		public const string News = "B";
+		public const string SecurityDefinitionRequest = "c";
+		public const string Email = "C";
+		public const string SecurityDefinition = "d";
+		public const string NewOrderSingle = "D";
+		public const string SecurityStatusRequest = "e";
+		public const string NewOrderList = "E";
+		public const string SecurityStatus = "f";
+		public const string OrderCancelRequest = "F";
+		public const string OrderCancelReplaceRequest = "G";
+		public const string TradingSessionStatusRequest = "g";
+		public const string TradingSessionStatus = "h";
+		public const string OrderStatusRequest = "H";
+		public const string MassQuote = "i";
+		public const string BusinessMessageReject = "j";
+		public const string AllocationInstruction = "J";
+		public const string ListCancelRequest = "K";
+		public const string BidRequest = "k";
+		public const string BidResponse = "l";
+		public const string ListExecute = "L";
+		public const string ListStrikePrice = "m";
+		public const string ListStatusRequest = "M";
+		public const string ListStatus = "N";
+		public const string XmlNonFix = "n";
+		public const string RegistrationInstructions = "o";
+		public const string AllocationInstructionAck = "P";
+		public const string RegistrationInstructionsResponse = "p";
+		public const string OrderMassCancelRequest = "q";
+		public const string DontKnowTrade = "Q";
+		public const string OrderMassCancelReport = "r";
+		public const string QuoteRequest = "R";
+		public const string NewOrderCross = "s";
+		public const string Quote = "S";
+		public const string CrossOrderCancelReplaceRequest = "t";
+		public const string SettlementInstructions = "T";
+		public const string CrossOrderCancelRequest = "u";
+		public const string SecurityTypeRequest = "v";
+		public const string MarketDataRequest = "V";
+		public const string SecurityTypes = "w";
+		public const string MarketDataSnapshotFullRefresh = "W";
+		public const string SecurityListRequest = "x";
+		public const string MarketDataIncrementalRefresh = "X";
+		public const string SecurityList = "y";
+		public const string MarketDataRequestReject = "Y";
+		public const string DerivativeSecurityListRequest = "z";
+		public const string QuoteCancel = "Z";
+	}
+}

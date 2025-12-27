@@ -1,0 +1,18 @@
+using System;
+
+namespace PureFix.Types.FIX43
+{
+	public static class OrderRestrictionsValues
+	{
+		public const string ForeignEntity = "7";
+		public const string RisklessArbitrage = "A";
+		public const string ProgramTrade = "1";
+		public const string ExternalMarketParticipant = "8";
+		public const string ActingAsMarketMakerOrSpecialistInUnderlying = "6";
+		public const string ActingAsMarketMakerOrSpecialistInSecurity = "5";
+		public const string NonIndexArbitrage = "3";
+		public const string IndexArbitrage = "2";
+		public const string CompetingMarketMaker = "4";
+		public const string ExternalInterConnectedMarketLinkage = "9";
+	}
+}
