@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using PureFix.Transport.Session;
+﻿using PureFix.Transport.Session;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
@@ -24,14 +23,14 @@ namespace PureFix.Transport.SocketTransport
             var host = m_config?.Description?.Application?.Tcp?.Host;
             var port = m_config?.Description?.Application?.Tcp?.Port;
 
-            ArgumentNullException.ThrowIfNull(host);
-            ArgumentNullException.ThrowIfNull(port);
-            ArgumentNullException.ThrowIfNull(m_config);
+            if (host == null) throw new InvalidOperationException("No host configured for TCP endpoint.");
+            if (port == null) throw new InvalidOperationException("No port configured for TCP endpoint.");
+            if (m_config == null) throw new InvalidOperationException("Configuration not initialized.");
 
             m_logger.Info("TcpAcceptorListener starts.");
 
             var endPoint = BaseTcpTransport.MakeEndPoint(host, port.Value);
-            ArgumentNullException.ThrowIfNull(endPoint);
+            if (endPoint == null) throw new InvalidOperationException("Failed to create endpoint from host and port.");
             using Socket listener = new(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             m_logger.Info($"binding to endpoint {endPoint}");
             listener.Bind(endPoint);

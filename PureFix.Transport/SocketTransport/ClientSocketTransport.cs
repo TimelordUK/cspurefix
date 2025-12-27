@@ -22,10 +22,10 @@ namespace PureFix.Transport.SocketTransport
 
         public async Task Start(CancellationToken cancellationToken)
         {
-            if (m_tcp?.Host == null) throw new InvalidDataException("no host for endpoint in tcp config.");
-            if (m_tcp?.Port == null) throw new InvalidDataException("no port for endpoint in tcp config.");
-            if (m_socket == null) throw new InvalidDataException("no socket to connect on.");
-            if (m_iPEndPoint == null) throw new InvalidDataException("no iPEndPoint to connect on.");
+            if (m_tcp?.Host == null) throw new InvalidOperationException("No host configured for TCP endpoint.");
+            if (m_tcp?.Port == null) throw new InvalidOperationException("No port configured for TCP endpoint.");
+            if (m_socket == null) throw new InvalidOperationException("Socket not initialized.");
+            if (m_iPEndPoint == null) throw new InvalidOperationException("IPEndPoint not initialized.");
 
             m_logger?.Info($"connecting to {m_iPEndPoint}");
             await m_socket.ConnectAsync(m_iPEndPoint, cancellationToken);
