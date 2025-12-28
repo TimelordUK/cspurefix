@@ -3,21 +3,14 @@ using System.Threading.Channels;
 
 namespace PureFix.Transport.Session
 {
-    public class EventDispatcher : ISessionEventReciever
+    public class EventDispatcher(ILogFactory? logger, IMessageTransport transport) : ISessionEventReciever
     {
-        public readonly record struct SessionEvent(byte[]? Data, int len);
-        private readonly TimerDispatcher _timerDispatcher;
-        private readonly TransportDispatcher _transportDispatcher;
+        public readonly record struct SessionEvent(byte[]? Data, int len, bool TransportDead = false);
+        private readonly TimerDispatcher _timerDispatcher = new(logger);
+        private readonly TransportDispatcher _transportDispatcher = new(logger, transport);
         private readonly Channel<SessionEvent> _channel = Channel.CreateUnbounded<SessionEvent>();
         private CancellationToken _token;
-        private readonly ILogger? _logger;
-
-        public EventDispatcher(ILogFactory? logger, IMessageTransport transport)
-        {
-            _logger = logger?.MakeLogger(nameof(EventDispatcher));
-            _timerDispatcher = new TimerDispatcher(logger);
-            _transportDispatcher = new TransportDispatcher(logger, transport);
-        }       
+        private readonly ILogger? _logger = logger?.MakeLogger(nameof(EventDispatcher));
 
         public void Writer(TimeSpan timer, CancellationToken token)
         {
@@ -40,6 +33,13 @@ namespace PureFix.Transport.Session
         {
             // Channel is thread-safe, no need to serialize through queue
             _channel.Writer.TryWrite(new SessionEvent());
+        }
+
+        public void OnTransportDead()
+        {
+            // Signal that transport has died - session should stop
+            _logger?.Info("Transport dead, signaling session to stop.");
+            _channel.Writer.TryWrite(new SessionEvent(null, 0, TransportDead: true));
         }
 
         public async Task<SessionEvent> WaitRead()

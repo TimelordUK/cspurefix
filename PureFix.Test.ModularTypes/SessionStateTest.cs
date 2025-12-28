@@ -117,6 +117,11 @@ namespace PureFix.Test.ModularTypes
             {
                 Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnRx {DateTime.Now:HH:mm:ss.fff} {buffer.Length}");
             }
+
+            public void OnTransportDead()
+            {
+                Console.WriteLine($"{Environment.CurrentManagedThreadId}: OnTransportDead {DateTime.Now:HH:mm:ss.fff}");
+            }
         }
 
         [Test]

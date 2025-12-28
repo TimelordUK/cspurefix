@@ -205,6 +205,26 @@ namespace PureFix.Transport.Ascii
                         return true;
                     }
 
+                case MsgType.Logon:
+                    {
+                        // For Logon messages, check if peer is requesting a reset
+                        // If ResetSeqNumFlag=Y, accept any sequence number and let PeerLogon handle the reset
+                        var resetFlag = view.ResetSeqNumFlag();
+                        if (resetFlag == true)
+                        {
+                            m_sessionLogger?.Info("Logon with ResetSeqNumFlag=Y, accepting regardless of sequence");
+                            var seqNo = view.MsgSeqNum();
+                            if (seqNo != null)
+                            {
+                                m_sessionState.LastPeerMsgSeqNum = seqNo;
+                                await m_sessionStore.SetTargetSeqNum(seqNo.Value + 1);
+                            }
+                            return true;
+                        }
+                        // Otherwise fall through to normal sequence check
+                        goto default;
+                    }
+
                 default:
                     {
                         var state = m_sessionState;
@@ -217,7 +237,7 @@ namespace PureFix.Transport.Ascii
                         if (seqDelta <= 0)
                         {
                             // serious problem ... drop immediately
-                            m_sessionLogger?.Warn("terminate as seqDelta({SeqDelta}) < 0 lastSeq = {LastSeq} seqNo = {SeqNo}", seqDelta, lastSeq, seqNo);
+                            m_sessionLogger?.Warn("terminate as seqDelta({SeqDelta}) <= 0 lastSeq = {LastSeq} seqNo = {SeqNo}", seqDelta, lastSeq, seqNo);
                             Stop();
                         }
                         else if (seqDelta > 1)

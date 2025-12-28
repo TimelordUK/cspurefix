@@ -28,20 +28,36 @@ namespace PureFix.Transport.Session
             return Task.Factory.StartNew(async () =>
             {
                 m_logger?.Info("starting to relay transport to session.");
-                while (!terminated && m_transport.Connected && !token.IsCancellationRequested)
+                try
                 {
-                    var received = await m_transport.ReceiveAsync(buffer, token);
-                    if (received == 0)
+                    while (!terminated && m_transport.Connected && !token.IsCancellationRequested)
                     {
-                        m_logger?.Info("read 0 from transport, exit");
-                        terminated = true;
-                        continue;
+                        var received = await m_transport.ReceiveAsync(buffer, token);
+                        if (received == 0)
+                        {
+                            m_logger?.Info("read 0 from transport, exit");
+                            terminated = true;
+                            continue;
+                        }
+                        var newBuffer = ArrayPool<byte>.Shared.Rent(received);
+                        System.Buffer.BlockCopy(buffer, 0, newBuffer, 0, received);
+                        reciever.OnRx(newBuffer, received);
                     }
-                    var newBuffer = ArrayPool<byte>.Shared.Rent(received);
-                    System.Buffer.BlockCopy(buffer, 0, newBuffer, 0, received);
-                    reciever.OnRx(newBuffer, received);
                 }
-                m_logger?.Info($"transport has ended. Connected = {m_transport.Connected}, token =  {token.IsCancellationRequested}, terminated = {terminated}");
+                catch (Exception ex) when (!token.IsCancellationRequested)
+                {
+                    m_logger?.Info("transport exception: {Message}", ex.Message);
+                    terminated = true;
+                }
+
+                m_logger?.Info("transport has ended. Connected={Connected}, cancelled={Cancelled}, terminated={Terminated}",
+                    m_transport.Connected, token.IsCancellationRequested, terminated);
+
+                // Signal transport death unless we were cancelled (clean shutdown)
+                if (!token.IsCancellationRequested)
+                {
+                    reciever.OnTransportDead();
+                }
             }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
         }
     }

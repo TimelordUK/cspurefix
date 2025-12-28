@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Channels;
@@ -84,7 +85,7 @@ namespace PureFix.Transport.Session
             if (state != m_sessionState.State)
             {
                 var currentState = m_sessionState.State;
-                m_sessionLogger?.Info("current state {CurrentState} ({CurrentState} moves to {NewState})", currentState, state);
+                m_sessionLogger?.Info("state transition: {CurrentState} -> {NewState}", currentState, state);
                 m_sessionState.State = state;
             }
         }
@@ -312,17 +313,26 @@ namespace PureFix.Transport.Session
 
         private async Task Reader(EventDispatcher dispatcher, CancellationToken token)
         {
-            m_sessionLogger?.Info("Reader is waiting on events.");          
+            m_sessionLogger?.Info("Reader is waiting on events.");
             while (!token.IsCancellationRequested)
             {
                 var msg = await dispatcher.WaitRead();
+
+                // Transport died - stop the session
+                if (msg.TransportDead)
+                {
+                    m_sessionLogger?.Info("Reader received TransportDead signal, stopping session.");
+                    Stop(new IOException("Transport disconnected"));
+                    break;
+                }
+
                 if (msg.Data == null)
                 {
                     await m_q.EnqueueAsync(OnTimer);
                 }
                 else
                 {
-                    await m_q.EnqueueAsync(()=>OnRx(msg.Data, msg.len));
+                    await m_q.EnqueueAsync(() => OnRx(msg.Data, msg.len));
                 }
             }
             m_sessionLogger?.Info("Reader is exiting.");
@@ -347,6 +357,36 @@ namespace PureFix.Transport.Session
             }
         }
 
+        /// <summary>
+        /// Prepares the session for reconnection after a disconnect.
+        /// Resets the state machine while preserving the session store (sequence numbers).
+        /// Call this before Run() when reconnecting.
+        /// </summary>
+        public void PrepareForReconnect()
+        {
+            m_sessionLogger?.Info("PrepareForReconnect: resetting session state for reconnection");
+
+            // Reset state machine to initial state
+            m_sessionState.State = SessionState.Idle;
+            m_sessionState.LastReceivedAt = null;
+            m_sessionState.LastSentAt = null;
+            m_sessionState.LastTestRequestAt = null;
+            m_sessionState.LogoutSentAt = null;
+
+            // Clear transport reference (will be replaced by new one)
+            m_transport = null;
+
+            // Cancel any existing token source
+            if (m_MySource is { IsCancellationRequested: false })
+            {
+                m_MySource.Cancel();
+            }
+            m_MySource = null;
+            m_parentToken = null;
+
+            m_sessionLogger?.Info("PrepareForReconnect: ready for new connection");
+        }
+
         public async Task Run(IMessageTransport transport, CancellationToken token)
         {
             m_sessionLogger?.Info("Run begins");
@@ -354,7 +394,7 @@ namespace PureFix.Transport.Session
             m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value);
             m_transport = transport;
             await OnRun();
-            await InitiatorLogon();            
+            await InitiatorLogon();
             var dispatcher = new EventDispatcher(m_logFactory, transport);
             // start sending events to the channel on which this session listens.
             // Writer starts background tasks that write to channel - doesn't block
