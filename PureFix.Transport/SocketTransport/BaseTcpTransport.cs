@@ -19,7 +19,7 @@ namespace PureFix.Transport.SocketTransport
         private Stream? m_networkStream;
         private SslStream? m_sslStream;
         private readonly TlsOptions? m_tlsOptions;
-        private IFixConfig m_config;
+        private readonly IFixConfig m_config;
         private SslProtocols Protocols { get; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
         protected BaseTcpTransport(IFixConfig config, IFixClock clock, ILogFactory logFactory)

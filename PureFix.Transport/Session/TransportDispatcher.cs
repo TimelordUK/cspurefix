@@ -8,16 +8,9 @@ using PureFix.Types;
 
 namespace PureFix.Transport.Session
 {
-    public class TransportDispatcher
+    public class TransportDispatcher(ILogFactory? logger, IMessageTransport transport)
     {
-        private readonly IMessageTransport m_transport;
-        private readonly ILogger? m_logger;
-
-        public TransportDispatcher(ILogFactory? logger, IMessageTransport transport)
-        {
-            m_transport = transport;
-            m_logger = logger?.MakeLogger(nameof(TransportDispatcher));
-        }
+        private readonly ILogger? m_logger = logger?.MakeLogger(nameof(TransportDispatcher));
 
         public Task Dispatch(ISessionEventReciever reciever, CancellationToken token)
         {
@@ -30,9 +23,9 @@ namespace PureFix.Transport.Session
                 m_logger?.Info("starting to relay transport to session.");
                 try
                 {
-                    while (!terminated && m_transport.Connected && !token.IsCancellationRequested)
+                    while (!terminated && transport.Connected && !token.IsCancellationRequested)
                     {
-                        var received = await m_transport.ReceiveAsync(buffer, token);
+                        var received = await transport.ReceiveAsync(buffer, token);
                         if (received == 0)
                         {
                             m_logger?.Info("read 0 from transport, exit");
@@ -51,7 +44,7 @@ namespace PureFix.Transport.Session
                 }
 
                 m_logger?.Info("transport has ended. Connected={Connected}, cancelled={Cancelled}, terminated={Terminated}",
-                    m_transport.Connected, token.IsCancellationRequested, terminated);
+                    transport.Connected, token.IsCancellationRequested, terminated);
 
                 // Signal transport death unless we were cancelled (clean shutdown)
                 if (!token.IsCancellationRequested)
