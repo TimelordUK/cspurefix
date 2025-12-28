@@ -8,17 +8,11 @@ using System.Text;
 
 namespace PureFix.Dictionary.Parser.QuickFix
 {
-    public class QuickFixXmlFileBuilder
+    public class QuickFixXmlFileBuilder(IFixDefinitions definitions)
     {
         private readonly Dictionary<int, string> _usedTags = [];
         private readonly Dictionary<string, ContainedComponentField> _seenComponents = [];
-        private readonly IFixDefinitions _definitions;
         private readonly int _indent = 2;
-
-        public QuickFixXmlFileBuilder(IFixDefinitions definitions)
-        {
-            _definitions = definitions;
-        }
 
         public string Write(string[] msgTypes)
         {
@@ -27,9 +21,9 @@ namespace PureFix.Dictionary.Parser.QuickFix
             {
                 return sb.ToString();
             }
-            var m0Def = _definitions.Message.GetValueOrDefault(msgTypes[0]);
+            var m0Def = definitions.Message.GetValueOrDefault(msgTypes[0]);
             if (m0Def == null) return sb.ToString();
-            sb.Append(QuickFixXmlFormatter.StartFix(_definitions.GetMajor(), _definitions.GetMinor(), _definitions.GetServicePack()));
+            sb.Append(QuickFixXmlFormatter.StartFix(definitions.GetMajor(), definitions.GetMinor(), definitions.GetServicePack()));
             var header = WriteComponent($"{m0Def.Name}.StandardHeader", "header");
             sb.Append(header);
             var trailer = WriteComponent($"{m0Def.Name}.StandardTrailer", "trailer");
@@ -48,7 +42,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
         {
             var sb = new StringBuilder();
 
-            var set = _definitions.GetSet(name);
+            var set = definitions.GetSet(name);
             if (set == null)
             {
                 return string.Empty;
@@ -66,7 +60,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             tags.Sort();
             sb.Append(QuickFixXmlFormatter.StartEntity("fields", leadingIndent));
             foreach (var t in tags) {
-                var sf = _definitions.TagToSimple[t];
+                var sf = definitions.TagToSimple[t];
                 //   <field number='1' name='Account' type='STRING' />
                 sb.Append(QuickFixXmlFormatter.DefineField(sf, leadingIndent + _indent));
                 if (!sf.IsEnum) continue;
@@ -113,7 +107,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             sb.Append(QuickFixXmlFormatter.StartEntity("messages", leadingIndent));
             foreach (var mt in msgTypes)
             {
-                var md = _definitions.Message.GetValueOrDefault(mt);
+                var md = definitions.Message.GetValueOrDefault(mt);
                 if (md == null) continue;
                 sb.Append(QuickFixXmlFormatter.DefineMessage(md, leadingIndent + _indent));
                 var fields = WriteFields(md.Fields.Skip(1).SkipLast(1).ToList(), leadingIndent + _indent + _indent);
@@ -163,10 +157,8 @@ namespace PureFix.Dictionary.Parser.QuickFix
             sb.Append(QuickFixXmlFormatter.AddComponent(containedComponentField, leadingIndent));
 
             // Add to seen components if not already there
-            if (!_seenComponents.ContainsKey(containedComponentField.Name))
+            if (_seenComponents.TryAdd(containedComponentField.Name, containedComponentField))
             {
-                _seenComponents[containedComponentField.Name] = containedComponentField;
-
                 // Recursively process nested components to ensure all dependencies are included
                 if (containedComponentField.Definition != null)
                 {

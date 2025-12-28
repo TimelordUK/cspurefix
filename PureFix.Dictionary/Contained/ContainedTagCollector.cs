@@ -11,7 +11,7 @@ namespace PureFix.Dictionary.Contained
         private static readonly Dictionary<IContainedSet, IReadOnlyList<(IContainedSet parent, ContainedField child)>> _memoised = [];
         private readonly List<(IContainedSet parent, ContainedField child)> _fields = [];
         private IReadOnlyList<(IContainedSet parent, ContainedField child)> Fields => _fields;
-        public Queue<IContainedSet> _queue = [];
+        private readonly Queue<IContainedSet> _queue = [];
         private IContainedSet? _current;
 
         public IReadOnlyList<(IContainedSet parent, ContainedField child)> Compute(IContainedSet set)

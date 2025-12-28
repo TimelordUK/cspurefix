@@ -11,14 +11,14 @@ namespace PureFix.Dictionary.Parser.QuickFix;
 
 public partial class QuickFixXmlFileParser(IFixDefinitions definitions) : IFixDictionaryParser
 {
-    public IFixDefinitions Definitions { get; } = definitions;
-    public Queue<Node> Queue { get; } = new ();
+    private IFixDefinitions Definitions { get; } = definitions;
+    private Queue<Node> Queue { get; } = new ();
 
     /// <summary>
     /// When true, validates the dictionary before parsing and throws DictionaryValidationException on errors.
     /// Default is true.
     /// </summary>
-    public bool ValidateBeforeParsing { get; set; } = true;
+    public bool ValidateBeforeParsing { get; init; } = true;
 
     /// <summary>
     /// Gets the validator used during parsing. Contains warnings even if parsing succeeded.
@@ -82,7 +82,7 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions) : IFixDi
         indexer.Compute(Definitions);
     }
 
-    public void Work(Node node)
+    private void Work(Node node)
     {
         switch (node.Type)
         {
@@ -289,7 +289,7 @@ public partial class QuickFixXmlFileParser(IFixDefinitions definitions) : IFixDi
      * groups and fields will later arrive once more to further resolve deeper into
      * the definition.
      */
-    public void ExpandSet(Node node)
+    private void ExpandSet(Node node)
     {
         foreach (var element in node.Element.Elements())
         {

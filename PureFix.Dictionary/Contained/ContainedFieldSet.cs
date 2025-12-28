@@ -17,23 +17,23 @@ namespace PureFix.Dictionary.Contained
         string description)
         : IContainedSet
     {
-        protected readonly Dictionary<string, IContainedSet> _groups = [];
-        protected readonly Dictionary<string, IContainedSet> _components = [];
-        protected readonly Dictionary<string, ContainedSimpleField> _simple = [];
-        protected readonly List<ContainedField> _fields = [];
+        private readonly Dictionary<string, IContainedSet> _groups = [];
+        private readonly Dictionary<string, IContainedSet> _components = [];
+        private readonly Dictionary<string, ContainedSimpleField> _simple = [];
+        private readonly List<ContainedField> _fields = [];
         protected readonly Dictionary<int, IContainedSet> _containedTag = [];
-        protected readonly List<int> _flattenedTag = [];
-        protected readonly Dictionary<int, bool> _containedLength = [];
-        protected readonly Dictionary<int, ContainedSimpleField> _localTag = [];
-        protected readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
-        protected readonly Dictionary<int, ContainedSimpleField> _tagToSimple = [];
-        protected readonly Dictionary<int, SimpleFieldDefinition> _tagToSimpleDefinition = [];
-        protected readonly Dictionary<int, (IContainedSet? parent, ContainedField field)> _tagToField = [];
-        protected readonly Dictionary<string, IContainedSet> _nameToSet = [];
-        protected readonly Dictionary<string, ContainedField> _localNameToField = [];
-        protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = [];
-        protected readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = [];
-        protected readonly List<ContainedSimpleField> _localAttribute = [];
+        private readonly List<int> _flattenedTag = [];
+        private readonly Dictionary<int, bool> _containedLength = [];
+        private readonly Dictionary<int, ContainedSimpleField> _localTag = [];
+        private readonly Dictionary<int, ContainedSimpleField> _localRequired = [];
+        private readonly Dictionary<int, ContainedSimpleField> _tagToSimple = [];
+        private readonly Dictionary<int, SimpleFieldDefinition> _tagToSimpleDefinition = [];
+        private readonly Dictionary<int, (IContainedSet? parent, ContainedField field)> _tagToField = [];
+        private readonly Dictionary<string, IContainedSet> _nameToSet = [];
+        private readonly Dictionary<string, ContainedField> _localNameToField = [];
+        private readonly Dictionary<string, ContainedSimpleField> _nameToLocalField = [];
+        private readonly Dictionary<string, ContainedSimpleField> _nameToLocalAttribute = [];
+        private readonly List<ContainedSimpleField> _localAttribute = [];
 
         /// <summary>
         /// Index of name to any group that may be present within the field list
@@ -127,7 +127,7 @@ namespace PureFix.Dictionary.Contained
         /// <summary>
         /// not for generral usage, this partially resets the set such it can be used on a second pass of the xml parser
         /// </summary>
-        public void Reset()
+        private void Reset()
         {
             _groups.Clear();
             _components.Clear();

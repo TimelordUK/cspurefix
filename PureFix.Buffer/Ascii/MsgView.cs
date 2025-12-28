@@ -138,7 +138,7 @@ namespace PureFix.Buffer.Ascii
         public bool IsTagEqual(int tag, string expected)
         {
             Span<byte> bytes = stackalloc byte[expected.Length];
-            System.Text.Encoding.ASCII.GetBytes(expected, bytes);
+            Encoding.ASCII.GetBytes(expected, bytes);
             return IsTagEqual(tag, bytes);
         }
 
@@ -241,46 +241,27 @@ namespace PureFix.Buffer.Ascii
         /// <summary>
         /// Zero-allocation enumerator for tag positions.
         /// </summary>
-        public readonly struct TagPositionEnumerable
+        public readonly struct TagPositionEnumerable(Tags? tags, int tag)
         {
-            private readonly Tags? _tags;
-            private readonly int _tag;
-
-            public TagPositionEnumerable(Tags? tags, int tag)
-            {
-                _tags = tags;
-                _tag = tag;
-            }
-
-            public TagPositionEnumerator GetEnumerator() => new(_tags, _tag);
+            public TagPositionEnumerator GetEnumerator() => new(tags, tag);
         }
 
         /// <summary>
         /// Zero-allocation enumerator for tag positions.
         /// </summary>
-        public ref struct TagPositionEnumerator
+        public ref struct TagPositionEnumerator(Tags? tags, int tag)
         {
-            private readonly Tags? _tags;
-            private readonly int _tag;
-            private readonly int _count;
-            private int _index;
-
-            public TagPositionEnumerator(Tags? tags, int tag)
-            {
-                _tags = tags;
-                _tag = tag;
-                _count = tags?.NextTagPos ?? 0;
-                _index = -1;
-            }
+            private readonly int _count = tags?.NextTagPos ?? 0;
+            private int _index = -1;
 
             public int Current => _index;
 
             public bool MoveNext()
             {
-                if (_tags == null) return false;
+                if (tags == null) return false;
                 while (++_index < _count)
                 {
-                    if (_tags[_index].Tag == _tag) return true;
+                    if (tags[_index].Tag == tag) return true;
                 }
                 return false;
             }
