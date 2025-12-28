@@ -20,17 +20,13 @@ namespace PureFix.Dictionary.Parser.Repo
 		    <Description>The CommissionDate component block is used to carry commission information such as the type of commission and the rate.</Description>
 	  </Component>
      */
-    public partial class RepoXmlComponentParser : RepoBaseXmlParser
+    public partial class RepoXmlComponentParser(IFixDefinitions definitions) : RepoBaseXmlParser(definitions)
     {
-        private Dictionary<int, RepoComponentDefinition> _componentsByID { get; set; } = [];
-        private Dictionary<string, RepoComponentDefinition> _componentsByName { get; set; } = [];
+        private Dictionary<int, RepoComponentDefinition> _componentsByID { get; } = [];
+        private Dictionary<string, RepoComponentDefinition> _componentsByName { get; } = [];
 
         public IReadOnlyDictionary<int, RepoComponentDefinition> ComponentsByID => _componentsByID;
         public IReadOnlyDictionary<string, RepoComponentDefinition> ComponentsByName => _componentsByName;
-
-        public RepoXmlComponentParser(IFixDefinitions definitions): base(definitions)
-        {
-        }
 
         protected override void ParseDoc(XDocument doc)
         {

@@ -17,7 +17,7 @@ namespace PureFix.Transport.Ascii
 {
     public abstract class AsciiSession : FixSession
     {
-        protected readonly IFixSessionStore m_sessionStore;
+        private readonly IFixSessionStore m_sessionStore;
         private readonly IFixMessageFactory m_fixMessageFactory;
         private FixMsgAsciiStoreResend? m_resender;
         public bool Heartbeat { get; set; } = true;

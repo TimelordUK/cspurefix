@@ -8,7 +8,7 @@ namespace PureFix.Dictionary.Compiler
 {
     public class CodeGenerator
     {
-        private readonly StringBuilder _Builder = new StringBuilder();
+        private readonly StringBuilder _Builder = new();
         private int _TabCount = 0;
 
         public BlockIndent BeginBlock()

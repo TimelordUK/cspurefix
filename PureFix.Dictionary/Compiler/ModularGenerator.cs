@@ -22,7 +22,7 @@ namespace PureFix.Dictionary.Compiler
             _modularOptions = options;
         }
 
-        public override void PostProcess()
+        protected override void PostProcess()
         {
             // Generate message factory
             GenerateFactory();

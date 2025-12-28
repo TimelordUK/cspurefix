@@ -16,11 +16,11 @@ namespace PureFix.Transport.SocketTransport
         protected IPEndPoint? m_iPEndPoint;
         protected readonly TcpTransportDescription? m_tcp;
         protected readonly ILogger m_logger;
-        protected Stream? m_networkStream;
-        protected SslStream? m_sslStream;
-        protected readonly TlsOptions? m_tlsOptions;
-        protected IFixConfig m_config;
-        public SslProtocols Protocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
+        private Stream? m_networkStream;
+        private SslStream? m_sslStream;
+        private readonly TlsOptions? m_tlsOptions;
+        private IFixConfig m_config;
+        private SslProtocols Protocols { get; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
         protected BaseTcpTransport(IFixConfig config, IFixClock clock, ILogFactory logFactory)
         {

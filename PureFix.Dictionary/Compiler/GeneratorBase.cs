@@ -10,18 +10,9 @@ using PureFix.Dictionary.Parser;
 
 namespace PureFix.Dictionary.Compiler
 {
-    public abstract class GeneratorBase
+    public abstract class GeneratorBase(string root, IFixDefinitions fixDefinitions, Options options)
     {
-        private readonly string m_Root;
-
         private readonly HashSet<string> m_FilesGenerated = new(StringComparer.OrdinalIgnoreCase);
-
-        protected GeneratorBase(string root, IFixDefinitions fixDefinitions, Options options)
-        {
-            m_Root = root;
-            FixDefinitions = fixDefinitions;
-            Options = options;
-        }
 
         public ISet<string> FilesGenerated => m_FilesGenerated;
 
@@ -34,7 +25,7 @@ namespace PureFix.Dictionary.Compiler
             PostProcess();
         }
 
-        public void Process(MessageDefinition message)
+        private void Process(MessageDefinition message)
         {
             var filename = MakeFilename(message.Name, message);
             if (m_FilesGenerated.Add(filename))
@@ -44,7 +35,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        public virtual void PostProcess() { }
+        protected virtual void PostProcess() { }
 
         private void Process(string parentPath, ContainedGroupField field)
         {
@@ -73,9 +64,9 @@ namespace PureFix.Dictionary.Compiler
             return root ?? other;
         }
 
-        protected Options Options { get; }
+        protected Options Options { get; } = options;
 
-        protected IFixDefinitions FixDefinitions { get; }
+        protected IFixDefinitions FixDefinitions { get; } = fixDefinitions;
 
         protected void ApplyFields(CodeGenerator generator, string parentPath, IContainedSet set)
         {
@@ -131,24 +122,24 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        protected string MakeFilename(string parentPath, IContainedSet set)
+        private string MakeFilename(string parentPath, IContainedSet set)
         {
             var typename = MakeTypeName(parentPath, set);
 
             if(set is MessageDefinition)
             {
-                return Path.Combine(m_Root, typename + ".cs");
+                return Path.Combine(root, typename + ".cs");
             }
 
-            return Path.Combine(m_Root, "Types", typename + ".cs");
+            return Path.Combine(root, "Types", typename + ".cs");
         }
 
         protected string MakeEnumFilename(string enumName)
         {
-            return Path.Combine(m_Root, "Types", enumName + ".cs");
+            return Path.Combine(root, "Types", enumName + ".cs");
         }
 
-        protected string MakeTypeName(string parentPath, IContainedSet set)
+        private string MakeTypeName(string parentPath, IContainedSet set)
         {
             if (set.Name == "StandardHeader")
             {
