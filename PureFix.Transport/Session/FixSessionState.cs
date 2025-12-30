@@ -154,18 +154,17 @@ namespace PureFix.Transport.Session
         private void CalcState()
         {
             if (Now == null) return;
-            var time = Now.Value.TimeOfDay;
             m_nextTickAction = TickAction.Nothing;
             m_secondsSinceLogoutSent = LogoutSentAt != null
-                ? (int)time.TotalSeconds - (int)LogoutSentAt.Value.TimeOfDay.TotalSeconds
+                ? (int)(Now.Value - LogoutSentAt.Value).TotalSeconds
                 : -1;
 
             m_secondsSinceSent = LastSentAt != null
-                ? (int)time.TotalSeconds - (int)LastSentAt.Value.TimeOfDay.TotalSeconds
+                ? (int)(Now.Value - LastSentAt.Value).TotalSeconds
                 : 0;
 
             m_secondsSinceReceive = LastReceivedAt != null
-                ? (int)time.TotalSeconds - (int)LastReceivedAt.Value.TimeOfDay.TotalSeconds
+                ? (int)(Now.Value - LastReceivedAt.Value).TotalSeconds
                 : 0;
         }
     }

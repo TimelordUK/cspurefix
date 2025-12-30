@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using ChannelClosedException = System.Threading.Channels.ChannelClosedException;
 using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
@@ -314,26 +315,41 @@ namespace PureFix.Transport.Session
         private async Task Reader(EventDispatcher dispatcher, CancellationToken token)
         {
             m_sessionLogger?.Info("Reader is waiting on events.");
-            while (!token.IsCancellationRequested)
+            try
             {
-                var msg = await dispatcher.WaitRead();
+                while (!token.IsCancellationRequested)
+                {
+                    var msg = await dispatcher.WaitRead();
 
-                // Transport died - stop the session
-                if (msg.TransportDead)
-                {
-                    m_sessionLogger?.Info("Reader received TransportDead signal, stopping session.");
-                    Stop(new IOException("Transport disconnected"));
-                    break;
-                }
+                    // Transport died - stop the session
+                    if (msg.TransportDead)
+                    {
+                        m_sessionLogger?.Info("Reader received TransportDead signal, stopping session.");
+                        Stop(new IOException("Transport disconnected"));
+                        break;
+                    }
 
-                if (msg.Data == null)
-                {
-                    await m_q.EnqueueAsync(OnTimer);
+                    if (msg.Data == null)
+                    {
+                        await m_q.EnqueueAsync(OnTimer);
+                    }
+                    else
+                    {
+                        await m_q.EnqueueAsync(() => OnRx(msg.Data, msg.len));
+                    }
                 }
-                else
-                {
-                    await m_q.EnqueueAsync(() => OnRx(msg.Data, msg.len));
-                }
+            }
+            catch (OperationCanceledException)
+            {
+                m_sessionLogger?.Info("Reader cancelled.");
+            }
+            catch (ChannelClosedException)
+            {
+                m_sessionLogger?.Info("Reader channel closed.");
+            }
+            catch (Exception ex)
+            {
+                m_sessionLogger?.Error(ex, "Reader unexpected exception: {Message}", ex.Message);
             }
             m_sessionLogger?.Info("Reader is exiting.");
         }

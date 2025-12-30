@@ -37,6 +37,12 @@ namespace PureFix.Transport.Ascii
 
         protected override void OnDecoded(string msgType, string txt)
         {
+            // Diagnostic: bypass Serilog to confirm session is alive (heartbeat = "0")
+            if (msgType == "0" || msgType == "A")
+            {
+                Console.WriteLine($"[SESSION] {DateTime.Now:HH:mm:ss} RX {msgType}");
+            }
+
             m_fixLog.Info(txt);
         }
 
@@ -85,6 +91,12 @@ namespace PureFix.Transport.Ascii
             {
                 var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, storeTxt);
                 await Recovery.AddRecord(record);
+            }
+
+            // Diagnostic: bypass Serilog to confirm session is alive (heartbeat = "0")
+            if (msgType == "0" || msgType == "A")
+            {
+                Console.WriteLine($"[SESSION] {DateTime.Now:HH:mm:ss} TX {msgType} seq={seqNum}");
             }
 
             // Log with pipe delimiter for human readability

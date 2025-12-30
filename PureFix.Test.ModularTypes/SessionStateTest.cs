@@ -105,6 +105,26 @@ namespace PureFix.Test.ModularTypes
             });
         }
 
+        [Test]
+        public void Heartbeat_Across_Midnight_Test()
+        {
+            // Bug fix test: timer should work correctly when crossing midnight boundary
+            var beforeMidnight = new DateTime(2018, 1, 1, 23, 59, 55);
+            var afterMidnight = new DateTime(2018, 1, 2, 0, 0, 26); // 31 seconds later
+
+            m_state.State = SessionState.ActiveNormalSession;
+            m_state.Now = beforeMidnight;
+            m_state.LastSentAt = beforeMidnight;
+            m_state.LastReceivedAt = afterMidnight;
+
+            var action = m_state.CalcAction(afterMidnight);
+            Assert.Multiple(() =>
+            {
+                Assert.That(m_state.TimeToHeartbeat, Is.True, "Should trigger heartbeat 31 seconds after last send");
+                Assert.That(action, Is.EqualTo(TickAction.Heartbeat));
+            });
+        }
+
         public class Receiver : ISessionEventReciever
         {
             public void OnTimer()

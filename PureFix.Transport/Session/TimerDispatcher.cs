@@ -1,4 +1,4 @@
-﻿using PureFix.Types;
+using PureFix.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +18,26 @@ namespace PureFix.Transport.Session
                 var task = Task.Factory.StartNew(async () =>
                 {
                     logger?.Info("timer starting.");
-                    while (!token.IsCancellationRequested)
+                    try
                     {
-                        await timer.WaitForNextTickAsync(token);
-                        onInvoke.Invoke();
+                        while (!token.IsCancellationRequested)
+                        {
+                            var ticked = await timer.WaitForNextTickAsync(token);
+                            if (!ticked)
+                            {
+                                logger?.Info("timer WaitForNextTickAsync returned false, exiting.");
+                                break;
+                            }
+                            onInvoke.Invoke();
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        logger?.Info("timer cancelled.");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.Error(ex, "timer unexpected exception: {Message}", ex.Message);
                     }
                     logger?.Info("timer exiting.");
                 }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
@@ -35,10 +51,26 @@ namespace PureFix.Transport.Session
                 var task = Task.Factory.StartNew(async () =>
                 {
                     logger?.Info("timer starting.");
-                    while (!token.IsCancellationRequested)
+                    try
                     {
-                        await timer.WaitForNextTickAsync(token);
-                        await onInvoke.Invoke();
+                        while (!token.IsCancellationRequested)
+                        {
+                            var ticked = await timer.WaitForNextTickAsync(token);
+                            if (!ticked)
+                            {
+                                logger?.Info("timer WaitForNextTickAsync returned false, exiting.");
+                                break;
+                            }
+                            await onInvoke.Invoke();
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        logger?.Info("timer cancelled.");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.Error(ex, "timer unexpected exception: {Message}", ex.Message);
                     }
                     logger?.Info("timer exiting.");
                 }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();

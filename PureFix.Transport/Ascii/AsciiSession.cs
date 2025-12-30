@@ -87,6 +87,10 @@ namespace PureFix.Transport.Ascii
         protected override async Task Tick()
         {
             var action = m_sessionState.CalcAction(m_clock.Current);
+
+            // Diagnostic: bypass Serilog to verify tick is running (uncomment for debugging)
+            // Console.WriteLine($"[TICK] {DateTime.Now:HH:mm:ss} action={action} state={m_sessionState.State}");
+
             switch (action)
             {
                 case TickAction.Nothing:
@@ -111,7 +115,9 @@ namespace PureFix.Transport.Ascii
 
                 case TickAction.TerminateOnError:
                     {
-                        m_sessionLogger?.Warn(m_sessionState.ToString());
+                        // Only log and terminate once - don't spam on every tick
+                        m_sessionLogger?.Warn("Session timeout - no response to test request. {State}", m_sessionState.ToString());
+                        Terminate(new TimeoutException("No response to test request within timeout period"));
                         break;
                     }
             }
