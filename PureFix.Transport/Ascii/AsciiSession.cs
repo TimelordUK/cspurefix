@@ -20,7 +20,20 @@ namespace PureFix.Transport.Ascii
         private readonly IFixSessionStore m_sessionStore;
         private readonly IFixMessageFactory m_fixMessageFactory;
         private FixMsgAsciiStoreResend? m_resender;
+        private int m_logonRetryCount;
+        private const int MaxLogonRetries = 100; // Reasonable limit to prevent infinite loops
         public bool Heartbeat { get; set; } = true;
+
+        /// <summary>
+        /// Prepares the session for reconnection after a disconnect.
+        /// Resets the logon retry counter in addition to base class state reset.
+        /// </summary>
+        public override void PrepareForReconnect()
+        {
+            base.PrepareForReconnect();
+            m_logonRetryCount = 0;
+            m_sessionLogger?.Info("PrepareForReconnect: reset logon retry counter");
+        }
 
         protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
             : base(config, logFactory, parser, encoder, q, clock)
@@ -198,6 +211,10 @@ namespace PureFix.Transport.Ascii
             {
                 //   this.startTimer();
             }
+
+            // Reset logon retry counter on successful logon
+            m_logonRetryCount = 0;
+
             logger?.Info("system ready, inform app");
             await OnReady(view);
         }
@@ -242,8 +259,10 @@ namespace PureFix.Transport.Ascii
                         var seqDelta = seqNo - lastSeq;
                         if (seqDelta <= 0)
                         {
-                            // serious problem ... drop immediately
-                            m_sessionLogger?.Warn("terminate as seqDelta({SeqDelta}) <= 0 lastSeq = {LastSeq} seqNo = {SeqNo}", seqDelta, lastSeq, seqNo);
+                            // MsgSeqNum too low - send Reject and terminate
+                            var expectedSeq = lastSeq.Value + 1;
+                            m_sessionLogger?.Warn("MsgSeqNum too low: received {SeqNo}, expected {ExpectedSeq}. Sending Reject.", seqNo, expectedSeq);
+                            await SendReject(msgType, seqNo.Value, $"MsgSeqNum too low, expecting {expectedSeq}", (int)SessionRejectReason.ValueIsIncorrect);
                             Stop();
                         }
                         else if (seqDelta > 1)
@@ -294,6 +313,34 @@ namespace PureFix.Transport.Ascii
                 m_sessionLogger?.Warn("rejecting with {RejectJson}", JsonHelper.ToJson(reject));
                 await Send(MsgType.Reject, reject);
             }
+        }
+
+        /// <summary>
+        /// Handles logon rejection due to sequence number mismatch.
+        /// Retries the logon with the next sequence number.
+        /// This handles the scenario where the client's sequence number is behind the server's expectation.
+        /// The encoder already increments MsgSeqNum after each message is sent, so we just retry.
+        /// </summary>
+        private async Task HandleLogonRejected(int? refSeqNum, string? text)
+        {
+            m_logonRetryCount++;
+
+            if (m_logonRetryCount > MaxLogonRetries)
+            {
+                m_sessionLogger?.Warn("Max logon retries ({MaxRetries}) exceeded, giving up. Text='{Text}'", MaxLogonRetries, text);
+                SetState(SessionState.PeerLogonRejected);
+                Stop();
+                return;
+            }
+
+            // The encoder's MsgSeqNum is already incremented after each message is sent,
+            // so we just need to retry the logon. The next logon will use the next sequence number.
+            var nextSeq = m_encoder.MsgSeqNum;
+            m_sessionLogger?.Info("Logon rejected (attempt {Count}), retrying with seq={NextSeq}. Text='{Text}'",
+                m_logonRetryCount, nextSeq, text);
+
+            // Retry the logon with the next sequence number
+            await SendLogon();
         }
 
 
@@ -439,7 +486,23 @@ namespace PureFix.Transport.Ascii
 
                 case MsgType.Reject:
                     {
-                        logger?.Info("peer rejects type '{MsgType}' with text '{Text}'", msgType, view.Lazy((int)MsgTag.Text));
+                        var refSeqNum = view.GetInt32((int)MsgTag.RefSeqNum);
+                        var refMsgType = view.GetString((int)MsgTag.RefMsgType);
+                        var text = view.GetString((int)MsgTag.Text);
+                        var reason = view.GetInt32((int)MsgTag.SessionRejectReason);
+
+                        logger?.Info("peer rejects RefSeqNum={RefSeqNum}, RefMsgType={RefMsgType}, Reason={Reason}",
+                            refSeqNum, refMsgType, reason);
+                        if (text != null)
+                        {
+                            logger?.Info("reject text: '{Text}'", text);
+                        }
+
+                        // Check if this is a logon rejection while we're waiting for logon response
+                        if (refMsgType == MsgType.Logon && m_sessionState.State == SessionState.InitiationLogonSent)
+                        {
+                            await HandleLogonRejected(refSeqNum, text);
+                        }
                         break;
                     }
             }

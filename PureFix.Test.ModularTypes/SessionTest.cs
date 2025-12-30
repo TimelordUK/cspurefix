@@ -17,6 +17,11 @@ using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Test.ModularTypes.Env.TradeCapture;
 using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Transport;
+using PureFix.Buffer.Ascii;
+using PureFix.Types;
+using PureFix.Types.Config;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace PureFix.Test.ModularTypes
 {
@@ -205,7 +210,240 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(tcci, Is.EqualTo(10));
                 Assert.That(tcca, Is.EqualTo(10));
-            });     
+            });
+        }
+
+        /// <summary>
+        /// Tests the sequence mismatch recovery scenario where:
+        /// 1. Client starts with sequence number lower than server expects
+        /// 2. Server sends Reject for each Logon until sequence catches up
+        /// 3. Client increments sequence and retries until successful
+        /// </summary>
+        [Test]
+        public async Task Initiator_Sequence_Mismatch_Retry_Test()
+        {
+            // Configuration: Client starts at seq 1 (default), server expects seq 5
+            // This means 4 retries are needed before success
+            const int serverExpectedSeq = 5;
+
+            // Set up initiator config - disable ResetSeqNumFlag so we test the retry logic
+            var config = _testEntity.GetTestInitiatorConfig();
+            if (config.Description is SessionDescription desc)
+            {
+                desc.ResetSeqNumFlag = false;
+            }
+
+            // Create transports and connect them
+            var clientTransport = new TestMessageTransport();
+            var serverTransport = new TestMessageTransport();
+            clientTransport.ConnectTo(serverTransport);
+            serverTransport.ConnectTo(clientTransport);
+
+            // Set up initiator session using DI container
+            var queue = new AsyncWorkQueue();
+            var diContainer = new SkeletonDIContainer(queue, _testEntity.Clock, config);
+            var container = new RuntimeContainer(diContainer.AppHost);
+
+            // Track logon attempts received by mock server
+            var logonSeqNumsReceived = new List<int>();
+            var rejectsSent = new List<string>();
+            var sessionReady = false;
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+            // Run the initiator session in background
+            var initiatorTask = Task.Run(async () =>
+            {
+                try
+                {
+                    await container.App.Run(clientTransport, cts.Token);
+                }
+                catch (OperationCanceledException) { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[INITIATOR] Exception: {ex.Message}");
+                }
+            });
+
+            // Mock server loop: read messages and respond
+            var serverTask = Task.Run(async () =>
+            {
+                var buffer = new byte[4096];
+                var parser = new AsciiParser(config.Definitions!) { Delimiter = AsciiChars.Soh };
+                var serverSeqNum = 1;
+
+                try
+                {
+                    while (!cts.Token.IsCancellationRequested)
+                    {
+                        // Read message from client
+                        var bytesRead = await serverTransport.ReceiveAsync(buffer, cts.Token);
+                        if (bytesRead == 0) break;
+
+                        var rawMsg = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        Console.WriteLine($"[MOCK SERVER] Raw received ({bytesRead} bytes): {rawMsg.Replace('\x01', '|')}");
+
+                        // Parse the message
+                        var views = new List<MsgView>();
+                        parser.ParseFrom(buffer, bytesRead, (_, view) => views.Add(view));
+                        Console.WriteLine($"[MOCK SERVER] Parsed {views.Count} message(s)");
+
+                        foreach (var view in views)
+                        {
+                            var msgType = view.MsgType();
+                            var clientSeqNum = view.MsgSeqNum() ?? 0;
+
+                            Console.WriteLine($"[MOCK SERVER] Message type={msgType}, seq={clientSeqNum}");
+
+                            if (msgType == MsgType.Logon)
+                            {
+                                logonSeqNumsReceived.Add(clientSeqNum);
+                                Console.WriteLine($"[MOCK SERVER] Received Logon with seq={clientSeqNum}");
+
+                                if (clientSeqNum < serverExpectedSeq)
+                                {
+                                    // Send Reject - client seq is too low
+                                    var rejectMsg = BuildRejectMessage(config.Description!, serverSeqNum++,
+                                        MsgType.Logon, clientSeqNum, "MsgSeqNum too low");
+                                    rejectsSent.Add(rejectMsg.Replace('\x01', '|'));
+                                    Console.WriteLine($"[MOCK SERVER] Sending Reject: {rejectMsg.Replace('\x01', '|')}");
+                                    await serverTransport.SendAsync(Encoding.UTF8.GetBytes(rejectMsg), cts.Token);
+                                    Console.WriteLine($"[MOCK SERVER] Reject sent for seq={clientSeqNum}");
+                                }
+                                else
+                                {
+                                    // Send Logon response - sequence is acceptable
+                                    var logonResponse = BuildLogonMessage(config.Description!, serverSeqNum++);
+                                    Console.WriteLine($"[MOCK SERVER] Sending Logon response: {logonResponse.Replace('\x01', '|')}");
+                                    await serverTransport.SendAsync(Encoding.UTF8.GetBytes(logonResponse), cts.Token);
+                                    Console.WriteLine($"[MOCK SERVER] Logon response sent, session established");
+                                    sessionReady = true;
+
+                                    // Wait a bit then send logout to end test cleanly
+                                    await Task.Delay(200, cts.Token);
+                                    var logoutMsg = BuildLogoutMessage(config.Description!, serverSeqNum++, "Test complete");
+                                    await serverTransport.SendAsync(Encoding.UTF8.GetBytes(logoutMsg), cts.Token);
+                                    Console.WriteLine($"[MOCK SERVER] Logout sent");
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (OperationCanceledException) { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[MOCK SERVER] Exception: {ex.Message}");
+                }
+            });
+
+            // Wait for either completion or timeout
+            await Task.WhenAny(Task.WhenAll(initiatorTask, serverTask), Task.Delay(8000));
+            cts.Cancel();
+
+            // Verify results
+            Console.WriteLine($"Logon seq nums received: [{string.Join(", ", logonSeqNumsReceived)}]");
+            Console.WriteLine($"Rejects sent: {rejectsSent.Count}");
+
+            Assert.Multiple(() =>
+            {
+                // Should have received multiple logon attempts (at least serverExpectedSeq logons: 1,2,3,4,5)
+                Assert.That(logonSeqNumsReceived.Count, Is.GreaterThanOrEqualTo(serverExpectedSeq),
+                    "Should have received enough logon retries");
+
+                // First logon should be at seq 1 (default starting sequence)
+                Assert.That(logonSeqNumsReceived.First(), Is.EqualTo(1),
+                    "First logon should be at seq 1");
+
+                // Last logon should be >= serverExpectedSeq (the successful one)
+                Assert.That(logonSeqNumsReceived.Last(), Is.GreaterThanOrEqualTo(serverExpectedSeq),
+                    "Last logon should have caught up to server's expected seq");
+
+                // Verify sequence numbers increased monotonically
+                for (int i = 1; i < logonSeqNumsReceived.Count; i++)
+                {
+                    Assert.That(logonSeqNumsReceived[i], Is.EqualTo(logonSeqNumsReceived[i - 1] + 1),
+                        $"Sequence should increment by 1 each retry (at index {i})");
+                }
+
+                // Session should have become ready
+                Assert.That(sessionReady, Is.True, "Session should have established successfully");
+            });
+
+            queue.Dispose();
+        }
+
+        /// <summary>
+        /// Builds a FIX Reject message with the given parameters.
+        /// </summary>
+        private static string BuildRejectMessage(ISessionDescription desc, int seqNum, string refMsgType, int refSeqNum, string text)
+        {
+            const char SOH = '\x01';
+            var time = DateTime.UtcNow.ToString("yyyyMMdd-HH:mm:ss.fff");
+            // Build body first to calculate length
+            var body = $"35=3{SOH}" +                          // MsgType = Reject
+                       $"49={desc.TargetCompID}{SOH}" +        // SenderCompID (server's perspective)
+                       $"56={desc.SenderCompID}{SOH}" +        // TargetCompID (server's perspective)
+                       $"34={seqNum}{SOH}" +                   // MsgSeqNum
+                       $"52={time}{SOH}" +                     // SendingTime
+                       $"45={refSeqNum}{SOH}" +                // RefSeqNum
+                       $"372={refMsgType}{SOH}" +              // RefMsgType
+                       $"58={text}{SOH}";                      // Text
+
+            var bodyLen = body.Length;
+            var msg = $"8={desc.BeginString}{SOH}9={bodyLen:D7}{SOH}{body}";
+            var checksum = CalculateChecksum(msg);
+            return $"{msg}10={checksum:D3}{SOH}";
+        }
+
+        /// <summary>
+        /// Builds a FIX Logon message response.
+        /// </summary>
+        private static string BuildLogonMessage(ISessionDescription desc, int seqNum)
+        {
+            const char SOH = '\x01';
+            var time = DateTime.UtcNow.ToString("yyyyMMdd-HH:mm:ss.fff");
+            // Build body first to calculate length
+            var body = $"35=A{SOH}" +                          // MsgType = Logon
+                       $"49={desc.TargetCompID}{SOH}" +        // SenderCompID (server's perspective)
+                       $"56={desc.SenderCompID}{SOH}" +        // TargetCompID (server's perspective)
+                       $"34={seqNum}{SOH}" +                   // MsgSeqNum
+                       $"52={time}{SOH}" +                     // SendingTime
+                       $"98=0{SOH}" +                          // EncryptMethod = None
+                       $"108=30{SOH}";                         // HeartBtInt
+
+            var bodyLen = body.Length;
+            var msg = $"8={desc.BeginString}{SOH}9={bodyLen:D7}{SOH}{body}";
+            var checksum = CalculateChecksum(msg);
+            return $"{msg}10={checksum:D3}{SOH}";
+        }
+
+        /// <summary>
+        /// Builds a FIX Logout message.
+        /// </summary>
+        private static string BuildLogoutMessage(ISessionDescription desc, int seqNum, string text)
+        {
+            const char SOH = '\x01';
+            var time = DateTime.UtcNow.ToString("yyyyMMdd-HH:mm:ss.fff");
+            // Build body first to calculate length
+            var body = $"35=5{SOH}" +                          // MsgType = Logout
+                       $"49={desc.TargetCompID}{SOH}" +        // SenderCompID (server's perspective)
+                       $"56={desc.SenderCompID}{SOH}" +        // TargetCompID (server's perspective)
+                       $"34={seqNum}{SOH}" +                   // MsgSeqNum
+                       $"52={time}{SOH}" +                     // SendingTime
+                       $"58={text}{SOH}";                      // Text
+
+            var bodyLen = body.Length;
+            var msg = $"8={desc.BeginString}{SOH}9={bodyLen:D7}{SOH}{body}";
+            var checksum = CalculateChecksum(msg);
+            return $"{msg}10={checksum:D3}{SOH}";
+        }
+
+        /// <summary>
+        /// Calculates FIX checksum (sum of all bytes mod 256).
+        /// </summary>
+        private static int CalculateChecksum(string msg)
+        {
+            return Encoding.ASCII.GetBytes(msg).Sum(b => (int)b) % 256;
         }
     }
 }

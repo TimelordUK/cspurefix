@@ -378,7 +378,7 @@ namespace PureFix.Transport.Session
         /// Resets the state machine while preserving the session store (sequence numbers).
         /// Call this before Run() when reconnecting.
         /// </summary>
-        public void PrepareForReconnect()
+        public virtual void PrepareForReconnect()
         {
             m_sessionLogger?.Info("PrepareForReconnect: resetting session state for reconnection");
 
