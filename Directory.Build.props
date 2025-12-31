@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Package metadata -->
-    <Version>0.1.8-alpha</Version>
+    <Version>0.1.9-alpha</Version>
     <Authors>TimelordUK</Authors>
     <Company>TimelordUK</Company>
     <Description>PureFix - A pure C# FIX protocol engine</Description>
@@ -11,6 +11,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>fix;fix-protocol;trading;financial</PackageTags>
 
+    <!-- README file displayed on nuget.org package page -->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
     <!-- Generate packages on build (optional - remove if you only want explicit pack) -->
     <!-- <GeneratePackageOnBuild>true</GeneratePackageOnBuild> -->
 
@@ -18,4 +21,9 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <!-- Include root README.md in all packages -->
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>
