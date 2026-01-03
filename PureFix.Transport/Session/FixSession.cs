@@ -175,9 +175,8 @@ namespace PureFix.Transport.Session
                     // this instance initiates logout
                     SetState(SessionState.WaitingLogoutConfirm);
                     m_sessionState.LogoutSentAt = m_clock.Current;
-                    var msg = $"{m_me} initiate logout";
-                    m_sessionLogger?.Info(msg);
-                    await SendLogout(msg);
+                    m_sessionLogger?.Info("{Name} initiate logout", m_me);
+                    await SendLogout($"{m_me} initiate logout");
                     break;
                 }
 
@@ -185,9 +184,8 @@ namespace PureFix.Transport.Session
                     // this instance responds to log out
                     SetState(SessionState.ConfirmingLogout);
                     m_sessionState.LogoutSentAt = m_clock.Current;
-                    var msg = $"{m_me} confirming logout";
-                    m_sessionLogger?.Info(msg);
-                    await SendLogout(msg);
+                    m_sessionLogger?.Info("{Name} confirming logout", m_me);
+                    await SendLogout($"{m_me} confirming logout");
                     Stop();
                     break;
                 }
