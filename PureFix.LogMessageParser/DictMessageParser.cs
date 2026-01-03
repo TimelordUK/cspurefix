@@ -28,10 +28,10 @@ namespace PureFix.LogMessageParser
         public DictMessageParser(DictMeta meta, Assembly typesAssembly)
         {
             Meta = meta;
-            var definitions = new FixDefinitions();           
-            var path = PathUtil.GetPath(meta.Dict ?? "");            
+            var definitions = new FixDefinitions();
+            var path = PathUtil.GetPath(meta.Dict ?? "");
             if (path == null) throw new ArgumentException($"path cannot be resolved {meta}");
-            IFixDictionaryParser qfParser = File.Exists(path) ? 
+            IFixDictionaryParser qfParser = File.Exists(path) ?
                 new QuickFixXmlFileParser(definitions) :
                 new RepoFixXmlFileParser(FixVersion.FIX50SP2, definitions);
             var fixNameSpace = meta.Type ?? "";
@@ -39,14 +39,44 @@ namespace PureFix.LogMessageParser
             Definitions = definitions;
             if (meta.Type != null)
             {
-                var fixType = typesAssembly.GetType(meta.Type);
-                var factories = typesAssembly.DefinedTypes.Where(t => t.ImplementedInterfaces.Contains(typeof(IFixMessageFactory))).ToList();
-                var ss = factories.FirstOrDefault(t => t.Namespace == fixNameSpace);
-                if (ss != null)
+                // First try the provided assembly, then search all loaded assemblies
+                var factory = FindMessageFactory(typesAssembly, fixNameSpace);
+                if (factory == null)
                 {
-                    MessageFactoryTypeInfo = ss;
-                    MessageFactory = Activator.CreateInstance(ss.AsType()) as IFixMessageFactory;
+                    // Search all loaded assemblies for the type namespace
+                    foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+                    {
+                        factory = FindMessageFactory(asm, fixNameSpace);
+                        if (factory != null) break;
+                    }
                 }
+
+                if (factory != null)
+                {
+                    MessageFactoryTypeInfo = factory;
+                    MessageFactory = Activator.CreateInstance(factory.AsType()) as IFixMessageFactory;
+                    Console.WriteLine($"Loaded MessageFactory for {meta.Name}: {factory.FullName}");
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: No MessageFactory found for {meta.Name} (namespace: {fixNameSpace})");
+                }
+            }
+        }
+
+        private static TypeInfo? FindMessageFactory(Assembly assembly, string fixNameSpace)
+        {
+            try
+            {
+                var factories = assembly.DefinedTypes
+                    .Where(t => t.ImplementedInterfaces.Contains(typeof(IFixMessageFactory)))
+                    .ToList();
+                return factories.FirstOrDefault(t => t.Namespace == fixNameSpace);
+            }
+            catch
+            {
+                // Some assemblies may throw on reflection
+                return null;
             }
         }
         

@@ -1,0 +1,37 @@
+{
+  "metas": [
+    {
+      "name": "FIX50SP2",
+      "displayName": "Standard FIX 5.0 SP2",
+      "dict": "FIX50SP2.xml",
+      "type": "PureFix.Types.FIX50SP2",
+      "version": "FIX.5.0SP2",
+      "senderCompIds": ["init-comp", "accept-comp"],
+      "targetCompIds": ["init-comp", "accept-comp"],
+      "isDefault": true,
+      "enabled": true
+    },
+    {
+      "name": "FIX44",
+      "displayName": "Standard FIX 4.4",
+      "dict": "FIX44.xml",
+      "type": "PureFix.Types.FIX44",
+      "version": "FIX.4.4",
+      "senderCompIds": ["*"],
+      "targetCompIds": ["*"],
+      "isDefault": false,
+      "enabled": true
+    },
+    {
+      "name": "FIX43",
+      "displayName": "Standard FIX 4.3",
+      "dict": "FIX43.xml",
+      "type": "PureFix.Types.FIX43",
+      "version": "FIX.4.3",
+      "senderCompIds": ["*"],
+      "targetCompIds": ["*"],
+      "isDefault": false,
+      "enabled": true
+    }
+  ]
+}
