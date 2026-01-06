@@ -132,7 +132,8 @@ namespace PureFix.Transport.Ascii
                 case TickAction.TerminateOnError:
                     {
                         // Only log and terminate once - don't spam on every tick
-                        m_sessionLogger?.Warn("Session timeout - no response to test request. {State}", m_sessionState.ToString());
+                        if (m_sessionLogger?.IsEnabled(LogLevel.Warn) == true)
+                            m_sessionLogger.Warn("Session timeout - no response to test request. {State}", m_sessionState.ToString());
                         Terminate(new TimeoutException("No response to test request within timeout period"));
                         break;
                     }
@@ -147,7 +148,8 @@ namespace PureFix.Transport.Ascii
             var userName = view.Username();
             var password = view.Password();
             var resetSeqNumFlag = view.ResetSeqNumFlag();
-            logger?.Info($"peerLogon Username = {userName}, heartBtInt = {heartBtInt}, peerCompId = {peerCompId}, resetSeqNumFlag = {resetSeqNumFlag}");
+            if (logger?.IsEnabled(LogLevel.Info) == true)
+                logger.Info($"peerLogon Username={userName}, heartBtInt={heartBtInt}, peerCompId={peerCompId}, resetSeqNumFlag={resetSeqNumFlag}");
 
             // Handle ResetSeqNumFlag from peer's logon
             // When peer sends ResetSeqNumFlag=Y, both sides should reset to 1.

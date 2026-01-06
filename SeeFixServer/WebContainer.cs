@@ -29,7 +29,24 @@ namespace SeeFixServer
             var dicts = app.Services.GetService<IDictContainer>();
             if (assembly != null && dicts != null)
             {
-                dicts.Init(PathUtil.GetPath("DictionaryMeta.json"), assembly);
+                // Try new TypeRegistry.json first, fall back to legacy DictionaryMeta.json
+                var registryPath = PathUtil.GetPath("TypeRegistry.json");
+                var legacyPath = PathUtil.GetPath("DictionaryMeta.json");
+
+                if (registryPath != null && File.Exists(registryPath))
+                {
+                    Console.WriteLine($"Loading type registry from: {registryPath}");
+                    dicts.Init(registryPath, assembly);
+                }
+                else if (legacyPath != null && File.Exists(legacyPath))
+                {
+                    Console.WriteLine($"Loading legacy dictionary meta from: {legacyPath}");
+                    dicts.Init(legacyPath, assembly);
+                }
+                else
+                {
+                    Console.WriteLine("Warning: No type registry or dictionary meta found");
+                }
             }
 
             return app;
