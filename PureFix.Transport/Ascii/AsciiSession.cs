@@ -54,7 +54,10 @@ namespace PureFix.Transport.Ascii
                 config.Description.TargetCompID);
             m_sessionStore = storeFactory.Create(sessionId);
 
-            m_sessionLogger?.Info("{Definitions}", Definitions);
+            m_sessionLogger?.Info("message count = {DefinitionCount}, component count = {ComponentCount}, simple count = {FieldCount}", 
+            Definitions.Message.Count, 
+            Definitions.Component.Count,
+            Definitions.Simple.Count);
         }
 
         private async Task SendTestRequest()
