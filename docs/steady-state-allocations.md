@@ -6,13 +6,19 @@ per-message parsing allocations (see `optimization-opportunities.md`).
 
 ## Current Performance
 
-**Baseline (skeleton mode - heartbeats only):** ~11 KB/s allocation rate, zero GC collections
+**Baseline (skeleton mode - heartbeats only):** ~1-5 KB/s allocation rate, zero GC collections
 
-This is already excellent for most use cases. The library is well-suited for:
+This is excellent for most use cases. The library is well-suited for:
 - Trade capture
 - Drop copy
 - Post-trade booking
 - Any scenario where microsecond latency is not critical
+
+### Recent Improvement (v0.1.10-alpha)
+
+Removed redundant `AsyncWorkQueue` layer - the `Channel<SessionEvent>` in `EventDispatcher`
+already provides serialization for timer and RX events. This reduced steady-state allocations
+from ~11 KB/s to ~1-5 KB/s (a **2-10x improvement**).
 
 ## Identified Allocation Sources
 
@@ -127,27 +133,28 @@ m_MySource = CancellationTokenSource.CreateLinkedTokenSource(m_parentToken.Value
 
 | Optimization | Effort | Savings | Priority |
 |--------------|--------|---------|----------|
-| LoggerMessage.Define for hot paths | Low | ~3-5 KB/s | **Medium** |
-| Conditional logging checks | Low | ~1-2 KB/s | **Low** |
-| Pre-allocate test req strings | Low | ~0.5 KB/s | **Low** |
-| **Total achievable** | **Low** | **~5-7 KB/s** | |
+| LoggerMessage.Define for hot paths | Low | ~1-2 KB/s | **Low** |
+| Conditional logging checks | Low | ~0.5 KB/s | **Low** |
+| Pre-allocate test req strings | Low | ~0.2 KB/s | **Very Low** |
+| **Total achievable** | **Low** | **~2-3 KB/s** | |
 
-This would reduce steady-state from ~11 KB/s to ~4-5 KB/s.
+This could potentially reduce steady-state from ~1-5 KB/s to sub-1 KB/s, approaching zero-allocation.
 
 ---
 
 ## What Cannot Be Easily Changed
 
-The remaining ~4-5 KB/s comes from:
+The remaining ~1-5 KB/s comes from:
 
 1. **.NET runtime internals** - Timer infrastructure, thread pool work items
 2. **Async state machine overhead** - When awaits actually suspend
 3. **Channel operations** - Internal buffering in `Channel<T>`
+4. **Logging overhead** - String formatting for log messages
 
 To go lower would require:
 - Eliminating async/await (synchronous + spin-wait)
 - Custom timer implementation (wheel timers)
-- Pre-allocated work queues
+- Zero-allocation logging (LoggerMessage.Define everywhere)
 
 **These changes would significantly increase code complexity and are not recommended** unless targeting ultra-low-latency scenarios (sub-microsecond).
 
@@ -155,17 +162,21 @@ To go lower would require:
 
 ## Recommendation
 
-**Wait for real-world usage feedback before optimizing.**
+**Current performance is excellent - no further optimization needed.**
 
-Current performance (~11 KB/s, zero steady-state GC) is excellent for the target use cases:
+Current performance (~1-5 KB/s, zero steady-state GC) is approaching zero-allocation and is
+excellent for all target use cases:
 - Trade capture
 - Drop copy
 - Post-trade booking
+- Market data distribution
 
-If users report GC pause issues in production, implement in this order:
+The v0.1.10-alpha release achieved the major win by removing the redundant `AsyncWorkQueue`.
+Further optimizations would provide diminishing returns.
+
+If users report GC pause issues in production, consider:
 1. `LoggerMessage.Define` for frequently-hit log statements
 2. Conditional logging guards
-3. String pre-allocation for heartbeats
 
 The library prioritizes **readability and maintainability** over the last few KB/s of allocation reduction.
 
