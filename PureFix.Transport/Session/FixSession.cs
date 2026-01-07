@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using ChannelClosedException = System.Threading.Channels.ChannelClosedException;
-using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Buffer.Ascii;
 using PureFix.Dictionary.Definition;
@@ -40,10 +39,9 @@ namespace PureFix.Transport.Session
         protected CancellationToken? m_parentToken;
         private CancellationTokenSource? m_MySource;
         private readonly List<IMessageView> _messages = [];
-        private readonly AsyncWorkQueue m_q;
         private readonly ILogFactory m_logFactory;
       
-        protected FixSession(IFixConfig config, ILogFactory logFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
+        protected FixSession(IFixConfig config, ILogFactory logFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
         {
             m_logFactory = logFactory ?? throw new ArgumentException("config had been supplied with no log factory");
             m_config = config;
@@ -78,7 +76,6 @@ namespace PureFix.Transport.Session
             m_requestLogonType = logonDefinition.MsgType;
             m_requestLogoutType = logoutDefinition.MsgType;
             m_respondLogoutType = logoutDefinition.MsgType;
-            m_q = q;
         }
 
         private void AssignState(SessionState state)
@@ -221,37 +218,31 @@ namespace PureFix.Transport.Session
 
         protected async Task Send(string msgType, IFixMessage message)
         {
-            await m_q.EnqueueAsync(async () =>
-            {
-                if (m_transport == null) return;
-                switch (m_sessionState.State)
-                {
-                    case SessionState.Stopped:
-                        m_sessionLogger?.Info("can't send {MsgType}, state is now {State}", msgType, m_sessionState.State);
-                        break;
+            if (m_transport == null) return;
 
-                    default:
-                        {
-                            if (m_parentToken == null) return;
-                            if (m_transport == null) return;
-                            var seqNum = m_encoder.MsgSeqNum;
-                            var storage = m_encoder.Encode(msgType, message);                            
-                            if (storage == null) return;
-                            m_sessionLogger?.Info("sending {MsgType}, pos = {Pos}, MsgSeqNum = {MsgSeqNum}", msgType, storage.Buffer.Pos, m_encoder.MsgSeqNum);
-                            await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
-                            m_sessionState.LastSentAt = m_clock.Current;
-                            // Use LogDelimiter for FIX log (defaults to Pipe), StoreDelimiter for store (defaults to SOH)
-                            var forLog = storage.AsString(m_config.LogDelimiter);
-                            var forStore = storage.AsString(m_config.StoreDelimiter);
-                            await m_q.EnqueueAsync(() =>
-                            {
-                                OnEncoded(msgType, seqNum, forLog, forStore);
-                            });
-                            m_encoder.Return(storage);
-                            break;
-                        }
-                }
-            });
+            switch (m_sessionState.State)
+            {
+                case SessionState.Stopped:
+                    m_sessionLogger?.Info("can't send {MsgType}, state is now {State}", msgType, m_sessionState.State);
+                    break;
+
+                default:
+                    {
+                        if (m_parentToken == null) return;
+                        var seqNum = m_encoder.MsgSeqNum;
+                        var storage = m_encoder.Encode(msgType, message);
+                        if (storage == null) return;
+                        m_sessionLogger?.Info("sending {MsgType}, pos = {Pos}, MsgSeqNum = {MsgSeqNum}", msgType, storage.Buffer.Pos, m_encoder.MsgSeqNum);
+                        await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
+                        m_sessionState.LastSentAt = m_clock.Current;
+                        // Use LogDelimiter for FIX log (defaults to Pipe), StoreDelimiter for store (defaults to SOH)
+                        var forLog = storage.AsString(m_config.LogDelimiter);
+                        var forStore = storage.AsString(m_config.StoreDelimiter);
+                        await OnEncoded(msgType, seqNum, forLog, forStore);
+                        m_encoder.Return(storage);
+                        break;
+                    }
+            }
         }
 
         public async Task OnTimer()
@@ -327,13 +318,14 @@ namespace PureFix.Transport.Session
                         break;
                     }
 
+                    // Direct calls - Channel already serializes events, no queue needed
                     if (msg.Data == null)
                     {
-                        await m_q.EnqueueAsync(OnTimer);
+                        await OnTimer();
                     }
                     else
                     {
-                        await m_q.EnqueueAsync(() => OnRx(msg.Data, msg.len));
+                        await OnRx(msg.Data, msg.len);
                     }
                 }
             }

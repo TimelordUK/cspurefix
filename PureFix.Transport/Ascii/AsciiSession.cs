@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
@@ -35,8 +34,8 @@ namespace PureFix.Transport.Ascii
             m_sessionLogger?.Info("PrepareForReconnect: reset logon retry counter");
         }
 
-        protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
-            : base(config, logFactory, parser, encoder, q, clock)
+        protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
+            : base(config, logFactory, parser, encoder, clock)
         {
             ArgumentNullException.ThrowIfNull(config);
             ArgumentNullException.ThrowIfNull(config.Description);

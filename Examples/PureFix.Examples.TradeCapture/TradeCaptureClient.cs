@@ -1,4 +1,3 @@
-﻿using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Transport.Ascii;
 using PureFix.Transport.Recovery;
@@ -21,7 +20,7 @@ namespace PureFix.Examples.TradeCapture
         private readonly Dictionary<string, TradeCaptureReport> m_reports = [];
         public Action? OnReadyCallback { get; set; }
 
-        public TradeCaptureClient(IFixConfig config, IFixLogRecovery? fixLogRecover, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock) : base(config, fixLogRecover, logFactory, fixMessageFactory, parser, encoder, q, clock)
+        public TradeCaptureClient(IFixConfig config, IFixLogRecovery? fixLogRecover, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock) : base(config, fixLogRecover, logFactory, fixMessageFactory, parser, encoder, clock)
         {
             m_logReceivedMessages = true;
         }

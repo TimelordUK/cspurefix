@@ -1,4 +1,3 @@
-using Arrow.Threading.Tasks;
 using PureFix.Examples.Shared;
 using PureFix.Examples.TradeCapture;
 using PureFix.Transport.Session;
@@ -37,7 +36,6 @@ static BaseAppDI MakeTradeCaptureHost(IFixConfig config)
 {
     // Create log factory from config - reads "logging" section from JSON
     var factory = new ConsoleLogFactory(config.Description);
-    var queue = new AsyncWorkQueue();
     var clock = new RealtimeClock();
-    return new TradeCaptureDI(queue, factory, clock, config);
+    return new TradeCaptureDI(factory, clock, config);
 }

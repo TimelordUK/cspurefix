@@ -1,4 +1,3 @@
-using Arrow.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using PureFix.Transport.Session;
@@ -24,7 +23,7 @@ public abstract class BaseAppDI
     protected IHost? AppHost { get; set; }
     protected readonly HostApplicationBuilder _builder;
 
-    protected BaseAppDI(AsyncWorkQueue q, ILogFactory factory, IFixClock clock, IFixConfig config)
+    protected BaseAppDI(ILogFactory factory, IFixClock clock, IFixConfig config)
     {
         ArgumentNullException.ThrowIfNull(config);
         ArgumentNullException.ThrowIfNull(config.Description);
@@ -52,7 +51,6 @@ public abstract class BaseAppDI
         _builder.Services.AddSingleton(config.Description);
         _builder.Services.AddSingleton(config.Definitions);
         _builder.Services.AddSingleton(config.Description.Application);
-        _builder.Services.AddSingleton(q);
 
         var store = new FixMsgMemoryStore(config.Description.SenderCompID);
         _builder.Services.AddSingleton<IFixMsgStore>(store);

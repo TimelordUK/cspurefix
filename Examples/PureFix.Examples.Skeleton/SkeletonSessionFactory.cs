@@ -1,4 +1,3 @@
-using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
@@ -14,12 +13,11 @@ public class SkeletonSessionFactory(
     IFixMessageFactory fixMessageFactory,
     IMessageParser parser,
     IMessageEncoder encoder,
-    AsyncWorkQueue q,
     IFixClock clock)
     : ISessionFactory
 {
     public FixSession MakeSession()
     {
-        return new TestAsciiSkeleton(config, fixLogRecovery, logFactory, fixMessageFactory, parser, encoder, q, clock);
+        return new TestAsciiSkeleton(config, fixLogRecovery, logFactory, fixMessageFactory, parser, encoder, clock);
     }
 }

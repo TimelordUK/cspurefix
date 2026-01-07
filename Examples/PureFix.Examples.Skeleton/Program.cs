@@ -1,4 +1,3 @@
-using Arrow.Threading.Tasks;
 using PureFix.Buffer.Ascii;
 using PureFix.Examples.Shared;
 using PureFix.Examples.Skeleton;
@@ -259,8 +258,7 @@ Console.WriteLine("Skeleton example completed");
 static BaseAppDI MakeSkeletonHost(IFixClock clock, IFixConfig config)
 {
     var factory = new ConsoleLogFactory(clock);
-    var queue = new AsyncWorkQueue();
-    return new SkeletonDI(queue, factory, clock, config);
+    return new SkeletonDI(factory, clock, config);
 }
 
 static void PrintHelp()

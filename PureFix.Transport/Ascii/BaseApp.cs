@@ -1,4 +1,3 @@
-﻿using Arrow.Threading.Tasks;
 using PureFix.Buffer;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
@@ -23,8 +22,8 @@ namespace PureFix.Transport.Ascii
         public string AppLogName { get; }
         private IFixLogRecovery? Recovery { get; }
 
-        protected BaseApp(IFixConfig config, IFixLogRecovery? fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, AsyncWorkQueue q, IFixClock clock)
-            : base(config, logFactory, fixMessageFactory, parser, encoder, q, clock)
+        protected BaseApp(IFixConfig config, IFixLogRecovery? fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
+            : base(config, logFactory, fixMessageFactory, parser, encoder, clock)
         {
             m_logReceivedMessages = true;
             var me = config.Name();
