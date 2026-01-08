@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PureFix.Dictionary.Definition;
 using PureFix.Types;
 using PureFix.Types.Core;
+using MsgTypeIntern = PureFix.Types.Core.MsgType;
 
 namespace PureFix.Buffer.Ascii
 {
@@ -186,7 +187,9 @@ namespace PureFix.Buffer.Ascii
                         throw new InvalidDataException($"MsgTag: not expected at position [{nextTagPos}] [{Buffer.ToString()}]");
                     }
 
-                    MsgType = Buffer.GetString(equalPos + 1, valueEndPos);
+                    // Use interned string for MsgType to avoid per-message allocation
+                    var msgTypeSpan = Buffer.GetSpan(equalPos + 1, valueEndPos - 1);
+                    MsgType = MsgTypeIntern.Intern(msgTypeSpan);
                     if (definitions.Message.TryGetValue(MsgType, out var message))
                     {
                         _message = message;
