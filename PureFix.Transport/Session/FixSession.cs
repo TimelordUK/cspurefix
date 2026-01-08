@@ -265,7 +265,7 @@ namespace PureFix.Transport.Session
                 m_parser.Return(view.Storage);
                 view.Return();
             }
-            m_sessionLogger?.Info("OnRx return buffer {BufferLength}", buffer.Length);
+            m_sessionLogger?.Debug("OnRx return buffer {BufferLength}", buffer.Length);
             ArrayPool<byte>.Shared.Return(buffer);
         }
 
@@ -412,7 +412,7 @@ namespace PureFix.Transport.Session
 
         private async Task CheckForwardMessage(string msgType, IMessageView view)
         {
-            m_sessionLogger?.Info("forwarding msgType = '{MsgType}' to application", msgType);
+            m_sessionLogger?.Debug("forwarding msgType = '{MsgType}' to application", msgType);
             SetState(SessionState.ActiveNormalSession);
             await OnApplicationMsg(msgType, view);
         }
