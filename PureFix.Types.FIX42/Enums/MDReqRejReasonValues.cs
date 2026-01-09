@@ -1,0 +1,17 @@
+using System;
+
+namespace PureFix.Types.FIX42
+{
+	public static class MDReqRejReasonValues
+	{
+		public const string UnknownSymbol = "0";
+		public const string DuplicateMdReqId = "1";
+		public const string InsufficientBandwidth = "2";
+		public const string InsufficientPermissions = "3";
+		public const string UnsupportedSubscriptionRequestType = "4";
+		public const string UnsupportedMarketDepth = "5";
+		public const string UnsupportedMdUpdateType = "6";
+		public const string UnsupportedAggregatedBook = "7";
+		public const string UnsupportedMdEntryType = "8";
+	}
+}

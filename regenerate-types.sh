@@ -24,6 +24,7 @@ fix_csproj() {
 
 # Core dictionaries to generate
 declare -A DICTS=(
+    ["FIX42"]="Data/FIX42.xml"
     ["FIX43"]="Data/FIX43.xml"
     ["FIX44"]="Data/FIX44.xml"
     ["FIX50SP2"]="Data/FIX50SP2.xml"
@@ -42,6 +43,13 @@ if ! grep -q "PureFix.Types.FIX43" cspurefix.sln 2>/dev/null; then
     echo ""
     echo "=== Adding FIX43 to solution ==="
     dotnet sln add PureFix.Types.FIX43/PureFix.Types.FIX43.csproj 2>/dev/null || true
+fi
+#
+# Add FIX42 to solution if not already there
+if ! grep -q "PureFix.Types.FIX42" cspurefix.sln 2>/dev/null; then
+    echo ""
+    echo "=== Adding FIX42 to solution ==="
+    dotnet sln add PureFix.Types.FIX42/PureFix.Types.FIX42.csproj 2>/dev/null || true
 fi
 
 echo ""
