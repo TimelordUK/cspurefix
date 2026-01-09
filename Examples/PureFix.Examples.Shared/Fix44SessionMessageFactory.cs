@@ -6,15 +6,8 @@ using PureFix.Types.FIX44.Components;
 
 namespace PureFix.Examples.Shared;
 
-public class Fix44SessionMessageFactory : ISessionMessageFactory
+public class Fix44SessionMessageFactory(ISessionDescription sessionDescription) : ISessionMessageFactory
 {
-    private readonly ISessionDescription m_SessionDescription;
-
-    public Fix44SessionMessageFactory(ISessionDescription sessionDescription)
-    {
-        m_SessionDescription = sessionDescription;
-    }
-
     IFixMessage ISessionMessageFactory.TestRequest(string testReqId)
     {
         return new TestRequest { StandardHeader = new StandardHeader(), TestReqID = testReqId };
@@ -44,10 +37,10 @@ public class Fix44SessionMessageFactory : ISessionMessageFactory
     {
         return new Logon
         {
-            Username = !string.IsNullOrEmpty(m_SessionDescription.Username) ? m_SessionDescription.Username : null,
-            Password = !string.IsNullOrEmpty(m_SessionDescription.Password) ? m_SessionDescription.Password : null,
-            HeartBtInt = m_SessionDescription.HeartBtInt,
-            ResetSeqNumFlag = m_SessionDescription.ResetSeqNumFlag,
+            Username = !string.IsNullOrEmpty(sessionDescription.Username) ? sessionDescription.Username : null,
+            Password = !string.IsNullOrEmpty(sessionDescription.Password) ? sessionDescription.Password : null,
+            HeartBtInt = sessionDescription.HeartBtInt,
+            ResetSeqNumFlag = sessionDescription.ResetSeqNumFlag,
             EncryptMethod = 0
         };
     }
@@ -73,19 +66,19 @@ public class Fix44SessionMessageFactory : ISessionMessageFactory
 
     IStandardHeader ISessionMessageFactory.Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides)
     {
-        var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);
+        var bodyLength = Math.Max(4, sessionDescription.BodyLengthChars ?? 7);
         var placeholder = (int)Math.Pow(10, bodyLength - 1) + 1;
         return new StandardHeader
         {
-            BeginString = m_SessionDescription.BeginString,
+            BeginString = sessionDescription.BeginString,
             BodyLength = placeholder,
             MsgType = msgType,
-            SenderCompID = m_SessionDescription.SenderCompID,
+            SenderCompID = sessionDescription.SenderCompID,
             MsgSeqNum = seqNum,
             SendingTime = time,
-            TargetCompID = m_SessionDescription.TargetCompID,
-            TargetSubID = m_SessionDescription.TargetSubID,
-            SenderSubID = m_SessionDescription.SenderSubID,
+            TargetCompID = sessionDescription.TargetCompID,
+            TargetSubID = sessionDescription.TargetSubID,
+            SenderSubID = sessionDescription.SenderSubID,
         };
     }
 }

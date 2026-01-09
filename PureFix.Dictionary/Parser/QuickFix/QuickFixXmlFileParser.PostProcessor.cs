@@ -19,7 +19,7 @@ namespace PureFix.Dictionary.Parser.QuickFix
             private readonly List<(string name, double elapsed)> _elapsed = [];
             private readonly Stopwatch _sw = new();
             public IReadOnlyList<(string name, double elapsed)> Elapsed => _elapsed;
-            public int Count { get; private set; } = 0;
+            public int Count { get; private set; }
 
             public void Compute(IFixDefinitions definitions)
             {

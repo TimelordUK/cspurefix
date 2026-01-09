@@ -86,7 +86,7 @@ public class DictionaryValidator
         var name = field.Attribute("name")?.Value;
         var numberStr = field.Attribute("number")?.Value;
         var type = field.Attribute("type")?.Value;
-        var lineInfo = (IXmlLineInfo)field;
+        IXmlLineInfo lineInfo = field;
         var lineNumber = lineInfo.HasLineInfo() ? lineInfo.LineNumber : (int?)null;
 
         // Check required attributes
@@ -381,15 +381,7 @@ public class DictionaryValidator
             if (!_fieldsByName.ContainsKey(fieldName))
             {
                 // Check if it's a case mismatch first
-                string? suggestion = null;
-                if (_fieldNamesCaseInsensitive.TryGetValue(fieldName, out var correctCase))
-                {
-                    suggestion = correctCase;
-                }
-                else
-                {
-                    suggestion = FindSimilar(fieldName, _allFieldNames);
-                }
+                var suggestion = _fieldNamesCaseInsensitive.TryGetValue(fieldName, out var correctCase) ? correctCase : FindSimilar(fieldName, _allFieldNames);
 
                 AddError("UNDEFINED_FIELD",
                     $"Field '{fieldName}' referenced in {containerType} '{containerName}' is not defined",
@@ -423,7 +415,7 @@ public class DictionaryValidator
     private void ValidateComponentReference(XElement compRef, string containerName, string containerType)
     {
         var compName = compRef.Attribute("name")?.Value;
-        var lineInfo = (IXmlLineInfo)compRef;
+        IXmlLineInfo lineInfo = compRef;
         var lineNumber = lineInfo.HasLineInfo() ? lineInfo.LineNumber : (int?)null;
 
         if (string.IsNullOrWhiteSpace(compName))

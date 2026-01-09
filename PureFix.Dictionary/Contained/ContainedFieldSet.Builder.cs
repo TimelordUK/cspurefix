@@ -182,7 +182,7 @@ namespace PureFix.Dictionary.Contained
             {
                 case TagType.RawData:
                 {
-                    if (parent.Fields[field.Position - 1] is ContainedSimpleField dataLengthField && dataLengthField.Definition.TagType == TagType.Length)
+                    if (parent.Fields[field.Position - 1] is ContainedSimpleField { Definition.TagType: TagType.Length } dataLengthField)
                     {
                         _containedLength[dataLengthField.Definition.Tag] = true;
                         ContainsRaw = true;

@@ -13,27 +13,19 @@ namespace PureFix.Dictionary.Parser.QuickFix
 {
     public partial class QuickFixXmlFileParser
     {
-        public class Node
+        public class Node(int id, string name, ElementType elementType, XElement element)
         {
             public readonly record struct Edge(int Head, int Tail);
-            public string Name { get; }
-            public int ID { get; }
-            public XElement Element { get; }
-            public ElementType Type { get; }
+            public string Name { get; } = name;
+            public int ID { get; } = id;
+            public XElement Element { get; } = element;
+            public ElementType Type { get; } = elementType;
             private readonly List<Edge> _edges = [];
             public IReadOnlyList<Edge> Edges => _edges;
             public IReadOnlyDictionary<string, string> AsAttributeDict() => Element.AsAttributeDict();
             public bool IsRequired() => Name == "StandardHeader" || 
                                         Name == "StandardTrailer" || 
                                         (AsAttributeDict().TryGetValue("required", out var val) && val == "Y");
-            
-            public Node(int id, string name, ElementType elementType, XElement element)
-            {
-                ID = id;
-                Name = name;
-                Element = element;
-                Type = elementType;
-            }
 
             public override string ToString()
             {

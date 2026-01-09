@@ -47,15 +47,10 @@ public record ParserValidationError(
 /// <summary>
 /// Exception thrown when XML dictionary validation fails
 /// </summary>
-public class DictionaryValidationException : Exception
+public class DictionaryValidationException(IReadOnlyList<ParserValidationError> errors)
+    : Exception(FormatMessage(errors))
 {
-    public IReadOnlyList<ParserValidationError> Errors { get; }
-
-    public DictionaryValidationException(IReadOnlyList<ParserValidationError> errors)
-        : base(FormatMessage(errors))
-    {
-        Errors = errors;
-    }
+    public IReadOnlyList<ParserValidationError> Errors { get; } = errors;
 
     private static string FormatMessage(IReadOnlyList<ParserValidationError> errors)
     {
