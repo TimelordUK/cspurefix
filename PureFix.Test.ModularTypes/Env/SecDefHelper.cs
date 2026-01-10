@@ -16,32 +16,32 @@ namespace PureFix.Test.ModularTypes.Env
 
         public IContainedSet GetSecListGrp()
         {
-            return Definitions.GetSet("SecurityList.SecListGrp");
+            return Definitions.GetSet("SecurityList.SecListGrp") ?? throw new InvalidOperationException();
         }
 
         public IContainedSet GetNumRelatedSym()
         {
-            return GetSecListGrp().GetSet("NoRelatedSym");
+            return GetSecListGrp().GetSet("NoRelatedSym") ?? throw new InvalidOperationException();
         }
 
         public IContainedSet GetSecurityTradingRules()
         {
-            return GetNumRelatedSym().GetSet("SecurityTradingRules");
+            return GetNumRelatedSym().GetSet("SecurityTradingRules") ?? throw new InvalidOperationException();
         }
 
         public IContainedSet GetBaseTradingRules()
         {
-            return GetSecurityTradingRules().GetSet("BaseTradingRules");
+            return GetSecurityTradingRules().GetSet("BaseTradingRules") ?? throw new InvalidOperationException();
         }
 
         public IContainedSet GetTickRules()
         {
-            return GetBaseTradingRules().GetSet("TickRules");
+            return GetBaseTradingRules().GetSet("TickRules") ?? throw new InvalidOperationException();
         }
 
         public IContainedSet GetNoTickRules()
         {
-            return GetTickRules().GetSet("NoTickRules");
+            return GetTickRules().GetSet("NoTickRules") ?? throw new InvalidOperationException();
         }
     }
 }

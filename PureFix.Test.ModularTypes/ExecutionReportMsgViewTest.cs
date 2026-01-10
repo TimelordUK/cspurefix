@@ -1,6 +1,7 @@
 ﻿using PureFix.Buffer.Ascii;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,17 +116,19 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var parties = structure.Value.FirstContainedWithin("Parties", msg);
-            var noPartyIDs = structure.Value.FirstContainedWithin("NoPartyIDs", msg);
+            var parties = structure?.FirstContainedWithin("Parties", msg);
+            var noPartyIDs = structure?.FirstContainedWithin("NoPartyIDs", msg);
             Assert.Multiple(() =>
             {
                 Assert.That(parties, Is.Not.Null);
+                Debug.Assert(parties != null, nameof(parties) + " != null");
                 Assert.That(parties.StartPosition, Is.EqualTo(20));
                 Assert.That(parties.EndPosition, Is.EqualTo(44));
                 Assert.That(parties.Depth, Is.EqualTo(1));
                 Assert.That(parties.Type, Is.EqualTo(SegmentType.Component));
 
                 Assert.That(noPartyIDs, Is.Not.Null);
+                Debug.Assert(noPartyIDs != null, nameof(noPartyIDs) + " != null");
                 Assert.That(noPartyIDs.StartPosition, Is.EqualTo(20));
                 Assert.That(noPartyIDs.EndPosition, Is.EqualTo(44));
                 Assert.That(noPartyIDs.Depth, Is.EqualTo(2));
@@ -139,11 +142,13 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var ptysSubGrp = structure.Value.GetInstances("PtysSubGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(ptysSubGrp, Is.Not.Null);
                 Assert.That(ptysSubGrp, Has.Count.EqualTo(3));
+                Debug.Assert(ptysSubGrp != null, nameof(ptysSubGrp) + " != null");
                 Assert.That(ptysSubGrp[0].StartPosition, Is.EqualTo(24));
                 Assert.That(ptysSubGrp[0].Type, Is.EqualTo(SegmentType.Component));
                 Assert.That(ptysSubGrp[1].StartPosition, Is.EqualTo(32));
@@ -155,6 +160,7 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(noPartySubIDs, Is.Not.Null);
                 Assert.That(noPartySubIDs, Has.Count.EqualTo(3));
 
+                Debug.Assert(noPartySubIDs != null, nameof(noPartySubIDs) + " != null");
                 Assert.That(noPartySubIDs[0].DelimiterTag, Is.EqualTo(523));
                 Assert.That(noPartySubIDs[0].Type, Is.EqualTo(SegmentType.Group));
                 Assert.That(noPartySubIDs[0].DelimiterPositions, Is.EqualTo(new List<int>([25, 27])));
@@ -192,10 +198,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var contraGrp = structure.Value.GetInstance("ContraGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(contraGrp, Is.Not.Null);
+                Debug.Assert(contraGrp != null, nameof(contraGrp) + " != null");
                 Assert.That(contraGrp.StartPosition, Is.EqualTo(46));
                 Assert.That(contraGrp.EndPosition, Is.EqualTo(61));
                 Assert.That(contraGrp.Depth, Is.EqualTo(1));
@@ -203,6 +211,7 @@ namespace PureFix.Test.ModularTypes
 
                 var noContraBrokers = structure.Value.GetInstance("NoContraBrokers");
                 Assert.That(noContraBrokers, Is.Not.Null);
+                Debug.Assert(noContraBrokers != null, nameof(noContraBrokers) + " != null");
                 Assert.That(noContraBrokers.Type, Is.EqualTo(SegmentType.Group));
                 Assert.That(noContraBrokers.Depth, Is.EqualTo(2));
                 Assert.That(noContraBrokers.DelimiterTag, Is.EqualTo(375));
@@ -248,10 +257,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var instrument = structure.Value.GetInstance("Instrument");
             Assert.Multiple(() =>
             {
                 Assert.That(instrument, Is.Not.Null);
+                Debug.Assert(instrument != null, nameof(instrument) + " != null");
                 Assert.That(instrument.StartPosition, Is.EqualTo(83));
                 Assert.That(instrument.StartTag, Is.EqualTo(55));
                 Assert.That(instrument.EndPosition, Is.EqualTo(133));
@@ -275,10 +286,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var financingDetails = structure.Value.GetInstance("FinancingDetails");
             Assert.Multiple(() =>
             {
                 Assert.That(financingDetails, Is.Not.Null);
+                Debug.Assert(financingDetails != null, nameof(financingDetails) + " != null");
                 Assert.That(financingDetails.StartPosition, Is.EqualTo(134));
                 Assert.That(financingDetails.StartTag, Is.EqualTo(913));
                 Assert.That(financingDetails.EndPosition, Is.EqualTo(142));
@@ -300,10 +313,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var pegInstructions = structure.Value.GetInstance("PegInstructions");
             Assert.Multiple(() =>
             {
                 Assert.That(pegInstructions, Is.Not.Null);
+                Debug.Assert(pegInstructions != null, nameof(pegInstructions) + " != null");
                 Assert.That(pegInstructions.StartPosition, Is.EqualTo(272));
                 Assert.That(pegInstructions.StartTag, Is.EqualTo(211));
                 Assert.That(pegInstructions.EndPosition, Is.EqualTo(277));
@@ -327,10 +342,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var discretionInstructions = structure.Value.GetInstance("DiscretionInstructions");
             Assert.Multiple(() =>
             {
                 Assert.That(discretionInstructions, Is.Not.Null);
+                Debug.Assert(discretionInstructions != null, nameof(discretionInstructions) + " != null");
                 Assert.That(discretionInstructions.StartPosition, Is.EqualTo(278));
                 Assert.That(discretionInstructions.StartTag, Is.EqualTo(388));
                 Assert.That(discretionInstructions.EndPosition, Is.EqualTo(284));
@@ -351,17 +368,21 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var commisionData = structure.Value.GetInstance("CommissionData");
-            Assert.Multiple(() =>
+            if (structure != null)
             {
-                Assert.That(commisionData, Is.Not.Null);
-                Assert.That(commisionData.StartPosition, Is.EqualTo(324));
-                Assert.That(commisionData.StartTag, Is.EqualTo(12));
-                Assert.That(commisionData.EndPosition, Is.EqualTo(327));
-                Assert.That(commisionData.Depth, Is.EqualTo(1));
-                Assert.That(commisionData.EndTag, Is.EqualTo(497));
-                Assert.That(commisionData.Type, Is.EqualTo(SegmentType.Component));
-            });
+                var commisionData = structure.Value.GetInstance("CommissionData");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(commisionData, Is.Not.Null);
+                    Debug.Assert(commisionData != null, nameof(commisionData) + " != null");
+                    Assert.That(commisionData.StartPosition, Is.EqualTo(324));
+                    Assert.That(commisionData.StartTag, Is.EqualTo(12));
+                    Assert.That(commisionData.EndPosition, Is.EqualTo(327));
+                    Assert.That(commisionData.Depth, Is.EqualTo(1));
+                    Assert.That(commisionData.EndTag, Is.EqualTo(497));
+                    Assert.That(commisionData.Type, Is.EqualTo(SegmentType.Component));
+                });
+            }
         }
 
         /*
@@ -377,10 +398,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var commisionData = structure.Value.GetInstance("SpreadOrBenchmarkCurveData");
             Assert.Multiple(() =>
             {
                 Assert.That(commisionData, Is.Not.Null);
+                Debug.Assert(commisionData != null, nameof(commisionData) + " != null");
                 Assert.That(commisionData.StartPosition, Is.EqualTo(328));
                 Assert.That(commisionData.StartTag, Is.EqualTo(218));
                 Assert.That(commisionData.EndPosition, Is.EqualTo(335));
@@ -403,17 +426,21 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var commisionData = structure.Value.GetInstance("YieldData");
-            Assert.Multiple(() =>
+            if (structure != null)
             {
-                Assert.That(commisionData, Is.Not.Null);
-                Assert.That(commisionData.StartPosition, Is.EqualTo(336));
-                Assert.That(commisionData.StartTag, Is.EqualTo(235));
-                Assert.That(commisionData.EndPosition, Is.EqualTo(341));
-                Assert.That(commisionData.Depth, Is.EqualTo(1));
-                Assert.That(commisionData.EndTag, Is.EqualTo(698));
-                Assert.That(commisionData.Type, Is.EqualTo(SegmentType.Component));
-            });
+                var commisionData = structure.Value.GetInstance("YieldData");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(commisionData, Is.Not.Null);
+                    Debug.Assert(commisionData != null, nameof(commisionData) + " != null");
+                    Assert.That(commisionData.StartPosition, Is.EqualTo(336));
+                    Assert.That(commisionData.StartTag, Is.EqualTo(235));
+                    Assert.That(commisionData.EndPosition, Is.EqualTo(341));
+                    Assert.That(commisionData.Depth, Is.EqualTo(1));
+                    Assert.That(commisionData.EndTag, Is.EqualTo(698));
+                    Assert.That(commisionData.Type, Is.EqualTo(SegmentType.Component));
+                });
+            }
         }
 
         /*
@@ -431,10 +458,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var contAmtGrp = structure.Value.GetInstance("ContAmtGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(contAmtGrp, Is.Not.Null);
+                Debug.Assert(contAmtGrp != null, nameof(contAmtGrp) + " != null");
                 Assert.That(contAmtGrp.StartPosition, Is.EqualTo(385));
                 Assert.That(contAmtGrp.StartTag, Is.EqualTo(518));
                 Assert.That(contAmtGrp.EndPosition, Is.EqualTo(394));
@@ -447,6 +476,7 @@ namespace PureFix.Test.ModularTypes
             Assert.Multiple(() =>
             {
                 Assert.That(noContAmts, Is.Not.Null);
+                Debug.Assert(noContAmts != null, nameof(noContAmts) + " != null");
                 Assert.That(noContAmts.StartPosition, Is.EqualTo(385));
                 Assert.That(noContAmts.StartTag, Is.EqualTo(518));
                 Assert.That(noContAmts.EndPosition, Is.EqualTo(394));
@@ -472,10 +502,12 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var contAmtGrp = structure.Value.GetInstance("MiscFeesGrp");
             Assert.Multiple(() =>
             {
                 Assert.That(contAmtGrp, Is.Not.Null);
+                Debug.Assert(contAmtGrp != null, nameof(contAmtGrp) + " != null");
                 Assert.That(contAmtGrp.StartPosition, Is.EqualTo(636));
                 Assert.That(contAmtGrp.StartTag, Is.EqualTo(136));
                 Assert.That(contAmtGrp.EndPosition, Is.EqualTo(644));
@@ -488,6 +520,7 @@ namespace PureFix.Test.ModularTypes
             Assert.Multiple(() =>
             {
                 Assert.That(noContAmts, Is.Not.Null);
+                Debug.Assert(noContAmts != null, nameof(noContAmts) + " != null");
                 Assert.That(noContAmts.StartPosition, Is.EqualTo(636));
                 Assert.That(noContAmts.StartTag, Is.EqualTo(136));
                 Assert.That(noContAmts.EndPosition, Is.EqualTo(644));
@@ -566,22 +599,28 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
-            var undInstrmtGrp = structure.Value.GetInstance("UndInstrmtGrp");
-            Assert.Multiple(() =>
+            if (structure != null)
             {
-                Assert.That(undInstrmtGrp, Is.Not.Null);
-                Assert.That(undInstrmtGrp.StartPosition, Is.EqualTo(143));
-                Assert.That(undInstrmtGrp.StartTag, Is.EqualTo(711));
-                Assert.That(undInstrmtGrp.EndPosition, Is.EqualTo(257));
-                Assert.That(undInstrmtGrp.Depth, Is.EqualTo(1));
-                Assert.That(undInstrmtGrp.EndTag, Is.EqualTo(889));
-                Assert.That(undInstrmtGrp.Type, Is.EqualTo(SegmentType.Component));
-            });
+                var undInstrmtGrp = structure.Value.GetInstance("UndInstrmtGrp");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(undInstrmtGrp, Is.Not.Null);
+                    Debug.Assert(undInstrmtGrp != null, nameof(undInstrmtGrp) + " != null");
+                    Assert.That(undInstrmtGrp.StartPosition, Is.EqualTo(143));
+                    Assert.That(undInstrmtGrp.StartTag, Is.EqualTo(711));
+                    Assert.That(undInstrmtGrp.EndPosition, Is.EqualTo(257));
+                    Assert.That(undInstrmtGrp.Depth, Is.EqualTo(1));
+                    Assert.That(undInstrmtGrp.EndTag, Is.EqualTo(889));
+                    Assert.That(undInstrmtGrp.Type, Is.EqualTo(SegmentType.Component));
+                });
+            }
 
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var noUnderlyings = structure.Value.GetInstance("NoUnderlyings");
             Assert.Multiple(() =>
             {
                 Assert.That(noUnderlyings, Is.Not.Null);
+                Debug.Assert(noUnderlyings != null, nameof(noUnderlyings) + " != null");
                 Assert.That(noUnderlyings.Depth, Is.EqualTo(2));
                 Assert.That(noUnderlyings.DelimiterTag, Is.EqualTo(311));
                 Assert.That(noUnderlyings.DelimiterPositions, Is.EqualTo(new List<int> { 144, 203 }));
@@ -777,6 +816,7 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var instrmtLegExecGrp = structure.Value.GetInstance("InstrmtLegExecGrp");
             Assert.That(instrmtLegExecGrp, Is.Not.Null);
 
@@ -795,6 +835,7 @@ namespace PureFix.Test.ModularTypes
             Assert.Multiple(() =>
             {
                 Assert.That(noLegs, Is.Not.Null);
+                Debug.Assert(noLegs != null, nameof(noLegs) + " != null");
                 Assert.That(noLegs.Type, Is.EqualTo(SegmentType.Group));
                 Assert.That(noLegs.StartPosition, Is.EqualTo(395));
                 Assert.That(noLegs.StartTag, Is.EqualTo(555));
@@ -813,6 +854,7 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var instrumentLeg = structure.Value.GetInstances("InstrumentLeg");
             Assert.That(instrumentLeg, Is.Not.Null);
             Assert.That(instrumentLeg, Has.Count.EqualTo(3));
@@ -857,6 +899,7 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var noLegSecurityAltID = structure.Value.GetInstances("NoLegSecurityAltID");
             Assert.That(noLegSecurityAltID, Is.Not.Null);
             Assert.Multiple(() =>
@@ -877,6 +920,7 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var legSecAltIDGrp = structure.Value.GetInstances("LegSecAltIDGrp");
             Assert.That(legSecAltIDGrp, Is.Not.Null);
             Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
@@ -910,6 +954,7 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var legSecAltIDGrp = structure.Value.GetInstances("LegSecAltIDGrp");
             Assert.That(legSecAltIDGrp, Is.Not.Null);
             Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
@@ -943,6 +988,7 @@ namespace PureFix.Test.ModularTypes
             var structure = _views[0].Structure;
             var msg = structure?.Msg();
             Assert.That(msg, Is.Not.Null);
+            Debug.Assert(structure != null, nameof(structure) + " != null");
             var legSecAltIDGrp = structure.Value.GetInstances("LegSecAltIDGrp");
             Assert.That(legSecAltIDGrp, Is.Not.Null);
             Assert.That(legSecAltIDGrp, Has.Count.EqualTo(3));
@@ -980,7 +1026,7 @@ namespace PureFix.Test.ModularTypes
             ((IFixParser)er).Parse(mv);
             Assert.That(er.StandardHeader, Is.Not.Null);
             Assert.That(er.StandardHeader.BeginString, Is.EqualTo("FIX4.4"));
-            string json = JsonHelper.ToJson(er);
+            JsonHelper.ToJson(er);
         }
 
         [Test]
@@ -1026,7 +1072,7 @@ namespace PureFix.Test.ModularTypes
             var parties = new Parties.NoPartyIDs();
             ((IFixParser)parties).Parse(partyView);
             Assert.That(parties, Is.Not.Null);
-            var json = JsonHelper.ToJson(parties);
+            JsonHelper.ToJson(parties);
             const string expected = """
                                     {
                                       "partyID": "magna.",
@@ -1060,11 +1106,14 @@ namespace PureFix.Test.ModularTypes
             Assert.Multiple(() =>
             {
                 Assert.That(noParties, Is.Not.Null);
+                Debug.Assert(noParties != null, nameof(noParties) + " != null");
                 Assert.That(noParties.GroupCount(), Is.EqualTo(3));
                 Assert.That(np0View, Is.Not.Null);
+                Debug.Assert(np0View != null, nameof(np0View) + " != null");
                 Assert.That(np0View.GetString("PartyID"), Is.EqualTo("magna."));
                 Assert.That(np0View.GetString("PartyIDSource"), Is.EqualTo("9"));
                 Assert.That(np0ViewPtysSubGrp, Is.Not.Null);
+                Debug.Assert(instance != null, nameof(instance) + " != null");
                 Assert.That(psg, DIs.DeepEqualTo(instance.PtysSubGrp));
             });
         }
@@ -1087,11 +1136,13 @@ namespace PureFix.Test.ModularTypes
             Assert.Multiple(() =>
             {
                 Assert.That(sag.SecurityAltID, Is.Not.Null);
+                Debug.Assert(sag.SecurityAltID != null, "sag.SecurityAltID != null");
                 Assert.That(sag.SecurityAltID.Length, Is.EqualTo(2));
             });
             var er = new ExecutionReport();
             ((IFixParser)er).Parse(erView);
             var json = JsonHelper.ToJson(er);
+            Assert.That(json, Is.Not.Null);
             const string expected = """
                                     {
                                         "Symbol": "ac,",
@@ -1161,6 +1212,7 @@ namespace PureFix.Test.ModularTypes
                                     """;
 
             var er2 = JsonHelper.FromJson<Instrument>(expected);
+            Debug.Assert(er2 != null, nameof(er2) + " != null");
             Assert.That(er2.SecurityID, Is.EqualTo(er.Instrument?.SecurityID));
         }
 
@@ -1232,8 +1284,10 @@ namespace PureFix.Test.ModularTypes
                     Assert.That(underlying0, Is.Not.Null);
                     Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
                     Assert.That(u1?.UnderlyingSymbol, Is.EqualTo("erat"));
+                    Debug.Assert(u1 != null, nameof(u1) + " != null");
                     var s0 = u1.UndSecAltIDGrp?.UnderlyingSecurityAltID?[0];
                     Assert.That(s0, Is.Not.Null);
+                    Debug.Assert(s0 != null, nameof(s0) + " != null");
                     Assert.That(s0.UnderlyingSecurityAltID, Is.EqualTo("Quisque"));
                     Assert.That(s0.UnderlyingSecurityAltIDSource, Is.EqualTo("tortor"));
                 });
@@ -1268,12 +1322,18 @@ namespace PureFix.Test.ModularTypes
             Assert.That(tags, Is.Not.Null);
             var sm = new AsciiSegmentParser(definitions);
             var s2 = sm.Parse(MsgType.ExecutionReport, tags, tags.Count);
-            
-            var heder = s2.Value.GetInstance("StandardHeader");
+
+            Debug.Assert(s2 != null, nameof(s2) + " != null");
+            var heder = s2.Value.GetInstance("StandardHeader") ?? throw new ArgumentNullException("s2.Value.GetInstance(\"StandardHeader\")");
+            Assert.That(heder, Is.Not.Null);
             var ins = s2.Value.GetInstance("Instrument");
+            Assert.That(ins, Is.Not.Null);
             var sag = s2.Value.GetInstance("SecAltIDGrp");
+            Assert.That(sag, Is.Not.Null);
             var parties = s2.Value.GetInstance("Parties");
+            Assert.That(parties, Is.Not.Null);
             var noPartyIDs = s2.Value.GetInstance("NoPartyIDs");
+            Assert.That(noPartyIDs, Is.Not.Null);
 
         }
     }
