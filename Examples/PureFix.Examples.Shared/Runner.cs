@@ -1,7 +1,5 @@
-using Arrow.Threading.Tasks;
 using PureFix.Transport.Session;
 using PureFix.Types;
-
 
 namespace PureFix.Examples.Shared;
 
@@ -17,7 +15,7 @@ public static class Runner
         await Task.Delay(500); // Let acceptor start listening
         var initiator = Start(initiatorConfigPath, dictRootPath, makeHost);
 
-        var tasks = new Task[] { acceptor, initiator };
+        var tasks = new[] { acceptor, initiator };
         Task.WaitAll(tasks);
     }
 

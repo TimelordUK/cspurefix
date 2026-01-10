@@ -1,4 +1,3 @@
-using PureFix.Transport;
 using PureFix.Types;
 using PureFix.Types.Config;
 using PureFix.Types.FIX44;

@@ -77,8 +77,8 @@ public class Fix50SP2SessionMessageFactory(ISessionDescription sessionDescriptio
             MsgSeqNum = seqNum,
             SendingTime = time,
             TargetCompID = sessionDescription.TargetCompID,
-            TargetSubID = !string.IsNullOrEmpty(sessionDescription.TargetSubID) ? sessionDescription.TargetSubID : sessionDescription.TargetSubID,
-            SenderSubID = !string.IsNullOrEmpty(sessionDescription.SenderSubID) ? sessionDescription.SenderSubID : sessionDescription.SenderSubID,
+            TargetSubID = !string.IsNullOrEmpty(sessionDescription.TargetSubID) ? sessionDescription.TargetSubID : "TargetSubID",
+            SenderSubID = !string.IsNullOrEmpty(sessionDescription.SenderSubID) ? sessionDescription.SenderSubID : "SenderSubID",
         };
     }
 }

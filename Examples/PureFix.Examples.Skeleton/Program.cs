@@ -150,8 +150,8 @@ if (clientOnly)
             }
             else
             {
-                Console.WriteLine($"  Sender SeqNum:  1 (will start fresh)");
-                Console.WriteLine($"  Target SeqNum:  1 (will start fresh)");
+                Console.WriteLine("  Sender SeqNum:  1 (will start fresh)");
+                Console.WriteLine("  Target SeqNum:  1 (will start fresh)");
             }
 
             if (sessionExists)
@@ -161,7 +161,7 @@ if (clientOnly)
             }
             else
             {
-                Console.WriteLine($"  Creation Time:  (new session)");
+                Console.WriteLine("  Creation Time:  (new session)");
             }
 
             if (headerExists)
@@ -187,7 +187,7 @@ if (clientOnly)
             }
             else
             {
-                Console.WriteLine($"  Stored Messages: 0");
+                Console.WriteLine("  Stored Messages: 0");
             }
         }
 
@@ -197,7 +197,7 @@ if (clientOnly)
     }
 
     // Normal run
-    Console.WriteLine($"Starting FIX client (connecting to external server)...");
+    Console.WriteLine("Starting FIX client (connecting to external server)...");
     if (storeDirectory != null)
     {
         Console.WriteLine($"Store:  {storeDirectory} (QuickFix-compatible file store)");
@@ -240,8 +240,8 @@ else
         Console.WriteLine($"Store:  {storeDirectory} (QuickFix-compatible file store)");
         Console.WriteLine();
         Console.WriteLine("Expected store files:");
-        Console.WriteLine($"  Acceptor:  FIX.4.4-accept-comp-init-comp.{{seqnums,session,header,body}}");
-        Console.WriteLine($"  Initiator: FIX.4.4-init-comp-accept-comp.{{seqnums,session,header,body}}");
+        Console.WriteLine("  Acceptor:  FIX.4.4-accept-comp-init-comp.{{seqnums,session,header,body}}");
+        Console.WriteLine("  Initiator: FIX.4.4-init-comp-accept-comp.{{seqnums,session,header,body}}");
     }
     else
     {
@@ -254,6 +254,7 @@ else
 
 Console.WriteLine();
 Console.WriteLine("Skeleton example completed");
+return;
 
 static BaseAppDI MakeSkeletonHost(IFixClock clock, IFixConfig config)
 {
