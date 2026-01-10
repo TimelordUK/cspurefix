@@ -117,9 +117,6 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
                 Assert.That(initiatorLogonCount, Is.EqualTo(2));
                 Assert.That(acceptorLogonCount, Is.EqualTo(2));
 
-                //Assert.That(initiatorLogoutCount, Is.EqualTo(2));
-                //Assert.That(acceptorLogoutCount, Is.EqualTo(2));
-
                 Assert.That(t1.IsFaulted, Is.False);
                 Assert.That(t2.IsFaulted, Is.False);
 

@@ -55,7 +55,6 @@ namespace PureFix.Dictionary.Compiler
                             foreach (var name in FixDefinitions.Message.Select(kv => kv.Value.Name).Distinct())
                             {
                                 var m = FixDefinitions.Message[name];
-                                if (m == null) continue;
                                 using (generator.BeginBlock($"case \"{m.MsgType}\":"))
                                 {
                                     generator.WriteLine($"var o = new {m.Name}();");
@@ -294,28 +293,34 @@ namespace PureFix.Dictionary.Compiler
 
             // Generate either PackageReference or ProjectReference based on options
             var itemGroup = _modularOptions.UsePackageReferences
-                ? $@"  <ItemGroup>
-    <PackageReference Include=""PureFix.Types.Core"" Version=""{_modularOptions.PackageVersion}"" />
-    <PackageReference Include=""PureFix.Types"" Version=""{_modularOptions.PackageVersion}"" />
-  </ItemGroup>"
-                : $@"  <ItemGroup>
-    <ProjectReference Include=""{_modularOptions.CoreProjectPath}"" />
-    <ProjectReference Include=""{_modularOptions.TypesProjectPath}"" />
-  </ItemGroup>";
+                ? $"""
+                     <ItemGroup>
+                       <PackageReference Include="PureFix.Types.Core" Version="{_modularOptions.PackageVersion}" />
+                       <PackageReference Include="PureFix.Types" Version="{_modularOptions.PackageVersion}" />
+                     </ItemGroup>
+                   """
+                : $"""
+                     <ItemGroup>
+                       <ProjectReference Include="{_modularOptions.CoreProjectPath}" />
+                       <ProjectReference Include="{_modularOptions.TypesProjectPath}" />
+                     </ItemGroup>
+                   """;
 
-            var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
+            var csproj = $"""
+                          <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <RootNamespace>{GetNamespace()}</RootNamespace>
-  </PropertyGroup>
+                            <PropertyGroup>
+                              <TargetFramework>net9.0</TargetFramework>
+                              <ImplicitUsings>enable</ImplicitUsings>
+                              <Nullable>enable</Nullable>
+                              <GenerateDocumentationFile>false</GenerateDocumentationFile>
+                              <RootNamespace>{GetNamespace()}</RootNamespace>
+                            </PropertyGroup>
 
-{itemGroup}
+                          {itemGroup}
 
-</Project>";
+                          </Project>
+                          """;
 
             var projectPath = Path.Join(_modularOptions.OutputPath, assemblyName, $"{assemblyName}.csproj");
 
@@ -401,7 +406,7 @@ namespace PureFix.Dictionary.Compiler
         /// Override ApplyFields to prevent calling Process() for groups
         /// since we generate them inline
         /// </summary>
-        protected new void ApplyFields(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName = null)
+        protected void ApplyFields(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName = null)
         {
             ContainedField? last = null;
             var fields = set.Fields;
@@ -571,12 +576,7 @@ namespace PureFix.Dictionary.Compiler
             return fieldName;
         }
 
-        protected void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set)
-        {
-            GenerateSupportingFunctions(generator, parentPath, set, null);
-        }
-
-        private void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName)
+        private static void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName)
         {
             // Generate IsValid
             GenerateIsValid(generator, set);
@@ -632,7 +632,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        private void GenerateEncode(CodeGenerator generator, IContainedSet set, string? parentTypeName)
+        private static void GenerateEncode(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             using (generator.BeginBlock("void IFixEncoder.Encode(IFixWriter writer)"))
             {
@@ -693,7 +693,7 @@ namespace PureFix.Dictionary.Compiler
             return true;
         }
 
-        private void GenerateParse(CodeGenerator generator, IContainedSet set, string? parentTypeName)
+        private static void GenerateParse(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             bool isSimple = IsSimpleMessage(set);
 
@@ -740,7 +740,7 @@ namespace PureFix.Dictionary.Compiler
                             {
                                 generator.WriteLine($"var count = {tempName}.GroupCount();");
                                 generator.WriteLine($"{propName} = new {group.Name}[count];");
-                                using (generator.BeginBlock($"for (int i = 0; i < count; i++)"))
+                                using (generator.BeginBlock("for (int i = 0; i < count; i++)"))
                                 {
                                     generator.WriteLine($"{propName}[i] = new();");
                                     generator.WriteLine($"((IFixParser){propName}[i]).Parse({tempName}.GetGroupInstance(i));");
@@ -754,7 +754,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        private void GenerateTryGetByTag(CodeGenerator generator, IContainedSet set, string? parentTypeName)
+        private static void GenerateTryGetByTag(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             using (generator.BeginBlock("bool IFixLookup.TryGetByTag(string name, out object? value)"))
             {
@@ -763,11 +763,12 @@ namespace PureFix.Dictionary.Compiler
                 {
                     foreach (var field in set.Fields)
                     {
-                        var propertyName = field is ContainedGroupField groupField
-                            ? GetGroupPropertyName(groupField, parentTypeName)
-                            : field is ContainedSimpleField simpleField
-                                ? GetFieldPropertyName(simpleField.Name, parentTypeName)
-                                : field.Name;
+                        var propertyName = field switch
+                        {
+                            ContainedGroupField groupField => GetGroupPropertyName(groupField, parentTypeName),
+                            ContainedSimpleField simpleField => GetFieldPropertyName(simpleField.Name, parentTypeName),
+                            _ => field.Name
+                        };
 
                         using (generator.BeginBlock($"case \"{field.Name}\":"))
                         {
@@ -785,7 +786,7 @@ namespace PureFix.Dictionary.Compiler
             }
         }
 
-        private void GenerateReset(CodeGenerator generator, IContainedSet set, string? parentTypeName)
+        private static void GenerateReset(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             using (generator.BeginBlock("void IFixReset.Reset()"))
             {
@@ -829,7 +830,7 @@ namespace PureFix.Dictionary.Compiler
             return _modularOptions.AssemblyName ?? "PureFix.Types.Generated";
         }
 
-        private string GetCSharpType(ContainedSimpleField field)
+        private static string GetCSharpType(ContainedSimpleField field)
         {
             return field.Definition.TagType switch
             {
@@ -848,7 +849,7 @@ namespace PureFix.Dictionary.Compiler
             };
         }
 
-        private string GetWriteMethod(TagType type)
+        private static string GetWriteMethod(TagType type)
         {
             return type switch
             {
@@ -924,7 +925,7 @@ namespace PureFix.Dictionary.Compiler
                     {
                         TagType.String => $"\"{field.Key}\"",
                         TagType.Boolean => (field.Key == "Y" ? "true" : "false"),
-                        _ => field.Key.ToString()
+                        _ => field.Key
                     };
 
                     var constantName = field.Description.UnderscoreToCamelCase();

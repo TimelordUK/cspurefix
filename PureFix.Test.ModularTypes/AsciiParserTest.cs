@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,6 @@ using PureFix.Types;
 using PureFix.Types.Config;
 using PureFix.Types.Core;
 using PureFix.Types.FIX44;
-using PureFix.Types.FIX44.Components;
-using JsonHelper = PureFix.Types.JsonHelper;
 
 namespace PureFix.Test.ModularTypes
 {
@@ -167,8 +166,10 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(msgs, Has.Count.AtLeast(1));
                 var msg = msgs[0];
                 Assert.That(msg.Segment?.Name, Is.EqualTo("Logon"));
+                Debug.Assert(msg.Segment != null);
                 var md = msg.Segment.Set as MessageDefinition;
                 Assert.That(md, Is.Not.Null);
+                Debug.Assert(md != null, nameof(md) + " != null");
                 Assert.That(md.MsgType, Is.EqualTo("A"));
                 Assert.That(msg.Tags?.ToArray(), Is.EqualTo(_expectedTagPos));
             });
@@ -184,8 +185,10 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(msgs, Has.Count.EqualTo(1));
                 var msg = msgs[0];
                 Assert.That(msg.Segment?.Name, Is.EqualTo("Logon"));
+                Debug.Assert(msg.Segment != null);
                 var md = msg.Segment.Set as MessageDefinition;
                 Assert.That(md, Is.Not.Null);
+                Debug.Assert(md != null, nameof(md) + " != null");
                 Assert.That(md.MsgType, Is.EqualTo("A"));
                 Assert.That(msg.Tags?.ToArray(), Is.EqualTo(_expectedTagPos));
             });
@@ -203,7 +206,6 @@ namespace PureFix.Test.ModularTypes
         [Test]
         public void Tags_Other_10_Past_Body_Length_Test()
         {
-            const string begin = "8=FIX4.4|9=0000208|";
             var changed = Logon.Replace("10=49|", "555=you know nothin|10=49");
              _testEntity.ParseText(changed);
         }
