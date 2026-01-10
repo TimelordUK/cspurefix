@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,6 +88,7 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(v1.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReportRequestAck));
                 Assert.That(v1.SeqNum, Is.EqualTo(2));
                 Assert.That(v1.InflatedMessage?.StandardHeader, Is.Not.Null);
+                Debug.Assert(v1.InflatedMessage != null);
                 Assert.That(v1.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
                 Assert.That(v1.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
             });
@@ -99,6 +101,7 @@ namespace PureFix.Test.ModularTypes
                     Assert.That(v.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReport));
                     Assert.That(v.SeqNum, Is.EqualTo(i + 1));
                     Assert.That(v.InflatedMessage?.StandardHeader, Is.Not.Null);
+                    Debug.Assert(v.InflatedMessage != null);
                     Assert.That(v.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
                     Assert.That(v.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
                 });
@@ -122,6 +125,7 @@ namespace PureFix.Test.ModularTypes
                     Assert.That(v.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReport));
                     Assert.That(v.SeqNum, Is.EqualTo(i + 1));
                     Assert.That(v.InflatedMessage?.StandardHeader, Is.Not.Null);
+                    Debug.Assert(v.InflatedMessage != null);
                     Assert.That(v.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
                     Assert.That(v.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
                 });
@@ -150,6 +154,7 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(v1.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReportRequest));
                 Assert.That(v1.SeqNum, Is.EqualTo(2));
                 Assert.That(v1.InflatedMessage?.StandardHeader, Is.Not.Null);
+                Debug.Assert(v1.InflatedMessage != null);
                 Assert.That(v1.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
                 Assert.That(v1.InflatedMessage.StandardHeader?.OrigSendingTime, Is.Not.Null);
             });
@@ -170,6 +175,7 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(reset.NewSeqNo, Is.EqualTo(to));
                 Assert.That(reset.GapFillFlag, Is.True);
                 Assert.That(reset.StandardHeader, Is.Not.Null);
+                Debug.Assert(reset.StandardHeader != null);
                 Assert.That(reset.StandardHeader.MsgType, Is.EqualTo(MsgTypeValues.SequenceReset));
                 Assert.That(reset.StandardHeader.PossDupFlag, Is.True);
                 Assert.That(reset.StandardHeader.MsgSeqNum, Is.EqualTo(from));

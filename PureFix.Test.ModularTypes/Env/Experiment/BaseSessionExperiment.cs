@@ -9,6 +9,7 @@ using PureFix.Transport.Session;
 using PureFix.Types;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,7 +87,11 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
             {
                 Assert.That(Acceptor.Config.Description, Is.Not.Null);
                 Assert.That(Initiator.Config.Description, Is.Not.Null);
+                Debug.Assert(Acceptor.Config.Description != null);
+                Debug.Assert(Acceptor.Config.Description.SenderCompID != null);
                 Initiator.CheckSeq(Acceptor.Config.Description.SenderCompID);
+                Debug.Assert(Initiator.Config.Description != null);
+                Debug.Assert(Initiator.Config.Description.SenderCompID != null);
                 Acceptor.CheckSeq(Initiator.Config.Description.SenderCompID);
             });
  

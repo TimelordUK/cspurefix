@@ -24,14 +24,14 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
     internal class RuntimeContainer
     {
         public IMessageTransport Transport { get; }
-        public IFixConfig Config { get; }
+        public IFixConfig Config { get; set; }
         public IFixMessageFactory FixMessageFactory { get; protected set; }
         public IFixMsgStore MessageStore { get; private set; }
         public IMessageParser Parser { get; private set; }
         public IMessageEncoder Encoder { get; private set; }
         public IFixLogRecovery Recovery { get; private set; }
         public CancellationTokenSource TokenSource { get; }
-        public BaseApp App { get; set; }
+        public  BaseApp App { get; set; }
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
@@ -80,16 +80,16 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
 
         public RuntimeContainer(IHost host)
         {
-            Queue = host.Services.GetService<AsyncWorkQueue>();
-            Config = host.Services.GetService<IFixConfig>();
+            Queue = host.Services.GetService<AsyncWorkQueue>() ?? throw new InvalidOperationException();
+            Config = host.Services.GetService<IFixConfig>() ?? throw new InvalidOperationException();
             Transport = new TestMessageTransport();
-            FixMessageFactory = host.Services.GetService<IFixMessageFactory>();
-            MessageStore = host.Services.GetService<IFixMsgStore>();
-            Parser = host.Services.GetService<IMessageParser>();
-            Encoder = host.Services.GetService<IMessageEncoder>();
-            Recovery = host.Services.GetService<IFixLogRecovery>();
+            FixMessageFactory = host.Services.GetService<IFixMessageFactory>() ?? throw new InvalidOperationException();
+            MessageStore = host.Services.GetService<IFixMsgStore>() ?? throw new InvalidOperationException();
+            Parser = host.Services.GetService<IMessageParser>() ?? throw new InvalidOperationException();
+            Encoder = host.Services.GetService<IMessageEncoder>() ?? throw new InvalidOperationException();
+            Recovery = host.Services.GetService<IFixLogRecovery>() ?? throw new InvalidOperationException();
             var sf = host.Services.GetService<ISessionFactory>();
-            App = (BaseApp)sf.MakeSession();
+            if (sf != null) App = (BaseApp)sf.MakeSession();
             TokenSource = new CancellationTokenSource();
             Host = host;
         }

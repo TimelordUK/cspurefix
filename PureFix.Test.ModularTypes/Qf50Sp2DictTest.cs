@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -226,6 +227,7 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
                 Assert.That(def, Is.Not.Null);
+                Debug.Assert(def != null, nameof(def) + " != null");
                 Assert.That(def.Tag, Is.EqualTo(4));
             });
         }
@@ -237,6 +239,7 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(_definitions.TagToSimple.TryGetValue(4, out var def), Is.True);
                 Assert.That(def, Is.Not.Null);
+                Debug.Assert(def != null, nameof(def) + " != null");
                 Assert.That(def.Tag, Is.EqualTo(4));
                 Assert.That(def.Name, Is.EqualTo("AdvSide"));
             });
@@ -266,8 +269,10 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(_definitions.Simple.TryGetValue("AdvSide", out var def), Is.True);
                 Assert.That(def, Is.Not.Null);
+                Debug.Assert(def != null, nameof(def) + " != null");
                 Assert.That(def.Tag, Is.EqualTo(4));
                 Assert.That(def.IsEnum, Is.True);
+                Debug.Assert(def.Enums != null, "def.Enums != null");
                 _setHelper.IsEnum(def.Enums, "B", "Buy", "BUY");
                 _setHelper.IsEnum(def.Enums, "S", "Sell", "SELL");
                 _setHelper.IsEnum(def.Enums, "X", "Cross", "CROSS");
@@ -281,6 +286,7 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(_definitions.Simple.TryGetValue(name, out var def), Is.True);
                 Assert.That(def, Is.Not.Null);
+                Debug.Assert(def != null, nameof(def) + " != null");
                 Assert.That(def.Tag, Is.EqualTo(number));
                 Assert.That(def.Type, Is.EqualTo(type));
             });
@@ -370,8 +376,10 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(_definitions.Simple.TryGetValue("MsgType", out var mt));
                 Assert.That(mt, Is.Not.Null);
+                Debug.Assert(mt != null, nameof(mt) + " != null");
                 Assert.That(mt.IsEnum, Is.True);
                 Assert.That(mt.Enums, Is.Not.Null);
+                Debug.Assert(mt.Enums != null, "mt.Enums != null");
                 Assert.That(mt.Enums.TryGetValue("0", out _), Is.True);
                 Assert.That(mt.Enums.TryGetValue("1", out _), Is.True);
                 foreach (var k in mt.Enums.Keys)
