@@ -21,6 +21,10 @@ namespace PureFix.Transport.Ascii
         private FixMsgAsciiStoreResend? m_resender;
         private int m_logonRetryCount;
         private const int MaxLogonRetries = 100; // Reasonable limit to prevent infinite loops
+
+        // Circuit breaker for ResendRequest - prevents repeatedly sending the same request
+        private int? m_lastResendRequestBeginSeq;
+        private int m_resendRequestDuplicateCount;
         public bool Heartbeat { get; set; } = true;
 
         /// <summary>
@@ -31,7 +35,9 @@ namespace PureFix.Transport.Ascii
         {
             base.PrepareForReconnect();
             m_logonRetryCount = 0;
-            m_sessionLogger?.Info("PrepareForReconnect: reset logon retry counter");
+            m_lastResendRequestBeginSeq = null;
+            m_resendRequestDuplicateCount = 0;
+            m_sessionLogger?.Info("PrepareForReconnect: reset logon retry counter and resend request circuit breaker");
         }
 
         protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
@@ -225,6 +231,15 @@ namespace PureFix.Transport.Ascii
 
         private async Task<bool> CheckSeqNo(string msgType, IMessageView view)
         {
+            // Messages with PossDupFlag=Y are resent messages (gap fill responses).
+            // They have "old" sequence numbers and should bypass normal sequence checking.
+            var possDupFlag = view.GetBool((int)MsgTag.PossDupFlag);
+            if (possDupFlag == true)
+            {
+                m_sessionLogger?.Debug("Message {MsgType} has PossDupFlag=Y, bypassing sequence check", msgType);
+                return true;
+            }
+
             switch (msgType)
             {
                 case MsgType.SequenceReset:
@@ -271,19 +286,36 @@ namespace PureFix.Transport.Ascii
                         }
                         else if (seqDelta > 1)
                         {
-                            // resend request required as have missed messages.
-                            // We process a Logon beforehand to confirm the connection even we out of sync
+                            // Gap detected - we've missed messages.
+                            // Strategy: Send ResendRequest (optimistic) but also process this message (pragmatic).
+                            // Don't block waiting for gap fill - keep the session running.
+                            // If gap fill arrives later, great. If not, we've already moved on.
+                            var lostCount = seqNo.Value - lastSeq.Value - 1;
+
+                            // We process a Logon beforehand to confirm the connection even if out of sync
                             if (msgType == MsgType.Logon)
                             {
                                 await PeerLogon(view);
                             }
-                            // If the out of sync message is a resend request itself, then we handle it first in order
-                            // to avoid triggering an endless loop of both sides sending resend requests in response to resend requests.
+                            // If the out of sync message is a resend request itself, handle it first to
+                            // avoid triggering an endless loop of both sides sending resend requests.
                             if (msgType == MsgType.ResendRequest)
                             {
                                 await OnResendRequest(view);
                             }
-                            await SendResendRequest(lastSeq.Value, seqNo.Value);
+
+                            // Try to send ResendRequest (circuit breaker may block if already sent)
+                            var resendSent = await SendResendRequest(lastSeq.Value, seqNo.Value);
+                            if (!resendSent)
+                            {
+                                m_sessionLogger?.Warn("Gap recovery abandoned. Lost {LostCount} messages (seq {FromSeq} to {ToSeq}).",
+                                    lostCount, lastSeq.Value + 1, seqNo.Value - 1);
+                            }
+
+                            // Always accept the current message and continue - don't block waiting for gap fill
+                            ret = true;
+                            state.LastPeerMsgSeqNum = seqNo;
+                            await m_sessionStore.SetTargetSeqNum(seqNo.Value + 1);
                         }
                         else
                         {
@@ -298,14 +330,33 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        private async Task SendResendRequest(int lastSeq, int receivedSeq)
+        /// <summary>
+        /// Sends a ResendRequest unless circuit breaker blocks it.
+        /// </summary>
+        /// <returns>True if request was sent, false if blocked by circuit breaker.</returns>
+        private async Task<bool> SendResendRequest(int lastSeq, int receivedSeq)
         {
-            var resend = m_config.MessageFactory?.ResendRequest(lastSeq + 1, 0);
+            var beginSeq = lastSeq + 1;
+
+            // Circuit breaker: if we already sent a ResendRequest for this beginSeq, don't send again
+            if (m_lastResendRequestBeginSeq == beginSeq)
+            {
+                m_resendRequestDuplicateCount++;
+                m_sessionLogger?.Warn("ResendRequest circuit breaker: already sent request for beginSeq={BeginSeq}, skipping duplicate #{Count}.",
+                    beginSeq, m_resendRequestDuplicateCount);
+                return false;
+            }
+
+            var resend = m_config.MessageFactory?.ResendRequest(beginSeq, 0);
             if (resend != null)
             {
                 m_sessionLogger?.Warn("received seq {ReceivedSeq}, but last known seq is {LastSeq}. Sending resend request", receivedSeq, lastSeq);
                 await Send(MsgType.ResendRequest, resend);
+                m_lastResendRequestBeginSeq = beginSeq;
+                m_resendRequestDuplicateCount = 0;
+                return true;
             }
+            return false;
         }
 
         private async Task SendReject(string msgType, int seqNo, string msg, int reason)
@@ -500,6 +551,15 @@ namespace PureFix.Transport.Ascii
                         if (newSeqNo.HasValue)
                         {
                             await m_sessionStore.SetTargetSeqNum(newSeqNo.Value);
+
+                            // Reset ResendRequest circuit breaker if this SequenceReset advances past our pending request
+                            if (m_lastResendRequestBeginSeq.HasValue && newSeqNo.Value > m_lastResendRequestBeginSeq.Value)
+                            {
+                                m_sessionLogger?.Debug("SequenceReset advances past pending ResendRequest beginSeq={BeginSeq}, clearing circuit breaker",
+                                    m_lastResendRequestBeginSeq);
+                                m_lastResendRequestBeginSeq = null;
+                                m_resendRequestDuplicateCount = 0;
+                            }
                         }
                         break;
                     }
