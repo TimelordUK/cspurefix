@@ -391,9 +391,25 @@ namespace PureFix.Transport.Ascii
             var requestedEndSeqNo = view.EndSeqNo();
             if (beginSeqNo == null) return;
             if (requestedEndSeqNo == null) return;
-            var endSeqNo = requestedEndSeqNo == 0 ? m_sessionState.LastSentSeqNum : requestedEndSeqNo.Value;
+
+            // EndSeqNo=0 in FIX means "to infinity" - resend all from BeginSeqNo to the last sent message
+            // Use the persisted SenderSeqNum (reliable) rather than in-memory LastSentSeqNum (can be stale)
+            var lastSentFromStore = m_sessionStore.SenderSeqNum - 1; // SenderSeqNum is next to send, so -1 is last sent
+            var endSeqNo = requestedEndSeqNo == 0 ? lastSentFromStore : requestedEndSeqNo.Value;
+
+            m_sessionLogger?.Debug("onResendRequest: requestedEndSeqNo={RequestedEnd}, lastSentFromStore={LastSent}, m_sessionState.LastSentSeqNum={StateLast}",
+                requestedEndSeqNo, lastSentFromStore, m_sessionState.LastSentSeqNum);
 
             m_sessionLogger?.Info("onResendRequest getResendRequest beginSeqNo = {BeginSeqNo}, endSeqNo = {EndSeqNo}", beginSeqNo, endSeqNo);
+
+            // Handle invalid range: endSeqNo < beginSeqNo indicates sequence number corruption
+            if (endSeqNo < beginSeqNo.Value)
+            {
+                m_sessionLogger?.Warn("Invalid resend range: beginSeqNo={BeginSeqNo} > endSeqNo={EndSeqNo}. Sequence numbers may be out of sync. Sending GapFill to advance past requested range.",
+                    beginSeqNo, endSeqNo);
+                // Send GapFill to advance peer past the requested range
+                endSeqNo = beginSeqNo.Value;
+            }
 
             if (m_resender == null)
             {

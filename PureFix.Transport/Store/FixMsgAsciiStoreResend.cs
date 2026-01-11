@@ -47,7 +47,13 @@ namespace PureFix.Transport.Store
             var records = await m_store.GetRange(startReq, endSeq);
             if (records == null || records.Count == 0)
             {
+                // No records in store for requested range - send a GapFill for the entire range
+                // per FIX spec: SequenceReset(35=4) with GapFillFlag(123)=Y
                 List<IFixMsgStoreRecord> toResend = [];
+                if (endSeq >= startReq)
+                {
+                    Gap(startReq, endSeq + 1, toResend);
+                }
                 return toResend;
             }
             var inflated = InflateRange(startReq, endSeq, records);
