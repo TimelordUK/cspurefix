@@ -25,6 +25,10 @@ namespace PureFix.Transport.Ascii
         // Circuit breaker for ResendRequest - prevents repeatedly sending the same request
         private int? m_lastResendRequestBeginSeq;
         private int m_resendRequestDuplicateCount;
+
+        // Timeout recovery - allow multiple attempts before terminating (helps survive sleep/wake)
+        private int m_timeoutRecoveryAttempts;
+        private const int MaxTimeoutRecoveryAttempts = 3;
         public bool Heartbeat { get; set; } = true;
 
         /// <summary>
@@ -37,7 +41,8 @@ namespace PureFix.Transport.Ascii
             m_logonRetryCount = 0;
             m_lastResendRequestBeginSeq = null;
             m_resendRequestDuplicateCount = 0;
-            m_sessionLogger?.Info("PrepareForReconnect: reset logon retry counter and resend request circuit breaker");
+            m_timeoutRecoveryAttempts = 0;
+            m_sessionLogger?.Info("PrepareForReconnect: reset logon retry counter, resend request circuit breaker, and timeout recovery");
         }
 
         protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
@@ -136,10 +141,23 @@ namespace PureFix.Transport.Ascii
 
                 case TickAction.TerminateOnError:
                     {
-                        // Only log and terminate once - don't spam on every tick
-                        if (m_sessionLogger?.IsEnabled(LogLevel.Warn) == true)
-                            m_sessionLogger.Warn("Session timeout - no response to test request. {State}", m_sessionState.ToString());
-                        Terminate(new TimeoutException("No response to test request within timeout period"));
+                        m_timeoutRecoveryAttempts++;
+                        if (m_timeoutRecoveryAttempts <= MaxTimeoutRecoveryAttempts)
+                        {
+                            // Try to recover - reset timeout state to give session a fresh window
+                            // This helps survive sleep/wake scenarios where TCP connection may still be alive
+                            m_sessionLogger?.Warn("Session timeout (attempt {Attempt}/{Max}). Attempting recovery - resetting timeout window.",
+                                m_timeoutRecoveryAttempts, MaxTimeoutRecoveryAttempts);
+                            m_sessionState.LastTestRequestAt = null;
+                            m_sessionState.LastReceivedAt = m_clock.Current; // Reset receive time to prevent immediate re-timeout
+                            SetState(SessionState.ActiveNormalSession);
+                        }
+                        else
+                        {
+                            m_sessionLogger?.Warn("Session timeout - max recovery attempts ({Max}) exceeded. Terminating.",
+                                MaxTimeoutRecoveryAttempts);
+                            Terminate(new TimeoutException("No response to test request within timeout period"));
+                        }
                         break;
                     }
             }
@@ -324,6 +342,13 @@ namespace PureFix.Transport.Ascii
 
                             // Update store's target sequence number (next expected incoming seq = seqNo + 1)
                             await m_sessionStore.SetTargetSeqNum(seqNo.Value + 1);
+                        }
+
+                        // Reset timeout recovery counter when we successfully receive messages
+                        if (ret && m_timeoutRecoveryAttempts > 0)
+                        {
+                            m_sessionLogger?.Debug("Message received, resetting timeout recovery counter from {Count}", m_timeoutRecoveryAttempts);
+                            m_timeoutRecoveryAttempts = 0;
                         }
                         return ret;
                     }
@@ -656,9 +681,9 @@ namespace PureFix.Transport.Ascii
             return true;
         }
 
-        private void Terminate(Exception _)
+        private void Terminate(Exception? error)
         {
-            // TODO: implement proper termination handling
+            Stop(error);
         }
 
         private async Task CheckForwardMsg(string msgType, IMessageView view)
