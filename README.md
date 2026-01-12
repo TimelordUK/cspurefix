@@ -104,6 +104,26 @@ See [docs/msgview-span-api.md](docs/msgview-span-api.md) for full API reference.
 - **File & memory stores** - Session persistence with QuickFix-compatible file format
 - **TLS support** - Secure connections out of the box
 
+### Session Resilience
+
+PureFix sessions are designed to survive network interruptions, including laptop sleep/wake cycles. When a timeout is detected, the session attempts recovery before terminating:
+
+```
+[18:56:12] sending test req. state = ActiveNormalSession
+[18:56:12] state transition: ActiveNormalSession -> AwaitingProcessingResponseToTestRequest
+[18:56:14] Session timeout (attempt 1/3). Attempting recovery - resetting timeout window.
+[18:56:16] state transition: AwaitingProcessingResponseToTestRequest -> ActiveNormalSession
+[18:56:16] [355,AE]: TradeCaptureReport received - session continues normally
+```
+
+After a 7-minute laptop sleep, the session:
+1. Detects the timeout and sends a TestRequest
+2. Uses the recovery window (3 attempts) instead of immediate termination
+3. Receives the peer's response when the network returns
+4. Resumes normal message flow without reconnection
+
+This eliminates unnecessary session drops during brief network interruptions or system sleep events.
+
 ## Getting Started
 
 **Want to see it in action?** Check out the [standalone demo](https://github.com/TimelordUK/purefix-standalone-demo) - a complete working example with Trade Capture that you can run immediately.
