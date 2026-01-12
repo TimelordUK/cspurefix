@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Package metadata -->
-    <Version>0.1.11-alpha</Version>
+    <Version>0.1.12-alpha</Version>
     <Authors>TimelordUK</Authors>
     <Company>TimelordUK</Company>
     <Description>PureFix - A pure C# FIX protocol engine</Description>
