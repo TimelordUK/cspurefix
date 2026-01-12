@@ -202,6 +202,9 @@ namespace PureFix.Transport.Ascii
                 m_sessionState.LastPeerMsgSeqNum = peerSeqNum;
                 await m_sessionStore.SetTargetSeqNum(peerSeqNum + 1);
 
+                // Notify derived classes to clear their state (e.g., recovery stores)
+                await OnSessionReset();
+
                 logger?.Info("Reset complete: EncoderSeqNum={EncoderSeqNum}, TargetSeqNum={TargetSeqNum}, LastPeerMsgSeqNum={LastPeerMsgSeqNum}", m_encoder.MsgSeqNum, m_sessionStore.TargetSeqNum, m_sessionState.LastPeerMsgSeqNum);
             }
 

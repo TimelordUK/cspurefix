@@ -393,6 +393,15 @@ namespace PureFix.Transport.Session
             m_sessionLogger?.Info("PrepareForReconnect: ready for new connection");
         }
 
+        /// <summary>
+        /// Called when ResetSeqNumFlag=Y is processed and the session resets.
+        /// Override to clear application-level state like recovery stores.
+        /// </summary>
+        protected virtual Task OnSessionReset()
+        {
+            return Task.CompletedTask;
+        }
+
         public async Task Run(IMessageTransport transport, CancellationToken token)
         {
             m_sessionLogger?.Info("Run begins");

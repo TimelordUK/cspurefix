@@ -159,5 +159,14 @@ namespace PureFix.Transport.Recovery
             m_logger?.Info($"[{record.MsgType},{record.SeqNum}] store state {state}");
             return state;
         }
+
+        public async Task Clear()
+        {
+            m_logger?.Info("Clearing recovery store for ResetSeqNumFlag");
+            MySeqNum = null;
+            PeerSeqNum = null;
+            LastStoreState = null;
+            await FixMsgStore.Clear();
+        }
     }
 }

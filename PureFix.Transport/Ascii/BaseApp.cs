@@ -94,5 +94,14 @@ namespace PureFix.Transport.Ascii
         {
             m_logger.Info("OnStopped");
         }
+
+        protected override async Task OnSessionReset()
+        {
+            // Clear the recovery store when session resets (ResetSeqNumFlag=Y)
+            if (Recovery != null)
+            {
+                await Recovery.Clear();
+            }
+        }
     }
 }

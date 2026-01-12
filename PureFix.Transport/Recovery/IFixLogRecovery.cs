@@ -10,5 +10,6 @@ namespace PureFix.Transport.Recovery
         FixMsgStoreState? LastStoreState { get; }
         Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record);
         Task Recover();
+        Task Clear();
     }
 }
