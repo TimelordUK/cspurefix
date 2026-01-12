@@ -183,11 +183,17 @@ namespace PureFix.Transport.Ascii
 
                 logger?.Info("Peer sent ResetSeqNumFlag=Y with SeqNum={PeerSeqNum}, weAlsoReset={WeAlsoReset}", peerSeqNum, weAlsoReset);
 
+                // Save current encoder sequence if we already reset (our outgoing sequence is already correct)
+                // When weAlsoReset=true, we've already sent our logon with the reset sequence - don't change it
+                var savedEncoderSeqNum = weAlsoReset ? m_encoder.MsgSeqNum : (int?)null;
+
                 // Always reset the store to clear old messages (prevents duplicate key errors on reconnect)
                 // This must happen even if weAlsoReset=true, because the store may have old messages from before sleep/wake
                 logger?.Info("Resetting session store to clear old messages");
                 await m_sessionStore.Reset();
-                m_encoder.MsgSeqNum = m_sessionStore.SenderSeqNum;
+
+                // Restore encoder sequence if we already reset, otherwise take from store
+                m_encoder.MsgSeqNum = savedEncoderSeqNum ?? m_sessionStore.SenderSeqNum;
 
                 // Recreate resender with empty store
                 m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
@@ -196,7 +202,7 @@ namespace PureFix.Transport.Ascii
                 m_sessionState.LastPeerMsgSeqNum = peerSeqNum;
                 await m_sessionStore.SetTargetSeqNum(peerSeqNum + 1);
 
-                logger?.Info("Reset complete: SenderSeqNum={SenderSeqNum}, TargetSeqNum={TargetSeqNum}, LastPeerMsgSeqNum={LastPeerMsgSeqNum}", m_sessionStore.SenderSeqNum, m_sessionStore.TargetSeqNum, m_sessionState.LastPeerMsgSeqNum);
+                logger?.Info("Reset complete: EncoderSeqNum={EncoderSeqNum}, TargetSeqNum={TargetSeqNum}, LastPeerMsgSeqNum={LastPeerMsgSeqNum}", m_encoder.MsgSeqNum, m_sessionStore.TargetSeqNum, m_sessionState.LastPeerMsgSeqNum);
             }
 
             var state = m_sessionState;
