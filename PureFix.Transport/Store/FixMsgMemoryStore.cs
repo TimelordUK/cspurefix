@@ -12,12 +12,12 @@ namespace PureFix.Transport.Store
     {
         private readonly SortedList<int, IFixMsgStoreRecord> _sortedBySeqNum = [];
         private readonly HashSet<string> _sessionMessages = [
-            MsgType.Logon, 
-            MsgType.Logout, 
-            MsgType.ResendRequest, 
-            MsgType.Heartbeat, 
-            MsgType.TestRequest, 
-            MsgType.SequenceReset 
+            MsgType.Logon,
+            MsgType.Logout,
+            MsgType.ResendRequest,
+            MsgType.Heartbeat,
+            MsgType.TestRequest,
+            MsgType.SequenceReset
         ];
 
         public FixMsgMemoryStore(string name)
@@ -67,7 +67,8 @@ namespace PureFix.Transport.Store
             else
             {
                 var nearestKey = Math.Abs(_sortedBySeqNum.Keys.BinarySearchIndexOf(seq));
-                if (_sortedBySeqNum.TryGetValue(nearestKey, out var starting)) {
+                if (_sortedBySeqNum.TryGetValue(nearestKey, out var starting))
+                {
                     startRecord = starting;
                 }
             }
@@ -94,7 +95,7 @@ namespace PureFix.Transport.Store
                 }
             }
             startRecord ??= _sortedBySeqNum.FirstOrDefault().Value;
-            var records = Enumerable.Range(startRecord.SeqNum, lastRecord.SeqNum- startRecord.SeqNum + 1).Select(GetRecord).Where(r => r != null).ToArray();
+            var records = Enumerable.Range(startRecord.SeqNum, lastRecord.SeqNum - startRecord.SeqNum + 1).Select(GetRecord).Where(r => r != null).ToArray();
             return Task.FromResult(records);
         }
 
@@ -106,7 +107,7 @@ namespace PureFix.Transport.Store
         public Task<FixMsgStoreState> Put(IFixMsgStoreRecord record)
         {
             if (_sessionMessages.Contains(record.MsgType)) return Task.FromResult(BuildState());
-           _sortedBySeqNum.Add(record.SeqNum, record);
+            _sortedBySeqNum.Add(record.SeqNum, record);
             return Task.FromResult(BuildState());
         }
 

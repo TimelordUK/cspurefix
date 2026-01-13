@@ -90,7 +90,7 @@ namespace PureFix.Transport.Session
 
             return buffer.ToString();
         }
-       
+
         public static string DateAsString(DateTime? date)
         {
             return date == null ? "na" : date.Value.ToString("HH:mm:ss.fff");
@@ -137,7 +137,7 @@ namespace PureFix.Transport.Session
                             {
                                 // not received anything from peer
                                 m_nextTickAction = TickAction.TestRequest;
-                              
+
                             }
                         }
                         else if (TimeToHeartbeat)

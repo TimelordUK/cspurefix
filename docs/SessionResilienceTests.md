@@ -174,6 +174,14 @@ Test: Very_Large_Gap_Single_ResendRequest
 - Receive seq 1000 when expecting seq 10
 - Verify single ResendRequest for 10-999
 - Verify message 1000 still processed
+
+Test: SequenceReset_Does_Not_Rewind_LastPeerMsgSeqNum
+- Receive seq 45 (out of order, gap 42-44), LastPeerMsgSeqNum = 45
+- Receive seq 46, LastPeerMsgSeqNum = 46
+- Receive SequenceReset GapFill with NewSeqNo=45 (filling gap 42-44)
+- Verify LastPeerMsgSeqNum stays at 46 (NOT rewound to 44)
+- Verify next expected seq is still 47
+- Note: This prevents cascading ResendRequests when messages arrive out of order
 ```
 
 ## Test Infrastructure Needed

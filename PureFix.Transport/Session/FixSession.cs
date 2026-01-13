@@ -16,12 +16,12 @@ using PureFix.Types;
 
 namespace PureFix.Transport.Session
 {
-    public abstract class FixSession 
+    public abstract class FixSession
     {
         protected readonly string? m_me;
         protected readonly bool m_initiator;
         protected readonly bool m_acceptor;
-        protected readonly FixSessionState  m_sessionState;
+        protected readonly FixSessionState m_sessionState;
         protected readonly string? m_requestLogoutType;
         protected string? m_respondLogoutType;
         protected readonly string m_requestLogonType;
@@ -40,7 +40,7 @@ namespace PureFix.Transport.Session
         private CancellationTokenSource? m_MySource;
         private readonly List<IMessageView> _messages = [];
         private readonly ILogFactory m_logFactory;
-      
+
         protected FixSession(IFixConfig config, ILogFactory logFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
         {
             m_logFactory = logFactory ?? throw new ArgumentException("config had been supplied with no log factory");
@@ -135,67 +135,74 @@ namespace PureFix.Transport.Session
                 await Send(m_requestLogoutType, lo);
             }
         }
-        
-        protected async Task PeerLogout(IMessageView view) {
+
+        protected async Task PeerLogout(IMessageView view)
+        {
             var msg = view.GetString((int)MsgTag.Text);
             var state = m_sessionState.State;
-            switch (state) {
+            switch (state)
+            {
                 case SessionState.WaitingLogoutConfirm:
-                {
-                    m_sessionLogger?.Info("peer confirms logout Text = '{Message}'", msg);
-                    Stop();
-                    break;
-                }
+                    {
+                        m_sessionLogger?.Info("peer confirms logout Text = '{Message}'", msg);
+                        Stop();
+                        break;
+                    }
 
                 case SessionState.InitiationLogonResponse:
                 case SessionState.ActiveNormalSession:
                 case SessionState.InitiationLogonReceived:
-                {
-                    SetState(SessionState.ConfirmingLogout);
-                    m_sessionLogger?.Info("peer initiates logout Text = '{Message}'", msg);
-                    await SessionLogout();
-                    break;
-                }
+                    {
+                        SetState(SessionState.ConfirmingLogout);
+                        m_sessionLogger?.Info("peer initiates logout Text = '{Message}'", msg);
+                        await SessionLogout();
+                        break;
+                    }
             }
         }
 
-        protected async Task SessionLogout() {
+        protected async Task SessionLogout()
+        {
             if (m_sessionState.LogoutSentAt != null)
             {
                 return;
             }
 
-            switch (m_sessionState.State) {
+            switch (m_sessionState.State)
+            {
                 case SessionState.ActiveNormalSession:
                 case SessionState.InitiationLogonResponse:
-                case SessionState.InitiationLogonReceived: {
-                    // this instance initiates logout
-                    SetState(SessionState.WaitingLogoutConfirm);
-                    m_sessionState.LogoutSentAt = m_clock.Current;
-                    m_sessionLogger?.Info("{Name} initiate logout", m_me);
-                    await SendLogout($"{m_me} initiate logout");
-                    break;
-                }
+                case SessionState.InitiationLogonReceived:
+                    {
+                        // this instance initiates logout
+                        SetState(SessionState.WaitingLogoutConfirm);
+                        m_sessionState.LogoutSentAt = m_clock.Current;
+                        m_sessionLogger?.Info("{Name} initiate logout", m_me);
+                        await SendLogout($"{m_me} initiate logout");
+                        break;
+                    }
 
-                case SessionState.ConfirmingLogout: {
-                    // this instance responds to log out
-                    SetState(SessionState.ConfirmingLogout);
-                    m_sessionState.LogoutSentAt = m_clock.Current;
-                    m_sessionLogger?.Info("{Name} confirming logout", m_me);
-                    await SendLogout($"{m_me} confirming logout");
-                    Stop();
-                    break;
-                }
+                case SessionState.ConfirmingLogout:
+                    {
+                        // this instance responds to log out
+                        SetState(SessionState.ConfirmingLogout);
+                        m_sessionState.LogoutSentAt = m_clock.Current;
+                        m_sessionLogger?.Info("{Name} confirming logout", m_me);
+                        await SendLogout($"{m_me} confirming logout");
+                        Stop();
+                        break;
+                    }
 
                 default:
-                {
-                    m_sessionLogger?.Info("sessionLogout ignored as in state {State}", m_sessionState.State);
-                    break;
-                }
+                    {
+                        m_sessionLogger?.Info("sessionLogout ignored as in state {State}", m_sessionState.State);
+                        break;
+                    }
             }
         }
 
-        protected void Stop(Exception? error = null) {
+        protected void Stop(Exception? error = null)
+        {
             if (m_sessionState.State == SessionState.Stopped)
             {
                 return;
@@ -205,7 +212,7 @@ namespace PureFix.Transport.Session
             {
                 m_sessionLogger?.Info("stop: emit error {Error}", error);
             }
-            
+
             SetState(SessionState.Stopped);
             OnStopped(error);
             if (m_MySource is { IsCancellationRequested: false })
@@ -277,7 +284,7 @@ namespace PureFix.Transport.Session
             if (msgType == null) return;
             OnDecoded(msgType, decoded);
         }
-        
+
         private async Task RxOnMsg(IMessageView view)
         {
             var msgType = view.GetString((int)MsgTag.MsgType);
@@ -287,10 +294,10 @@ namespace PureFix.Transport.Session
             {
                 m_sessionLogger?.Info("[{PeerSeqNum},{MsgType}]: {View}", peerSeqNum, msgType, view);
             }
-           
+
             if (peerSeqNum == null) return;
             m_sessionState.LastReceivedAt = m_clock.Current;
-           
+
             if (m_manageSession)
             {
                 await OnMsg(msgType, view);
@@ -344,7 +351,8 @@ namespace PureFix.Transport.Session
             m_sessionLogger?.Info("Reader is exiting.");
         }
 
-        private async Task InitiatorLogon() {
+        private async Task InitiatorLogon()
+        {
             if (m_transport != null)
             {
                 m_sessionLogger?.Info("reset from previous transport");
@@ -448,10 +456,10 @@ namespace PureFix.Transport.Session
                 case SessionState.InitiationLogonResponse:
                 case SessionState.ActiveNormalSession:
                 case SessionState.InitiationLogonReceived:
-                {
-                    await SessionLogout();
-                    break;
-                }
+                    {
+                        await SessionLogout();
+                        break;
+                    }
 
                 case SessionState.Stopped:
                     m_sessionLogger?.Info("done. session is now stopped");

@@ -14,6 +14,6 @@ namespace PureFix.Transport.Store
         public Task<FixMsgStoreState> Put(IFixMsgStoreRecord record);
         public Task<IFixMsgStoreRecord?> Get(int seq);
         public Task<bool> Exists(int seq);
-        public Task<IFixMsgStoreRecord?[]> GetSeqNumRange(int from, int?to = null);
+        public Task<IFixMsgStoreRecord?[]> GetSeqNumRange(int from, int? to = null);
     }
 }

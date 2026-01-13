@@ -161,7 +161,7 @@ namespace PureFix.Transport.SocketTransport
         public void Dispose()
         {
             m_sslStream?.Dispose();
-            m_networkStream?.Dispose();          
+            m_networkStream?.Dispose();
             m_socket?.Dispose();
             m_networkStream = null;
             m_socket = null;
@@ -204,6 +204,6 @@ namespace PureFix.Transport.SocketTransport
             {
                 throw new InvalidOperationException("no stream to send on.");
             }
-        }   
+        }
     }
 }

@@ -80,7 +80,7 @@ namespace PureFix.Transport.Session
         }
         private readonly ILogger? _logger = factory?.MakeLogger(nameof(TimerDispatcher));
 
-        public Task Dispatch(ISessionEventReciever reciever , TimeSpan interval, CancellationToken token)
+        public Task Dispatch(ISessionEventReciever reciever, TimeSpan interval, CancellationToken token)
         {
             var timer = new AsyncTimer(_logger);
             var t = timer.Start(interval, reciever.OnTimer, token);

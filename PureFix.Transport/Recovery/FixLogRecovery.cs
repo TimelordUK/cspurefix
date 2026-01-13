@@ -13,7 +13,7 @@ namespace PureFix.Transport.Recovery
     public class FixLogRecovery : IFixLogRecovery
     {
         public string LogFilePath { get; set; } = "logs";
-      
+
         public IFixMsgStore FixMsgStore { get; }
         public FixMsgStoreState? LastStoreState { get; private set; }
         public IFixConfig Config { get; }
@@ -26,7 +26,7 @@ namespace PureFix.Transport.Recovery
         {
             ArgumentNullException.ThrowIfNull(config?.Description);
             Config = config;
-            FixMsgStore = msgStore;          
+            FixMsgStore = msgStore;
             m_logger = logFactory.MakeLogger(nameof(FixLogRecovery));
             Parser = parser;
         }
@@ -37,7 +37,7 @@ namespace PureFix.Transport.Recovery
             try
             {
                 Parser.OnView = v =>
-                {                    
+                {
                     messages.Add((AsciiView)v);
                 };
                 m_logger?.Info($"loading {fixLog.FullName} to recover store.");
@@ -99,7 +99,7 @@ namespace PureFix.Transport.Recovery
                 if (FixMsgStore != null)
                 {
                     LastStoreState = await AddRecord(record);
-                }                
+                }
             }
         }
 

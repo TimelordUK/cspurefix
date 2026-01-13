@@ -66,8 +66,8 @@ namespace PureFix.Transport.Ascii
                 config.Description.TargetCompID);
             m_sessionStore = storeFactory.Create(sessionId);
 
-            m_sessionLogger?.Info("message count = {DefinitionCount}, component count = {ComponentCount}, simple count = {FieldCount}", 
-            Definitions.Message.Count, 
+            m_sessionLogger?.Info("message count = {DefinitionCount}, component count = {ComponentCount}, simple count = {FieldCount}",
+            Definitions.Message.Count,
             Definitions.Component.Count,
             Definitions.Simple.Count);
         }
@@ -96,7 +96,8 @@ namespace PureFix.Transport.Ascii
             }
         }
 
-        private bool ValidStateApplicationMsg() {
+        private bool ValidStateApplicationMsg()
+        {
             switch (m_sessionState.State)
             {
                 case SessionState.Idle:
@@ -466,10 +467,10 @@ namespace PureFix.Transport.Ascii
         }
 
 
-/// <summary>
-/// Initializes the session store and loads persisted sequence numbers.
-/// Must be called before the session starts processing messages.
-/// </summary>
+        /// <summary>
+        /// Initializes the session store and loads persisted sequence numbers.
+        /// Must be called before the session starts processing messages.
+        /// </summary>
         protected async Task InitializeSessionStore()
         {
             await m_sessionStore.Initialize();
@@ -486,9 +487,9 @@ namespace PureFix.Transport.Ascii
             m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
         }
 
-/// <summary>
-/// Stores an encoded message to the session store and updates sender sequence number.
-/// </summary>
+        /// <summary>
+        /// Stores an encoded message to the session store and updates sender sequence number.
+        /// </summary>
         protected async Task StoreEncodedMessage(string msgType, int seqNum, string encoded)
         {
             var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, encoded);
@@ -547,9 +548,11 @@ namespace PureFix.Transport.Ascii
             SetState(SessionState.ActiveNormalSession);
         }
 
-        private bool OkForLogon() {
+        private bool OkForLogon()
+        {
             var state = m_sessionState.State;
-            if (m_acceptor) {
+            if (m_acceptor)
+            {
                 return state == SessionState.WaitingForALogon;
             }
             return state == SessionState.InitiationLogonSent;
@@ -611,13 +614,30 @@ namespace PureFix.Transport.Ascii
                     {
                         var newSeqNo = view.GetInt32((int)MsgTag.NewSeqNo);
                         logger?.Info("peer sends '{MsgType}' sequence reset. newSeqNo = {NewSeqNo}", msgType, newSeqNo);
-                        // expect newSeqNo to be the next message's sequence number.
-                        m_sessionState.LastPeerMsgSeqNum = newSeqNo - 1;
 
-                        // Update store's target sequence number to match
                         if (newSeqNo.HasValue)
                         {
-                            await m_sessionStore.SetTargetSeqNum(newSeqNo.Value);
+                            var impliedLastSeq = newSeqNo.Value - 1;
+
+                            // Only advance LastPeerMsgSeqNum forward, never backwards.
+                            // This can happen when we receive messages out of order:
+                            // e.g., receive seq 45, then seq 46, then SequenceReset with NewSeqNo=45 for a gap we requested
+                            // In this case, we should NOT rewind to expecting seq 45 again.
+                            if (impliedLastSeq > m_sessionState.LastPeerMsgSeqNum)
+                            {
+                                m_sessionState.LastPeerMsgSeqNum = impliedLastSeq;
+                            }
+                            else
+                            {
+                                m_sessionLogger?.Debug("SequenceReset NewSeqNo={NewSeqNo} does not advance past current LastPeerMsgSeqNum={LastSeq}, keeping current value",
+                                    newSeqNo, m_sessionState.LastPeerMsgSeqNum);
+                            }
+
+                            // Update store's target sequence number (only if it advances)
+                            if (newSeqNo.Value > m_sessionStore.TargetSeqNum)
+                            {
+                                await m_sessionStore.SetTargetSeqNum(newSeqNo.Value);
+                            }
 
                             // Reset ResendRequest circuit breaker if this SequenceReset advances past our pending request
                             if (m_lastResendRequestBeginSeq.HasValue && newSeqNo.Value > m_lastResendRequestBeginSeq.Value)
@@ -708,7 +728,7 @@ namespace PureFix.Transport.Ascii
                     {
                         case MsgType.Logon:
                             {
-                                SetState(SessionState.PeerLogonRejected);                               
+                                SetState(SessionState.PeerLogonRejected);
                             }
                             break;
                     }
@@ -775,5 +795,5 @@ namespace PureFix.Transport.Ascii
         }
     }
 }
- 
+
 

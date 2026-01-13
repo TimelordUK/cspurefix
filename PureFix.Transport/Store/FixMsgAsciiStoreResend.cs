@@ -28,7 +28,8 @@ namespace PureFix.Transport.Store
             ArgumentNullException.ThrowIfNull(config.Definitions);
             ArgumentNullException.ThrowIfNull(config.MessageFactory);
 
-            m_Parser = new AsciiParser(config.Definitions) {
+            m_Parser = new AsciiParser(config.Definitions)
+            {
                 Delimiter = config.Delimiter,
                 WriteDelimiter = config.LogDelimiter
             };
@@ -95,7 +96,7 @@ namespace PureFix.Transport.Store
                     Gap(expected, seqNum, toResend);
                 }
                 expected = seqNum + 1;
-                toResend.Add(record); 
+                toResend.Add(record);
             }
             if (endSeq - expected > 0)
             {
@@ -104,8 +105,10 @@ namespace PureFix.Transport.Store
             return toResend;
         }
 
-        private void Gap(int beginGap, int newSeq, List<IFixMsgStoreRecord> arr) {
-            if (beginGap > 0) {
+        private void Gap(int beginGap, int newSeq, List<IFixMsgStoreRecord> arr)
+        {
+            if (beginGap > 0)
+            {
                 var reset = SequenceResetGap(beginGap, newSeq);
                 if (reset != null)
                 {
@@ -135,7 +138,7 @@ namespace PureFix.Transport.Store
             header.MsgSeqNum = startGap;
             header.PossDupFlag = true;
             header.SendingTime = m_clock.Current;
-            
+
             var record = new FixMsgStoreRecord(MsgType.SequenceReset, m_clock.Current, startGap, null)
             { InflatedMessage = gapFill };
             return record;
@@ -153,23 +156,23 @@ namespace PureFix.Transport.Store
             originalRecord.InflatedMessage = o;
         }
 
-    /**
-      * Prepares the FIX message as response to ResendRequest (2).
-      *
-      * The FIX session processor retransmitting a message with the PossDupFlag(43) set to "Y" must modify the following fields:
-      *
-      * SendingTime(52) set to the current sending time
-      * OrigSendingTime(122) set to the SendingTime(52) from the original message
-      * Recalculate the BodyLength(9)
-      * Recalculate the CheckSum(10)
-      *
-      * If the message is encrypted, SecureDataLen(90) and SecureData(91) may also require re-encryption and re-encoding
-      *
-      * @see https://www.fixtrading.org/standards/fix-session-layer-online/#message-recovery
-      *
-      * @param originalRecord the FIX message to be retransmitted as possible duplicate
-      * @returns the FIX message ready to be retransmitted
-      */
+        /**
+          * Prepares the FIX message as response to ResendRequest (2).
+          *
+          * The FIX session processor retransmitting a message with the PossDupFlag(43) set to "Y" must modify the following fields:
+          *
+          * SendingTime(52) set to the current sending time
+          * OrigSendingTime(122) set to the SendingTime(52) from the original message
+          * Recalculate the BodyLength(9)
+          * Recalculate the CheckSum(10)
+          *
+          * If the message is encrypted, SecureDataLen(90) and SecureData(91) may also require re-encryption and re-encoding
+          *
+          * @see https://www.fixtrading.org/standards/fix-session-layer-online/#message-recovery
+          *
+          * @param originalRecord the FIX message to be retransmitted as possible duplicate
+          * @returns the FIX message ready to be retransmitted
+          */
         private IFixMsgStoreRecord? PrepareRecordForRetransmission(IFixMsgStoreRecord originalRecord)
         {
             var factory = m_config.MessageFactory;
@@ -183,7 +186,7 @@ namespace PureFix.Transport.Store
             o.StandardHeader.PossDupFlag = true;
             o.StandardHeader.OrigSendingTime = o.StandardHeader.SendingTime;
             o.StandardHeader.SendingTime = m_clock.Current;
-            
+
             return retransmitted;
         }
     }

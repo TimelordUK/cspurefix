@@ -23,7 +23,7 @@ namespace PureFix.Transport.SocketTransport
             ArgumentNullException.ThrowIfNull(config);
             ArgumentNullException.ThrowIfNull(clock);
             ArgumentNullException.ThrowIfNull(logFactory);
-           
+
             m_logger = logFactory.MakeLogger("BaseTcpEntity");
             m_sessionFactory = sessionFactory;
             m_config = config;

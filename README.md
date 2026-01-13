@@ -124,6 +124,22 @@ After a 7-minute laptop sleep, the session:
 
 This eliminates unnecessary session drops during brief network interruptions or system sleep events.
 
+### Client Safety: ResendGapFillOnly
+
+For **client/initiator sessions**, we strongly recommend enabling `ResendGapFillOnly` in your session configuration:
+
+```json
+{
+  "resendGapFillOnly": true
+}
+```
+
+When the counterparty sends a ResendRequest, this setting ensures PureFix responds with a SequenceReset-GapFill instead of replaying stored messages. This prevents accidental re-execution of old orders if the counterparty requests message replay.
+
+**Why this matters**: If a client replays a stored NewOrderSingle from hours ago, the broker may execute it as a new order - causing duplicate fills and potential losses.
+
+> **Note**: Message replay functionality exists but is still in alpha testing. Until fully validated, `ResendGapFillOnly: true` is the safest option for order-sending clients.
+
 ## Getting Started
 
 **Want to see it in action?** Check out the [standalone demo](https://github.com/TimelordUK/purefix-standalone-demo) - a complete working example with Trade Capture that you can run immediately.
