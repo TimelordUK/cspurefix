@@ -22,5 +22,14 @@ namespace PureFix.Transport.Session
         {
             return config?.Description?.ResetSeqNumFlag ?? false;
         }
+
+        /// <summary>
+        /// Returns true if the session should always respond to ResendRequest with GapFill
+        /// instead of replaying stored messages. Critical safety feature for clients.
+        /// </summary>
+        public static bool ResendGapFillOnly(this IFixConfig config)
+        {
+            return config?.Description?.ResendGapFillOnly ?? false;
+        }
     }
 }

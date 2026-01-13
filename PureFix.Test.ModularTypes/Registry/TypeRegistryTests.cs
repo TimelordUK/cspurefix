@@ -520,6 +520,7 @@ public class TypeRegistryTests
         public int? HeartBtInt => 30;
         public LoggingConfig? Logging => null;
         public StoreConfig? Store => null;
+        public bool? ResendGapFillOnly => null;
     }
 
     #endregion

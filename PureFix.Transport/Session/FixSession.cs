@@ -349,9 +349,13 @@ namespace PureFix.Transport.Session
             {
                 m_sessionLogger?.Info("reset from previous transport");
             }
-         
+
             if (m_initiator)
             {
+                // Reset sequences before logon if ResetSeqNumFlag=Y is configured
+                // This ensures we send logon with seq=1, not the recovered sequence from store
+                await OnPreLogon();
+
                 m_sessionLogger?.Debug("initiator sending logon state = {State}", m_sessionState.State);
                 await SendLogon();
                 SetState(SessionState.InitiationLogonSent);
@@ -398,6 +402,15 @@ namespace PureFix.Transport.Session
         /// Override to clear application-level state like recovery stores.
         /// </summary>
         protected virtual Task OnSessionReset()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Called before sending the logon message (initiator only).
+        /// Override to reset session store and encoder when ResetSeqNumFlag=Y.
+        /// </summary>
+        protected virtual Task OnPreLogon()
         {
             return Task.CompletedTask;
         }

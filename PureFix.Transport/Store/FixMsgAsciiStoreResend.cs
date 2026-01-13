@@ -41,6 +41,19 @@ namespace PureFix.Transport.Store
 
         public async Task<IReadOnlyList<IFixMsgStoreRecord>> GetResendRequest(int startReq, int endSeq)
         {
+            // Safety feature: If ResendGapFillOnly is enabled, ALWAYS send GapFill instead of
+            // replaying stored messages. This is critical for clients/initiators to prevent
+            // accidentally resending old orders which could cause duplicate executions.
+            if (m_config.ResendGapFillOnly())
+            {
+                List<IFixMsgStoreRecord> gapFillOnly = [];
+                if (endSeq >= startReq)
+                {
+                    Gap(startReq, endSeq + 1, gapFillOnly);
+                }
+                return gapFillOnly;
+            }
+
             // need to cover request from start to end where any missing numbers are
             // included as gaps to allow vector of messages to be sent by the session
             // on a request

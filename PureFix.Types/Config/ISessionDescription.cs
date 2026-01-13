@@ -34,5 +34,13 @@ namespace PureFix.Types.Config
         /// Message store configuration. If null, in-memory store is used.
         /// </summary>
         public StoreConfig? Store { get; }
+
+        /// <summary>
+        /// If true, always respond to ResendRequest with GapFill instead of replaying stored messages.
+        /// This is a critical safety feature for clients/initiators to prevent accidentally resending
+        /// old orders which could cause duplicate executions. Default is false for backwards compatibility.
+        /// Recommended: Set to true for all client/initiator applications.
+        /// </summary>
+        public bool? ResendGapFillOnly { get; }
     }
 }
