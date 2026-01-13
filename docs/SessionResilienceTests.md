@@ -182,6 +182,20 @@ Test: SequenceReset_Does_Not_Rewind_LastPeerMsgSeqNum
 - Verify LastPeerMsgSeqNum stays at 46 (NOT rewound to 44)
 - Verify next expected seq is still 47
 - Note: This prevents cascading ResendRequests when messages arrive out of order
+
+Test: PossDup_Resend_Does_Not_Increment_Encoder_Sequence
+- Encoder at MsgSeqNum = 120
+- Resend 4 messages (seq 116-119) with PossDupFlag=Y
+- Verify wire messages have original MsgSeqNum (116, 117, 118, 119)
+- Verify encoder MsgSeqNum stays at 120 (NOT incremented to 124)
+- Next new message should be seq 120
+- Note: Prevents sequence gaps after handling ResendRequest
+
+Test: PossDup_Resend_Not_Stored
+- Resend message with PossDupFlag=Y
+- Verify message is sent on wire
+- Verify message is NOT stored in session store
+- Note: Prevents duplicate storage of retransmitted messages
 ```
 
 ## Test Infrastructure Needed

@@ -93,7 +93,13 @@ namespace PureFix.Buffer.Ascii
                 }
 
                 trailer.Encode(writer);
-                MsgSeqNum = MsgSeqNum + 1;
+
+                // Don't increment sequence for PossDup resends - the original MsgSeqNum was used
+                // and we don't want to "consume" sequence numbers for retransmitted messages
+                if (hdr.PossDupFlag != true)
+                {
+                    MsgSeqNum = MsgSeqNum + 1;
+                }
                 return storage;
             }
             finally

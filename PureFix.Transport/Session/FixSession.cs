@@ -236,16 +236,33 @@ namespace PureFix.Transport.Session
                 default:
                     {
                         if (m_parentToken == null) return;
+
+                        // Check if this is a PossDup resend BEFORE encoding (header gets reset during encode)
+                        var isPossDupResend = message.StandardHeader?.PossDupFlag == true;
+                        var originalSeqNum = message.StandardHeader?.MsgSeqNum;
+
                         var seqNum = m_encoder.MsgSeqNum;
                         var storage = m_encoder.Encode(msgType, message);
                         if (storage == null) return;
                         m_sessionLogger?.Info("sending {MsgType}, pos = {Pos}, MsgSeqNum = {MsgSeqNum}", msgType, storage.Buffer.Pos, m_encoder.MsgSeqNum);
                         await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                         m_sessionState.LastSentAt = m_clock.Current;
-                        // Use LogDelimiter for FIX log (defaults to Pipe), StoreDelimiter for store (defaults to SOH)
-                        var forLog = storage.AsString(m_config.LogDelimiter);
-                        var forStore = storage.AsString(m_config.StoreDelimiter);
-                        await OnEncoded(msgType, seqNum, forLog, forStore);
+
+                        // PossDup resends should NOT be stored - they're retransmissions of already-stored messages
+                        // Only log them, don't store them again
+                        if (!isPossDupResend)
+                        {
+                            // Use LogDelimiter for FIX log (defaults to Pipe), StoreDelimiter for store (defaults to SOH)
+                            var forLog = storage.AsString(m_config.LogDelimiter);
+                            var forStore = storage.AsString(m_config.StoreDelimiter);
+                            await OnEncoded(msgType, seqNum, forLog, forStore);
+                        }
+                        else
+                        {
+                            // PossDup resend - log but don't store
+                            m_sessionLogger?.Debug("PossDup resend seq {OriginalSeq}, not storing", originalSeqNum);
+                        }
+
                         m_encoder.Return(storage);
                         break;
                     }
