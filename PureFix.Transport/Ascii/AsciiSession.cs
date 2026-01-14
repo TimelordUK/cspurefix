@@ -105,9 +105,12 @@ namespace PureFix.Transport.Ascii
                 case SessionState.InitiationLogonSent:
                 case SessionState.WaitingForALogon:
                 case SessionState.HandleResendRequest:
-                case SessionState.AwaitingProcessingResponseToTestRequest:
                 case SessionState.AwaitingProcessingResponseToResendRequest:
                     return false;
+                // Allow application messages during test request wait - peer may send messages
+                // at any time, and test request is just a heartbeat check
+                case SessionState.AwaitingProcessingResponseToTestRequest:
+                    return true;
                 default:
                     return true;
             }
@@ -264,6 +267,28 @@ namespace PureFix.Transport.Ascii
             if (possDupFlag == true)
             {
                 m_sessionLogger?.Debug("Message {MsgType} has PossDupFlag=Y, bypassing sequence check", msgType);
+
+                // Check if this PossDup message fills the pending gap range and clear the circuit breaker
+                // This handles the case where peer replays actual messages instead of sending GapFill
+                var seqNo = view.MsgSeqNum();
+                if (seqNo.HasValue && m_lastResendRequestBeginSeq.HasValue && m_pendingResendEndSeq.HasValue)
+                {
+                    if (seqNo.Value >= m_lastResendRequestBeginSeq.Value && seqNo.Value <= m_pendingResendEndSeq.Value)
+                    {
+                        m_sessionLogger?.Debug("PossDup message seq {SeqNo} is in pending gap range {GapBegin}-{GapEnd}",
+                            seqNo, m_lastResendRequestBeginSeq.Value, m_pendingResendEndSeq.Value);
+
+                        // Clear circuit breaker when we receive the end of the gap range
+                        if (seqNo.Value == m_pendingResendEndSeq.Value)
+                        {
+                            m_sessionLogger?.Info("PossDup filled gap end (seq {SeqNo}), clearing ResendRequest circuit breaker", seqNo);
+                            m_lastResendRequestBeginSeq = null;
+                            m_pendingResendEndSeq = null;
+                            m_resendRequestDuplicateCount = 0;
+                        }
+                    }
+                }
+
                 return true;
             }
 
@@ -303,6 +328,11 @@ namespace PureFix.Transport.Ascii
                         if (seqNo == null) return false;
                         bool ret = false;
                         var seqDelta = seqNo - lastSeq;
+                        var expectedSeq = lastSeq.Value + 1;
+
+                        m_sessionLogger?.Debug("CheckSeqNo: {MsgType} seq={ReceivedSeq}, expected={Expected}",
+                            msgType, seqNo, $"{expectedSeq} (delta={seqDelta})");
+
                         if (seqDelta <= 0)
                         {
                             // Check if this is a delayed message that fills a pending gap.
@@ -332,11 +362,20 @@ namespace PureFix.Transport.Ascii
                                 return true;
                             }
 
-                            // MsgSeqNum too low - send Reject and terminate
-                            var expectedSeq = lastSeq.Value + 1;
+                            // MsgSeqNum too low - send Reject
                             m_sessionLogger?.Warn("MsgSeqNum too low: received {SeqNo}, expected {ExpectedSeq}. Sending Reject.", seqNo, expectedSeq);
                             await SendReject(msgType, seqNo.Value, $"MsgSeqNum too low, expecting {expectedSeq}", (int)SessionRejectReason.ValueIsIncorrect);
-                            Stop();
+
+                            // For Logon messages: don't terminate - let client retry with higher seq
+                            // For other messages: terminate the session
+                            if (msgType != MsgType.Logon)
+                            {
+                                Stop();
+                            }
+                            else
+                            {
+                                m_sessionLogger?.Info("Logon rejected for seq too low, waiting for retry with higher sequence");
+                            }
                         }
                         else if (seqDelta > 1)
                         {
@@ -345,6 +384,10 @@ namespace PureFix.Transport.Ascii
                             // Don't block waiting for gap fill - keep the session running.
                             // If gap fill arrives later, great. If not, we've already moved on.
                             var lostCount = seqNo.Value - lastSeq.Value - 1;
+
+                            var cbState = m_lastResendRequestBeginSeq.HasValue ? $"active({m_lastResendRequestBeginSeq}-{m_pendingResendEndSeq})" : "inactive";
+                            m_sessionLogger?.Warn("GAP DETECTED: received={ReceivedSeq}, expected={Expected}, lost={LostCount} cb={CB}",
+                                seqNo.Value, expectedSeq, $"{lostCount}, cb={cbState}");
 
                             // We process a Logon beforehand to confirm the connection even if out of sync
                             if (msgType == MsgType.Logon)
@@ -403,25 +446,29 @@ namespace PureFix.Transport.Ascii
             var beginSeq = lastSeq + 1;
             var endSeq = receivedSeq - 1;  // The last sequence we're missing
 
+            m_sessionLogger?.Debug("SendResendRequest: lastSeq={LastSeq}, receivedSeq={ReceivedSeq}, gapRange={Range}",
+                lastSeq, receivedSeq, $"{beginSeq}-{endSeq}");
+
             // Circuit breaker: Only allow ONE pending ResendRequest at a time
             // If there's already a pending request, skip any new gaps
             if (m_lastResendRequestBeginSeq.HasValue)
             {
                 m_resendRequestDuplicateCount++;
-                m_sessionLogger?.Warn("ResendRequest circuit breaker: pending request for {PendingBegin}, skipping new gap. Count={Count}",
-                    m_lastResendRequestBeginSeq.Value, m_resendRequestDuplicateCount);
+                m_sessionLogger?.Warn("ResendRequest BLOCKED: pending={PendingRange}, new={NewRange}, count={Count}",
+                    $"{m_lastResendRequestBeginSeq}-{m_pendingResendEndSeq}", $"{beginSeq}-{endSeq}", m_resendRequestDuplicateCount);
                 return false;
             }
 
             var resend = m_config.MessageFactory?.ResendRequest(beginSeq, 0);
             if (resend != null)
             {
-                m_sessionLogger?.Warn("Gap detected: received seq {ReceivedSeq}, expected {ExpectedSeq}. Sending resend request.",
-                    receivedSeq, beginSeq);
+                m_sessionLogger?.Warn("Sending ResendRequest: beginSeq={BeginSeq}, endSeq=0 (infinity), will track pending range {BeginSeq}-{EndSeq}",
+                    beginSeq, endSeq);
                 await Send(MsgType.ResendRequest, resend);
                 m_lastResendRequestBeginSeq = beginSeq;
                 m_pendingResendEndSeq = endSeq;
                 m_resendRequestDuplicateCount = 0;
+                m_sessionLogger?.Info("Circuit breaker ACTIVATED: pendingBegin={BeginSeq}, pendingEnd={EndSeq}", beginSeq, endSeq);
                 return true;
             }
             return false;
@@ -459,8 +506,8 @@ namespace PureFix.Transport.Ascii
             // The encoder's MsgSeqNum is already incremented after each message is sent,
             // so we just need to retry the logon. The next logon will use the next sequence number.
             var nextSeq = m_encoder.MsgSeqNum;
-            m_sessionLogger?.Info("Logon rejected (attempt {Count}), retrying with seq={NextSeq}. Text='{Text}'",
-                m_logonRetryCount, nextSeq, text);
+            m_sessionLogger?.Info("LOGON_SEQ_RETRY: attempt={Attempt}, nextSeq={NextSeq}, reason='{Text}'",
+                $"{m_logonRetryCount}/{MaxLogonRetries}", nextSeq, text);
 
             // Retry the logon with the next sequence number
             await SendLogon();
@@ -642,8 +689,8 @@ namespace PureFix.Transport.Ascii
                             // Reset ResendRequest circuit breaker if this SequenceReset advances past our pending request
                             if (m_lastResendRequestBeginSeq.HasValue && newSeqNo.Value > m_lastResendRequestBeginSeq.Value)
                             {
-                                m_sessionLogger?.Debug("SequenceReset advances past pending ResendRequest beginSeq={BeginSeq}, clearing circuit breaker",
-                                    m_lastResendRequestBeginSeq);
+                                m_sessionLogger?.Info("Circuit breaker CLEARED by SequenceReset: NewSeqNo={NewSeqNo}, was tracking {Range}",
+                                    newSeqNo, $"{m_lastResendRequestBeginSeq}-{m_pendingResendEndSeq}");
                                 m_lastResendRequestBeginSeq = null;
                                 m_pendingResendEndSeq = null;
                                 m_resendRequestDuplicateCount = 0;

@@ -241,10 +241,20 @@ namespace PureFix.Transport.Session
                         var isPossDupResend = message.StandardHeader?.PossDupFlag == true;
                         var originalSeqNum = message.StandardHeader?.MsgSeqNum;
 
-                        var seqNum = m_encoder.MsgSeqNum;
+                        var seqNumBeforeEncode = m_encoder.MsgSeqNum;
                         var storage = m_encoder.Encode(msgType, message);
                         if (storage == null) return;
-                        m_sessionLogger?.Info("sending {MsgType}, pos = {Pos}, MsgSeqNum = {MsgSeqNum}", msgType, storage.Buffer.Pos, m_encoder.MsgSeqNum);
+                        var seqNumAfterEncode = m_encoder.MsgSeqNum;
+
+                        if (isPossDupResend)
+                        {
+                            m_sessionLogger?.Info("sending PossDup {MsgType}, originalSeq={OrigSeq}, encoder stayed at {After}",
+                                msgType, originalSeqNum, seqNumAfterEncode);
+                        }
+                        else
+                        {
+                            m_sessionLogger?.Info("sending {MsgType}, pos = {Pos}, MsgSeqNum = {MsgSeqNum}", msgType, storage.Buffer.Pos, seqNumAfterEncode);
+                        }
                         await m_transport.SendAsync(storage.AsBytes(), m_parentToken.Value);
                         m_sessionState.LastSentAt = m_clock.Current;
 
@@ -255,7 +265,7 @@ namespace PureFix.Transport.Session
                             // Use LogDelimiter for FIX log (defaults to Pipe), StoreDelimiter for store (defaults to SOH)
                             var forLog = storage.AsString(m_config.LogDelimiter);
                             var forStore = storage.AsString(m_config.StoreDelimiter);
-                            await OnEncoded(msgType, seqNum, forLog, forStore);
+                            await OnEncoded(msgType, seqNumBeforeEncode, forLog, forStore);
                         }
                         else
                         {
