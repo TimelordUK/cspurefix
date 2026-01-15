@@ -6,6 +6,36 @@ A high-performance, pure C# FIX protocol engine for .NET.
 [![Build](https://github.com/TimelordUK/cspurefix/actions/workflows/build.yml/badge.svg)](https://github.com/TimelordUK/cspurefix/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+## Project Status: Beta
+
+| Component | Maturity | Notes |
+|-----------|----------|-------|
+| **Message Parser** | ✅ Production | Extensively tested against 20+ brokers across asset classes |
+| **Type Generation** | ✅ Production | Stable API, battle-tested with custom dictionaries |
+| **Session Handling** | 🟡 Beta | Robust for normal operation, reconnection, and sequence recovery |
+| **Resend/Gap Fill** | 🟡 Beta | Works in common scenarios; edge cases under continued testing |
+
+### Parser Testing Coverage
+
+The message parser has been validated in production drop-copy scenarios (read-only, no order entry) across:
+
+- **Asset Classes**: FX Spot, FX Options, FX Swaps, NDF, NDS, Forwards, CDS, CDX, Government Bonds, Futures
+- **Message Types**: ExecutionReport (8), Allocation (J), TradeCaptureReport (AE), and session messages
+- **Protocols**: FIX 4.2, 4.4, 5.0 SP2, including FpML extensions
+- **Brokers**: 20+ counterparties with broker-specific dictionary customizations
+
+### Session Handling Status
+
+Session management handles standard scenarios reliably:
+- ✅ Normal logon/logout with heartbeat
+- ✅ Reconnection after socket drop or sleep/wake
+- ✅ Sequence number persistence and recovery
+- ✅ ResetSeqNumFlag handling (initiator, acceptor, both sides)
+- ✅ Logon sequence mismatch retry (client catches up to server)
+- 🟡 ResendRequest/GapFill edge cases (race conditions under testing)
+
+> **Recommendation**: For order-sending clients, enable `ResendGapFillOnly: true` until resend handling is fully production-validated.
+
 ## Performance
 
 PureFix uses a lazy parsing architecture that minimizes allocations:
