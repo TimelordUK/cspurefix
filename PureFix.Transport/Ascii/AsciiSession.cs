@@ -18,33 +18,21 @@ namespace PureFix.Transport.Ascii
     {
         private readonly IFixSessionStore m_sessionStore;
         private readonly IFixMessageFactory m_fixMessageFactory;
+        private readonly SessionSequenceCoordinator m_coordinator;
         private FixMsgAsciiStoreResend? m_resender;
-        private int m_logonRetryCount;
         private const int MaxLogonRetries = 100; // Reasonable limit to prevent infinite loops
-
-        // Circuit breaker for ResendRequest - prevents repeatedly sending overlapping requests
-        private int? m_lastResendRequestBeginSeq;
-        private int? m_pendingResendEndSeq;  // End of the pending resend range
-        private int m_resendRequestDuplicateCount;
-
-        // Timeout recovery - allow multiple attempts before terminating (helps survive sleep/wake)
-        private int m_timeoutRecoveryAttempts;
         private const int MaxTimeoutRecoveryAttempts = 3;
         public bool Heartbeat { get; set; } = true;
 
         /// <summary>
         /// Prepares the session for reconnection after a disconnect.
-        /// Resets the logon retry counter in addition to base class state reset.
+        /// Resets transient state via coordinator in addition to base class state reset.
         /// </summary>
         public override void PrepareForReconnect()
         {
             base.PrepareForReconnect();
-            m_logonRetryCount = 0;
-            m_lastResendRequestBeginSeq = null;
-            m_pendingResendEndSeq = null;
-            m_resendRequestDuplicateCount = 0;
-            m_timeoutRecoveryAttempts = 0;
-            m_sessionLogger?.Info("PrepareForReconnect: reset logon retry counter, resend request circuit breaker, and timeout recovery");
+            m_coordinator.PrepareForReconnect();
+            m_sessionLogger?.Info("PrepareForReconnect: coordinator reset transient state");
         }
 
         protected AsciiSession(IFixConfig config, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
@@ -65,6 +53,9 @@ namespace PureFix.Transport.Ascii
                 config.Description.SenderCompID,
                 config.Description.TargetCompID);
             m_sessionStore = storeFactory.Create(sessionId);
+
+            // Create the sequence coordinator - single source of truth for all sequence state
+            m_coordinator = new SessionSequenceCoordinator(m_sessionStore, clock, m_sessionLogger);
 
             m_sessionLogger?.Info("message count = {DefinitionCount}, component count = {ComponentCount}, simple count = {FieldCount}",
             Definitions.Message.Count,
@@ -147,21 +138,16 @@ namespace PureFix.Transport.Ascii
 
                 case TickAction.TerminateOnError:
                     {
-                        m_timeoutRecoveryAttempts++;
-                        if (m_timeoutRecoveryAttempts <= MaxTimeoutRecoveryAttempts)
+                        if (m_coordinator.IncrementTimeoutRecovery(MaxTimeoutRecoveryAttempts))
                         {
                             // Try to recover - reset timeout state to give session a fresh window
                             // This helps survive sleep/wake scenarios where TCP connection may still be alive
-                            m_sessionLogger?.Warn("Session timeout (attempt {Attempt}/{Max}). Attempting recovery - resetting timeout window.",
-                                m_timeoutRecoveryAttempts, MaxTimeoutRecoveryAttempts);
                             m_sessionState.LastTestRequestAt = null;
                             m_sessionState.LastReceivedAt = m_clock.Current; // Reset receive time to prevent immediate re-timeout
                             SetState(SessionState.ActiveNormalSession);
                         }
                         else
                         {
-                            m_sessionLogger?.Warn("Session timeout - max recovery attempts ({Max}) exceeded. Terminating.",
-                                MaxTimeoutRecoveryAttempts);
                             Terminate(new TimeoutException("No response to test request within timeout period"));
                         }
                         break;
@@ -189,29 +175,25 @@ namespace PureFix.Transport.Ascii
 
                 logger?.Info("Peer sent ResetSeqNumFlag=Y with SeqNum={PeerSeqNum}, weAlsoReset={WeAlsoReset}", peerSeqNum, weAlsoReset);
 
-                // Save current encoder sequence if we already reset (our outgoing sequence is already correct)
-                // When weAlsoReset=true, we've already sent our logon with the reset sequence - don't change it
+                // Save encoder sequence if we already reset (we've already sent our logon with reset sequence)
+                // The encoder has already incremented after sending, so we need to preserve that
                 var savedEncoderSeqNum = weAlsoReset ? m_encoder.MsgSeqNum : (int?)null;
 
-                // Always reset the store to clear old messages (prevents duplicate key errors on reconnect)
-                // This must happen even if weAlsoReset=true, because the store may have old messages from before sleep/wake
-                logger?.Info("Resetting session store to clear old messages");
-                await m_sessionStore.Reset();
+                // Coordinator handles the reset logic (clears store, resets tracking)
+                await m_coordinator.HandlePeerReset(peerSeqNum, weAlsoReset);
 
-                // Restore encoder sequence if we already reset, otherwise take from store
-                m_encoder.MsgSeqNum = savedEncoderSeqNum ?? m_sessionStore.SenderSeqNum;
+                // Sync encoder from saved value (if we already reset) or from coordinator
+                m_encoder.MsgSeqNum = savedEncoderSeqNum ?? m_coordinator.NextSenderSeqNum;
+                m_sessionState.LastPeerMsgSeqNum = m_coordinator.LastProcessedPeerSeqNum;
 
                 // Recreate resender with empty store
                 m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
 
-                // Reset our expected incoming sequence
-                m_sessionState.LastPeerMsgSeqNum = peerSeqNum;
-                await m_sessionStore.SetTargetSeqNum(peerSeqNum + 1);
-
                 // Notify derived classes to clear their state (e.g., recovery stores)
                 await OnSessionReset();
 
-                logger?.Info("Reset complete: EncoderSeqNum={EncoderSeqNum}, TargetSeqNum={TargetSeqNum}, LastPeerMsgSeqNum={LastPeerMsgSeqNum}", m_encoder.MsgSeqNum, m_sessionStore.TargetSeqNum, m_sessionState.LastPeerMsgSeqNum);
+                logger?.Info("Reset complete: EncoderSeqNum={EncoderSeqNum}, ExpectedTarget={ExpectedTarget}, LastProcessedPeer={LastProcessed}",
+                    m_encoder.MsgSeqNum, m_coordinator.ExpectedTargetSeqNum, m_coordinator.LastProcessedPeerSeqNum);
             }
 
             var state = m_sessionState;
@@ -225,18 +207,18 @@ namespace PureFix.Transport.Ascii
                 SetState(SessionState.InitiationLogonResponse);
                 logger?.Info("acceptor responds to logon request");
 
-                // If WE (acceptor) are sending ResetSeqNumFlag=Y, we need to reset our incoming
-                // sequence expectation to 0 (expecting 1 next from peer) BEFORE sending our logon.
-                // This handles the broker-reset pattern where client sends N, we respond with Y.
+                // If WE (acceptor) are sending ResetSeqNumFlag=Y, we need to reset our sequences
+                // BEFORE sending our logon. This handles the broker-reset pattern where client sends N, we respond with Y.
                 // Only do this if the peer did NOT already send ResetSeqNumFlag=Y (that case is handled above).
                 var weReset = m_config.ResetSeqNumFlag();
                 if (weReset && resetSeqNumFlag != true)
                 {
                     logger?.Info("Acceptor sending ResetSeqNumFlag=Y (peer sent N), resetting sequences");
-                    m_sessionState.LastPeerMsgSeqNum = 0;
-                    await m_sessionStore.SetTargetSeqNum(1);
-                    await m_sessionStore.Reset();
-                    m_encoder.MsgSeqNum = 1;
+                    await m_coordinator.ResetAsAcceptor();
+
+                    // Sync encoder and session state from coordinator
+                    m_encoder.MsgSeqNum = m_coordinator.NextSenderSeqNum;
+                    m_sessionState.LastPeerMsgSeqNum = m_coordinator.LastProcessedPeerSeqNum;
                     m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
                 }
 
@@ -253,7 +235,7 @@ namespace PureFix.Transport.Ascii
             }
 
             // Reset logon retry counter on successful logon
-            m_logonRetryCount = 0;
+            m_coordinator.ResetLogonRetryCount();
 
             logger?.Info("system ready, inform app");
             await OnReady(view);
@@ -268,25 +250,12 @@ namespace PureFix.Transport.Ascii
             {
                 m_sessionLogger?.Debug("Message {MsgType} has PossDupFlag=Y, bypassing sequence check", msgType);
 
-                // Check if this PossDup message fills the pending gap range and clear the circuit breaker
-                // This handles the case where peer replays actual messages instead of sending GapFill
+                // Track this message in the coordinator's resend manager
+                // (updates pending request tracking - clears request when all messages received)
                 var seqNo = view.MsgSeqNum();
-                if (seqNo.HasValue && m_lastResendRequestBeginSeq.HasValue && m_pendingResendEndSeq.HasValue)
+                if (seqNo.HasValue)
                 {
-                    if (seqNo.Value >= m_lastResendRequestBeginSeq.Value && seqNo.Value <= m_pendingResendEndSeq.Value)
-                    {
-                        m_sessionLogger?.Debug("PossDup message seq {SeqNo} is in pending gap range {GapBegin}-{GapEnd}",
-                            seqNo, m_lastResendRequestBeginSeq.Value, m_pendingResendEndSeq.Value);
-
-                        // Clear circuit breaker when we receive the end of the gap range
-                        if (seqNo.Value == m_pendingResendEndSeq.Value)
-                        {
-                            m_sessionLogger?.Info("PossDup filled gap end (seq {SeqNo}), clearing ResendRequest circuit breaker", seqNo);
-                            m_lastResendRequestBeginSeq = null;
-                            m_pendingResendEndSeq = null;
-                            m_resendRequestDuplicateCount = 0;
-                        }
-                    }
+                    await m_coordinator.OnMessageReceived(seqNo.Value, possDupFlag: true);
                 }
 
                 return true;
@@ -338,25 +307,16 @@ namespace PureFix.Transport.Ascii
                             // Check if this is a delayed message that fills a pending gap.
                             // This handles the case where messages arrive out of order due to network delays
                             // (e.g., after sleep/wake). The original message may arrive AFTER higher sequences.
-                            var inPendingGapRange = m_lastResendRequestBeginSeq.HasValue &&
-                                                     m_pendingResendEndSeq.HasValue &&
-                                                     seqNo >= m_lastResendRequestBeginSeq.Value &&
-                                                     seqNo <= m_pendingResendEndSeq.Value;
+                            var pendingRequests = m_coordinator.PendingResendRequests;
+                            var inPendingGapRange = pendingRequests.Any(p => seqNo >= p.Begin && seqNo <= p.End);
 
                             if (inPendingGapRange)
                             {
-                                m_sessionLogger?.Info("Accepting delayed message seq {SeqNo} (in pending gap range {GapBegin}-{GapEnd})",
-                                    seqNo, m_lastResendRequestBeginSeq.Value, m_pendingResendEndSeq.Value);
+                                m_sessionLogger?.Info("Accepting delayed message seq {SeqNo} (in pending gap range)",
+                                    seqNo);
 
-                                // Clear the resend request if this message fills the gap completely
-                                // (received the end of the range)
-                                if (seqNo == m_pendingResendEndSeq.Value)
-                                {
-                                    m_sessionLogger?.Debug("Gap end filled (seq {SeqNo}), clearing ResendRequest circuit breaker", seqNo);
-                                    m_lastResendRequestBeginSeq = null;
-                                    m_pendingResendEndSeq = null;
-                                    m_resendRequestDuplicateCount = 0;
-                                }
+                                // Track the message receipt - coordinator will clear request when all received
+                                await m_coordinator.OnMessageReceived(seqNo.Value, possDupFlag: false);
 
                                 // Don't update LastPeerMsgSeqNum - it's already ahead of this sequence
                                 return true;
@@ -385,9 +345,9 @@ namespace PureFix.Transport.Ascii
                             // If gap fill arrives later, great. If not, we've already moved on.
                             var lostCount = seqNo.Value - lastSeq.Value - 1;
 
-                            var cbState = m_lastResendRequestBeginSeq.HasValue ? $"active({m_lastResendRequestBeginSeq}-{m_pendingResendEndSeq})" : "inactive";
-                            m_sessionLogger?.Warn("GAP DETECTED: received={ReceivedSeq}, expected={Expected}, lost={LostCount} cb={CB}",
-                                seqNo.Value, expectedSeq, $"{lostCount}, cb={cbState}");
+                            var pendingCount = m_coordinator.PendingResendRequests.Count;
+                            m_sessionLogger?.Warn("GAP DETECTED: received={ReceivedSeq}, expected={Expected}, lost={LostCount} pending={Pending}",
+                                seqNo.Value, expectedSeq, $"{lostCount}, pending={pendingCount}");
 
                             // We process a Logon beforehand to confirm the connection even if out of sync
                             if (msgType == MsgType.Logon)
@@ -401,12 +361,32 @@ namespace PureFix.Transport.Ascii
                                 await OnResendRequest(view);
                             }
 
-                            // Try to send ResendRequest (circuit breaker may block if already sent)
-                            var resendSent = await SendResendRequest(lastSeq.Value, seqNo.Value);
-                            if (!resendSent)
+                            // Use coordinator to determine what action to take
+                            var action = m_coordinator.OnGapDetected(expectedSeq, seqNo.Value);
+                            m_sessionLogger?.Debug("Gap action: {Action}", action);
+
+                            switch (action.Type)
                             {
-                                m_sessionLogger?.Warn("Gap recovery abandoned. Lost {LostCount} messages (seq {FromSeq} to {ToSeq}).",
-                                    lostCount, lastSeq.Value + 1, seqNo.Value - 1);
+                                case ResendActionType.SendResendRequest:
+                                    if (action.Begin.HasValue && action.End.HasValue)
+                                    {
+                                        var resend = m_config.MessageFactory?.ResendRequest(action.Begin.Value, 0);
+                                        if (resend != null)
+                                        {
+                                            m_sessionLogger?.Warn("Sending ResendRequest: begin={Begin}, end=0 (infinity)", action.Begin);
+                                            await Send(MsgType.ResendRequest, resend);
+                                            m_coordinator.RecordResendRequestSent(action.Begin.Value, action.End.Value);
+                                        }
+                                    }
+                                    break;
+
+                                case ResendActionType.Wait:
+                                    m_sessionLogger?.Info("Waiting for existing resend request to complete: {Reason}", action.Reason);
+                                    break;
+
+                                case ResendActionType.SendGapFill:
+                                    m_sessionLogger?.Warn("Gap recovery abandoned (storm protection): {Reason}", action.Reason);
+                                    break;
                             }
 
                             // Always accept the current message and continue - don't block waiting for gap fill
@@ -424,54 +404,13 @@ namespace PureFix.Transport.Ascii
                         }
 
                         // Reset timeout recovery counter when we successfully receive messages
-                        if (ret && m_timeoutRecoveryAttempts > 0)
+                        if (ret)
                         {
-                            m_sessionLogger?.Debug("Message received, resetting timeout recovery counter from {Count}", m_timeoutRecoveryAttempts);
-                            m_timeoutRecoveryAttempts = 0;
+                            m_coordinator.ResetTimeoutRecovery();
                         }
                         return ret;
                     }
             }
-        }
-
-        /// <summary>
-        /// Sends a ResendRequest unless circuit breaker blocks it.
-        /// Only ONE ResendRequest is allowed at a time - if there's already a pending request,
-        /// new gaps are ignored until the pending request is resolved (via SequenceReset or timeout).
-        /// This prevents the chaos of concurrent overlapping ResendRequests.
-        /// </summary>
-        /// <returns>True if request was sent, false if blocked by circuit breaker.</returns>
-        private async Task<bool> SendResendRequest(int lastSeq, int receivedSeq)
-        {
-            var beginSeq = lastSeq + 1;
-            var endSeq = receivedSeq - 1;  // The last sequence we're missing
-
-            m_sessionLogger?.Debug("SendResendRequest: lastSeq={LastSeq}, receivedSeq={ReceivedSeq}, gapRange={Range}",
-                lastSeq, receivedSeq, $"{beginSeq}-{endSeq}");
-
-            // Circuit breaker: Only allow ONE pending ResendRequest at a time
-            // If there's already a pending request, skip any new gaps
-            if (m_lastResendRequestBeginSeq.HasValue)
-            {
-                m_resendRequestDuplicateCount++;
-                m_sessionLogger?.Warn("ResendRequest BLOCKED: pending={PendingRange}, new={NewRange}, count={Count}",
-                    $"{m_lastResendRequestBeginSeq}-{m_pendingResendEndSeq}", $"{beginSeq}-{endSeq}", m_resendRequestDuplicateCount);
-                return false;
-            }
-
-            var resend = m_config.MessageFactory?.ResendRequest(beginSeq, 0);
-            if (resend != null)
-            {
-                m_sessionLogger?.Warn("Sending ResendRequest: beginSeq={BeginSeq}, endSeq=0 (infinity), will track pending range {BeginSeq}-{EndSeq}",
-                    beginSeq, endSeq);
-                await Send(MsgType.ResendRequest, resend);
-                m_lastResendRequestBeginSeq = beginSeq;
-                m_pendingResendEndSeq = endSeq;
-                m_resendRequestDuplicateCount = 0;
-                m_sessionLogger?.Info("Circuit breaker ACTIVATED: pendingBegin={BeginSeq}, pendingEnd={EndSeq}", beginSeq, endSeq);
-                return true;
-            }
-            return false;
         }
 
         private async Task SendReject(string msgType, int seqNo, string msg, int reason)
@@ -493,9 +432,8 @@ namespace PureFix.Transport.Ascii
         /// </summary>
         private async Task HandleLogonRejected(int? refSeqNum, string? text)
         {
-            m_logonRetryCount++;
-
-            if (m_logonRetryCount > MaxLogonRetries)
+            // Ask coordinator if we should retry
+            if (!m_coordinator.OnLogonRejectedForSequence(MaxLogonRetries))
             {
                 m_sessionLogger?.Warn("Max logon retries ({MaxRetries}) exceeded, giving up. Text='{Text}'", MaxLogonRetries, text);
                 SetState(SessionState.PeerLogonRejected);
@@ -507,7 +445,7 @@ namespace PureFix.Transport.Ascii
             // so we just need to retry the logon. The next logon will use the next sequence number.
             var nextSeq = m_encoder.MsgSeqNum;
             m_sessionLogger?.Info("LOGON_SEQ_RETRY: attempt={Attempt}, nextSeq={NextSeq}, reason='{Text}'",
-                $"{m_logonRetryCount}/{MaxLogonRetries}", nextSeq, text);
+                $"{m_coordinator.LogonRetryCount}/{MaxLogonRetries}", nextSeq, text);
 
             // Retry the logon with the next sequence number
             await SendLogon();
@@ -522,13 +460,15 @@ namespace PureFix.Transport.Ascii
         {
             await m_sessionStore.Initialize();
 
-            // Load persisted sequence numbers into encoder and session state
-            m_encoder.MsgSeqNum = m_sessionStore.SenderSeqNum;
-            m_sessionState.LastPeerMsgSeqNum = m_sessionStore.TargetSeqNum > 0
-                ? m_sessionStore.TargetSeqNum - 1
-                : 0;
+            // Initialize coordinator from store - it becomes the source of truth
+            m_coordinator.InitializeFromStore();
 
-            m_sessionLogger?.Info("Session store initialized: SenderSeqNum={SenderSeqNum}, TargetSeqNum={TargetSeqNum}", m_sessionStore.SenderSeqNum, m_sessionStore.TargetSeqNum);
+            // Sync encoder and session state from coordinator
+            m_encoder.MsgSeqNum = m_coordinator.NextSenderSeqNum;
+            m_sessionState.LastPeerMsgSeqNum = m_coordinator.LastProcessedPeerSeqNum;
+
+            m_sessionLogger?.Info("Session store initialized: NextSender={NextSender}, ExpectedTarget={ExpectedTarget}",
+                m_coordinator.NextSenderSeqNum, m_coordinator.ExpectedTargetSeqNum);
 
             // Create resender now that store is initialized
             m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
@@ -660,41 +600,16 @@ namespace PureFix.Transport.Ascii
                 case MsgType.SequenceReset:
                     {
                         var newSeqNo = view.GetInt32((int)MsgTag.NewSeqNo);
+                        var gapFillSeq = view.MsgSeqNum() ?? m_coordinator.ExpectedTargetSeqNum;
                         logger?.Info("peer sends '{MsgType}' sequence reset. newSeqNo = {NewSeqNo}", msgType, newSeqNo);
 
                         if (newSeqNo.HasValue)
                         {
-                            var impliedLastSeq = newSeqNo.Value - 1;
+                            // Let coordinator handle the gap fill - updates expected sequence and clears pending requests
+                            await m_coordinator.OnGapFillReceived(gapFillSeq, newSeqNo.Value);
 
-                            // Only advance LastPeerMsgSeqNum forward, never backwards.
-                            // This can happen when we receive messages out of order:
-                            // e.g., receive seq 45, then seq 46, then SequenceReset with NewSeqNo=45 for a gap we requested
-                            // In this case, we should NOT rewind to expecting seq 45 again.
-                            if (impliedLastSeq > m_sessionState.LastPeerMsgSeqNum)
-                            {
-                                m_sessionState.LastPeerMsgSeqNum = impliedLastSeq;
-                            }
-                            else
-                            {
-                                m_sessionLogger?.Debug("SequenceReset NewSeqNo={NewSeqNo} does not advance past current LastPeerMsgSeqNum={LastSeq}, keeping current value",
-                                    newSeqNo, m_sessionState.LastPeerMsgSeqNum);
-                            }
-
-                            // Update store's target sequence number (only if it advances)
-                            if (newSeqNo.Value > m_sessionStore.TargetSeqNum)
-                            {
-                                await m_sessionStore.SetTargetSeqNum(newSeqNo.Value);
-                            }
-
-                            // Reset ResendRequest circuit breaker if this SequenceReset advances past our pending request
-                            if (m_lastResendRequestBeginSeq.HasValue && newSeqNo.Value > m_lastResendRequestBeginSeq.Value)
-                            {
-                                m_sessionLogger?.Info("Circuit breaker CLEARED by SequenceReset: NewSeqNo={NewSeqNo}, was tracking {Range}",
-                                    newSeqNo, $"{m_lastResendRequestBeginSeq}-{m_pendingResendEndSeq}");
-                                m_lastResendRequestBeginSeq = null;
-                                m_pendingResendEndSeq = null;
-                                m_resendRequestDuplicateCount = 0;
-                            }
+                            // Sync session state from coordinator
+                            m_sessionState.LastPeerMsgSeqNum = m_coordinator.LastProcessedPeerSeqNum;
                         }
                         break;
                     }
@@ -736,14 +651,12 @@ namespace PureFix.Transport.Ascii
             {
                 m_sessionLogger?.Info("Initiator has ResetSeqNumFlag=Y, resetting sequences before logon");
 
-                // Reset the session store (clears old messages and resets sequence numbers)
-                await m_sessionStore.Reset();
+                // Coordinator handles the full reset
+                await m_coordinator.ResetSession("Initiator ResetSeqNumFlag=Y");
 
-                // Set encoder to 1 for the logon message
-                m_encoder.MsgSeqNum = 1;
-
-                // Reset expected incoming sequence
-                m_sessionState.LastPeerMsgSeqNum = 0;
+                // Sync encoder and session state from coordinator
+                m_encoder.MsgSeqNum = m_coordinator.NextSenderSeqNum;
+                m_sessionState.LastPeerMsgSeqNum = m_coordinator.LastProcessedPeerSeqNum;
 
                 // Recreate resender with empty store
                 m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
