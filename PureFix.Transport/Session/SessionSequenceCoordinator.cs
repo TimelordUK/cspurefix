@@ -193,29 +193,39 @@ public class SessionSequenceCoordinator
             {
                 // PossDup messages don't update our expected sequence
                 // They're replays of messages we may have already seen
-                _logger?.Debug("PossDup message received: seq={Seq}", seqNum);
+                _logger?.Debug("PossDup message received: seq={Seq}, expected={Expected}, lastProcessed={LastProcessed}",
+                    seqNum, _expectedTargetSeqNum, _lastProcessedPeerSeqNum);
                 return true; // Still process it
             }
 
             if (seqNum < _expectedTargetSeqNum)
             {
                 // Old message - already processed
-                _logger?.Debug("Old message ignored: seq={Seq}, expected={Expected}",
-                    seqNum, _expectedTargetSeqNum);
+                _logger?.Debug("Old message ignored: seq={Seq}, expected={Expected}, lastProcessed={LastProcessed}",
+                    seqNum, _expectedTargetSeqNum, _lastProcessedPeerSeqNum);
                 return false;
             }
+
+            var expectedBefore = _expectedTargetSeqNum;
+            var lastProcessedBefore = _lastProcessedPeerSeqNum;
 
             if (seqNum == _expectedTargetSeqNum)
             {
                 // Expected message - advance
                 _lastProcessedPeerSeqNum = seqNum;
                 _expectedTargetSeqNum = seqNum + 1;
+
+                _logger?.Debug("Message received in sequence: seq={Seq}, expected now={Expected}",
+                    seqNum, _expectedTargetSeqNum);
             }
             else
             {
                 // Gap detected - will be handled by caller via OnGapDetected
-                // For now just track that we received this one
+                // Track that we received this one but DON'T advance expected (gap not filled yet)
                 _lastProcessedPeerSeqNum = Math.Max(_lastProcessedPeerSeqNum, seqNum);
+
+                _logger?.Info("Gap message received: seq={Seq}, expected={Expected}, gap={GapInfo}",
+                    seqNum, expectedBefore, $"{seqNum - expectedBefore}, lastProcessed now={_lastProcessedPeerSeqNum}");
             }
         }
 
@@ -235,15 +245,25 @@ public class SessionSequenceCoordinator
         {
             _resendManager.OnGapFillReceived(gapFillSeq, newSeqNo, now);
 
+            var expectedBefore = _expectedTargetSeqNum;
+            var lastProcessedBefore = _lastProcessedPeerSeqNum;
+
             // GapFill says "skip from gapFillSeq to newSeqNo"
-            // So our new expected is newSeqNo
+            // So our new expected is newSeqNo - but NEVER rewind!
+            // Old GapFills from previous resend requests may have lower sequences.
             if (newSeqNo > _expectedTargetSeqNum)
             {
                 _expectedTargetSeqNum = newSeqNo;
-                _lastProcessedPeerSeqNum = newSeqNo - 1;
+                // Also never rewind lastProcessed - use Math.Max
+                _lastProcessedPeerSeqNum = Math.Max(_lastProcessedPeerSeqNum, newSeqNo - 1);
 
-                _logger?.Info("GapFill advanced expected sequence: {GapFillSeq} -> {NewSeq}",
-                    gapFillSeq, newSeqNo);
+                _logger?.Info("GapFill advanced: {GapFillSeq} -> {NewSeq}, expected: {StateChange}",
+                    gapFillSeq, newSeqNo, $"{expectedBefore}->{_expectedTargetSeqNum}, lastProcessed: {lastProcessedBefore}->{_lastProcessedPeerSeqNum}");
+            }
+            else
+            {
+                _logger?.Debug("GapFill ignored (would not advance): {GapFillSeq} -> {NewSeqNo}, current: {CurrentState}",
+                    gapFillSeq, newSeqNo, $"expected={_expectedTargetSeqNum}, lastProcessed={_lastProcessedPeerSeqNum}");
             }
         }
 

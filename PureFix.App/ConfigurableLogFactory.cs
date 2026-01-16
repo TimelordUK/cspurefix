@@ -139,16 +139,19 @@ public class ConfigurableLogFactory : ILogFactory
         public void Debug<T>(string template, T arg) => _logger.Debug(template, arg);
         public void Debug<T1, T2>(string template, T1 arg1, T2 arg2) => _logger.Debug(template, arg1, arg2);
         public void Debug<T1, T2, T3>(string template, T1 arg1, T2 arg2, T3 arg3) => _logger.Debug(template, arg1, arg2, arg3);
+        public void DebugV(string template, params object?[] args) => _logger.Debug(template, args);
 
         public void Info(string message) => _logger.Information(message);
         public void Info<T>(string template, T arg) => _logger.Information(template, arg);
         public void Info<T1, T2>(string template, T1 arg1, T2 arg2) => _logger.Information(template, arg1, arg2);
         public void Info<T1, T2, T3>(string template, T1 arg1, T2 arg2, T3 arg3) => _logger.Information(template, arg1, arg2, arg3);
+        public void InfoV(string template, params object?[] args) => _logger.Information(template, args);
 
         public void Warn(string message) => _logger.Warning(message);
         public void Warn<T>(string template, T arg) => _logger.Warning(template, arg);
         public void Warn<T1, T2>(string template, T1 arg1, T2 arg2) => _logger.Warning(template, arg1, arg2);
         public void Warn<T1, T2, T3>(string template, T1 arg1, T2 arg2, T3 arg3) => _logger.Warning(template, arg1, arg2, arg3);
+        public void WarnV(string template, params object?[] args) => _logger.Warning(template, args);
 
         public void Error(Exception ex, string? message = null) => _logger.Error(ex, message ?? ex.Message);
         public void Error<T>(Exception ex, string template, T arg) => _logger.Error(ex, template, arg);

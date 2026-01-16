@@ -385,14 +385,23 @@ namespace PureFix.Transport.Ascii
                                     break;
 
                                 case ResendActionType.SendGapFill:
-                                    m_sessionLogger?.Warn("Gap recovery abandoned (storm protection): {Reason}", action.Reason);
+                                    // Storm protection triggered - we've sent too many ResendRequests.
+                                    // Don't send another request - just accept the current message and move on.
+                                    // The gap (expectedSeq to seqNo-1) will be permanently lost.
+                                    m_sessionLogger?.Warn("Gap recovery abandoned (storm protection): {Reason}. " +
+                                        "Accepting seq={SeqNo}, gap {GapRange} will not be recovered.",
+                                        action.Reason, seqNo, $"{action.Begin}-{action.End}");
                                     break;
                             }
 
                             // Always accept the current message and continue - don't block waiting for gap fill
                             ret = true;
+                            var prevSeq = state.LastPeerMsgSeqNum;
                             state.LastPeerMsgSeqNum = seqNo;
                             await m_sessionStore.SetTargetSeqNum(seqNo.Value + 1);
+
+                            m_sessionLogger?.Debug("Gap message accepted: sessionState {PrevSeq}->{NewSeq}, store={StoreInfo}",
+                                prevSeq, seqNo, $"target={seqNo.Value + 1}, coord expected={m_coordinator.ExpectedTargetSeqNum}");
                         }
                         else
                         {
@@ -407,6 +416,17 @@ namespace PureFix.Transport.Ascii
                         if (ret)
                         {
                             m_coordinator.ResetTimeoutRecovery();
+
+                            // Sanity check: session state and coordinator should be in sync
+                            // (session expected = lastPeerMsgSeqNum + 1, coordinator expected should be <= this)
+                            var sessionExpected = (state.LastPeerMsgSeqNum ?? 0) + 1;
+                            var coordExpected = m_coordinator.ExpectedTargetSeqNum;
+                            if (coordExpected > sessionExpected)
+                            {
+                                m_sessionLogger?.Warn("SEQUENCE DESYNC: coordinator expected ({CoordExpected}) > session expected ({SessionExpected}). " +
+                                    "This indicates a bug in sequence tracking.",
+                                    coordExpected, sessionExpected);
+                            }
                         }
                         return ret;
                     }
@@ -605,11 +625,30 @@ namespace PureFix.Transport.Ascii
 
                         if (newSeqNo.HasValue)
                         {
+                            var sessionSeqBefore = m_sessionState.LastPeerMsgSeqNum;
+                            var coordinatorSeqBefore = m_coordinator.LastProcessedPeerSeqNum;
+
                             // Let coordinator handle the gap fill - updates expected sequence and clears pending requests
                             await m_coordinator.OnGapFillReceived(gapFillSeq, newSeqNo.Value);
 
-                            // Sync session state from coordinator
-                            m_sessionState.LastPeerMsgSeqNum = m_coordinator.LastProcessedPeerSeqNum;
+                            // Sync session state from coordinator - but NEVER rewind!
+                            // Old GapFills (from previous resend requests) may have lower sequence numbers
+                            // than what we've already processed. Only advance, never go backwards.
+                            var coordinatorSeqAfter = m_coordinator.LastProcessedPeerSeqNum;
+                            var newSessionSeq = Math.Max(sessionSeqBefore ?? 0, coordinatorSeqAfter);
+
+                            if (newSessionSeq < (sessionSeqBefore ?? 0))
+                            {
+                                logger?.Warn("GapFill would rewind session state: session={SessionSeq}, coordinator={CoordSeq}, keeping session value",
+                                    sessionSeqBefore, coordinatorSeqAfter);
+                            }
+                            else if (newSessionSeq > (sessionSeqBefore ?? 0))
+                            {
+                                logger?.Info("GapFill advancing session state: {Before} -> {After}, coordinator: {CoordChange}",
+                                    sessionSeqBefore, newSessionSeq, $"{coordinatorSeqBefore}->{coordinatorSeqAfter}");
+                            }
+
+                            m_sessionState.LastPeerMsgSeqNum = newSessionSeq;
                         }
                         break;
                     }
