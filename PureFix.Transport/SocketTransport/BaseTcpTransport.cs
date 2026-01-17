@@ -84,17 +84,29 @@ namespace PureFix.Transport.SocketTransport
                 certPath.EndsWith(".p12", StringComparison.OrdinalIgnoreCase))
             {
                 // PKCS#12 format (typically password-protected)
+#if NET9_0_OR_GREATER
                 return X509CertificateLoader.LoadPkcs12FromFile(certPath, password);
+#else
+                return new X509Certificate2(certPath, password);
+#endif
             }
             else if (certPath.EndsWith(".pem", StringComparison.OrdinalIgnoreCase))
             {
                 // PEM format
+#if NET9_0_OR_GREATER
                 return X509CertificateLoader.LoadCertificateFromFile(certPath);
+#else
+                return X509Certificate2.CreateFromPemFile(certPath);
+#endif
             }
             else
             {
                 // Try PKCS#12 first (most common for client certificates)
+#if NET9_0_OR_GREATER
                 return X509CertificateLoader.LoadPkcs12FromFile(certPath, password);
+#else
+                return new X509Certificate2(certPath, password);
+#endif
             }
         }
 
