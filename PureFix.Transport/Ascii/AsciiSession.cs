@@ -400,6 +400,9 @@ namespace PureFix.Transport.Ascii
                             state.LastPeerMsgSeqNum = seqNo;
                             await m_sessionStore.SetTargetSeqNum(seqNo.Value + 1);
 
+                            // Notify coordinator of gap message receipt (coordinator tracks but doesn't advance expected)
+                            await m_coordinator.OnMessageReceived(seqNo.Value, possDupFlag: false);
+
                             m_sessionLogger?.Debug("Gap message accepted: sessionState {PrevSeq}->{NewSeq}, store={StoreInfo}",
                                 prevSeq, seqNo, $"target={seqNo.Value + 1}, coord expected={m_coordinator.ExpectedTargetSeqNum}");
                         }
@@ -410,6 +413,10 @@ namespace PureFix.Transport.Ascii
 
                             // Update store's target sequence number (next expected incoming seq = seqNo + 1)
                             await m_sessionStore.SetTargetSeqNum(seqNo.Value + 1);
+
+                            // CRITICAL: Notify coordinator of in-sequence message receipt.
+                            // This keeps coordinator's expected in sync with session state.
+                            await m_coordinator.OnMessageReceived(seqNo.Value, possDupFlag: false);
                         }
 
                         // Reset timeout recovery counter when we successfully receive messages

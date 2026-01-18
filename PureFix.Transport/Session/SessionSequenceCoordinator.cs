@@ -218,14 +218,22 @@ public class SessionSequenceCoordinator
                 _logger?.Debug("Message received in sequence: seq={Seq}, expected now={Expected}",
                     seqNum, _expectedTargetSeqNum);
             }
+            else if (seqNum > _expectedTargetSeqNum)
+            {
+                // Gap detected - session accepts this message and moves on.
+                // We must advance expected to stay in sync with session state.
+                // The ResendRequestManager still tracks the pending gap request.
+                _lastProcessedPeerSeqNum = seqNum;
+                _expectedTargetSeqNum = seqNum + 1;
+
+                _logger?.Info("Gap message accepted: seq={Seq}, was expecting={Expected}, expected now={ExpectedNow}",
+                    seqNum, expectedBefore, _expectedTargetSeqNum);
+            }
             else
             {
-                // Gap detected - will be handled by caller via OnGapDetected
-                // Track that we received this one but DON'T advance expected (gap not filled yet)
-                _lastProcessedPeerSeqNum = Math.Max(_lastProcessedPeerSeqNum, seqNum);
-
-                _logger?.Info("Gap message received: seq={Seq}, expected={Expected}, gap={GapInfo}",
-                    seqNum, expectedBefore, $"{seqNum - expectedBefore}, lastProcessed now={_lastProcessedPeerSeqNum}");
+                // Old message (seqNum < expected) - don't update state
+                _logger?.Debug("Old message received: seq={Seq}, expected={Expected}, ignoring for sequence tracking",
+                    seqNum, _expectedTargetSeqNum);
             }
         }
 

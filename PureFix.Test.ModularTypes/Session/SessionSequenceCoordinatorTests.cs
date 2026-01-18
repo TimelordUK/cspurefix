@@ -178,7 +178,7 @@ public class SessionSequenceCoordinatorTests
     }
 
     [Test]
-    public async Task OnMessageReceived_GapDetected_UpdatesLastProcessed()
+    public async Task OnMessageReceived_GapDetected_AdvancesExpectedToStayInSync()
     {
         var coordinator = new SessionSequenceCoordinator(_store, _clock);
         // Expecting 1, but receive 5 (gap of 1-4)
@@ -186,7 +186,91 @@ public class SessionSequenceCoordinatorTests
         await coordinator.OnMessageReceived(5, possDupFlag: false);
 
         Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(5));
-        // ExpectedTargetSeqNum stays at 1 until gap is filled
+        // ExpectedTargetSeqNum advances to 6 to stay in sync with session state.
+        // The session accepts the gap message and moves on; coordinator must match.
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(6));
+    }
+
+    [Test]
+    public async Task OnMessageReceived_SequenceOfMessages_CoordinatorStaysInSync()
+    {
+        // REGRESSION TEST: This catches the bug where coordinator wasn't being
+        // notified about normal in-sequence messages, causing it to have stale state.
+        var coordinator = new SessionSequenceCoordinator(_store, _clock);
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(1));
+
+        // Simulate receiving messages 1 through 13 in sequence
+        for (int i = 1; i <= 13; i++)
+        {
+            await coordinator.OnMessageReceived(i, possDupFlag: false);
+            Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(i + 1),
+                $"After receiving seq {i}, expected should be {i + 1}");
+            Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(i),
+                $"After receiving seq {i}, lastProcessed should be {i}");
+        }
+
+        // After receiving 1-13, expected should be 14
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(14));
+        Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(13));
+    }
+
+    [Test]
+    public async Task OnMessageReceived_GapThenInSequence_CoordinatorStaysInSync()
+    {
+        // REGRESSION TEST: After a gap is accepted, subsequent in-sequence messages
+        // should not trigger additional gaps.
+        var coordinator = new SessionSequenceCoordinator(_store, _clock);
+
+        // Receive 1-5 in sequence
+        for (int i = 1; i <= 5; i++)
+        {
+            await coordinator.OnMessageReceived(i, possDupFlag: false);
+        }
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(6));
+
+        // Now receive 10 (gap of 6-9)
+        await coordinator.OnMessageReceived(10, possDupFlag: false);
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(11),
+            "After gap message, expected should advance to stay in sync");
+
+        // Now receive 11, 12, 13 in sequence - these should NOT be seen as gaps
+        for (int i = 11; i <= 13; i++)
+        {
+            var expectedBefore = coordinator.ExpectedTargetSeqNum;
+            await coordinator.OnMessageReceived(i, possDupFlag: false);
+            Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(i + 1),
+                $"Message {i} should be in sequence (was expecting {expectedBefore})");
+        }
+
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(14));
+    }
+
+    [Test]
+    public async Task OnMessageReceived_PostResetSequence_CoordinatorTracksAll()
+    {
+        // REGRESSION TEST: Simulates the production scenario where after reset,
+        // coordinator must track all received messages to avoid spurious gap detection.
+        var coordinator = new SessionSequenceCoordinator(_store, _clock);
+
+        // Simulate ResetSeqNumFlag=Y exchange
+        await coordinator.HandlePeerReset(peerSeqNum: 1, weAlsoReset: true);
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(2),
+            "After reset with peer logon seq=1, expected should be 2");
+
+        // Receive messages 2-13 in sequence (simulating normal post-logon traffic)
+        for (int i = 2; i <= 13; i++)
+        {
+            await coordinator.OnMessageReceived(i, possDupFlag: false);
+        }
+
+        // Coordinator expected must be 14 (not still at 2!)
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(14),
+            "After receiving 2-13, coordinator expected must be 14");
+
+        // Now if we receive seq 19 (gap), the gap is 14-18 (5 messages), not 2-18
+        var gapAction = coordinator.OnGapDetected(14, 19);
+        Assert.That(gapAction.Begin, Is.EqualTo(14),
+            "Gap should start at 14, not at an earlier stale value");
     }
 
     [Test]
@@ -441,9 +525,10 @@ public class SessionSequenceCoordinatorTests
         Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(5));
 
         // Gap detected: receive 10, missing 6-9
+        // With new behavior, expected advances to 11 to stay in sync with session
         await coordinator.OnMessageReceived(10, possDupFlag: false);
         Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(10));
-        // Expected stays at 6 (gap not filled)
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(11));
 
         // Continue receiving 11-15
         for (int i = 11; i <= 15; i++)
@@ -451,13 +536,16 @@ public class SessionSequenceCoordinatorTests
             await coordinator.OnMessageReceived(i, possDupFlag: false);
         }
         Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(15));
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(16));
 
         // Now an OLD GapFill arrives (from a previous request) with lower sequence
         // This simulates the bug scenario where GapFill for 6->10 arrives late
+        // Since 10 < 16 (current expected), this GapFill should be IGNORED
         await coordinator.OnGapFillReceived(6, 10);
 
-        // Expected should advance to 10, but lastProcessed should NOT rewind from 15 to 9
-        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(10));
+        // Expected should stay at 16 (GapFill ignored), lastProcessed stays at 15
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(16),
+            "Old GapFill with newSeqNo < expected should be ignored");
         Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(15),
             "LastProcessedPeerSeqNum should NOT be rewound by old GapFill");
     }
@@ -528,12 +616,12 @@ public class SessionSequenceCoordinatorTests
     }
 
     /// <summary>
-    /// Simulates the exact production loop scenario:
-    /// 1. Normal messages advance session to seq 22
-    /// 2. Old GapFill (14->17) arrives from previous ResendRequest
-    /// 3. Before the fix, this would rewind lastProcessedPeerSeqNum to 16
-    /// 4. Next message (seq 25) would detect gap 17-24
-    /// 5. This creates a loop of re-requesting already-received messages
+    /// Simulates the production loop scenario with the new sync behavior:
+    /// 1. Normal messages advance to seq 13
+    /// 2. Gap detected at 17 (missing 14-16), expected advances to 18
+    /// 3. Receive 17-22, expected advances to 23
+    /// 4. Old GapFill (14->17) arrives - IGNORED because 17 < 23
+    /// 5. This demonstrates that coordinator stays in sync and old GapFills don't cause problems
     /// </summary>
     [Test]
     public async Task ProductionLoopScenario_OldGapFillDoesNotCauseLoop()
@@ -552,33 +640,37 @@ public class SessionSequenceCoordinatorTests
         Assert.That(action1.Type, Is.EqualTo(ResendActionType.SendResendRequest));
         coordinator.RecordResendRequestSent(14, 16);
 
-        // Receive 17-22 while waiting for gap fill
-        for (int i = 17; i <= 22; i++)
+        // Receive 17 (gap message) - expected advances to 18
+        await coordinator.OnMessageReceived(17, possDupFlag: false);
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(18));
+
+        // Receive 18-22 in sequence
+        for (int i = 18; i <= 22; i++)
         {
             await coordinator.OnMessageReceived(i, possDupFlag: false);
         }
         Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(22));
-        // Expected still 14 (gap not filled)
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(23));
 
         // OLD GapFill arrives: 14->17
-        // Before fix: this would set lastProcessed to 16, causing rewind
-        // After fix: lastProcessed stays at 22
+        // Since 17 < 23 (current expected), this is IGNORED
         await coordinator.OnGapFillReceived(14, 17);
 
-        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(17));
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(23),
+            "Old GapFill should be ignored - expected stays at 23");
         Assert.That(coordinator.LastProcessedPeerSeqNum, Is.EqualTo(22),
             "CRITICAL: lastProcessedPeerSeqNum must NOT rewind from 22 to 16");
 
-        // Now message 25 arrives
+        // Now message 25 arrives (gap of 23-24)
         await coordinator.OnMessageReceived(25, possDupFlag: false);
+        Assert.That(coordinator.ExpectedTargetSeqNum, Is.EqualTo(26));
 
-        // The gap should be 17-24, NOT 17-24 repeatedly
-        // (If lastProcessed had rewound to 16, we'd see gap 17-24 in a loop)
-        var action2 = coordinator.OnGapDetected(17, 25);
+        // Gap detection would be for 23-24, a proper small gap
+        var action2 = coordinator.OnGapDetected(23, 25);
 
-        // This should request 17-24, not re-request anything we've already seen
-        Assert.That(action2.Begin, Is.GreaterThanOrEqualTo(17));
-        Assert.That(action2.End, Is.LessThanOrEqualTo(24));
+        // This should request 23-24, not re-request old stuff
+        Assert.That(action2.Begin, Is.EqualTo(23));
+        Assert.That(action2.End, Is.EqualTo(24));
     }
 
     #endregion
