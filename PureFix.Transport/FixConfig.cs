@@ -61,6 +61,13 @@ namespace PureFix.Transport
         /// </summary>
         public IFixSessionStoreFactory? SessionStoreFactory { get; set; }
 
+        /// <summary>
+        /// Registry for tracking active sessions. When a new session with the same SessionId
+        /// is created (e.g., client reconnect), the old session is stopped to prevent
+        /// stale transport writes.
+        /// </summary>
+        public ISessionRegistry? SessionRegistry { get; set; }
+
         public static IFixConfig MakeConfigFromPaths(string dictionaryRootPath, string sessionDescriptionPath)
         {
             var definitions = new FixDefinitions();

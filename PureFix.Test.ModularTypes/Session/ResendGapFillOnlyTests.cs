@@ -248,6 +248,7 @@ internal class MockFixConfig : IFixConfig
     public ISessionDescription? Description => _description;
     public ISessionMessageFactory? MessageFactory { get; }
     public IFixSessionStoreFactory? SessionStoreFactory => null;
+    public ISessionRegistry? SessionRegistry => null;
 }
 
 /// <summary>

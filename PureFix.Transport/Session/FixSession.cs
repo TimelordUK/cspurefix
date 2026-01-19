@@ -214,6 +214,10 @@ namespace PureFix.Transport.Session
             }
 
             SetState(SessionState.Stopped);
+
+            // Allow derived classes to perform cleanup before OnStopped (e.g., unregister from session registry)
+            OnSessionStopping();
+
             OnStopped(error);
             if (m_MySource is { IsCancellationRequested: false })
             {
@@ -221,6 +225,24 @@ namespace PureFix.Transport.Session
                 m_MySource?.Cancel();
             }
             m_transport = null;
+        }
+
+        /// <summary>
+        /// Called during Stop() before OnStopped. Override to perform cleanup like unregistering from session registry.
+        /// </summary>
+        protected virtual void OnSessionStopping()
+        {
+            // Base implementation does nothing - derived classes can override
+        }
+
+        /// <summary>
+        /// Stops the session from external callers (e.g., session registry when a new session replaces this one).
+        /// </summary>
+        /// <param name="reason">The reason for stopping the session.</param>
+        public void RequestStop(string reason)
+        {
+            m_sessionLogger?.Info("RequestStop: {Reason}", reason);
+            Stop(new InvalidOperationException(reason));
         }
 
         protected async Task Send(string msgType, IFixMessage message)
