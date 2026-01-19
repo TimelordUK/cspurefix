@@ -29,13 +29,9 @@ Examples:
 The following data types are based on int.
 </Description>
      */
-    public partial class RepoXmlDataTypeParser : RepoBaseXmlParser
+    public partial class RepoXmlDataTypeParser(IFixDefinitions definitions) : RepoBaseXmlParser(definitions)
     {
         public Dictionary<string, RepoDataTypeDefinition> DataTypes { get; init; } = [];
-
-        public RepoXmlDataTypeParser(IFixDefinitions definitions): base(definitions)
-        {
-        }
 
         protected override void ParseDoc(XDocument doc)
         {

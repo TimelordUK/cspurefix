@@ -8,13 +8,9 @@ using System.Xml.Linq;
 
 namespace PureFix.Dictionary.Parser.Repo
 {
-    public abstract class RepoBaseXmlParser
+    public abstract class RepoBaseXmlParser(IFixDefinitions definitions)
     {
-            public IFixDefinitions Definitions { get; private set; }
-            protected RepoBaseXmlParser(IFixDefinitions definitions)
-            {
-                Definitions = definitions;
-            }
+            public IFixDefinitions Definitions { get; private set; } = definitions;
 
             public void Parse(string path)
             {

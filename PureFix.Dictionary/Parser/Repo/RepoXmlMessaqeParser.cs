@@ -21,14 +21,10 @@ namespace PureFix.Dictionary.Parser.Repo
 		<Description>The Heartbeat monitors the status of the communication link and identifies when the last of a string of messages was not received.</Description>
 	</Message>
      */
-    public partial class RepoXmlMessageParser : RepoBaseXmlParser
+    public partial class RepoXmlMessageParser(IFixDefinitions definitions) : RepoBaseXmlParser(definitions)
     {
         private Dictionary<int, RepoMessageDefinition> _messages { get; set; } = [];
         public IReadOnlyDictionary<int, RepoMessageDefinition> Messages => _messages;
-
-        public RepoXmlMessageParser(IFixDefinitions definitions): base(definitions)
-        {
-        }
 
         protected override void ParseDoc(XDocument doc)
         {

@@ -121,10 +121,7 @@ public partial class CSharpIdentifierSanitizer
                 collidedWith = existing;
 
                 // Increment collision counter and append suffix
-                if (!_collisionCounts.TryGetValue(key, out var count))
-                {
-                    count = 1;
-                }
+                var count = _collisionCounts.GetValueOrDefault(key, 1);
                 _collisionCounts[key] = count + 1;
                 sanitized = $"{sanitized}_{count + 1}";
                 wasModified = true;

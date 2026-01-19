@@ -20,14 +20,10 @@ namespace PureFix.Dictionary.Parser.Repo
     <Description>MsgType = 0</Description>
 </MsgContent>
  */
-    public partial class RepoXmlMsgContentParser : RepoBaseXmlParser
+    public partial class RepoXmlMsgContentParser(IFixDefinitions definitions) : RepoBaseXmlParser(definitions)
     {
         private Dictionary<int, List<RepoMsgContentDefinition>> _contents { get; set; } = [];
         public IReadOnlyDictionary<int, List<RepoMsgContentDefinition>> Contents => _contents;
-
-        public RepoXmlMsgContentParser(IFixDefinitions definitions): base(definitions)
-        {
-        }
 
         protected override void ParseDoc(XDocument doc)
         {

@@ -15,14 +15,10 @@ namespace PureFix.Dictionary.Parser.Repo
 		<AbbrTerm>Acct</AbbrTerm>
 	</Abbreviation>
      */
-    public partial class RepoXmlAbbreviationParser : RepoBaseXmlParser
+    public partial class RepoXmlAbbreviationParser(IFixDefinitions definitions) : RepoBaseXmlParser(definitions)
     {
         private Dictionary<string, string> _abbreviatons { get; set; } = [];
         public IReadOnlyDictionary<string, string> Abbreviations => _abbreviatons;
-
-        public RepoXmlAbbreviationParser(IFixDefinitions definitions): base(definitions)
-        {
-        }
 
         protected override void ParseDoc(XDocument doc)
         {

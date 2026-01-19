@@ -47,7 +47,7 @@ namespace PureFix.Dictionary.Compiler
             {
                 using (generator.BeginBlock("public class FixMessageFactory : IFixMessageFactory"))
                 {
-                    using (generator.BeginBlock($"public IFixMessage? ToFixMessage(IMessageView view)"))
+                    using (generator.BeginBlock("public IFixMessage? ToFixMessage(IMessageView view)"))
                     {
                         generator.WriteLine("var msgType = view.GetString((int)MsgTag.MsgType);");
                         using (generator.BeginBlock("switch (msgType)"))
@@ -355,7 +355,7 @@ namespace PureFix.Dictionary.Compiler
                     generator.WriteLine("IStandardTrailer? IFixMessage.StandardTrailer => StandardTrailer;");
 
                     generator.WriteLine();
-                    GenerateSupportingFunctions(generator, "", message, message.Name);
+                    GenerateSupportingFunctions(generator, message, message.Name);
                 }
             }
 
@@ -385,7 +385,7 @@ namespace PureFix.Dictionary.Compiler
                     {
                         ApplyFields(generator, "", component.Definition, componentName);
                         generator.WriteLine();
-                        GenerateSupportingFunctions(generator, "", component.Definition, componentName);
+                        GenerateSupportingFunctions(generator, component.Definition, componentName);
                     }
                 }
             }
@@ -418,7 +418,7 @@ namespace PureFix.Dictionary.Compiler
                 switch (field)
                 {
                     case ContainedSimpleField simpleField:
-                        HandleFieldProperty(generator, parentPath, i, simpleField, last, next, parentTypeName);
+                        HandleFieldProperty(generator, i, simpleField, parentTypeName);
                         break;
                     case ContainedComponentField componentField:
                     {
@@ -440,16 +440,13 @@ namespace PureFix.Dictionary.Compiler
                         // DON'T call Process() for groups - they're nested inline
                         break;
                 }
-
-                last = field;
             }
         }
 
         private void GenerateNestedGroup(
             CodeGenerator generator,
             string parentPath,
-            ContainedGroupField group,
-            int indentLevel = 1)
+            ContainedGroupField group)
         {
             if (group.Definition == null) return;
 
@@ -461,7 +458,7 @@ namespace PureFix.Dictionary.Compiler
                 ApplyFields(generator, parentPath + groupName, group.Definition, groupName);
 
                 generator.WriteLine();
-                GenerateSupportingFunctions(generator, parentPath + groupName, group.Definition, groupName);
+                GenerateSupportingFunctions(generator, group.Definition, groupName);
             }
         }
 
@@ -473,16 +470,13 @@ namespace PureFix.Dictionary.Compiler
             ContainedField? last,
             ContainedField? next)
         {
-            HandleFieldProperty(generator, parentPath, index, field, last, next, null);
+            HandleFieldProperty(generator, index, field, null);
         }
 
         private void HandleFieldProperty(
             CodeGenerator generator,
-            string parentPath,
             int index,
             ContainedSimpleField field,
-            ContainedField? last,
-            ContainedField? next,
             string? parentTypeName)
         {
             var propName = GetFieldPropertyName(field.Name, parentTypeName);
@@ -548,7 +542,7 @@ namespace PureFix.Dictionary.Compiler
 
             if (name.StartsWith("No") && name.Length > 2)
             {
-                propertyName = name.Substring(2);
+                propertyName = name[2..];
             }
             else
             {
@@ -576,7 +570,7 @@ namespace PureFix.Dictionary.Compiler
             return fieldName;
         }
 
-        private static void GenerateSupportingFunctions(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName)
+        private static void GenerateSupportingFunctions(CodeGenerator generator, IContainedSet set, string? parentTypeName)
         {
             // Generate IsValid
             GenerateIsValid(generator, set);

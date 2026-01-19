@@ -19,13 +19,9 @@ namespace PureFix.Dictionary.Parser.Repo
 		<Description>Account mnemonic as agreed between buy and sell sides, e.g. broker and institution or investor/intermediary and fund manager.</Description>
 	</Field>
      */
-    public partial class RepoXmlFieldParser : RepoBaseXmlParser
+    public partial class RepoXmlFieldParser(IFixDefinitions definitions) : RepoBaseXmlParser(definitions)
     {
         public required IReadOnlyDictionary<int, List<FieldEnum>> Enums { get; init ; }
-
-        public RepoXmlFieldParser(IFixDefinitions definitions): base(definitions)
-        {
-        }
 
         protected override void ParseDoc(XDocument doc)
         {
