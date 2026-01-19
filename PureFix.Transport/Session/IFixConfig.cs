@@ -19,5 +19,13 @@ namespace PureFix.Transport.Session
         /// Applications can provide FileSessionStoreFactory for persistence or custom implementations.
         /// </summary>
         IFixSessionStoreFactory? SessionStoreFactory { get; }
+
+        /// <summary>
+        /// Registry for tracking active sessions. When a new session with the same SessionId
+        /// is created (e.g., client reconnect), the old session is stopped to prevent
+        /// stale transport writes.
+        /// Optional - if null, session replacement is not tracked.
+        /// </summary>
+        ISessionRegistry? SessionRegistry { get; }
     }
 }

@@ -19,6 +19,8 @@ namespace PureFix.Transport.Ascii
         private readonly IFixSessionStore m_sessionStore;
         private readonly IFixMessageFactory m_fixMessageFactory;
         private readonly SessionSequenceCoordinator m_coordinator;
+        private readonly SessionId m_sessionId;
+        private readonly ISessionRegistry? m_sessionRegistry;
         private FixMsgAsciiStoreResend? m_resender;
         private const int MaxLogonRetries = 100; // Reasonable limit to prevent infinite loops
         private const int MaxTimeoutRecoveryAttempts = 3;
@@ -48,11 +50,14 @@ namespace PureFix.Transport.Ascii
 
             // Create session store from factory (defaults to in-memory if not configured)
             var storeFactory = config.SessionStoreFactory ?? new MemorySessionStoreFactory();
-            var sessionId = new SessionId(
+            m_sessionId = new SessionId(
                 config.Description.BeginString,
                 config.Description.SenderCompID,
                 config.Description.TargetCompID);
-            m_sessionStore = storeFactory.Create(sessionId);
+            m_sessionStore = storeFactory.Create(m_sessionId);
+
+            // Get session registry from config (optional - for tracking active sessions)
+            m_sessionRegistry = config.SessionRegistry;
 
             // Create the sequence coordinator - single source of truth for all sequence state
             m_coordinator = new SessionSequenceCoordinator(m_sessionStore, clock, m_sessionLogger);
@@ -487,6 +492,17 @@ namespace PureFix.Transport.Ascii
         {
             await m_sessionStore.Initialize();
 
+            // Register with session registry - this will stop any existing session with same SessionId
+            // This prevents stale transport writes when a client reconnects before the old session detects disconnect
+            if (m_sessionRegistry != null)
+            {
+                var stoppedOld = m_sessionRegistry.Register(m_sessionId, this);
+                if (stoppedOld)
+                {
+                    m_sessionLogger?.Info("Session registry stopped previous session for {SessionId}", m_sessionId);
+                }
+            }
+
             // Initialize coordinator from store - it becomes the source of truth
             m_coordinator.InitializeFromStore();
 
@@ -499,6 +515,20 @@ namespace PureFix.Transport.Ascii
 
             // Create resender now that store is initialized
             m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
+        }
+
+        /// <summary>
+        /// Called when the session stops. Unregisters from session registry.
+        /// </summary>
+        protected override void OnSessionStopping()
+        {
+            base.OnSessionStopping();
+
+            if (m_sessionRegistry != null)
+            {
+                m_sessionLogger?.Info("Session stopping - unregistering from registry: {SessionId}", m_sessionId);
+                m_sessionRegistry.Unregister(m_sessionId, this);
+            }
         }
 
         /// <summary>
