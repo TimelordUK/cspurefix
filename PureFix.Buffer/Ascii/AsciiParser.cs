@@ -17,11 +17,9 @@ namespace PureFix.Buffer.Ascii
 {
     public partial class AsciiParser : IMessageParser
     {
-        private static int _nextId;
         public byte Delimiter { get; set; } = AsciiChars.Soh;
         public byte WriteDelimiter { get; set; } = AsciiChars.Soh;
         public IFixDefinitions Definitions { get; }
-        public int ID { get; } = Interlocked.Increment(ref _nextId);
 
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;

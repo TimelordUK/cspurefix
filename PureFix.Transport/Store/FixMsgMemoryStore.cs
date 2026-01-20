@@ -25,8 +25,6 @@ namespace PureFix.Transport.Store
             Name = name;
         }
 
-        private static int _nextId;
-        private int _id = Interlocked.Increment(ref _nextId);
         public string Name { get; }
 
 
