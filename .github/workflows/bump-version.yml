@@ -1,0 +1,122 @@
+name: Bump Version and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      prerelease:
+        description: 'Prerelease suffix (leave empty for stable release)'
+        required: false
+        default: 'beta'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  bump-version:
+    name: Bump Version
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Get current version
+      id: current
+      run: |
+        VERSION=$(grep -oP '(?<=<Version>)[^<]+' Directory.Build.props)
+        echo "Current version: $VERSION"
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+        # Parse version components (handle prerelease suffix)
+        BASE_VERSION=$(echo "$VERSION" | sed 's/-.*$//')
+        MAJOR=$(echo "$BASE_VERSION" | cut -d. -f1)
+        MINOR=$(echo "$BASE_VERSION" | cut -d. -f2)
+        PATCH=$(echo "$BASE_VERSION" | cut -d. -f3)
+
+        echo "major=$MAJOR" >> $GITHUB_OUTPUT
+        echo "minor=$MINOR" >> $GITHUB_OUTPUT
+        echo "patch=$PATCH" >> $GITHUB_OUTPUT
+
+    - name: Calculate new version
+      id: new
+      run: |
+        MAJOR=${{ steps.current.outputs.major }}
+        MINOR=${{ steps.current.outputs.minor }}
+        PATCH=${{ steps.current.outputs.patch }}
+        BUMP="${{ github.event.inputs.bump }}"
+        PRERELEASE="${{ github.event.inputs.prerelease }}"
+
+        case "$BUMP" in
+          major)
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+            ;;
+          minor)
+            MINOR=$((MINOR + 1))
+            PATCH=0
+            ;;
+          patch)
+            PATCH=$((PATCH + 1))
+            ;;
+        esac
+
+        NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+        if [ -n "$PRERELEASE" ]; then
+          NEW_VERSION="${NEW_VERSION}-${PRERELEASE}"
+        fi
+
+        echo "New version: $NEW_VERSION"
+        echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Update Directory.Build.props
+      run: |
+        NEW_VERSION="${{ steps.new.outputs.version }}"
+        sed -i "s|<Version>[^<]*</Version>|<Version>${NEW_VERSION}</Version>|" Directory.Build.props
+
+        echo "Updated Directory.Build.props:"
+        grep Version Directory.Build.props
+
+    - name: Commit version bump
+      run: |
+        NEW_VERSION="${{ steps.new.outputs.version }}"
+        git add Directory.Build.props
+        git commit -m "chore: Bump version to ${NEW_VERSION}"
+
+    - name: Create and push tag
+      run: |
+        NEW_VERSION="${{ steps.new.outputs.version }}"
+        TAG="v${NEW_VERSION}"
+
+        git tag "$TAG"
+        git push origin master
+        git push origin "$TAG"
+
+        echo "Created and pushed tag: $TAG"
+
+    - name: Summary
+      run: |
+        echo "## Version Bump Complete" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **Previous version:** ${{ steps.current.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **New version:** ${{ steps.new.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Bump type:** ${{ github.event.inputs.bump }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "The release workflow will now create a GitHub release, which will trigger NuGet publishing." >> $GITHUB_STEP_SUMMARY
