@@ -42,5 +42,36 @@ namespace PureFix.Types.Config
         /// Recommended: Set to true for all client/initiator applications.
         /// </summary>
         public bool? ResendGapFillOnly { get; set; }
+
+        /// <summary>
+        /// Creates a shallow clone of this SessionDescription.
+        /// Used for wildcard TargetCompID mode where each acceptor session needs its own
+        /// description to track its specific counterparty CompID.
+        /// </summary>
+        public SessionDescription Clone()
+        {
+            return new SessionDescription
+            {
+                Application = Application, // Shared - TCP settings don't change per session
+                Name = Name,
+                SenderCompID = SenderCompID,
+                TargetCompID = TargetCompID,
+                ResetSeqNumFlag = ResetSeqNumFlag,
+                SenderSubID = SenderSubID,
+                TargetSubID = TargetSubID,
+                BeginString = BeginString,
+                Username = Username,
+                Password = Password,
+                LastSentSeqNum = LastSentSeqNum,
+                LastReceivedSeqNum = LastReceivedSeqNum,
+                BodyLengthChars = BodyLengthChars,
+                HeartBtInt = HeartBtInt,
+                MsgSeqNum = MsgSeqNum,
+                PeerSeqNum = PeerSeqNum,
+                Logging = Logging,
+                Store = Store,
+                ResendGapFillOnly = ResendGapFillOnly
+            };
+        }
     }
 }

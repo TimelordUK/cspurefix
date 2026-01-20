@@ -27,6 +27,12 @@ namespace PureFix.Transport.Ascii
         public bool Heartbeat { get; set; } = true;
 
         /// <summary>
+        /// Tracks if this session was created with wildcard TargetCompID ("*").
+        /// Used to update the TargetCompID from the peer's SenderCompID on Logon.
+        /// </summary>
+        private readonly bool m_isWildcardMode;
+
+        /// <summary>
         /// Prepares the session for reconnection after a disconnect.
         /// Resets transient state via coordinator in addition to base class state reset.
         /// </summary>
@@ -45,6 +51,13 @@ namespace PureFix.Transport.Ascii
             ArgumentException.ThrowIfNullOrEmpty(config.Description.SenderCompID);
             ArgumentException.ThrowIfNullOrEmpty(config.Description.TargetCompID);
             ArgumentException.ThrowIfNullOrEmpty(config.Description.BeginString);
+
+            // Wildcard TargetCompID ("*") is only valid for acceptors
+            m_isWildcardMode = config.Description.TargetCompID == "*";
+            if (m_isWildcardMode && config.IsInitiator())
+            {
+                throw new ArgumentException("Wildcard TargetCompID ('*') is only valid for acceptors, not initiators");
+            }
 
             m_fixMessageFactory = fixMessageFactory;
 
@@ -170,6 +183,20 @@ namespace PureFix.Transport.Ascii
             var resetSeqNumFlag = view.ResetSeqNumFlag();
             if (logger?.IsEnabled(LogLevel.Info) == true)
                 logger.Info($"peerLogon Username={userName}, heartBtInt={heartBtInt}, peerCompId={peerCompId}, resetSeqNumFlag={resetSeqNumFlag}");
+
+            // Handle wildcard TargetCompID: update from peer's SenderCompID
+            // This allows acceptors to accept any client without knowing their CompID in advance
+            // We check m_isWildcardMode (set at construction) rather than the config value because
+            // the config is shared across sessions and may have been modified by a previous session.
+            if (m_isWildcardMode && !string.IsNullOrEmpty(peerCompId))
+            {
+                if (m_config.Description is PureFix.Types.Config.SessionDescription desc)
+                {
+                    logger?.Info("Wildcard TargetCompID: updating from '{CurrentTarget}' to '{PeerCompId}'",
+                        desc.TargetCompID, peerCompId);
+                    desc.TargetCompID = peerCompId;
+                }
+            }
 
             // Handle ResetSeqNumFlag from peer's logon
             // When peer sends ResetSeqNumFlag=Y, both sides should reset to 1.
