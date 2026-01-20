@@ -21,6 +21,12 @@ namespace PureFix.Buffer.Ascii
         public byte WriteDelimiter { get; set; } = AsciiChars.Soh;
         public IFixDefinitions Definitions { get; }
 
+        /// <summary>
+        /// Optional session string store for header field interning.
+        /// When set, CompID fields (49, 56, 50, 57) will be interned to reduce allocations.
+        /// </summary>
+        public ISessionStringStore? StringStore { get; set; }
+
         private readonly AsciiParseState _state;
         private readonly AsciiSegmentParser _segmentParser;
         public Tags? Locations => _state.Locations;
@@ -37,6 +43,15 @@ namespace PureFix.Buffer.Ascii
             _state = new AsciiParseState(definitions, _pool);
             _segmentParser = new AsciiSegmentParser(Definitions);
             _state.BeginMessage();
+        }
+
+        /// <summary>
+        /// Creates a parser with the specified string store for header field interning.
+        /// </summary>
+        public AsciiParser(IFixDefinitions definitions, ISessionStringStore? stringStore)
+            : this(definitions)
+        {
+            StringStore = stringStore;
         }
 
         // eventually need to parse the location set via segment parser to add all structures from the message.
@@ -77,7 +92,8 @@ namespace PureFix.Buffer.Ascii
                 Delimiter,
                 WriteDelimiter,
                 _segmentParser,
-                _state.MsgType);
+                _state.MsgType,
+                StringStore);  // Pass the parser's string store for header interning
         }
 
         /// <summary>

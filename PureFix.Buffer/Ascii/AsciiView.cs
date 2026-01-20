@@ -30,6 +30,15 @@ namespace PureFix.Buffer.Ascii
         private bool _structureParsed;
         private bool _isPooled;
 
+        // For string interning
+        private ISessionStringStore? _stringStore;
+
+        // Tags that should use the session string store (CompIDs)
+        private static readonly HashSet<int> SessionInternableTags = new() { 49, 56, 50, 57 };
+
+        // BeginString tag uses static pool
+        private const int TagBeginString = 8;
+
         public override string BufferString()
         {
             return Buffer.ToString();
@@ -46,10 +55,11 @@ namespace PureFix.Buffer.Ascii
             int delimiter,
             int writeDelimiter,
             AsciiSegmentParser? segmentParser,
-            string? msgType)
+            string? msgType,
+            ISessionStringStore? stringStore = null)
         {
             var view = Pool.Get();
-            view.Initialize(definitions, null, storage, null, ptr, delimiter, writeDelimiter, segmentParser, msgType);
+            view.Initialize(definitions, null, storage, null, ptr, delimiter, writeDelimiter, segmentParser, msgType, stringStore);
             view._isPooled = true;
             return view;
         }
@@ -101,7 +111,8 @@ namespace PureFix.Buffer.Ascii
             int delimiter,
             int writeDelimiter,
             AsciiSegmentParser? segmentParser,
-            string? msgType)
+            string? msgType,
+            ISessionStringStore? stringStore = null)
         {
             Definitions = definitions;
             Segment = segment;
@@ -114,6 +125,7 @@ namespace PureFix.Buffer.Ascii
             _segmentParser = segmentParser;
             _msgType = msgType;
             _structureParsed = structure != null;
+            _stringStore = stringStore;
         }
 
         private void Reset()
@@ -123,6 +135,7 @@ namespace PureFix.Buffer.Ascii
             _msgType = null;
             _structureParsed = false;
             Storage = null!;
+            _stringStore = null;  // Don't hold reference after return to pool
         }
 
         /// <summary>
@@ -196,8 +209,30 @@ namespace PureFix.Buffer.Ascii
   
         protected override string? StringAtPosition(int position)
         {
-            var tag = GetTag(position);
-            return tag == null ? null : Buffer.GetString(tag.Value.Start, tag.Value.Start + tag.Value.Len);
+            var tagPos = GetTag(position);
+            if (tagPos == null) return null;
+
+            var tag = Tags![position].Tag;
+            var start = tagPos.Value.Start;
+            var len = tagPos.Value.Len;
+
+            // BeginString (tag 8): use static pool - zero allocation for known versions
+            if (tag == TagBeginString)
+            {
+                // GetSpan uses inclusive end, so end = start + len - 1
+                var span = Buffer.GetSpan(start, start + len - 1);
+                return BeginStringPool.Intern(span);
+            }
+
+            // Session constants (CompIDs): use session store if available
+            if (_stringStore != null && SessionInternableTags.Contains(tag))
+            {
+                var span = Buffer.GetSpan(start, start + len - 1);
+                return _stringStore.GetOrAdd(tag, span);
+            }
+
+            // Default: allocate new string (GetString uses exclusive end)
+            return Buffer.GetString(start, start + len);
         }
 
         protected long? LongAtPosition(int position)

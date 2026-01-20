@@ -1,7 +1,50 @@
 # String Interning Optimization for Generated Types
 
-**Status:** Design idea - for discussion
+**Status:** Phase 1 complete - Core interning implemented
 **Goal:** Reduce string allocations for high-frequency repeated field values
+
+## Baseline Benchmark Results
+
+Benchmarks run with `HeaderStringAllocationBenchmarks` measuring string allocations from header field access. Test environment: AMD Ryzen 9 7950X, .NET 9.0.4, Ubuntu 22.04 WSL.
+
+### Results for 10,000 Messages (FIX 5.0SP2 TradeCaptureReport)
+
+| Benchmark | Time (μs) | Allocated | Alloc Ratio |
+|-----------|-----------|-----------|-------------|
+| ParseOnly (baseline) | 12,894 | 20.8 MB | 1.00 |
+| ParseAndGetBeginString | 80,883 | 245.6 MB | 11.78x |
+| ParseAndGetMsgType | 80,203 | 245.5 MB | 11.77x |
+| ParseAndGetSenderCompID | 77,559 | 245.6 MB | 11.77x |
+| ParseAndGetTargetCompID | 79,646 | 245.6 MB | 11.78x |
+| ParseAndGetAllHeaderStrings | 77,643 | 247.7 MB | 11.88x |
+| ParseAndCheckSpan | 77,764 | 245.2 MB | 11.75x |
+
+### Key Observations
+
+1. **Massive allocation increase on field access**: Accessing any field triggers ~225 MB additional allocation for 10,000 messages (22.5 KB per message). This is caused by lazy structure parsing in `AsciiView` being triggered on first field access.
+
+2. **String allocations are a fraction of total**: The string bytes themselves are minimal (~10 bytes for "FIX.5.0SP2", ~10 bytes for CompIDs). The bulk comes from view structure parsing.
+
+3. **MsgType already interned**: `ParseAndGetMsgType` allocates 245.5 MB vs 245.6 MB for `ParseAndGetBeginString` - a difference of only ~100 KB, suggesting MsgType interning is working.
+
+4. **Span API still triggers lazy parsing**: `ParseAndCheckSpan` using `IsTagEqual()` has similar allocations to `GetString()` calls - the span comparison itself is zero-alloc, but accessing any tag triggers full structure parsing.
+
+### Expected Impact of String Interning
+
+For the **string-specific** allocations (not the lazy parsing overhead):
+
+| Field | Per-Message Allocation | 10k Messages | With Interning |
+|-------|----------------------|--------------|----------------|
+| BeginString (tag 8) | ~34 bytes | 340 KB | ~34 bytes (once) |
+| SenderCompID (tag 49) | ~42 bytes | 420 KB | ~42 bytes (once) |
+| TargetCompID (tag 56) | ~44 bytes | 440 KB | ~44 bytes (once) |
+| SenderSubID (tag 50) | ~44 bytes | 440 KB | ~44 bytes (once) |
+| TargetSubID (tag 57) | ~44 bytes | 440 KB | ~44 bytes (once) |
+| **Total header strings** | ~208 bytes | **2.08 MB** | **~208 bytes** |
+
+String interning will eliminate ~2 MB per 10k messages (~200 KB per 1k messages) for header fields alone. The larger lazy-parsing allocations are a separate optimization opportunity.
+
+---
 
 ## Problem
 
