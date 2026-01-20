@@ -24,6 +24,16 @@ The message parser has been validated in production drop-copy scenarios (read-on
 - **Protocols**: FIX 4.2, 4.4, 5.0 SP2, including FpML extensions
 - **Brokers**: 20+ counterparties with broker-specific dictionary customizations
 
+### Test Coverage
+
+| Metric | Coverage |
+|--------|----------|
+| Line Coverage | 67% |
+| Branch Coverage | 53% |
+| Tests | 476 passing |
+
+*Coverage excludes generated FIX type assemblies. Run `./scripts/coverage.sh` for local report.*
+
 ### Session Handling Status
 
 Session management handles standard scenarios reliably:

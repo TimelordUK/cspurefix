@@ -28,8 +28,27 @@ jobs:
     - name: Build solution
       run: dotnet build --configuration Release --no-restore
 
-    - name: Run Tests (Modular Types)
-      run: dotnet test PureFix.Test.ModularTypes/PureFix.Test.ModularTypes.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+    - name: Run Tests with Coverage
+      run: |
+        dotnet test PureFix.Test.ModularTypes/PureFix.Test.ModularTypes.csproj \
+          --configuration Release \
+          --no-build \
+          --verbosity normal \
+          --logger "trx;LogFileName=test-results.trx" \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./coverage \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="[PureFix.Types.FIX*]*"
+
+    - name: Install ReportGenerator
+      run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
+    - name: Generate Coverage Report
+      run: |
+        reportgenerator \
+          -reports:"./coverage/**/coverage.cobertura.xml" \
+          -targetdir:"./coverage/report" \
+          -reporttypes:"Html;MarkdownSummaryGithub" \
+          -assemblyfilters:"-PureFix.Types.FIX*;-PureFix.Types.FIX44UnitTest"
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -38,6 +57,20 @@ jobs:
         name: test-results
         path: |
           **/TestResults/*.trx
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: ./coverage/report/
+
+    - name: Add Coverage Summary to Job
+      if: always()
+      run: |
+        if [ -f "./coverage/report/SummaryGithub.md" ]; then
+          cat ./coverage/report/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        fi
 
   benchmark:
     name: Run Benchmarks

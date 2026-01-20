@@ -372,3 +372,4 @@ FodyWeavers.xsd
 test-generated/
 test-generated-modular/
 packages-microsoft-prod.deb
+/coverage/
