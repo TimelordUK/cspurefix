@@ -110,13 +110,61 @@ jobs:
         git push origin "$TAG"
 
         echo "Created and pushed tag: $TAG"
+        echo "tag=$TAG" >> $GITHUB_OUTPUT
+      id: tag
+
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        CURRENT_TAG="${{ steps.tag.outputs.tag }}"
+        # Get the previous tag (excluding current)
+        PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${CURRENT_TAG}$" | head -n1)
+        if [ -z "$PREV_TAG" ]; then
+          PREV_TAG=$(git rev-list --max-parents=0 HEAD)
+        fi
+
+        echo "Generating changelog from $PREV_TAG to $CURRENT_TAG"
+
+        # Generate changelog
+        {
+          echo "## What's Changed"
+          echo ""
+          git log ${PREV_TAG}..${CURRENT_TAG} --pretty=format:"- %s (%h)" --no-merges
+          echo ""
+          echo ""
+          echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...${CURRENT_TAG}"
+        } > release_notes.md
+
+        cat release_notes.md
+
+    - name: Create GitHub Release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        TAG="${{ steps.tag.outputs.tag }}"
+        PRERELEASE="${{ github.event.inputs.prerelease }}"
+
+        # Determine if this is a prerelease
+        if [ -n "$PRERELEASE" ]; then
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes-file release_notes.md \
+            --prerelease
+        else
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes-file release_notes.md
+        fi
+
+        echo "Created GitHub release: $TAG"
 
     - name: Summary
       run: |
-        echo "## Version Bump Complete" >> $GITHUB_STEP_SUMMARY
+        echo "## Version Bump and Release Complete" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "- **Previous version:** ${{ steps.current.outputs.version }}" >> $GITHUB_STEP_SUMMARY
         echo "- **New version:** ${{ steps.new.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Tag:** ${{ steps.tag.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Bump type:** ${{ github.event.inputs.bump }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "The release workflow will now create a GitHub release, which will trigger NuGet publishing." >> $GITHUB_STEP_SUMMARY
+        echo "GitHub release created. NuGet publish workflow will now run automatically." >> $GITHUB_STEP_SUMMARY
