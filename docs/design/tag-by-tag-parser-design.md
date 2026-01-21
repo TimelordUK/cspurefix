@@ -364,7 +364,27 @@ private void BuildDepthMapRecursive(IContainedSet set, int depth, Dictionary<str
 }
 ```
 
-**Future Optimization**: Can "jit" placement hints over time - cache depth calculations since many tags will repeat the same lookup. Build hints lazily as messages are parsed.
+**Future Optimization - Locality Caching**: Tags from the same component tend to cluster together. Cache the last successfully placed component:
+
+```csharp
+IContainedSet? _lastPlacedComponent;
+
+int PlaceTag(int tag)
+{
+    // Fast path: check if tag belongs in last component
+    if (_lastPlacedComponent?.LocalTag.ContainsKey(tag) == true)
+        return _cachedDepth;  // O(1) hit
+
+    // Cache miss: walk from root, update cache
+    _lastPlacedComponent = null;
+    var (component, depth) = WalkToFind(tag);
+    _lastPlacedComponent = component;
+    _cachedDepth = depth;
+    return depth;
+}
+```
+
+High hit rate for well-formed messages, graceful fallback for scattered tags.
 
 ### 2. Discovery/Segment Order
 
