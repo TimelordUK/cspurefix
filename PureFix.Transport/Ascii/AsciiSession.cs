@@ -6,10 +6,12 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using PureFix.Buffer;
+using PureFix.Buffer.Validation;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.Core;
+using PureFix.Types.Validation;
 
 
 namespace PureFix.Transport.Ascii
@@ -31,6 +33,17 @@ namespace PureFix.Transport.Ascii
         /// Used to update the TargetCompID from the peer's SenderCompID on Logon.
         /// </summary>
         private readonly bool m_isWildcardMode;
+
+        /// <summary>
+        /// Message validator for protocol and structural validation.
+        /// Created from ValidationConfig if provided, otherwise null (uses legacy m_checkMsgIntegrity).
+        /// </summary>
+        private readonly IMessageValidator? m_validator;
+
+        /// <summary>
+        /// Validation configuration for this session.
+        /// </summary>
+        private readonly ValidationConfig? m_validationConfig;
 
         /// <summary>
         /// Prepares the session for reconnection after a disconnect.
@@ -74,6 +87,15 @@ namespace PureFix.Transport.Ascii
 
             // Create the sequence coordinator - single source of truth for all sequence state
             m_coordinator = new SessionSequenceCoordinator(m_sessionStore, clock, m_sessionLogger);
+
+            // Initialize validation from config (if provided)
+            m_validationConfig = config.Validation;
+            if (m_validationConfig != null)
+            {
+                m_validator = MessageValidatorFactory.Create(m_validationConfig, isAcceptor: m_acceptor);
+                m_sessionLogger?.Info("Validation enabled: Mode={Mode}, CheckChecksum={CheckChecksum}",
+                    m_validationConfig.Mode, m_validationConfig.CheckChecksum);
+            }
 
             m_sessionLogger?.Info("message count = {DefinitionCount}, component count = {ComponentCount}, simple count = {FieldCount}",
             Definitions.Message.Count,
@@ -781,8 +803,47 @@ namespace PureFix.Transport.Ascii
                 return;
             }
 
-            if (m_checkMsgIntegrity)
+            // Use new validation system if configured, otherwise fall back to legacy behavior
+            if (m_validator != null && m_validationConfig != null)
             {
+                var validationResult = await ValidateMessage(msgType, view);
+                if (validationResult.ShouldReject(m_validationConfig.Mode))
+                {
+                    m_sessionLogger?.Info("message '{MsgType}' failed validation: {Warnings}",
+                        msgType, string.Join(", ", validationResult.Warnings.Select(w => w.Message)));
+
+                    // Invoke warning callback if configured
+                    if (m_validationConfig.OnWarning != null)
+                    {
+                        foreach (var warning in validationResult.Warnings)
+                        {
+                            m_validationConfig.OnWarning(warning);
+                        }
+                    }
+
+                    // Handle rejection
+                    await HandleValidationFailure(msgType, view, validationResult);
+                    return;
+                }
+
+                // Log warnings even if not rejecting (Lenient mode)
+                if (validationResult.HasWarnings)
+                {
+                    m_sessionLogger?.Debug("message '{MsgType}' validation warnings: {Warnings}",
+                        msgType, string.Join(", ", validationResult.Warnings.Select(w => w.Message)));
+
+                    if (m_validationConfig.OnWarning != null)
+                    {
+                        foreach (var warning in validationResult.Warnings)
+                        {
+                            m_validationConfig.OnWarning(warning);
+                        }
+                    }
+                }
+            }
+            else if (m_checkMsgIntegrity)
+            {
+                // Legacy validation path (no ValidationConfig provided)
                 var checkIntegrity = await CheckIntegrity(msgType, view);
                 if (!checkIntegrity)
                 {
@@ -835,6 +896,50 @@ namespace PureFix.Transport.Ascii
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Validates a message using the configured validator.
+        /// </summary>
+        private Task<ValidationResult> ValidateMessage(string msgType, IMessageView view)
+        {
+            var result = new ValidationResult();
+            m_validator?.Validate(view, result);
+            return Task.FromResult(result);
+        }
+
+        /// <summary>
+        /// Handles a validation failure by sending appropriate reject and updating state.
+        /// </summary>
+        private async Task HandleValidationFailure(string msgType, IMessageView view, ValidationResult result)
+        {
+            if (!view.TryGetInt32((int)MsgTag.MsgSeqNum, out var seqNum))
+            {
+                seqNum = 0;
+            }
+
+            // Determine the primary reason for rejection
+            var firstWarning = result.Warnings.FirstOrDefault();
+            var rejectReason = firstWarning?.Type switch
+            {
+                ValidationWarningType.ChecksumMismatch => SessionRejectReason.ValueIsIncorrect,
+                ValidationWarningType.BodyLengthMismatch => SessionRejectReason.ValueIsIncorrect,
+                ValidationWarningType.RequiredFieldMissing => SessionRejectReason.RequiredTagMissing,
+                ValidationWarningType.UnknownField => SessionRejectReason.UndefinedTag,
+                ValidationWarningType.UnknownFieldInComponent => SessionRejectReason.UndefinedTag,
+                ValidationWarningType.EnumOutOfRange => SessionRejectReason.ValueIsIncorrect,
+                ValidationWarningType.InvalidFormat => SessionRejectReason.IncorrectDataFormatForValue,
+                _ => SessionRejectReason.Other
+            };
+
+            var message = firstWarning?.Message ?? "Validation failed";
+            await SendReject(msgType, seqNum, message, (int)rejectReason);
+
+            // Handle Logon rejection specially
+            if (msgType == MsgType.Logon)
+            {
+                SetState(SessionState.PeerLogonRejected);
+            }
         }
 
         private void Terminate(Exception? error)
