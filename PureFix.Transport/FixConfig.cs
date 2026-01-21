@@ -98,6 +98,9 @@ namespace PureFix.Transport
                 // Auto-create session store factory from config
                 config.SessionStoreFactory = CreateStoreFactory(sessionDescription.Store);
 
+                // Copy validation config from session description
+                config.Validation = sessionDescription.Validation;
+
                 return config;
             }
             return new FixConfig();

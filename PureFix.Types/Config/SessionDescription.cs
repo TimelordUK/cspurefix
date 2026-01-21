@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PureFix.Types.Validation;
 
 namespace PureFix.Types.Config
 {
@@ -44,6 +45,12 @@ namespace PureFix.Types.Config
         public bool? ResendGapFillOnly { get; set; }
 
         /// <summary>
+        /// Validation configuration for message parsing and processing.
+        /// If null, uses legacy validation (checksum only for acceptors, none for initiators).
+        /// </summary>
+        public ValidationConfig? Validation { get; set; }
+
+        /// <summary>
         /// Creates a shallow clone of this SessionDescription.
         /// Used for wildcard TargetCompID mode where each acceptor session needs its own
         /// description to track its specific counterparty CompID.
@@ -70,7 +77,8 @@ namespace PureFix.Types.Config
                 PeerSeqNum = PeerSeqNum,
                 Logging = Logging,
                 Store = Store,
-                ResendGapFillOnly = ResendGapFillOnly
+                ResendGapFillOnly = ResendGapFillOnly,
+                Validation = Validation
             };
         }
     }
