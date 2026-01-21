@@ -10,6 +10,7 @@ using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.Config;
+using PureFix.Types.Validation;
 
 namespace PureFix.Transport
 {
@@ -67,6 +68,12 @@ namespace PureFix.Transport
         /// stale transport writes.
         /// </summary>
         public ISessionRegistry? SessionRegistry { get; set; }
+
+        /// <summary>
+        /// Validation configuration for message parsing and processing.
+        /// If null, default validation is used based on session role.
+        /// </summary>
+        public ValidationConfig? Validation { get; set; }
 
         public static IFixConfig MakeConfigFromPaths(string dictionaryRootPath, string sessionDescriptionPath)
         {

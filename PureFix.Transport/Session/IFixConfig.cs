@@ -2,6 +2,7 @@
 using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.Config;
+using PureFix.Types.Validation;
 
 namespace PureFix.Transport.Session
 {
@@ -27,5 +28,12 @@ namespace PureFix.Transport.Session
         /// Optional - if null, session replacement is not tracked.
         /// </summary>
         ISessionRegistry? SessionRegistry { get; }
+
+        /// <summary>
+        /// Validation configuration for message parsing and processing.
+        /// If null, default validation is used based on session role
+        /// (Lenient for initiators, Strict for acceptors).
+        /// </summary>
+        ValidationConfig? Validation { get; }
     }
 }

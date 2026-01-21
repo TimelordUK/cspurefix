@@ -5,6 +5,7 @@ using PureFix.Transport.Store;
 using PureFix.Types;
 using PureFix.Types.Config;
 using PureFix.Types.FIX44;
+using PureFix.Types.Validation;
 
 namespace PureFix.Test.ModularTypes.Session;
 
@@ -249,6 +250,7 @@ internal class MockFixConfig : IFixConfig
     public ISessionMessageFactory? MessageFactory { get; }
     public IFixSessionStoreFactory? SessionStoreFactory => null;
     public ISessionRegistry? SessionRegistry => null;
+    public ValidationConfig? Validation => null;
 }
 
 /// <summary>
