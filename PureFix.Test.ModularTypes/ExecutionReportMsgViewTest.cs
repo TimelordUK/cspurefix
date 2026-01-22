@@ -1119,7 +1119,7 @@ namespace PureFix.Test.ModularTypes
         }
 
         [Test]
-        [Ignore("SecAltIDGrp not defined in FIX44-Core.xml test dictionary")]
+        // [Ignore("SecAltIDGrp not defined in FIX44-Core.xml test dictionary")]
         public void View_Instrument_Decode_Test()
         {
             Assert.That(_views, Is.Not.Null);
@@ -1218,7 +1218,7 @@ namespace PureFix.Test.ModularTypes
 
 
         [Test]
-        [Ignore("UnderlyingInstrument not defined in FIX44-Core.xml test dictionary")]
+
         public void View_UndInstrmtGrp_Component_Decode_Test()
         {
             Assert.That(_views, Is.Not.Null);
@@ -1243,7 +1243,7 @@ namespace PureFix.Test.ModularTypes
 
             const string expected0 = """
                                      {
-                                       "NoUnderlyingSecurityAltID": [
+                                       "UnderlyingSecurityAltID": [
                                        {
                                           "UnderlyingSecurityAltID": "ornare",
                                           "UnderlyingSecurityAltIDSource": "magna."
