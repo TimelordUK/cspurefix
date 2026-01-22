@@ -56,6 +56,8 @@ namespace PureFix.Buffer.Ascii
                 // Clear collections (keeps capacity for reuse)
                 Segments.Clear();
                 StructureStack.Clear();
+                ExitedDepth1Components.Clear();
+                FragmentedComponents.Clear();
 
                 // Clear references
                 MsgType = null!;
@@ -74,6 +76,18 @@ namespace PureFix.Buffer.Ascii
             public int Last { get; private set; }
             public MessageDefinition? MsgDefinition { get; private set; }
             public SegmentDescription? Peek => StructureStack.Count > 0 ? StructureStack.Peek() : null;
+
+            /// <summary>
+            /// Tracks depth-1 component names that have been exited (popped from stack).
+            /// Used to detect fragmentation when re-entering the same component.
+            /// </summary>
+            public HashSet<string> ExitedDepth1Components { get; } = [];
+
+            /// <summary>
+            /// Components detected as fragmented (re-entered after exiting).
+            /// Only these components need SegmentViews built.
+            /// </summary>
+            public HashSet<string> FragmentedComponents { get; } = [];
 
             private bool _disposed;
         }

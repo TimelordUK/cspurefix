@@ -1,3 +1,5 @@
+using PureFix.Buffer.Ascii;
+using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Contained;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;

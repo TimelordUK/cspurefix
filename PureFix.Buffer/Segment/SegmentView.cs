@@ -36,5 +36,16 @@ namespace PureFix.Buffer.Segment
 
             _tags.Add(tag);
         }
+
+        /// <summary>
+        /// Adjusts the start/end positions to match a parent container.
+        /// Used for nested components inside groups where the positions must
+        /// match the parent group instance for containment checks to work.
+        /// </summary>
+        public void AdjustPositions(int start, int end)
+        {
+            StartPosition = start;
+            EndPosition = end;
+        }
     }
 }

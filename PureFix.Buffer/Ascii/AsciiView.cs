@@ -24,8 +24,8 @@ namespace PureFix.Buffer.Ascii
         public StoragePool.Storage Storage { get; private set; } = null!;
         public ElasticBuffer Buffer => Storage.Buffer;
 
-        // For lazy structure parsing
-        private AsciiSegmentParser? _segmentParser;
+        // For lazy structure parsing - accepts any ISegmentParser implementation
+        private ISegmentParser? _segmentParser;
         private string? _msgType;
         private bool _structureParsed;
         private bool _isPooled;
@@ -54,7 +54,7 @@ namespace PureFix.Buffer.Ascii
             int ptr,
             int delimiter,
             int writeDelimiter,
-            AsciiSegmentParser? segmentParser,
+            ISegmentParser? segmentParser,
             string? msgType,
             ISessionStringStore? stringStore = null)
         {
@@ -89,7 +89,7 @@ namespace PureFix.Buffer.Ascii
             int ptr,
             int delimiter,
             int writeDelimiter,
-            AsciiSegmentParser? segmentParser = null,
+            ISegmentParser? segmentParser = null,
             string? msgType = null) : base(definitions, segment, structure, storage.Locations)
         {
             Ptr = ptr;
@@ -110,7 +110,7 @@ namespace PureFix.Buffer.Ascii
             int ptr,
             int delimiter,
             int writeDelimiter,
-            AsciiSegmentParser? segmentParser,
+            ISegmentParser? segmentParser,
             string? msgType,
             ISessionStringStore? stringStore = null)
         {

@@ -35,6 +35,7 @@ namespace PureFix.Buffer.Segment
         public ContainedField? CurrentField { get; private set; }
         private List<int>? _delimterPositions;
         private List<int>? _containedDelimiterPositions;
+        private List<SegmentView>? _instanceViews;
 
         public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)Array.Empty<int>();
 
@@ -85,7 +86,24 @@ namespace PureFix.Buffer.Segment
                 EndPosition = end,
                 EndTag = EndTag
             };
+
+            // If we have stored instance SegmentViews (from TagByTag parsing), use them
+            if (_instanceViews != null && instance < _instanceViews.Count)
+            {
+                d.Add(_instanceViews[instance]);
+            }
+
             return d;
+        }
+
+        /// <summary>
+        /// Adds an instance SegmentView for TagByTag parsing.
+        /// Call this after AddDelimiterPosition for each instance.
+        /// </summary>
+        public void AddInstanceView(SegmentView view)
+        {
+            _instanceViews ??= [];
+            _instanceViews.Add(view);
         }
 
         public void StartGroup(int tag)

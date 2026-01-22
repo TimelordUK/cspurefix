@@ -1,4 +1,5 @@
 using PureFix.Buffer.Ascii;
+using PureFix.Buffer.Segment;
 using PureFix.Dictionary.Definition;
 using PureFix.Dictionary.Parser.QuickFix;
 using PureFix.Transport;
@@ -22,18 +23,33 @@ namespace PureFix.Test.ModularTypes.Helpers
         public AsciiParser Parser { get; private set; }
         public IFixClock Clock { get; private set; }
 
-        public TestEntity(string dataDict = "FIX44.xml")
+        public TestEntity(string dataDict = "FIX44.xml", ISegmentParser? segmentParser = null)
         {
             Clock = new TestClock();
             Definitions = new FixDefinitions();
             var qf = new QuickFixXmlFileParser(Definitions);
             qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, dataDict));
-            Prepare();
+            Prepare(segmentParser);
         }
 
-        public void Prepare()
+        public void Prepare(ISegmentParser? segmentParser = null)
         {
-            Parser = new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+            Parser = segmentParser != null
+                ? new AsciiParser(Definitions, segmentParser) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe }
+                : new AsciiParser(Definitions) { Delimiter = AsciiChars.Pipe, WriteDelimiter = AsciiChars.Pipe };
+        }
+
+        /// <summary>
+        /// Creates a TestEntity configured to use the TagByTag segment parser.
+        /// Useful for testing out-of-order tag handling (Bloomberg-style messages).
+        /// </summary>
+        public static TestEntity WithTagByTagParser(string dataDict = "FIX44.xml")
+        {
+            var definitions = new FixDefinitions();
+            var qf = new QuickFixXmlFileParser(definitions);
+            qf.Parse(Path.Join(Fix44PathHelper.DataDictRootPath, dataDict));
+            var tagByTagParser = new TagByTagSegmentParser(definitions);
+            return new TestEntity(dataDict, tagByTagParser);
         }
 
         public async Task<List<AsciiView>> Replay(string path)

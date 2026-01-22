@@ -15,7 +15,11 @@ using PureFix.Types.Core;
 
 namespace PureFix.Buffer.Ascii
 {
-    public partial class AsciiSegmentParser(IFixDefinitions definitions)
+    /// <summary>
+    /// Stack-based segment parser using recursive descent.
+    /// Fast and efficient for messages with tags in definition order.
+    /// </summary>
+    public partial class AsciiSegmentParser(IFixDefinitions definitions) : ISegmentParser
     {
         public IFixDefinitions Definitions { get; } = definitions;
 
@@ -47,6 +51,10 @@ namespace PureFix.Buffer.Ascii
 
         private static void Fragments(Context context, TagIndex ti)
         {
+            // Optimization: only build SegmentViews for components detected as fragmented
+            // during Discover. Non-fragmented components use their position ranges directly.
+            if (context.FragmentedComponents.Count == 0) return;
+
             var seen = new HashSet<string>();
             for (var i = 1; i < context.Segments.Count -1; ++i)
             {
@@ -55,6 +63,8 @@ namespace PureFix.Buffer.Ascii
                 if (seg.Name == null) continue;
                 if (seg.SegmentView != null) continue;
                 if (seen.Contains(seg.Name)) continue;
+                // Only process components that were detected as fragmented
+                if (!context.FragmentedComponents.Contains(seg.Name)) continue;
                 // case where there is a component with one field which wraps the group - these will all be self contained.
                 if (ti.ComponentGroupWrappers.Contains(seg.Name)) continue;
                 // for example instrument where tags may be scattered and not all contiguous, compute a view rather than a slice.
@@ -84,6 +94,12 @@ namespace PureFix.Buffer.Ascii
                 var done = context.StructureStack.Pop();
                 done.End(context.Segments.Count, context.CurrentTagPosition - 1, context.Tags[context.CurrentTagPosition - 1].Tag);
                 context.Segments.Add(done);
+
+                // Track when we exit depth-1 components for fragmentation detection
+                if (done.Depth == 1 && done.Name != null)
+                {
+                    context.ExitedDepth1Components.Add(done.Name);
+                }
 
                 var peekSet = context.Peek?.Set;
                 if (peekSet!= null && peekSet.ContainedTag.ContainsKey(tag))
@@ -122,6 +138,11 @@ namespace PureFix.Buffer.Ascii
                 case ContainedFieldType.Component:
                     {
                         var cf = (ContainedComponentField)currentField;
+                        // Detect fragmentation: re-entering a depth-1 component we already exited
+                        if (context.StructureStack.Count == 1 && context.ExitedDepth1Components.Contains(cf.Name))
+                        {
+                            context.FragmentedComponents.Add(cf.Name);
+                        }
                         structure = new SegmentDescription(cf.Name, tag, cf.Definition, context.CurrentTagPosition,
                             context.StructureStack.Count, SegmentType.Component);
                         break;

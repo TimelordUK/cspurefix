@@ -28,7 +28,7 @@ namespace PureFix.Buffer.Ascii
         public ISessionStringStore? StringStore { get; set; }
 
         private readonly AsciiParseState _state;
-        private readonly AsciiSegmentParser _segmentParser;
+        private readonly ISegmentParser _segmentParser;
         public Tags? Locations => _state.Locations;
         private readonly StoragePool _pool = new();
         private long _receivedBytes;
@@ -46,10 +46,31 @@ namespace PureFix.Buffer.Ascii
         }
 
         /// <summary>
+        /// Creates a parser with a custom segment parser strategy.
+        /// Use TagByTagSegmentParser for out-of-order tags (e.g., Bloomberg-style messages).
+        /// </summary>
+        public AsciiParser(IFixDefinitions definitions, ISegmentParser segmentParser)
+        {
+            Definitions = definitions;
+            _state = new AsciiParseState(definitions, _pool);
+            _segmentParser = segmentParser;
+            _state.BeginMessage();
+        }
+
+        /// <summary>
         /// Creates a parser with the specified string store for header field interning.
         /// </summary>
         public AsciiParser(IFixDefinitions definitions, ISessionStringStore? stringStore)
             : this(definitions)
+        {
+            StringStore = stringStore;
+        }
+
+        /// <summary>
+        /// Creates a parser with a custom segment parser and string store.
+        /// </summary>
+        public AsciiParser(IFixDefinitions definitions, ISegmentParser segmentParser, ISessionStringStore? stringStore)
+            : this(definitions, segmentParser)
         {
             StringStore = stringStore;
         }
