@@ -8,130 +8,155 @@ using PureFix.Types.Core;
 namespace PureFix.Types
 {
     /// <summary>
-    /// An implementation of a FIX writer that uses an elastic buffer for performance
+    /// An implementation of a FIX writer that uses an elastic buffer for performance.
+    /// Can be reused across multiple messages by calling Reset().
     /// </summary>
-    public sealed class DefaultFixWriter(ElasticBuffer buffer, Tags tags, byte delimiter = 1) : IFixWriter
+    public sealed class DefaultFixWriter : IFixWriter
     {
         private const byte EQ = (byte)'=';
-        public byte Delimiter { get; } = delimiter;
+        private ElasticBuffer _buffer = null!;
+        private Tags _tags = null!;
+
+        public byte Delimiter { get; private set; } = 1;
+
+        /// <summary>
+        /// Creates a new DefaultFixWriter with the specified buffer and tags.
+        /// </summary>
+        public DefaultFixWriter(ElasticBuffer buffer, Tags tags, byte delimiter = 1)
+        {
+            _buffer = buffer;
+            _tags = tags;
+            Delimiter = delimiter;
+        }
+
+        /// <summary>
+        /// Creates an uninitialized writer. Must call Reset() before use.
+        /// </summary>
+        public DefaultFixWriter()
+        {
+        }
+
+        /// <summary>
+        /// Resets the writer to use new buffer and tags. Allows reuse without allocation.
+        /// </summary>
+        public void Reset(ElasticBuffer buffer, Tags tags, byte delimiter)
+        {
+            _buffer = buffer;
+            _tags = tags;
+            Delimiter = delimiter;
+        }
 
         /// <summary>
         /// The tags that are populated whilst writing
         /// </summary>
-        public Tags Tags
-        {
-            get{return tags;}
-        }
+        public Tags Tags => _tags;
 
         /// <summary>
         /// The buffer being written to
         /// </summary>
-        public ElasticBuffer Buffer
-        {
-            get{return buffer;}
-        }
+        public ElasticBuffer Buffer => _buffer;
 
         public void WriteBoolean(int tag, bool value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteBoolean(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteBoolean(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
 
         public void WriteBuffer(int tag, byte[] value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteBuffer(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteBuffer(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
 
         public void WriteLocalDateOnly(int tag, DateOnly value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteLocalDateOnly(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteLocalDateOnly(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
 
         public void WriteMonthYear(int tag, MonthYear value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteMonthYear(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteMonthYear(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
 
         public void WriteNumber(int tag, double value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteNumber(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteNumber(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
 
 
         }
 
         public void WriteString(int tag, string value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteString(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteString(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
 
         }
 
         public void WriteUtcDateOnly(int tag, DateOnly value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteUtcDateOnly(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteUtcDateOnly(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
 
         public void WriteUtcTimeStamp(int tag, DateTime value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteUtcTimeStamp(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteUtcTimeStamp(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
 
         public void WriteWholeNumber(int tag, int value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteWholeNumber(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteWholeNumber(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
 
         public void WriteTimeOnly(int tag, TimeOnly value)
         {
-            buffer.WriteWholeNumber(tag);
-            buffer.WriteChar(EQ);
-            var start = buffer.Pos;
-            buffer.WriteTimeOnly(value);
-            buffer.WriteChar(Delimiter);
-            tags.Store(start, buffer.Pos - start - 1, tag);
+            _buffer.WriteWholeNumber(tag);
+            _buffer.WriteChar(EQ);
+            var start = _buffer.Pos;
+            _buffer.WriteTimeOnly(value);
+            _buffer.WriteChar(Delimiter);
+            _tags.Store(start, _buffer.Pos - start - 1, tag);
         }
     }
 }

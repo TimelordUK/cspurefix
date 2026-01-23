@@ -21,6 +21,7 @@ namespace PureFix.Buffer.Ascii
     {
         public IFixDefinitions Definitions { get; set; } = definitions;
         private StoragePool Pool { get; } = new();
+        private readonly DefaultFixWriter _writer = new();
 
         public ISessionDescription SessionDescription { get; } = sessionDescription;
 
@@ -73,9 +74,9 @@ namespace PureFix.Buffer.Ascii
                 var storage = Pool.Rent();
 
                 var delimiter = SessionDescription.Application?.Delimiter ?? AsciiChars.Soh;
-                var writer = new DefaultFixWriter(storage.Buffer, storage.Locations, delimiter);
-                hdr.Encode(writer);
-                message.Encode(writer);
+                _writer.Reset(storage.Buffer, storage.Locations, delimiter);
+                hdr.Encode(_writer);
+                message.Encode(_writer);
 
                 // checksum can only be calculated after the body length is correctly set which we now will know
                 // having serialised the header and message contents.
@@ -92,7 +93,7 @@ namespace PureFix.Buffer.Ascii
                     return null;
                 }
 
-                trailer.Encode(writer);
+                trailer.Encode(_writer);
 
                 // Don't increment sequence for PossDup resends - the original MsgSeqNum was used
                 // and we don't want to "consume" sequence numbers for retransmitted messages
