@@ -10,26 +10,17 @@ namespace PureFix.Types
     /// <summary>
     /// An implementation of a FIX writer that uses an elastic buffer for performance
     /// </summary>
-    public sealed class DefaultFixWriter : IFixWriter
+    public sealed class DefaultFixWriter(ElasticBuffer buffer, Tags tags, byte delimiter = 1) : IFixWriter
     {
         private const byte EQ = (byte)'=';
-        public byte Delimiter { get; }
-        private readonly ElasticBuffer m_Buffer;
-        private readonly Tags m_Tags;
-
-        public DefaultFixWriter(ElasticBuffer buffer, Tags tags, byte delimiter = 1)
-        {
-            m_Buffer = buffer;
-            m_Tags = tags;
-            Delimiter = delimiter;
-        }
+        public byte Delimiter { get; } = delimiter;
 
         /// <summary>
         /// The tags that are populated whilst writing
         /// </summary>
         public Tags Tags
         {
-            get{return m_Tags;}
+            get{return tags;}
         }
 
         /// <summary>
@@ -37,110 +28,110 @@ namespace PureFix.Types
         /// </summary>
         public ElasticBuffer Buffer
         {
-            get{return m_Buffer;}
+            get{return buffer;}
         }
 
         public void WriteBoolean(int tag, bool value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteBoolean(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteBoolean(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
 
         public void WriteBuffer(int tag, byte[] value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteBuffer(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteBuffer(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
 
         public void WriteLocalDateOnly(int tag, DateOnly value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteLocalDateOnly(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteLocalDateOnly(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
 
         public void WriteMonthYear(int tag, MonthYear value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteMonthYear(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteMonthYear(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
 
         public void WriteNumber(int tag, double value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteNumber(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteNumber(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
 
 
         }
 
         public void WriteString(int tag, string value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteString(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteString(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
 
         }
 
         public void WriteUtcDateOnly(int tag, DateOnly value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteUtcDateOnly(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteUtcDateOnly(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
 
         public void WriteUtcTimeStamp(int tag, DateTime value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteUtcTimeStamp(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteUtcTimeStamp(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
 
         public void WriteWholeNumber(int tag, int value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteWholeNumber(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteWholeNumber(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
 
         public void WriteTimeOnly(int tag, TimeOnly value)
         {
-            m_Buffer.WriteWholeNumber(tag);
-            m_Buffer.WriteChar(EQ);
-            var start = m_Buffer.Pos;
-            m_Buffer.WriteTimeOnly(value);
-            m_Buffer.WriteChar(Delimiter);
-            m_Tags.Store(start, m_Buffer.Pos - start - 1, tag);
+            buffer.WriteWholeNumber(tag);
+            buffer.WriteChar(EQ);
+            var start = buffer.Pos;
+            buffer.WriteTimeOnly(value);
+            buffer.WriteChar(Delimiter);
+            tags.Store(start, buffer.Pos - start - 1, tag);
         }
     }
 }

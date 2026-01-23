@@ -77,7 +77,7 @@ namespace PureFix.Buffer.Ascii
                 hdr.Encode(writer);
                 message.Encode(writer);
 
-                // checksum can only be caluculated after the body length is correctly set which we now will know
+                // checksum can only be calculated after the body length is correctly set which we now will know
                 // having serialised the header and message contents.
                 // "8=FIX.4.4|9=100001|35=D"
 
@@ -98,7 +98,7 @@ namespace PureFix.Buffer.Ascii
                 // and we don't want to "consume" sequence numbers for retransmitted messages
                 if (hdr.PossDupFlag != true)
                 {
-                    MsgSeqNum = MsgSeqNum + 1;
+                    MsgSeqNum += 1;
                 }
                 return storage;
             }
