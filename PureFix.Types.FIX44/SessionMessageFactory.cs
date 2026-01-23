@@ -12,7 +12,9 @@ namespace PureFix.Types.FIX44
 	public class SessionMessageFactory : ISessionMessageFactory
 	{
 		private readonly ISessionDescription m_SessionDescription;
-		
+		private Components.StandardHeader? _header;
+		private Components.StandardTrailer? _trailer;
+
 		public SessionMessageFactory(ISessionDescription sessionDescription)
 		{
 			m_SessionDescription = sessionDescription;
@@ -40,7 +42,9 @@ namespace PureFix.Types.FIX44
 		
 		IStandardTrailer? ISessionMessageFactory.Trailer(int checksum)
 		{
-			return new Components.StandardTrailer() { CheckSum = checksum.ToString("D3") };
+			_trailer ??= new Components.StandardTrailer();
+			_trailer.CheckSum = checksum.ToString("D3");
+			return _trailer;
 		}
 		
 		IFixMessage? ISessionMessageFactory.Logon(string? userRequestId, bool? isResponse)
@@ -79,21 +83,25 @@ namespace PureFix.Types.FIX44
 		
 		IStandardHeader? ISessionMessageFactory.Header(string msgType, int seqNum, DateTime time, IStandardHeader? overrides)
 		{
-			var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);
-			var placeholder = (int)Math.Pow(10, bodyLength - 1) + 1;
-			return new Components.StandardHeader
+			if (_header == null)
 			{
-				BeginString = m_SessionDescription.BeginString,
-				BodyLength = placeholder,
-				MsgType = msgType,
-				SenderCompID = m_SessionDescription.SenderCompID,
-				MsgSeqNum = seqNum,
-				SendingTime = time,
-				TargetCompID = m_SessionDescription.TargetCompID,
-				TargetSubID = !string.IsNullOrEmpty(m_SessionDescription.TargetSubID) ? m_SessionDescription.TargetSubID : m_SessionDescription.TargetSubID,
-				SenderSubID = !string.IsNullOrEmpty(m_SessionDescription.SenderSubID) ? m_SessionDescription.SenderSubID : m_SessionDescription.SenderSubID,
+				var bodyLength = Math.Max(4, m_SessionDescription.BodyLengthChars ?? 7);
+				var placeholder = (int)Math.Pow(10, bodyLength - 1) + 1;
+				_header = new Components.StandardHeader
+				{
+					BeginString = m_SessionDescription.BeginString,
+					BodyLength = placeholder,
+					SenderCompID = m_SessionDescription.SenderCompID,
+					TargetCompID = m_SessionDescription.TargetCompID,
+					TargetSubID = !string.IsNullOrEmpty(m_SessionDescription.TargetSubID) ? m_SessionDescription.TargetSubID : null,
+					SenderSubID = !string.IsNullOrEmpty(m_SessionDescription.SenderSubID) ? m_SessionDescription.SenderSubID : null,
+				};
 			}
-			;
+			// Update per-message fields
+			_header.MsgType = msgType;
+			_header.MsgSeqNum = seqNum;
+			_header.SendingTime = time;
+			return _header;
 		}
 	}
 }
