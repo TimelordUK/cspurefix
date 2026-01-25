@@ -1,22 +1,15 @@
-using PureFix.Examples.Skeleton;
-using PureFix.Test.ModularTypes.Helpers;
-using PureFix.Examples.TradeCapture;
-using PureFix.Test.ModularTypes.Helpers;
-﻿using PureFix.Buffer.Ascii;
+using System.Text;
+using Arrow.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PureFix.Buffer;
+using PureFix.Buffer.Ascii;
+using PureFix.Test.ModularTypes.Helpers;
+using PureFix.Transport.Ascii;
+using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
 using PureFix.Transport.Store;
 using PureFix.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Arrow.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using PureFix.Transport.Recovery;
-using PureFix.Transport.Ascii;
 using PureFix.Types.Config;
 
 namespace PureFix.Test.ModularTypes.Env.Experiment
@@ -31,7 +24,7 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
         public IMessageEncoder Encoder { get; private set; }
         public IFixLogRecovery Recovery { get; private set; }
         public CancellationTokenSource TokenSource { get; }
-        public  BaseApp App { get; set; }
+        public  BaseApp App { get; set; } = null!;
         public IReadOnlyList<string> FixLog => ((TestLogger)App.Logs.fixLog).Entries();
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }

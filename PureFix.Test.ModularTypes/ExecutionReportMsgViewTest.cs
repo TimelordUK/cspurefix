@@ -1282,7 +1282,7 @@ namespace PureFix.Test.ModularTypes
                 Assert.Multiple(() =>
                 {
                     Assert.That(underlying0, Is.Not.Null);
-                    Assert.That(underlying0.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
+                    Assert.That(underlying0!.UndSecAltIDGrp, DIs.DeepEqualTo(expectedInst));
                     Assert.That(u1?.UnderlyingSymbol, Is.EqualTo("erat"));
                     Debug.Assert(u1 != null, nameof(u1) + " != null");
                     var s0 = u1.UndSecAltIDGrp?.UnderlyingSecurityAltID?[0];

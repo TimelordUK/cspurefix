@@ -408,7 +408,6 @@ namespace PureFix.Dictionary.Compiler
         /// </summary>
         protected void ApplyFields(CodeGenerator generator, string parentPath, IContainedSet set, string? parentTypeName = null)
         {
-            ContainedField? last = null;
             var fields = set.Fields;
             for (int i = 0; i < fields.Count; i++)
             {

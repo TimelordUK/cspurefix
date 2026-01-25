@@ -9,7 +9,7 @@ namespace PureFix.Test.ModularTypes.Helpers
         private readonly LogTrace m_al = [];
         private readonly LogTrace m_fl = [];
 
-        public TestLoggerFactory(IFixClock clock = null)
+        public TestLoggerFactory(IFixClock? clock = null)
         {
             _clock = clock ?? new RealtimeClock();
         }

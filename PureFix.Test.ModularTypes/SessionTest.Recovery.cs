@@ -44,7 +44,7 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(recovery.PeerSeqNum, Is.EqualTo(122));
                 Assert.That(recovery.LastStoreState, Is.Not.Null);
                 // have sent request trade captures and logon (rest heartbeats are ignored).
-                Assert.That(recovery.LastStoreState.Value.LastSeq, Is.EqualTo(2));
+                Assert.That(recovery.LastStoreState!.Value.LastSeq, Is.EqualTo(2));
             });
         }
 

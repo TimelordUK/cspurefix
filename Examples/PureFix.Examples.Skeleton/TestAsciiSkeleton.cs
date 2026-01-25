@@ -40,7 +40,7 @@ namespace PureFix.Examples.Skeleton
             return Task.CompletedTask;
         }
 
-        protected override void OnStopped(Exception error)
+        protected override void OnStopped(Exception? error)
         {
             m_logger.Info("OnStopped");
         }

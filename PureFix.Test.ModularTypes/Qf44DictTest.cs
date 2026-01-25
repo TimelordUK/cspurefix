@@ -69,24 +69,25 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(_definitions.Simple.TryGetValue("Side", out var def), Is.True);
                 Assert.That(def, Is.Not.Null);
-                Assert.That(def.Tag, Is.EqualTo(54));
+                Assert.That(def!.Tag, Is.EqualTo(54));
                 Assert.That(def.IsEnum, Is.True);
-                _setHelper.IsEnum(def.Enums, "1", "Buy", "BUY");
-                _setHelper.IsEnum(def.Enums, "2", "Sell", "SELL");
-                _setHelper.IsEnum(def.Enums, "3", "BuyMinus", "BUY_MINUS");
-                _setHelper.IsEnum(def.Enums, "4", "SellPlus", "SELL_PLUS");
-                _setHelper.IsEnum(def.Enums, "5", "SellShort", "SELL_SHORT");
-                _setHelper.IsEnum(def.Enums, "6", "SellShortExempt", "SELL_SHORT_EXEMPT");
-                _setHelper.IsEnum(def.Enums, "7", "Undisclosed", "UNDISCLOSED");
-                _setHelper.IsEnum(def.Enums, "8", "Cross", "CROSS");
-                _setHelper.IsEnum(def.Enums, "9", "CrossShort", "CROSS_SHORT");
-                _setHelper.IsEnum(def.Enums, "A", "CrossShortExempt", "CROSS_SHORT_EXEMPT");
-                _setHelper.IsEnum(def.Enums, "B", "AsDefined", "AS_DEFINED");
-                _setHelper.IsEnum(def.Enums, "C", "Opposite", "OPPOSITE");
-                _setHelper.IsEnum(def.Enums, "D", "Subscribe", "SUBSCRIBE");
-                _setHelper.IsEnum(def.Enums, "E", "Redeem", "REDEEM");
-                _setHelper.IsEnum(def.Enums, "F", "Lend", "LEND");
-                _setHelper.IsEnum(def.Enums, "G", "Borrow", "BORROW");
+                var enums = def.Enums!;
+                _setHelper.IsEnum(enums, "1", "Buy", "BUY");
+                _setHelper.IsEnum(enums, "2", "Sell", "SELL");
+                _setHelper.IsEnum(enums, "3", "BuyMinus", "BUY_MINUS");
+                _setHelper.IsEnum(enums, "4", "SellPlus", "SELL_PLUS");
+                _setHelper.IsEnum(enums, "5", "SellShort", "SELL_SHORT");
+                _setHelper.IsEnum(enums, "6", "SellShortExempt", "SELL_SHORT_EXEMPT");
+                _setHelper.IsEnum(enums, "7", "Undisclosed", "UNDISCLOSED");
+                _setHelper.IsEnum(enums, "8", "Cross", "CROSS");
+                _setHelper.IsEnum(enums, "9", "CrossShort", "CROSS_SHORT");
+                _setHelper.IsEnum(enums, "A", "CrossShortExempt", "CROSS_SHORT_EXEMPT");
+                _setHelper.IsEnum(enums, "B", "AsDefined", "AS_DEFINED");
+                _setHelper.IsEnum(enums, "C", "Opposite", "OPPOSITE");
+                _setHelper.IsEnum(enums, "D", "Subscribe", "SUBSCRIBE");
+                _setHelper.IsEnum(enums, "E", "Redeem", "REDEEM");
+                _setHelper.IsEnum(enums, "F", "Lend", "LEND");
+                _setHelper.IsEnum(enums, "G", "Borrow", "BORROW");
             });
         }
 

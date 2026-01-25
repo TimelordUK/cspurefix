@@ -387,7 +387,7 @@ namespace PureFix.Test.ModularTypes
                     Assert.That(k, Is.Not.Null);
                     Assert.That(_definitions.Message.TryGetValue(k, out var m), Is.True);
                     Assert.That(m, Is.Not.Null);
-                    Assert.That(m.MsgType, Is.EqualTo(k));
+                    Assert.That(m!.MsgType, Is.EqualTo(k));
                 }
             });
         }

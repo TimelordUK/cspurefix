@@ -20,7 +20,7 @@ namespace PureFix.Test.ModularTypes.Helpers
     internal class TestEntity
     {
         public IFixDefinitions Definitions { get; }
-        public AsciiParser Parser { get; private set; }
+        public AsciiParser Parser { get; private set; } = null!;
         public IFixClock Clock { get; private set; }
 
         public TestEntity(string dataDict = "FIX44.xml", ISegmentParser? segmentParser = null)
@@ -113,7 +113,7 @@ namespace PureFix.Test.ModularTypes.Helpers
             using var streamReader = File.OpenText(file);
             var json = await streamReader.ReadToEndAsync();
             var values = JsonSerializer.Deserialize<Dictionary<string, int>>(json);
-            return values;
+            return values ?? new Dictionary<string, int>();
         }
 
         public void TimeParsePath(string description, string path, int repeats, int batch = 1)

@@ -11,7 +11,7 @@ namespace PureFix.Test.ModularTypes.Helpers
     internal class TestMessageTransport : IMessageTransport
     {
         private readonly BlockingCollection<byte[]> _rx_data = new();
-        private BlockingCollection<byte[]> _tx_data;
+        private BlockingCollection<byte[]>? _tx_data;
 
         public void ConnectTo(TestMessageTransport sendingTo)
         {

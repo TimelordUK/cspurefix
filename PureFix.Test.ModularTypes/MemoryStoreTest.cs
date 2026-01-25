@@ -16,7 +16,7 @@ namespace PureFix.Test.ModularTypes
         private TestEntity _testEntity;
         private List<AsciiView> _views;
         private IFixConfig _config;
-        private string SenderCompID => _config?.Description?.SenderCompID;
+        private string? SenderCompID => _config?.Description?.SenderCompID;
 
         [OneTimeSetUp]
         public async Task OnceSetup()

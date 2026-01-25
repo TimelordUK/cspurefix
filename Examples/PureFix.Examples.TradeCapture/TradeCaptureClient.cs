@@ -33,7 +33,7 @@ namespace PureFix.Examples.TradeCapture
                 case MsgType.TradeCaptureReport:
                     {
                         var tc = (TradeCaptureReport)m_msg_factory.ToFixMessage(view)!;
-                        m_reports[tc?.TradeReportID ?? ""] = tc;
+                        m_reports[tc.TradeReportID ?? ""] = tc;
                         m_logger.Info($"{JsonHelper.ToJson(tc)}");
                         m_logger.Info($"[reports: {m_reports.Count}] received tc ExecID = {tc?.ExecID} TradeReportID = {tc?.TradeReportID} Symbol = {tc?.Instrument?.Symbol} {tc?.LastQty} @ ${tc?.LastPx}");
                         break;
@@ -50,7 +50,7 @@ namespace PureFix.Examples.TradeCapture
             return Task.CompletedTask;
         }
 
-        protected override bool OnLogon(IMessageView view, string user, string password)
+        protected override bool OnLogon(IMessageView view, string? user, string? password)
         {
             var msg = m_msg_factory.ToFixMessage(view);
             m_logger.Info($"peer logs in user {user} {msg}");
@@ -65,7 +65,7 @@ namespace PureFix.Examples.TradeCapture
             await Send(MsgTypeValues.TradeCaptureReportRequest, tcr);
         }
 
-        protected override void OnStopped(Exception error)
+        protected override void OnStopped(Exception? error)
         {
             m_logger.Info("OnStopped");
         }

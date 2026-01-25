@@ -82,7 +82,7 @@ namespace PureFix.Examples.TradeCapture
             }
         }
 
-        protected override bool OnLogon(IMessageView view, string user, string password)
+        protected override bool OnLogon(IMessageView view, string? user, string? password)
         {
             var msg = m_msg_factory.ToFixMessage(view);
             m_logger.Info($"peer logs in user {user}");
@@ -96,7 +96,7 @@ namespace PureFix.Examples.TradeCapture
             return Task.CompletedTask;
         }
 
-        protected override void OnStopped(Exception error)
+        protected override void OnStopped(Exception? error)
         {
             m_logger.Info("OnStopped");
         }
