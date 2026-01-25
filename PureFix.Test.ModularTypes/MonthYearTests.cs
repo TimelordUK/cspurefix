@@ -126,8 +126,9 @@ namespace PureFix.Test.ModularTypes
 
             var text = JsonSerializer.Serialize(data);
             var loaded = JsonSerializer.Deserialize<JsonData>(text);
+            Assert.That(loaded, Is.Not.Null);
 
-            Assert.That(data.Value, Is.EqualTo(loaded.Value));
+            Assert.That(data.Value, Is.EqualTo(loaded!.Value));
             Assert.That(data.DefaultValue, Is.EqualTo(loaded.DefaultValue));
             Assert.That(data.NullableValue, Is.EqualTo(loaded.NullableValue));
             Assert.That(data.NullableValueNotSet, Is.EqualTo(loaded.NullableValueNotSet));

@@ -67,7 +67,7 @@ namespace PureFix.Test.ModularTypes
             using var streamReader = File.OpenText(Path.Join(Fix44PathHelper.SessionRootPath, "test-qf44-initiator-tls.json"));
             var all = streamReader.ReadToEnd();
             var session = JsonHelper.FromJson<SessionDescription>(all);
-            return session;
+            return session ?? throw new InvalidOperationException("Failed to deserialize session description");
         }
 
         [Test]
@@ -137,7 +137,8 @@ namespace PureFix.Test.ModularTypes
             var msg = MakeOrder();
             var formatter = new AsciiEncoder(_testEntity.Definitions, session, new Fix44ModularSessionMessageFactory(session), _clock);
             var res = formatter.Encode(MsgTypeValues.NewOrderSingle, msg);
-            var s = res.AsString(AsciiChars.Pipe);
+            Assert.That(res, Is.Not.Null);
+            var s = res!.AsString(AsciiChars.Pipe);
             Assert.That(s, Is.EqualTo("8=FIX.4.4|9=000160|35=D|49=init-tls-comp|56=accept-tls-comp|34=1|57=fix|52=20240101-00:00:00.000|11=NF 0040/03022010|1=ABC123ZYX|21=1|111=0|55=IOC|54=1|38=1000|40=2|44=49.38|59=0|10=231|"));
         }
 

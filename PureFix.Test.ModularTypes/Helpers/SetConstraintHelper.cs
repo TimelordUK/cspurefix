@@ -45,14 +45,14 @@ namespace PureFix.Test.ModularTypes.Helpers
             Assert.Multiple(() =>
             {
                 Assert.That(set, Is.Not.Null);
-                var field = set?.Fields[index];
+                var field = set.Fields[index];
                 Assert.That(field, Is.Not.Null);
-                Assert.That(field.Type, Is.EqualTo(ContainedFieldType.Simple));
+                Assert.That(field!.Type, Is.EqualTo(ContainedFieldType.Simple));
                 Assert.That(field.Name, Is.EqualTo(name));
                 Assert.That(field.Required, Is.EqualTo(expected));
                 Assert.That(Definitions.Simple.TryGetValue(name, out var masterDef), Is.True);
                 Assert.That(masterDef, Is.Not.Null);
-                Assert.That(masterDef.Name, Is.EqualTo(name));
+                Assert.That(masterDef!.Name, Is.EqualTo(name));
                 var tag = masterDef.Tag;
                 Assert.That(set.ContainedTag.ContainsKey(tag));
                 Assert.That(set.Simple.ContainsKey(name));

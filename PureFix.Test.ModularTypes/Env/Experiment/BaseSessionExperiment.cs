@@ -1,18 +1,9 @@
-using PureFix.Examples.Skeleton;
-using PureFix.Test.ModularTypes.Helpers;
-using PureFix.Examples.TradeCapture;
-using PureFix.Test.ModularTypes.Helpers;
-﻿using Arrow.Threading.Tasks;
+using Arrow.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Transport.Session;
 using PureFix.Types;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace PureFix.Test.ModularTypes.Env.Experiment
@@ -24,10 +15,10 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
             Clock = testEntity.Clock;
             Queue = new AsyncWorkQueue();
         }
-        public IFixConfig InitiatorConfig { get; protected set; }
-        public IFixConfig AcceptorConfig { get; protected set; }
-        public RuntimeContainer Initiator { get; protected set; }
-        public RuntimeContainer Acceptor { get; protected set; }
+        public IFixConfig InitiatorConfig { get; protected set; } = null!;
+        public IFixConfig AcceptorConfig { get; protected set; } = null!;
+        public RuntimeContainer Initiator { get; protected set; } = null!;
+        public RuntimeContainer Acceptor { get; protected set; } = null!;
         public IFixClock Clock { get; protected set; }
         public AsyncWorkQueue Queue { get; protected set; }
 

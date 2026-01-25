@@ -113,7 +113,7 @@ namespace PureFix.Test.ModularTypes
                 Assert.That(v1.MsgType, Is.EqualTo(MsgTypeValues.TradeCaptureReportRequestAck));
                 Assert.That(v1.SeqNum, Is.EqualTo(8));
                 Assert.That(v1.InflatedMessage?.StandardHeader, Is.Not.Null);
-                Assert.That(v1.InflatedMessage.StandardHeader?.PossDupFlag, Is.True);
+                Assert.That(v1.InflatedMessage!.StandardHeader?.PossDupFlag, Is.True);
                 Assert.That(v1.InflatedMessage?.StandardHeader?.OrigSendingTime, Is.Not.Null);
             });
 

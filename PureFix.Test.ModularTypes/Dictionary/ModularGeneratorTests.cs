@@ -105,7 +105,8 @@ namespace PureFix.Test.ModularTypes.Dictionary
             generator.Process();
 
             // Assert - should have 10 messages
-            var messageFiles = Directory.GetFiles(options.BaseOptions.BackingTypeOutputPath, "*.cs")
+            Assert.That(options.BaseOptions.BackingTypeOutputPath, Is.Not.Null);
+            var messageFiles = Directory.GetFiles(options.BaseOptions.BackingTypeOutputPath!, "*.cs")
                 .Where(f => !f.EndsWith("FixMessageFactory.cs"))
                 .ToList();
 

@@ -1,27 +1,17 @@
-using PureFix.Examples.Skeleton;
-using PureFix.Test.ModularTypes.Helpers;
-using PureFix.Examples.TradeCapture;
-using PureFix.Test.ModularTypes.Helpers;
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Arrow.Threading.Tasks;
-using PureFix.Test.ModularTypes.Env;
-using PureFix.Test.ModularTypes.Helpers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using PureFix.Buffer.Ascii;
+using PureFix.Examples.Skeleton;
+using PureFix.Examples.TradeCapture;
 using PureFix.Test.ModularTypes.Env.Experiment;
-using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Test.ModularTypes.Env.Skeleton;
-using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Test.ModularTypes.Env.TradeCapture;
 using PureFix.Test.ModularTypes.Helpers;
 using PureFix.Transport;
-using PureFix.Buffer.Ascii;
 using PureFix.Types;
 using PureFix.Types.Config;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace PureFix.Test.ModularTypes
 {
@@ -91,9 +81,9 @@ namespace PureFix.Test.ModularTypes
             {
                 Assert.That(config, Is.Not.Null);
                 Assert.That(config.Description, Is.Not.Null);
-                Assert.That(config.Description.Application, Is.Not.Null);
+                Assert.That(config.Description!.Application, Is.Not.Null);
                 Assert.That(config.Definitions, Is.Not.Null);
-                Assert.That(config.Definitions.Message.ContainsKey("0"));
+                Assert.That(config.Definitions!.Message.ContainsKey("0"));
                 Assert.That(config.Definitions.Simple.ContainsKey("BeginString"));
                 // MessageFactory is intentionally null - it should be set by the application using appropriate generated types
                 Assert.That(config.MessageFactory, Is.Null);

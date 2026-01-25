@@ -383,21 +383,9 @@ public class DictionaryValidatorTests
     [Test]
     public void Validation_Can_Be_Disabled()
     {
-        var xml = @"
-<fix major='4' minor='4'>
-  <header><field name='BeginString' required='Y' /></header>
-  <trailer><field name='CheckSum' required='Y' /></trailer>
-  <messages>
-    <message name='Heartbeat' msgtype='0' msgcat='admin'>
-      <field name='NonExistent' required='N' />
-    </message>
-  </messages>
-  <fields>
-    <field number='8' name='BeginString' type='STRING' />
-    <field number='10' name='CheckSum' type='STRING' />
-  </fields>
-</fix>";
-
+        // The XML below would fail validation due to NonExistent field,
+        // but with ValidateBeforeParsing = false, validation is skipped
+        // (actual parsing would fail later with original error)
         var definitions = new FixDefinitions();
         var parser = new QuickFixXmlFileParser(definitions)
         {
@@ -405,7 +393,6 @@ public class DictionaryValidatorTests
         };
 
         // Should not throw because validation is disabled
-        // (but the actual parsing will fail later with original error)
         Assert.That(parser.Validator, Is.Null);
     }
 
