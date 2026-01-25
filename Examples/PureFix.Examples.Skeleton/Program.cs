@@ -58,8 +58,6 @@ byte? logDelimiter = sohLog ? AsciiChars.Soh : null;
 var dictRootPath = AppContext.BaseDirectory; // Dictionary files are copied via PureFix.Data reference
 var sessionRootPath = Path.Join(dictRootPath, "Session");
 
-var clock = new RealtimeClock();
-
 if (clientOnly)
 {
     // Client-only mode - connect to external server/broker
@@ -72,7 +70,7 @@ if (clientOnly)
     }
 
     // Load config to get session details
-    var config = FixApp.MakeConfig(configPath, dictRootPath, storeDirectory);
+    var config = FixApp.MakeConfig(configPath, dictRootPath);
     var desc = config.Description;
 
     Console.WriteLine();
@@ -208,7 +206,7 @@ if (clientOnly)
     }
     Console.WriteLine();
 
-    await Runner.RunSingle(configPath, dictRootPath, clock, MakeSkeletonHost, storeDirectory, logDelimiter);
+    await Runner.RunSingle(configPath, dictRootPath, MakeSkeletonHost);
 }
 else
 {
@@ -249,16 +247,17 @@ else
     }
     Console.WriteLine();
 
-    await Runner.Run(acceptorConfig, initiatorConfig, dictRootPath, clock, MakeSkeletonHost, storeDirectory, logDelimiter);
+    await Runner.Run(acceptorConfig, initiatorConfig, dictRootPath, MakeSkeletonHost);
 }
 
 Console.WriteLine();
 Console.WriteLine("Skeleton example completed");
 return;
 
-static BaseAppDI MakeSkeletonHost(IFixClock clock, IFixConfig config)
+static BaseAppDI MakeSkeletonHost(IFixConfig config)
 {
-    var factory = new ConsoleLogFactory(clock);
+    var factory = new ConsoleLogFactory(config.Description);
+    var clock = new RealtimeClock();
     return new SkeletonDI(factory, clock, config);
 }
 
