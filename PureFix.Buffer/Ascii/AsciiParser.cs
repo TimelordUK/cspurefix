@@ -250,5 +250,22 @@ namespace PureFix.Buffer.Ascii
         {
             _pool.Return(sto);
         }
+
+        /// <summary>
+        /// Resets the parser state for a new connection.
+        /// Clears any partial message data from previous connection to prevent
+        /// buffer corruption when reconnecting.
+        /// </summary>
+        public void Reset()
+        {
+            // Return any outstanding storage from partial message parsing
+            if (_state.Storage != null)
+            {
+                _pool.Return(_state.Storage);
+            }
+
+            // Reset all parse state and allocate fresh buffer
+            _state.BeginMessage();
+        }
     }
 }

@@ -451,6 +451,11 @@ namespace PureFix.Transport.Session
             m_MySource = null;
             m_parentToken = null;
 
+            // Reset parser state to clear any partial message data from previous connection
+            // This prevents buffer corruption when reconnecting
+            m_parser.Reset();
+            m_sessionLogger?.Info("PrepareForReconnect: parser state reset");
+
             m_sessionLogger?.Info("PrepareForReconnect: ready for new connection");
         }
 

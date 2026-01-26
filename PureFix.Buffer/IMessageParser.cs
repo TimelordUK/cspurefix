@@ -13,5 +13,12 @@ namespace PureFix.Buffer
     {
         void ParseFrom(ReadOnlySpan<byte> readFrom, int len, Action<int, MsgView>? onView, Action<StoragePool.Storage>? onDecode = null);
         void Return(StoragePool.Storage sto);
+
+        /// <summary>
+        /// Resets the parser state for a new connection.
+        /// Must be called when reconnecting to clear any partial message data
+        /// from the previous connection.
+        /// </summary>
+        void Reset();
     }
 }
