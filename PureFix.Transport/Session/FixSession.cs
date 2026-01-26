@@ -313,7 +313,7 @@ namespace PureFix.Transport.Session
             m_parser.ParseFrom(buffer, len, (_, v) => _messages.Add(v), OnFixLog);
             if (_messages.Count == 0) return;
             var plural = _messages.Count > 1 ? "s" : "";
-            m_sessionLogger?.Info("OnRx received {Count} message{Plural}", _messages.Count, plural);
+            m_sessionLogger?.Debug("OnRx received {Count} message{Plural}", _messages.Count, plural);
             foreach (var msg in _messages)
             {
                 await RxOnMsg(msg);
