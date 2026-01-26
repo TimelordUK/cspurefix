@@ -40,12 +40,12 @@ namespace PureFix.Transport.Recovery
                 {
                     messages.Add((AsciiView)v);
                 };
-                m_logger?.Info($"loading {fixLog.FullName} to recover store.");
+                m_logger?.Info("Loading {FixLogPath} to recover store", fixLog.FullName);
                 Parser.Snapshot(fixLog.FullName);
             }
             catch (Exception ex)
             {
-                m_logger?.Info($"error - parsed count: {messages.Count} (clearing)");
+                m_logger?.Info("Error - parsed count: {ParsedCount} (clearing)", messages.Count);
                 m_logger?.Error(ex);
                 messages.Clear();
             }
@@ -55,7 +55,7 @@ namespace PureFix.Transport.Recovery
         private List<AsciiView> GetMessages(List<AsciiView> messages, string filterComp)
         {
             var myMessages = messages.Where(v => v.GetString((int)MsgTag.SenderCompID) == filterComp).ToList();
-            m_logger?.Info($"comp {filterComp} recovers {myMessages.Count}");
+            m_logger?.Info("Comp {CompId} recovers {MessageCount} messages", filterComp, myMessages.Count);
             return myMessages;
         }
 
@@ -145,7 +145,7 @@ namespace PureFix.Transport.Recovery
 
                 await LoadStore(myMessages);
                 RecoverPeer(peerMessages);
-                m_logger?.Info($"Recover MySeqNum = {MySeqNum} PeerSeqNum = {PeerSeqNum}");
+                m_logger?.Info("Recover complete: MySeqNum={MySeqNum}, PeerSeqNum={PeerSeqNum}", MySeqNum, PeerSeqNum);
             }
             catch (Exception ex)
             {
@@ -156,7 +156,7 @@ namespace PureFix.Transport.Recovery
         public async Task<FixMsgStoreState> AddRecord(IFixMsgStoreRecord record)
         {
             var state = await FixMsgStore.Put(record);
-            m_logger?.Info($"[{record.MsgType},{record.SeqNum}] store state {state}");
+            m_logger?.Debug("[{MsgType},{SeqNum}] store state {StoreState}", record.MsgType, record.SeqNum, state);
             return state;
         }
 
