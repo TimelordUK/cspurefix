@@ -37,7 +37,7 @@ namespace PureFix.Buffer.Segment
         private List<int>? _containedDelimiterPositions;
         private List<SegmentView>? _instanceViews;
 
-        public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)Array.Empty<int>();
+        public IReadOnlyList<int> DelimiterPositions => _containedDelimiterPositions ?? (IReadOnlyList<int>)[];
 
         public override string ToString()
         {

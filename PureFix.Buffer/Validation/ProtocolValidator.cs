@@ -74,7 +74,7 @@ public class ProtocolValidator : IMessageValidator
 
     private static void ValidateBodyLength(IMessageView view, ValidationResult result)
     {
-        if (!view.TryGetInt32(BodyLengthTag, out var declared))
+        if (!view.TryGetInt32(BodyLengthTag, out _))
         {
             result.AddWarning(ValidationWarning.RequiredFieldMissing(BodyLengthTag, "header"));
             return;

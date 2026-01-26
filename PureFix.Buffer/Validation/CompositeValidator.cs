@@ -7,23 +7,15 @@ namespace PureFix.Buffer.Validation;
 /// Combines multiple validators into a single validator.
 /// Runs all validators in sequence, accumulating warnings.
 /// </summary>
-public class CompositeValidator : IMessageValidator
+public class CompositeValidator(params IMessageValidator[] validators) : IMessageValidator
 {
-    private readonly IMessageValidator[] _validators;
-
-    public CompositeValidator(params IMessageValidator[] validators)
+    public CompositeValidator(IEnumerable<IMessageValidator> validators) : this(validators.ToArray())
     {
-        _validators = validators;
-    }
-
-    public CompositeValidator(IEnumerable<IMessageValidator> validators)
-    {
-        _validators = validators.ToArray();
     }
 
     public void Validate(IMessageView view, ValidationResult result)
     {
-        foreach (var validator in _validators)
+        foreach (var validator in validators)
         {
             validator.Validate(view, result);
         }
