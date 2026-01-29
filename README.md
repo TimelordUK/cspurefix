@@ -4,6 +4,7 @@ A high-performance, pure C# FIX protocol engine for .NET.
 
 [![NuGet](https://img.shields.io/nuget/v/PureFix.Transport.svg)](https://www.nuget.org/packages/PureFix.Transport)
 [![Build](https://github.com/TimelordUK/cspurefix/actions/workflows/build.yml/badge.svg)](https://github.com/TimelordUK/cspurefix/actions)
+[![codecov](https://codecov.io/gh/TimelordUK/cspurefix/graph/badge.svg)](https://codecov.io/gh/TimelordUK/cspurefix)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Project Status: Beta
@@ -28,9 +29,9 @@ The message parser has been validated in production drop-copy scenarios (read-on
 
 | Metric | Coverage |
 |--------|----------|
-| Line Coverage | 67% |
-| Branch Coverage | 53% |
-| Tests | 476 passing |
+| Line Coverage | 68.8% |
+| Branch Coverage | 54.1% |
+| Method Coverage | 71.9% |
 
 *Coverage excludes generated FIX type assemblies. Run `./scripts/coverage.sh` for local report.*
 
