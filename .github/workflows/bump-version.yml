@@ -37,19 +37,32 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          9.0.x
+          10.0.x
+
+    - name: Install xmlstarlet
+      run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+
     - name: Get current version
       id: current
       run: |
-        VERSION=$(grep -oP '(?<=<Version>)[^<]+' Directory.Build.props)
+        # Evaluate MSBuild property authoritatively (respects Directory.Build.props).
+        VERSION=$(dotnet msbuild Directory.Build.props -getProperty:Version -nologo | tr -d '[:space:]')
+        if [ -z "$VERSION" ]; then
+          echo "Failed to read <Version> from Directory.Build.props" >&2
+          exit 1
+        fi
         echo "Current version: $VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-        # Parse version components (handle prerelease suffix)
-        BASE_VERSION=$(echo "$VERSION" | sed 's/-.*$//')
-        MAJOR=$(echo "$BASE_VERSION" | cut -d. -f1)
-        MINOR=$(echo "$BASE_VERSION" | cut -d. -f2)
-        PATCH=$(echo "$BASE_VERSION" | cut -d. -f3)
-
+        # Parse SemVer: strip prerelease suffix, then split MAJOR.MINOR.PATCH.
+        BASE_VERSION="${VERSION%%-*}"
+        IFS=. read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
         echo "major=$MAJOR" >> $GITHUB_OUTPUT
         echo "minor=$MINOR" >> $GITHUB_OUTPUT
         echo "patch=$PATCH" >> $GITHUB_OUTPUT
@@ -89,10 +102,20 @@ jobs:
     - name: Update Directory.Build.props
       run: |
         NEW_VERSION="${{ steps.new.outputs.version }}"
-        sed -i "s|<Version>[^<]*</Version>|<Version>${NEW_VERSION}</Version>|" Directory.Build.props
 
-        echo "Updated Directory.Build.props:"
-        grep Version Directory.Build.props
+        # XPath-based in-place edit — no regex, proper XML parser.
+        xmlstarlet ed --inplace \
+          --update "/Project/PropertyGroup/Version" \
+          --value "$NEW_VERSION" \
+          Directory.Build.props
+
+        # Verify via MSBuild evaluation (round-trip check).
+        APPLIED=$(dotnet msbuild Directory.Build.props -getProperty:Version -nologo | tr -d '[:space:]')
+        echo "Updated Directory.Build.props Version: $APPLIED"
+        if [ "$APPLIED" != "$NEW_VERSION" ]; then
+          echo "Version update failed: expected $NEW_VERSION, got $APPLIED" >&2
+          exit 1
+        fi
 
     - name: Commit version bump
       run: |
