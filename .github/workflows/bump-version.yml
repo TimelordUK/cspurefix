@@ -51,12 +51,25 @@ jobs:
     - name: Get current version
       id: current
       run: |
-        # Evaluate MSBuild property authoritatively (respects Directory.Build.props).
-        VERSION=$(dotnet msbuild Directory.Build.props -getProperty:Version -nologo | tr -d '[:space:]')
-        if [ -z "$VERSION" ]; then
+        # Source of truth for "what is already released" is the highest git tag,
+        # which is immutable. Directory.Build.props can drift behind reality if the
+        # file is rewritten (e.g. a TFM migration), so we reconcile the two and take
+        # the higher of the props <Version> and the latest release tag.
+        PROPS_VERSION=$(dotnet msbuild Directory.Build.props -getProperty:Version -nologo | tr -d '[:space:]')
+        if [ -z "$PROPS_VERSION" ]; then
           echo "Failed to read <Version> from Directory.Build.props" >&2
           exit 1
         fi
+
+        LATEST_TAG=$(git tag --sort=-v:refname | head -n1)
+        TAG_VERSION="${LATEST_TAG#v}"
+
+        echo "props version: $PROPS_VERSION"
+        echo "latest tag:    ${LATEST_TAG:-<none>}"
+
+        # Highest of the two (semver-aware). An empty tag version sorts first, so props wins.
+        VERSION=$(printf '%s\n%s\n' "$PROPS_VERSION" "$TAG_VERSION" | grep -v '^$' | sort -V | tail -n1)
+
         echo "Current version: $VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -94,6 +107,13 @@ jobs:
         NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
         if [ -n "$PRERELEASE" ]; then
           NEW_VERSION="${NEW_VERSION}-${PRERELEASE}"
+        fi
+
+        # Guard: never collide with an existing tag (releases / NuGet are immutable).
+        if git rev-parse "refs/tags/v${NEW_VERSION}" >/dev/null 2>&1; then
+          echo "Tag v${NEW_VERSION} already exists - props/tag state is inconsistent." >&2
+          echo "A published version is ahead of Directory.Build.props; realign <Version> and retry." >&2
+          exit 1
         fi
 
         echo "New version: $NEW_VERSION"
