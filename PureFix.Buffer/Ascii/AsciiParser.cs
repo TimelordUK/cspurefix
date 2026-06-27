@@ -30,7 +30,7 @@ namespace PureFix.Buffer.Ascii
         private readonly AsciiParseState _state;
         private readonly ISegmentParser _segmentParser;
         public Tags? Locations => _state.Locations;
-        private readonly StoragePool _pool = new();
+        private readonly StoragePool _pool;
         private long _receivedBytes;
         private long _parsedMessages;
         private double _totalElapsedSegmentParseMicros;
@@ -38,8 +38,20 @@ namespace PureFix.Buffer.Ascii
         public Stats ParserStats => new(_receivedBytes, _parsedMessages, _pool.Rents, _pool.Returns, _totalElapsedSegmentParseMicros, _totalElapsedParseMicros);
 
         public AsciiParser(IFixDefinitions definitions)
+            : this(definitions, StoragePool.DefaultMaxMessageLocations)
+        {
+        }
+
+        /// <summary>
+        /// Creates a parser with an explicit cap on the number of tag locations a
+        /// single message may contain. Bounds tag-store growth so a malformed or
+        /// stream-desynced frame is rejected with a thrown error rather than driving
+        /// an unbounded allocation into a heap-OOM (jspurefix issue #143).
+        /// </summary>
+        public AsciiParser(IFixDefinitions definitions, int maxMessageLocations)
         {
             Definitions = definitions;
+            _pool = new StoragePool(maxMessageLocations);
             _state = new AsciiParseState(definitions, _pool);
             _segmentParser = new AsciiSegmentParser(Definitions);
             _state.BeginMessage();
@@ -52,6 +64,7 @@ namespace PureFix.Buffer.Ascii
         public AsciiParser(IFixDefinitions definitions, ISegmentParser segmentParser)
         {
             Definitions = definitions;
+            _pool = new StoragePool(StoragePool.DefaultMaxMessageLocations);
             _state = new AsciiParseState(definitions, _pool);
             _segmentParser = segmentParser;
             _state.BeginMessage();

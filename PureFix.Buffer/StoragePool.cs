@@ -11,10 +11,27 @@ namespace PureFix.Buffer
 {
     public class StoragePool
     {
+        // Cap the tag store so a malformed/oversized frame or a desynced stream
+        // that never reaches a frame boundary cannot drive an unbounded array
+        // allocation into a heap-OOM. Matches the ascii maxMessageLen bound used
+        // by the TypeScript port (jspurefix). The shortest possible field is a
+        // few bytes, so a tag-count cap equal to the max message size in bytes
+        // cannot reject any legitimate message.
+        public const int DefaultMaxMessageLocations = 160 * 1024;
+
         public class Storage
         {
             public virtual ElasticBuffer Buffer { get; } = new();
-            public virtual Tags Locations { get; } = new();
+            public virtual Tags Locations { get; }
+
+            public Storage() : this(DefaultMaxMessageLocations)
+            {
+            }
+
+            public Storage(int maxMessageLocations)
+            {
+                Locations = new Tags(50, maxMessageLocations);
+            }
 
             public TagPos? BeginStringLoc => Locations?[0];
             public TagPos? BodyLengthLoc => Locations?[1];
@@ -99,6 +116,29 @@ namespace PureFix.Buffer
 
         public long Returns { get; private set; }
 
-        private readonly ObjectPool<Storage> _pool = new DefaultObjectPool<Storage>(new DefaultPooledObjectPolicy<Storage>());
+        private readonly ObjectPool<Storage> _pool;
+
+        public StoragePool() : this(DefaultMaxMessageLocations)
+        {
+        }
+
+        public StoragePool(int maxMessageLocations)
+        {
+            _pool = new DefaultObjectPool<Storage>(new StoragePolicy(maxMessageLocations));
+        }
+
+        private sealed class StoragePolicy : IPooledObjectPolicy<Storage>
+        {
+            private readonly int _maxMessageLocations;
+
+            public StoragePolicy(int maxMessageLocations)
+            {
+                _maxMessageLocations = maxMessageLocations;
+            }
+
+            public Storage Create() => new Storage(_maxMessageLocations);
+
+            public bool Return(Storage obj) => true;
+        }
     }
 }

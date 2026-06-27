@@ -10,17 +10,25 @@ namespace PureFix.Types.Core
         public const int CheckSumTag = (int)MsgTag.CheckSum;
         public const int MessageTag = (int)MsgTag.MsgType;
 
+        public const int DefaultMaxLength = 1024 * 1024;
+
         private TagPos[] _tagPos;
         private int _ptr;
+        private readonly int _maxLength;
 
         public Tags() : this(50)
         {
         }
 
-        public Tags(int startingCapacity)
+        public Tags(int startingCapacity, int maxLength = DefaultMaxLength)
         {
-            _tagPos = new TagPos[startingCapacity];
+            _maxLength = maxLength;
+            _tagPos = new TagPos[Math.Min(startingCapacity, maxLength)];
         }
+
+        // exposed for testing the growth bound
+        public int Capacity => _tagPos.Length;
+        public int MaxLength => _maxLength;
 
         public override string ToString()
         {
@@ -37,10 +45,11 @@ namespace PureFix.Types.Core
 
         public int NextTagPos => _ptr;
 
-        public Tags(Tags that) : this()
+        public Tags(Tags that)
         {
             _tagPos = that._tagPos[..that._ptr];
             _ptr = that._ptr;
+            _maxLength = that._maxLength;
         }
 
         public int Count => _ptr;
@@ -67,7 +76,12 @@ namespace PureFix.Types.Core
         {
             if (_ptr == _tagPos.Length)
             {
-                var grown = new TagPos[_tagPos.Length * 2];
+                if (_tagPos.Length >= _maxLength)
+                {
+                    throw new InvalidOperationException(
+                        $"tag count exceeds maximum of {_maxLength} - message too large or stream misaligned");
+                }
+                var grown = new TagPos[Math.Min(_tagPos.Length * 2, _maxLength)];
                 Array.Copy(_tagPos, grown, _tagPos.Length);
                 _tagPos = grown;
             }
