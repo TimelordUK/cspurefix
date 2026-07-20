@@ -30,6 +30,12 @@ public class SessionSequenceCoordinatorTests
         await _store.Initialize();
     }
 
+    [TearDown]
+    public async Task TearDown()
+    {
+        await _store.DisposeAsync();
+    }
+
     #region Initialization
 
     [Test]
