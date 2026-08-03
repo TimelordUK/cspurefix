@@ -45,6 +45,14 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
             builder.Services.AddSingleton<IFixMsgStore>(store);
             builder.Services.AddSingleton<IFixLogParser, FixLogParser>();
             builder.Services.AddSingleton<IFixLogRecovery, T>();
+
+            // Same per-connection isolation the real hosts use, so tests exercise the
+            // production path rather than a shared parser/encoder.
+            builder.Services.AddSingleton<ISessionScopeFactory>(sp =>
+                new DefaultSessionScopeFactory(
+                    sp.GetRequiredService<IFixConfig>(),
+                    sp.GetRequiredService<IFixClock>(),
+                    description => new Fix44ModularSessionMessageFactory(description)));
         }
     }
 }

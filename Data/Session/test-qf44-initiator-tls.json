@@ -6,12 +6,12 @@
     "tcp": {
       "host": "localhost",
       "port": 2344,
+      "keepAliveMs": 10000,
       "tls": {
-        "timeout": 10000,
-        "sessionTimeout": 10000,
-        "enableTrace": true,
-        "key": "data/session/certs/client/client.key",
-        "cert": "data/session/certs/client/client.crt",
+        "enabled": true,
+        "targetHost": "localhost",
+        "certificate": "data/session/certs/client/client.pfx",
+        "validateServerCertificate": true,
         "ca": [
           "data/session/certs/ca/ca.crt"
         ]

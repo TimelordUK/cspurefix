@@ -18,11 +18,18 @@ namespace PureFix.Transport.Ascii
 {
     public abstract class AsciiSession : FixSession
     {
-        private readonly IFixSessionStore m_sessionStore;
+        private IFixSessionStore m_sessionStore;
         private readonly IFixMessageFactory m_fixMessageFactory;
-        private readonly SessionSequenceCoordinator m_coordinator;
-        private readonly SessionId m_sessionId;
+        private SessionSequenceCoordinator m_coordinator;
+        private SessionId m_sessionId;
         private readonly ISessionRegistry? m_sessionRegistry;
+
+        /// <summary>
+        /// False while a wildcard acceptor is still waiting to learn which counterparty it
+        /// is serving. Until the peer's Logon arrives the SessionId, the session store and
+        /// the registry key are all placeholders and must not be used or published.
+        /// </summary>
+        private bool m_identityBound;
         private FixMsgAsciiStoreResend? m_resender;
         private const int MaxLogonRetries = 100; // Reasonable limit to prevent infinite loops
         private const int MaxTimeoutRecoveryAttempts = 3;
@@ -74,12 +81,20 @@ namespace PureFix.Transport.Ascii
 
             m_fixMessageFactory = fixMessageFactory;
 
-            // Create session store from factory (defaults to in-memory if not configured)
-            var storeFactory = config.SessionStoreFactory ?? new MemorySessionStoreFactory();
             m_sessionId = new SessionId(
                 config.Description.BeginString,
                 config.Description.SenderCompID,
                 config.Description.TargetCompID);
+
+            // A wildcard acceptor cannot know its counterparty - and therefore its store
+            // file or registry key - until the peer logs on. Binding at construction would
+            // give every client the same SessionId, so they would share one store and each
+            // new connection would evict the previous one from the registry.
+            // BindPeerIdentity swaps in the real store once the Logon names the peer.
+            m_identityBound = !m_isWildcardMode;
+            var storeFactory = m_identityBound
+                ? config.SessionStoreFactory ?? new MemorySessionStoreFactory()
+                : new MemorySessionStoreFactory();
             m_sessionStore = storeFactory.Create(m_sessionId);
 
             // Get session registry from config (optional - for tracking active sessions)
@@ -206,19 +221,8 @@ namespace PureFix.Transport.Ascii
             if (logger?.IsEnabled(LogLevel.Info) == true)
                 logger.Info($"peerLogon Username={userName}, heartBtInt={heartBtInt}, peerCompId={peerCompId}, resetSeqNumFlag={resetSeqNumFlag}");
 
-            // Handle wildcard TargetCompID: update from peer's SenderCompID
-            // This allows acceptors to accept any client without knowing their CompID in advance
-            // We check m_isWildcardMode (set at construction) rather than the config value because
-            // the config is shared across sessions and may have been modified by a previous session.
-            if (m_isWildcardMode && !string.IsNullOrEmpty(peerCompId))
-            {
-                if (m_config.Description is PureFix.Types.Config.SessionDescription desc)
-                {
-                    logger?.Info("Wildcard TargetCompID: updating from '{CurrentTarget}' to '{PeerCompId}'",
-                        desc.TargetCompID, peerCompId);
-                    desc.TargetCompID = peerCompId;
-                }
-            }
+            // Wildcard TargetCompID has already been bound to this peer in OnMsg, before
+            // any sequence handling touched the store.
 
             // Handle ResetSeqNumFlag from peer's logon
             // When peer sends ResetSeqNumFlag=Y, both sides should reset to 1.
@@ -539,18 +543,19 @@ namespace PureFix.Transport.Ascii
         /// </summary>
         protected async Task InitializeSessionStore()
         {
+            if (!m_identityBound)
+            {
+                // Wildcard acceptor: nothing worth initialising or publishing yet. The real
+                // store is opened by BindPeerIdentity once we know who connected.
+                m_sessionLogger?.Info("wildcard acceptor - deferring store and registry binding until peer Logon");
+                return;
+            }
+
             await m_sessionStore.Initialize();
 
             // Register with session registry - this will stop any existing session with same SessionId
             // This prevents stale transport writes when a client reconnects before the old session detects disconnect
-            if (m_sessionRegistry != null)
-            {
-                var stoppedOld = m_sessionRegistry.Register(m_sessionId, this);
-                if (stoppedOld)
-                {
-                    m_sessionLogger?.Info("Session registry stopped previous session for {SessionId}", m_sessionId);
-                }
-            }
+            RegisterWithRegistry();
 
             // Initialize coordinator from store - it becomes the source of truth
             m_coordinator.InitializeFromStore();
@@ -566,6 +571,72 @@ namespace PureFix.Transport.Ascii
             m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
         }
 
+        private void RegisterWithRegistry()
+        {
+            if (m_sessionRegistry == null) return;
+
+            var stoppedOld = m_sessionRegistry.Register(m_sessionId, this);
+            if (stoppedOld)
+            {
+                m_sessionLogger?.Info("Session registry stopped previous session for {SessionId}", m_sessionId);
+            }
+        }
+
+        /// <summary>
+        /// Binds a wildcard acceptor session to the counterparty named in its Logon.
+        /// </summary>
+        /// <remarks>
+        /// Called from OnMsg before any sequence handling, because CheckSeqNo writes to the
+        /// store. Each counterparty gets its own SessionId, so its own store file and its own
+        /// registry key - two different clients no longer share sequence state or evict one
+        /// another. The description mutated here belongs to this connection's scope alone.
+        /// </remarks>
+        private async Task BindPeerIdentity(string peerCompId)
+        {
+            var description = m_config.Description;
+            var previous = description?.TargetCompID;
+
+            if (description is PureFix.Types.Config.SessionDescription desc)
+            {
+                desc.TargetCompID = peerCompId;
+            }
+            else
+            {
+                m_sessionLogger?.Warn(
+                    "wildcard acceptor cannot rebind TargetCompID: description type {Type} is not SessionDescription; " +
+                    "outbound headers will still carry '*'",
+                    description?.GetType().Name ?? "null");
+            }
+
+            m_sessionId = new SessionId(
+                m_sessionId.BeginString,
+                m_sessionId.SenderCompID,
+                peerCompId);
+
+            m_sessionLogger?.Info("Wildcard TargetCompID bound: '{Previous}' -> '{PeerCompId}'", previous, peerCompId);
+
+            var storeFactory = m_config.SessionStoreFactory ?? new MemorySessionStoreFactory();
+            m_sessionStore = storeFactory.Create(m_sessionId);
+            await m_sessionStore.Initialize();
+
+            m_coordinator = new SessionSequenceCoordinator(m_sessionStore, m_clock, m_sessionLogger);
+            m_coordinator.InitializeFromStore();
+
+            m_encoder.MsgSeqNum = m_coordinator.NextSenderSeqNum;
+            m_sessionState.LastPeerMsgSeqNum = m_coordinator.LastProcessedPeerSeqNum;
+            m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
+
+            m_identityBound = true;
+
+            // Only now is the key stable enough to publish. A reconnect from this same
+            // counterparty will displace the earlier session; a different counterparty will not.
+            RegisterWithRegistry();
+
+            m_sessionLogger?.Info(
+                "Bound session {SessionId}: NextSender={NextSender}, ExpectedTarget={ExpectedTarget}",
+                m_sessionId, m_coordinator.NextSenderSeqNum, m_coordinator.ExpectedTargetSeqNum);
+        }
+
         /// <summary>
         /// Called when the session stops. Unregisters from session registry.
         /// </summary>
@@ -573,7 +644,8 @@ namespace PureFix.Transport.Ascii
         {
             base.OnSessionStopping();
 
-            if (m_sessionRegistry != null)
+            // An unbound wildcard session was never published, so there is nothing to remove.
+            if (m_sessionRegistry != null && m_identityBound)
             {
                 m_sessionLogger?.Info("Session stopping - unregistering from registry: {SessionId}", m_sessionId);
                 m_sessionRegistry.Unregister(m_sessionId, this);
@@ -796,6 +868,29 @@ namespace PureFix.Transport.Ascii
 
         protected override async Task OnMsg(string msgType, IMessageView view)
         {
+            // A wildcard acceptor learns its counterparty from the Logon. Bind before
+            // CheckSeqNo, which reads and writes the session store.
+            if (m_isWildcardMode && !m_identityBound)
+            {
+                if (msgType != MsgType.Logon)
+                {
+                    m_sessionLogger?.Warn(
+                        "wildcard acceptor received '{MsgType}' before Logon - dropping connection", msgType);
+                    Stop(new InvalidOperationException($"expected Logon first, received {msgType}"));
+                    return;
+                }
+
+                var peerCompId = view.SenderCompID();
+                if (string.IsNullOrEmpty(peerCompId))
+                {
+                    m_sessionLogger?.Warn("wildcard acceptor received Logon with no SenderCompID - dropping connection");
+                    Stop(new InvalidOperationException("Logon carried no SenderCompID; cannot bind wildcard session"));
+                    return;
+                }
+
+                await BindPeerIdentity(peerCompId);
+            }
+
             var checkSeqNo = await CheckSeqNo(msgType, view);
             if (!checkSeqNo)
             {

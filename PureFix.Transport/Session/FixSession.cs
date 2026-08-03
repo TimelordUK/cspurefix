@@ -239,7 +239,7 @@ namespace PureFix.Transport.Session
         /// Stops the session from external callers (e.g., session registry when a new session replaces this one).
         /// </summary>
         /// <param name="reason">The reason for stopping the session.</param>
-        public void RequestStop(string reason)
+        public virtual void RequestStop(string reason)
         {
             m_sessionLogger?.Info("RequestStop: {Reason}", reason);
             Stop(new InvalidOperationException(reason));
@@ -308,21 +308,36 @@ namespace PureFix.Transport.Session
 
         public async Task OnRx(byte[] buffer, int len)
         {
-            _messages.Clear();
-            m_sessionLogger?.Debug("OnRx {Length}", len);
-            m_parser.ParseFrom(buffer, len, (_, v) => _messages.Add(v), OnFixLog);
-            if (_messages.Count == 0) return;
-            var plural = _messages.Count > 1 ? "s" : "";
-            m_sessionLogger?.Debug("OnRx received {Count} message{Plural}", _messages.Count, plural);
-            foreach (var msg in _messages)
+            // Everything rented here must come back even when a handler throws, otherwise a
+            // single bad message permanently loses a pooled array and its view/storage.
+            try
             {
-                await RxOnMsg(msg);
-                var view = (AsciiView)msg;
-                m_parser.Return(view.Storage);
-                view.Return();
+                _messages.Clear();
+                m_sessionLogger?.Debug("OnRx {Length}", len);
+                m_parser.ParseFrom(buffer, len, (_, v) => _messages.Add(v), OnFixLog);
+                if (_messages.Count == 0) return;
+                var plural = _messages.Count > 1 ? "s" : "";
+                m_sessionLogger?.Debug("OnRx received {Count} message{Plural}", _messages.Count, plural);
+                foreach (var msg in _messages)
+                {
+                    await RxOnMsg(msg);
+                }
             }
-            m_sessionLogger?.Debug("OnRx return buffer {BufferLength}", buffer.Length);
-            ArrayPool<byte>.Shared.Return(buffer);
+            finally
+            {
+                // Return every view parsed from this buffer, including any left unprocessed
+                // because an earlier message threw.
+                foreach (var msg in _messages)
+                {
+                    var view = (AsciiView)msg;
+                    m_parser.Return(view.Storage);
+                    view.Return();
+                }
+                _messages.Clear();
+
+                m_sessionLogger?.Debug("OnRx return buffer {BufferLength}", buffer.Length);
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
         }
 
         protected void OnFixLog(StoragePool.Storage storage)

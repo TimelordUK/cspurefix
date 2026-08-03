@@ -1,4 +1,3 @@
-using PureFix.Buffer;
 using PureFix.Transport.Recovery;
 using PureFix.Transport.Session;
 using PureFix.Types;
@@ -6,43 +5,38 @@ using PureFix.Types;
 
 namespace PureFix.Examples.TradeCapture;
 
+/// <summary>
+/// Builds a session per connection. Config, parser and encoder come from the scope, never
+/// from the container - see <see cref="ISessionScope"/>.
+/// </summary>
 public class TradeCaptureSessionFactory : ISessionFactory
 {
-    private readonly IFixConfig _config;
     private readonly IFixLogRecovery? _fixLogRecovery;
     private readonly ILogFactory _logFactory;
     private readonly IFixMessageFactory _fixMessageFactory;
-    private readonly IMessageParser _parser;
-    private readonly IMessageEncoder _encoder;
     private readonly IFixClock _clock;
 
     public TradeCaptureSessionFactory(
-        IFixConfig config,
         IFixLogRecovery? fixLogRecovery,
         ILogFactory logFactory,
         IFixMessageFactory fixMessageFactory,
-        IMessageParser parser,
-        IMessageEncoder encoder,
         IFixClock clock)
     {
-        _config = config;
         _fixLogRecovery = fixLogRecovery;
         _logFactory = logFactory;
         _fixMessageFactory = fixMessageFactory;
-        _parser = parser;
-        _encoder = encoder;
         _clock = clock;
     }
 
-    public FixSession MakeSession()
+    public FixSession MakeSession(ISessionScope scope)
     {
-        if (_config.IsInitiator())
+        if (scope.Config.IsInitiator())
         {
-            return new TradeCaptureClient(_config, _fixLogRecovery, _logFactory, _fixMessageFactory, _parser, _encoder, _clock);
+            return new TradeCaptureClient(
+                scope.Config, _fixLogRecovery, _logFactory, _fixMessageFactory, scope.Parser, scope.Encoder, _clock);
         }
-        else
-        {
-            return new TradeCaptureServer(_config, _fixLogRecovery, _logFactory, _fixMessageFactory, _parser, _encoder, _clock);
-        }
+
+        return new TradeCaptureServer(
+            scope.Config, _fixLogRecovery, _logFactory, _fixMessageFactory, scope.Parser, scope.Encoder, _clock);
     }
 }

@@ -38,6 +38,11 @@ public abstract class BaseAppDI
         // Note: ISessionMessageFactory should be registered by derived classes using appropriate generated types
         // _builder.Services.AddSingleton<ISessionMessageFactory, Fix44SessionMessageFactory>();
         _builder.Services.AddSingleton(config);
+
+        // NOTE: these two are registered only for tooling and tests that want a parser or
+        // encoder outside a session. Sessions must NOT use them - an acceptor serves many
+        // connections at once and each needs its own, which is what ISessionScopeFactory
+        // hands out. See ISessionScope.
         _builder.Services.AddSingleton<IMessageParser>(sp =>
         {
             var cfg = sp.GetRequiredService<IFixConfig>();

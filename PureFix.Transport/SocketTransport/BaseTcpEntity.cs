@@ -16,8 +16,14 @@ namespace PureFix.Transport.SocketTransport
         protected readonly IFixConfig m_config;
         protected readonly IFixClock m_clock;
         protected readonly ILogFactory m_logFactory;
+        protected readonly ISessionScopeFactory m_scopeFactory;
 
-        protected BaseTcpEntity(ISessionFactory sessionFactory, IFixConfig config, IFixClock clock, ILogFactory logFactory)
+        protected BaseTcpEntity(
+            ISessionFactory sessionFactory,
+            IFixConfig config,
+            IFixClock clock,
+            ILogFactory logFactory,
+            ISessionScopeFactory? scopeFactory = null)
         {
             ArgumentNullException.ThrowIfNull(sessionFactory);
             ArgumentNullException.ThrowIfNull(config);
@@ -29,6 +35,10 @@ namespace PureFix.Transport.SocketTransport
             m_config = config;
             m_clock = clock;
             m_logFactory = logFactory;
+
+            // Fall back to the built-in scope factory when the application has not
+            // registered one, so a connection never shares parser/encoder state by default.
+            m_scopeFactory = scopeFactory ?? new DefaultSessionScopeFactory(config, clock);
         }
 
         public abstract Task Start(CancellationToken cancellationToken);
