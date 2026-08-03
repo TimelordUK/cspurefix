@@ -16,8 +16,9 @@ namespace PureFix.Transport.SocketTransport
         ISessionFactory sessionFactory,
         IFixConfig config,
         IFixClock clock,
-        ILogFactory logFactory)
-        : BaseTcpEntity(sessionFactory, config, clock, logFactory)
+        ILogFactory logFactory,
+        ISessionScopeFactory? scopeFactory = null)
+        : BaseTcpEntity(sessionFactory, config, clock, logFactory, scopeFactory)
     {
         // Try to connect to an endpoint, once the transport is established create a session from the factory
         // and start, which will initiate a logon to the remote.
@@ -29,6 +30,11 @@ namespace PureFix.Transport.SocketTransport
 
             m_logger.Info("TcpInitiatorConnector starts. ReconnectSeconds={ReconnectSeconds}", reconnectSeconds);
 
+            // One scope for the lifetime of the connector. An initiator talks to a single
+            // peer and reuses its session across reconnects, so its parser/encoder state
+            // (notably the outbound sequence number) must survive a reconnect too.
+            using var scope = m_scopeFactory.CreateScope();
+
             // Create session once - it will be reused across reconnections
             // This preserves app state and session store (sequence numbers)
             FixSession? session = null;
@@ -37,7 +43,7 @@ namespace PureFix.Transport.SocketTransport
             // Outer loop for reconnection after session ends
             while (!cancellationToken.IsCancellationRequested)
             {
-                var client = new ClientSocketTransport(m_config, m_clock, m_logFactory);
+                var client = new ClientSocketTransport(scope.Config, m_clock, m_logFactory);
                 var connected = false;
                 var attempt = 1;
                 var timer = new PeriodicTimer(TimeSpan.FromSeconds(reconnectSeconds));
@@ -57,7 +63,8 @@ namespace PureFix.Transport.SocketTransport
                         m_logger.Info("waiting {ReconnectSeconds}s for reconnection attempt", reconnectSeconds);
                         await timer.WaitForNextTickAsync(cancellationToken);
                         // Need fresh socket for retry
-                        client = new ClientSocketTransport(m_config, m_clock, m_logFactory);
+                        client.Dispose();
+                        client = new ClientSocketTransport(scope.Config, m_clock, m_logFactory);
                         ++attempt;
                     }
                 }
@@ -67,8 +74,8 @@ namespace PureFix.Transport.SocketTransport
 
                 if (isFirstConnection)
                 {
-                    m_logger.Info("connected to endpoint, creating session.");
-                    session = m_sessionFactory.MakeSession();
+                    m_logger.Info("connected to endpoint, creating session with {Scope}.", scope.Id);
+                    session = m_sessionFactory.MakeSession(scope);
                     isFirstConnection = false;
                 }
                 else
@@ -86,6 +93,10 @@ namespace PureFix.Transport.SocketTransport
                 catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
                 {
                     m_logger.Warn("session ended with exception: {Message}", ex.Message);
+                }
+                finally
+                {
+                    client.Dispose();
                 }
 
                 m_logger.Info("session has ended.");

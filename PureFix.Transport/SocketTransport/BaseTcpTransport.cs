@@ -19,6 +19,7 @@ namespace PureFix.Transport.SocketTransport
         private Stream? m_networkStream;
         private SslStream? m_sslStream;
         private readonly TlsOptions? m_tlsOptions;
+        private X509Certificate2Collection? m_trustAnchors;
         private readonly IFixConfig m_config;
         private SslProtocols Protocols { get; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
@@ -32,6 +33,18 @@ namespace PureFix.Transport.SocketTransport
             m_tcp = config?.Description?.Application?.Tcp ?? throw new InvalidDataException("no config tcp parameters given");
             m_logger = logFactory.MakeLogger("BaseTransport");
             var tls = config?.Description?.Application?.Tcp.Tls;
+
+            // Surface configuration that would not do what it looks like it does - most
+            // importantly a fully populated tls block with no "enabled": true, which used
+            // to connect in plaintext without a word.
+            if (tls != null)
+            {
+                foreach (var problem in tls.Validate())
+                {
+                    m_logger.Warn("TLS config: {Problem}", problem);
+                }
+            }
+
             if (tls?.Enabled is true)
             {
                 m_tlsOptions = tls;
@@ -53,20 +66,26 @@ namespace PureFix.Transport.SocketTransport
 
         public async Task AsStream()
         {
-            if (m_socket != null)
+            if (m_socket == null) return;
+
+            m_networkStream = new NetworkStream(m_socket);
+            if (m_tlsOptions == null) return;
+
+            try
             {
-                try
-                {
-                    m_networkStream = new NetworkStream(m_socket);
-                    if (m_tlsOptions != null)
-                    {
-                        await AsSSlStream();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    m_logger.Error(ex);
-                }
+                await AsSSlStream();
+            }
+            catch (Exception ex)
+            {
+                // Fail closed. This used to log and continue, which left m_sslStream null
+                // and m_networkStream live, so ReceiveAsync/SendAsync silently fell back to
+                // the plaintext socket and sent the Logon credentials in the clear.
+                m_logger.Error(ex, "TLS handshake failed - refusing to fall back to plaintext: {Message}", ex.Message);
+                m_sslStream?.Dispose();
+                m_sslStream = null;
+                m_networkStream.Dispose();
+                m_networkStream = null;
+                throw new AuthenticationException("TLS handshake failed; connection refused.", ex);
             }
         }
 
@@ -116,7 +135,10 @@ namespace PureFix.Transport.SocketTransport
             ArgumentNullException.ThrowIfNull(m_networkStream);
             ArgumentNullException.ThrowIfNull(m_tlsOptions);
 
-            m_sslStream = new SslStream(m_networkStream, false, ValidateServerCertificate, null);
+            m_trustAnchors = LoadTrustAnchors(m_tlsOptions.Ca);
+            var checkRevocation = m_tlsOptions.CheckCertificateRevocation;
+
+            m_sslStream = new SslStream(m_networkStream, false, ValidatePeerCertificate, null);
 
             if (m_config.IsInitiator())
             {
@@ -130,44 +152,187 @@ namespace PureFix.Transport.SocketTransport
                     certs.Add(MakeCertificate());
                 }
 
-                await m_sslStream.AuthenticateAsClientAsync(targetHost, certs, Protocols, checkCertificateRevocation: false);
+                await m_sslStream.AuthenticateAsClientAsync(targetHost, certs, Protocols, checkRevocation);
                 m_logger.Info("Client authenticated.");
             }
             else
             {
                 // Server mode - authenticate clients
-                m_logger.Info("Server waiting to authenticate clients.");
+                var requestClientCert = m_tlsOptions.RequestClientCertificate || m_tlsOptions.RequireClientCertificate;
+                m_logger.Info("Server waiting to authenticate clients. requestClientCert={Request}", requestClientCert);
                 var serverCert = MakeCertificate();
-                await m_sslStream.AuthenticateAsServerAsync(serverCert, clientCertificateRequired: false, Protocols, checkCertificateRevocation: false);
+                await m_sslStream.AuthenticateAsServerAsync(serverCert, requestClientCert, Protocols, checkRevocation);
                 m_logger.Info("Server authenticated.");
             }
         }
 
-        private bool ValidateServerCertificate(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+        /// <summary>
+        /// Loads the configured CA files so a peer chaining to a private root can be accepted
+        /// without turning verification off wholesale.
+        /// </summary>
+        private X509Certificate2Collection? LoadTrustAnchors(List<string>? caPaths)
         {
-            var validate = m_tlsOptions?.ValidateServerCertificate ?? false;
-            m_logger.Info($"ValidateServerCertificate: errors={sslPolicyErrors}, validate={validate}");
+            if (caPaths is not { Count: > 0 }) return null;
 
-            if (!validate)
+            var anchors = new X509Certificate2Collection();
+            foreach (var path in caPaths)
             {
-                // Accept all certificates (useful for self-signed certs in dev/test)
+                try
+                {
+#if NET9_0_OR_GREATER
+                    anchors.Add(X509CertificateLoader.LoadCertificateFromFile(path));
+#else
+                    anchors.Add(X509Certificate2.CreateFromPemFile(path));
+#endif
+                    m_logger.Info("loaded TLS trust anchor {Path}", path);
+                }
+                catch (Exception ex)
+                {
+                    // A trust anchor we cannot read would silently downgrade us to the
+                    // machine store, so refuse rather than guess.
+                    throw new AuthenticationException($"could not load TLS trust anchor '{path}'", ex);
+                }
+            }
+
+            return anchors;
+        }
+
+        private bool ValidatePeerCertificate(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+        {
+            var validate = m_tlsOptions?.ValidateServerCertificate ?? true;
+
+            if (sslPolicyErrors == SslPolicyErrors.None)
+            {
                 return true;
             }
 
-            // Only accept if no errors
-            return sslPolicyErrors == SslPolicyErrors.None;
+            var isServer = !m_config.IsInitiator();
+            if (isServer && certificate == null)
+            {
+                // No client certificate offered. Only fatal when one was required.
+                var required = m_tlsOptions?.RequireClientCertificate ?? false;
+                if (required) m_logger.Warn("client presented no certificate but requireClientCertificate is set - rejecting");
+                return !required;
+            }
+
+            if (!validate)
+            {
+                m_logger.Warn(
+                    "accepting peer certificate despite {Errors} because validateServerCertificate is false",
+                    sslPolicyErrors);
+                return true;
+            }
+
+            // A private CA satisfies the chain error only; a name mismatch is still fatal.
+            if (m_trustAnchors is { Count: > 0 }
+                && sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors
+                && certificate != null)
+            {
+                if (ChainsToConfiguredAnchor(certificate))
+                {
+                    m_logger.Info("peer certificate accepted via configured trust anchor");
+                    return true;
+                }
+            }
+
+            m_logger.Warn("rejecting peer certificate: {Errors}", sslPolicyErrors);
+            return false;
         }
 
+        private bool ChainsToConfiguredAnchor(X509Certificate certificate)
+        {
+            if (m_trustAnchors == null) return false;
+
+            using var peer = new X509Certificate2(certificate);
+            using var chain = new X509Chain();
+            chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+            chain.ChainPolicy.RevocationMode = m_tlsOptions?.CheckCertificateRevocation == true
+                ? X509RevocationMode.Online
+                : X509RevocationMode.NoCheck;
+            chain.ChainPolicy.CustomTrustStore.AddRange(m_trustAnchors);
+
+            var built = chain.Build(peer);
+            if (!built)
+            {
+                foreach (var status in chain.ChainStatus)
+                {
+                    m_logger.Warn("trust anchor chain error: {Status} {Info}", status.Status, status.StatusInformation);
+                }
+            }
+
+            return built;
+        }
+
+        /// <summary>
+        /// Resolves a host to an endpoint to connect to. Uses GetHostAddresses rather than
+        /// GetHostEntry so an IP literal is not put through a pointless (and often slow or
+        /// failing) reverse lookup, and prefers IPv4 for consistency with typical FIX venues.
+        /// </summary>
         public static IPEndPoint? MakeEndPoint(string host, int port)
         {
-            var hostEntry = Dns.GetHostEntry(host);
-            if (hostEntry.AddressList.Length > 0)
+            if (IPAddress.TryParse(host, out var literal))
             {
-                var ipAddress = hostEntry.AddressList[0];
-                var iPEndPoint = new IPEndPoint(ipAddress, port);
-                return iPEndPoint;
+                return new IPEndPoint(literal, port);
             }
-            return null;
+
+            var addresses = Dns.GetHostAddresses(host);
+            if (addresses.Length == 0) return null;
+
+            var preferred = Array.Find(addresses, a => a.AddressFamily == AddressFamily.InterNetwork)
+                            ?? addresses[0];
+            return new IPEndPoint(preferred, port);
+        }
+
+        /// <summary>
+        /// Resolves the address an acceptor should bind to. Understands the wildcard forms
+        /// ("0.0.0.0", "*", "::", "any") that MakeEndPoint cannot express through DNS.
+        /// </summary>
+        public static IPEndPoint MakeListenEndPoint(string host, int port)
+        {
+            switch (host.Trim().ToLowerInvariant())
+            {
+                case "":
+                case "*":
+                case "any":
+                case "0.0.0.0":
+                    return new IPEndPoint(IPAddress.Any, port);
+                case "::":
+                case "[::]":
+                    return new IPEndPoint(IPAddress.IPv6Any, port);
+            }
+
+            return MakeEndPoint(host, port)
+                   ?? throw new InvalidOperationException($"could not resolve listen address '{host}'");
+        }
+
+        /// <summary>
+        /// Enables TCP keep-alive so a counterparty that disappears without sending a FIN
+        /// is detected at the socket layer rather than being served indefinitely.
+        /// </summary>
+        public static void ConfigureKeepAlive(Socket socket, TcpTransportDescription? tcp, ILogger? logger = null)
+        {
+            var keepAliveMs = tcp?.KeepAliveMs;
+            if (keepAliveMs is not > 0) return;
+
+            try
+            {
+                var seconds = Math.Max(1, keepAliveMs.Value / 1000);
+                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, seconds);
+                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, seconds);
+                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 3);
+                logger?.Info("TCP keep-alive enabled: idle={Seconds}s, interval={Seconds}s, retries=3", seconds, seconds);
+            }
+            catch (SocketException ex)
+            {
+                // Some platforms reject the per-socket tuning knobs; keep-alive itself may
+                // still be on. Not fatal.
+                logger?.Warn("could not fully configure TCP keep-alive: {Message}", ex.Message);
+            }
+            catch (PlatformNotSupportedException ex)
+            {
+                logger?.Warn("TCP keep-alive tuning not supported on this platform: {Message}", ex.Message);
+            }
         }
 
         public void Dispose()

@@ -31,7 +31,12 @@ public sealed class FileSessionStreamProvider : ISessionStreamProvider, IAsyncDi
             GetFilePath("body"),
             FileMode.OpenOrCreate,
             FileAccess.ReadWrite,
-            FileShare.Read);
+            // ReadWrite rather than Read: when a counterparty reconnects, the replacement
+            // session opens these files while the displaced session may not have released
+            // its handles yet. With FileShare.Read that handoff throws and the reconnecting
+            // client cannot log on at all. Only one session per SessionId is ever live -
+            // the registry guarantees it - so concurrent writers are not a concern.
+            FileShare.ReadWrite);
         _bodyStream.Seek(0, SeekOrigin.End); // Append mode
         return _bodyStream;
     }
@@ -46,47 +51,50 @@ public sealed class FileSessionStreamProvider : ISessionStreamProvider, IAsyncDi
             GetFilePath("header"),
             FileMode.OpenOrCreate,
             FileAccess.Write,
-            FileShare.Read);
+            FileShare.ReadWrite); // see OpenBodyStream
         headerStream.Seek(0, SeekOrigin.End); // Append mode
         // Use UTF8 without BOM for QuickFix compatibility
         _headerWriter = new StreamWriter(headerStream, new UTF8Encoding(false)) { AutoFlush = false };
         return _headerWriter;
     }
 
-    public async Task<string?> ReadSeqNumsAsync()
-    {
-        var path = GetFilePath("seqnums");
-        if (!File.Exists(path))
-            return null;
-        return await File.ReadAllTextAsync(path);
-    }
+    public Task<string?> ReadSeqNumsAsync() => ReadAllTextShared(GetFilePath("seqnums"));
 
-    public async Task WriteSeqNumsAsync(string content)
-    {
-        Directory.CreateDirectory(_directory);
-        await File.WriteAllTextAsync(GetFilePath("seqnums"), content);
-    }
+    public Task WriteSeqNumsAsync(string content) => WriteAllTextShared(GetFilePath("seqnums"), content);
 
-    public async Task<string?> ReadSessionTimeAsync()
-    {
-        var path = GetFilePath("session");
-        if (!File.Exists(path))
-            return null;
-        return await File.ReadAllTextAsync(path);
-    }
+    public Task<string?> ReadSessionTimeAsync() => ReadAllTextShared(GetFilePath("session"));
 
-    public async Task WriteSessionTimeAsync(string content)
-    {
-        Directory.CreateDirectory(_directory);
-        await File.WriteAllTextAsync(GetFilePath("session"), content);
-    }
+    public Task WriteSessionTimeAsync(string content) => WriteAllTextShared(GetFilePath("session"), content);
 
     public async Task<string[]> ReadHeaderLinesAsync()
     {
-        var path = GetFilePath("header");
-        if (!File.Exists(path))
-            return [];
-        return await File.ReadAllLinesAsync(path);
+        var content = await ReadAllTextShared(GetFilePath("header"));
+        return content?.Split('\n').Select(l => l.TrimEnd('\r')).ToArray() ?? [];
+    }
+
+    // File.ReadAllTextAsync and friends open with FileShare.Read, which collides with the
+    // body/header writers this provider keeps open (and with a displaced session's handles
+    // during a reconnect). Every access goes through these helpers so the whole store agrees
+    // on FileShare.ReadWrite.
+
+    private static async Task<string?> ReadAllTextShared(string path)
+    {
+        if (!File.Exists(path)) return null;
+
+        await using var stream = new FileStream(
+            path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        return await reader.ReadToEndAsync();
+    }
+
+    private async Task WriteAllTextShared(string path, string content)
+    {
+        Directory.CreateDirectory(_directory);
+
+        await using var stream = new FileStream(
+            path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+        await using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+        await writer.WriteAsync(content);
     }
 
     public async Task ResetAsync()

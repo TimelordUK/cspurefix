@@ -30,6 +30,6 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
         protected readonly ILogFactory m_logFactory = logFactory;
         protected readonly IFixLogRecovery m_fixLogRecovery = fixLogRecovery;
 
-        public abstract FixSession MakeSession();
+        public abstract FixSession MakeSession(ISessionScope scope);
     }
 }

@@ -6,12 +6,16 @@
     "tcp": {
       "host": "fix.broker.example.com",
       "port": 9876,
+      "keepAliveMs": 30000,
       "tls": {
         "enabled": true,
         "certificate": "/path/to/your/certificate.pfx",
         "password": "your-certificate-password",
         "targetHost": "fix.broker.example.com",
-        "validateServerCertificate": false
+        "validateServerCertificate": true,
+        "ca": [
+          "/path/to/your/broker-ca.crt"
+        ]
       }
     },
     "protocol": "ascii",

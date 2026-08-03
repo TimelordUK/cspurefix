@@ -29,10 +29,25 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
         public IReadOnlyList<string> AppLog => ((TestLogger)App.Logs.appLog).Entries();
         public AsyncWorkQueue Queue { get; private set; }
         public IHost Host { get; }
+
+        /// <summary>
+        /// The connection scope backing <see cref="App"/>. Config, Parser and Encoder above
+        /// are taken from it so a test observes the same state the session is using.
+        /// </summary>
+        public ISessionScope? Scope { get; private set; }
         public void NoResetSeqNumFlag()
         {
-            if (Config.Description == null) return;
-            ((SessionDescription)Config.Description).ResetSeqNumFlag = false;
+            // Config is the scope's clone, which is what the session reads. Container
+            // singletons built before the scope existed - IFixLogRecovery in particular -
+            // still hold the template, so set the flag on both.
+            Set(Config.Description);
+            Set(Host.Services.GetService<IFixConfig>()?.Description);
+            return;
+
+            static void Set(ISessionDescription? description)
+            {
+                if (description is SessionDescription concrete) concrete.ResetSeqNumFlag = false;
+            }
         }
       
         public void Dump()
@@ -82,7 +97,21 @@ namespace PureFix.Test.ModularTypes.Env.Experiment
             Encoder = host.Services.GetService<IMessageEncoder>() ?? throw new InvalidOperationException();
             Recovery = host.Services.GetService<IFixLogRecovery>() ?? throw new InvalidOperationException();
             var sf = host.Services.GetService<ISessionFactory>();
-            if (sf != null) App = (BaseApp)sf.MakeSession();
+            if (sf != null)
+            {
+                var scopeFactory = host.Services.GetService<ISessionScopeFactory>()
+                                   ?? new DefaultSessionScopeFactory(Config, host.Services.GetRequiredService<IFixClock>());
+                Scope = scopeFactory.CreateScope();
+
+                // Point the container at the scope's instances. The session uses these, not
+                // the container singletons, so a test asserting on Encoder.MsgSeqNum or
+                // mutating Config.Description must see the same objects.
+                Config = Scope.Config;
+                Parser = Scope.Parser;
+                Encoder = Scope.Encoder;
+
+                App = (BaseApp)sf.MakeSession(Scope);
+            }
             TokenSource = new CancellationTokenSource();
             Host = host;
         }

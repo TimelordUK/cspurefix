@@ -51,15 +51,18 @@ namespace PureFix.Types.Config
         public ValidationConfig? Validation { get; set; }
 
         /// <summary>
-        /// Creates a shallow clone of this SessionDescription.
-        /// Used for wildcard TargetCompID mode where each acceptor session needs its own
-        /// description to track its specific counterparty CompID.
+        /// Creates a per-connection copy of this SessionDescription.
         /// </summary>
+        /// <remarks>
+        /// Every field a session can write to must be copied, not shared. TargetCompID in
+        /// particular is rebound by a wildcard acceptor once its peer logs on; sharing the
+        /// description would make that rebinding visible to every other live connection.
+        /// </remarks>
         public SessionDescription Clone()
         {
             return new SessionDescription
             {
-                Application = Application, // Shared - TCP settings don't change per session
+                Application = Application?.Clone(),
                 Name = Name,
                 SenderCompID = SenderCompID,
                 TargetCompID = TargetCompID,

@@ -239,7 +239,7 @@ namespace PureFix.Transport.Session
         /// Stops the session from external callers (e.g., session registry when a new session replaces this one).
         /// </summary>
         /// <param name="reason">The reason for stopping the session.</param>
-        public void RequestStop(string reason)
+        public virtual void RequestStop(string reason)
         {
             m_sessionLogger?.Info("RequestStop: {Reason}", reason);
             Stop(new InvalidOperationException(reason));
@@ -308,21 +308,36 @@ namespace PureFix.Transport.Session
 
         public async Task OnRx(byte[] buffer, int len)
         {
-            _messages.Clear();
-            m_sessionLogger?.Debug("OnRx {Length}", len);
-            m_parser.ParseFrom(buffer, len, (_, v) => _messages.Add(v), OnFixLog);
-            if (_messages.Count == 0) return;
-            var plural = _messages.Count > 1 ? "s" : "";
-            m_sessionLogger?.Debug("OnRx received {Count} message{Plural}", _messages.Count, plural);
-            foreach (var msg in _messages)
+            // Everything rented here must come back even when a handler throws, otherwise a
+            // single bad message permanently loses a pooled array and its view/storage.
+            try
             {
-                await RxOnMsg(msg);
-                var view = (AsciiView)msg;
-                m_parser.Return(view.Storage);
-                view.Return();
+                _messages.Clear();
+                m_sessionLogger?.Debug("OnRx {Length}", len);
+                m_parser.ParseFrom(buffer, len, (_, v) => _messages.Add(v), OnFixLog);
+                if (_messages.Count == 0) return;
+                var plural = _messages.Count > 1 ? "s" : "";
+                m_sessionLogger?.Debug("OnRx received {Count} message{Plural}", _messages.Count, plural);
+                foreach (var msg in _messages)
+                {
+                    await RxOnMsg(msg);
+                }
             }
-            m_sessionLogger?.Debug("OnRx return buffer {BufferLength}", buffer.Length);
-            ArrayPool<byte>.Shared.Return(buffer);
+            finally
+            {
+                // Return every view parsed from this buffer, including any left unprocessed
+                // because an earlier message threw.
+                foreach (var msg in _messages)
+                {
+                    var view = (AsciiView)msg;
+                    m_parser.Return(view.Storage);
+                    view.Return();
+                }
+                _messages.Clear();
+
+                m_sessionLogger?.Debug("OnRx return buffer {BufferLength}", buffer.Length);
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
         }
 
         protected void OnFixLog(StoragePool.Storage storage)
@@ -486,13 +501,29 @@ namespace PureFix.Transport.Session
             await OnRun();
             await InitiatorLogon();
             var dispatcher = new EventDispatcher(m_logFactory, transport);
-            // start sending events to the channel on which this session listens.
-            // Writer starts background tasks that write to channel - doesn't block
-            dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
-            // read from the channel
-            await Reader(dispatcher, m_MySource.Token);
-            m_sessionLogger?.Info("Run ends");
+            try
+            {
+                // start sending events to the channel on which this session listens.
+                // Writer starts background tasks that write to channel - doesn't block
+                dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
+                // read from the channel
+                await Reader(dispatcher, m_MySource.Token);
+            }
+            finally
+            {
+                // Release per-session resources (file handles held by the session store in
+                // particular) now the session is finished, rather than leaking one set per
+                // accepted connection.
+                await OnSessionEnded();
+                m_sessionLogger?.Info("Run ends");
+            }
         }
+
+        /// <summary>
+        /// Called once when Run completes, however it completes. Override to release
+        /// resources the session owns.
+        /// </summary>
+        protected virtual ValueTask OnSessionEnded() => ValueTask.CompletedTask;
 
         private async Task CheckForwardMessage(string msgType, IMessageView view)
         {

@@ -29,5 +29,27 @@ namespace PureFix.Types.Config
         /// Defaults to SOH (0x01) for QuickFix compatibility.
         /// </summary>
         public byte StoreDelimiter { get; set; } = 0x01;
+
+        /// <summary>
+        /// Copies the application block. Tcp is shared by reference because the listen or
+        /// connect endpoint is fixed for the process lifetime, while the delimiters are
+        /// copied so a per-connection scope can adjust them in isolation.
+        /// </summary>
+        public MsgApplication Clone()
+        {
+            return new MsgApplication
+            {
+                Name = Name,
+                Type = Type,
+                Resilient = Resilient,
+                ReconnectSeconds = ReconnectSeconds,
+                Protocol = Protocol,
+                Tcp = Tcp,
+                Dictionary = Dictionary,
+                LogDelimiter = LogDelimiter,
+                Delimiter = Delimiter,
+                StoreDelimiter = StoreDelimiter
+            };
+        }
     }
 }
