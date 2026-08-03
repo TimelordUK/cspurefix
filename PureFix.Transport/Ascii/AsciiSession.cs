@@ -571,6 +571,28 @@ namespace PureFix.Transport.Ascii
             m_resender = new FixMsgAsciiStoreResend(m_sessionStore, m_fixMessageFactory, m_config, m_clock);
         }
 
+        /// <summary>
+        /// Releases the session store when the connection finishes. Without this an acceptor
+        /// leaks a set of file handles per accepted connection, and a reconnecting
+        /// counterparty can find its own store files still held open.
+        /// </summary>
+        protected override async ValueTask OnSessionEnded()
+        {
+            await base.OnSessionEnded();
+
+            try
+            {
+                await m_sessionStore.Flush();
+            }
+            catch (Exception ex)
+            {
+                m_sessionLogger?.Error(ex, "failed to flush session store on close: {Message}", ex.Message);
+            }
+
+            await m_sessionStore.DisposeAsync();
+            m_sessionLogger?.Info("session store closed for {SessionId}", m_sessionId);
+        }
+
         private void RegisterWithRegistry()
         {
             if (m_sessionRegistry == null) return;
@@ -616,8 +638,10 @@ namespace PureFix.Transport.Ascii
             m_sessionLogger?.Info("Wildcard TargetCompID bound: '{Previous}' -> '{PeerCompId}'", previous, peerCompId);
 
             var storeFactory = m_config.SessionStoreFactory ?? new MemorySessionStoreFactory();
+            var placeholder = m_sessionStore;
             m_sessionStore = storeFactory.Create(m_sessionId);
             await m_sessionStore.Initialize();
+            await placeholder.DisposeAsync();
 
             m_coordinator = new SessionSequenceCoordinator(m_sessionStore, m_clock, m_sessionLogger);
             m_coordinator.InitializeFromStore();

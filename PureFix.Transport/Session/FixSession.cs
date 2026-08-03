@@ -501,13 +501,29 @@ namespace PureFix.Transport.Session
             await OnRun();
             await InitiatorLogon();
             var dispatcher = new EventDispatcher(m_logFactory, transport);
-            // start sending events to the channel on which this session listens.
-            // Writer starts background tasks that write to channel - doesn't block
-            dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
-            // read from the channel
-            await Reader(dispatcher, m_MySource.Token);
-            m_sessionLogger?.Info("Run ends");
+            try
+            {
+                // start sending events to the channel on which this session listens.
+                // Writer starts background tasks that write to channel - doesn't block
+                dispatcher.Writer(TimeSpan.FromMilliseconds(100), m_MySource.Token);
+                // read from the channel
+                await Reader(dispatcher, m_MySource.Token);
+            }
+            finally
+            {
+                // Release per-session resources (file handles held by the session store in
+                // particular) now the session is finished, rather than leaking one set per
+                // accepted connection.
+                await OnSessionEnded();
+                m_sessionLogger?.Info("Run ends");
+            }
         }
+
+        /// <summary>
+        /// Called once when Run completes, however it completes. Override to release
+        /// resources the session owns.
+        /// </summary>
+        protected virtual ValueTask OnSessionEnded() => ValueTask.CompletedTask;
 
         private async Task CheckForwardMessage(string msgType, IMessageView view)
         {
