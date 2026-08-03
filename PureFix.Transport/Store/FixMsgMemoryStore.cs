@@ -105,7 +105,9 @@ namespace PureFix.Transport.Store
         public Task<FixMsgStoreState> Put(IFixMsgStoreRecord record)
         {
             if (_sessionMessages.Contains(record.MsgType)) return Task.FromResult(BuildState());
-            _sortedBySeqNum.Add(record.SeqNum, record);
+            // Assign rather than Add: storing a sequence number twice is a caller mistake,
+            // not a reason to throw out of the session's read loop and drop the connection.
+            _sortedBySeqNum[record.SeqNum] = record;
             return Task.FromResult(BuildState());
         }
 

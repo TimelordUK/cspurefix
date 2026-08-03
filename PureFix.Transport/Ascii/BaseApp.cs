@@ -22,9 +22,23 @@ namespace PureFix.Transport.Ascii
         public string AppLogName { get; }
         private IFixLogRecovery? Recovery { get; }
 
+        /// <summary>
+        /// Whether the legacy fix-log recovery store is actually in use.
+        /// </summary>
+        /// <remarks>
+        /// Recovery is a fallback for applications with no SessionStoreFactory. It is
+        /// typically a container singleton shared by every session, so an acceptor serving
+        /// several counterparties must not write to it: they would all push their own
+        /// sequence numbers into one store. OnEncoded used to add unconditionally, which
+        /// threw a duplicate-key ArgumentException out of the session read loop and
+        /// disconnected every client after the first.
+        /// </remarks>
+        private readonly bool m_useLogRecovery;
+
         protected BaseApp(IFixConfig config, IFixLogRecovery? fixLogRecovery, ILogFactory logFactory, IFixMessageFactory fixMessageFactory, IMessageParser parser, IMessageEncoder encoder, IFixClock clock)
             : base(config, logFactory, fixMessageFactory, parser, encoder, clock)
         {
+            m_useLogRecovery = config.SessionStoreFactory == null && fixLogRecovery != null;
             m_logReceivedMessages = true;
             var me = config.Name();
             FixLogName = $"csfix.{me}.fix";
@@ -47,8 +61,7 @@ namespace PureFix.Transport.Ascii
 
             // When a session store factory is configured, it handles all persistence
             // FixLogRecovery is only used as a fallback when no store factory is set
-            var useLogRecovery = m_config.SessionStoreFactory == null && Recovery != null;
-            if (useLogRecovery)
+            if (m_useLogRecovery)
             {
                 await Recovery!.Recover();
                 // Config values take precedence, then recovery
@@ -79,11 +92,12 @@ namespace PureFix.Transport.Ascii
             // Store to session store (using SOH delimiter format)
             await StoreEncodedMessage(msgType, seqNum, storeTxt);
 
-            // Also add to legacy recovery if configured
-            if (Recovery != null)
+            // Also add to legacy recovery, but only when it is the store actually being
+            // read back on restart. See m_useLogRecovery.
+            if (m_useLogRecovery)
             {
                 var record = new FixMsgStoreRecord(msgType, m_clock.Current, seqNum, storeTxt);
-                await Recovery.AddRecord(record);
+                await Recovery!.AddRecord(record);
             }
 
             // Log with pipe delimiter for human readability
